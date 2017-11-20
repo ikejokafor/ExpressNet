@@ -170,26 +170,32 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 // TILE ROUTER PORT CONFIGS
 //--------------------------------------------------------------------------------------------------------------------------------------------------
-parameter C_PORT_CONFIG_NONE            = 3'b000;
-parameter C_PORT_CONFIG_LAYER_ENGINE_IO = 3'b001;
-parameter C_PORT_CONFIG_LAYER_BRIDGE    = 3'b010;
-parameter C_PORT_CONFIG_DATA_MOVER      = 3'b011;
-parameter C_PORT_CONFIG_CONTROLLER      = 3'b100;
-parameter C_PORT_CONFIG_MSG_INTF        = 3'b101;
+parameter C_PORT_CONFIG_NONE            = 0;
+parameter C_PORT_CONFIG_LAYER_ENGINE_IO = 1;
+parameter C_PORT_CONFIG_LAYER_BRIDGE    = 2;
+parameter C_PORT_CONFIG_DATA_MOVER_RD   = 3;
+parameter C_PORT_CONFIG_DATA_MOVER_WR   = 4;
+parameter C_PORT_CONFIG_CONTROLLER      = 5;
+parameter C_PORT_CONFIG_MSG_INTF        = 6;
+
 parameter C_COL                         = 0;
 parameter C_ROW                         = 1;
 
 `define NUM_ROWS            16'd9
 `define NUM_COLS            16'd2
 `define NUM_PE              16'd4
-`define NUM_PE_TYPES        16'd6
-`define NUM_DATA_MOVERS     16'd7
+`define NUM_PE_TYPES        16'd7
+`define NUM_DATA_MOVERS     16'd6
 
-`define	PACKET_WIDTH	        16'd128
+`define	PACKET_WIDTH	        16'd66
 `define NUM_LAYER_ENG_IO        16'd64
 `define NUM_LAYER_BRIDGE        16'd1
 `define NUM_LAYER_ENG_CTRL      16'd1
 `define NUM_MSG_INTF            16'd1
+
+`define NUM_CONFIG_ROW  `NUM_COLS
+`define NUM_CONFIG_COL  `NUM_PE
+`define NUM_LAYER_ENG_PE  (`NUM_LAYER_ENG_IO / `NUM_PE / `NUM_COLS)
 
 
 function integer count_instances;
@@ -208,26 +214,7 @@ function integer count_instances;
 endfunction
 
 
-function integer get_instance_index;    // fix function
-	input 	[(`NUM_PE_TYPES - 1):0] 	config_array	[(`NUM_ROWS - 1):0][(`NUM_COLS - 1):0][(`NUM_PE - 1):0];
-	input	[(`NUM_PE_TYPES - 1):0]	    config_type;
-	input	integer	row;
-	input	integer col;
-	input	integer pe;
-	
-	integer r,c,p;
-	begin
-		get_instance_index = 0;
-		for (r=0; r<`NUM_ROWS; r=r+1)
-			for (c=0; c<`NUM_COLS; c=c+1)
-				for (p=0; p<`NUM_PE; p=p+1)
-					if (config_array[r][c][p] == config_type)
-						if (r==row && c==col && p==pe)
-							break;
-						else
-							get_instance_index = get_instance_index + 1;
-	end
-endfunction
+
 
 	
 function integer get_instance_location;     // fix function
@@ -255,13 +242,39 @@ function integer get_instance_location;     // fix function
     end
 endfunction
 
-function integer get_data_mover_idx;
-	integer idx;
+
+function integer router_index;
+	input integer r;
+	input integer c;
+	input integer p;
+
 	begin
-        get_data_mover_idx = idx - 63;
-        if(get_data_mover_idx > 3) begin
-            get_data_mover_idx = get_data_mover_idx - 1;
-        end
+        router_index = ((r * `NUM_CONFIG_ROW + c) * `NUM_CONFIG_COL + p);
+	end
+endfunction
+
+
+function integer rd_data_mover_idx;
+	input integer r;
+	input integer c;
+	input integer p;
+    
+    integer idx;
+    idx = router_index(r, c, p);
+	begin
+        rd_data_mover_idx = idx - 64;
+    end
+endfunction
+
+function integer wr_data_mover_idx;
+	input integer r;
+	input integer c;
+	input integer p;
+    
+    integer idx;
+    idx = router_index(r, c, p);
+	begin
+        wr_data_mover_idx = (idx - 68) + 3;
     end
 endfunction
 

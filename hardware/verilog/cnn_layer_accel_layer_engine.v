@@ -27,7 +27,9 @@
 module cnn_layer_accel_layer_engine #(
     parameter   C_NUM_LAYER_ENG_IO      = 18,
     parameter	C_PACKET_WIDTH	        = 66,
-    parameter   C_NUM_LAYER_ENG_CTRL    = 2
+    parameter   C_NUM_LAYER_ENG_CTRL    = 2,
+    parameter   C_NUM_LAYER_ENG_PE      = 8,
+    parameter   C_NUM_PE                = 4
 ) (
     clk,
     rst,
@@ -69,19 +71,19 @@ module cnn_layer_accel_layer_engine #(
     input                                               rst;
     
     
-    input	[                   C_NUM_LAYER_ENG_IO - 1:0]           layer_eng_io_input_valid	        ;
-	output	[                   C_NUM_LAYER_ENG_IO - 1:0]	        layer_eng_io_input_accept	        ;
-	input	[(C_NUM_LAYER_ENG_IO * C_PACKET_WIDTH) - 1:0]	        layer_eng_io_input_data		        ;
-	output	[                   C_NUM_LAYER_ENG_IO - 1:0]	        layer_eng_io_output_valid	        ;
-	input	[                   C_NUM_LAYER_ENG_IO - 1:0]	        layer_eng_io_output_accept	        ;
-	output	[(C_NUM_LAYER_ENG_IO * C_PACKET_WIDTH) - 1:0]	        layer_eng_io_output_data	        ;
+    output	[                   C_NUM_LAYER_ENG_IO - 1:0]           layer_eng_io_input_valid	        ;
+	input	[                   C_NUM_LAYER_ENG_IO - 1:0]	        layer_eng_io_input_accept	        ;
+	output	[(C_NUM_LAYER_ENG_IO * C_PACKET_WIDTH) - 1:0]	        layer_eng_io_input_data		        ;
+	input	[                   C_NUM_LAYER_ENG_IO - 1:0]	        layer_eng_io_output_valid	        ;
+	output	[                   C_NUM_LAYER_ENG_IO - 1:0]	        layer_eng_io_output_accept	        ;
+	input	[(C_NUM_LAYER_ENG_IO * C_PACKET_WIDTH) - 1:0]	        layer_eng_io_output_data	        ;
   
-    input[                   C_NUM_LAYER_ENG_CTRL - 1:0]             layer_eng_ctrl_input_valid		    ;
-	output[                   C_NUM_LAYER_ENG_CTRL - 1:0]             layer_eng_ctrl_input_accept		;
-	input[(C_NUM_LAYER_ENG_CTRL * C_PACKET_WIDTH) - 1:0]	         layer_eng_ctrl_input_data		    ;
-	output[                   C_NUM_LAYER_ENG_CTRL - 1:0]	         layer_eng_ctrl_output_valid		;
-	input[                   C_NUM_LAYER_ENG_CTRL - 1:0]	         layer_eng_ctrl_output_accept	    ;
-	output[(C_NUM_LAYER_ENG_CTRL * C_PACKET_WIDTH) - 1:0]	         layer_eng_ctrl_output_data		    ;
+    output	[                   C_NUM_LAYER_ENG_CTRL - 1:0]         layer_eng_ctrl_input_valid		    ;
+	input	[                   C_NUM_LAYER_ENG_CTRL - 1:0]         layer_eng_ctrl_input_accept		    ;
+	output	[(C_NUM_LAYER_ENG_CTRL * C_PACKET_WIDTH) - 1:0]	        layer_eng_ctrl_input_data		    ;
+	input	[                   C_NUM_LAYER_ENG_CTRL - 1:0]	        layer_eng_ctrl_output_valid		    ;
+	output	[                   C_NUM_LAYER_ENG_CTRL - 1:0]	        layer_eng_ctrl_output_accept	    ;
+	input	[(C_NUM_LAYER_ENG_CTRL * C_PACKET_WIDTH) - 1:0]	        layer_eng_ctrl_output_data		    ;
     
 	
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -95,30 +97,33 @@ module cnn_layer_accel_layer_engine #(
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	genvar i;
-    for(i = 0; i < C_NUM_LAYER_ENG_IO; i = i + 1) begin // fix so not hardcoded
-        cnn_layer_accel_layer_engine_pe #(
-            .C_PACKET_WIDTH ( C_PACKET_WIDTH )
-        )
-        i0_cnn_layer_accel_layer_engine_pe  (
-            .clk                            ( clk                                           ),
-            .rst                            ( rst                                           ),
+    generate       
+        for(i = 0; i < (C_NUM_LAYER_ENG_PE * 2); i = i + 2) begin // fix so not hardcoded
+            cnn_layer_accel_layer_engine_pe #(
+                .C_PACKET_WIDTH ( C_PACKET_WIDTH ),
+                .C_NUM_PE       ( C_NUM_PE       )
+            )
+            i0_cnn_layer_accel_layer_engine_pe  (
+                .clk                            ( clk                                                                                                      ),
+                .rst                            ( rst                                                                                                      ),
+            
+                .layer_eng_rd_input_valid	    ( layer_eng_io_input_valid	    [                                            (i * C_NUM_PE) +: C_NUM_PE]   ),   
+                .layer_eng_rd_input_accept	    ( layer_eng_io_input_accept	    [                                            (i * C_NUM_PE) +: C_NUM_PE]   ),
+                .layer_eng_rd_input_data		( layer_eng_io_input_data	    [      ((i * C_NUM_PE) * C_PACKET_WIDTH) +: (C_PACKET_WIDTH * C_NUM_PE)]   ),
+                .layer_eng_rd_output_valid	    ( layer_eng_io_output_valid	    [                                            (i * C_NUM_PE) +: C_NUM_PE]   ),
+                .layer_eng_rd_output_accept	    ( layer_eng_io_output_accept	[                                            (i * C_NUM_PE) +: C_NUM_PE]   ),
+                .layer_eng_rd_output_data	    ( layer_eng_io_output_data	    [      ((i * C_NUM_PE) * C_PACKET_WIDTH) +: (C_PACKET_WIDTH * C_NUM_PE)]   ),  
+            
+                .layer_eng_wr_input_valid	    ( layer_eng_io_input_valid	    [                                      ((i + 1) * C_NUM_PE) +: C_NUM_PE]   ),   
+                .layer_eng_wr_input_accept	    ( layer_eng_io_input_accept	    [                                      ((i + 1) * C_NUM_PE) +: C_NUM_PE]   ),
+                .layer_eng_wr_input_data		( layer_eng_io_input_data	    [(((i + 1) * C_NUM_PE) * C_PACKET_WIDTH) +: (C_PACKET_WIDTH * C_NUM_PE)]   ),
+                .layer_eng_wr_output_valid	    ( layer_eng_io_output_valid	    [                                      ((i + 1) * C_NUM_PE) +: C_NUM_PE]   ),
+                .layer_eng_wr_output_accept	    ( layer_eng_io_output_accept	[                                      ((i + 1) * C_NUM_PE) +: C_NUM_PE]   ),
+                .layer_eng_wr_output_data	    ( layer_eng_io_output_data	    [(((i + 1) * C_NUM_PE) * C_PACKET_WIDTH) +: (C_PACKET_WIDTH * C_NUM_PE)]   )               
+            );
+        end
         
-            .layer_eng_rd_input_valid	    ( layer_eng_io_input_valid	    [                         i]   ),   
-            .layer_eng_rd_input_accept	    ( layer_eng_io_input_accept	    [                         i]   ),
-            .layer_eng_rd_input_data		( layer_eng_io_input_data	    [(i * C_PACKET_WIDTH) +: C_PACKET_WIDTH]   ),
-            .layer_eng_rd_output_valid	    ( layer_eng_io_output_valid	    [                         i]   ),
-            .layer_eng_rd_output_accept	    ( layer_eng_io_output_accept	[                         i]   ),
-            .layer_eng_rd_output_data	    ( layer_eng_io_output_data	    [(i * C_PACKET_WIDTH) +: C_PACKET_WIDTH]   ),  
-
-            .layer_eng_wr_input_valid	    ( layer_eng_io_input_valid	    [                         i]   ),   
-            .layer_eng_wr_input_accept	    ( layer_eng_io_input_accept	    [                         i]   ),
-            .layer_eng_wr_input_data		( layer_eng_io_input_data	    [(i * C_PACKET_WIDTH) +: C_PACKET_WIDTH]  ),
-            .layer_eng_wr_output_valid	    ( layer_eng_io_output_valid	    [                         i]   ),
-            .layer_eng_wr_output_accept	    ( layer_eng_io_output_accept	[                         i]   ),
-            .layer_eng_wr_output_data	    ( layer_eng_io_output_data	    [(i * C_PACKET_WIDTH) +: C_PACKET_WIDTH]   )               
-        );
-    end
-
+    endgenerate
     
     cnn_layer_accel_layer_engine_controller #(
        .C_NUM_LAYER_ENG_CTRL                            ( C_NUM_LAYER_ENG_CTRL                              ),

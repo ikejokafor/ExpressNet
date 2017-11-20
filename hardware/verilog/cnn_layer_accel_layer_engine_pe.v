@@ -25,7 +25,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_layer_engine_pe #(
-    C_PACKET_WIDTH = 66
+    parameter C_PACKET_WIDTH = 66,
+    parameter C_NUM_PE       = 4
 ) (
     clk                                 ,
     rst                                 ,
@@ -65,22 +66,22 @@ module cnn_layer_accel_layer_engine_pe #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Inputs / Output Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input                                                           clk;
-    input                                                           rst;
-    
-	input	                                layer_eng_rd_input_valid	        ;
-	output		                            layer_eng_rd_input_accept	        ;
-	input	[C_PACKET_WIDTH - 1:0]	        layer_eng_rd_input_data		        ;
-	output		                            layer_eng_rd_output_valid	        ;
-	input		                            layer_eng_rd_output_accept	        ;
-	output	[C_PACKET_WIDTH - 1:0]	        layer_eng_rd_output_data	        ;
-    
-    input	                                layer_eng_wr_input_valid	        ;
-	output		                            layer_eng_wr_input_accept	        ;
-	input	[C_PACKET_WIDTH - 1:0]	        layer_eng_wr_input_data		        ;
-	output		                            layer_eng_wr_output_valid	        ;
-	input		                            layer_eng_wr_output_accept	        ;
-	output	[C_PACKET_WIDTH - 1:0]	        layer_eng_wr_output_data	        ;
+    input                                                   clk;
+    input                                                   rst;
+
+    input	[C_NUM_PE  - 1:0]                       layer_eng_rd_input_valid	        ;
+	output	[C_NUM_PE  - 1:0] 	                  	layer_eng_rd_input_accept	        ;
+	input	[(C_PACKET_WIDTH * C_NUM_PE) - 1:0]   	layer_eng_rd_input_data	            ;
+    output	[C_NUM_PE  - 1:0]                       layer_eng_rd_output_valid	        ;
+	input	[C_NUM_PE  - 1:0] 	                  	layer_eng_rd_output_accept	        ;
+	output	[(C_PACKET_WIDTH * C_NUM_PE) - 1:0]	  	layer_eng_rd_output_data		    ; 
+
+    input	[C_NUM_PE  - 1:0]                     	layer_eng_wr_input_valid	        ;
+	output	[C_NUM_PE  - 1:0] 	                  	layer_eng_wr_input_accept	        ;
+	input	[(C_PACKET_WIDTH * C_NUM_PE) - 1:0]	  	layer_eng_wr_input_data	            ;
+    output	[C_NUM_PE  - 1:0]                       layer_eng_wr_output_valid	        ;
+	input	[C_NUM_PE  - 1:0] 	                  	layer_eng_wr_output_accept	        ;
+	output	[(C_PACKET_WIDTH * C_NUM_PE) - 1:0]	  	layer_eng_wr_output_data		    ; 
 	
 	
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -96,12 +97,43 @@ module cnn_layer_accel_layer_engine_pe #(
 	genvar i;
 	
 	
-	
-	// BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    assign layer_eng_wr_output_valid	= layer_eng_rd_input_valid;	
-    assign layer_eng_rd_input_accept    = layer_eng_wr_output_accept;	
-    assign layer_eng_wr_output_data     = layer_eng_rd_input_data;		    
-	// END logic ------------------------------------------------------------------------------------------------------------------------------------
+	// BEGIN Layer Eng PE logic ---------------------------------------------------------------------------------------------------------------------
+    assign layer_eng_rd_input_accept[0] = 1;
+    assign layer_eng_rd_input_accept[1] = 1;  
+    assign layer_eng_rd_input_accept[2] = 1;  
+    assign layer_eng_rd_input_accept[3] = 1;      
+    wire  [(C_PACKET_WIDTH * C_NUM_PE) - 1:0] packet_rd;
+    assign packet_rd[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH] = layer_eng_rd_input_data[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH];
+    assign packet_rd[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH] = layer_eng_rd_input_data[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH];
+    assign packet_rd[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH] = layer_eng_rd_input_data[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH];
+    assign packet_rd[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH] = layer_eng_rd_input_data[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH];
+    assign layer_eng_rd_output_valid[0] = 0;
+    assign layer_eng_rd_output_valid[1] = 0;
+    assign layer_eng_rd_output_valid[2] = 0;
+    assign layer_eng_rd_output_valid[3] = 0;
+    assign layer_eng_rd_output_data[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH] = 66'b0;
+    assign layer_eng_rd_output_data[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH] = 66'b0;
+    assign layer_eng_rd_output_data[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH] = 66'b0;
+    assign layer_eng_rd_output_data[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH] = 66'b0;
+
+    assign layer_eng_wr_input_accept[0] = 1;
+    assign layer_eng_wr_input_accept[1] = 1;  
+    assign layer_eng_wr_input_accept[2] = 1;  
+    assign layer_eng_wr_input_accept[3] = 1;      
+    wire  [(C_PACKET_WIDTH * C_NUM_PE) - 1:0] packet_wr;
+    assign packet_wr[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH] = layer_eng_wr_input_data[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH];
+    assign packet_wr[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH] = layer_eng_wr_input_data[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH];
+    assign packet_wr[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH] = layer_eng_wr_input_data[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH];
+    assign packet_wr[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH] = layer_eng_wr_input_data[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH];
+    assign layer_eng_wr_output_valid[0] = 0;
+    assign layer_eng_wr_output_valid[1] = 0;
+    assign layer_eng_wr_output_valid[2] = 0;
+    assign layer_eng_wr_output_valid[3] = 0;
+    assign layer_eng_wr_output_data[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH] = 66'b0;
+    assign layer_eng_wr_output_data[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH] = 66'b0;
+    assign layer_eng_wr_output_data[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH] = 66'b0;
+    assign layer_eng_wr_output_data[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH] = 66'b0;    
+	// END Layer Eng PE logic -----------------------------------------------------------------------------------------------------------------------
     
     
     // DEBUG ----------------------------------------------------------------------------------------------------------------------------------------

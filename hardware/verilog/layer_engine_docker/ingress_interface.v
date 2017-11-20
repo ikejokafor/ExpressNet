@@ -1,7 +1,7 @@
 `timescale 1ns / 1ns
 
 module ingress_interface #(
-    parameter	C_PACKET_WIDTH		= 144
+    parameter	C_PACKET_WIDTH		= 128
 ) (
 	clk								,
 	rst								,
@@ -33,18 +33,21 @@ module ingress_interface #(
 	master_dataout_tag				,
 	master_dataout_option			,
 	master_dataout					,
-	
-	ext_input_valid					,
-	ext_input_accept				,
-	ext_input_payload				,
 
 	ext_output_valid				,
 	ext_output_accept				,
-	ext_output_payload					
+	ext_output_payload				,
+	
+	ext_input_valid					,
+	ext_input_accept				,
+	ext_input_payload				
+
+	
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
+    `include "math.vh"
     `include "soc_it_defs.vh"
     `include "cnn_layer_accel_defines.vh"
     
@@ -90,14 +93,16 @@ module ingress_interface #(
 	input			[4	-1:0]					master_dataout_tag				;
 	input			[4	-1:0]					master_dataout_option			;
 	output			[128-1:0]					master_dataout					;
-	
+
+    output											ext_output_valid				;
+	input											ext_output_accept				;
+	output		[C_PACKET_WIDTH-1:0]				ext_output_payload				;
+    
 	input											ext_input_valid					;
 	output											ext_input_accept				;
 	input		[C_PACKET_WIDTH-1:0]				ext_input_payload				;
 	
-	output											ext_output_valid				;
-	input											ext_output_accept				;
-	output		[C_PACKET_WIDTH-1:0]				ext_output_payload				;
+
 	
 	
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -239,7 +244,7 @@ module ingress_interface #(
     );
     
 
-	assign command											= (state == ST_IDLE) 		? ext_input_payload				[127:0]			: 128'b0;
+	assign command											= (state == ST_IDLE) 		? ext_input_payload				[(C_PACKET_WIDTH - 1):0]			: 128'b0;
 	assign command_valid 									= (state == ST_IDLE) 		? ext_input_valid								: 1'b0;
 	assign ext_input_accept									= (state == ST_WAIT_DONE) 	? master_dataout_dst_rdy		 			: command_accept;
 	assign master_dataout_src_rdy 							= (state == ST_WAIT_DONE) 	? ext_input_valid 								: 1'b0;

@@ -65,14 +65,16 @@ module cnn_layer_accel_layer_engine_controller  #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     input                                               clk;
     input                                               rst;
-    
-   input                                layer_eng_ctrl_input_valid;	
-   output                               layer_eng_ctrl_input_accept;	
-   input   [C_PACKET_WIDTH - 1:0]	    layer_eng_ctrl_input_data;	
-   output  	                            layer_eng_ctrl_output_valid;	
-   input   	                            layer_eng_ctrl_output_accept;
-   output  [C_PACKET_WIDTH - 1:0]	    layer_eng_ctrl_output_data;	
-      
+
+    input                                layer_eng_ctrl_input_valid;	
+    output                               layer_eng_ctrl_input_accept;	
+    input   [C_PACKET_WIDTH - 1:0]	     layer_eng_ctrl_input_data;	
+    output  	                         layer_eng_ctrl_output_valid;	
+    input   	                         layer_eng_ctrl_output_accept;
+    output  [C_PACKET_WIDTH - 1:0]	     layer_eng_ctrl_output_data;	
+   
+
+
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     // Wires / Regs 

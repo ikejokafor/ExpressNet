@@ -217,7 +217,6 @@ module msg_intf #(
     // BEGIN Get Command Data logic -----------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin
         if(rst) begin
-            command_data_buffer <= 0;
             for(idx0 = 0; idx0 < `NUM_FLITS; idx0 = idx0 + 1) begin
                 command_data_buffer[(idx0 * 128) +: 128] <= 0;
             end
@@ -225,7 +224,7 @@ module msg_intf #(
         end else begin
             if(state == ST_LOAD_MESSAGE) begin
                 load_message_counter      <= load_message_counter + 1;      
-                for(idx1 = 1; idx1 < `NUM_FLITS; idx1 = idx1 + 1) begin
+                for(idx1 = 1; idx1 < (`NUM_FLITS + 1); idx1 = idx1 + 1) begin
                     if(idx1 == load_message_counter) begin
                         command_data_buffer[((idx1 - 1) * 128) +: 128] <= command_data;
                     end
@@ -242,29 +241,31 @@ module msg_intf #(
     // BEGIN Msg Intf Logic -------------------------------------------------------------------------------------------------------------------------
     assign msg_intf_output_valid = msg_intf_output_valid_r;
     assign msg_intf_output_data = msg_intf_output_data_r;
-    
+    assign command_data_ready   = (state == ST_IDLE) && command_valid;  
     
     always@(posedge clk) begin
         if(rst) begin
-            command_data_advance                            <= 0;
-            completion_type                                 <= `SAP_MSG_TYPE_EXECUTE_COMPLETE;
-            completion_length                               <= 32;
-            completion_target                               <= 16'h0;
-            completion_id                                   <= 0;
-            completion_data                                 <= 128'h0;
-            packetizer_mode					                <= `PACKETIZER_MODE_ROUTE_MATCH;
-			packetizer_option				                <= 8'b0;
-            msg_intf_output_valid_r <= 0;
-            state <= ST_IDLE;
+            command_data_advance        <= 0;
+            completion_type             <= `SAP_MSG_TYPE_EXECUTE_COMPLETE;
+            completion_length           <= 32;
+            completion_target           <= 16'h0;
+            completion_id               <= 0;
+            completion_data             <= 128'h0;
+            packetizer_mode				<= `PACKETIZER_MODE_ROUTE_MATCH;
+			packetizer_option			<= 8'b0;
+            msg_intf_output_valid_r     <= 0;
+            msg_intf_output_data_r      <= 0;
+            state                       <= ST_IDLE;
         end else begin
-            command_data_advance                            <= 0;
-            completion_type                                 <= `SAP_MSG_TYPE_EXECUTE_COMPLETE;
-            completion_length                               <= 32;
-            completion_target                               <= command_initiator;
-			packetizer_mode					<= `PACKETIZER_MODE_ROUTE_MATCH;
-			packetizer_option				<= 8'b0;
-            completion_id                                   <= command_id;
-            msg_intf_output_valid_r <= 0;
+            command_data_advance        <= 0;
+            completion_type             <= `SAP_MSG_TYPE_EXECUTE_COMPLETE;
+            completion_length           <= 32;
+            completion_target           <= command_initiator;
+			packetizer_mode				<= `PACKETIZER_MODE_ROUTE_MATCH;
+			packetizer_option			<= 8'b0;
+            completion_id               <= command_id;
+            msg_intf_output_data_r      <= 0;
+            msg_intf_output_valid_r     <= 0;
             case(state)
                 ST_IDLE: begin          
                     if(command_data_valid) begin
@@ -280,10 +281,10 @@ module msg_intf #(
                 end
                 ST_LOAD_MESSAGE: begin  
                     if(load_message_counter != `NUM_FLITS) begin
-                        command_data_advance      <= 1'b1;
-                        state             <= ST_LOAD_MESSAGE;
+                        command_data_advance        <= 1'b1;
+                        state                       <= ST_LOAD_MESSAGE;
                     end else begin
-                        state             <= ST_DECODE_MESSAGE;
+                        state                       <= ST_DECODE_MESSAGE;
                     end
                 end
                 ST_DECODE_MESSAGE: begin  

@@ -206,7 +206,9 @@ module cnn_layer_accel (
     cnn_layer_accel_layer_engine #(
         .C_NUM_LAYER_ENG_IO     ( `NUM_LAYER_ENG_IO      ), 
         .C_NUM_LAYER_ENG_CTRL   ( `NUM_LAYER_ENG_CTRL    ),
-        .C_PACKET_WIDTH	        ( `PACKET_WIDTH	         )
+        .C_PACKET_WIDTH	        ( `PACKET_WIDTH	         ),
+        .C_NUM_LAYER_ENG_PE     ( `NUM_LAYER_ENG_PE      ),
+        .C_NUM_PE               ( `NUM_PE                )
     )
     i0_cnn_layer_accel_layer_engine (
         .clk                            ( sap_clk                   ),
@@ -284,8 +286,7 @@ module cnn_layer_accel (
        .recv_msg_src_rdy                ( recv_msg_src_rdy  ),
        .recv_msg_dst_rdy                ( recv_msg_dst_rdy  ),
        .recv_msg_payload                ( recv_msg_payload  ),
-        
-        
+
         .layer_eng_io_input_valid	    ( layer_eng_io_input_valid	        ),
         .layer_eng_io_input_accept	    ( layer_eng_io_input_accept	        ),
         .layer_eng_io_input_data		( layer_eng_io_input_data		    ),
@@ -314,7 +315,7 @@ module cnn_layer_accel (
     assign slave_clk   = sap_clk;
     assign slave_rst   = sap_rst;
     assign vendor_id   = 16'hFF00;
-    assign device_id   = 16'h000B;
+    assign device_id   = 16'h000A;
     assign revision_id = 8'h1;
     assign class_code  = 24'h120000;
     
