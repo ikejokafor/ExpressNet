@@ -26,11 +26,16 @@
 `ifndef __CNN_LAYER_ACCEL_DEFINES__
 `define __CNN_LAYER_ACCEL_DEFINES__
 
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+//	Includes
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+`include "tile_router_v1_00_a_defines.vh"
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------   
 // MSC definitions 
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 `define NUM_ENGINES                         16'd4
-`define NUM_FLITS                        16'd1
+`define NUM_FLITS                           16'd1
 `define NUM_TRANSACTORS                     16'd1
 `define NUM_SLAVE_REGS                      16'd1
 `define SOC_IT_DATAIN_WIDTH                 16'd128
@@ -39,6 +44,111 @@
 `define BITS_PER_BYTE                       16'd8
 `define MAX_CELL_KEYPOINTS                  16'd16
 `define BYTE_PER_ELEMENT                    16'd4
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------
+// CONMAND DATA FIELDS
+//--------------------------------------------------------------------------------------------------------------------------------------------------
+// COMMAND 0
+`define CMD_DATA_WIDTH                   64
+`define CMD_DATA_FIELD_LOW               0
+`define CMD_DATA_FIELD_HIGH              (`CMD_DATA_FIELD_LOW + `CMD_DATA_WIDTH - 1)
+`define CMD_DATA_FIELD                   (`CMD_DATA_FIELD_HIGH):(`CMD_DATA_FIELD_LOW)
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------
+// TILE ROUTER PORT CONFIGS
+//--------------------------------------------------------------------------------------------------------------------------------------------------
+parameter C_PORT_CONFIG_NONE            = 0;
+parameter C_PORT_CONFIG_LAYER_ENGINE_IO = 1;
+parameter C_PORT_CONFIG_LAYER_BRIDGE    = 2;
+parameter C_PORT_CONFIG_DATA_MOVER_RD   = 3;
+parameter C_PORT_CONFIG_DATA_MOVER_WR   = 4;
+parameter C_PORT_CONFIG_CONTROLLER      = 5;
+parameter C_PORT_CONFIG_MSG_INTF        = 6;
+
+parameter C_COL                         = 0;
+parameter C_ROW                         = 1;
+
+`define NUM_ROWS            16'd7
+`define NUM_COLS            16'd2
+`define NUM_PE              16'd4
+`define NUM_PE_TYPES        16'd7
+`define NUM_DATA_MOVERS     16'd6
+`define NUM_LAYER_ENG_PE    (`NUM_ROWS - 1)
+
+`define	PACKET_WIDTH	        16'd66
+`define NUM_LAYER_ENG_IO        (`NUM_PE * `NUM_LAYER_ENG_PE * `NUM_COLS)
+`define NUM_LAYER_BRIDGE        16'd1
+`define NUM_LAYER_ENG_CTRL      16'd1
+`define NUM_MSG_INTF            16'd1
+
+`define NUM_CONFIG_ROW  `NUM_COLS
+`define NUM_CONFIG_COL  `NUM_PE
+
+
+function integer rd_data_mover_idx;
+	input integer r;
+	input integer c;
+	input integer p;
+    input integer NUM_CONFIG_ROW;
+    input integer NUM_CONFIG_COL;
+    
+    integer idx;
+    idx = router_index(r, c, p, NUM_CONFIG_ROW, NUM_CONFIG_COL);
+	begin
+        rd_data_mover_idx = idx - (`NUM_LAYER_ENG_IO);
+    end
+endfunction
+
+function integer wr_data_mover_idx;
+	input integer r;
+	input integer c;
+	input integer p;
+    input integer NUM_CONFIG_ROW;
+    input integer NUM_CONFIG_COL;
+    
+    integer idx;
+    idx = router_index(r, c, p, NUM_CONFIG_ROW, NUM_CONFIG_COL);
+	begin
+        wr_data_mover_idx = (idx - (`NUM_LAYER_ENG_IO + `NUM_PE)) + 3;
+    end
+endfunction
+
+
+function integer lyr_eng_idx;
+	input integer i;
+    
+	begin
+        lyr_eng_idx = (i / 2);
+    end
+endfunction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -151,72 +261,6 @@
 
 
 
-
-
-
-
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------
-// CONMAND DATA FIELDS
-//--------------------------------------------------------------------------------------------------------------------------------------------------
-// COMMAND 0
-`define CMD_DATA_WIDTH                   64
-`define CMD_DATA_FIELD_LOW               0
-`define CMD_DATA_FIELD_HIGH              (`CMD_DATA_FIELD_LOW + `CMD_DATA_WIDTH - 1)
-`define CMD_DATA_FIELD                   (`CMD_DATA_FIELD_HIGH):(`CMD_DATA_FIELD_LOW)
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------
-// TILE ROUTER PORT CONFIGS
-//--------------------------------------------------------------------------------------------------------------------------------------------------
-parameter C_PORT_CONFIG_NONE            = 0;
-parameter C_PORT_CONFIG_LAYER_ENGINE_IO = 1;
-parameter C_PORT_CONFIG_LAYER_BRIDGE    = 2;
-parameter C_PORT_CONFIG_DATA_MOVER_RD   = 3;
-parameter C_PORT_CONFIG_DATA_MOVER_WR   = 4;
-parameter C_PORT_CONFIG_CONTROLLER      = 5;
-parameter C_PORT_CONFIG_MSG_INTF        = 6;
-
-parameter C_COL                         = 0;
-parameter C_ROW                         = 1;
-
-`define NUM_ROWS            16'd9
-`define NUM_COLS            16'd2
-`define NUM_PE              16'd4
-`define NUM_PE_TYPES        16'd7
-`define NUM_DATA_MOVERS     16'd6
-
-`define	PACKET_WIDTH	        16'd66
-`define NUM_LAYER_ENG_IO        16'd64
-`define NUM_LAYER_BRIDGE        16'd1
-`define NUM_LAYER_ENG_CTRL      16'd1
-`define NUM_MSG_INTF            16'd1
-
-`define NUM_CONFIG_ROW  `NUM_COLS
-`define NUM_CONFIG_COL  `NUM_PE
-`define NUM_LAYER_ENG_PE  (`NUM_LAYER_ENG_IO / `NUM_PE / `NUM_COLS)
-
-
-function integer count_instances;
-	input 	[(`NUM_PE_TYPES - 1):0] 	config_array	[(`NUM_ROWS - 1):0][(`NUM_COLS - 1):0][(`NUM_PE - 1):0];
-	input	[(`NUM_PE_TYPES - 1):0]	    config_type;
-	
-	integer r,c,p;
-    begin
-		count_instances = 0;
-        for (r=0; r<`NUM_ROWS; r=r+1)
-			for (c=0; c<`NUM_COLS; c=c+1)
-				for (p=0; p<`NUM_PE; p=p+1)
-					if (config_array[r][c][p] == config_type)
-						count_instances = count_instances + 1;
-    end
-endfunction
-
-
-
-
-	
 function integer get_instance_location;     // fix function
 	input 	[(`NUM_PE_TYPES - 1):0] 	config_array	[(`NUM_ROWS - 1):0][(`NUM_COLS - 1):0][(`NUM_PE - 1):0];
 	input	[(`NUM_PE_TYPES - 1):0]	    config_type;
@@ -243,38 +287,18 @@ function integer get_instance_location;     // fix function
 endfunction
 
 
-function integer router_index;
-	input integer r;
-	input integer c;
-	input integer p;
-
-	begin
-        router_index = ((r * `NUM_CONFIG_ROW + c) * `NUM_CONFIG_COL + p);
-	end
-endfunction
-
-
-function integer rd_data_mover_idx;
-	input integer r;
-	input integer c;
-	input integer p;
-    
-    integer idx;
-    idx = router_index(r, c, p);
-	begin
-        rd_data_mover_idx = idx - 64;
-    end
-endfunction
-
-function integer wr_data_mover_idx;
-	input integer r;
-	input integer c;
-	input integer p;
-    
-    integer idx;
-    idx = router_index(r, c, p);
-	begin
-        wr_data_mover_idx = (idx - 68) + 3;
+function integer count_instances;
+	input 	[(`NUM_PE_TYPES - 1):0] 	config_array	[(`NUM_ROWS - 1):0][(`NUM_COLS - 1):0][(`NUM_PE - 1):0];
+	input	[(`NUM_PE_TYPES - 1):0]	    config_type;
+	
+	integer r,c,p;
+    begin
+		count_instances = 0;
+        for (r=0; r<`NUM_ROWS; r=r+1)
+			for (c=0; c<`NUM_COLS; c=c+1)
+				for (p=0; p<`NUM_PE; p=p+1)
+					if (config_array[r][c][p] == config_type)
+						count_instances = count_instances + 1;
     end
 endfunction
 

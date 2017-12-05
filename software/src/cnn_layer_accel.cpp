@@ -71,10 +71,11 @@ void cnn_layer_accel::Process() {
 	testData_ptr->lower = 0xDEADBEEFBEEFDEAD;
 	testData_ptr->upper = 0xBEEFDEADDEADBEEF;
 
-	SocItHandle *commandData = get_soc_it_adapter()->AllocateMemoryHandle(sizeof(soc_it_data_ptr_t));
+	SocItHandle *commandData = get_soc_it_adapter()->AllocateMemoryHandle(16);
 	soc_it_data_ptr_t *commandData_ptr = (soc_it_data_ptr_t*)commandData->get_offset();
-	commandData_ptr->lower = testData->get_offset();
-	commandData_ptr->upper = 16;
+	commandData_ptr->lower = (uint64_t)0;
+	commandData_ptr->lower = ((uint64_t)1) << 11 | ((uint64_t)1) << 8 | ((uint64_t)0) << 5 | ((uint64_t)0) << 2 |  (uint64_t)0 ;
+	commandData_ptr->upper = (uint64_t)0;
 
 	ProcessMessage->AddBytes((uint8_t*)(commandData_ptr), commandData->get_size());
 

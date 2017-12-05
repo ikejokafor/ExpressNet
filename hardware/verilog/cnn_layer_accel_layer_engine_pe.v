@@ -1,144 +1,204 @@
-`timescale 1ns / 1ns
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Company:			
-//				
-// Engineer:		
-//
-// Create Date:		
-// Design Name:		
-// Module Name:		
-// Project Name:	
-// Target Devices:  
-// Tool versions:
-// Description:		
-//
-// Dependencies:
-//	 
-// 	 
-//
-// Revision:
-//
-//
-//
-//
-// Additional Comments:
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-module cnn_layer_accel_layer_engine_pe #(
-    parameter C_PACKET_WIDTH = 66,
-    parameter C_NUM_PE       = 4
-) (
-    clk                                 ,
-    rst                                 ,
-    
-    layer_eng_rd_input_valid	        ,
-    layer_eng_rd_input_accept	        ,
-    layer_eng_rd_input_data		        ,
-    layer_eng_rd_output_valid	        ,
-    layer_eng_rd_output_accept	        ,
-    layer_eng_rd_output_data	        ,
+`timescale 1ns / 1ps
 
-    layer_eng_wr_input_valid	        ,
-    layer_eng_wr_input_accept	        ,
-    layer_eng_wr_input_data		        ,
-    layer_eng_wr_output_valid	        ,
-    layer_eng_wr_output_accept	        ,
-    layer_eng_wr_output_data	        
-  
+module layer_engine_pe
+(
+    clk                 ,
+	rst                 ,
+	
+    ingress_clk         ,
+	ingress_valid       ,
+	ingress_accept      ,
+	ingress_payload     ,
+	
+    egress_clk          ,
+	egress_valid        ,
+	egress_accept       ,
+	egress_payload      ,
+    
+    msg_in_valid        ,
+    msg_in_accept       ,
+    msg_in_payload      ,
+
+    msg_out_valid       ,
+    msg_out_accept      ,
+    msg_out_payload     ,
 );
-    //-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Includes
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    `include "math.vh"
-	`include "soc_it_defs.vh"
-	`include "cnn_layer_accel_defines.vh"
+    parameter C_DATA_WIDTH      = 128;
+    parameter C_NUM_PORTS       = 4;
+    parameter C_OPCODE_WIDTH    = 64;
+    
+    input										clk					;
+	input										rst					;
 	
+    input                                       ingress_clk         ;
+	input	[ C_NUM_PORTS-1:0]					ingress_valid		;
+	output	[ C_NUM_PORTS-1:0]					ingress_accept		;
+	input	[(C_NUM_PORTS*C_DATA_WIDTH)-1:0]	ingress_payload		;
 	
-	
-	
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Local Parameters
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
+    input                                       egress_clk          ;
+	output	[ C_NUM_PORTS-1:0]					egress_valid	    ;
+	input	[ C_NUM_PORTS-1:0]					egress_accept	    ;
+	output	[(C_NUM_PORTS*C_DATA_WIDTH)-1:0]	egress_payload	    ;
+    
+    wire    [(5*C_OPCODE_WIDTH)-1:0]            opcode              ;
+    wire    [ 5-1:0]                            opcode_valid        ;
+    wire    [ 5-1:0]                            opcode_accept       ;
+    
+    wire    [15:0]                              config_address      ;
+    wire                                        config_wren         ;
+    wire                                        config_wrack        ;
+    wire                                        config_rden         ;
+    wire                                        config_rdack        ;
+    wire    [127:0]                             config_datain       ;
+    wire    [127:0]                             config_dataout      ;
+    
+    layer_engine_controller
+    #(
+        .C_OPCODE_WIDTH     (C_OPCODE_WIDTH)
+    )
+    i_controller
+    (
+        .clk                (clk),
+        .rst                (rst),
+        
+        .msg_in_valid       (),
+        .msg_in_accept      (),
+        .msg_in_payload     (),
+        
+        .msg_out_valid      (),
+        .msg_out_accept     (),
+        .msg_out_payload    (),
+        
+        .opcode             (opcode         ),
+        .opcode_valid       (opcode_valid   ),
+        .opcode_accept      (opcode_accept  ),
+        
+        .config_address     (config_address ),
+        .config_wren        (config_wren    ),
+        .config_wrack       (config_wrack   ),
+        .config_rden        (config_rden    ),
+        .config_rdack       (config_rdack   ),
+        .config_datain      (config_datain  ),
+        .config_dataout     (config_dataout )
+    );
 
-	
-	
-	
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Inputs / Output Ports
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input                                                   clk;
-    input                                                   rst;
-
-    input	[C_NUM_PE  - 1:0]                       layer_eng_rd_input_valid	        ;
-	output	[C_NUM_PE  - 1:0] 	                  	layer_eng_rd_input_accept	        ;
-	input	[(C_PACKET_WIDTH * C_NUM_PE) - 1:0]   	layer_eng_rd_input_data	            ;
-    output	[C_NUM_PE  - 1:0]                       layer_eng_rd_output_valid	        ;
-	input	[C_NUM_PE  - 1:0] 	                  	layer_eng_rd_output_accept	        ;
-	output	[(C_PACKET_WIDTH * C_NUM_PE) - 1:0]	  	layer_eng_rd_output_data		    ; 
-
-    input	[C_NUM_PE  - 1:0]                     	layer_eng_wr_input_valid	        ;
-	output	[C_NUM_PE  - 1:0] 	                  	layer_eng_wr_input_accept	        ;
-	input	[(C_PACKET_WIDTH * C_NUM_PE) - 1:0]	  	layer_eng_wr_input_data	            ;
-    output	[C_NUM_PE  - 1:0]                       layer_eng_wr_output_valid	        ;
-	input	[C_NUM_PE  - 1:0] 	                  	layer_eng_wr_output_accept	        ;
-	output	[(C_PACKET_WIDTH * C_NUM_PE) - 1:0]	  	layer_eng_wr_output_data		    ; 
-	
-	
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Wires / Regs / Integers
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-
-	
-	
-
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Module Instantiations
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	genvar i;
-	
-	
-	// BEGIN Layer Eng PE logic ---------------------------------------------------------------------------------------------------------------------
-    assign layer_eng_rd_input_accept[0] = 1;
-    assign layer_eng_rd_input_accept[1] = 1;  
-    assign layer_eng_rd_input_accept[2] = 1;  
-    assign layer_eng_rd_input_accept[3] = 1;      
-    wire  [(C_PACKET_WIDTH * C_NUM_PE) - 1:0] packet_rd;
-    assign packet_rd[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH] = layer_eng_rd_input_data[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH];
-    assign packet_rd[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH] = layer_eng_rd_input_data[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH];
-    assign packet_rd[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH] = layer_eng_rd_input_data[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH];
-    assign packet_rd[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH] = layer_eng_rd_input_data[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH];
-    assign layer_eng_rd_output_valid[0] = 0;
-    assign layer_eng_rd_output_valid[1] = 0;
-    assign layer_eng_rd_output_valid[2] = 0;
-    assign layer_eng_rd_output_valid[3] = 0;
-    assign layer_eng_rd_output_data[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH] = 66'b0;
-    assign layer_eng_rd_output_data[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH] = 66'b0;
-    assign layer_eng_rd_output_data[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH] = 66'b0;
-    assign layer_eng_rd_output_data[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH] = 66'b0;
-
-    assign layer_eng_wr_input_accept[0] = 1;
-    assign layer_eng_wr_input_accept[1] = 1;  
-    assign layer_eng_wr_input_accept[2] = 1;  
-    assign layer_eng_wr_input_accept[3] = 1;      
-    wire  [(C_PACKET_WIDTH * C_NUM_PE) - 1:0] packet_wr;
-    assign packet_wr[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH] = layer_eng_wr_input_data[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH];
-    assign packet_wr[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH] = layer_eng_wr_input_data[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH];
-    assign packet_wr[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH] = layer_eng_wr_input_data[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH];
-    assign packet_wr[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH] = layer_eng_wr_input_data[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH];
-    assign layer_eng_wr_output_valid[0] = 0;
-    assign layer_eng_wr_output_valid[1] = 0;
-    assign layer_eng_wr_output_valid[2] = 0;
-    assign layer_eng_wr_output_valid[3] = 0;
-    assign layer_eng_wr_output_data[(C_PACKET_WIDTH * 0) +: C_PACKET_WIDTH] = 66'b0;
-    assign layer_eng_wr_output_data[(C_PACKET_WIDTH * 1) +: C_PACKET_WIDTH] = 66'b0;
-    assign layer_eng_wr_output_data[(C_PACKET_WIDTH * 2) +: C_PACKET_WIDTH] = 66'b0;
-    assign layer_eng_wr_output_data[(C_PACKET_WIDTH * 3) +: C_PACKET_WIDTH] = 66'b0;    
-	// END Layer Eng PE logic -----------------------------------------------------------------------------------------------------------------------
+    layer_engine_convolver
+    #(
+        .C_OPCODE_WIDTH     (C_OPCODE_WIDTH)
+    )
+    i_convolver
+    (
+        .clk                (clk),
+        .rst                (rst),
+        
+        .opcode             (opcode         [0*C_OPCODE_WIDTH +: C_OPCODE_WIDTH]   ),
+        .opcode_valid       (opcode_valid   [0]                                    ),
+        .opcode_accept      (opcode_accept  [0]                                    ),
+        
+        .datain             (),
+        .datain_valid       (),
+        .datain_ready       (),
+        
+        .dataout            (),
+        .dataout_valid      (),
+        .dataout_ready      (),
+        
+        .config_address     (config_address ),
+        .config_wren        (config_wren    ),
+        .config_wrack       (config_wrack   ),
+        .config_rden        (config_rden    ),
+        .config_rdack       (config_rdack   ),
+        .config_datain      (config_datain  ),
+        .config_dataout     (config_dataout )
+    );
+    
+    layer_engine_adder
+    #(
+        .C_OPCODE_WIDTH     (C_OPCODE_WIDTH)
+    )
+    i_adder
+    (
+        .clk                (clk),
+        .rst                (rst),
+        
+        .opcode             (opcode         [1*C_OPCODE_WIDTH +: C_OPCODE_WIDTH]   ),
+        .opcode_valid       (opcode_valid   [1]                                    ),
+        .opcode_accept      (opcode_accept  [1]                                    ),
+        
+        .datain             (),
+        .datain_valid       (),
+        .datain_ready       (),
+        
+        .dataout            (),
+        .dataout_valid      (),
+        .dataout_ready      ()
+    );
+    
+    layer_engine_pooler
+    #(
+        .C_OPCODE_WIDTH     (C_OPCODE_WIDTH)
+    )
+    i_pooler
+    (
+        .clk                (clk),
+        .rst                (rst),
+        
+        .opcode             (opcode         [2*C_OPCODE_WIDTH +: C_OPCODE_WIDTH]   ),
+        .opcode_valid       (opcode_valid   [2]                                    ),
+        .opcode_accept      (opcode_accept  [2]                                    ),
+        
+        .datain             (),
+        .datain_valid       (),
+        .datain_ready       (),
+        
+        .dataout            (),
+        .dataout_valid      (),
+        .dataout_ready      ()
+    );
+    
+    layer_engine_activator
+    #(
+        .C_OPCODE_WIDTH     (C_OPCODE_WIDTH)
+    )
+    i_activator
+    (
+        .clk                (clk),
+        .rst                (rst),
+        
+        .opcode             (opcode         [3*C_OPCODE_WIDTH +: C_OPCODE_WIDTH]   ),
+        .opcode_valid       (opcode_valid   [3]                                    ),
+        .opcode_accept      (opcode_accept  [3]                                    ),
+        
+        .datain             (),
+        .datain_valid       (),
+        .datain_ready       (),
+        
+        .dataout            (),
+        .dataout_valid      (),
+        .dataout_ready      ()
+    );
+    
+    layer_engine_output_map
+    #(
+        .C_OPCODE_WIDTH     (C_OPCODE_WIDTH)
+    )
+    i_output_map
+    (
+        .clk                (clk),
+        .rst                (rst),
+        
+        .opcode             (opcode         [4*C_OPCODE_WIDTH +: C_OPCODE_WIDTH]   ),
+        .opcode_valid       (opcode_valid   [4]                                    ),
+        .opcode_accept      (opcode_accept  [4]                                    ),
+        
+        .datain             (),
+        .datain_valid       (),
+        .datain_ready       (),
+        
+        .dataout            (),
+        .dataout_valid      (),
+        .dataout_ready      ()
+    );
     
     
-    // DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
-	// DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
-
-	
-	
 endmodule

@@ -1,0 +1,29 @@
+Chapter_10.pdf
+	Do butterflies
+	Do FFT in place													page 4
+	decimation in frequency											page 5
+	reduced number of multiplications								page 6
+		CORDIC arithmetic for operations							page 6
+	if resources are scare radix 2 is best		
+		radix-4 would be fastest if resources are available			page 8
+		tradeoff between 2 is radix-2^2								page 8
+	conjugate symmetry so ~ half the butterfly size					page 9
+	
+
+10.1.1.83.7879.pdf	
+	First, the delay-feedback approaches are always more efficient
+	than corresponding delay-commutator approaches in
+	terms of memory utilization since the stored butterfly output
+	can be directly used by the multipliers. Second, radix-4 algorithm
+	based single-path architectures have higher multiplier
+	utilization, however, radix-2 algorithm based architectures
+	have simpler butterflies which are better utilized.	
+	
+07347603.pdf
+	If total reconfig time will be of issue, using a larger fft engine for smaller simaltenaouts fft's can be done
+		less power in the long run as well
+	use CMM and CSA which replaces multiplcaition with addition and shifting but we have DSP blocks so use em
+	
+	
+using Kintex Ultrascale ku115
+	

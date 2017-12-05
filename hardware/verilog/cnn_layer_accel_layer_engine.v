@@ -101,7 +101,11 @@ module cnn_layer_accel_layer_engine #(
         for(i = 0; i < (C_NUM_LAYER_ENG_PE * 2); i = i + 2) begin // fix so not hardcoded
             cnn_layer_accel_layer_engine_pe #(
                 .C_PACKET_WIDTH ( C_PACKET_WIDTH ),
-                .C_NUM_PE       ( C_NUM_PE       )
+                .C_NUM_PE       ( C_NUM_PE       ),
+                .C_RD_TILE_X    (0               ),
+                .C_RD_TILE_Y    (lyr_eng_idx(i)  ),
+                .C_WR_TILE_X    (1               ),
+                .C_WR_TILE_Y    (lyr_eng_idx(i)  )
             )
             i0_cnn_layer_accel_layer_engine_pe  (
                 .clk                            ( clk                                                                                                      ),
@@ -127,7 +131,10 @@ module cnn_layer_accel_layer_engine #(
     
     cnn_layer_accel_layer_engine_controller #(
        .C_NUM_LAYER_ENG_CTRL                            ( C_NUM_LAYER_ENG_CTRL                              ),
-       .C_PACKET_WIDTH	                                ( C_PACKET_WIDTH	                                )   
+       .C_PACKET_WIDTH	                                ( C_PACKET_WIDTH	                                ),     
+       .C_PE_PORT_NUM                                   ( 3                                                 ),    // fix so not hardcoded
+       .C_TILE_X                                        ( 1                                                 ),    // fix so not hardcoded
+       .C_TILE_Y                                        ( 6                                                 )     // fix so not hardcoded
     )
     i0_cnn_layer_accel_layer_engine_controller (
         .clk                                            ( clk                                           ),

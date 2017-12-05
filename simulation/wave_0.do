@@ -1,0 +1,113 @@
+onerror {resume}
+quietly WaveActivateNextPane {} 0
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/C_DATAIN_WIDTH
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/C_DATAOUT_WIDTH
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/C_IMAGE_WIDTH
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/C_OPCODE_WIDTH
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/C_PIXEL_WIDTH
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/ST_ACTIVE
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/ST_DECODE_OPCODE
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/ST_FLUSH_PIPELINE
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/ST_IDLE
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/ST_LOAD_ROW_BUFFERS
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/ST_PRIME_WINDOW
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/clk
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/count
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/datain
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/datain_ready
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/datain_valid
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/dataout
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/dataout_ready
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/dataout_valid
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_max_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_count
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_datain
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_dataout
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_full
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_rden
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_wr_addr
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_wr_addr_r
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_wren
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer_wren_r
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_max_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer_count
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer_dataout
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer_full
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer_rden
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer_wr_addr
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer_wr_addr_r
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer_wren
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer_wren_r
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i2_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i2_max_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i3_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i3_max_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i4_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i4_max_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i5_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i5_max_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i6_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i7_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i8_SRL_bus_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/input_buffer_dataout
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/input_buffer_empty
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/input_buffer_full
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/input_buffer_rden
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/max_out
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/opcode
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/opcode_accept
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/opcode_valid
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/partial_max0
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/pool_out_valid
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/pool_output_count
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/pool_output_total
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/row_buffer_select
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/rst
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/state
+add wave -noupdate -group {POOL} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/state_s
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/BUFFER
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/C_IMAGE_WIDTH
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/C_PIXEL_WIDTH
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/clk
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/count
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/din
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/dout
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/full
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/i
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/rden
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/rst
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/wr_addr
+add wave -noupdate -group {ROW1} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i1_row_buffer/wren
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/BUFFER
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/C_IMAGE_WIDTH
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/C_PIXEL_WIDTH
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/clk
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/count
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/din
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/dout
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/full
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/i
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/rden
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/rst
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/wr_addr
+add wave -noupdate -group ROW0 -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_engine_pooler/i0_row_buffer/wren
+TreeUpdate [SetDefaultTree]
+WaveRestoreCursors {{Cursor 1} {0 ns} 0}
+quietly wave cursor active 0
+configure wave -namecolwidth 273
+configure wave -valuecolwidth 100
+configure wave -justifyvalue left
+configure wave -signalnamewidth 1
+configure wave -snapdistance 10
+configure wave -datasetprefix 0
+configure wave -rowmargin 4
+configure wave -childrowmargin 2
+configure wave -gridoffset 0
+configure wave -gridperiod 1
+configure wave -griddelta 40
+configure wave -timeline 0
+configure wave -timelineunits ns
+update
+WaveRestoreZoom {374 ns} {1683 ns}

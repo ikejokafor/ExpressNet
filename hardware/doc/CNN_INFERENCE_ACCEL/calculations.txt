@@ -1,0 +1,14 @@
+N = # of DSP's for 1 channel of FFT engine
+Pr = Pc = N / (max (#dsp_R_point_FFT, #dsp_C_point_FFT));
+Ir = Ceiling(R/Pr);
+Ic = Ceiling(C/Pc);
+Ir_CycleCount = Ir * R_cycleCount; 
+Ic_CycleCount = Ic * C_cycleCount;
+TotalCycleCount = Ic_CycleCount + Ir_CycleCount;
+
+Sliding Window Output Size
+(W−F+2P)/S+1
+W is window size
+F is filter size
+p is amount of padding
+S is stride

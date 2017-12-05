@@ -1,7 +1,10 @@
 `timescale 1ns / 1ns
 
 module ingress_interface #(
-    parameter	C_PACKET_WIDTH		= 128
+    parameter	C_PACKET_WIDTH		= 128,
+    parameter   C_PE_PORT_NUM       = 0,
+    parameter   C_TILE_X            = 0,
+    parameter   C_TILE_Y            = 0
 ) (
 	clk								,
 	rst								,
@@ -244,25 +247,33 @@ module ingress_interface #(
     );
     
 
-	assign command											= (state == ST_IDLE) 		? ext_input_payload				[(C_PACKET_WIDTH - 1):0]			: 128'b0;
-	assign command_valid 									= (state == ST_IDLE) 		? ext_input_valid								: 1'b0;
-	assign ext_input_accept									= (state == ST_WAIT_DONE) 	? master_dataout_dst_rdy		 			: command_accept;
-	assign master_dataout_src_rdy 							= (state == ST_WAIT_DONE) 	? ext_input_valid 								: 1'b0;
-	assign master_dataout						= (state == ST_WAIT_DONE)	? ext_input_payload								: 128'b0;
-	
-	assign ext_output_payload								= (state == ST_WAIT_DONE)	? packetizer_egress_data						: response;
-	assign ext_output_valid									= (state == ST_WAIT_DONE)	? packetizer_egress_valid						: response_valid;
-	assign packetizer_egress_ready							= (state == ST_WAIT_DONE)	? ext_output_accept								: 1'b0;
-	assign response_accept									= (state == ST_WAIT_DONE)	? 1'b0 											: ext_output_accept;
-	
-	assign cache_ingress_data							    = (state == ST_WAIT_DONE)	? master_datain					: 128'b0;
-	assign cache_ingress_valid						        = (state == ST_WAIT_DONE)	? master_datain_src_rdy							: 1'b0;
-	assign master_datain_dst_rdy						= (state == ST_WAIT_DONE)	? cache_ingress_ready						: 1'b0;
-	
-	assign packetizer_ingress_data							= (state == ST_WAIT_DONE)	? cache_egress_data						: 128'b0;
-	assign packetizer_ingress_valid							= (state == ST_WAIT_DONE)	? cache_egress_valid			 			: 1'b0;
-	assign cache_egress_ready							    = (state == ST_WAIT_DONE)	? packetizer_ingress_ready						: 1'b0;
-	
+	//assign command											= (state == ST_IDLE) 		? ext_input_payload				[(C_PACKET_WIDTH - 1):0]			: 128'b0;
+	//assign command_valid 									= (state == ST_IDLE) 		? ext_input_valid								: 1'b0;
+	//assign ext_input_accept									= (state == ST_WAIT_DONE) 	? master_dataout_dst_rdy		 			: command_accept;  
+    //
+	//assign master_dataout_src_rdy 							= (state == ST_WAIT_DONE) 	? ext_input_valid 								: 1'b0;
+	//assign master_dataout						= (state == ST_WAIT_DONE)	? ext_input_payload								: 128'b0;
+	//
+	//assign ext_output_payload								= (state == ST_WAIT_DONE)	? packetizer_egress_data						: response;
+	//assign ext_output_valid									= (state == ST_WAIT_DONE)	? packetizer_egress_valid						: response_valid;
+	//assign packetizer_egress_ready							= (state == ST_WAIT_DONE)	? ext_output_accept								: 1'b0;
+	//assign response_accept									= (state == ST_WAIT_DONE)	? 1'b0 											: ext_output_accept;
+	//
+	//assign cache_ingress_data							    = (state == ST_WAIT_DONE)	? master_datain					: 128'b0;
+	//assign cache_ingress_valid						        = (state == ST_WAIT_DONE)	? master_datain_src_rdy							: 1'b0;
+	//assign master_datain_dst_rdy						= (state == ST_WAIT_DONE)	? cache_ingress_ready						: 1'b0;
+	//
+	//assign packetizer_ingress_data							= (state == ST_WAIT_DONE)	? cache_egress_data						: 128'b0;
+	//assign packetizer_ingress_valid							= (state == ST_WAIT_DONE)	? cache_egress_valid			 			: 1'b0;
+	//assign cache_egress_ready							    = (state == ST_WAIT_DONE)	? packetizer_ingress_ready						: 1'b0;
+    
+    
+    assign ext_output_valid	= 0;
+    assign ext_output_payload = 66'b0;   
+    assign ext_input_accept = 1;
+    wire [C_PACKET_WIDTH - 1:0] packet;
+	assign packet = ext_input_payload;
+    
 	always@(posedge clk) begin
 		if (rst) begin
             ingress_transactor_request          <= 0;

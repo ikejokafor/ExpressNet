@@ -1,0 +1,80 @@
+Notes:
+1. When these data ports are not in use and to reduce leakage power dissipation, the data port input signals must be tied High, the port
+input register must be selected, and the CE and RST input control signals must be tied Low. An example of unused C port
+recommended settings would be setting C[47:0] = all ones, CREG = 1, CEC = 0, and RSTC = 0.
+2. These signals are dedicated routing paths internal to the DSP48E1 column. They are not accessible via fabric routing resources.
+3. All signals are active High.
+
+
+Can cascade the A and B inputs from one DSP slice to next DSP slices for certain designs
+	For example, a Finite Impulse
+	Response (FIR) filter design can use the cascading inputs to arrange a series of input data
+	samples and the cascading outputs to arrange a series of partial output results.
+	
+
+	
+If the pattern detector is not being employed, it can be used for other creative design
+implementations. These include:
+• Duplicating a pin (for example, the sign bit) to reduce fanout and thus increase speed.
+
+
+To achieve maximum performance when using the DSP48E1 slice, the design needs to be
+fully pipelined. For multiplier-based designs, the DSP48E1 slice requires a three-stage
+pipeline. For non-multiplier-based designs, a two-stage pipeline should be used. Also see
+the 7 series FPGA data sheets [Ref 5]. If latency is important in the design and only one or
+two registers can be used within the DSP48E1 slice, always use the M register.
+
+
+
+https://www.xilinx.com/support/answers/36710.html
+The user specifies 1 to 64 instructions in the core GUI which are translated into the various control signals for the XtremeDSP slice of the target device. 
+The instructions are stored in a ROM from which the user selects the appropriate instruction using the SEL port.
+
+The 48-bit adder/subtracter/accumulator can be split into smaller data segments where
+the internal carry propagation between segments is blocked to ensure independent
+operation for all segments. The adder/subtracter/accumulator can be split into four 12-bit
+adder/subtracter/accumulators or two 24-bit adder/subtracter/accumulators with carry
+out signal per segment. The SIMD mode segmentation is a static configuration as opposed
+to dynamic OPMODE type control 
+
+
+Six-Input Adder
+
+
+The height of the DSP column can differ between the Virtex-5, Virtex-6, and 7 series devices
+and should be considered while porting designs between the devices. Spanning columns is
+possible by taking P bus output from the top of one DSP column and adding fabric
+pipeline registers to route this bus to the C port of the bottom DSP48E1 slice of the adjacent
+DSP column. Alignment of input operands is also necessary to span multiple DSP
+columns.
+
+
+
+
+• Always sign extend the input operands when implementing smaller bit width
+functions. For lower fabric power, push operands into MSBs and ground (GND) LSBs.
+• While cascading different DSP48E1 slices, the pipestages of the different signal paths
+should be matched.
+• SRL16s/SRL32s in the CLB and block RAM should be used to store filter coefficients
+or act as a register file or memory elements in conjunction with the DSP48E1 slice. The
+bit pitch of the input bits (4 bits per interconnect) is designed to pitch match the CLB
+and block RAM.
+• The block RAM can also be used as a fast, finite state machine to drive the control
+logic for the DSP design.
+• A pipeline register should be used at the output of an SRL16 or block RAM before
+connecting it to the input of the DSP48E1 slice. This ensures the best performance of
+input operands feeding the DSP48E1 slice.
+• In 7 series devices, the register at the output of the SRL16 in the slice has a reset pin
+and a clock-enable pin. To reset the SRL16, a zero is input into the SRL16 for 16 clock
+cycles while holding the reset of the output register High. This capability is
+particularly useful in implementing filters where the SRL16s are used to store the data
+inputs.
+
+page 58
+
+
+
+
+
+IN SUMMARY
+one dsp and kep accum data in reg and keep cycling data back and accum

@@ -1,0 +1,1 @@
+need atleast 3 pipeline reg's for multiplier usage

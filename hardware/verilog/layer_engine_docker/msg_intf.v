@@ -25,7 +25,11 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 module msg_intf #(
-    C_PACKET_WIDTH      = 16'd66
+    parameter   C_PACKET_WIDTH      = 16'd66,
+    parameter   C_PE_PORT_NUM       = 0,
+    parameter   C_TILE_X            = 0,
+    parameter   C_TILE_Y            = 0,
+    parameter   router_idx          = 0,
 ) (
     clk                     ,
     rst                     ,
@@ -134,7 +138,6 @@ module msg_intf #(
     wire                                                    command_data_valid;
     wire                                                    command_data_ready;
     
-    reg [                                       127:0]    msg_intf_output_data_r;
     
     reg  [                 (`NUM_FLITS * 128) - 1:0]     command_data_buffer;
     reg  [                                        15:0]     load_message_counter;    
@@ -240,8 +243,9 @@ module msg_intf #(
     
     // BEGIN Msg Intf Logic -------------------------------------------------------------------------------------------------------------------------
     assign msg_intf_output_valid = msg_intf_output_valid_r;
-    assign msg_intf_output_data = msg_intf_output_data_r;
-    assign command_data_ready   = (state == ST_IDLE) && command_valid;  
+    assign msg_intf_output_data = command_data_buffer;
+    assign command_data_ready   = (state == ST_IDLE) && command_valid; 
+    assign msg_intf_input_accept  = 1;
     
     always@(posedge clk) begin
         if(rst) begin
@@ -254,7 +258,6 @@ module msg_intf #(
             packetizer_mode				<= `PACKETIZER_MODE_ROUTE_MATCH;
 			packetizer_option			<= 8'b0;
             msg_intf_output_valid_r     <= 0;
-            msg_intf_output_data_r      <= 0;
             state                       <= ST_IDLE;
         end else begin
             command_data_advance        <= 0;
@@ -264,7 +267,6 @@ module msg_intf #(
 			packetizer_mode				<= `PACKETIZER_MODE_ROUTE_MATCH;
 			packetizer_option			<= 8'b0;
             completion_id               <= command_id;
-            msg_intf_output_data_r      <= 0;
             msg_intf_output_valid_r     <= 0;
             case(state)
                 ST_IDLE: begin          
@@ -292,7 +294,6 @@ module msg_intf #(
                 end
                 ST_SEND_MESSAGE: begin  
                     msg_intf_output_valid_r <= 1;
-                    msg_intf_output_data_r    <= command_data_buffer;
                     if(msg_intf_output_accept) begin
                         state   <= ST_IDLE;
                     end
@@ -301,7 +302,7 @@ module msg_intf #(
                 
                 end
                 default: begin
-                
+
                 end
             endcase
         end
