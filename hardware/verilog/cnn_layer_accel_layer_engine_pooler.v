@@ -152,8 +152,6 @@ module cnn_layer_accel_layer_engine_pooler #(
     
     wire [15:0]                         input_img_row; 
     wire [15:0]                         input_img_col; 
-    reg  [15:0]                         valid_img_row;
-    reg  [15:0]                         valid_img_col;
     reg  [15:0]                         img_row_count;
     reg  [15:0]                         img_col_count;
     reg  [15:0]                         map_count;
@@ -163,6 +161,7 @@ module cnn_layer_accel_layer_engine_pooler #(
     reg  [15:0]                         num_output_pixels_count;
     wire                                pipeline_active;
     reg                                 init_pipeline;
+    reg  [15:0]                         output_count;
  
  
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -188,15 +187,15 @@ module cnn_layer_accel_layer_engine_pooler #(
        .C_DATA_WIDTH ( C_PIXEL_WIDTH     ),
        .C_FIFO_DEPTH ( 10                )
     ) i0_output_buffer (
-        .clk            ( clk                    ),
-        .rst            ( rst                    ),
-        .wren           ( output_buffer_wren     ),
-        .rden           ( dataout_ready          ),
-        .datain         ( output_buffer_datain   ),
-        .dataout        ( dataout                ),
-        .empty          (                        ),
-        .full           ( output_buffer_full     ),
-        .almost_full    (                        )
+        .clk            ( clk                                       ),
+        .rst            ( rst                                       ),
+        .wren           ( output_buffer_wren                        ),
+        .rden           ( dataout_valid && dataout_ready            ),
+        .datain         ( output_buffer_datain                      ),
+        .dataout        ( dataout                                   ),
+        .empty          (                                           ),
+        .full           ( output_buffer_full                        ),
+        .almost_full    (                                           )
     );
 
 
@@ -234,19 +233,6 @@ module cnn_layer_accel_layer_engine_pooler #(
     );
 
     
-    SRL_bit #(
-        //.C_CLOCK_CYCLES( `POOLING_LATENCY   )
-        .C_CLOCK_CYCLES( 4   )
-    ) 
-    i0_SRL_bit (
-        .clk        ( clk                   ),
-        .rst        ( rst                   ),
-        .ce         ( 1                     ),
-        .data_in    ( pipeline_active       ),
-        .data_out   ( pool_out_valid        )
-    );
-  
-  
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     always@(posedge clk) begin
         i0_SRL_bus_out      <= input_buffer_dataout;
@@ -303,20 +289,19 @@ module cnn_layer_accel_layer_engine_pooler #(
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
     
     
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
+        // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     always@(posedge clk) begin
         if(rst) begin
-            num_output_pixels_count <= 0;
+            output_count <= 0;       
         end else begin
-            if(state_1 == ST_ACTIVE) begin
-                num_output_pixels_count <= num_output_pixels_count + 1;
-            end else begin
-                num_output_pixels_count <= 0;
+            if(state_1 == ST_ACTIVE) begin // as along as active, outputing valid pixel every cycle
+                output_count <= output_count + 1;
             end
         end
-    end    
-	// END logic ------------------------------------------------------------------------------------------------------------------------------------     
-
+    end
+	// END logic ------------------------------------------------------------------------------------------------------------------------------------
+    
+    
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     //assign input_img_row      = opcode_r[`POOL_ENG_NUM_IMG_ROW_FIELD];
@@ -328,6 +313,7 @@ module cnn_layer_accel_layer_engine_pooler #(
     assign input_img_col        = 10; 
     assign num_maps             = 1;
     assign num_output_pixels    = 100;
+    assign dataout_valid        = !output_buffer_full;
     
     always@(posedge clk) begin
         if(rst) begin
@@ -349,8 +335,6 @@ module cnn_layer_accel_layer_engine_pooler #(
                 end
                 ST_LOAD_OPCODE: begin
                     pad_amt             <= (C_POOL_WINDOW_SZ - 1) >> 1; // dealing with square images, so padding is the same
-                    valid_img_row       <= input_img_row - (C_POOL_WINDOW_SZ - 1); 
-                    valid_img_col       <= input_img_col - (C_POOL_WINDOW_SZ - 1);
                     state_0             <= ST_DECODE_OPCODE;
                 end
                 ST_DECODE_OPCODE: begin
@@ -370,13 +354,13 @@ module cnn_layer_accel_layer_engine_pooler #(
             endcase
         end
     end  
-	// END logic ------------------------------------------------------------------------------------------------------------------------------------     
+	// END logic ------------------------------------------------------------------------------------------------------------------------------------  
 
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign output_buffer_datain  =  (    
-                                        img_col_count > pad_amt && img_col_count > ((input_img_col - 1) -  pad_amt) &&
-                                        img_row_count > pad_amt && img_row_count > ((input_img_row - 1) -  pad_amt)  
+                                        img_col_count >= pad_amt && img_col_count <= ((input_img_col - 1) - pad_amt) &&
+                                        img_row_count >= pad_amt && img_row_count <= ((input_img_row - 1) - pad_amt)  
                                     ) ? pool_out : 0;
     assign output_buffer_wren    = (state_1 == ST_ACTIVE);
     assign i0_row_buffer_datain  = (state_1 == ST_LOAD_ROW_BUFFERS) ? input_buffer_dataout : i1_row_buffer_dataout;
