@@ -49,6 +49,8 @@ module testbench_0;
     wire datain_ready;      
     logic [15:0] arr[99:0];
     integer fd;
+    wire [15:0] dataout;
+    wire        dataout_valid;
     
     clock_gen #(
         .C_PERIOD_BY_2(C_PERIOD / 2)
@@ -73,9 +75,9 @@ module testbench_0;
         .datain_valid        ( datain_valid     ),
         .datain_ready        ( datain_ready     ),
 
-        .dataout             (                  ),
-        .dataout_valid       (                  ),
-        .dataout_ready       (                  )
+        .dataout             (   dataout               ),
+        .dataout_valid       (    dataout_valid              ),
+        .dataout_ready       (     1'b0         )
     );
     
 

@@ -66,7 +66,8 @@ module cnn_layer_accel_layer_engine_pooler #(
     localparam ST_LOAD_ROW_BUFFERS      = 4'b0010;
     localparam ST_ACTIVE                = 4'b0100;
     localparam ST_FLUSH_PIPELINE        = 4'b1000;
-    
+      
+    localparam C_NUM_ROW_BUF            = C_POOL_WINDOW_SZ - 1;
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Inputs / Outputs
@@ -147,7 +148,7 @@ module cnn_layer_accel_layer_engine_pooler #(
     reg [C_PIXEL_WIDTH - 1:0]           partial_max1_3_r;
 
     reg [C_PIXEL_WIDTH - 1:0]           pool_out; 
-    reg [1:0]                           row_buffer_select;
+    reg [C_NUM_ROW_BUF - 1:0]           row_buffer_select;
     wire                                pool_out_valid;
     
     wire [15:0]                         input_img_row; 
@@ -157,11 +158,7 @@ module cnn_layer_accel_layer_engine_pooler #(
     reg  [15:0]                         map_count;
     wire [15:0]                         num_maps;
     reg  [15:0]                         pad_amt;
-    wire [15:0]                         num_output_pixels;
-    reg  [15:0]                         num_output_pixels_count;
-    wire                                pipeline_active;
     reg                                 init_pipeline;
-    reg  [15:0]                         output_count;
  
  
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -231,38 +228,41 @@ module cnn_layer_accel_layer_engine_pooler #(
         .full       ( i1_row_buffer_full       ),
         .count      ( i1_row_buffer_count      )
     );
-
+    
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     always@(posedge clk) begin
-        i0_SRL_bus_out      <= input_buffer_dataout;
-        i1_SRL_bus_out      <= i0_SRL_bus_out;
-        i2_SRL_bus_out      <= i1_SRL_bus_out;
-        i2_SRL_bus_out_r    <= i2_SRL_bus_out;
-        
-        i3_SRL_bus_out      <= i1_row_buffer_dataout;
-        i4_SRL_bus_out      <= i3_SRL_bus_out;
-        i5_SRL_bus_out      <= i4_SRL_bus_out;
-        i5_SRL_bus_out_r    <= i5_SRL_bus_out;
-        
-        i6_SRL_bus_out      <= i0_row_buffer_dataout;
-        i7_SRL_bus_out      <= i6_SRL_bus_out;
-        i8_SRL_bus_out      <= i7_SRL_bus_out;
-        i8_SRL_bus_out_r    <= i8_SRL_bus_out;
-        
-        partial_max0_0      <= (i0_SRL_bus_out > i1_SRL_bus_out) ? i0_SRL_bus_out : i1_SRL_bus_out;
-        partial_max0_1      <= (i3_SRL_bus_out > i4_SRL_bus_out) ? i3_SRL_bus_out : i4_SRL_bus_out;
-        partial_max0_2      <= (i6_SRL_bus_out > i7_SRL_bus_out) ? i6_SRL_bus_out : i7_SRL_bus_out;
+        if(state_1 == ST_ACTIVE && !input_buffer_empty) begin
+        //if(state_1 == ST_ACTIVE && !input_buffer_empty && !output_buffer_full) begin
+            i0_SRL_bus_out      <= input_buffer_dataout;
+            i1_SRL_bus_out      <= i0_SRL_bus_out;
+            i2_SRL_bus_out      <= i1_SRL_bus_out;
+            i2_SRL_bus_out_r    <= i2_SRL_bus_out;
+            
+            i3_SRL_bus_out      <= i1_row_buffer_dataout;
+            i4_SRL_bus_out      <= i3_SRL_bus_out;
+            i5_SRL_bus_out      <= i4_SRL_bus_out;
+            i5_SRL_bus_out_r    <= i5_SRL_bus_out;
+            
+            i6_SRL_bus_out      <= i0_row_buffer_dataout;
+            i7_SRL_bus_out      <= i6_SRL_bus_out;
+            i8_SRL_bus_out      <= i7_SRL_bus_out;
+            i8_SRL_bus_out_r    <= i8_SRL_bus_out;
+            
+            partial_max0_0      <= (i0_SRL_bus_out > i1_SRL_bus_out) ? i0_SRL_bus_out : i1_SRL_bus_out;
+            partial_max0_1      <= (i3_SRL_bus_out > i4_SRL_bus_out) ? i3_SRL_bus_out : i4_SRL_bus_out;
+            partial_max0_2      <= (i6_SRL_bus_out > i7_SRL_bus_out) ? i6_SRL_bus_out : i7_SRL_bus_out;
 
-        partial_max1_1      <= (partial_max0_0 > i2_SRL_bus_out_r) ? partial_max0_0 : i2_SRL_bus_out_r;
-        partial_max1_2      <= (partial_max0_1 > i5_SRL_bus_out_r) ? partial_max0_1 : i5_SRL_bus_out_r;
-        partial_max1_3      <= (partial_max0_2 > i8_SRL_bus_out_r) ? partial_max0_2 : i8_SRL_bus_out_r;  
-        
-        partial_max2        <= (partial_max1_1 > partial_max1_2) ? partial_max1_1 : partial_max1_2;
-        
-        partial_max1_3_r    <= partial_max1_3;
+            partial_max1_1      <= (partial_max0_0 > i2_SRL_bus_out_r) ? partial_max0_0 : i2_SRL_bus_out_r;
+            partial_max1_2      <= (partial_max0_1 > i5_SRL_bus_out_r) ? partial_max0_1 : i5_SRL_bus_out_r;
+            partial_max1_3      <= (partial_max0_2 > i8_SRL_bus_out_r) ? partial_max0_2 : i8_SRL_bus_out_r;  
+            
+            partial_max2        <= (partial_max1_1 > partial_max1_2) ? partial_max1_1 : partial_max1_2;
+            
+            partial_max1_3_r    <= partial_max1_3;
 
-        pool_out            <= (partial_max2 > partial_max1_3_r) ? partial_max2 : partial_max1_3_r;
+            pool_out            <= (partial_max2 > partial_max1_3_r) ? partial_max2 : partial_max1_3_r;
+        end
     end  
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -273,9 +273,10 @@ module cnn_layer_accel_layer_engine_pooler #(
             img_row_count <= 0;       
             img_col_count <= 0;
         end else begin
-            if(state_1 == ST_ACTIVE && !input_buffer_empty) begin // as along as active, outputing valid pixel every cycle
+            if(state_1 == ST_ACTIVE && !input_buffer_empty) begin
+            //if(state_1 == ST_ACTIVE && !input_buffer_empty && !output_buffer_full) begin
                 img_col_count <= img_col_count + 1;
-                if(img_col_count == input_img_col) begin
+                if(img_col_count == (input_img_col - 1)) begin
                     img_col_count <= 0;
                     img_row_count <= img_row_count + 1;
                 end
@@ -287,21 +288,7 @@ module cnn_layer_accel_layer_engine_pooler #(
         end
     end
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-        // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
-    always@(posedge clk) begin
-        if(rst) begin
-            output_count <= 0;       
-        end else begin
-            if(state_1 == ST_ACTIVE) begin // as along as active, outputing valid pixel every cycle
-                output_count <= output_count + 1;
-            end
-        end
-    end
-	// END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     //assign input_img_row      = opcode_r[`POOL_ENG_NUM_IMG_ROW_FIELD];
@@ -312,7 +299,6 @@ module cnn_layer_accel_layer_engine_pooler #(
     assign input_img_row        = 10;
     assign input_img_col        = 10; 
     assign num_maps             = 1;
-    assign num_output_pixels    = 100;
     assign dataout_valid        = !output_buffer_full;
     
     always@(posedge clk) begin
@@ -356,18 +342,23 @@ module cnn_layer_accel_layer_engine_pooler #(
     end  
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------  
 
-    
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign output_buffer_datain  =  (    
                                         img_col_count >= pad_amt && img_col_count <= ((input_img_col - 1) - pad_amt) &&
                                         img_row_count >= pad_amt && img_row_count <= ((input_img_row - 1) - pad_amt)  
                                     ) ? pool_out : 0;
-    assign output_buffer_wren    = (state_1 == ST_ACTIVE);
+    assign output_buffer_wren    = (state_1 == ST_ACTIVE) && !input_buffer_empty;
+    //assign output_buffer_wren    = (state_1 == ST_ACTIVE) && !input_buffer_empty && !output_buffer_full;
     assign i0_row_buffer_datain  = (state_1 == ST_LOAD_ROW_BUFFERS) ? input_buffer_dataout : i1_row_buffer_dataout;
     assign i0_row_buffer_wren    = i0_row_buffer_wren_r;
     assign i1_row_buffer_wren    = i1_row_buffer_wren_r;
     assign datain_ready          = (!input_buffer_full) && (state_1 != ST_IDLE_1 || state_1 != ST_FLUSH_PIPELINE);
-    assign pipeline_active       = (state_1 == ST_ACTIVE);
+    assign pool_out_valid        = (state_1 == ST_ACTIVE) && !input_buffer_empty;
+    //assign pool_out_valid        = (state_1 == ST_ACTIVE) && !input_buffer_empty && !output_buffer_full;
+    
+    
+
 
     always@(posedge clk) begin
         if(rst) begin
@@ -380,7 +371,6 @@ module cnn_layer_accel_layer_engine_pooler #(
             i0_row_buffer_wren_r    <= 0;
             i1_row_buffer_wren_r    <= 0;
             input_buffer_rden       <= 0;
-            row_buffer_select       <= {1'b0, 1'b1};
             map_count               <= 0;
             state_1                 <= ST_IDLE_1;
         end else begin
@@ -392,51 +382,44 @@ module cnn_layer_accel_layer_engine_pooler #(
             case(state_1)
                 ST_IDLE_1: begin
                     if(init_pipeline) begin
-                        state_1  <= ST_LOAD_ROW_BUFFERS;
+                        state_1         <= ST_LOAD_ROW_BUFFERS;
                     end
                 end
                 ST_LOAD_ROW_BUFFERS: begin
                     if(!input_buffer_empty) begin
-                        if(row_buffer_select[0] && !(i0_row_buffer_count == input_img_col)) begin
-                            input_buffer_rden       <= 1;
+                        input_buffer_rden <= 1;
+                        if(i0_row_buffer_count != input_img_col) begin
                             i0_row_buffer_wren_r    <= 1;
                             i0_row_buffer_wr_addr_r <= i0_row_buffer_wr_addr_r + 1;
                             i0_row_buffer_wr_addr   <= i0_row_buffer_wr_addr_r;
-                        end else if(row_buffer_select[1] && !(i1_row_buffer_count == input_img_col)) begin
-                            input_buffer_rden       <= 1;
-                            i1_row_buffer_wren_r    <= 1;
-                            i1_row_buffer_wr_addr_r <= i1_row_buffer_wr_addr_r + 1;
-                            i1_row_buffer_wr_addr   <= i1_row_buffer_wr_addr_r;
-                        end                   
+                        end                
                         if(i0_row_buffer_count == (input_img_col - 1)) begin
-                            row_buffer_select       <= {row_buffer_select[0], row_buffer_select[1]};
-                            i0_row_buffer_wren_r    <= 0;
-                            input_buffer_rden       <= 1;
+                            i0_row_buffer_wren_r    <= 0;                        
                             i1_row_buffer_wren_r    <= 1;
                             i1_row_buffer_wr_addr_r <= i1_row_buffer_wr_addr_r + 1;
                             i1_row_buffer_wr_addr   <= i1_row_buffer_wr_addr_r;
-                        end
-                        if(i1_row_buffer_count == (input_img_col - 1)) begin
-                            input_buffer_rden       <= 0;
-                        end 
-                        if((i0_row_buffer_count == input_img_col) && (i1_row_buffer_count == input_img_col) && input_buffer_full) begin
-                            row_buffer_select       <= {row_buffer_select[0], row_buffer_select[1]};
-                            i0_row_buffer_wr_addr   <= input_img_col - 1;
-                            i1_row_buffer_wr_addr   <= input_img_col - 1;
                             state_1                 <= ST_ACTIVE;
                         end
                     end
                 end
                 ST_ACTIVE: begin
-                    //if(!input_buffer_empty && !output_buffer_full) begin
                     if(!input_buffer_empty) begin
-                        i0_row_buffer_rden      <= pipeline_active;
-                        i1_row_buffer_rden      <= pipeline_active;
-                        i0_row_buffer_wren_r    <= pipeline_active;
-                        i1_row_buffer_wren_r    <= pipeline_active;
-                        input_buffer_rden       <= pipeline_active;
+                    //if(!input_buffer_empty && !output_buffer_full) begin
+                        input_buffer_rden  <= 1;
+                        if(i1_row_buffer_count != input_img_col) begin
+                            i1_row_buffer_wren_r    <= 1;
+                            i1_row_buffer_wr_addr_r <= i1_row_buffer_wr_addr_r + 1;
+                            i1_row_buffer_wr_addr   <= i1_row_buffer_wr_addr_r;
+                        end else if(i0_row_buffer_count == input_img_col && i1_row_buffer_count == input_img_col) begin
+                            i0_row_buffer_wr_addr   <= input_img_col - 1;
+                            i1_row_buffer_wr_addr   <= input_img_col - 1;
+                            i0_row_buffer_rden      <= 1;
+                            i1_row_buffer_rden      <= 1;
+                            i0_row_buffer_wren_r    <= 1;
+                            i1_row_buffer_wren_r    <= 1;
+                        end
                     end
-                    if(img_col_count == input_img_col && img_row_count == input_img_row) begin 
+                    if(img_col_count == (input_img_col - 1) && img_row_count == (input_img_row - 1)) begin 
                         // since output will always be same same as input, and for resonable image sizes (ie >> 3x3)
                         // no need to explicit flush pipeline (ie, clock num_filter_latency_cycles after valid output)
                         map_count   <= map_count + 1;
