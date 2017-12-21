@@ -77,7 +77,7 @@ module cnn_layer_accel_layer_conv_array #(
 	//	Wires / Regs
 	//----------------------------------------------------------------------------------------------------------------------------------------------- 
     wire    [        C_I_DSP_OUTPUT_WIDTH - 1:0]    i_dsp_out;                    
-    reg     [         C_FILTER_BANK_WIDTH - 1:0]    i_filter_bank[C_MAX_WINDOW_SIZE -1:0];
+    reg     [         C_FILTER_BANK_WIDTH - 1:0]    i_filter_bank[C_MAX_WINDOW_SIZE - 1:0];
     reg     [ C_I_DSP_FILTER_DATAIN_WIDTH - 1:0]    i_dsp_filter_datain;
     reg     [                              15:0]    down_counter;
 
@@ -119,6 +119,7 @@ module cnn_layer_accel_layer_conv_array #(
         .clk        ( clk                                                                       ),
         .rst        ( rst                                                                       ),
         .accum      ( 1'b0                                                                      ),
+        .accum_rst  ( 1'b0                                                                      ),
         .a          ( i_img_datain[0 * C_IMG_DATA_WIDTH +: C_IMG_DATA_WIDTH]                    ),
         .b          ( i_dsp_filter_datain[(0 * C_FILTER_DATA_WIDTH) +: C_FILTER_DATA_WIDTH]     ),
         .pcin       ( 48'b0                                                                     ),
@@ -136,6 +137,7 @@ module cnn_layer_accel_layer_conv_array #(
         .clk        ( clk                                                                       ),
         .rst        ( rst                                                                       ),
         .accum      ( 1'b0                                                                      ),
+        .accum_rst  ( 1'b0                                                                      ),
         .a          ( i_img_datain[1 * C_IMG_DATA_WIDTH +: C_IMG_DATA_WIDTH]                    ),
         .b          ( i_dsp_filter_datain[(1 * C_FILTER_DATA_WIDTH) +: C_FILTER_DATA_WIDTH]     ),
         .pcin       ( i_dsp_out[0 * `DSP_OUTPUT_WIDTH +: `DSP_OUTPUT_WIDTH]                     ),
@@ -153,6 +155,7 @@ module cnn_layer_accel_layer_conv_array #(
         .clk        ( clk                                                                       ),
         .rst        ( rst                                                                       ),
         .accum      ( accum                                                                     ),
+        .accum_rst  ( dataout_valid                                                             ),
         .a          ( i_img_datain[2 * C_IMG_DATA_WIDTH +: C_IMG_DATA_WIDTH]                    ),
         .b          ( i_dsp_filter_datain[(2 * C_FILTER_DATA_WIDTH) +: C_FILTER_DATA_WIDTH]     ),
         .pcin       ( i_dsp_out[1 * `DSP_OUTPUT_WIDTH +: `DSP_OUTPUT_WIDTH]                     ),

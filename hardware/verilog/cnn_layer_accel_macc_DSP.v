@@ -30,6 +30,7 @@ module cnn_layer_accel_macc_DSP  #(
     clk        ,
     rst        ,
     accum      ,
+    accum_rst  ,
     a          ,
     b          ,
     pcin       ,
@@ -48,6 +49,7 @@ module cnn_layer_accel_macc_DSP  #(
     input                                       clk;
     input                                       rst;
     input                                       accum;
+    input                                       accum_rst;
     input   signed [C_DSP_INPUT_WIDTH - 1:0]    a;
     input   signed [C_DSP_INPUT_WIDTH - 1:0]    b;
     input          [C_DSP_OUTPUT_WIDTH - 1:0]   pcin;
@@ -58,7 +60,6 @@ module cnn_layer_accel_macc_DSP  #(
     // ----------------------------------------------------------------------------------------------------------------------------------------------
     reg signed [2 * C_DSP_INPUT_WIDTH :0]   m_reg;
     wire       [2 * C_DSP_INPUT_WIDTH :0]   m_reg_u;
-
     reg        [C_DSP_INPUT_WIDTH - 1:0]    a_delay_reg[C_INPUT_DELAY -1:0];
     reg        [C_DSP_INPUT_WIDTH - 1:0]    b_delay_reg[C_INPUT_DELAY -1:0];
     integer                                 idx;
@@ -89,19 +90,21 @@ module cnn_layer_accel_macc_DSP  #(
             always@(posedge clk) begin
                 if(rst) begin
                     pout <= 0;
+                end else if(accum_rst) begin
+                    pout <= m_reg_u + pcin;
                 end else if(accum) begin
                     pout <= m_reg_u + pcin + pout;
-                end 
+                end
             end
         end else begin
             always@(posedge clk) begin
                 if(rst) begin
-                        pout <= 0;
-                    end else begin
-                        pout <= m_reg_u + pcin;
-                    end
+                    pout <= 0;
+                end else begin
+                    pout <= m_reg_u + pcin;
                 end
             end
+        end
     endgenerate 
     // END DSP Logic --------------------------------------------------------------------------------------------------------------------------------
 

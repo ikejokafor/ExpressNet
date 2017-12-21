@@ -11,6 +11,7 @@ entity cnn_layer_accel_macc_DSP is
         clk             : in     vl_logic;
         rst             : in     vl_logic;
         accum           : in     vl_logic;
+        accum_rst       : in     vl_logic;
         a               : in     vl_logic_vector;
         b               : in     vl_logic_vector;
         pcin            : in     vl_logic_vector;
