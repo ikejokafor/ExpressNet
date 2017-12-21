@@ -34,19 +34,19 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------   
 // MSC definitions 
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-`define NUM_ENGINES                         16'd4
-`define NUM_FLITS                           16'd1
-`define NUM_TRANSACTORS                     16'd1
-`define NUM_SLAVE_REGS                      16'd1
-`define SOC_IT_DATAIN_WIDTH                 16'd128
-`define DSP_LATENCY                         16'd4
-`define DSP_INPUT_WIDTH                     16'd18
-`define DSP_OUTPUT_WIDTH                    16'd48
-`define NUM_MAST_INF_CLIENTS                16'd1
-`define BITS_PER_BYTE                       16'd8
-`define MAX_CELL_KEYPOINTS                  16'd16
-`define BYTE_PER_ELEMENT                    16'd4
-
+`define NUM_ENGINES             16'd4
+`define NUM_FLITS               16'd1
+`define NUM_TRANSACTORS         16'd1
+`define NUM_SLAVE_REGS          16'd1
+`define SOC_IT_DATAIN_WIDTH     16'd128
+`define DSP_LATENCY             16'd4
+`define DSP_INPUT_WIDTH         16'd18
+`define DSP_OUTPUT_WIDTH        16'd48
+`define NUM_MAST_INF_CLIENTS    16'd1
+`define BITS_PER_BYTE           16'd8
+`define MAX_CELL_KEYPOINTS      16'd16
+`define BYTE_PER_ELEMENT        16'd4
+`define CLOCK_FACTOR            3
 
 
 
@@ -81,6 +81,7 @@ parameter C_ROW                         = 1;
 `define NUM_DATA_MOVERS     16'd6
 `define NUM_LAYER_ENG_PE    (`NUM_ROWS - 1)
 
+
 `define	PACKET_WIDTH	        16'd66
 `define NUM_LAYER_ENG_IO        (`NUM_PE * `NUM_LAYER_ENG_PE * `NUM_COLS)
 `define NUM_LAYER_BRIDGE        16'd1
@@ -89,6 +90,16 @@ parameter C_ROW                         = 1;
 
 `define NUM_CONFIG_ROW  `NUM_COLS
 `define NUM_CONFIG_COL  `NUM_PE
+
+function integer ceil;
+    input real value;
+    begin
+        if(int'(value) == value) begin
+            return value;
+        end
+        return int'(value + 1);
+    end
+endfunction
 
 
 function integer rd_data_mover_idx;
