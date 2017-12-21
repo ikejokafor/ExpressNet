@@ -24,10 +24,9 @@
 // Additional Comments:
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 module SRL_bus #(
-  parameter C_CLOCK_CYCLES   = 1,
-  parameter C_DATA_WIDTH     = 32
+    parameter C_CLOCK_CYCLES   = 1,
+    parameter C_DATA_WIDTH     = 32
 ) (
     clk,
     ce,

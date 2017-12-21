@@ -40,10 +40,14 @@
 `define NUM_SLAVE_REGS                      16'd1
 `define SOC_IT_DATAIN_WIDTH                 16'd128
 `define DSP_LATENCY                         16'd4
+`define DSP_INPUT_WIDTH                     16'd18
+`define DSP_OUTPUT_WIDTH                    16'd48
 `define NUM_MAST_INF_CLIENTS                16'd1
 `define BITS_PER_BYTE                       16'd8
 `define MAX_CELL_KEYPOINTS                  16'd16
 `define BYTE_PER_ELEMENT                    16'd4
+
+
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------

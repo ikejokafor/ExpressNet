@@ -35,6 +35,7 @@ module layer_engine_activator #(
 	opcode              ,
 	opcode_valid        ,
 	opcode_accept       ,
+    opcode_complete     ,
 	
 	datain              ,
 	datain_valid        ,
@@ -42,7 +43,7 @@ module layer_engine_activator #(
 	
 	dataout             ,
 	dataout_valid       ,
-	dataout_ready       
+	dataout_ready         
 );
  	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Includes
@@ -53,9 +54,10 @@ module layer_engine_activator #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam ST_IDLE_0                = 3'b001;
-    localparam ST_DECODE_OPCODE         = 3'b010;
-    localparam ST_BUSY                  = 3'b100;    
+    localparam ST_IDLE            = 4'b0001;
+    localparam ST_LOAD_OPCODE     = 4'b0010;
+    localparam ST_DECODE_OPCODE   = 4'b0100;
+    localparam ST_BUSY            = 4'b1000;    
 
     
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -66,100 +68,64 @@ module layer_engine_activator #(
 	
 	input	[C_OPCODE_WIDTH-1:0]        	opcode;
 	input									opcode_valid;
-	output									opcode_accept;
+	output reg  							opcode_accept;
+    output reg                              opcode_complete;
 
 	input	[C_DATAIN_WIDTH-1:0]			datain;
 	input									datain_valid;
-	output									datain_ready;
+	output	reg								datain_ready;
 	
 	output	[C_DATAOUT_WIDTH-1:0]			dataout;
-	output									dataout_valid;
+	output reg  							dataout_valid;
 	input									dataout_ready;
 
     
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Wires / Regs
 	//----------------------------------------------------------------------------------------------------------------------------------------------- 
-    reg [2:0]                           state;
+    reg [3:0]                           state;
+    reg [C_OPCODE_WIDTH - 1:0]          opcode_r;
+    reg                                 pipeline_active;
     reg [15:0]                          num_outputs_count;
+    reg [15:0]                          num_inputs;
+    wire                                job_done;
 
-    reg                                 input_buffer_rden; 
-    wire    [C_DATAIN_WIDTH - 1:0]      input_buffer_dataout;
-    wire                                input_buffer_empty;
-    wire                                input_buffer_full;
-
-    reg                                 output_buffer_wren;                          
-    reg     [C_DATAOUT_WIDTH - 1:0]     output_buffer_datain; 
-    wire                                output_buffer_empty;    
-    wire                                output_buffer_full; 
-    reg                                 num_inputs;                      
-
-    
-    //-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Module Instantiations
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    fifo_fwft #(
-       .C_DATA_WIDTH ( C_PIXEL_WIDTH     ),
-       .C_FIFO_DEPTH ( 10                )
-    ) i0_input_buffer (
-        .clk            ( clk                    ),
-        .rst            ( rst                    ),
-        .wren           ( datain_valid           ),
-        .rden           ( input_buffer_rden      ),
-        .datain         ( datain                 ),
-        .dataout        ( input_buffer_dataout   ),
-        .empty          ( input_buffer_empty     ),
-        .full           ( input_buffer_full      ),
-        .almost_full    (                        )
-    );
-    
-    
-    fifo_fwft #(
-       .C_DATA_WIDTH ( C_PIXEL_WIDTH     ),
-       .C_FIFO_DEPTH ( 10                )
-    ) i0_output_buffer (
-        .clk            ( clk                                       ),
-        .rst            ( rst                                       ),
-        .wren           ( output_buffer_wren                        ),
-        .rden           ( dataout_valid && dataout_ready            ),
-        .datain         ( output_buffer_datain                      ),
-        .dataout        ( dataout                                   ),
-        .empty          ( output_buffer_empty                       ),
-        .full           ( output_buffer_full                        ),
-        .almost_full    (                                           )
-    );
-    
-    
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    assign dataout_valid = output_buffer_empty;
-    assign datain_ready  = !input_buffer_full;
    
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+    assign num_inputs    = opcode_r[`ACT_NUM_INPUTS_FIELD];
+    assign job_done      = (num_outputs_count == num_inputs);
+
     always@(posedge clk) begin
         if(rst) begin
+            opcode_r                <= 0;
             opcode_accept           <= 0;
             opcode_complete         <= 0;
             pipeline_active         <= 0;
-            state_0                 <= ST_IDLE_0;
+            state                   <= ST_IDLE;
         end else begin
             opcode_accept           <= 0;
             opcode_complete         <= 0;
-            case(state_0)
-                ST_IDLE_0: begin
+            case(state)
+                ST_IDLE: begin
                     if(opcode_valid) begin
-                        num_inputs        <= opcode[`ACT_NUM_INPUTS_FIELD];
-                        state_0           <= ST_DECODE_OPCODE;
+                        opcode_r         <= opcode;
+                        state            <= ST_LOAD_OPCODE;
                     end
+                end
+                ST_LOAD_OPCODE: begin
+                    state             <= ST_DECODE_OPCODE;
                 end
                 ST_DECODE_OPCODE: begin
                     opcode_accept       <= 1;
                     pipeline_active     <= 1;
-                    state_0             <= ST_BUSY;
+                    state               <= ST_BUSY;
                 end
                 ST_BUSY: begin
-                    if(num_outputs_count == num_inputs) begin
+                    if(job_done) begin
+                        opcode_r            <= 0;
                         opcode_complete     <= 1;
                         pipeline_active     <= 0;
-                        state_0             <= ST_IDLE_0;
+                        state               <= ST_IDLE;
                     end                   
                 end
                 default: begin
@@ -176,8 +142,10 @@ module layer_engine_activator #(
         if(rst) begin
             num_outputs_count <= 0;
         end else begin
-            if(output_buffer_wren) begin
+            if(dataout_valid) begin
                 num_outputs_count <= num_outputs_count + 1;
+            end else if(job_done) begin
+                num_outputs_count <= 0;
             end
         end
     end  
@@ -187,18 +155,31 @@ module layer_engine_activator #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     always@(posedge clk) begin
         if(rst) begin
-            input_buffer_rden       <= 1;
+            dataout_valid       <= 0;
+            datain_ready        <= 0;
         end else begin
-            input_buffer_rden       <= 0;
-            output_buffer_wren      <= 0;
-            output_buffer_datain    <= 0;
-            if(pipeline_active && !input_buffer_empty && !output_buffer_full) begin
-                input_buffer_rden     <= 1;
-                output_buffer_datain  <= (input_buffer_dataout < 0) ? 0 : input_buffer_dataout;
-                output_buffer_wren    <= 1;
+            dataout_valid       <= 0;
+            datain_ready        <= 0;
+            if(pipeline_active) begin
+                datain_ready    <= 1;
+            end
+            if(datain_valid && dataout_ready) begin
+                dataout         <= ($signed(datain) < $signed(0)) ? 0 : datain;
+                dataout_valid   <= 1;
             end                     
         end
     end  
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
+ 
+`ifdef SIMULATION
+    string state_0_s;
+    always@(*) begin
+        case(state_0)
+            ST_IDLE             :   state_0_s = "ST_IDLE";
+            ST_LOAD_OPCODE      :   state_0_s = "ST_LOAD_OPCODE";
+            ST_DECODE_OPCODE    :   state_0_s = "ST_DECODE_OPCODE";
+            ST_BUSY             :   state_0_s = "ST_BUSY";
+        endcase
+    end 
+`endif
 endmodule

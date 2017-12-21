@@ -25,12 +25,12 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_layer_engine_pooler #(
-    parameter C_DATAIN_WIDTH    = 128,
-    parameter C_DATAOUT_WIDTH   = 128,
-	parameter C_OPCODE_WIDTH    = 64,
-    parameter C_PIXEL_WIDTH     = 16,
-    parameter C_MAX_IMG_WIDTH   = 10,
-    parameter C_POOL_WINDOW_SZ  = 3
+    parameter C_DATAIN_WIDTH        = 16,
+    parameter C_DATAOUT_WIDTH       = 16,
+	parameter C_OPCODE_WIDTH        = 64,
+    parameter C_MAX_KERNEL_WIDTH 	= 3,
+    parameter C_MAX_KERNEL_HEIGHT 	= 3,	    
+    parameter C_MAX_WINDOW_WIDTH 	= 10	    
 ) (
 	clk                 ,
 	rst                 ,
@@ -64,10 +64,13 @@ module cnn_layer_accel_layer_engine_pooler #(
     
     localparam ST_IDLE_1                = 4'b0001;
     localparam ST_LOAD_ROW_BUFFERS      = 4'b0010;
-    localparam ST_ACTIVE                = 4'b0100;
-    localparam ST_FLUSH_PIPELINE        = 4'b1000;
-      
-    localparam C_NUM_ROW_BUF            = C_POOL_WINDOW_SZ - 1;
+    localparam ST_ACTIVE_0              = 4'b0100;
+    localparam ST_ACTIVE_1              = 4'b1000;
+    
+    localparam C_WINDOW_WIDTH           = C_DATAIN_WIDTH * C_MAX_KERNEL_WIDTH * C_MAX_KERNEL_HEIGHT;
+    localparam C_WINDOW_V_WIDTH         = C_MAX_KERNEL_WIDTH * C_MAX_KERNEL_HEIGHT;
+    localparam C_LOG2_MAX_WINDOW_WIDTH  = clog2(C_MAX_WINDOW_WIDTH);
+
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Inputs / Outputs
@@ -82,10 +85,10 @@ module cnn_layer_accel_layer_engine_pooler #(
 
 	input	[C_DATAIN_WIDTH-1:0]			datain;
 	input									datain_valid;
-	output   								datain_ready;
+	output   reg						    datain_ready;
 	
-	output	[C_DATAOUT_WIDTH-1:0]			dataout;
-	output									dataout_valid;
+	output	reg [C_DATAOUT_WIDTH-1:0]		dataout;
+	output	reg								dataout_valid;
 	input									dataout_ready;
     
     
@@ -94,168 +97,96 @@ module cnn_layer_accel_layer_engine_pooler #(
 	//----------------------------------------------------------------------------------------------------------------------------------------------- 
     reg [3:0]                           state_0;
     reg [3:0]                           state_1;
-    reg [C_OPCODE_WIDTH-1:0]            opcode_r;
+    reg [C_OPCODE_WIDTH - 1:0]          opcode_r;   
     
-    reg                                 input_buffer_rden;
-    wire [C_PIXEL_WIDTH - 1:0]          input_buffer_dataout;       
-    wire                                input_buffer_empty;        
-    wire                                input_buffer_full; 
+    wire [15:0]                         input_kernel_size; 
 
-    wire                                output_buffer_wren;
-    wire                                output_buffer_full;
-    wire [C_PIXEL_WIDTH - 1:0]          output_buffer_datain;    
+    wire [15:0]                         job_done;             
+    
+    wire [C_WINDOW_WIDTH - 1:0]         window;
+    wire [C_WINDOW_V_WIDTH - 1:0]       window_valid;
+    reg  [C_DATAIN_WIDTH - 1:0]         window_00;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_01;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_02;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_02_r;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_10;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_11;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_12;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_12_r;         
+    reg  [C_DATAIN_WIDTH - 1:0]         window_20;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_21;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_22;        
+    reg  [C_DATAIN_WIDTH - 1:0]         window_22_r;      
 
-    reg [clog2(C_MAX_IMG_WIDTH) - 1:0]  i0_row_buffer_wr_addr;    
-    reg [clog2(C_MAX_IMG_WIDTH) - 1:0]  i0_row_buffer_wr_addr_r;  
-    wire [C_PIXEL_WIDTH - 1:0]          i0_row_buffer_datain;     
-    wire                                i0_row_buffer_wren;
-    reg                                 i0_row_buffer_wren_r;
-    reg                                 i0_row_buffer_rden;       
-    wire [C_PIXEL_WIDTH - 1:0]          i0_row_buffer_dataout;      
-    wire                                i0_row_buffer_full;       
-    wire [clog2(C_MAX_IMG_WIDTH):0]     i0_row_buffer_count;    
+    reg [C_DATAIN_WIDTH - 1:0]           partial_max0_0;  
+    reg [C_DATAIN_WIDTH - 1:0]           partial_max0_1;  
+    reg [C_DATAIN_WIDTH - 1:0]           partial_max0_2;
+    reg [C_DATAIN_WIDTH - 1:0]           partial_max1_1;  
+    reg [C_DATAIN_WIDTH - 1:0]           partial_max1_2; 
+    reg [C_DATAIN_WIDTH - 1:0]           partial_max1_3;   
+    reg [C_DATAIN_WIDTH - 1:0]           partial_max2;    
+    reg [C_DATAIN_WIDTH - 1:0]           partial_max1_3_r;
 
-    reg [clog2(C_MAX_IMG_WIDTH) - 1:0]  i1_row_buffer_wr_addr;
-    reg [clog2(C_MAX_IMG_WIDTH) - 1:0]  i1_row_buffer_wr_addr_r;
-
-    wire                                i1_row_buffer_wren;
-    reg                                 i1_row_buffer_wren_r;
-    reg                                 i1_row_buffer_rden;       
-    wire [C_PIXEL_WIDTH - 1:0]          i1_row_buffer_dataout;     
-    wire                                i1_row_buffer_full;  
-    wire [clog2(C_MAX_IMG_WIDTH):0]     i1_row_buffer_count;      
-
-    reg [C_PIXEL_WIDTH - 1:0]           i0_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i1_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i2_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i2_SRL_bus_out_r;
-    reg [C_PIXEL_WIDTH - 1:0]           i3_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i4_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i5_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i5_SRL_bus_out_r;
-    reg [C_PIXEL_WIDTH - 1:0]           i6_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i7_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i8_SRL_bus_out;
-    reg [C_PIXEL_WIDTH - 1:0]           i8_SRL_bus_out_r;
-   
-    reg [C_PIXEL_WIDTH - 1:0]           partial_max0_0;  
-    reg [C_PIXEL_WIDTH - 1:0]           partial_max0_1;  
-    reg [C_PIXEL_WIDTH - 1:0]           partial_max0_2;
-    reg [C_PIXEL_WIDTH - 1:0]           partial_max1_1;  
-    reg [C_PIXEL_WIDTH - 1:0]           partial_max1_2; 
-    reg [C_PIXEL_WIDTH - 1:0]           partial_max1_3;   
-    reg [C_PIXEL_WIDTH - 1:0]           partial_max2;    
-    reg [C_PIXEL_WIDTH - 1:0]           partial_max1_3_r;
-
-    reg [C_PIXEL_WIDTH - 1:0]           pool_out; 
-    reg [C_NUM_ROW_BUF - 1:0]           row_buffer_select;
+    reg [C_DATAIN_WIDTH - 1:0]          pool_out; 
     wire                                pool_out_valid;
     
-    wire [15:0]                         input_img_row; 
-    wire [15:0]                         input_img_col; 
+    wire [C_LOG2_MAX_WINDOW_WIDTH - 1:0]     input_img_row; 
+    wire [C_LOG2_MAX_WINDOW_WIDTH - 1:0]     input_img_col; 
     reg  [15:0]                         img_row_count;
     reg  [15:0]                         img_col_count;
     reg  [15:0]                         map_count;
     wire [15:0]                         num_maps;
     reg  [15:0]                         pad_amt;
-    reg                                 init_pipeline;
+    reg                                 pipeline_active;
+    reg                                 initialize;
  
  
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    fifo_fwft #(
-       .C_DATA_WIDTH ( C_PIXEL_WIDTH     ),
-       .C_FIFO_DEPTH ( 10                )
-    ) i0_input_buffer (
-        .clk            ( clk                    ),
-        .rst            ( rst                    ),
-        .wren           ( datain_valid           ),
-        .rden           ( input_buffer_rden      ),
-        .datain         ( datain                 ),
-        .dataout        ( input_buffer_dataout   ),
-        .empty          ( input_buffer_empty     ),
-        .full           ( input_buffer_full      ),
-        .almost_full    (                        )
-    );
-    
-    
-    fifo_fwft #(
-       .C_DATA_WIDTH ( C_PIXEL_WIDTH     ),
-       .C_FIFO_DEPTH ( 10                )
-    ) i0_output_buffer (
-        .clk            ( clk                                       ),
-        .rst            ( rst                                       ),
-        .wren           ( output_buffer_wren                        ),
-        .rden           ( dataout_valid && dataout_ready            ),
-        .datain         ( output_buffer_datain                      ),
-        .dataout        ( dataout                                   ),
-        .empty          (                                           ),
-        .full           ( output_buffer_full                        ),
-        .almost_full    (                                           )
-    );
-
-
-    row_buffer #(
-       .C_PIXEL_WIDTH ( C_PIXEL_WIDTH     ),
-       .C_IMAGE_WIDTH ( C_MAX_IMG_WIDTH     ) 
+    window_buffer #(
+       .C_KERNEL_WIDTH 		( C_MAX_KERNEL_WIDTH	    ),
+       .C_KERNEL_HEIGHT 	( C_MAX_KERNEL_HEIGHT		),
+       .C_DATAIN_WIDTH 		( C_DATAIN_WIDTH	        ),
+       .C_MAX_WINDOW_WIDTH  ( C_MAX_WINDOW_WIDTH        )
     ) 
-    i0_row_buffer(
-        .wr_addr    ( i0_row_buffer_wr_addr     ),
-        .din        ( i0_row_buffer_datain      ),
-        .clk        ( clk                       ),  
-        .wren       ( i0_row_buffer_wren        ),
-        .rden       ( i0_row_buffer_rden        ),
-        .rst        ( rst                       ),
-        .dout       ( i0_row_buffer_dataout     ),
-        .full       ( i0_row_buffer_full        ),
-        .count      ( i0_row_buffer_count       )
-    );	
-
-    
-    row_buffer #(
-       .C_PIXEL_WIDTH  ( C_PIXEL_WIDTH      ),
-       .C_IMAGE_WIDTH  ( C_MAX_IMG_WIDTH    ) 
-    ) 
-    i1_row_buffer(
-        .wr_addr    ( i1_row_buffer_wr_addr    ),
-        .din        ( input_buffer_dataout     ),
-        .clk        ( clk                      ),      
-        .wren       ( i1_row_buffer_wren       ),
-        .rden       ( i1_row_buffer_rden       ),
-        .rst        ( rst                      ),
-        .dout       ( i1_row_buffer_dataout    ),
-        .full       ( i1_row_buffer_full       ),
-        .count      ( i1_row_buffer_count      )
+    i0_window_buffer (
+        .rst            ( rst               ),
+        .initialize     ( initialize        ),
+        .clk            ( clk               ),
+        .width          ( input_img_col     ),
+        .datain         ( datain            ),
+        .datain_valid   ( datain_valid      ),
+        .window         ( window            ),
+        .window_valid   ( window_valid      )
     );
     
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     always@(posedge clk) begin
-        if(state_1 == ST_ACTIVE && !input_buffer_empty) begin
-        //if(state_1 == ST_ACTIVE && !input_buffer_empty && !output_buffer_full) begin
-            i0_SRL_bus_out      <= input_buffer_dataout;
-            i1_SRL_bus_out      <= i0_SRL_bus_out;
-            i2_SRL_bus_out      <= i1_SRL_bus_out;
-            i2_SRL_bus_out_r    <= i2_SRL_bus_out;
-            
-            i3_SRL_bus_out      <= i1_row_buffer_dataout;
-            i4_SRL_bus_out      <= i3_SRL_bus_out;
-            i5_SRL_bus_out      <= i4_SRL_bus_out;
-            i5_SRL_bus_out_r    <= i5_SRL_bus_out;
-            
-            i6_SRL_bus_out      <= i0_row_buffer_dataout;
-            i7_SRL_bus_out      <= i6_SRL_bus_out;
-            i8_SRL_bus_out      <= i7_SRL_bus_out;
-            i8_SRL_bus_out_r    <= i8_SRL_bus_out;
-            
-            partial_max0_0      <= (i0_SRL_bus_out > i1_SRL_bus_out) ? i0_SRL_bus_out : i1_SRL_bus_out;
-            partial_max0_1      <= (i3_SRL_bus_out > i4_SRL_bus_out) ? i3_SRL_bus_out : i4_SRL_bus_out;
-            partial_max0_2      <= (i6_SRL_bus_out > i7_SRL_bus_out) ? i6_SRL_bus_out : i7_SRL_bus_out;
+        if(state_1 == ST_ACTIVE_0 && datain_valid && dataout_ready) begin
+            window_00           <= window[0 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_01           <= window[1 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_02           <= window[2 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_02_r         <= window_02;
 
-            partial_max1_1      <= (partial_max0_0 > i2_SRL_bus_out_r) ? partial_max0_0 : i2_SRL_bus_out_r;
-            partial_max1_2      <= (partial_max0_1 > i5_SRL_bus_out_r) ? partial_max0_1 : i5_SRL_bus_out_r;
-            partial_max1_3      <= (partial_max0_2 > i8_SRL_bus_out_r) ? partial_max0_2 : i8_SRL_bus_out_r;  
+            window_10           <= window[3 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_11           <= window[4 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_12           <= window[5 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_12_r         <= window_12;
+
+            window_20           <= window[6 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_21           <= window[7 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_22           <= window[8 * C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+            window_22_r         <= window_22;
+            
+            partial_max0_0      <= (window_00 > window_01) ? window_00 : window_01;
+            partial_max0_1      <= (window_10 > window_11) ? window_10 : window_11;
+            partial_max0_2      <= (window_20 > window_21) ? window_20 : window_21;
+
+            partial_max1_1      <= (partial_max0_0 > window_02_r) ? partial_max0_0 : window_02_r;
+            partial_max1_2      <= (partial_max0_1 > window_12_r) ? partial_max0_1 : window_12_r;
+            partial_max1_3      <= (partial_max0_2 > window_22_r) ? partial_max0_2 : window_22_r;  
             
             partial_max2        <= (partial_max1_1 > partial_max1_2) ? partial_max1_1 : partial_max1_2;
             
@@ -265,6 +196,21 @@ module cnn_layer_accel_layer_engine_pooler #(
         end
     end  
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
+    
+      // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
+  
+        SRL_bit #(
+        .C_CLOCK_CYCLES( 5 )
+    )
+    i0_SRL_bit    (
+        .clk        ( clk                                                       ),
+        .rst        ( rst                                                       ),
+        .ce         ( 1'b1                                                      ),
+        .data_in    ( state_1 == ST_ACTIVE_0 && datain_valid && dataout_ready   ),
+        .data_out   ( pool_out_valid                                            )
+    );
+	// END logic ------------------------------------------------------------------------------------------------------------------------------------
+
 
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
@@ -273,45 +219,49 @@ module cnn_layer_accel_layer_engine_pooler #(
             img_row_count <= 0;       
             img_col_count <= 0;
         end else begin
-            if(state_1 == ST_ACTIVE && !input_buffer_empty) begin
-            //if(state_1 == ST_ACTIVE && !input_buffer_empty && !output_buffer_full) begin
+            if(state_1 == ST_IDLE_1 && pipeline_active) begin
+                img_col_count <= pad_amt;
+                img_row_count <= pad_amt;
+            end
+            if(state_1 == ST_ACTIVE_0 && datain_valid && dataout_ready && pool_out_valid) begin
                 img_col_count <= img_col_count + 1;
                 if(img_col_count == (input_img_col - 1)) begin
                     img_col_count <= 0;
                     img_row_count <= img_row_count + 1;
                 end
-                if(img_col_count == input_img_col && img_row_count == input_img_row) begin
-                    img_col_count <= 0;
-                    img_row_count <= 0;
+                if(img_col_count == ((input_img_col - 1) - pad_amt) && img_row_count == ((input_img_row - 1) - pad_amt)) begin 
+                    img_col_count <= pad_amt;
+                    img_row_count <= pad_amt;
                 end
             end
         end
     end
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
-
+    
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     //assign input_img_row      = opcode_r[`POOL_ENG_NUM_IMG_ROW_FIELD];
     //assign input_img_col      = opcode_r[`POOL_ENG_NUM_IMG_COL_FIELD]; 
     //assign num_maps           = opcode_r[`POOL_ENG_NUM_MAP_FIELD];
-    //assign num_output_pixels  = opcode_r[`POOL_ENG_NUM_OUT_PIXELS_FIELD]
-    
+    //assign input_kernel_size  = opcode_r[`POOL_ENG_KERNEL_SIZE_FIELD];    
     assign input_img_row        = 10;
     assign input_img_col        = 10; 
-    assign num_maps             = 1;
-    assign dataout_valid        = !output_buffer_full;
-    
+    assign num_maps             = 2;
+    assign input_kernel_size    = 3;   
+    assign pad_amt              = (input_kernel_size - 1) >> 1; // dealing with square images, so padding is the same
+    assign job_done             = (map_count == num_maps);
+   
     always@(posedge clk) begin
         if(rst) begin
             opcode_r                <= 0;
             opcode_accept           <= 0;
             opcode_complete         <= 0;
-            init_pipeline           <= 0;
+            pipeline_active         <= 0;
             state_0                 <= ST_IDLE_0;
         end else begin
             opcode_accept           <= 0;
             opcode_complete         <= 0;
-            init_pipeline           <= 0;
+            pipeline_active         <= 0;
             case(state_0)
                 ST_IDLE_0: begin
                     if(opcode_valid) begin
@@ -320,18 +270,19 @@ module cnn_layer_accel_layer_engine_pooler #(
                     end
                 end
                 ST_LOAD_OPCODE: begin
-                    pad_amt             <= (C_POOL_WINDOW_SZ - 1) >> 1; // dealing with square images, so padding is the same
                     state_0             <= ST_DECODE_OPCODE;
                 end
                 ST_DECODE_OPCODE: begin
-                    opcode_accept   <= 1;
-                    init_pipeline   <= 1;
-                    state_0         <= ST_BUSY;
+                    opcode_accept       <= 1;
+                    pipeline_active     <= 1;
+                    state_0             <= ST_BUSY;
                 end
                 ST_BUSY: begin
-                    if(map_count == num_maps) begin
-                        opcode_complete <= 1;
-                        state_0         <= ST_IDLE_0;
+                    if(job_done) begin
+                        opcode_r            <= 0;
+                        pipeline_active     <= 0;
+                        opcode_complete     <= 1;
+                        state_0             <= ST_IDLE_0;
                     end                   
                 end
                 default: begin
@@ -344,91 +295,40 @@ module cnn_layer_accel_layer_engine_pooler #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    assign output_buffer_datain  =  (    
-                                        img_col_count >= pad_amt && img_col_count <= ((input_img_col - 1) - pad_amt) &&
-                                        img_row_count >= pad_amt && img_row_count <= ((input_img_row - 1) - pad_amt)  
-                                    ) ? pool_out : 0;
-    assign output_buffer_wren    = (state_1 == ST_ACTIVE) && !input_buffer_empty;
-    //assign output_buffer_wren    = (state_1 == ST_ACTIVE) && !input_buffer_empty && !output_buffer_full;
-    assign i0_row_buffer_datain  = (state_1 == ST_LOAD_ROW_BUFFERS) ? input_buffer_dataout : i1_row_buffer_dataout;
-    assign i0_row_buffer_wren    = i0_row_buffer_wren_r;
-    assign i1_row_buffer_wren    = i1_row_buffer_wren_r;
-    assign datain_ready          = (!input_buffer_full) && (state_1 != ST_IDLE_1 || state_1 != ST_FLUSH_PIPELINE);
-    assign pool_out_valid        = (state_1 == ST_ACTIVE) && !input_buffer_empty;
-    //assign pool_out_valid        = (state_1 == ST_ACTIVE) && !input_buffer_empty && !output_buffer_full;
+    assign dataout          =  pool_out;                      
+    assign dataout_valid    =   (    
+                                    img_col_count >= pad_amt && img_col_count <= ((input_img_col - 1) - pad_amt) &&
+                                    img_row_count >= pad_amt && img_row_count <= ((input_img_row - 1) - pad_amt) &&
+                                    pool_out_valid && state_1 == ST_ACTIVE_0
+                                );
+    assign datain_ready     = (state_1 != ST_IDLE_1 && !initialize);
     
-    
-
-
     always@(posedge clk) begin
         if(rst) begin
-            i0_row_buffer_wr_addr   <= 0;
-            i1_row_buffer_wr_addr   <= 0;
-            i0_row_buffer_wr_addr_r <= 0;
-            i1_row_buffer_wr_addr_r <= 0;            
-            i0_row_buffer_rden      <= 0;
-            i1_row_buffer_rden      <= 0;
-            i0_row_buffer_wren_r    <= 0;
-            i1_row_buffer_wren_r    <= 0;
-            input_buffer_rden       <= 0;
-            map_count               <= 0;
-            state_1                 <= ST_IDLE_1;
+            map_count    <= 0;
+            initialize   <= 0;
+            state_1      <= ST_IDLE_1;
         end else begin
-            i0_row_buffer_rden      <= 0;
-            i1_row_buffer_rden      <= 0;
-            i0_row_buffer_wren_r    <= 0;
-            i1_row_buffer_wren_r    <= 0;
-            input_buffer_rden       <= 0;
+            initialize   <= 0;
             case(state_1)
                 ST_IDLE_1: begin
-                    if(init_pipeline) begin
+                    if(pipeline_active) begin
                         state_1         <= ST_LOAD_ROW_BUFFERS;
                     end
                 end
                 ST_LOAD_ROW_BUFFERS: begin
-                    if(!input_buffer_empty) begin
-                        input_buffer_rden <= 1;
-                        if(i0_row_buffer_count != input_img_col) begin
-                            i0_row_buffer_wren_r    <= 1;
-                            i0_row_buffer_wr_addr_r <= i0_row_buffer_wr_addr_r + 1;
-                            i0_row_buffer_wr_addr   <= i0_row_buffer_wr_addr_r;
-                        end                
-                        if(i0_row_buffer_count == (input_img_col - 1)) begin
-                            i0_row_buffer_wren_r    <= 0;                        
-                            i1_row_buffer_wren_r    <= 1;
-                            i1_row_buffer_wr_addr_r <= i1_row_buffer_wr_addr_r + 1;
-                            i1_row_buffer_wr_addr   <= i1_row_buffer_wr_addr_r;
-                            state_1                 <= ST_ACTIVE;
-                        end
+                    if(&window_valid[7:0]) begin
+                        state_1 <= ST_ACTIVE_0;
                     end
                 end
-                ST_ACTIVE: begin
-                    if(!input_buffer_empty) begin
-                    //if(!input_buffer_empty && !output_buffer_full) begin
-                        input_buffer_rden  <= 1;
-                        if(i1_row_buffer_count != input_img_col) begin
-                            i1_row_buffer_wren_r    <= 1;
-                            i1_row_buffer_wr_addr_r <= i1_row_buffer_wr_addr_r + 1;
-                            i1_row_buffer_wr_addr   <= i1_row_buffer_wr_addr_r;
-                        end else if(i0_row_buffer_count == input_img_col && i1_row_buffer_count == input_img_col) begin
-                            i0_row_buffer_wr_addr   <= input_img_col - 1;
-                            i1_row_buffer_wr_addr   <= input_img_col - 1;
-                            i0_row_buffer_rden      <= 1;
-                            i1_row_buffer_rden      <= 1;
-                            i0_row_buffer_wren_r    <= 1;
-                            i1_row_buffer_wren_r    <= 1;
-                        end
-                    end
-                    if(img_col_count == (input_img_col - 1) && img_row_count == (input_img_row - 1)) begin 
-                        // since output will always be same same as input, and for resonable image sizes (ie >> 3x3)
-                        // no need to explicit flush pipeline (ie, clock num_filter_latency_cycles after valid output)
+                ST_ACTIVE_0: begin
+                    if(img_col_count == ((input_img_col - 1) - pad_amt) && img_row_count == ((input_img_row - 1) - pad_amt)) begin 
                         map_count   <= map_count + 1;
-                        state_1     <= ST_FLUSH_PIPELINE;
+                        initialize  <= 1;
+                        state_1     <= ST_ACTIVE_1;
                     end
                 end
-                ST_FLUSH_PIPELINE: begin
-                    i0_row_buffer_wr_addr   <= 0;
-                    i1_row_buffer_wr_addr   <= 0;
+                ST_ACTIVE_1: begin
                     if(map_count == num_maps) begin
                         map_count   <= 0;
                         state_1     <= ST_IDLE_1;
@@ -445,25 +345,25 @@ module cnn_layer_accel_layer_engine_pooler #(
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
     
     
-    `ifdef SIMULATION
-        string state_0_s;
-        always@(*) begin
-            case(state_0)
-                ST_IDLE_0           :   state_0_s = "ST_IDLE_0";
-                ST_LOAD_OPCODE      :   state_0_s = "ST_LOAD_OPCODE";
-                ST_DECODE_OPCODE    :   state_0_s = "ST_DECODE_OPCODE";
-                ST_BUSY             :   state_0_s = "ST_BUSY";
-            endcase
-        end
-        string state_1_s;
-        always@(*) begin
-            case(state_1)
-                ST_IDLE_1           :   state_1_s = "ST_IDLE_1";
-                ST_LOAD_ROW_BUFFERS :   state_1_s = "ST_LOAD_ROW_BUFFERS";
-                ST_ACTIVE           :   state_1_s = "ST_ACTIVE";
-                ST_FLUSH_PIPELINE   :   state_1_s = "ST_FLUSH_PIPELINE";
-            endcase
-        end
-    `endif
+`ifdef SIMULATION
+    string state_0_s;
+    always@(*) begin
+        case(state_0)
+            ST_IDLE_0           :   state_0_s = "ST_IDLE_0";
+            ST_LOAD_OPCODE      :   state_0_s = "ST_LOAD_OPCODE";
+            ST_DECODE_OPCODE    :   state_0_s = "ST_DECODE_OPCODE";
+            ST_BUSY             :   state_0_s = "ST_BUSY";
+        endcase
+    end
+    string state_1_s;
+    always@(*) begin
+        case(state_1)
+            ST_IDLE_1           :   state_1_s = "ST_IDLE_1";
+            ST_LOAD_ROW_BUFFERS :   state_1_s = "ST_LOAD_ROW_BUFFERS";
+            ST_ACTIVE_0         :   state_1_s = "ST_ACTIVE_0";
+            ST_ACTIVE_1         :   state_1_s = "ST_ACTIVE_1";
+        endcase
+    end
+`endif
     
 endmodule

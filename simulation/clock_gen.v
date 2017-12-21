@@ -43,7 +43,7 @@ module clock_gen #(
     
     // BEGIN Clock Gen logic ------------------------------------------------------------------------------------------------------------------------
     initial begin
-		clk_out_r = 0;
+		clk_out_r = 1;
 	end   
     
     assign clk_out = clk_out_r;

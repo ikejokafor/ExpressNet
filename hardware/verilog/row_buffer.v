@@ -1,112 +1,92 @@
-`timescale 1ns / 1ns
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Company:			
-//				
-// Engineer:		
-//
-// Create Date:		
-// Design Name:		
-// Module Name:		
-// Project Name:	
-// Target Devices:  
-// Tool versions:
-// Description:		
-//
-// Dependencies:
-//	 
-// 	 
-//
-// Revision:
-//
-//
-//
-//
-// Additional Comments: 
-//                      
-//                      
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-module row_buffer #(
-    parameter C_PIXEL_WIDTH  = 16,             
-    parameter C_IMAGE_WIDTH  = 256              
-) (
-    wr_addr,   
-    din,       
-    clk,       
-    wren,      
-    rden,      
-    rst,       
-    dout,      
-    full,
-    count
-);	
-    // ----------------------------------------------------------------------------------------------------------------------------------------------
-    // Includes
-    // ----------------------------------------------------------------------------------------------------------------------------------------------
-    `include "math.vh"
-  
-    
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Inputs / Output Ports
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input       [clog2(C_IMAGE_WIDTH) - 1:0]    wr_addr;
-    input       [       C_PIXEL_WIDTH - 1:0]    din; 
-    input                                       clk;
-    input                                       wren;  
-    input                                       rden;  
-    input                                       rst; 
-    output reg  [        C_PIXEL_WIDTH - 1:0]   dout;
-    output                                      full;
-    output reg  [clog2(C_IMAGE_WIDTH):0]        count;
+`timescale 1ns / 1ps
+
+module row_buffer
+(
+	rst,
+    initialize,
+	clk,
+	delay,
+	datain,
+	datain_valid,
+	window,
+	window_valid,
+	dataout,
+	dataout_valid
+);
+`include "math.vh"
 	
-
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	// Regs
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    reg     [       C_PIXEL_WIDTH - 1:0]    BUFFER[C_IMAGE_WIDTH - 1:0];
-    integer                                 i;
+	parameter	C_HAS_DELAY_LINE		= 1;
+	parameter	C_NUM_OUTPUT_REGISTERS	= 5;
+	parameter 	C_MAX_DELAY 			= 1024;
+	parameter	C_PTR_WIDTH 			= clog2(C_MAX_DELAY);
+	parameter	C_DATAIN_WIDTH 			= 32;
+	parameter	C_DATAOUT_WIDTH			= C_NUM_OUTPUT_REGISTERS * C_DATAIN_WIDTH;
 	
-	// BEGIN BUFFER Write logic -----------------------------------------------------------------------------------------------------------------------   
-    always@(posedge clk) begin
-        if (wren) begin
-            BUFFER[wr_addr] <= din;
-        end 
-    end
-    // END BUFFER Write logic -------------------------------------------------------------------------------------------------------------------------
-
-    
-    // BEGIN BUFFER Count logic -----------------------------------------------------------------------------------------------------------------------
-    assign full = (count == C_IMAGE_WIDTH);
-    
-    always@(posedge clk) begin
-        if(rst) begin
-            count <= 0;
-        end else begin
-            if(wren && rden) begin
-                count <= count;
-            end else if(wren && count < C_IMAGE_WIDTH) begin
-                count <= count + 1;
-            end else if(rden && count > 0) begin
-                count <= count - 1;
-            end
-        end
-    end
-    // END BUFFER Count logic -------------------------------------------------------------------------------------------------------------------------
-
-    
-    
-    // BEGIN BUFFER Read logic ------------------------------------------------------------------------------------------------------------------------
-    always@(posedge clk) begin
-        if(rden) begin
-            for(i = 0; i < (C_IMAGE_WIDTH - 1); i = i + 1) begin
-                BUFFER[i] <= BUFFER[i + 1];
-            end
-        end
-    end
-
-    always@(*) begin
-        dout <= BUFFER[0];
-    end
-  // END BUFFER logic ---------------------------------------------------------------------------------------------------------------------------------
-
+	input										rst;
+    input                                       initialize;
+	input										clk;
+	input		[C_PTR_WIDTH-1:0]				delay;
+	input		[C_DATAIN_WIDTH-1:0]			datain;
+	input										datain_valid;
+	output	reg	[C_DATAOUT_WIDTH-1:0]			window;
+	output	reg	[C_NUM_OUTPUT_REGISTERS-1:0]	window_valid;
+	output		[C_DATAIN_WIDTH-1:0]			dataout;
+	output										dataout_valid;
+	
+	integer i;
+	
+	always @(posedge clk)
+	begin
+		if (rst || initialize)
+		begin
+			window_valid <= {C_NUM_OUTPUT_REGISTERS{1'b0}};
+		end
+		else
+		begin
+			if (datain_valid)
+			begin
+				window_valid[0] <= datain_valid;
+				window[0*C_DATAIN_WIDTH +: C_DATAIN_WIDTH] <= datain;
+				for (i = 1; i < C_NUM_OUTPUT_REGISTERS; i = i + 1)
+				begin
+					window_valid[i] <= window_valid[i-1];
+					window[i*C_DATAIN_WIDTH +: C_DATAIN_WIDTH] <= window[(i-1)*C_DATAIN_WIDTH +: C_DATAIN_WIDTH];
+				end
+			end
+		end
+	end
+	
+	reg	[C_PTR_WIDTH-1:0]	delay_minus_num_output_registers;
+	
+	always @(posedge clk)
+	begin
+		delay_minus_num_output_registers <= delay-C_NUM_OUTPUT_REGISTERS;
+	end
+	
+	generate
+		if (C_HAS_DELAY_LINE == 1)
+		begin
+			delay_line
+			#(
+				.C_MAX_DELAY 	(C_MAX_DELAY),
+				.C_DWIDTH 		(C_DATAIN_WIDTH)
+			)
+			i_delay_line
+			(
+				.rst			(rst																			),
+				.clk			(clk																			),
+				.delay			(delay_minus_num_output_registers												),
+				.datain			(window			[(C_NUM_OUTPUT_REGISTERS-1)*C_DATAIN_WIDTH +: C_DATAIN_WIDTH]	),
+				.wr_en			(window_valid	[C_NUM_OUTPUT_REGISTERS-1]	& datain_valid						),
+				.dataout		(dataout																		),
+				.dataout_valid	(dataout_valid																	)
+			);
+		end
+		else
+		begin
+			assign dataout = {C_DATAIN_WIDTH{1'b0}};
+			assign dataout_valid = 1'b0;
+		end
+	endgenerate
+		
 endmodule
