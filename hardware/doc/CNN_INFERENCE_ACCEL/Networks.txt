@@ -1,4 +1,0 @@
-AlexNet
-VGG16
-GoogleNet
-SqueezeNet
