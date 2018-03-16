@@ -1,128 +1,94 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate -group {TOP
-} /testbench_0/clk
-add wave -noupdate -group {TOP
-} /testbench_0/count_init
-add wave -noupdate -group {TOP
-} /testbench_0/dataout
-add wave -noupdate -group {TOP
-} /testbench_0/dataout_valid
-add wave -noupdate -group {TOP
-} /testbench_0/i_filter_datain
-add wave -noupdate -group {TOP
-} /testbench_0/i_filter_init
-add wave -noupdate -group {TOP
-} /testbench_0/i_img_datain
-add wave -noupdate -group {TOP
-} /testbench_0/img_datain_valid
-add wave -noupdate -group {TOP
-} /testbench_0/rst
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/clk
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/count_init
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/dataout
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/dataout_valid
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/down_counter
-add wave -noupdate -group {CONV_ARRAY
-} -radix hexadecimal /testbench_0/i0_cnn_layer_accel_layer_conv_array/i_dsp_filter_datain
-add wave -noupdate -group {CONV_ARRAY
-} -radix hexadecimal /testbench_0/i0_cnn_layer_accel_layer_conv_array/i_dsp_out
-add wave -noupdate -group {CONV_ARRAY
-} -radix hexadecimal /testbench_0/i0_cnn_layer_accel_layer_conv_array/i_filter_bank
-add wave -noupdate -group {CONV_ARRAY
-} -radix hexadecimal /testbench_0/i0_cnn_layer_accel_layer_conv_array/i_filter_datain
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i_filter_init
-add wave -noupdate -group {CONV_ARRAY
-} -radix hexadecimal /testbench_0/i0_cnn_layer_accel_layer_conv_array/i_img_datain
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/img_datain_valid
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/pipeline_active
-add wave -noupdate -group {CONV_ARRAY
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/rst
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/a
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/a_delay_reg
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/accum
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/b
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/b_delay_reg
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/clk
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/idx
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/m_reg
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/m_reg_u
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/pcin
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/pout
-add wave -noupdate -group {DSP0
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i0_cnn_layer_accel_macc_DSP/rst
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/a
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/a_delay_reg
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/accum
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/b
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/b_delay_reg
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/clk
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/idx
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/m_reg
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/m_reg_u
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/pcin
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/pout
-add wave -noupdate -group {DSP1
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i1_cnn_layer_accel_macc_DSP/rst
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/a
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/a_delay_reg
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/accum
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/b
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/b_delay_reg
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/clk
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/idx
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/m_reg
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/m_reg_u
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/pcin
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/pout
-add wave -noupdate -group {DSP2
-} -radix unsigned /testbench_0/i0_cnn_layer_accel_layer_conv_array/i2_cnn_layer_accel_macc_DSP/rst
+add wave -noupdate -group {TOP} /testbench_1/COLS
+add wave -noupdate -group {TOP} /testbench_1/C_LOG2_BRAM_DEPTH
+add wave -noupdate -group {TOP} /testbench_1/C_PERIOD
+add wave -noupdate -group {TOP} /testbench_1/ROWS
+add wave -noupdate -group {TOP} /testbench_1/arr
+add wave -noupdate -group {TOP} /testbench_1/arr2
+add wave -noupdate -group {TOP} /testbench_1/clk
+add wave -noupdate -group {TOP} /testbench_1/datain
+add wave -noupdate -group {TOP} /testbench_1/datain_valid
+add wave -noupdate -group {TOP} /testbench_1/fd
+add wave -noupdate -group {TOP} /testbench_1/i
+add wave -noupdate -group {TOP} /testbench_1/j
+add wave -noupdate -group {TOP} /testbench_1/parity0
+add wave -noupdate -group {TOP} /testbench_1/parity1
+add wave -noupdate -group {TOP} /testbench_1/pixel_datain_tag
+add wave -noupdate -group {TOP} /testbench_1/rst
+add wave -noupdate -group {TOP} /testbench_1/seq_datain_tag
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/C_BRAM_DEPTH
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/C_LOG2_BRAM_DEPTH
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/C_NUM_AWE
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/C_PIXEL_DATAOUT_WIDTH
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/C_PIXEL_WIDTH
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/C_SEQ_DATA_WIDTH
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrL_pfb_rden
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrL_seq_rden
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_col
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_gray_code
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_numCols
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_numRows
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_pfb_wren
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_row
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_seq_rdAddr
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_seq_wrAddr
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_seq_wren
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bram_ctrl_state
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/bran_ctrl_wrAddr
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/clk
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/datain
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/datain_valid
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/new_map
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/pfb_dataout
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/pfb_full
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/pixel_datain_tag
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/pixel_dataout
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/pixel_dataout_valid
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/rst
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/seq_count
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/seq_datain
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/seq_datain_tag
+add wave -noupdate -group {OCTO} /testbench_1/i0_cnn_layer_accel_octo/seq_dataout
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/C_BRAM_DEPTH
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/C_LOG2_BRAM_DEPTH
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/C_NUM_AWE
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/ST_AWE_CE_ACTIVE
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/ST_AWE_CE_PRIM_BUFFER
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/ST_IDLE
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/ST_LOAD_PFB
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/ST_LOAD_SEQUENCER
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/clk
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/col
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/datain_valid
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/gc
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/gray_code
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/new_map
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/numCols
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/numCols_r
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/numRows
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/numRows_r
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/pfb_full
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/pfb_rden
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/pfb_wren
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/pixel_datain_tag
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/row
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/row_Matric
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/rst
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/seq_count
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/seq_datain_tag
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/seq_rdAddr
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/seq_rden
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/seq_wrAddr
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/seq_wren
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/state
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/state_s
+add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/wrAddr
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {225 ns} 0}
-quietly wave cursor active 1
-configure wave -namecolwidth 177
-configure wave -valuecolwidth 115
+WaveRestoreCursors {{Cursor 1} {0 ns} 0}
+quietly wave cursor active 0
+configure wave -namecolwidth 150
+configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 1
 configure wave -snapdistance 10
@@ -133,6 +99,6 @@ configure wave -gridoffset 0
 configure wave -gridperiod 1
 configure wave -griddelta 40
 configure wave -timeline 0
-configure wave -timelineunits ns
+configure wave -timelineunits ps
 update
-WaveRestoreZoom {86 ns} {298 ns}
+WaveRestoreZoom {0 ns} {567 ns}

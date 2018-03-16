@@ -1,0 +1,11 @@
+follow regular caffe install stuff
+
+append below code atop any python scripts
+
+    import sys
+    sys.path.append('/home/ikenna/caffe-master/python/')
+    sys.path.append('/home/ikenna/detector_test_kitti/solo2/python/')
+
+see https://github.com/opencv/opencv/issues/10021 if any issues with protobuf
+
+for cpu only change line 12 of detector.py to     caffe.set_mode_cpu()
