@@ -236,22 +236,18 @@ module cnn_layer_accel_awe_rowbuffers #(
             row_buffer_sav_val0 <= 0;
             row_buffer_sav_val1 <= 0;
         end else begin
-            if(cycle_counter == 2) begin
-                if(gray_code[0] ^ gray_code[1]) begin
-                    row_buffer_sav_val0 <= bram0_dataout;
-                    row_buffer_sav_val1 <= bram2_dataout;
-                end else begin
-                    row_buffer_sav_val0 <= bram1_dataout;
-                    row_buffer_sav_val1 <= bram3_dataout;
-                end
-            end else if(cycle_counter == 0) begin
-                if(gray_code[0] ^ gray_code[1]) begin
-                    row_buffer_sav_val0 <= bram0_dataout;
-                    row_buffer_sav_val1 <= bram2_dataout;
-                end else begin
-                    row_buffer_sav_val0 <= bram1_dataout;
-                    row_buffer_sav_val1 <= bram3_dataout;
-                end
+            if(gray_code == 2'b00 && cycle_counter == 2) begin
+                row_buffer_sav_val0 <= bram1_dataout;
+                row_buffer_sav_val1 <= bram3_dataout;
+            end else if(gray_code == 2'b01 && cycle_counter == 2) begin
+                row_buffer_sav_val0 <= bram0_dataout;
+                row_buffer_sav_val1 <= bram2_dataout;
+            end else if(gray_code == 2'b11 && cycle_counter == 0) begin
+                row_buffer_sav_val0 <= bram1_dataout;
+                row_buffer_sav_val1 <= bram3_dataout;
+            end else if(gray_code == 2'b10 && cycle_counter == 0) begin
+                row_buffer_sav_val0 <= bram0_dataout;
+                row_buffer_sav_val1 <= bram2_dataout;
             end
         end
     end

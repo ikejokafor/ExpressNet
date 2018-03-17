@@ -108,9 +108,9 @@ add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_la
 add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/ST_LOAD_PFB
 add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/ST_LOAD_SEQUENCER
 add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/clk
-add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/col
-add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/col_d
-add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/col_d_w
+add wave -noupdate -group {CTRL} -radix unsigned /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/col
+add wave -noupdate -group {CTRL} -radix unsigned /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/col_d
+add wave -noupdate -group {CTRL} -radix unsigned /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/col_d_w
 add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/cycle_counter
 add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/datain_valid
 add wave -noupdate -group {CTRL} /testbench_1/i0_cnn_layer_accel_octo/i0_cnn_layer_accel_octo_bram_ctrl/gc
@@ -230,7 +230,7 @@ add wave -noupdate -group {ROW_BUFFER
 add wave -noupdate -group {ROW_BUFFER
 } {/testbench_1/i0_cnn_layer_accel_octo/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/col_d}
 add wave -noupdate -group {ROW_BUFFER
-} {/testbench_1/i0_cnn_layer_accel_octo/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/cycle_counter}
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_octo/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/cycle_counter}
 add wave -noupdate -group {ROW_BUFFER
 } {/testbench_1/i0_cnn_layer_accel_octo/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/gray_code}
 add wave -noupdate -group {ROW_BUFFER
@@ -340,7 +340,7 @@ add wave -noupdate -group BRAM3 {/testbench_1/i0_cnn_layer_accel_octo/genblk1[0]
 add wave -noupdate -group BRAM3 {/testbench_1/i0_cnn_layer_accel_octo/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_dual_port_1_clock_ram/wrAddr}
 add wave -noupdate -group BRAM3 {/testbench_1/i0_cnn_layer_accel_octo/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_dual_port_1_clock_ram/wren}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {523 ns} 0}
+WaveRestoreCursors {{Cursor 1} {1060 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 245
 configure wave -valuecolwidth 191
@@ -356,4 +356,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {349 ns} {885 ns}
+WaveRestoreZoom {886 ns} {1254 ns}
