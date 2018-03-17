@@ -80,6 +80,8 @@ module cnn_layer_accel_octo #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Wires / Regs / Integers
 	//-----------------------------------------------------------------------------------------------------------------------------------------------    
+    wire                                        row_matric;
+    
     wire    [   C_LOG2_SEQ_DATA_DEPTH - 1:0]    bram_ctrl_seq_wrAddr;
     wire    [   C_LOG2_SEQ_DATA_DEPTH - 1:0]    bram_ctrl_seq_rdAddr;
     wire                                        bram_ctrl_seq_wren;
@@ -98,6 +100,7 @@ module cnn_layer_accel_octo #(
     wire                                        pfb_rden;
     wire    [                          17:0]    pfb_count;
 
+    wire    [                           5:0]    cycle_counter;
     reg                                         new_map;
     wire    [                           5:0]    bram_ctrl_state;
     wire    [       C_LOG2_BRAM_DEPTH - 2:0]    bram_ctrl_row;
@@ -138,24 +141,24 @@ module cnn_layer_accel_octo #(
                .C_BRAM_DEPTH   ( C_BRAM_DEPTH   )
             ) 
             i0_cnn_layer_accel_awe_rowbuffers (
-                .clk                        ( clk                                       ),
-                .rst                        ( rst                                       ),
-                .row                        ( bram_ctrl_row                             ),
-                .row_d                      ( bram_ctrl_row_d                           ),
-                .col                        ( bram_ctrl_col                             ),
-                .col_d                      ( bram_ctrl_col_d                           ),
-                .numRows                    ( bram_ctrl_numRows                         ),
-                .numCols                    ( bram_ctrl_numCols                         ),
-                .state                      ( bram_ctrl_state                           ),
-                .gray_code                  ( bram_ctrl_gray_code                       ),
-                .seq_datain                 ( seq_dataout                               ),
-                .row_matric                 ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]   ),
-                .sv_val                     ( seq_dataout[`SEQ_DATA_SV_VAL_FIELD]       ),
-                .pfb_rden                   ( bram_ctrl_pfb_rden_d                      ),
-                .pixel_datain               ( pfb_dataout                               ),
-                .pixel_datain_valid         ( pixel_datain_tag                          ),
-                .pixel_dataout              ( pixel_dataout                             ),
-                .pixel_dataout_valid        ( pixel_dataout_valid                       )  
+                .clk                        ( clk                       ),
+                .rst                        ( rst                       ),
+                .row                        ( bram_ctrl_row             ),
+                .row_d                      ( bram_ctrl_row_d           ),
+                .col                        ( bram_ctrl_col             ),
+                .col_d                      ( bram_ctrl_col_d           ),
+                .numRows                    ( bram_ctrl_numRows         ),
+                .numCols                    ( bram_ctrl_numCols         ),
+                .state                      ( bram_ctrl_state           ),
+                .gray_code                  ( bram_ctrl_gray_code       ),
+                .seq_datain                 ( seq_dataout               ),
+                .row_matric                 ( row_matric                ),
+                .pfb_rden                   ( bram_ctrl_pfb_rden_d      ),
+                .cycle_counter              ( cycle_counter             ),
+                .pixel_datain               ( pfb_dataout               ),
+                .pixel_datain_valid         ( pixel_datain_tag          ),
+                .pixel_dataout              ( pixel_dataout             ),
+                .pixel_dataout_valid        ( pixel_dataout_valid       )  
             );
 
             
@@ -184,34 +187,50 @@ module cnn_layer_accel_octo #(
         .C_BRAM_DEPTH   ( C_BRAM_DEPTH  )
     )
     i0_cnn_layer_accel_octo_bram_ctrl (
-        .clk                    ( clk                                       ),
-        .rst                    ( rst                                       ),
-        .datain_valid           ( datain_valid                              ),
-        .pixel_datain_tag       ( pixel_datain_tag                          ),
-        .pixel_datain_rdy       ( pixel_datain_rdy                          ), 
-        .seq_datain_tag         ( seq_datain_tag                            ),
-        .seq_datain_rdy         ( seq_datain_rdy                            ),
-        .new_map                ( new_map                                   ),
-        .state                  ( bram_ctrl_state                           ),
-        .row                    ( bram_ctrl_row                             ),
-        .row_d                  ( bram_ctrl_row_d                           ),
-        .col                    ( bram_ctrl_col                             ),
-        .col_d                  ( bram_ctrl_col_d                           ),
-        .numRows                ( bram_ctrl_numRows                         ),
-        .numCols                ( bram_ctrl_numCols                         ),   
-        .seq_count              ( seq_count                                 ),         
-        .pfb_count              ( pfb_count                                 ),            
-        .row_Matric             ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]   ),
-        .gray_code              ( bram_ctrl_gray_code                       ),
-        .pfb_wren               ( bram_ctrl_pfb_wren                        ),
-        .pfb_rden               ( bram_ctrl_pfb_rden                        ),
-        .pfb_rden_d             ( bram_ctrl_pfb_rden_d                      ),
-        .seq_wrAddr             ( bram_ctrl_seq_wrAddr                      ),   
-        .seq_rdAddr             ( bram_ctrl_seq_rdAddr                      ),
-        .seq_wren               ( bram_ctrl_seq_wren                        ),
-        .seq_rden               ( bram_ctrL_seq_rden                        )    
+        .clk                    ( clk                   ),
+        .rst                    ( rst                   ),
+        .datain_valid           ( datain_valid          ),
+        .pixel_datain_tag       ( pixel_datain_tag      ),
+        .pixel_datain_rdy       ( pixel_datain_rdy      ), 
+        .seq_datain_tag         ( seq_datain_tag        ),
+        .seq_datain_rdy         ( seq_datain_rdy        ),
+        .new_map                ( new_map               ),
+        .state                  ( bram_ctrl_state       ),
+        .row                    ( bram_ctrl_row         ),
+        .row_d                  ( bram_ctrl_row_d       ),
+        .col                    ( bram_ctrl_col         ),
+        .col_d                  ( bram_ctrl_col_d       ),
+        .numRows                ( bram_ctrl_numRows     ),
+        .numCols                ( bram_ctrl_numCols     ),   
+        .seq_count              ( seq_count             ),         
+        .pfb_count              ( pfb_count             ),            
+        .row_matric             ( row_matric            ),
+        .gray_code              ( bram_ctrl_gray_code   ),
+        .cycle_counter          ( cycle_counter         ),
+        .pfb_wren               ( bram_ctrl_pfb_wren    ),
+        .pfb_rden               ( bram_ctrl_pfb_rden    ),
+        .pfb_rden_d             ( bram_ctrl_pfb_rden_d  ),
+        .seq_wrAddr             ( bram_ctrl_seq_wrAddr  ),   
+        .seq_rdAddr             ( bram_ctrl_seq_rdAddr  ),
+        .seq_wren               ( bram_ctrl_seq_wren    ),
+        .seq_rden               ( bram_ctrL_seq_rden    )    
     );
     
+    
+    SRL_bit #(
+        .C_CLOCK_CYCLES( 2 )
+    ) 
+    i1_SRL_bit (
+        .clk        ( clk                                       ),
+        .rst        ( rst                                       ),
+        .ce         ( 1'b1                                      ),
+        .data_in    ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]   ),
+        .data_out   ( row_matric                                )
+    );    
+ 
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------         
     assign pfb_rden = (bram_ctrl_state == ST_AWE_CE_PRIM_BUFFER_0 || bram_ctrl_state == ST_AWE_CE_PRIM_BUFFER_1) ? bram_ctrl_pfb_rden_d : bram_ctrl_pfb_rden;
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
+
     
 endmodule

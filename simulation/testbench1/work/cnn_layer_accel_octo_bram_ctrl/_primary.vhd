@@ -23,8 +23,9 @@ entity cnn_layer_accel_octo_bram_ctrl is
         numCols         : out    vl_logic_vector;
         seq_count       : in     vl_logic_vector;
         pfb_count       : in     vl_logic_vector(17 downto 0);
-        row_Matric      : in     vl_logic;
+        row_matric      : in     vl_logic;
         gray_code       : out    vl_logic_vector(1 downto 0);
+        cycle_counter   : out    vl_logic_vector(5 downto 0);
         pfb_wren        : out    vl_logic;
         pfb_rden        : out    vl_logic;
         pfb_rden_d      : out    vl_logic;
