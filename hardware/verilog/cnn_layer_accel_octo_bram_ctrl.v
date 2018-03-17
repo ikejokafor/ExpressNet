@@ -303,14 +303,17 @@ module cnn_layer_accel_octo_bram_ctrl #(
                 end
                 ST_AWE_CE_ACTIVE: begin
                     seq_rden <= 1;
+                    seq_rdAddr <= seq_rdAddr + 1;
                     if(row_matric) begin
                         pfb_rden         <= 1;
-                        pixel_datain_rdy <= 1;
                     end
-                    if(row == numRows_r) begin
-                        state <= ST_IDLE;
-                    end else if(col == numCols) begin
-                        state <= ST_LOAD_PFB;
+                    if(col_d == numCols) begin
+                        seq_rdAddr <= 0;
+                        if(row == numRows_r) begin
+                            state <= ST_IDLE;
+                        end else begin
+                            state <= ST_LOAD_PFB;
+                        end
                     end
                 end
             endcase

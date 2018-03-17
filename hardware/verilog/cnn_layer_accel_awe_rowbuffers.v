@@ -346,33 +346,67 @@ module cnn_layer_accel_awe_rowbuffers #(
                         pixel_dataout[71:36]    <= {bram3_dataout, bram2_dataout};
                     end
                     if(row_matric) begin
-                        bram0_wren <= 1;
-                        bram1_wren <= 1;
-                        bram2_wren <= 1;
-                        bram3_wren <= 1;
-                        if(!(gray_code[0] ^ gray_code[1])) begin
-                            // incoming row                         
+                        if(gray_code == 2'b00) begin
+                            // incoming row
+                            bram1_wren      <= 1;
+                            bram3_wren      <= 1;                            
                             bram1_wrAddr    <= {1'b0, col};
                             bram3_wrAddr    <= {1'b0, col};
                             bram1_datain    <= pixel_datain;                 
                             bram3_datain    <= pixel_datain;
                             // row rename
+                            bram0_wren      <= 1;
+                            bram2_wren      <= 1;
                             bram0_wrAddr    <= {1'b0, col};
-                            bram2_wrAddr    <= {1'b0, col};                            
+                            bram2_wrAddr    <= {1'b0, col};  
                             bram0_datain    <= row_buffer_sav_val0;
-                            bram2_datain    <= row_buffer_sav_val1;
-                        end else begin
+                            bram2_datain    <= row_buffer_sav_val1;                            
+                        end else if(gray_code == 2'b01) begin
                             // incoming row
+                            bram0_wren      <= 1;
+                            bram2_wren      <= 1;
                             bram0_wrAddr    <= {1'b0, col};
-                            bram2_wrAddr    <= {1'b0, col};
-                            bram0_datain    <= pixel_datain;                 
-                            bram2_datain    <= pixel_datain;
+                            bram2_wrAddr    <= {1'b0, col}; 
+                            bram1_datain    <= pixel_datain;                 
+                            bram3_datain    <= pixel_datain;                            
                             // row rename
+                            bram1_wren      <= 1;
+                            bram3_wren      <= 1;                            
+                            bram1_wrAddr    <= {1'b1, col};
+                            bram3_wrAddr    <= {1'b1, col};
+                            bram1_datain    <= pixel_datain;                 
+                            bram3_datain    <= pixel_datain;
+                        end else if(gray_code == 2'b11) begin
+                            // incoming row
+                            bram1_wren      <= 1;
+                            bram3_wren      <= 1;                            
+                            bram1_wrAddr    <= {1'b1, col};
+                            bram3_wrAddr    <= {1'b1, col};
+                            bram1_datain    <= pixel_datain;                 
+                            bram3_datain    <= pixel_datain;
+                            // row rename
+                            bram0_wren      <= 1;
+                            bram2_wren      <= 1;
+                            bram0_wrAddr    <= {1'b1, col};
+                            bram2_wrAddr    <= {1'b1, col};  
+                            bram0_datain    <= row_buffer_sav_val0;
+                            bram2_datain    <= row_buffer_sav_val1; 
+                        end else if(gray_code == 2'b10) begin
+                            // incoming row
+                            bram0_wren      <= 1;
+                            bram2_wren      <= 1;
+                            bram0_wrAddr    <= {1'b1, col};
+                            bram2_wrAddr    <= {1'b1, col}; 
+                            bram1_datain    <= pixel_datain;                 
+                            bram3_datain    <= pixel_datain;                            
+                            // row rename
+                            bram1_wren      <= 1;
+                            bram3_wren      <= 1;                            
                             bram1_wrAddr    <= {1'b0, col};
                             bram3_wrAddr    <= {1'b0, col};
-                            bram1_datain    <= row_buffer_sav_val0;
-                            bram3_datain    <= row_buffer_sav_val1;                           
-                        end                   
+                            bram1_datain    <= pixel_datain;                 
+                            bram3_datain    <= pixel_datain;
+                        end
                     end
                 end
             endcase
