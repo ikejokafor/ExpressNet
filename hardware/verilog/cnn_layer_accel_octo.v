@@ -86,14 +86,18 @@ module cnn_layer_accel_octo #(
 	//  Wires / Regs / Integers
 	//-----------------------------------------------------------------------------------------------------------------------------------------------    
     wire                                        row_matric;
+    wire    [                           1:0]    gray_code;
     
     wire    [   C_LOG2_SEQ_DATA_DEPTH - 1:0]    seq_wrAddr;
     wire    [   C_LOG2_SEQ_DATA_DEPTH - 1:0]    seq_rdAddr;
     wire                                        seq_wren;
     wire                                        seq_rden;
-    wire    [                           1:0]    gray_code;
     wire    [        C_SEQ_DATA_WIDTH - 1:0]    seq_dataout;
-    wire    [       C_LOG2_SEQ_DATA_DEPTH:0]    seq_count;   
+    wire    [       C_LOG2_SEQ_DATA_DEPTH:0]    seq_count;
+    wire                                        seq_count_rst;          
+    wire                                        seq_count_set;          
+    wire    [       C_LOG2_SEQ_DATA_DEPTH:0]    seq_count_set_value;    
+    
 
     wire    [   C_PIXEL_DATAOUT_WIDTH - 1:0]    pixel_dataout;
     wire                                        pixel_dataout_valid;
@@ -102,8 +106,9 @@ module cnn_layer_accel_octo #(
     wire                                        pfb_rden;
     wire                                        pfb_rden_d;
     wire    [           C_PIXEL_WIDTH - 1:0]    pfb_dataout;
-    wire                                        bram_ctrl_pfb_rden;
     wire    [                          17:0]    pfb_count;
+    
+    wire                                        bram_ctrl_pfb_rden;
 
     wire    [                           5:0]    cycle_counter;
     reg                                         new_map;
@@ -125,16 +130,19 @@ module cnn_layer_accel_octo #(
         .C_SEQ_ACCESS   ( 1                     )
     ) 
     sequencer (
-        .wrAddr     ( seq_wrAddr              ),   
-        .rdAddr     ( seq_rdAddr              ),
-        .datain     ( datain[C_SEQ_DATA_WIDTH - 1:0]    ),
-        .clk        ( clk                               ),
-        .rst        ( rst                               ),
-        .wren       ( seq_wren                ),
-        .rden       ( seq_rden                ),
-        .dataout    ( seq_dataout                       ),
-        .count      ( seq_count                         ),
-        .full       (                                   )        
+        .wrAddr             ( seq_wrAddr                        ),   
+        .rdAddr             ( seq_rdAddr                        ),
+        .datain             ( datain[C_SEQ_DATA_WIDTH - 1:0]    ),
+        .clk                ( clk                               ),
+        .rst                ( rst                               ),
+        .wren               ( seq_wren                          ),
+        .rden               ( seq_rden                          ),
+        .dataout            ( seq_dataout                       ),
+        .count              ( seq_count                         ),
+        .count_rst          ( seq_count_rst                     ),
+        .count_set          ( seq_count_set                     ),
+        .count_set_value    ( seq_count_set_value               ),         
+        .full               (                                   )        
     );
     
 
@@ -193,28 +201,31 @@ module cnn_layer_accel_octo #(
         .rst                    ( rst                   ),
         .datain_valid           ( datain_valid          ),
         .pixel_datain_tag       ( pixel_datain_tag      ),
-        .pixel_datain_rdy       ( pixel_datain_rdy      ), 
+        .pixel_datain_rdy       ( pixel_datain_rdy      ),
+        .pixel_dataout_valid    ( pixel_dataout_valid   ), 
+        .seq_wrAddr             ( seq_wrAddr            ),   
+        .seq_rdAddr             ( seq_rdAddr            ),
+        .seq_wren               ( seq_wren              ),
+        .seq_rden               ( seq_rden              ),         
         .seq_datain_tag         ( seq_datain_tag        ),
         .seq_datain_rdy         ( seq_datain_rdy        ),
+        .seq_count              ( seq_count             ), 
+        .seq_count_rst          ( seq_count_rst         ),
+        .seq_count_set          ( seq_count_set         ),
+        .seq_count_set_value    ( seq_count_set_value   ), 
         .new_map                ( new_map               ),
         .state                  ( state                 ),
         .input_row_d            ( input_row_d           ),
         .input_col              ( input_col             ),
         .input_col_d            ( input_col_d           ),
         .num_input_cols         ( num_input_cols        ),   
-        .seq_count              ( seq_count             ),         
-        .pfb_count              ( pfb_count             ),            
         .row_matric             ( row_matric            ),
         .gray_code              ( gray_code             ),
         .cycle_counter          ( cycle_counter         ),
+        .pfb_count              ( pfb_count             ),                    
         .pfb_wren               ( pfb_wren              ),
         .pfb_rden               ( bram_ctrl_pfb_rden    ),
         .pfb_rden_d             ( pfb_rden_d            ),
-        .seq_wrAddr             ( seq_wrAddr            ),   
-        .seq_rdAddr             ( seq_rdAddr            ),
-        .seq_wren               ( seq_wren              ),
-        .seq_rden               ( seq_rden              ),
-        .pixel_dataout_valid    ( pixel_dataout_valid   ),
         .row_matric_done        ( row_matric_done       )
     );
     
@@ -229,6 +240,7 @@ module cnn_layer_accel_octo #(
         .data_in    ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]   ),
         .data_out   ( row_matric                                )
     );    
+
  
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------         
     assign pfb_rden = (state == ST_AWE_CE_PRIM_BUFFER_0 || state == ST_AWE_CE_PRIM_BUFFER_1) ? pfb_rden_d : bram_ctrl_pfb_rden;

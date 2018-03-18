@@ -37,27 +37,30 @@ module cnn_layer_accel_octo_bram_ctrl #(
     datain_valid,
     pixel_datain_tag,
     pixel_datain_rdy,
+    pixel_dataout_valid,
+    seq_wrAddr,  
+    seq_rdAddr,  
+    seq_wren,    
+    seq_rden,
     seq_datain_tag,
     seq_datain_rdy,
+    seq_count,
+    seq_count_rst,        
+    seq_count_set,        
+    seq_count_set_value, 
     new_map,
     state,  
     input_row_d,
     input_col,
     input_col_d,
     num_input_cols,
-    seq_count,            
-    pfb_count,             
     row_matric,
     gray_code,
     cycle_counter,
+    pfb_count,     
     pfb_wren, 
     pfb_rden,
     pfb_rden_d,
-    seq_wrAddr,  
-    seq_rdAddr,  
-    seq_wren,    
-    seq_rden,
-    pixel_dataout_valid,
     row_matric_done
 );
 
@@ -92,27 +95,30 @@ module cnn_layer_accel_octo_bram_ctrl #(
     input                                       datain_valid;
     input                                       pixel_datain_tag;
     output reg                                  pixel_datain_rdy;
+    output                                      pixel_dataout_valid;
+    output reg [C_LOG2_SEQ_DATA_DEPTH - 1:0]    seq_wrAddr;  
+    output reg [C_LOG2_SEQ_DATA_DEPTH - 1:0]    seq_rdAddr;  
+    output reg                                  seq_wren;    
+    output reg                                  seq_rden;    
     input                                       seq_datain_tag;
     output reg                                  seq_datain_rdy;
+    input      [   C_LOG2_SEQ_DATA_DEPTH:0]     seq_count;
+    output reg                                  seq_count_rst;        
+    output reg                                  seq_count_set;        
+    output     [   C_LOG2_SEQ_DATA_DEPTH:0]     seq_count_set_value;     
     input                                       new_map;
     output reg [                       6:0]     state;  
     output     [   C_LOG2_BRAM_DEPTH - 2:0]     input_row_d;
     output reg [   C_LOG2_BRAM_DEPTH - 2:0]     input_col;
     output     [   C_LOG2_BRAM_DEPTH - 2:0]     input_col_d;
     output     [   C_LOG2_BRAM_DEPTH - 2:0]     num_input_cols; 
-    input      [   C_LOG2_SEQ_DATA_DEPTH:0]     seq_count;            
     input      [                      17:0]     pfb_count; 
-    input                                       row_matric;
-    output     [                       1:0]     gray_code;
-    output reg [                       5:0]     cycle_counter;
     output reg                                  pfb_wren;    
     output reg                                  pfb_rden; 
     output                                      pfb_rden_d;
-    output reg [C_LOG2_SEQ_DATA_DEPTH - 1:0]    seq_wrAddr;  
-    output reg [C_LOG2_SEQ_DATA_DEPTH - 1:0]    seq_rdAddr;  
-    output reg                                  seq_wren;    
-    output reg                                  seq_rden;
-    output                                      pixel_dataout_valid;
+    input                                       row_matric;
+    output     [                       1:0]     gray_code;
+    output reg [                       5:0]     cycle_counter;
     output                                      row_matric_done;
 	
 
@@ -265,7 +271,8 @@ module cnn_layer_accel_octo_bram_ctrl #(
   
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------          
-    assign row_matric_done = (row_matric_count == row_matric_done_count_cfg);
+    assign row_matric_done      = (row_matric_count == row_matric_done_count_cfg);
+    assign seq_count_set_value  = seq_full_count_cfg;
     
     always@(posedge clk) begin
         if(rst) begin
@@ -274,6 +281,8 @@ module cnn_layer_accel_octo_bram_ctrl #(
             seq_wren                <= 0;
             seq_rden                <= 0;
             seq_datain_rdy          <= 0;
+            seq_count_rst           <= 0;
+            seq_count_set           <= 0;
             pixel_datain_rdy        <= 0;
             seq_wrAddr              <= 0; 
             seq_rdAddr              <= 0;
@@ -285,7 +294,9 @@ module cnn_layer_accel_octo_bram_ctrl #(
             pfb_rden                <= 0;
             seq_wren                <= 0;
             seq_rden                <= 0;
-            seq_datain_rdy          <= 0;
+            seq_datain_rdy          <= 0;           
+            seq_count_rst           <= 0;
+            seq_count_set           <= 0;
             pixel_datain_rdy        <= 0;
             pixel_dataout_valid_r   <= 0;
             case(state)           
@@ -304,6 +315,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
                     end
                     if(seq_count == seq_full_count_cfg) begin
                         seq_datain_rdy  <= 0;
+                        seq_wren        <= 0;
                         state           <= ST_AWE_CE_PRIM_BUFFER_0;
                     end
                 end
@@ -336,20 +348,25 @@ module cnn_layer_accel_octo_bram_ctrl #(
                     end
                 end
                 ST_AWE_CE_ACTIVE: begin
-                    pixel_dataout_valid_r   <= 1;
-                    seq_rden                <= 1;
-                    seq_rdAddr              <= seq_rdAddr + 1;
-                    if(row_matric) begin
-                        pfb_rden         <= 1;
+                    if(seq_count > 2) begin
+                        seq_rden     <= 1;
+                        seq_rdAddr   <= seq_rdAddr + 1;
+                    end else begin
+                        seq_rden     <= 0;
+                        seq_rdAddr   <= 0;
                     end
+                    if(row_matric) begin
+                        pfb_rden <= 1;
+                    end
+                    pixel_dataout_valid_r   <= 1;
                     if(output_col == num_output_cols_cfg && row_matric) begin
-                        seq_rdAddr              <= 0;
                         pixel_dataout_valid_r   <= 0;
-                        seq_rden                <= 0;
                         if(output_row == num_output_rows_cfg) begin
-                            state <= ST_IDLE;
+                            seq_count_rst   <= 1;
+                            state           <= ST_IDLE;
                         end else begin
-                            state       <= ST_FIN_ROW_MATRIC;
+                            seq_count_set   <= 1;
+                            state           <= ST_FIN_ROW_MATRIC;
                         end
                     end
                 end

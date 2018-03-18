@@ -144,16 +144,19 @@ module cnn_layer_accel_awe_rowbuffers #(
         .C_SEQ_ACCESS   ( 0                  )
     ) 
     i0_xilinx_dual_port_1_clock_ram (
-        .wrAddr     ( bram0_wrAddr      ),  
-        .rdAddr     ( bram0_rdAddr      ),
-        .datain     ( bram0_datain      ),
-        .clk        ( clk               ),
-        .rst        ( rst               ),        
-        .wren       ( bram0_wren        ),
-        .rden       ( bram0_rden        ),
-        .dataout    ( bram0_dataout     ),
-        .count      (                   ),        
-        .full       (                   )
+        .wrAddr             ( bram0_wrAddr      ),  
+        .rdAddr             ( bram0_rdAddr      ),
+        .datain             ( bram0_datain      ),
+        .clk                ( clk               ),
+        .rst                ( rst               ),        
+        .wren               ( bram0_wren        ),
+        .rden               ( bram0_rden        ),
+        .dataout            ( bram0_dataout     ),
+        .count              (                   ), 
+        .count_rst          (                   ),
+        .count_set          (                   ),
+        .count_set_value    (                   ),
+        .full               (                   )
     );
     
     
@@ -163,16 +166,19 @@ module cnn_layer_accel_awe_rowbuffers #(
         .C_SEQ_ACCESS   ( 0                  )  
     ) 
     i1_xilinx_dual_port_1_clock_ram (
-        .wrAddr     ( bram1_wrAddr      ),  
-        .rdAddr     ( bram1_rdAddr      ),
-        .datain     ( bram1_datain      ),
-        .clk        ( clk               ),
-        .rst        ( rst               ),
-        .wren       ( bram1_wren        ),
-        .rden       ( bram1_rden        ),
-        .dataout    ( bram1_dataout     ),
-        .count      (                   ),        
-        .full       (                   )
+        .wrAddr             ( bram1_wrAddr      ),  
+        .rdAddr             ( bram1_rdAddr      ),
+        .datain             ( bram1_datain      ),
+        .clk                ( clk               ),
+        .rst                ( rst               ),        
+        .wren               ( bram1_wren        ),
+        .rden               ( bram1_rden        ),
+        .dataout            ( bram1_dataout     ),
+        .count              (                   ), 
+        .count_rst          (                   ),
+        .count_set          (                   ),
+        .count_set_value    (                   ),
+        .full               (                   )
     );
     
     
@@ -182,16 +188,19 @@ module cnn_layer_accel_awe_rowbuffers #(
         .C_SEQ_ACCESS   ( 0                  )  
     ) 
     i2_xilinx_dual_port_1_clock_ram (
-        .wrAddr     ( bram2_wrAddr      ),  
-        .rdAddr     ( bram2_rdAddr      ),
-        .datain     ( bram2_datain      ),
-        .clk        ( clk               ),
-        .rst        ( rst               ),        
-        .wren       ( bram2_wren        ),
-        .rden       ( bram2_rden        ),
-        .dataout    ( bram2_dataout     ),
-        .count      (                   ),        
-        .full       (                   )
+        .wrAddr             ( bram2_wrAddr      ),  
+        .rdAddr             ( bram2_rdAddr      ),
+        .datain             ( bram2_datain      ),
+        .clk                ( clk               ),
+        .rst                ( rst               ),        
+        .wren               ( bram2_wren        ),
+        .rden               ( bram2_rden        ),
+        .dataout            ( bram2_dataout     ),
+        .count              (                   ), 
+        .count_rst          (                   ),
+        .count_set          (                   ),
+        .count_set_value    (                   ),
+        .full               (                   )
     );
     
     
@@ -201,16 +210,19 @@ module cnn_layer_accel_awe_rowbuffers #(
         .C_SEQ_ACCESS   ( 0                  )  
     ) 
     i3_xilinx_dual_port_1_clock_ram (
-        .wrAddr     ( bram3_wrAddr      ),  
-        .rdAddr     ( bram3_rdAddr      ),
-        .datain     ( bram3_datain      ),
-        .clk        ( clk               ),
-        .rst        ( rst               ),        
-        .wren       ( bram3_wren        ),
-        .rden       ( bram3_rden        ),
-        .dataout    ( bram3_dataout     ),
-        .count      (                   ),
-        .full       (                   )
+        .wrAddr             ( bram3_wrAddr      ),  
+        .rdAddr             ( bram3_rdAddr      ),
+        .datain             ( bram3_datain      ),
+        .clk                ( clk               ),
+        .rst                ( rst               ),        
+        .wren               ( bram3_wren        ),
+        .rden               ( bram3_rden        ),
+        .dataout            ( bram3_dataout     ),
+        .count              (                   ), 
+        .count_rst          (                   ),
+        .count_set          (                   ),
+        .count_set_value    (                   ),
+        .full               (                   )
     );
     
 

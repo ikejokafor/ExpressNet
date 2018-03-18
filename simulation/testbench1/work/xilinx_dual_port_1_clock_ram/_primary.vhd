@@ -16,6 +16,9 @@ entity xilinx_dual_port_1_clock_ram is
         rden            : in     vl_logic;
         dataout         : out    vl_logic_vector;
         count           : out    vl_logic_vector;
+        count_rst       : in     vl_logic;
+        count_set       : in     vl_logic;
+        count_set_value : in     vl_logic_vector;
         full            : out    vl_logic
     );
     attribute mti_svvh_generic_type : integer;

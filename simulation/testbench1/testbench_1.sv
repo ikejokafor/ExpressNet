@@ -100,7 +100,7 @@ module testbench_1;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_input_cols_cfg            = COLS - 1;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_rows_cfg           = ROWS - (KERNEL_SIZE - 1) - 1;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg           = COLS - (KERNEL_SIZE - 1) - 1;
-        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.seq_full_count_cfg            = COLS * 5;
+        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.seq_full_count_cfg            = (COLS - (KERNEL_SIZE - 1)) * 5;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.row_matric_done_count_cfg     = i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_input_cols_cfg 
                                                                                                     - i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg - 1;
         pixel_datain_tag = 0;
@@ -117,27 +117,27 @@ module testbench_1;
             $fwrite(fd, "\n");
         end
         
-        //          S      RM   RST    P
-        arr2[0] = {1'b0, 1'b0, 1'b1, 1'b1, 10'd0  };
-        arr2[1] = {1'b0, 1'b0, 1'b0, 1'b0, 10'd2  };
-        arr2[2] = {1'b1, 1'b0, 1'b0, 1'b0, 10'd512};
-        arr2[3] = {1'b0, 1'b0, 1'b0, 1'b0, 10'd513};
-        arr2[4] = {1'b0, 1'b1, 1'b0, 1'b0, 10'd514};
+        //          RM   RST    P
+        arr2[0] = {1'b0, 1'b1, 1'b1, 10'd0  };
+        arr2[1] = {1'b0, 1'b0, 1'b0, 10'd2  };
+        arr2[2] = {1'b0, 1'b0, 1'b0, 10'd512};
+        arr2[3] = {1'b0, 1'b0, 1'b0, 10'd513};
+        arr2[4] = {1'b1, 1'b0, 1'b0, 10'd514};
         parity0 = 0;
         parity1 = 1;
 
     
         j = 0;      
         for(i = 5; i < ((COLS - (KERNEL_SIZE - 1)) * 5); i = i + 5) begin
-            arr2[i    ] = {1'b1, 1'b0, 1'b1, parity0, arr2[i - 5][`SEQ_DATA_SEQ_FIELD] + 10'd1};
+            arr2[i    ] = {1'b0, 1'b1, parity0, arr2[i - 5][`SEQ_DATA_SEQ_FIELD] + 10'd1};
             if((j % 2) == 0) begin
                 arr2[i + 1] = {1'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`SEQ_DATA_SEQ_FIELD]};
             end else begin
                 arr2[i + 1] = {1'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`SEQ_DATA_SEQ_FIELD] + 10'd2};
             end
-            arr2[i + 2] = {1'b0, 1'b0, 1'b0, 1'b0, arr2[i - 3][`SEQ_DATA_SEQ_FIELD] + 10'd1};
-            arr2[i + 3] = {1'b0, 1'b0, 1'b0, 1'b0, arr2[i - 2][`SEQ_DATA_SEQ_FIELD] + 10'd1};
-            arr2[i + 4] = {1'b0, 1'b1, 1'b0, 1'b0, arr2[i - 1][`SEQ_DATA_SEQ_FIELD] + 10'd1};
+            arr2[i + 2] = {1'b0, 1'b0, 1'b0, arr2[i - 3][`SEQ_DATA_SEQ_FIELD] + 10'd1};
+            arr2[i + 3] = {1'b0, 1'b0, 1'b0, arr2[i - 2][`SEQ_DATA_SEQ_FIELD] + 10'd1};
+            arr2[i + 4] = {1'b1, 1'b0, 1'b0, arr2[i - 1][`SEQ_DATA_SEQ_FIELD] + 10'd1};
             parity0 = ~parity0;
             parity1 = ~parity1;
             j = (j + 1) % 2;
@@ -159,7 +159,7 @@ module testbench_1;
         datain = arr2[0];
         datain_valid = 1;
         seq_datain_tag = 1;
-        while(i < (COLS * 5)) begin
+        while(i < ((COLS - (KERNEL_SIZE - 1)) * 5)) begin
             @(posedge clk);
             if(seq_datain_rdy) begin
                 datain = arr2[i];
@@ -188,8 +188,7 @@ module testbench_1;
         datain_valid = 0;
         pixel_datain_tag = 0;
         
-        
-        @(posedge clk);        
+    
         $stop;
     end
     

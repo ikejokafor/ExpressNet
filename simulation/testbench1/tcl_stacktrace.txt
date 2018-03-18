@@ -1,0 +1,20 @@
+Sat Mar 17 8:50:42 PM Eastern Daylight Time 2018
+Trace back: invalid command name ".main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data"
+    while executing
+"$widget index @$x,$y"
+    (procedure "WaveABar::mouseMotionUpdate" line 19)
+    invoked from within
+"WaveABar::mouseMotionUpdate .main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data .main_pane.wave.interior.cs.body.pw.wf 486 466"
+    ("after" script)
+  <2: ::tkerror {invalid command name ".main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data"}
+  <1: ::bgerror {invalid command name ".main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data"}
+Sat Mar 17 10:27:19 PM Eastern Daylight Time 2018
+Trace back: invalid command name ".main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data"
+    while executing
+"$widget index @$x,$y"
+    (procedure "WaveABar::mouseMotionUpdate" line 19)
+    invoked from within
+"WaveABar::mouseMotionUpdate .main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data .main_pane.wave.interior.cs.body.pw.wf 1060 769"
+    ("after" script)
+  <2: ::tkerror {invalid command name ".main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data"}
+  <1: ::bgerror {invalid command name ".main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data"}

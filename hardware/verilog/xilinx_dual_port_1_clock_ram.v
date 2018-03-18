@@ -40,6 +40,9 @@ module xilinx_dual_port_1_clock_ram #(
     rden,       
     dataout,
     count,
+    count_rst,
+    count_set,
+    count_set_value,
     full    
 );	
     // ----------------------------------------------------------------------------------------------------------------------------------------------
@@ -59,8 +62,11 @@ module xilinx_dual_port_1_clock_ram #(
     input                                       wren;       
     input                                       rden;       
     output reg  [          C_RAM_WIDTH - 1:0]   dataout;
-    output                                      full;
     output reg  [       clog2(C_RAM_DEPTH):0]   count;
+    input                                       count_rst;
+    input                                       count_set;
+    input       [       clog2(C_RAM_DEPTH):0]   count_set_value;
+    output                                      full;
 
   
     
@@ -88,7 +94,11 @@ module xilinx_dual_port_1_clock_ram #(
         if(rst) begin
             count <= 0;
         end else begin
-            if(wren && rden) begin
+            if(count_rst) begin
+                count <= 0;
+            end else if(count_set) begin
+                count <= count_set_value;
+            end else if(wren && rden) begin
                 count <= count;
             end else if(wren && count <= C_RAM_DEPTH) begin
                 count <= count + 1;
@@ -100,8 +110,7 @@ module xilinx_dual_port_1_clock_ram #(
     // END BRAM Count logic -------------------------------------------------------------------------------------------------------------------------
  
  
-    // BEGIN BRAM Read logic ------------------------------------------------------------------------------------------------------------------------
-    
+    // BEGIN BRAM Read logic ------------------------------------------------------------------------------------------------------------------------    
     generate
         if(C_SEQ_ACCESS) begin
             assign rd_address = (rden) ? rd_addr_plus_one : rdAddr;
