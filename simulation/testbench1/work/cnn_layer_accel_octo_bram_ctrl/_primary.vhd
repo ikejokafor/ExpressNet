@@ -14,13 +14,11 @@ entity cnn_layer_accel_octo_bram_ctrl is
         seq_datain_tag  : in     vl_logic;
         seq_datain_rdy  : out    vl_logic;
         new_map         : in     vl_logic;
-        state           : out    vl_logic_vector(5 downto 0);
-        row             : out    vl_logic_vector;
-        row_d           : out    vl_logic_vector;
-        col             : out    vl_logic_vector;
-        col_d           : out    vl_logic_vector;
-        numRows         : out    vl_logic_vector;
-        numCols         : out    vl_logic_vector;
+        state           : out    vl_logic_vector(6 downto 0);
+        input_row_d     : out    vl_logic_vector;
+        input_col       : out    vl_logic_vector;
+        input_col_d     : out    vl_logic_vector;
+        num_input_cols  : out    vl_logic_vector;
         seq_count       : in     vl_logic_vector;
         pfb_count       : in     vl_logic_vector(17 downto 0);
         row_matric      : in     vl_logic;
@@ -32,7 +30,9 @@ entity cnn_layer_accel_octo_bram_ctrl is
         seq_wrAddr      : out    vl_logic_vector;
         seq_rdAddr      : out    vl_logic_vector;
         seq_wren        : out    vl_logic;
-        seq_rden        : out    vl_logic
+        seq_rden        : out    vl_logic;
+        pixel_dataout_valid: out    vl_logic;
+        row_matric_done : out    vl_logic
     );
     attribute mti_svvh_generic_type : integer;
     attribute mti_svvh_generic_type of C_NUM_AWE : constant is 1;

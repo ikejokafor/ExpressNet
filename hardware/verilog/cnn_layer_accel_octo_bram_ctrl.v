@@ -21,7 +21,7 @@
 //
 //
 //
-// Additional Comments:    
+// Additional Comments:    input dimensions is regular map dimensions plus padded size
 //                         
 //                         
 //                         
@@ -41,12 +41,10 @@ module cnn_layer_accel_octo_bram_ctrl #(
     seq_datain_rdy,
     new_map,
     state,  
-    row,
-    row_d,
-    col,
-    col_d,
-    numRows,
-    numCols,
+    input_row_d,
+    input_col,
+    input_col_d,
+    num_input_cols,
     seq_count,            
     pfb_count,             
     row_matric,
@@ -58,7 +56,9 @@ module cnn_layer_accel_octo_bram_ctrl #(
     seq_wrAddr,  
     seq_rdAddr,  
     seq_wren,    
-    seq_rden      
+    seq_rden,
+    pixel_dataout_valid,
+    row_matric_done
 );
 
 
@@ -75,12 +75,13 @@ module cnn_layer_accel_octo_bram_ctrl #(
     localparam C_LOG2_BRAM_DEPTH        = clog2(C_BRAM_DEPTH);
     localparam C_LOG2_SEQ_DATA_DEPTH    = clog2((C_BRAM_DEPTH / 2) * 5);
 
-    localparam ST_IDLE                  = 6'b000001;  
-    localparam ST_LOAD_SEQUENCER        = 6'b000010;
-    localparam ST_AWE_CE_PRIM_BUFFER_0  = 6'b000100;
-    localparam ST_AWE_CE_PRIM_BUFFER_1  = 6'b001000;
-    localparam ST_LOAD_PFB              = 6'b010000;
-    localparam ST_AWE_CE_ACTIVE         = 6'b100000;
+    localparam ST_IDLE                  = 7'b0000001;  
+    localparam ST_LOAD_SEQUENCER        = 7'b0000010;
+    localparam ST_AWE_CE_PRIM_BUFFER_0  = 7'b0000100;
+    localparam ST_AWE_CE_PRIM_BUFFER_1  = 7'b0001000;
+    localparam ST_LOAD_PFB              = 7'b0010000;
+    localparam ST_AWE_CE_ACTIVE         = 7'b0100000;
+    localparam ST_FIN_ROW_MATRIC        = 7'b1000000;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -94,13 +95,11 @@ module cnn_layer_accel_octo_bram_ctrl #(
     input                                       seq_datain_tag;
     output reg                                  seq_datain_rdy;
     input                                       new_map;
-    output reg [                       5:0]     state;  
-    output reg [   C_LOG2_BRAM_DEPTH - 2:0]     row;
-    output     [   C_LOG2_BRAM_DEPTH - 2:0]     row_d;
-    output reg [   C_LOG2_BRAM_DEPTH - 2:0]     col;
-    output     [   C_LOG2_BRAM_DEPTH - 2:0]     col_d;
-    output     [   C_LOG2_BRAM_DEPTH - 2:0]     numRows;
-    output     [   C_LOG2_BRAM_DEPTH - 2:0]     numCols; 
+    output reg [                       6:0]     state;  
+    output     [   C_LOG2_BRAM_DEPTH - 2:0]     input_row_d;
+    output reg [   C_LOG2_BRAM_DEPTH - 2:0]     input_col;
+    output     [   C_LOG2_BRAM_DEPTH - 2:0]     input_col_d;
+    output     [   C_LOG2_BRAM_DEPTH - 2:0]     num_input_cols; 
     input      [   C_LOG2_SEQ_DATA_DEPTH:0]     seq_count;            
     input      [                      17:0]     pfb_count; 
     input                                       row_matric;
@@ -113,6 +112,8 @@ module cnn_layer_accel_octo_bram_ctrl #(
     output reg [C_LOG2_SEQ_DATA_DEPTH - 1:0]    seq_rdAddr;  
     output reg                                  seq_wren;    
     output reg                                  seq_rden;
+    output                                      pixel_dataout_valid;
+    output                                      row_matric_done;
 	
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -120,12 +121,18 @@ module cnn_layer_accel_octo_bram_ctrl #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------        
     wire                                    row_matric;
     wire                                    start_count_delay;
-    wire    [   C_LOG2_BRAM_DEPTH - 2:0]    row_d_w;
-    wire    [   C_LOG2_BRAM_DEPTH - 2:0]    col_d_w;
     reg     [                       1:0]    gc;
-    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    numRows_r;
-    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    numCols_r; 
-    reg     [   C_LOG2_SEQ_DATA_DEPTH:0]    seq_full_count;
+    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    input_row;
+    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    output_col;   
+    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    output_row;
+    reg     [                       8:0]    row_matric_count;
+    reg                                     pixel_dataout_valid_r;
+    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    num_input_rows_cfg;
+    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols_cfg; 
+    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    num_output_rows_cfg;
+    reg     [   C_LOG2_BRAM_DEPTH - 2:0]    num_output_cols_cfg; 
+    reg     [   C_LOG2_SEQ_DATA_DEPTH:0]    seq_full_count_cfg;
+    reg     [                       8:0]    row_matric_done_count_cfg;
     
 	
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -144,30 +151,30 @@ module cnn_layer_accel_octo_bram_ctrl #(
  
  
     SRL_bus #(
-        .C_CLOCK_CYCLES ( 2                         ),    // two cycle delay for fifo_fwft
+        .C_CLOCK_CYCLES ( 2                         ),
         .C_DATA_WIDTH   ( (C_LOG2_BRAM_DEPTH - 1)   )
     ) 
     i0_SRL_bus (
         .clk        ( clk           ),
         .rst        ( rst           ),
         .ce         ( 1'b1          ),
-        .data_in    ( col           ),
-        .data_out   ( col_d_w       )
+        .data_in    ( input_col     ),
+        .data_out   ( input_col_d   )
     );
     
     
     SRL_bus #(
-        .C_CLOCK_CYCLES ( 2                         ),    // two cycle delay for fifo_fwft
+        .C_CLOCK_CYCLES ( 2                         ),
         .C_DATA_WIDTH   ( (C_LOG2_BRAM_DEPTH - 1)   )
     ) 
     i1_SRL_bus (
         .clk        ( clk           ),
         .rst        ( rst           ),
         .ce         ( 1'b1          ),
-        .data_in    ( row           ),
-        .data_out   ( row_d_w       )
+        .data_in    ( input_row     ),
+        .data_out   ( input_row_d   )
     );
-      
+
     
     SRL_bit #(
         .C_CLOCK_CYCLES( 2 )
@@ -178,6 +185,18 @@ module cnn_layer_accel_octo_bram_ctrl #(
         .ce         ( 1'b1                  ),
         .data_in    ( seq_rden              ),
         .data_out   ( start_count_delay     )
+    );
+    
+    
+    SRL_bit #(
+        .C_CLOCK_CYCLES( 2 )
+    ) 
+    i1_SRL_bit (
+        .clk        ( clk                       ),
+        .rst        ( rst                       ),
+        .ce         ( 1'b1                      ),
+        .data_in    ( pixel_dataout_valid_r     ),
+        .data_out   ( pixel_dataout_valid       )
     );
 
 
@@ -198,19 +217,32 @@ module cnn_layer_accel_octo_bram_ctrl #(
 
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
-    assign numRows = numRows_r;
-    assign numCols = numCols_r;
+    assign num_input_cols   = num_input_cols_cfg;
     
     always@(posedge clk) begin
         if(rst) begin
-            row <= 0;
-            col <= 0;
+            input_row <= 0;
+            input_col <= 0;
         end else begin
-            if(col == numCols_r) begin
-                col  <= 0;
-                row  <= row + 1;
-            end else if(row_matric || ((state == ST_AWE_CE_PRIM_BUFFER_0 || state == ST_LOAD_PFB) && datain_valid && pixel_datain_tag) && pixel_datain_rdy) begin
-                col  <= col + 1;
+            if(input_col == num_input_cols_cfg) begin
+                input_col  <= 0;
+                input_row  <= input_row + 1;
+            end else if((state == ST_AWE_CE_PRIM_BUFFER_0 || state == ST_LOAD_PFB) && datain_valid && pixel_datain_tag && pixel_datain_rdy) begin
+                input_col  <= input_col + 1;
+            end
+        end
+    end
+    
+    always@(posedge clk) begin
+        if(rst) begin
+            output_row <= 0;
+            output_col <= 0;
+        end else begin
+            if(output_col == num_output_cols_cfg && row_matric) begin
+                output_col  <= 0;
+                output_row  <= output_row + 1;
+            end else if(row_matric) begin
+                output_col  <= output_col + 1;
             end
         end
     end
@@ -224,7 +256,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
         if(rst) begin
             gc <= 0;
         end else begin
-            if(state == ST_AWE_CE_ACTIVE && col == numCols_r) begin
+            if(state == ST_FIN_ROW_MATRIC && row_matric_count == row_matric_done_count_cfg) begin
                 gc <= gc + 1;
             end
         end
@@ -232,28 +264,30 @@ module cnn_layer_accel_octo_bram_ctrl #(
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
   
 
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------         
-    assign col_d = col_d_w;
-    assign row_d = row_d_w;
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------          
+    assign row_matric_done = (row_matric_count == row_matric_done_count_cfg);
     
     always@(posedge clk) begin
         if(rst) begin
-            pfb_wren            <= 0;  
-            pfb_rden            <= 0;
-            seq_wren            <= 0;
-            seq_rden            <= 0;
-            seq_datain_rdy      <= 0;
-            pixel_datain_rdy    <= 0;
-            seq_wrAddr          <= 0; 
-            seq_rdAddr          <= 0;
-            state               <= ST_IDLE;
+            pfb_wren                <= 0;  
+            pfb_rden                <= 0;
+            seq_wren                <= 0;
+            seq_rden                <= 0;
+            seq_datain_rdy          <= 0;
+            pixel_datain_rdy        <= 0;
+            seq_wrAddr              <= 0; 
+            seq_rdAddr              <= 0;
+            pixel_dataout_valid_r   <= 0;
+            row_matric_count        <= 0;
+            state                   <= ST_IDLE;
         end else begin
-            pfb_wren            <= 0;
-            pfb_rden            <= 0;
-            seq_wren            <= 0;
-            seq_rden            <= 0;
-            seq_datain_rdy      <= 0;
-            pixel_datain_rdy    <= 0;
+            pfb_wren                <= 0;
+            pfb_rden                <= 0;
+            seq_wren                <= 0;
+            seq_rden                <= 0;
+            seq_datain_rdy          <= 0;
+            pixel_datain_rdy        <= 0;
+            pixel_dataout_valid_r   <= 0;
             case(state)           
                 ST_IDLE: begin
                     if(new_map) begin
@@ -268,7 +302,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
                     if(seq_wren) begin
                         seq_wrAddr <= seq_wrAddr + 1;
                     end
-                    if(seq_count == seq_full_count) begin
+                    if(seq_count == seq_full_count_cfg) begin
                         seq_datain_rdy  <= 0;
                         state           <= ST_AWE_CE_PRIM_BUFFER_0;
                     end
@@ -279,14 +313,14 @@ module cnn_layer_accel_octo_bram_ctrl #(
                         pfb_wren            <= 1;
                         pfb_rden            <= 1;
                     end
-                    if(row == 2 && col == numCols_r) begin
+                    if(input_row == 2 && input_col == num_input_cols_cfg) begin
                         pfb_wren            <= 0;
                         pixel_datain_rdy    <= 0;
                         state               <= ST_AWE_CE_PRIM_BUFFER_1;
                     end
                 end
                 ST_AWE_CE_PRIM_BUFFER_1: begin
-                    if(row_d_w == 2 && col_d_w == numCols_r) begin 
+                    if(input_row_d == 2 && input_col_d == num_input_cols_cfg) begin 
                         state <= ST_LOAD_PFB;
                     end
                 end
@@ -295,25 +329,37 @@ module cnn_layer_accel_octo_bram_ctrl #(
                         pixel_datain_rdy    <= 1;
                         pfb_wren            <= 1;
                     end
-                    if(pfb_count == numCols_r) begin
+                    if(pfb_count == num_input_cols_cfg) begin
                         pixel_datain_rdy    <= 0;
                         pfb_wren            <= 0;
-                        state <= ST_AWE_CE_ACTIVE;
+                        state               <= ST_AWE_CE_ACTIVE;
                     end
                 end
                 ST_AWE_CE_ACTIVE: begin
-                    seq_rden <= 1;
-                    seq_rdAddr <= seq_rdAddr + 1;
+                    pixel_dataout_valid_r   <= 1;
+                    seq_rden                <= 1;
+                    seq_rdAddr              <= seq_rdAddr + 1;
                     if(row_matric) begin
                         pfb_rden         <= 1;
                     end
-                    if(col_d == numCols) begin
-                        seq_rdAddr <= 0;
-                        if(row == numRows_r) begin
+                    if(output_col == num_output_cols_cfg && row_matric) begin
+                        seq_rdAddr              <= 0;
+                        pixel_dataout_valid_r   <= 0;
+                        seq_rden                <= 0;
+                        if(output_row == num_output_rows_cfg) begin
                             state <= ST_IDLE;
                         end else begin
-                            state <= ST_LOAD_PFB;
+                            state       <= ST_FIN_ROW_MATRIC;
                         end
+                    end
+                end
+                ST_FIN_ROW_MATRIC: begin
+                    pfb_rden            <= 1;
+                    row_matric_count    <= row_matric_count + 1;
+                    if(row_matric_count == row_matric_done_count_cfg) begin
+                        pfb_rden            <= 0;
+                        row_matric_count    <= 0;
+                        state               <= ST_LOAD_PFB;
                     end
                 end
             endcase
@@ -334,7 +380,8 @@ module cnn_layer_accel_octo_bram_ctrl #(
                 ST_AWE_CE_PRIM_BUFFER_0:    state_s = "ST_AWE_CE_PRIM_BUFFER_0";
                 ST_AWE_CE_PRIM_BUFFER_1:    state_s = "ST_AWE_CE_PRIM_BUFFER_1";
                 ST_LOAD_PFB:                state_s = "ST_LOAD_PFB";           
-                ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";  
+                ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
+                ST_FIN_ROW_MATRIC:          state_s = "ST_FIN_ROW_MATRIC";
         endcase
     end
 `endif	

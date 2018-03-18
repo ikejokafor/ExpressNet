@@ -34,12 +34,10 @@ module cnn_layer_accel_awe_rowbuffers #(
 ) (
     clk,                    
     rst,                    
-    row,
-    row_d,
-    col,
-    col_d,
-    numRows,                
-    numCols,                  
+    input_row_d,
+    input_col,
+    input_col_d,
+    num_input_cols,                  
     state,
     gray_code,
     seq_datain,
@@ -49,7 +47,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     pixel_datain,
     pixel_datain_valid,
     pixel_dataout,
-    pixel_dataout_valid
+    row_matric_done
 );
 
 
@@ -66,25 +64,24 @@ module cnn_layer_accel_awe_rowbuffers #(
     localparam C_LOG2_BRAM_DEPTH        = clog2(C_BRAM_DEPTH);
     localparam C_PIXEL_DATAOUT_WIDTH    = `PIXEL_WIDTH * 4;
     
-    localparam ST_IDLE                  = 6'b000001;  
-    localparam ST_LOAD_SEQUENCER        = 6'b000010;
-    localparam ST_AWE_CE_PRIM_BUFFER_0  = 6'b000100;
-    localparam ST_AWE_CE_PRIM_BUFFER_1  = 6'b001000;
-    localparam ST_LOAD_PFB              = 6'b010000;
-    localparam ST_AWE_CE_ACTIVE         = 6'b100000;
+    localparam ST_IDLE                  = 7'b0000001;  
+    localparam ST_LOAD_SEQUENCER        = 7'b0000010;
+    localparam ST_AWE_CE_PRIM_BUFFER_0  = 7'b0000100;
+    localparam ST_AWE_CE_PRIM_BUFFER_1  = 7'b0001000;
+    localparam ST_LOAD_PFB              = 7'b0010000;
+    localparam ST_AWE_CE_ACTIVE         = 7'b0100000;
+    localparam ST_FIN_ROW_MATRIC        = 7'b1000000;
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Inputs / Output Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     input                                           clk;
     input                                           rst;  
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    row;
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    row_d;
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    col;    
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    col_d;
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    numRows;                
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    numCols;
-    input       [                           5:0]    state;
+    input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_row_d;
+    input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_col;    
+    input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_col_d;
+    input       [       C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols;
+    input       [                           6:0]    state;
     input       [                           1:0]    gray_code;
     input       [         `SEQ_DATA_WIDTH - 1:0]    seq_datain;
     input                                           row_matric;
@@ -93,14 +90,13 @@ module cnn_layer_accel_awe_rowbuffers #(
     input       [            `PIXEL_WIDTH - 1:0]    pixel_datain;
     input                                           pixel_datain_valid;    
     output reg  [   C_PIXEL_DATAOUT_WIDTH - 1:0]    pixel_dataout;
-    output reg                                      pixel_dataout_valid;
+    input                                           row_matric_done;
 	
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Wires / Regs / Integers
 	//-----------------------------------------------------------------------------------------------------------------------------------------------    
     reg                                         row_matric;       
-    reg                                         pixel_dataout_valid_r;
     wire    [    `SEQ_DATA_SEQ_WIDTH - 1:0]     seq_datain_field;
     wire    [   `SEQ_DATA_SEQ_WIDTH0 - 1:0]     seq_datain_field0;
     wire    [   `SEQ_DATA_SEQ_WIDTH1 - 1:0]     seq_datain_field1;
@@ -217,18 +213,6 @@ module cnn_layer_accel_awe_rowbuffers #(
         .full       (                   )
     );
     
-    
-    SRL_bit #(
-        .C_CLOCK_CYCLES( 2 )
-    ) 
-    i1_SRL_bit (
-        .clk        ( clk                       ),
-        .rst        ( rst                       ),
-        .ce         ( 1'b1                      ),
-        .data_in    ( pixel_dataout_valid_r     ),
-        .data_out   ( pixel_dataout_valid       )
-    );
-
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
     always@(posedge clk) begin
@@ -287,7 +271,6 @@ module cnn_layer_accel_awe_rowbuffers #(
             bram1_rden              <= 0;
             bram2_rden              <= 0;
             bram3_rden              <= 0;
-            pixel_dataout_valid_r   <= 0;
         end else begin
             bram0_wren              <= 0;
             bram1_wren              <= 0;
@@ -297,35 +280,34 @@ module cnn_layer_accel_awe_rowbuffers #(
             bram1_rden              <= 0;
             bram2_rden              <= 0;
             bram3_rden              <= 0;
-            pixel_dataout_valid_r   <= 0;
             case(state)           
                 ST_AWE_CE_PRIM_BUFFER_0, ST_AWE_CE_PRIM_BUFFER_1: begin
                     if(pfb_rden) begin
-                        if(row_d == 0 && col_d <= numCols) begin
+                        if(input_row_d == 0 && input_col_d <= num_input_cols) begin
                             bram0_wren <= 1;
                             bram1_wren <= 1;
                             bram2_wren <= 1;
                             bram3_wren <= 1;
-                            bram0_wrAddr <= {1'b0, col_d};
-                            bram1_wrAddr <= {1'b0, col_d};
-                            bram2_wrAddr <= {1'b0, col_d};
-                            bram3_wrAddr <= {1'b0, col_d};
+                            bram0_wrAddr <= {1'b0, input_col_d};
+                            bram1_wrAddr <= {1'b0, input_col_d};
+                            bram2_wrAddr <= {1'b0, input_col_d};
+                            bram3_wrAddr <= {1'b0, input_col_d};
                             bram0_datain <= pixel_datain;
                             bram1_datain <= pixel_datain;
                             bram2_datain <= pixel_datain;
                             bram3_datain <= pixel_datain;
-                        end else if(row_d == 1 && col_d <= numCols) begin
+                        end else if(input_row_d == 1 && input_col_d <= num_input_cols) begin
                             bram1_wren <= 1;
                             bram3_wren <= 1;   
-                            bram1_wrAddr <= {1'b1, col_d};
-                            bram3_wrAddr <= {1'b1, col_d};
+                            bram1_wrAddr <= {1'b1, input_col_d};
+                            bram3_wrAddr <= {1'b1, input_col_d};
                             bram1_datain <= pixel_datain;
                             bram3_datain <= pixel_datain;                            
-                        end else if(row_d == 2 && col_d <= numCols) begin
+                        end else if(input_row_d == 2 && input_col_d <= num_input_cols) begin
                             bram0_wren <= 1;
                             bram2_wren <= 1;   
-                            bram0_wrAddr <= {1'b1, col_d};
-                            bram2_wrAddr <= {1'b1, col_d}; 
+                            bram0_wrAddr <= {1'b1, input_col_d};
+                            bram2_wrAddr <= {1'b1, input_col_d}; 
                             bram0_datain <= pixel_datain;
                             bram2_datain <= pixel_datain;                          
                         end
@@ -340,7 +322,6 @@ module cnn_layer_accel_awe_rowbuffers #(
                     bram1_rdAddr            <= seq_datain_odd;
                     bram2_rdAddr            <= seq_datain_even;
                     bram3_rdAddr            <= seq_datain_odd;
-                    pixel_dataout_valid_r   <= 1;
                     if(bram0_rden) begin
                         pixel_dataout[35:0]     <= {bram1_dataout, bram0_dataout};
                         pixel_dataout[71:36]    <= {bram3_dataout, bram2_dataout};
@@ -350,63 +331,131 @@ module cnn_layer_accel_awe_rowbuffers #(
                             // incoming row
                             bram1_wren      <= 1;
                             bram3_wren      <= 1;                            
-                            bram1_wrAddr    <= {1'b0, col};
-                            bram3_wrAddr    <= {1'b0, col};
+                            bram1_wrAddr    <= {1'b0, input_col};
+                            bram3_wrAddr    <= {1'b0, input_col};
                             bram1_datain    <= pixel_datain;                 
                             bram3_datain    <= pixel_datain;
                             // row rename
                             bram0_wren      <= 1;
                             bram2_wren      <= 1;
-                            bram0_wrAddr    <= {1'b0, col};
-                            bram2_wrAddr    <= {1'b0, col};  
+                            bram0_wrAddr    <= {1'b0, input_col};
+                            bram2_wrAddr    <= {1'b0, input_col};  
                             bram0_datain    <= row_buffer_sav_val0;
                             bram2_datain    <= row_buffer_sav_val1;                            
                         end else if(gray_code == 2'b01) begin
                             // incoming row
                             bram0_wren      <= 1;
                             bram2_wren      <= 1;
-                            bram0_wrAddr    <= {1'b0, col};
-                            bram2_wrAddr    <= {1'b0, col}; 
+                            bram0_wrAddr    <= {1'b0, input_col};
+                            bram2_wrAddr    <= {1'b0, input_col}; 
                             bram1_datain    <= pixel_datain;                 
                             bram3_datain    <= pixel_datain;                            
                             // row rename
                             bram1_wren      <= 1;
                             bram3_wren      <= 1;                            
-                            bram1_wrAddr    <= {1'b1, col};
-                            bram3_wrAddr    <= {1'b1, col};
+                            bram1_wrAddr    <= {1'b1, input_col};
+                            bram3_wrAddr    <= {1'b1, input_col};
                             bram1_datain    <= pixel_datain;                 
                             bram3_datain    <= pixel_datain;
                         end else if(gray_code == 2'b11) begin
                             // incoming row
                             bram1_wren      <= 1;
                             bram3_wren      <= 1;                            
-                            bram1_wrAddr    <= {1'b1, col};
-                            bram3_wrAddr    <= {1'b1, col};
+                            bram1_wrAddr    <= {1'b1, input_col};
+                            bram3_wrAddr    <= {1'b1, input_col};
                             bram1_datain    <= pixel_datain;                 
                             bram3_datain    <= pixel_datain;
                             // row rename
                             bram0_wren      <= 1;
                             bram2_wren      <= 1;
-                            bram0_wrAddr    <= {1'b1, col};
-                            bram2_wrAddr    <= {1'b1, col};  
+                            bram0_wrAddr    <= {1'b1, input_col};
+                            bram2_wrAddr    <= {1'b1, input_col};  
                             bram0_datain    <= row_buffer_sav_val0;
                             bram2_datain    <= row_buffer_sav_val1; 
                         end else if(gray_code == 2'b10) begin
                             // incoming row
                             bram0_wren      <= 1;
                             bram2_wren      <= 1;
-                            bram0_wrAddr    <= {1'b1, col};
-                            bram2_wrAddr    <= {1'b1, col}; 
+                            bram0_wrAddr    <= {1'b1, input_col};
+                            bram2_wrAddr    <= {1'b1, input_col}; 
                             bram1_datain    <= pixel_datain;                 
                             bram3_datain    <= pixel_datain;                            
                             // row rename
                             bram1_wren      <= 1;
                             bram3_wren      <= 1;                            
-                            bram1_wrAddr    <= {1'b0, col};
-                            bram3_wrAddr    <= {1'b0, col};
+                            bram1_wrAddr    <= {1'b0, input_col};
+                            bram3_wrAddr    <= {1'b0, input_col};
                             bram1_datain    <= pixel_datain;                 
                             bram3_datain    <= pixel_datain;
                         end
+                    end
+                end
+                ST_FIN_ROW_MATRIC: begin
+                    if(row_matric_done) begin
+                        bram0_wren      <= 0;
+                        bram1_wren      <= 0;
+                        bram2_wren      <= 0;
+                        bram3_wren      <= 0;
+                    end else if(gray_code == 2'b00) begin
+                        // incoming row
+                        bram1_wren      <= 1;
+                        bram3_wren      <= 1;                            
+                        bram1_wrAddr    <= {1'b0, input_col};
+                        bram3_wrAddr    <= {1'b0, input_col};
+                        bram1_datain    <= pixel_datain;                 
+                        bram3_datain    <= pixel_datain;
+                        // row rename
+                        bram0_wren      <= 1;
+                        bram2_wren      <= 1;
+                        bram0_wrAddr    <= {1'b0, input_col};
+                        bram2_wrAddr    <= {1'b0, input_col};  
+                        bram0_datain    <= row_buffer_sav_val0;
+                        bram2_datain    <= row_buffer_sav_val1;                            
+                    end else if(gray_code == 2'b01) begin
+                        // incoming row
+                        bram0_wren      <= 1;
+                        bram2_wren      <= 1;
+                        bram0_wrAddr    <= {1'b0, input_col};
+                        bram2_wrAddr    <= {1'b0, input_col}; 
+                        bram1_datain    <= pixel_datain;                 
+                        bram3_datain    <= pixel_datain;                            
+                        // row rename
+                        bram1_wren      <= 1;
+                        bram3_wren      <= 1;                            
+                        bram1_wrAddr    <= {1'b1, input_col};
+                        bram3_wrAddr    <= {1'b1, input_col};
+                        bram1_datain    <= pixel_datain;                 
+                        bram3_datain    <= pixel_datain;
+                    end else if(gray_code == 2'b11) begin
+                        // incoming row
+                        bram1_wren      <= 1;
+                        bram3_wren      <= 1;                            
+                        bram1_wrAddr    <= {1'b1, input_col};
+                        bram3_wrAddr    <= {1'b1, input_col};
+                        bram1_datain    <= pixel_datain;                 
+                        bram3_datain    <= pixel_datain;
+                        // row rename
+                        bram0_wren      <= 1;
+                        bram2_wren      <= 1;
+                        bram0_wrAddr    <= {1'b1, input_col};
+                        bram2_wrAddr    <= {1'b1, input_col};  
+                        bram0_datain    <= row_buffer_sav_val0;
+                        bram2_datain    <= row_buffer_sav_val1; 
+                    end else if(gray_code == 2'b10) begin
+                        // incoming row
+                        bram0_wren      <= 1;
+                        bram2_wren      <= 1;
+                        bram0_wrAddr    <= {1'b1, input_col};
+                        bram2_wrAddr    <= {1'b1, input_col}; 
+                        bram1_datain    <= pixel_datain;                 
+                        bram3_datain    <= pixel_datain;                            
+                        // row rename
+                        bram1_wren      <= 1;
+                        bram3_wren      <= 1;                            
+                        bram1_wrAddr    <= {1'b0, input_col};
+                        bram3_wrAddr    <= {1'b0, input_col};
+                        bram1_datain    <= pixel_datain;                 
+                        bram3_datain    <= pixel_datain;
                     end
                 end
             endcase
@@ -427,9 +476,10 @@ module cnn_layer_accel_awe_rowbuffers #(
                 ST_AWE_CE_PRIM_BUFFER_0:    state_s = "ST_AWE_CE_PRIM_BUFFER_0";
                 ST_AWE_CE_PRIM_BUFFER_1:    state_s = "ST_AWE_CE_PRIM_BUFFER_1";
                 ST_LOAD_PFB:                state_s = "ST_LOAD_PFB";           
-                ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";  
+                ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
+                ST_FIN_ROW_MATRIC:          state_s = "ST_FIN_ROW_MATRIC";
         endcase
     end
-`endif	
+`endif		
 	
 endmodule

@@ -47,6 +47,7 @@ module testbench_1;
     localparam C_LOG2_BRAM_DEPTH    = clog2(`BRAM_DEPTH);
     localparam ROWS                 = 10;
     localparam COLS                 = 10;
+    localparam KERNEL_SIZE          = 3;
    
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -95,9 +96,13 @@ module testbench_1;
     bit parity1;
     initial begin
         i0_cnn_layer_accel_octo.new_map = 0;
-        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.numRows_r = ROWS - 1;
-        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.numCols_r = COLS - 1;
-        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.seq_full_count = COLS * 5;
+        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_input_rows_cfg            = ROWS - 1;
+        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_input_cols_cfg            = COLS - 1;
+        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_rows_cfg           = ROWS - (KERNEL_SIZE - 1) - 1;
+        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg           = COLS - (KERNEL_SIZE - 1) - 1;
+        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.seq_full_count_cfg            = COLS * 5;
+        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.row_matric_done_count_cfg     = i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_input_cols_cfg 
+                                                                                                    - i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg - 1;
         pixel_datain_tag = 0;
         seq_datain_tag = 0;
         datain = 0;
@@ -123,7 +128,7 @@ module testbench_1;
 
     
         j = 0;      
-        for(i = 5; i < (COLS * 5); i = i + 5) begin
+        for(i = 5; i < ((COLS - (KERNEL_SIZE - 1)) * 5); i = i + 5) begin
             arr2[i    ] = {1'b1, 1'b0, 1'b1, parity0, arr2[i - 5][`SEQ_DATA_SEQ_FIELD] + 10'd1};
             if((j % 2) == 0) begin
                 arr2[i + 1] = {1'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`SEQ_DATA_SEQ_FIELD]};
