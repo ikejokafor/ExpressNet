@@ -376,7 +376,11 @@ module cnn_layer_accel_octo_bram_ctrl #(
                     if(row_matric_count == row_matric_done_count_cfg) begin
                         pfb_rden            <= 0;
                         row_matric_count    <= 0;
-                        state               <= ST_LOAD_PFB;
+                        if(output_row == num_output_rows_cfg) begin
+                            state <= ST_AWE_CE_ACTIVE;
+                        end else begin
+                            state <= ST_LOAD_PFB;
+                        end
                     end
                 end
             endcase

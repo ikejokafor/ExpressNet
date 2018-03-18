@@ -102,7 +102,7 @@ module testbench_1;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg           = COLS - (KERNEL_SIZE - 1) - 1;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.seq_full_count_cfg            = (COLS - (KERNEL_SIZE - 1)) * 5;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.row_matric_done_count_cfg     = i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_input_cols_cfg 
-                                                                                                    - i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg - 1;
+                                                                                                    - i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg;
         pixel_datain_tag = 0;
         seq_datain_tag = 0;
         datain = 0;
