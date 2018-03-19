@@ -21,7 +21,8 @@ entity cnn_layer_accel_awe_rowbuffers is
         pixel_datain    : in     vl_logic_vector(17 downto 0);
         pixel_datain_valid: in     vl_logic;
         pixel_dataout   : out    vl_logic_vector(71 downto 0);
-        row_matric_done : in     vl_logic
+        row_matric_done : in     vl_logic;
+        wrAddr          : in     vl_logic_vector
     );
     attribute mti_svvh_generic_type : integer;
     attribute mti_svvh_generic_type of C_PIXEL_WIDTH : constant is 1;

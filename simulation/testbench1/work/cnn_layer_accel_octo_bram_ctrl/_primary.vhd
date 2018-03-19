@@ -34,8 +34,9 @@ entity cnn_layer_accel_octo_bram_ctrl is
         pfb_count       : in     vl_logic_vector(17 downto 0);
         pfb_wren        : out    vl_logic;
         pfb_rden        : out    vl_logic;
-        pfb_rden_d      : out    vl_logic;
-        row_matric_done : out    vl_logic
+        pfb_dataout_valid: in     vl_logic;
+        row_matric_done : out    vl_logic;
+        wrAddr          : out    vl_logic_vector
     );
     attribute mti_svvh_generic_type : integer;
     attribute mti_svvh_generic_type of C_NUM_AWE : constant is 1;

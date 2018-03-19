@@ -60,13 +60,12 @@ module cnn_layer_accel_octo #(
     localparam C_SEQ_DATA_DEPTH         = ((C_BRAM_DEPTH / 2) * 5);
     localparam C_LOG2_SEQ_DATA_DEPTH    = clog2((C_BRAM_DEPTH / 2) * 5);
 
-    localparam ST_IDLE                  = 7'b0000001;  
-    localparam ST_LOAD_SEQUENCER        = 7'b0000010;
-    localparam ST_AWE_CE_PRIM_BUFFER_0  = 7'b0000100;
-    localparam ST_AWE_CE_PRIM_BUFFER_1  = 7'b0001000;
-    localparam ST_LOAD_PFB              = 7'b0010000;
-    localparam ST_AWE_CE_ACTIVE         = 7'b0100000;
-    localparam ST_FIN_ROW_MATRIC        = 7'b1000000;
+    localparam ST_IDLE                  = 6'b000001;  
+    localparam ST_LOAD_SEQUENCER        = 6'b000010;
+    localparam ST_AWE_CE_PRIM_BUFFER    = 6'b000100;
+    localparam ST_LOAD_PFB              = 6'b001000;
+    localparam ST_AWE_CE_ACTIVE         = 6'b010000;
+    localparam ST_FIN_ROW_MATRIC        = 6'b100000;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -104,12 +103,10 @@ module cnn_layer_accel_octo #(
  
     wire                                        pfb_wren;     
     wire                                        pfb_rden;
-    wire                                        pfb_rden_d;
     wire    [           C_PIXEL_WIDTH - 1:0]    pfb_dataout;
+    wire                                        pfb_dataout_valid;
     wire    [                          17:0]    pfb_count;
     
-    wire                                        bram_ctrl_pfb_rden;
-
     wire    [                           5:0]    cycle_counter;
     reg                                         new_map;
     wire    [                           6:0]    state;
@@ -117,7 +114,8 @@ module cnn_layer_accel_octo #(
     wire    [       C_LOG2_BRAM_DEPTH - 2:0]    input_col;
     wire    [       C_LOG2_BRAM_DEPTH - 2:0]    input_col_d;  
     wire    [       C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols;
-    wire                                        row_matric_done;
+    wire                                        row_matric_done; 
+    wire    [       C_LOG2_BRAM_DEPTH - 2:0]    wrAddr;
     genvar                                      i;
     
     
@@ -163,16 +161,17 @@ module cnn_layer_accel_octo #(
                 .gray_code                  ( gray_code                 ),
                 .seq_datain                 ( seq_dataout               ),
                 .row_matric                 ( row_matric                ),
-                .pfb_rden                   ( pfb_rden_d                ),
+                .pfb_rden                   ( pfb_rden                  ),
                 .cycle_counter              ( cycle_counter             ),
                 .pixel_datain               ( pfb_dataout               ),
                 .pixel_datain_valid         ( pixel_datain_tag          ),
                 .pixel_dataout              ( pixel_dataout             ),
-                .row_matric_done            ( row_matric_done           )
+                .row_matric_done            ( row_matric_done           ),
+                .wrAddr                     ( wrAddr                    )
             );
 
             
-            fifo_fwft_prog_full_count #(
+            fifo_fwft_prog_full_count_mod #(
                 .C_DATA_WIDTH ( C_PIXEL_WIDTH       ), 
                 .C_FIFO_DEPTH ( C_BRAM_DEPTH / 2    )
             ) 
@@ -183,6 +182,7 @@ module cnn_layer_accel_octo #(
                 .rden           ( pfb_rden              ),
                 .datain         ( datain                ),
                 .dataout        ( pfb_dataout           ),
+                .dataout_valid  ( pfb_dataout_valid     ),
                 .empty          (                       ),
                 .full           (                       ),
                 .prog_full      (                       ),
@@ -224,9 +224,10 @@ module cnn_layer_accel_octo #(
         .cycle_counter          ( cycle_counter         ),
         .pfb_count              ( pfb_count             ),                    
         .pfb_wren               ( pfb_wren              ),
-        .pfb_rden               ( bram_ctrl_pfb_rden    ),
-        .pfb_rden_d             ( pfb_rden_d            ),
-        .row_matric_done        ( row_matric_done       )
+        .pfb_rden               ( pfb_rden              ),
+        .pfb_dataout_valid      ( pfb_dataout_valid     ),
+        .row_matric_done        ( row_matric_done       ),
+        .wrAddr                 ( wrAddr                )
     );
     
     
@@ -242,23 +243,18 @@ module cnn_layer_accel_octo #(
     );    
 
  
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------         
-    assign pfb_rden = (state == ST_AWE_CE_PRIM_BUFFER_0 || state == ST_AWE_CE_PRIM_BUFFER_1) ? pfb_rden_d : bram_ctrl_pfb_rden;
-    // END logic ------------------------------------------------------------------------------------------------------------------------------------
-
-`ifdef SIMULATION  
+`ifdef SIMULATION
     string state_s;
     always@(state) begin 
         case(state) 
                 ST_IDLE:                    state_s = "ST_IDLE";              
                 ST_LOAD_SEQUENCER:          state_s = "ST_LOAD_SEQUENCER";     
-                ST_AWE_CE_PRIM_BUFFER_0:    state_s = "ST_AWE_CE_PRIM_BUFFER_0";
-                ST_AWE_CE_PRIM_BUFFER_1:    state_s = "ST_AWE_CE_PRIM_BUFFER_1";
+                ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
                 ST_LOAD_PFB:                state_s = "ST_LOAD_PFB";           
                 ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
                 ST_FIN_ROW_MATRIC:          state_s = "ST_FIN_ROW_MATRIC";
         endcase
     end
-`endif
+`endif	
     
 endmodule
