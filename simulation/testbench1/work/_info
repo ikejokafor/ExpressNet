@@ -22,7 +22,7 @@ Z6 !s92 -lint -sv +define+simulation +define+SIMULATION -work work {+incdir+C:\S
 !s100 Sboz=GCoL<;=XH2<Z6;812
 !s105 clock_gen_v_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|../clock_gen.v|
-!s108 1521428303.567000
+!s108 1521485629.746000
 !s107 ../clock_gen.v|
 !i10b 1
 vcnn_layer_accel_awe_rowbuffer_logic
@@ -53,6 +53,7 @@ vcnn_layer_accel_awe_rowbuffers
 R1
 VzIESSXa2L0BzQ2gjYRMI`2
 r1
+!s85 0
 31
 I9mCDFfDMMPiLl7LkDbgOV3
 S1
@@ -67,11 +68,10 @@ L0 31
 R4
 R5
 R6
-!s85 0
+!s100 h<0BDRT@Q^ROJFK>LVY;:2
 !s105 cnn_layer_accel_awe_rowbuffers_v_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v|
-!s100 h<0BDRT@Q^ROJFK>LVY;:2
-!s108 1521428303.706000
+!s108 1521485629.888000
 !s107 C:\SOC_IT\/cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:\SOC_IT\/soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v|
 !i10b 1
 vcnn_layer_accel_awe_top
@@ -128,10 +128,10 @@ R1
 V2O`oWUieIo_4lIHVO6;Df0
 r1
 31
-IoMRHRGigj?3S[U8>:Z57j1
+IfTll65]?^91zQOjW[Q`6B1
 S1
 R2
-w1521427921
+w1521480913
 8../../hardware/verilog/cnn_layer_accel_octo.v
 F../../hardware/verilog/cnn_layer_accel_octo.v
 R8
@@ -142,21 +142,21 @@ R4
 R5
 R6
 !s85 0
-!s100 d8Vfni<EY1cCdDNRCY3i^3
+!s100 94N;ZObAWl`?;CI2:]@270
 !s105 cnn_layer_accel_octo_v_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_octo.v|
-!s108 1521428303.929000
+!s108 1521485630.103000
 !s107 C:\SOC_IT\/cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:\SOC_IT\/soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_octo.v|
 !i10b 1
 vcnn_layer_accel_octo_bram_ctrl
 R1
-VQK<gN_L?@:SKe8WM=C9QZ2
+V;:G<I_e[2@1FX?Z9O@_941
 r1
 31
-IH[0^:kWGB[f1e7R4e9A;f2
+I4UiTTYMBP@XaLZ6@WhP1B1
 S1
 R2
-w1521427732
+w1521485240
 8../../hardware/verilog/cnn_layer_accel_octo_bram_ctrl.v
 F../../hardware/verilog/cnn_layer_accel_octo_bram_ctrl.v
 R8
@@ -167,19 +167,16 @@ R4
 R5
 R6
 !s85 0
-!s100 Fei9lljXlQjJJfE3c=0^g3
 !s105 cnn_layer_accel_octo_bram_ctrl_v_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_octo_bram_ctrl.v|
-!s108 1521428303.857000
+!s100 `eE]^YEed_1NX4^7`XM493
+!s108 1521485630.032000
 !s107 C:\SOC_IT\/cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:\SOC_IT\/soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_octo_bram_ctrl.v|
 !i10b 1
 vfifo_fwft_prog_full_count_mod
 R1
-VX1Tcl[KF;k_]^zhX3JK@:0
-r1
-!s85 0
-31
 I_MmIj6=QdQz@o;IT2B@J]3
+VX1Tcl[KF;k_]^zhX3JK@:0
 S1
 R2
 w1521402188
@@ -187,14 +184,17 @@ w1521402188
 F../../hardware/verilog/fifo_fwft_prog_full_count_mod.v
 L0 1
 R4
+r1
+31
 R5
 R6
 !s100 7d[SSEN_l<@J2eYCF7[@90
 !s105 fifo_fwft_prog_full_count_mod_v_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|../../hardware/verilog/fifo_fwft_prog_full_count_mod.v|
-!s108 1521428303.637000
+!s108 1521485629.818000
 !s107 ../../hardware/verilog/fifo_fwft_prog_full_count_mod.v|
 !i10b 1
+!s85 0
 vglbl
 R1
 VM[9mS]S:KA1i4VeCMX35[3
@@ -213,7 +213,7 @@ R5
 !s100 >SGIoMRzTL8mMF7c01izI1
 !s105 glbl_v_unit
 !s90 -reportprogress|300|-lint|-sv|-work|work|C:\Xilinx\Vivado\2016.1\data\verilog\src\/glbl.v|
-!s108 1521428303.421000
+!s108 1521485629.602000
 !s107 C:\Xilinx\Vivado\2016.1\data\verilog\src\/glbl.v|
 !i10b 1
 vSRL_bit
@@ -236,7 +236,7 @@ n@s@r@l_bit
 !s100 hkC<0jYWg9Ofz]3J6^OA`1
 !s105 SRL_bit_v_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|../../hardware/verilog/SRL_bit.v|
-!s108 1521428304.002000
+!s108 1521485630.178000
 !s107 ../../hardware/verilog/SRL_bit.v|
 !i10b 1
 vSRL_bus
@@ -260,7 +260,7 @@ n@s@r@l_bus
 !s105 SRL_bus_v_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|../../hardware/verilog/SRL_bus.v|
 !i10b 1
-!s108 1521428304.074000
+!s108 1521485630.247000
 !s107 ../../hardware/verilog/SRL_bus.v|
 vtestbench_0
 R1
@@ -308,7 +308,7 @@ R6
 !s100 TRmRQ>o^JS^8A6YEfU]bk1
 !s105 testbench_1_sv_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|./testbench_1.sv|
-!s108 1521428303.491000
+!s108 1521485629.670000
 !s107 C:\SOC_IT\/cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:\SOC_IT\/soc_it_common/hardware/include/math.vh|./testbench_1.sv|
 !i10b 1
 vxilinx_dual_port_1_clock_ram
@@ -331,7 +331,7 @@ R6
 !s100 bH1?AVSSFClZLoDEk88co2
 !s105 xilinx_dual_port_1_clock_ram_v_unit
 !s90 -reportprogress|300|-lint|-sv|+define+simulation|+define+SIMULATION|-work|work|+incdir+C:\SOC_IT\/soc_it_common/hardware/include|+incdir+C:\SOC_IT\/tile_router/hardware/verilog/|+incdir+C:\SOC_IT\/cnn_layer_accel/hardware/verilog/|../../hardware/verilog/xilinx_dual_port_1_clock_ram.v|
-!s108 1521428303.785000
+!s108 1521485629.961000
 !s107 C:\SOC_IT\/soc_it_common/hardware/include/math.vh|../../hardware/verilog/xilinx_dual_port_1_clock_ram.v|
 !i10b 1
 vxilinx_true_dual_port_no_change_2_clock_ram

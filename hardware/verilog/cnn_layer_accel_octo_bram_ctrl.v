@@ -60,7 +60,6 @@ module cnn_layer_accel_octo_bram_ctrl #(
     pfb_count,     
     pfb_wren, 
     pfb_rden,
-    pfb_dataout_valid,
     row_matric_done,
     wrAddr
 );
@@ -115,7 +114,6 @@ module cnn_layer_accel_octo_bram_ctrl #(
     input      [                      17:0]     pfb_count; 
     output reg                                  pfb_wren;    
     output reg                                  pfb_rden;
-    input                                       pfb_dataout_valid;
     input                                       row_matric;
     output     [                       1:0]     gray_code;
     output reg [                       5:0]     cycle_counter;
@@ -184,7 +182,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
     
     
     SRL_bit #(
-        .C_CLOCK_CYCLES( 2 )
+        .C_CLOCK_CYCLES( 3 )
     ) 
     i1_SRL_bit (
         .clk        ( clk                       ),
@@ -332,10 +330,12 @@ module cnn_layer_accel_octo_bram_ctrl #(
                         pixel_datain_rdy    <= 1;
                         pfb_wren            <= 1;
                     end
-                    if(pfb_dataout_valid) begin
-                        pfb_rden    <= 1;
+                    if(pfb_count == 1 && pfb_rden) begin
+                        pfb_rden <= 0;
+                    end else if(pfb_count >= 1) begin
+                        pfb_rden <= 1;
                     end else begin
-                        pfb_rden    <= 0;
+                        pfb_rden <= 0;
                     end
                     if(input_row_d == 2 && input_col_d == num_input_cols_cfg) begin
                         state   <= ST_LOAD_PFB;

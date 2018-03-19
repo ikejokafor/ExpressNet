@@ -104,7 +104,6 @@ module cnn_layer_accel_octo #(
     wire                                        pfb_wren;     
     wire                                        pfb_rden;
     wire    [           C_PIXEL_WIDTH - 1:0]    pfb_dataout;
-    wire                                        pfb_dataout_valid;
     wire    [                          17:0]    pfb_count;
     
     wire    [                           5:0]    cycle_counter;
@@ -171,7 +170,7 @@ module cnn_layer_accel_octo #(
             );
 
             
-            fifo_fwft_prog_full_count_mod #(
+            fifo_fwft_prog_full_count #(
                 .C_DATA_WIDTH ( C_PIXEL_WIDTH       ), 
                 .C_FIFO_DEPTH ( C_BRAM_DEPTH / 2    )
             ) 
@@ -182,7 +181,6 @@ module cnn_layer_accel_octo #(
                 .rden           ( pfb_rden              ),
                 .datain         ( datain                ),
                 .dataout        ( pfb_dataout           ),
-                .dataout_valid  ( pfb_dataout_valid     ),
                 .empty          (                       ),
                 .full           (                       ),
                 .prog_full      (                       ),
@@ -225,7 +223,6 @@ module cnn_layer_accel_octo #(
         .pfb_count              ( pfb_count             ),                    
         .pfb_wren               ( pfb_wren              ),
         .pfb_rden               ( pfb_rden              ),
-        .pfb_dataout_valid      ( pfb_dataout_valid     ),
         .row_matric_done        ( row_matric_done       ),
         .wrAddr                 ( wrAddr                )
     );
