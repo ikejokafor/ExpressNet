@@ -27,8 +27,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module testbench_1;
 
-    parameter C_PERIOD0 = 2;     // ns
-    parameter C_PERIOD1 = 10;    // ns    
+    parameter C_PERIOD0 = 2;     // ns; ie 500 MHz clock
+    parameter C_PERIOD1 = 10;    // ns; ie 100 MHz clcok   
     reg rst;
     wire clk_100MHz;
     wire clk_500MHz;
@@ -64,7 +64,7 @@ module testbench_1;
     
    
     clock_gen #(
-        .C_PERIOD_BY_2(C_PERIOD0 / 2)
+        .C_PERIOD_BY_2(C_PERIOD1 / 2)
     )
     i0_clock_gen (
         .clk_out(clk_100MHz)
@@ -72,7 +72,7 @@ module testbench_1;
 
     
     clock_gen #(
-        .C_PERIOD_BY_2(C_PERIOD1 / 2)
+        .C_PERIOD_BY_2(C_PERIOD0 / 2)
     )
     i1_clock_gen (
         .clk_out(clk_500MHz)
@@ -155,7 +155,7 @@ module testbench_1;
         
         
         rst = 1;
-        #(C_PERIOD1 * 2) rst = 0;
+        #(C_PERIOD0 * 2) rst = 0;
 
         
         @(posedge clk_500MHz);

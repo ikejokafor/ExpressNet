@@ -1,8 +1,8 @@
-simulation/testbench0/work
+simulation/testbench0/work/
 simulation/testbench0/vsim.wlf
 simulation/testbench0/tcl_stacktrace.txt
 simulation/testbench0/wlf*
-simulation/testbench1/work
+simulation/testbench1/work/
 simulation/testbench1/vsim.wlf
 simulation/testbench1/tcl_stacktrace.txt
 simulation/testbench1/wlf*
