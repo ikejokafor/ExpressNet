@@ -34,7 +34,8 @@ module cnn_layer_accel_octo #(
     parameter C_BRAM_DEPTH      = 1024,
     parameter C_SEQ_DATA_WIDTH  = 13
 ) (
-    clk,
+    clk_100MHz,
+    clk_500MHz,
     rst,
     pixel_datain_tag,
     pixel_datain_rdy,
@@ -43,8 +44,6 @@ module cnn_layer_accel_octo #(
     datain,
     datain_valid
 );
-
-
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -56,7 +55,7 @@ module cnn_layer_accel_octo #(
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_LOG2_BRAM_DEPTH        = clog2(C_BRAM_DEPTH);
-    localparam C_PIXEL_DATAOUT_WIDTH    = C_PIXEL_WIDTH * 4;
+    localparam C_PIXEL_DATAOUT_WIDTH    = C_NUM_AWE * C_PIXEL_WIDTH * `DSP_PER_AWE;
     localparam C_SEQ_DATA_DEPTH         = ((C_BRAM_DEPTH / 2) * 5);
     localparam C_LOG2_SEQ_DATA_DEPTH    = clog2((C_BRAM_DEPTH / 2) * 5);
 
@@ -71,7 +70,8 @@ module cnn_layer_accel_octo #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Inputs / Output Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input                               clk;
+    input                               clk_100MHz;
+    input                               clk_500MHz;
     input                               rst;
     input                               pixel_datain_tag;
     output                              pixel_datain_rdy;
@@ -120,8 +120,8 @@ module cnn_layer_accel_octo #(
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    xilinx_dual_port_1_clock_ram #(
+	//-----------------------------------------------------------------------------------------------------------------------------------------------    
+    xilinx_dual_port_1_clock_ram_v1 #(
         .C_RAM_WIDTH    ( C_SEQ_DATA_WIDTH      ),      
         .C_RAM_DEPTH    ( C_SEQ_DATA_DEPTH      ),
         .C_SEQ_ACCESS   ( 1                     )
@@ -130,7 +130,7 @@ module cnn_layer_accel_octo #(
         .wrAddr             ( seq_wrAddr                        ),   
         .rdAddr             ( seq_rdAddr                        ),
         .datain             ( datain[C_SEQ_DATA_WIDTH - 1:0]    ),
-        .clk                ( clk                               ),
+        .clk                ( clk_500MHz                        ),
         .rst                ( rst                               ),
         .wren               ( seq_wren                          ),
         .rden               ( seq_rden                          ),
@@ -143,48 +143,48 @@ module cnn_layer_accel_octo #(
     );
     
 
+    fifo_fwft_prog_full_count #(
+        .C_DATA_WIDTH ( C_PIXEL_WIDTH       ), 
+        .C_FIFO_DEPTH ( C_BRAM_DEPTH / 2    )
+    ) 
+    preftechBuffer (
+        .clk            ( clk_500MHz     ),
+        .rst            ( rst            ),
+        .wren           ( pfb_wren       ),
+        .rden           ( pfb_rden       ),
+        .datain         ( datain         ),
+        .dataout        ( pfb_dataout    ),
+        .empty          (                ),
+        .full           (                ),
+        .prog_full      (                ),
+        .count          ( pfb_count      )
+    );
+    
+    
     generate
-        for(i = 0; i < C_NUM_AWE; i = i + 1) begin
+        for(i = 0; i < C_NUM_AWE; i = i + 1) begin: LBL_ROW_BUFFERS
             cnn_layer_accel_awe_rowbuffers #(
                .C_PIXEL_WIDTH  ( C_PIXEL_WIDTH  ),
                .C_BRAM_DEPTH   ( C_BRAM_DEPTH   )
             ) 
             i0_cnn_layer_accel_awe_rowbuffers (
-                .clk                        ( clk                       ),
-                .rst                        ( rst                       ),
-                .input_row_d                ( input_row_d               ),
-                .input_col                  ( input_col                 ),
-                .input_col_d                ( input_col_d               ),
-                .num_input_cols             ( num_input_cols            ),
-                .state                      ( state                     ),
-                .gray_code                  ( gray_code                 ),
-                .seq_datain                 ( seq_dataout               ),
-                .row_matric                 ( row_matric                ),
-                .pfb_rden                   ( pfb_rden                  ),
-                .cycle_counter              ( cycle_counter             ),
-                .pixel_datain               ( pfb_dataout               ),
-                .pixel_datain_valid         ( pixel_datain_tag          ),
-                .pixel_dataout              ( pixel_dataout             ),
-                .row_matric_done            ( row_matric_done           ),
-                .wrAddr                     ( wrAddr                    )
-            );
-
-            
-            fifo_fwft_prog_full_count #(
-                .C_DATA_WIDTH ( C_PIXEL_WIDTH       ), 
-                .C_FIFO_DEPTH ( C_BRAM_DEPTH / 2    )
-            ) 
-            preftechBuffer (
-                .clk            ( clk                   ),
-                .rst            ( rst                   ),
-                .wren           ( pfb_wren              ),
-                .rden           ( pfb_rden              ),
-                .datain         ( datain                ),
-                .dataout        ( pfb_dataout           ),
-                .empty          (                       ),
-                .full           (                       ),
-                .prog_full      (                       ),
-                .count          ( pfb_count             )
+                .clk_500MHz                 ( clk_500MHz                                                                            ),
+                .rst                        ( rst                                                                                   ),
+                .input_row_d                ( input_row_d                                                                           ),
+                .input_col                  ( input_col                                                                             ),
+                .input_col_d                ( input_col_d                                                                           ),
+                .num_input_cols             ( num_input_cols                                                                        ),
+                .state                      ( state                                                                                 ),
+                .gray_code                  ( gray_code                                                                             ),
+                .seq_datain                 ( seq_dataout                                                                           ),
+                .row_matric                 ( row_matric                                                                            ),
+                .pfb_rden                   ( pfb_rden                                                                              ),
+                .cycle_counter              ( cycle_counter                                                                         ),
+                .pixel_datain               ( pfb_dataout                                                                           ),
+                .pixel_datain_valid         ( pixel_datain_tag                                                                      ),
+                .pixel_dataout              ( pixel_dataout[(i * C_PIXEL_WIDTH * `DSP_PER_AWE) +: (C_PIXEL_WIDTH * `DSP_PER_AWE)]   ),
+                .row_matric_done            ( row_matric_done                                                                       ),
+                .wrAddr                     ( wrAddr                                                                                )
             );
         end
     endgenerate
@@ -195,7 +195,7 @@ module cnn_layer_accel_octo #(
         .C_BRAM_DEPTH   ( C_BRAM_DEPTH  )
     )
     i0_cnn_layer_accel_octo_bram_ctrl (
-        .clk                    ( clk                   ),
+        .clk_500MHz             ( clk_500MHz            ),
         .rst                    ( rst                   ),
         .datain_valid           ( datain_valid          ),
         .pixel_datain_tag       ( pixel_datain_tag      ),
@@ -232,7 +232,7 @@ module cnn_layer_accel_octo #(
         .C_CLOCK_CYCLES( 2 )
     ) 
     i1_SRL_bit (
-        .clk        ( clk                                       ),
+        .clk        ( clk_500MHz                                ),
         .rst        ( rst                                       ),
         .ce         ( 1'b1                                      ),
         .data_in    ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]   ),

@@ -46,6 +46,7 @@
 `define BRAM_DEPTH                      1024
 `define CONFIG_3x3                      1'b0
 `define CONFIG_5x5                      1'b1
+`define DSP_PER_AWE                     4
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -85,5 +86,15 @@
 `define SEQ_DATA_SEQ_LOW1               0
 `define SEQ_DATA_SEQ_HIGH1              (`SEQ_DATA_SEQ_LOW1 + `SEQ_DATA_SEQ_WIDTH1 - 1)
 `define SEQ_DATA_SEQ_FIELD1             (`SEQ_DATA_SEQ_HIGH1):(`SEQ_DATA_SEQ_LOW1)
+
+
+parameter  C_PACKET_WIDTH		= 66;
+localparam C_DATAIN_WIDTH      = 18;
+localparam C_WEIGHT_WIDTH_IN   = 32;
+localparam C_WEIGHT_WIDTH      = C_WEIGHT_WIDTH_IN >> 1;
+localparam C_A_INPUT_WIDTH     = 30;
+localparam C_B_INPUT_WIDTH     = 18;
+
+localparam C_P_OUTPUT_WIDTH   = 48;
 
 `endif

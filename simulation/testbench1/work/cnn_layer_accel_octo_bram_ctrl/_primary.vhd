@@ -6,7 +6,7 @@ entity cnn_layer_accel_octo_bram_ctrl is
         C_BRAM_DEPTH    : integer := 1024
     );
     port(
-        clk             : in     vl_logic;
+        clk_500MHz      : in     vl_logic;
         rst             : in     vl_logic;
         datain_valid    : in     vl_logic;
         pixel_datain_tag: in     vl_logic;

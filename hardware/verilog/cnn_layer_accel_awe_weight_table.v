@@ -1,7 +1,31 @@
-/* this module infers block ram */
-
-// Dual Port Block RAM (True Dual Port, Two R/W Ports)
-module awe_weight_table
+`timescale 1ns / 1ns
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Company:			
+//				
+// Engineer:		
+//
+// Create Date:		
+// Design Name:		
+// Module Name:		
+// Project Name:	
+// Target Devices:  
+// Tool versions:
+// Description:		
+//
+// Dependencies:
+//	 
+// 	 
+//
+// Revision:
+//
+//
+//
+//
+// Additional Comments:     /* this module infers block ram */
+//                          Dual Port Block RAM (True Dual Port, Two R/W Ports)
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module cnn_layer_accel_awe_weight_table
 (
 	clka		,
 	dina		,

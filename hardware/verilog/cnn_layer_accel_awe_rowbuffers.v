@@ -32,7 +32,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     parameter C_PIXEL_WIDTH   = 18,
     parameter C_BRAM_DEPTH    = 1024
 ) (
-    clk,                    
+    clk_500MHz,                    
     rst,                    
     input_row_d,
     input_col,
@@ -75,7 +75,7 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Inputs / Output Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input                                           clk;
+    input                                           clk_500MHz;
     input                                           rst;  
     input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_row_d;
     input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_col;    
@@ -139,16 +139,16 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    xilinx_dual_port_1_clock_ram #(
+    xilinx_dual_port_1_clock_ram_v1 #(
         .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
         .C_RAM_DEPTH    ( C_BRAM_DEPTH       ),
         .C_SEQ_ACCESS   ( 0                  )
     ) 
-    i0_xilinx_dual_port_1_clock_ram (
+    i0_xilinx_dual_port_1_clock_ram_v1 (
         .wrAddr             ( bram0_wrAddr      ),  
         .rdAddr             ( bram0_rdAddr      ),
         .datain             ( bram0_datain      ),
-        .clk                ( clk               ),
+        .clk                ( clk_500MHz        ),
         .rst                ( rst               ),        
         .wren               ( bram0_wren        ),
         .rden               ( bram0_rden        ),
@@ -161,16 +161,16 @@ module cnn_layer_accel_awe_rowbuffers #(
     );
     
     
-    xilinx_dual_port_1_clock_ram #(
+    xilinx_dual_port_1_clock_ram_v1 #(
         .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
         .C_RAM_DEPTH    ( C_BRAM_DEPTH       ),
         .C_SEQ_ACCESS   ( 0                  )  
     ) 
-    i1_xilinx_dual_port_1_clock_ram (
+    i1_xilinx_dual_port_1_clock_ram_v1 (
         .wrAddr             ( bram1_wrAddr      ),  
         .rdAddr             ( bram1_rdAddr      ),
         .datain             ( bram1_datain      ),
-        .clk                ( clk               ),
+        .clk                ( clk_500MHz        ),
         .rst                ( rst               ),        
         .wren               ( bram1_wren        ),
         .rden               ( bram1_rden        ),
@@ -183,16 +183,16 @@ module cnn_layer_accel_awe_rowbuffers #(
     );
     
     
-    xilinx_dual_port_1_clock_ram #(
+    xilinx_dual_port_1_clock_ram_v1 #(
         .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
         .C_RAM_DEPTH    ( C_BRAM_DEPTH       ),
         .C_SEQ_ACCESS   ( 0                  )  
     ) 
-    i2_xilinx_dual_port_1_clock_ram (
+    i2_xilinx_dual_port_1_clock_ram_v1 (
         .wrAddr             ( bram2_wrAddr      ),  
         .rdAddr             ( bram2_rdAddr      ),
         .datain             ( bram2_datain      ),
-        .clk                ( clk               ),
+        .clk                ( clk_500MHz        ),
         .rst                ( rst               ),        
         .wren               ( bram2_wren        ),
         .rden               ( bram2_rden        ),
@@ -205,16 +205,16 @@ module cnn_layer_accel_awe_rowbuffers #(
     );
     
     
-    xilinx_dual_port_1_clock_ram #(
+    xilinx_dual_port_1_clock_ram_v1 #(
         .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
         .C_RAM_DEPTH    ( C_BRAM_DEPTH       ),
         .C_SEQ_ACCESS   ( 0                  )  
     ) 
-    i3_xilinx_dual_port_1_clock_ram (
+    i3_xilinx_dual_port_1_clock_ram_v1 (
         .wrAddr             ( bram3_wrAddr      ),  
         .rdAddr             ( bram3_rdAddr      ),
         .datain             ( bram3_datain      ),
-        .clk                ( clk               ),
+        .clk                ( clk_500MHz        ),
         .rst                ( rst               ),        
         .wren               ( bram3_wren        ),
         .rden               ( bram3_rden        ),
@@ -228,7 +228,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
-    always@(posedge clk) begin
+    always@(posedge clk_500MHz) begin
         if(rst) begin
             row_buffer_sav_val0 <= 0;
             row_buffer_sav_val1 <= 0;
@@ -266,7 +266,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                                         | seq_datain[`SEQ_DATA_PARITY_FIELD]
                                 };
                                 
-    always@(posedge clk) begin
+    always@(posedge clk_500MHz) begin
         if(rst) begin
             bram0_wrAddr            <= 0;
             bram1_wrAddr            <= 0;

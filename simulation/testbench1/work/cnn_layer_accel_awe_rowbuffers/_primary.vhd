@@ -6,7 +6,7 @@ entity cnn_layer_accel_awe_rowbuffers is
         C_BRAM_DEPTH    : integer := 1024
     );
     port(
-        clk             : in     vl_logic;
+        clk_500MHz      : in     vl_logic;
         rst             : in     vl_logic;
         input_row_d     : in     vl_logic_vector;
         input_col       : in     vl_logic_vector;

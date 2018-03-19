@@ -32,7 +32,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
     parameter C_NUM_AWE     = 1,
     parameter C_BRAM_DEPTH  = 1024
 ) (
-    clk,       
+    clk_500MHz,       
     rst,    
     datain_valid,
     pixel_datain_tag,
@@ -89,7 +89,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Inputs / Output Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------   
-    input                                       clk;       
+    input                                       clk_500MHz;       
     input                                       rst;   
     input                                       datain_valid;
     input                                       pixel_datain_tag;
@@ -125,7 +125,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
 	//  Wires / Regs / Integers
 	//-----------------------------------------------------------------------------------------------------------------------------------------------        
     wire                                    row_matric;
-    wire                                    start_count_delay;
+    wire                                    cycle_count_inc;
     reg     [                       1:0]    gc;
     reg     [   C_LOG2_BRAM_DEPTH - 2:0]    input_row;
     reg     [   C_LOG2_BRAM_DEPTH - 2:0]    output_col;   
@@ -138,7 +138,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
     reg     [   C_LOG2_BRAM_DEPTH - 2:0]    num_output_cols_cfg; 
     reg     [   C_LOG2_SEQ_DATA_DEPTH:0]    seq_full_count_cfg;
     reg     [                       8:0]    row_matric_done_count_cfg;
-    wire    [   C_LOG2_BRAM_DEPTH - 2:0]    wrAddr_w;       
+    
 	
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -148,7 +148,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
         .C_DATA_WIDTH   ( (C_LOG2_BRAM_DEPTH - 1)   )
     ) 
     i0_SRL_bus (
-        .clk        ( clk           ),
+        .clk        ( clk_500MHz    ),
         .rst        ( rst           ),
         .ce         ( 1'b1          ),
         .data_in    ( input_col     ),
@@ -161,7 +161,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
         .C_DATA_WIDTH   ( (C_LOG2_BRAM_DEPTH - 1)   )
     ) 
     i1_SRL_bus (
-        .clk        ( clk           ),
+        .clk        ( clk_500MHz    ),
         .rst        ( rst           ),
         .ce         ( 1'b1          ),
         .data_in    ( input_row     ),
@@ -173,11 +173,11 @@ module cnn_layer_accel_octo_bram_ctrl #(
         .C_CLOCK_CYCLES( 2 )
     ) 
     i3_SRL_bit (
-        .clk        ( clk                   ),
+        .clk        ( clk_500MHz            ),
         .rst        ( rst                   ),
         .ce         ( 1'b1                  ),
         .data_in    ( seq_rden              ),
-        .data_out   ( start_count_delay     )
+        .data_out   ( cycle_count_inc       )
     );
     
     
@@ -185,33 +185,20 @@ module cnn_layer_accel_octo_bram_ctrl #(
         .C_CLOCK_CYCLES( 3 )
     ) 
     i1_SRL_bit (
-        .clk        ( clk                       ),
+        .clk        ( clk_500MHz                ),
         .rst        ( rst                       ),
         .ce         ( 1'b1                      ),
         .data_in    ( pixel_dataout_valid_r     ),
         .data_out   ( pixel_dataout_valid       )
     );
-
-    
-    SRL_bus #(
-        .C_CLOCK_CYCLES ( 1                      ),  // acnt for 2 cycle latency of fifo when priming buffer
-        .C_DATA_WIDTH   ( C_LOG2_BRAM_DEPTH - 1  )
-    ) 
-    i2_SRL_bus (
-        .clk        ( clk          ),
-        .rst        ( rst          ),
-        .ce         ( 1'b1         ),
-        .data_in    ( wrAddr       ),
-        .data_out   ( wrAddr_w     )
-    ); 
-    
+  
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
-    always@(posedge clk) begin
+    always@(posedge clk_500MHz) begin
         if(rst) begin
             cycle_counter <= 0;
         end else begin
-            if(state == ST_AWE_CE_ACTIVE && start_count_delay) begin
+            if(state == ST_AWE_CE_ACTIVE && cycle_count_inc) begin
                 cycle_counter <= cycle_counter + 1;
                 if(cycle_counter == 4) begin
                     cycle_counter <= 0;
@@ -225,7 +212,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
     assign num_input_cols   = num_input_cols_cfg;
     
-    always@(posedge clk) begin
+    always@(posedge clk_500MHz) begin
         if(rst) begin
             input_row <= 0;
             input_col <= 0;
@@ -241,7 +228,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
         end
     end
     
-    always@(posedge clk) begin
+    always@(posedge clk_500MHz) begin
         if(rst) begin
             output_row <= 0;
             output_col <= 0;
@@ -260,7 +247,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
     assign gray_code = {gc[1], ^gc[1:0]};
     
-    always@(posedge clk) begin
+    always@(posedge clk_500MHz) begin
         if(rst) begin
             gc <= 0;
         end else begin
@@ -276,7 +263,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
     assign row_matric_done      = (row_matric_count == row_matric_done_count_cfg);
     assign seq_count_set_value  = seq_full_count_cfg;
     
-    always@(posedge clk) begin
+    always@(posedge clk_500MHz) begin
         if(rst) begin
             pfb_wren                <= 0;  
             pfb_rden                <= 0;
@@ -379,7 +366,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
                 ST_FIN_ROW_MATRIC: begin
                     pfb_rden   <= 1;
                     wrAddr     <= wrAddr + 1;
-                    if(wrAddr_w == num_input_cols_cfg) begin
+                    if(wrAddr == row_matric_done_count_cfg) begin
                         wrAddr     <= 0;
                         pfb_rden   <= 0;
                         if(output_row == num_output_rows_cfg) begin

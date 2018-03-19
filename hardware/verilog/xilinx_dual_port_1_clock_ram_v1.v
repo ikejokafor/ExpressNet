@@ -26,7 +26,7 @@
 //                      If a reset or enable is not necessary, it may be tied off or removed from the code.
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-module xilinx_dual_port_1_clock_ram #(
+module xilinx_dual_port_1_clock_ram_v1 #(
     parameter C_RAM_WIDTH       = 64,                       // Specify RAM data width
     parameter C_RAM_DEPTH       = 512,                      // Specify RAM depth (number of entries)
     parameter C_SEQ_ACCESS      = 1

@@ -8,7 +8,8 @@ entity cnn_layer_accel_octo is
         C_SEQ_DATA_WIDTH: integer := 13
     );
     port(
-        clk             : in     vl_logic;
+        clk_100MHz      : in     vl_logic;
+        clk_500MHz      : in     vl_logic;
         rst             : in     vl_logic;
         pixel_datain_tag: in     vl_logic;
         pixel_datain_rdy: out    vl_logic;

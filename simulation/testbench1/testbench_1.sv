@@ -27,9 +27,11 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module testbench_1;
 
-    parameter C_PERIOD = 10;    
+    parameter C_PERIOD0 = 2;     // ns
+    parameter C_PERIOD1 = 10;    // ns    
     reg rst;
-    wire clk;
+    wire clk_100MHz;
+    wire clk_500MHz;
 
 
   	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -62,12 +64,20 @@ module testbench_1;
     
    
     clock_gen #(
-        .C_PERIOD_BY_2(C_PERIOD / 2)
+        .C_PERIOD_BY_2(C_PERIOD0 / 2)
     )
     i0_clock_gen (
-        .clk_out(clk)
+        .clk_out(clk_100MHz)
     );
+
     
+    clock_gen #(
+        .C_PERIOD_BY_2(C_PERIOD1 / 2)
+    )
+    i1_clock_gen (
+        .clk_out(clk_500MHz)
+    );
+
     
     cnn_layer_accel_octo #(
         .C_NUM_AWE          ( `NUM_AWE          ),
@@ -76,7 +86,8 @@ module testbench_1;
         .C_SEQ_DATA_WIDTH   ( `SEQ_DATA_WIDTH   )  
     ) 
     i0_cnn_layer_accel_octo (
-        .clk                    ( clk               ),
+        .clk_100MHz             ( clk_100MHz        ),
+        .clk_500MHz             ( clk_500MHz        ),
         .rst                    ( rst               ),
         .pixel_datain_tag       ( pixel_datain_tag  ),
         .pixel_datain_rdy       ( pixel_datain_rdy  ),
@@ -101,8 +112,7 @@ module testbench_1;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_rows_cfg           = ROWS - (KERNEL_SIZE - 1) - 1;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg           = COLS - (KERNEL_SIZE - 1) - 1;
         i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.seq_full_count_cfg            = (COLS - (KERNEL_SIZE - 1)) * 5;
-        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.row_matric_done_count_cfg     = i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_input_cols_cfg 
-                                                                                                    - i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.num_output_cols_cfg;
+        i0_cnn_layer_accel_octo.i0_cnn_layer_accel_octo_bram_ctrl.row_matric_done_count_cfg     = COLS; 
         pixel_datain_tag = 0;
         seq_datain_tag = 0;
         datain = 0;
@@ -145,22 +155,22 @@ module testbench_1;
         
         
         rst = 1;
-        #(C_PERIOD * 2) rst = 0;
+        #(C_PERIOD1 * 2) rst = 0;
 
         
-        @(posedge clk);
+        @(posedge clk_500MHz);
         i0_cnn_layer_accel_octo.new_map = 1;
-        @(posedge clk);
+        @(posedge clk_500MHz);
         i0_cnn_layer_accel_octo.new_map = 0;
         
 
         i = 1;
-        @(posedge clk);
+        @(posedge clk_500MHz);
         datain = arr2[0];
         datain_valid = 1;
         seq_datain_tag = 1;
         while(i < ((COLS - (KERNEL_SIZE - 1)) * 5)) begin
-            @(posedge clk);
+            @(posedge clk_500MHz);
             if(seq_datain_rdy) begin
                 datain = arr2[i];
                 i = i + 1;
@@ -171,24 +181,19 @@ module testbench_1;
 
         
         i = 1;
-        @(posedge clk);
+        @(posedge clk_500MHz);
         datain = arr[0];
         datain_valid = 1;
         pixel_datain_tag = 1;
         while(i < (COLS * ROWS)) begin
-            @(posedge clk);
+            @(posedge clk_500MHz);
             if(pixel_datain_rdy) begin
                 datain = arr[i];
                 i = i + 1;
             end
-            if(i == 43) begin
-                $stop;
-            end
         end 
         datain_valid = 0;
-        pixel_datain_tag = 0;
-        
-    
+        pixel_datain_tag = 0;    
         $stop;
     end
     
