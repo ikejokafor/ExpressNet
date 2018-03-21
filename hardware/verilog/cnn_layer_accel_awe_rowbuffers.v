@@ -29,11 +29,12 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_awe_rowbuffers #(
-    parameter C_PIXEL_WIDTH   = 18,
-    parameter C_BRAM_DEPTH    = 1024
+    parameter C_PIXEL_WIDTH     = 18,
+    parameter C_BRAM_DEPTH      = 1024,
+    parameter C_SEQ_DATA_WIDTH  = 16
 ) (
     clk_500MHz,                    
-    rst,                    
+    accel_rst,                    
     input_row_d,
     input_col,
     input_col_d,
@@ -45,7 +46,6 @@ module cnn_layer_accel_awe_rowbuffers #(
     pfb_rden,
     cycle_counter,
     pixel_datain,
-    pixel_datain_valid,
     pixel_dataout,
     row_matric_done,
     wrAddr
@@ -63,32 +63,28 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_LOG2_BRAM_DEPTH        = clog2(C_BRAM_DEPTH);
-    localparam C_PIXEL_DATAOUT_WIDTH    = `PIXEL_WIDTH * 4;
+    localparam C_PIXEL_DATAOUT_WIDTH    = C_PIXEL_WIDTH * 4;
     
-    localparam ST_IDLE                  = 6'b000001;  
-    localparam ST_LOAD_SEQUENCER        = 6'b000010;
-    localparam ST_AWE_CE_PRIM_BUFFER    = 6'b000100;
-    localparam ST_LOAD_PFB              = 6'b001000;
-    localparam ST_AWE_CE_ACTIVE         = 6'b010000;
-    localparam ST_FIN_ROW_MATRIC        = 6'b100000;
+    localparam ST_IDLE_0                = 4'b0001;  
+    localparam ST_AWE_CE_PRIM_BUFFER    = 4'b0010;
+    localparam ST_WAIT_PFB_LOAD         = 4'b0100;
+    localparam ST_AWE_CE_ACTIVE         = 4'b1000;
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Inputs / Output Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     input                                           clk_500MHz;
-    input                                           rst;  
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_row_d;
+    input                                           accel_rst;  
+    input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_row;
     input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_col;    
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_col_d;
     input       [       C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols;
-    input       [                           6:0]    state;
+    input       [                           3:0]    state;
     input       [                           1:0]    gray_code;
-    input       [         `SEQ_DATA_WIDTH - 1:0]    seq_datain;
+    input       [        C_SEQ_DATA_WIDTH - 1:0]    seq_datain;
     input                                           row_matric;
-    input                                           pfb_rden;
     input       [                           5:0]    cycle_counter;
-    input       [            `PIXEL_WIDTH - 1:0]    pixel_datain;
-    input                                           pixel_datain_valid;    
+    input       [           C_PIXEL_WIDTH - 1:0]    pixel_datain;
+    input                                           pfb_rden;    
     output reg  [   C_PIXEL_DATAOUT_WIDTH - 1:0]    pixel_dataout;
     input                                           row_matric_done;
     input       [       C_LOG2_BRAM_DEPTH - 2:0]    wrAddr;
@@ -134,17 +130,16 @@ module cnn_layer_accel_awe_rowbuffers #(
     reg                                         bram3_wren;
     reg                                         bram3_rden;
     reg     [           `PIXEL_WIDTH - 1:0]     bram3_dataout;
-    
+  
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    xilinx_dual_port_1_clock_ram_v1 #(
+    xilinx_dual_port_1_clock_ram #(
         .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
-        .C_RAM_DEPTH    ( C_BRAM_DEPTH       ),
-        .C_SEQ_ACCESS   ( 0                  )
+        .C_RAM_DEPTH    ( C_BRAM_DEPTH       )
     ) 
-    i0_xilinx_dual_port_1_clock_ram_v1 (
+    i0_xilinx_dual_port_1_clock_ram (
         .wrAddr             ( bram0_wrAddr      ),  
         .rdAddr             ( bram0_rdAddr      ),
         .datain             ( bram0_datain      ),
@@ -152,21 +147,15 @@ module cnn_layer_accel_awe_rowbuffers #(
         .rst                ( rst               ),        
         .wren               ( bram0_wren        ),
         .rden               ( bram0_rden        ),
-        .dataout            ( bram0_dataout     ),
-        .count              (                   ), 
-        .count_rst          (                   ),
-        .count_set          (                   ),
-        .count_set_value    (                   ),
-        .full               (                   )
+        .dataout            ( bram0_dataout     )
     );
     
     
-    xilinx_dual_port_1_clock_ram_v1 #(
+    xilinx_dual_port_1_clock_ram #(
         .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
-        .C_RAM_DEPTH    ( C_BRAM_DEPTH       ),
-        .C_SEQ_ACCESS   ( 0                  )  
+        .C_RAM_DEPTH    ( C_BRAM_DEPTH       )
     ) 
-    i1_xilinx_dual_port_1_clock_ram_v1 (
+    i1_xilinx_dual_port_1_clock_ram (
         .wrAddr             ( bram1_wrAddr      ),  
         .rdAddr             ( bram1_rdAddr      ),
         .datain             ( bram1_datain      ),
@@ -174,21 +163,15 @@ module cnn_layer_accel_awe_rowbuffers #(
         .rst                ( rst               ),        
         .wren               ( bram1_wren        ),
         .rden               ( bram1_rden        ),
-        .dataout            ( bram1_dataout     ),
-        .count              (                   ), 
-        .count_rst          (                   ),
-        .count_set          (                   ),
-        .count_set_value    (                   ),
-        .full               (                   )
+        .dataout            ( bram1_dataout     )
     );
     
     
-    xilinx_dual_port_1_clock_ram_v1 #(
+    xilinx_dual_port_1_clock_ram #(
         .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
-        .C_RAM_DEPTH    ( C_BRAM_DEPTH       ),
-        .C_SEQ_ACCESS   ( 0                  )  
+        .C_RAM_DEPTH    ( C_BRAM_DEPTH       ) 
     ) 
-    i2_xilinx_dual_port_1_clock_ram_v1 (
+    i2_xilinx_dual_port_1_clock_ram (
         .wrAddr             ( bram2_wrAddr      ),  
         .rdAddr             ( bram2_rdAddr      ),
         .datain             ( bram2_datain      ),
@@ -196,56 +179,39 @@ module cnn_layer_accel_awe_rowbuffers #(
         .rst                ( rst               ),        
         .wren               ( bram2_wren        ),
         .rden               ( bram2_rden        ),
-        .dataout            ( bram2_dataout     ),
-        .count              (                   ), 
-        .count_rst          (                   ),
-        .count_set          (                   ),
-        .count_set_value    (                   ),
-        .full               (                   )
+        .dataout            ( bram2_dataout     )
     );
     
     
-    xilinx_dual_port_1_clock_ram_v1 #(
+    xilinx_dual_port_1_clock_ram #(
         .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
-        .C_RAM_DEPTH    ( C_BRAM_DEPTH       ),
-        .C_SEQ_ACCESS   ( 0                  )  
+        .C_RAM_DEPTH    ( C_BRAM_DEPTH       ) 
     ) 
-    i3_xilinx_dual_port_1_clock_ram_v1 (
+    i3_xilinx_dual_port_1_clock_ram (
         .wrAddr             ( bram3_wrAddr      ),  
         .rdAddr             ( bram3_rdAddr      ),
         .datain             ( bram3_datain      ),
-        .clk                ( clk_500MHz        ),
-        .rst                ( rst               ),        
+        .clk                ( clk_500MHz        ),       
         .wren               ( bram3_wren        ),
         .rden               ( bram3_rden        ),
-        .dataout            ( bram3_dataout     ),
-        .count              (                   ), 
-        .count_rst          (                   ),
-        .count_set          (                   ),
-        .count_set_value    (                   ),
-        .full               (                   )
+        .dataout            ( bram3_dataout     )
     );
-    
+   
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
     always@(posedge clk_500MHz) begin
-        if(rst) begin
-            row_buffer_sav_val0 <= 0;
-            row_buffer_sav_val1 <= 0;
-        end else begin
-            if(gray_code == 2'b00 && cycle_counter == 2) begin
-                row_buffer_sav_val0 <= bram1_dataout;
-                row_buffer_sav_val1 <= bram3_dataout;
-            end else if(gray_code == 2'b01 && cycle_counter == 2) begin
-                row_buffer_sav_val0 <= bram0_dataout;
-                row_buffer_sav_val1 <= bram2_dataout;
-            end else if(gray_code == 2'b11 && cycle_counter == 0) begin
-                row_buffer_sav_val0 <= bram1_dataout;
-                row_buffer_sav_val1 <= bram3_dataout;
-            end else if(gray_code == 2'b10 && cycle_counter == 0) begin
-                row_buffer_sav_val0 <= bram0_dataout;
-                row_buffer_sav_val1 <= bram2_dataout;
-            end
+        if(gray_code == 2'b00 && cycle_counter == 2) begin
+            row_buffer_sav_val0 <= bram1_dataout;
+            row_buffer_sav_val1 <= bram3_dataout;
+        end else if(gray_code == 2'b01 && cycle_counter == 2) begin
+            row_buffer_sav_val0 <= bram0_dataout;
+            row_buffer_sav_val1 <= bram2_dataout;
+        end else if(gray_code == 2'b11 && cycle_counter == 0) begin
+            row_buffer_sav_val0 <= bram1_dataout;
+            row_buffer_sav_val1 <= bram3_dataout;
+        end else if(gray_code == 2'b10 && cycle_counter == 0) begin
+            row_buffer_sav_val0 <= bram0_dataout;
+            row_buffer_sav_val1 <= bram2_dataout;
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
@@ -267,208 +233,131 @@ module cnn_layer_accel_awe_rowbuffers #(
                                 };
                                 
     always@(posedge clk_500MHz) begin
-        if(rst) begin
-            bram0_wrAddr            <= 0;
-            bram1_wrAddr            <= 0;
-            bram2_wrAddr            <= 0;
-            bram3_wrAddr            <= 0;
-            bram0_rdAddr            <= 0;
-            bram1_rdAddr            <= 0;
-            bram2_rdAddr            <= 0;
-            bram3_rdAddr            <= 0;
+        if(accel_rst) begin
+            // convolution engine 0
             bram0_wren              <= 0;
             bram1_wren              <= 0;
-            bram2_wren              <= 0;
-            bram3_wren              <= 0;  
             bram0_rden              <= 0;
             bram1_rden              <= 0;
+            // convolution engine 1
+            bram2_wren              <= 0;
+            bram3_wren              <= 0;  
             bram2_rden              <= 0;
             bram3_rden              <= 0;
         end else begin
+            // convolution engine 0
             bram0_wren              <= 0;
             bram1_wren              <= 0;
-            bram2_wren              <= 0;
-            bram3_wren              <= 0;  
             bram0_rden              <= 0;
             bram1_rden              <= 0;
+            // convolution engine 1
+            bram2_wren              <= 0;
+            bram3_wren              <= 0;  
             bram2_rden              <= 0;
             bram3_rden              <= 0;
             case(state)           
                 ST_AWE_CE_PRIM_BUFFER: begin
+                    // convolution engine 0
                     if(pfb_rden) begin
-                        if(input_row_d == 0 && input_col_d <= num_input_cols) begin
+                        if(input_row == 0 && input_col <= num_input_cols) begin
                             bram0_wren <= 1;
                             bram1_wren <= 1;
+                            bram0_wrAddr <= {1'b0, input_col};
+                            bram1_wrAddr <= {1'b0, input_col};
+                            bram0_datain <= pixel_datain;
+                            bram1_datain <= pixel_datain;
+                        end else if(input_row == 1 && input_col <= num_input_cols) begin
+                            bram1_wren      <= 1;  
+                            bram1_wrAddr    <= {1'b1, input_col};
+                            bram1_datain    <= pixel_datain;
+                        end else if(input_row == 2 && input_col <= num_input_cols) begin
+                            bram0_wren      <= 1;
+                            bram0_wrAddr    <= {1'b1, input_col};
+                            bram0_datain    <= pixel_datain;
+                        end
+                    end
+                    // convolution engine 1
+                    if(pfb_rden) begin
+                        if(input_row == 0 && input_col <= num_input_cols) begin
                             bram2_wren <= 1;
                             bram3_wren <= 1;
-                            bram0_wrAddr <= {1'b0, input_col_d};
-                            bram1_wrAddr <= {1'b0, input_col_d};
-                            bram2_wrAddr <= {1'b0, input_col_d};
-                            bram3_wrAddr <= {1'b0, input_col_d};
-                            bram0_datain <= pixel_datain;
-                            bram1_datain <= pixel_datain;
+                            bram2_wrAddr <= {1'b0, input_col};
+                            bram3_wrAddr <= {1'b0, input_col};
                             bram2_datain <= pixel_datain;
                             bram3_datain <= pixel_datain;
-                        end else if(input_row_d == 1 && input_col_d <= num_input_cols) begin
-                            bram1_wren <= 1;
+                        end else if(input_row == 1 && input_col <= num_input_cols) begin
                             bram3_wren <= 1;   
-                            bram1_wrAddr <= {1'b1, input_col_d};
-                            bram3_wrAddr <= {1'b1, input_col_d};
-                            bram1_datain <= pixel_datain;
+                            bram3_wrAddr <= {1'b1, input_col};
                             bram3_datain <= pixel_datain;                            
-                        end else if(input_row_d == 2 && input_col_d <= num_input_cols) begin
-                            bram0_wren <= 1;
+                        end else if(input_row == 2 && input_col <= num_input_cols) begin
                             bram2_wren <= 1;   
-                            bram0_wrAddr <= {1'b1, input_col_d};
-                            bram2_wrAddr <= {1'b1, input_col_d}; 
-                            bram0_datain <= pixel_datain;
+                            bram2_wrAddr <= {1'b1, input_col}; 
                             bram2_datain <= pixel_datain;                          
                         end
                     end
                 end
                 ST_AWE_CE_ACTIVE: begin
-                    bram0_rden              <= 1;
-                    bram1_rden              <= 1;
-                    bram2_rden              <= 1;
-                    bram3_rden              <= 1;
-                    bram0_rdAddr            <= seq_datain_even;
-                    bram1_rdAddr            <= seq_datain_odd;
-                    bram2_rdAddr            <= seq_datain_even;
-                    bram3_rdAddr            <= seq_datain_odd;
-                    if(bram0_rden) begin
-                        pixel_dataout[35:0]     <= {bram1_dataout, bram0_dataout};
-                        pixel_dataout[71:36]    <= {bram3_dataout, bram2_dataout};
-                    end
-                    if(row_matric) begin
-                        if(gray_code == 2'b00) begin
-                            // incoming row
-                            bram1_wren      <= 1;
-                            bram3_wren      <= 1;                            
-                            bram1_wrAddr    <= {1'b0, wrAddr};
-                            bram3_wrAddr    <= {1'b0, wrAddr};
-                            bram1_datain    <= pixel_datain;                 
-                            bram3_datain    <= pixel_datain;
-                            // row rename
-                            bram0_wren      <= 1;
-                            bram2_wren      <= 1;
-                            bram0_wrAddr    <= {1'b0, wrAddr};
-                            bram2_wrAddr    <= {1'b0, wrAddr};  
-                            bram0_datain    <= row_buffer_sav_val0;
-                            bram2_datain    <= row_buffer_sav_val1;                            
-                        end else if(gray_code == 2'b01) begin
-                            // incoming row
-                            bram0_wren      <= 1;
-                            bram2_wren      <= 1;
-                            bram0_wrAddr    <= {1'b0, wrAddr};
-                            bram2_wrAddr    <= {1'b0, wrAddr}; 
-                            bram1_datain    <= pixel_datain;                 
-                            bram3_datain    <= pixel_datain;                            
-                            // row rename
-                            bram1_wren      <= 1;
-                            bram3_wren      <= 1;                            
-                            bram1_wrAddr    <= {1'b1, wrAddr};
-                            bram3_wrAddr    <= {1'b1, wrAddr};
-                            bram1_datain    <= pixel_datain;                 
-                            bram3_datain    <= pixel_datain;
-                        end else if(gray_code == 2'b11) begin
-                            // incoming row
-                            bram1_wren      <= 1;
-                            bram3_wren      <= 1;                            
-                            bram1_wrAddr    <= {1'b1, wrAddr};
-                            bram3_wrAddr    <= {1'b1, wrAddr};
-                            bram1_datain    <= pixel_datain;                 
-                            bram3_datain    <= pixel_datain;
-                            // row rename
-                            bram0_wren      <= 1;
-                            bram2_wren      <= 1;
-                            bram0_wrAddr    <= {1'b1, wrAddr};
-                            bram2_wrAddr    <= {1'b1, wrAddr};  
-                            bram0_datain    <= row_buffer_sav_val0;
-                            bram2_datain    <= row_buffer_sav_val1; 
-                        end else if(gray_code == 2'b10) begin
-                            // incoming row
-                            bram0_wren      <= 1;
-                            bram2_wren      <= 1;
-                            bram0_wrAddr    <= {1'b1, wrAddr};
-                            bram2_wrAddr    <= {1'b1, wrAddr}; 
-                            bram1_datain    <= pixel_datain;                 
-                            bram3_datain    <= pixel_datain;                            
-                            // row rename
-                            bram1_wren      <= 1;
-                            bram3_wren      <= 1;                            
-                            bram1_wrAddr    <= {1'b0, wrAddr};
-                            bram3_wrAddr    <= {1'b0, wrAddr};
-                            bram1_datain    <= pixel_datain;                 
-                            bram3_datain    <= pixel_datain;
+                    //convolution engine 0
+                    if(ceo_start) begin
+                        bram0_rden              <= 1;
+                        bram1_rden              <= 1;
+                        bram0_rdAddr            <= seq_datain_even;
+                        bram1_rdAddr            <= seq_datain_odd;
+                        if(bram0_rden) begin
+                            pixel_dataout[31:0]     <= {bram1_dataout, bram0_dataout};
+                        end
+                        if(row_matric) begin
+                            if(!(gray_code[0] ^ gray_code[1])) begin
+                                // incoming row
+                                bram1_wren      <= 1;                  
+                                bram1_wrAddr    <= {gray_code[0], wrAddr};
+                                bram1_datain    <= pixel_datain;                 
+                                // row rename
+                                bram0_wren      <= 1;
+                                bram0_wrAddr    <= {gray_code[1], wrAddr};
+                                bram0_datain    <= row_buffer_sav_val0;
+                            end else if(gray_code[0] ^ gray_code[1]) begin
+                                // incoming row
+                                bram0_wren      <= 1;
+                                bram0_wrAddr    <= {gray_code[0], wrAddr};
+                                bram0_datain    <= pixel_datain;                                          
+                                // row rename
+                                bram1_wren      <= 1;                       
+                                bram1_wrAddr    <= {gray_code[1], wrAddr};
+                                bram1_datain    <= pixel_datain;  
+                            end
                         end
                     end
-                end
-                ST_FIN_ROW_MATRIC: begin
-                    if(row_matric_done) begin
-                        bram0_wren      <= 0;
-                        bram1_wren      <= 0;
-                        bram2_wren      <= 0;
-                        bram3_wren      <= 0;
-                    end else if(gray_code == 2'b00) begin
-                        // incoming row
-                        bram1_wren      <= 1;
-                        bram3_wren      <= 1;                            
-                        bram1_wrAddr    <= {1'b0, wrAddr};
-                        bram3_wrAddr    <= {1'b0, wrAddr};
-                        bram1_datain    <= pixel_datain;                 
-                        bram3_datain    <= pixel_datain;
-                        // row rename
-                        bram0_wren      <= 1;
-                        bram2_wren      <= 1;
-                        bram0_wrAddr    <= {1'b0, wrAddr};
-                        bram2_wrAddr    <= {1'b0, wrAddr};  
-                        bram0_datain    <= row_buffer_sav_val0;
-                        bram2_datain    <= row_buffer_sav_val1;                            
-                    end else if(gray_code == 2'b01) begin
-                        // incoming row
-                        bram0_wren      <= 1;
-                        bram2_wren      <= 1;
-                        bram0_wrAddr    <= {1'b0, wrAddr};
-                        bram2_wrAddr    <= {1'b0, wrAddr}; 
-                        bram1_datain    <= pixel_datain;                 
-                        bram3_datain    <= pixel_datain;                            
-                        // row rename
-                        bram1_wren      <= 1;
-                        bram3_wren      <= 1;                            
-                        bram1_wrAddr    <= {1'b1, wrAddr};
-                        bram3_wrAddr    <= {1'b1, wrAddr};
-                        bram1_datain    <= pixel_datain;                 
-                        bram3_datain    <= pixel_datain;
-                    end else if(gray_code == 2'b11) begin
-                        // incoming row
-                        bram1_wren      <= 1;
-                        bram3_wren      <= 1;                            
-                        bram1_wrAddr    <= {1'b1, wrAddr};
-                        bram3_wrAddr    <= {1'b1, wrAddr};
-                        bram1_datain    <= pixel_datain;                 
-                        bram3_datain    <= pixel_datain;
-                        // row rename
-                        bram0_wren      <= 1;
-                        bram2_wren      <= 1;
-                        bram0_wrAddr    <= {1'b1, wrAddr};
-                        bram2_wrAddr    <= {1'b1, wrAddr};  
-                        bram0_datain    <= row_buffer_sav_val0;
-                        bram2_datain    <= row_buffer_sav_val1; 
-                    end else if(gray_code == 2'b10) begin
-                        // incoming row
-                        bram0_wren      <= 1;
-                        bram2_wren      <= 1;
-                        bram0_wrAddr    <= {1'b1, wrAddr};
-                        bram2_wrAddr    <= {1'b1, wrAddr}; 
-                        bram1_datain    <= pixel_datain;                 
-                        bram3_datain    <= pixel_datain;                            
-                        // row rename
-                        bram1_wren      <= 1;
-                        bram3_wren      <= 1;                            
-                        bram1_wrAddr    <= {1'b0, wrAddr};
-                        bram3_wrAddr    <= {1'b0, wrAddr};
-                        bram1_datain    <= pixel_datain;                 
-                        bram3_datain    <= pixel_datain;
+                    //convolution engine 1
+                    if(ce1_start) begin
+                        bram2_rden              <= 1;
+                        bram3_rden              <= 1;
+                        bram2_rdAddr            <= seq_datain_even;
+                        bram3_rdAddr            <= seq_datain_odd;
+                        if(bram2_rden) begin
+                            pixel_dataout[63:32] <= {bram3_dataout, bram2_dataout};
+                        end
+                        if(row_matric) begin
+                            if(!(gray_code[0] ^ gray_code[1])) begin
+                                // incoming row
+                                bram3_wren      <= 1;                  
+                                bram3_wrAddr    <= {gray_code[0], wrAddr};
+                                bram3_datain    <= pixel_datain;                 
+                                // row rename
+                                bram2_wren      <= 1;
+                                bram2_wrAddr    <= {gray_code[1], wrAddr};
+                                bram2_datain    <= row_buffer_sav_val0;
+                            end else if(gray_code[0] ^ gray_code[1]) begin
+                                // incoming row
+                                bram2_wren      <= 1;
+                                bram2_wrAddr    <= {gray_code[0], wrAddr};
+                                bram2_datain    <= pixel_datain;                                          
+                                // row rename
+                                bram3_wren      <= 1;                       
+                                bram3_wrAddr    <= {gray_code[1], wrAddr};
+                                bram3_datain    <= pixel_datain;  
+                            end
+                        end
                     end
                 end
             endcase
@@ -484,14 +373,12 @@ module cnn_layer_accel_awe_rowbuffers #(
     string state_s;
     always@(state) begin 
         case(state) 
-                ST_IDLE:                    state_s = "ST_IDLE";              
-                ST_LOAD_SEQUENCER:          state_s = "ST_LOAD_SEQUENCER";     
+                ST_IDLE_0:                  state_s = "ST_IDLE_0";              
                 ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
-                ST_LOAD_PFB:                state_s = "ST_LOAD_PFB";           
+                ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
                 ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
-                ST_FIN_ROW_MATRIC:          state_s = "ST_FIN_ROW_MATRIC";
         endcase
     end
-`endif		
+`endif	
 	
 endmodule
