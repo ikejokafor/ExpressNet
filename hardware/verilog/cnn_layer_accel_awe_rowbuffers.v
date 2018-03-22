@@ -90,50 +90,49 @@ module cnn_layer_accel_awe_rowbuffers #(
     input       [    C_PIXEL_WIDTH - 1:0]    ce1_pixel_datain       ;
     input                                    ce0_start              ;
     input                                    ce1_start              ;
-    input       [    C_PIXEL_WIDTH - 1:0]    ce0_pixel_dataout      ;
-    input       [    C_PIXEL_WIDTH - 1:0]    ce1_pixel_dataout      ;
+    output reg  [    C_PIXEL_WIDTH - 1:0]    ce0_pixel_dataout      ;
+    output reg  [    C_PIXEL_WIDTH - 1:0]    ce1_pixel_dataout      ;
     input       [C_LOG2_BRAM_DEPTH - 2:0]    wrAddr                 ;
     
     
  	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Wires / Regs / Integers
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    wire    [    `SEQ_DATA_SEQ_WIDTH - 1:0]     seq_datain_field;
-    wire    [   `SEQ_DATA_SEQ_WIDTH0 - 1:0]     seq_datain_field0;
-    wire    [   `SEQ_DATA_SEQ_WIDTH1 - 1:0]     seq_datain_field1;
-    wire    [    `SEQ_DATA_SEQ_WIDTH - 1:0]     seq_datain_even;
-    wire    [    `SEQ_DATA_SEQ_WIDTH - 1:0]     seq_datain_odd;
-    reg     [           `PIXEL_WIDTH - 1:0]     row_buffer_sav_val0;
-    reg     [           `PIXEL_WIDTH - 1:0]     row_buffer_sav_val1;
+    wire    [ `SEQ_DATA_SEQ_WIDTH - 1:0]     seq_datain_field;
+    wire    [`SEQ_DATA_SEQ_WIDTH0 - 1:0]     seq_datain_field0;
+    wire    [`SEQ_DATA_SEQ_WIDTH1 - 1:0]     seq_datain_field1;
+    wire    [ `SEQ_DATA_SEQ_WIDTH - 1:0]     seq_datain_even;
+    wire    [ `SEQ_DATA_SEQ_WIDTH - 1:0]     seq_datain_odd;
+    reg     [       C_PIXEL_WIDTH - 1:0]     row_buffer_sav_val0;
+    reg     [       C_PIXEL_WIDTH - 1:0]     row_buffer_sav_val1;
 
-    
-    reg     [      C_LOG2_BRAM_DEPTH - 1:0]     bram0_wrAddr;
-    reg     [      C_LOG2_BRAM_DEPTH - 1:0]     bram0_rdAddr;
-    reg     [           `PIXEL_WIDTH - 1:0]     bram0_datain; 
-    reg                                         bram0_wren;
-    reg                                         bram0_rden;
-    reg     [           `PIXEL_WIDTH - 1:0]     bram0_dataout;
+    reg     [   C_LOG2_BRAM_DEPTH - 1:0]     bram0_wrAddr;
+    reg     [   C_LOG2_BRAM_DEPTH - 1:0]     bram0_rdAddr;
+    reg     [       C_PIXEL_WIDTH - 1:0]     bram0_datain; 
+    reg                                      bram0_wren;
+    reg                                      bram0_rden;
+    reg     [       C_PIXEL_WIDTH - 1:0]     bram0_dataout;
 
-    reg     [      C_LOG2_BRAM_DEPTH - 1:0]     bram1_wrAddr;
-    reg     [      C_LOG2_BRAM_DEPTH - 1:0]     bram1_rdAddr;
-    reg     [           `PIXEL_WIDTH - 1:0]     bram1_datain; 
-    reg                                         bram1_wren;
-    reg                                         bram1_rden;
-    reg     [           `PIXEL_WIDTH - 1:0]     bram1_dataout;
+    reg     [   C_LOG2_BRAM_DEPTH - 1:0]     bram1_wrAddr;
+    reg     [   C_LOG2_BRAM_DEPTH - 1:0]     bram1_rdAddr;
+    reg     [       C_PIXEL_WIDTH - 1:0]     bram1_datain; 
+    reg                                      bram1_wren;
+    reg                                      bram1_rden;
+    reg     [       C_PIXEL_WIDTH - 1:0]     bram1_dataout;
     
-    reg     [      C_LOG2_BRAM_DEPTH - 1:0]     bram2_wrAddr;
-    reg     [      C_LOG2_BRAM_DEPTH - 1:0]     bram2_rdAddr;
-    reg     [           `PIXEL_WIDTH - 1:0]     bram2_datain; 
-    reg                                         bram2_wren;
-    reg                                         bram2_rden;
-    reg     [           `PIXEL_WIDTH - 1:0]     bram2_dataout;  
+    reg     [   C_LOG2_BRAM_DEPTH - 1:0]     bram2_wrAddr;
+    reg     [   C_LOG2_BRAM_DEPTH - 1:0]     bram2_rdAddr;
+    reg     [       C_PIXEL_WIDTH - 1:0]     bram2_datain; 
+    reg                                      bram2_wren;
+    reg                                      bram2_rden;
+    reg     [       C_PIXEL_WIDTH - 1:0]     bram2_dataout;  
     
-    reg     [      C_LOG2_BRAM_DEPTH - 1:0]     bram3_wrAddr;
-    reg     [      C_LOG2_BRAM_DEPTH - 1:0]     bram3_rdAddr;
-    reg     [           `PIXEL_WIDTH - 1:0]     bram3_datain; 
-    reg                                         bram3_wren;
-    reg                                         bram3_rden;
-    reg     [           `PIXEL_WIDTH - 1:0]     bram3_dataout;
+    reg     [   C_LOG2_BRAM_DEPTH - 1:0]     bram3_wrAddr;
+    reg     [   C_LOG2_BRAM_DEPTH - 1:0]     bram3_rdAddr;
+    reg     [       C_PIXEL_WIDTH - 1:0]     bram3_datain; 
+    reg                                      bram3_wren;
+    reg                                      bram3_rden;
+    reg     [        C_PIXEL_WIDTH- 1:0]     bram3_dataout;
   
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -147,8 +146,7 @@ module cnn_layer_accel_awe_rowbuffers #(
         .wrAddr             ( bram0_wrAddr      ),  
         .rdAddr             ( bram0_rdAddr      ),
         .datain             ( bram0_datain      ),
-        .clk                ( clk_500MHz        ),
-        .rst                ( rst               ),        
+        .clk                ( clk_500MHz        ),    
         .wren               ( bram0_wren        ),
         .rden               ( bram0_rden        ),
         .dataout            ( bram0_dataout     )
@@ -163,8 +161,7 @@ module cnn_layer_accel_awe_rowbuffers #(
         .wrAddr             ( bram1_wrAddr      ),  
         .rdAddr             ( bram1_rdAddr      ),
         .datain             ( bram1_datain      ),
-        .clk                ( clk_500MHz        ),
-        .rst                ( rst               ),        
+        .clk                ( clk_500MHz        ),      
         .wren               ( bram1_wren        ),
         .rden               ( bram1_rden        ),
         .dataout            ( bram1_dataout     )
@@ -179,8 +176,7 @@ module cnn_layer_accel_awe_rowbuffers #(
         .wrAddr             ( bram2_wrAddr      ),  
         .rdAddr             ( bram2_rdAddr      ),
         .datain             ( bram2_datain      ),
-        .clk                ( clk_500MHz        ),
-        .rst                ( rst               ),        
+        .clk                ( clk_500MHz        ),       
         .wren               ( bram2_wren        ),
         .rden               ( bram2_rden        ),
         .dataout            ( bram2_dataout     )
@@ -302,7 +298,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                 end
                 ST_AWE_CE_ACTIVE: begin
                     //convolution engine 0
-                    if(ceo_start) begin
+                    if(ce0_start) begin
                         bram0_rden              <= 1;
                         bram1_rden              <= 1;
                         bram0_rdAddr            <= seq_datain_even;

@@ -29,15 +29,19 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_octo_bram_ctrl #(
-    parameter C_NUM_AWE         = 4     ,
-    parameter C_NUM_CE_PER_AWE  = 2     ,
-    parameter C_BRAM_DEPTH      = 1024
+    parameter C_NUM_NETWORK_IF  = 1,
+    parameter C_PAYLOAD_WIDTH   = 128,
+    parameter C_NUM_AWE         = 4,
+    parameter C_NUM_CE_PER_AWE  = 2,
+    parameter C_BRAM_DEPTH      = 1024,
+    parameter C_SEQ_DATA_WIDTH  = 16
 ) (
     clk_500MHz                  ,
     accel_rst                   ,
     pixel_datain_valid          ,
     num_input_cols              ,
     num_input_rows              ,
+    num_input_depth             ,
     start                       ,
     state                       ,
     input_row                   ,
@@ -52,7 +56,8 @@ module cnn_layer_accel_octo_bram_ctrl #(
     row_matric_done             ,
     wrAddr                      ,
     ce_start                    ,
-    job_done                    ,
+    seq_rden                    ,
+    next_row                    ,
     pixel_dataout_valid         ,
     from_network_valid		    ,
     from_network_accept		    ,
@@ -73,7 +78,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------     
-    localparam C_LOG2_BRAM_DEPTH        = clog2(C_BRAM_DEPTH)
+    localparam C_LOG2_BRAM_DEPTH        = clog2(C_BRAM_DEPTH);
     localparam C_LOG2_SEQ_DATA_DEPTH    = clog2((C_BRAM_DEPTH / 2) * 5);
     localparam C_CE_START_WIDTH         = C_NUM_AWE * C_NUM_CE_PER_AWE;
 
@@ -90,13 +95,13 @@ module cnn_layer_accel_octo_bram_ctrl #(
 	//  Inputs / Output Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------   
     input                                   clk_500MHz;       
-    input                                   rst;   
+    input                                   accel_rst;   
     output                                  pixel_datain_valid;  
     input      [C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols;
     input      [C_LOG2_BRAM_DEPTH - 2:0]    num_input_rows;
-
+    input      [C_LOG2_BRAM_DEPTH - 2:0]    num_input_depth;
     input                                   start;
-    output reg [                    3:0]    state;   
+    output reg [                    3:0]    state_0;   
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    input_row;
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    input_col;
     input                                   pfb_empty;
@@ -110,7 +115,8 @@ module cnn_layer_accel_octo_bram_ctrl #(
     output                                  row_matric_done;
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    wrAddr;
     output reg [ C_CE_START_WIDTH - 1:0]    ce_start;
-    output reg                              job_done;
+    input                                   seq_rden;
+    input                                   next_row;
     output                                  pixel_dataout_valid;  
     input	   [ C_NUM_NETWORK_IF - 1:0]    from_network_valid		;
 	output reg [ C_NUM_NETWORK_IF - 1:0]    from_network_accept		;
@@ -123,12 +129,16 @@ module cnn_layer_accel_octo_bram_ctrl #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Wires / Regs / Integers
 	//-----------------------------------------------------------------------------------------------------------------------------------------------        
-    reg     [                       3:0]    prev_state;  
-    reg     [                       1:0]    state_1;  
+    reg     [                     1:0]      state_1;
+    reg     [ C_LOG2_BRAM_DEPTH - 2:0]      input_depth;   
+    reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_depth; 
+    reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_row;
+    reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_col;
+    reg     [                     3:0]      prev_state;  
     wire                                    row_matric;
     wire                                    cycle_count_inc;
-    reg     [                       1:0]    gc;
-    reg     [                       8:0]    row_matric_count;
+    reg     [                     1:0]      gc;
+    reg     [                     8:0]      rowr_request;
     reg                                     pixel_dataout_valid_r;
     reg                                     row_request_in_progress;
     integer                                 idx0;
@@ -143,7 +153,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
     ) 
     i3_SRL_bit (
         .clk        ( clk_500MHz            ),
-        .rst        ( rst                   ),
+        .rst        ( accel_rst             ),
         .ce         ( 1'b1                  ),
         .data_in    ( seq_rden              ),
         .data_out   ( cycle_count_inc       )
@@ -155,7 +165,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
     ) 
     i1_SRL_bit (
         .clk        ( clk_500MHz                ),
-        .rst        ( rst                       ),
+        .rst        ( accel_rst                 ),
         .ce         ( 1'b1                      ),
         .data_in    ( pixel_dataout_valid_r     ),
         .data_out   ( pixel_dataout_valid       )
@@ -164,7 +174,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
     always@(posedge clk_500MHz) begin
-        if(rst) begin
+        if(accel_rst) begin
             cycle_counter <= 0;
         end else begin
             if(state == ST_AWE_CE_ACTIVE && cycle_count_inc) begin
@@ -189,7 +199,7 @@ module cnn_layer_accel_octo_bram_ctrl #(
                 depth <= 0;
             end else if(input_row == num_input_rows) begin
                 input_row   <= 0;
-                depth       <= depth + 1;
+                input_depth <= input_depth + 1;
             end if(input_col == num_input_cols) begin
                 input_col  <= 0;
                 input_row  <= input_row + 1;
@@ -203,18 +213,18 @@ module cnn_layer_accel_octo_bram_ctrl #(
         if(accel_rst) begin
             output_row   <= 0;
             output_col   <= 0;
-            depth       <= 0;
+            output_depth <= 0;
         end else begin
-            if(depth == input_depth) begin
-                depth <= 0;
+            if(output_depth == num_output_depth) begin
+                output_depth <= 0;
             end else if(input_row == num_input_rows) begin
-                input_row   <= 0;
-                depth       <= depth + 1;
+                output_row    <= 0;
+                output_depth  <= output_depth + 1;
             end if(input_col == num_input_cols) begin
                 input_col  <= 0;
-                input_row  <= input_row + 1;
+                output_row   <= output_row + 1;
             end else if(cycle_counter == 4) begin
-                input_col  <= input_col + 1;
+                output_col  <= output_col + 1;
             end
         end
     end
@@ -296,13 +306,11 @@ module cnn_layer_accel_octo_bram_ctrl #(
             pixel_dataout_valid_r   <= 0;
             row_matric_count        <= 0;
             wrAddr                  <= 0;
-            job_done                <= 0;
             row_request             <= 0;
             state_0                 <= ST_IDLE_0;
         end else begin
             pfb_rden                <= 0;
             pixel_dataout_valid_r   <= 0;
-            job_done                <= 0;
             row_request             <= 0;
             case(state_0)           
                 ST_IDLE_0: begin
@@ -349,7 +357,6 @@ module cnn_layer_accel_octo_bram_ctrl #(
                     if(output_col == num_input_cols) begin
                         pixel_dataout_valid_r   <= 0;
                         if(depth == input_depth) begin
-                            job_done            <= 1;
                             state_0             <= ST_IDLE_0;
                         end else begin
                             if(pfb_count != num_input_cols) begin

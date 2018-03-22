@@ -29,12 +29,12 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_awp #(
-    parameter C_NUM_NETWORK_IF  = 1,
-    parameter C_PACKET_WIDTH    = 128,
     parameter C_NUM_QUADS       = 1,
+    parameter C_NUM_NETWORK_IF  = 1,
+    parameter C_PIXEL_WIDTH     = 16,
+    parameter C_PAYLOAD_WIDTH   = 128,
     parameter C_NUM_AWE         = 4,
     parameter C_NUM_CE_PER_AWE  = 2,
-    parameter C_PIXEL_WIDTH     = 16,
     parameter C_BRAM_DEPTH      = 1024,
     parameter C_SEQ_DATA_WIDTH  = 16
 ) (
@@ -63,7 +63,7 @@ module cnn_layer_accel_awp #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_PAYLOAD_WIDTH = C_NUM_NETWORK_IF * C_PACKET_WIDTH;
+    localparam C_PAYLOAD_WIDTH = C_NUM_NETWORK_IF * C_PAYLOAD_WIDTH;
     
     
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -122,11 +122,13 @@ module cnn_layer_accel_awp #(
     generate
         for(i = 0; i < C_NUM_QUADS; i = i + 1) begin
             cnn_layer_accel_quad #(
-                .C_NUM_AWE          ( C_NUM_AWE         ),     
-                .C_NUM_CE_PER_AWE   ( C_NUM_CE_PER_AWE  ),      
-                .C_PIXEL_WIDTH      ( C_PIXEL_WIDTH     ),          
-                .C_BRAM_DEPTH       ( C_BRAM_DEPTH      ),            
-                .C_SEQ_DATA_WIDTH   ( C_SEQ_DATA_WIDTH  )            
+                .C_PIXEL_WIDTH      ( C_PIXEL_WIDTH     ),
+                .C_NUM_NETWORK_IF   ( C_NUM_NETWORK_IF  ),                
+                .C_PAYLOAD_WIDTH    ( C_PAYLOAD_WIDTH   ),
+                .C_NUM_AWE          ( C_NUM_AWE         ),
+                .C_NUM_CE_PER_AWE   ( C_NUM_CE_PER_AWE  ),
+                .C_BRAM_DEPTH       ( C_BRAM_DEPTH      ),
+                .C_SEQ_DATA_WIDTH   ( C_SEQ_DATA_WIDTH  )         
             ) 
             i0_cnn_layer_accel_quad (
                 .network_clk            ( network_clk               ),

@@ -29,9 +29,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_quad #(
+    parameter C_NUM_NETWORK_IF  = 1,
+    parameter C_PIXEL_WIDTH     = 16,
+    parameter C_PAYLOAD_WIDTH   = 128,
     parameter C_NUM_AWE         = 4,
     parameter C_NUM_CE_PER_AWE  = 2,
-    parameter C_PIXEL_WIDTH     = 18,
     parameter C_BRAM_DEPTH      = 1024,
     parameter C_SEQ_DATA_WIDTH  = 16
 ) (
@@ -87,7 +89,7 @@ module cnn_layer_accel_quad #(
     input                               pixel_datain_valid;
     input                               weight_wren;      
     input                               config_wren;       
-    input   [   `PACKET_WIDTH - 1:0]    datain;
+    input   [   `PAYLOAD_WIDTH - 1:0]    datain;
     output                              seq_rden;
     input   [C_SEQ_DATA_WIDTH - 1:0]    seq_datain;
     output                              dataout_valid;
@@ -165,8 +167,9 @@ module cnn_layer_accel_quad #(
 
             
             cnn_layer_accel_awe_rowbuffers #(
-               .C_PIXEL_WIDTH  ( C_PIXEL_WIDTH  ),
-               .C_BRAM_DEPTH   ( C_BRAM_DEPTH   )
+               .C_PIXEL_WIDTH       ( C_PIXEL_WIDTH     ),
+               .C_BRAM_DEPTH        ( C_BRAM_DEPTH      ),
+                .C_SEQ_DATA_WIDTH   ( C_SEQ_DATA_WIDTH  )
             ) 
             i0_cnn_layer_accel_awe_rowbuffers (
                 .clk_500MHz                 ( clk_500MHz                                                                        ),
@@ -192,10 +195,13 @@ module cnn_layer_accel_quad #(
     endgenerate
     
     
-    cnn_layer_accel_octo_bram_ctrl #(
+    cnn_layer_accel_octo_bram_ctrl #(       
+        .C_NUM_NETWORK_IF   ( C_NUM_NETWORK_IF  ),
+        .C_PAYLOAD_WIDTH    ( C_PAYLOAD_WIDTH   ),
         .C_NUM_AWE          ( C_NUM_AWE         ),
-        .C_NUM_CE_PER_AWE   ( C_NUM_CE_PER_AWE  ), 
-        .C_BRAM_DEPTH       ( C_BRAM_DEPTH      )
+        .C_NUM_CE_PER_AWE   ( C_NUM_CE_PER_AWE  ),
+        .C_BRAM_DEPTH       ( C_BRAM_DEPTH      ),    
+        .C_SEQ_DATA_WIDTH   ( C_SEQ_DATA_WIDTH  )  
     )
     i0_cnn_layer_accel_octo_bram_ctrl (
         .clk_500MHz             ( clk_500MHz                                ),
@@ -207,7 +213,7 @@ module cnn_layer_accel_quad #(
         .input_col              ( input_col                                 ),
         .num_input_cols         ( num_input_cols_cfg                        ),
         .num_input_rows         ( num_input_rows_cfg                        ),
-        .input_depth            ( input_depth_cfg                           ),
+        .num_input_depth        ( num_input_depth_cfg                       ),
         .row_matric             ( row_matric                                ),
         .gray_code              ( gray_code                                 ),
         .cycle_counter          ( cycle_counter                             ),
@@ -218,6 +224,7 @@ module cnn_layer_accel_quad #(
         .pfb_dataout_valid      ( pfb_dataout_valid[(0 * C_NUM_PFB) +: 1]   ),
         .wrAddr                 ( wrAddr                                    ),
         .ce_start               ( ce_start                                  ),
+        .seq_rden               ( seq_rden                                  ),              
         .pixel_dataout_valid    ( pixel_dataout_valid                       ),
         .from_network_valid		( from_network_valid		                ),
         .from_network_accept	( from_network_accept	                    ),

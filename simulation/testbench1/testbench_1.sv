@@ -56,13 +56,13 @@ module testbench_1;
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Wires / Regs
 	//----------------------------------------------------------------------------------------------------------------------------------------------- 
-from_network_valid	
-from_network_accept	    
-from_network_payload     
+    reg  [`NUM_NETWORK_IF - 1:0]   from_network_valid;
+    wire [`NUM_NETWORK_IF - 1:0]   from_network_accept;	    
+    reg  [`PAYLOAD_WIDTH  - 1:0]   from_network_payload;    
 
-to_network_valid	
-to_network_accept	
-to_network_payload
+    wire [`NUM_NETWORK_IF - 1:0]   to_network_valid;	
+    reg  [`NUM_NETWORK_IF - 1:0]   to_network_accept;	
+    wire [`PAYLOAD_WIDTH  - 1:0]   to_network_payload;
 
 
     clock_gen #(
@@ -83,7 +83,7 @@ to_network_payload
     
     cnn_layer_accel_awp #(
         .C_NUM_NETWORK_IF   ( `NUM_NETWORK_IF   ),
-        .C_PACKET_WIDTH     ( `PACKET_WIDTH     ),
+        .C_PAYLOAD_WIDTH    ( `PAYLOAD_WIDTH    ),
         .C_NUM_QUADS        ( `NUM_QUADS        ),
         .C_NUM_AWE          ( `NUM_AWE          ),
         .C_NUM_CE_PER_AWE   ( `NUM_CE_PER_AWE   ),
@@ -113,22 +113,22 @@ to_network_payload
     bit [`SEQ_DATA_WIDTH - 1:0]   arr2[0:((COLS * 5) - 1)];
     int i;
     int j;
+    int k;
     bit parity0;
     bit parity1;
     initial begin
         i0_cnn_layer_accel_awp.i0_cnn_layer_accel_quad.num_input_rows_cfg   = ROWS - 1;
         i0_cnn_layer_accel_awp.i0_cnn_layer_accel_quad.num_input_cols_cfg   = COLS - 1;
         i0_cnn_layer_accel_awp.i0_cnn_layer_accel_quad.num_input_depth_cfg  = DEPTH - 1;
-        i0_cnn_layer_accel_awp.i0_cnn_layer_accel_quad.start                = 0;       
-        datain = 0;
-
+        i0_cnn_layer_accel_awp.i0_cnn_layer_accel_quad.start                = 0;  
+        from_network_valid                                                  = 0;
         
         fd = $fopen("map.txt", "w");
         for(k = 0; k < DEPTH; k = k + 1) begin
             for(i = 0; i < ROWS; i = i + 1) begin
                 for(j = 0; j < COLS; j = j + 1) begin
-                    arr[(k * ROWS + row_index) * COLS + col_index] = $urandom_range(1, 10);
-                    $fwrite(fd, "%d ", arr[(k * ROWS + row_index) * COLS + col_index]);
+                    arr[(k * ROWS + i) * COLS + j] = $urandom_range(1, 10);
+                    $fwrite(fd, "%d ", arr[(k * ROWS + i) * COLS + j]);
                 end
                 $fwrite(fd, "\n");
             end
@@ -182,7 +182,6 @@ to_network_payload
         i0_cnn_layer_accel_awp.seq_wren  = 1;
         while(i < 512) begin
             @(posedge clk_100MHz);
-            if(
             from_network_payload[127:112]    = arr2[(i * 8) + 0]; 
             from_network_payload[111:96]     = arr2[(i * 8) + 1];     
             from_network_payload[95:80]      = arr2[(i * 8) + 2];     
@@ -222,7 +221,7 @@ to_network_payload
                 from_network_payload[31:15]   = arr[(6 * (ROWS * COLS)) + i];           
                 from_network_payload[15:0]    = arr[(7 * (ROWS * COLS)) + i];
                 j = i + 1;
-                while(j < COL) begin
+                while(j < COLS) begin
                     if(to_network_accept) begin
                         from_network_payload[127:112] = arr[(0 * (ROWS * COLS)) + j];
                         from_network_payload[111:96]  = arr[(1 * (ROWS * COLS)) + j];           
@@ -236,7 +235,7 @@ to_network_payload
                     end
                 end
                 from_network_valid = 0;
-                i = i + COL;
+                i = i + COLS;
             end
         end 
 
