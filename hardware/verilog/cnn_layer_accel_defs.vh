@@ -46,7 +46,9 @@
 `define BRAM_DEPTH                      1024
 `define CONFIG_3x3                      1'b0
 `define CONFIG_5x5                      1'b1
-`define DSP_PER_AWE                     4
+`define NUM_QUADS                       1     
+`define NUM_AWE                         4
+`define NUM_CE_PER_AWE                  2
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------

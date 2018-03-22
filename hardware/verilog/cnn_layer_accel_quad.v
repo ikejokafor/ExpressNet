@@ -42,11 +42,14 @@ module cnn_layer_accel_quad #(
     pixel_datain_valid,
     weight_wren,       
     config_wren,       
-    datain,
     seq_rden,
     seq_datain,
-    dataout_valid,
-    dataout
+    from_network_valid	    ,
+	from_network_accept	    ,
+	from_network_payload    ,
+    to_network_valid,		
+    to_network_accept,		
+    to_network_payload		
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -89,7 +92,13 @@ module cnn_layer_accel_quad #(
     input   [C_SEQ_DATA_WIDTH - 1:0]    seq_datain;
     output                              dataout_valid;
     output                              dataout;
-
+    input	[C_NUM_NETWORK_IF - 1:0]    from_network_valid		;
+	output  [C_NUM_NETWORK_IF - 1:0]    from_network_accept		;
+	input	[C_PAYLOAD_WIDTH  - 1:0]    from_network_payload	;
+    output	[C_NUM_NETWORK_IF - 1:0]    to_network_valid;		
+    input	[C_NUM_NETWORK_IF - 1:0]    to_network_accept;	
+    output	[C_PAYLOAD_WIDTH  - 1:0]    to_network_payload;
+    
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Wires / Regs / Integers
@@ -122,7 +131,7 @@ module cnn_layer_accel_quad #(
 
     reg     [         15:0]                  num_input_cols_cfg;  
     reg     [         15:0]                  num_input_rows_cfg;  
-    reg     [         15:0]                  input_depth_cfg;     
+    reg     [         15:0]                  num_input_depth_cfg;     
     reg     [         15:0]                  num_kernels_cfg;     
     reg     [         15:0]                  kernel_size_cfg;     
     
@@ -143,7 +152,7 @@ module cnn_layer_accel_quad #(
                   .rst              ( accel_rst                                                                     ),
                   .wr_clk           ( network_clk                                                                   ),
                   .rd_clk           ( clk_500MHz                                                                    ),
-                  .din              ( datain[(((i * C_NUM_CE_PER_AWE) + j) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]       ),
+                  .din              ( from_network_payload[(((i * C_NUM_CE_PER_AWE) + j) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]       ),
                   .wr_en            ( pfb_wren                                                                      ),
                   .rd_en            ( pfb_rden                                                                      ),
                   .dout             ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + j) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]  ),
@@ -171,8 +180,8 @@ module cnn_layer_accel_quad #(
                 .row_matric                 ( row_matric                                                                        ),
                 .pfb_rden                   ( pfb_rden                                                                          ),
                 .cycle_counter              ( cycle_counter                                                                     ),
-                .pixel_datain_ce0           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 0) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]      ),
-                .pixel_datain_ce1           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 1) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]      ),
+                .ce0_pixel_datain           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 0) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]      ),
+                .ce1_pixel_datain           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 1) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]      ),
                 .ce0_start                  ( ce_start[(((i * C_NUM_CE_PER_AWE) + 0) * 1) +: 1]                                 ),
                 .ce1_start                  ( ce_start[(((i * C_NUM_CE_PER_AWE) + 1) * 1) +: 1]                                 ),
                 .ce0_pixel_dataout          ( pixel_dataout[(((i * C_NUM_CE_PER_AWE) + 0) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]    ),
@@ -184,9 +193,9 @@ module cnn_layer_accel_quad #(
     
     
     cnn_layer_accel_octo_bram_ctrl #(
-        .C_NUM_AWE          ( C_NUM_AWE     ),
-        .C_NUM_CE_PER_AWE   (
-        .C_BRAM_DEPTH       ( C_BRAM_DEPTH  )
+        .C_NUM_AWE          ( C_NUM_AWE         ),
+        .C_NUM_CE_PER_AWE   ( C_NUM_CE_PER_AWE  ), 
+        .C_BRAM_DEPTH       ( C_BRAM_DEPTH      )
     )
     i0_cnn_layer_accel_octo_bram_ctrl (
         .clk_500MHz             ( clk_500MHz                                ),
@@ -209,7 +218,13 @@ module cnn_layer_accel_quad #(
         .pfb_dataout_valid      ( pfb_dataout_valid[(0 * C_NUM_PFB) +: 1]   ),
         .wrAddr                 ( wrAddr                                    ),
         .ce_start               ( ce_start                                  ),
-        .pixel_dataout_valid    ( pixel_dataout_valid                       )
+        .pixel_dataout_valid    ( pixel_dataout_valid                       ),
+        .from_network_valid		( from_network_valid		                ),
+        .from_network_accept	( from_network_accept	                    ),
+        .from_network_payload	( from_network_payload	                    ),
+        .to_network_valid	    ( to_network_valid	                        ),
+        .to_network_accept	    ( to_network_accept	                        ),
+        .to_network_payload     ( to_network_payload                        )
     );
     
     
@@ -232,7 +247,7 @@ module cnn_layer_accel_quad #(
     //    if(config_wren) begin
     //        num_input_cols_cfg  = datain[];  
     //        num_input_rows_cfg  = datain[];
-    //        input_depth_cfg     = datain[];
+    //        num_input_depth_cfg = datain[];
     //        num_kernels_cfg     = datain[];
     //        kernel_size_cfg     = datain[];
     //    end

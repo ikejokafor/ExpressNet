@@ -139,8 +139,12 @@ module cnn_layer_accel_awp #(
                 .datain                 ( from_network_payload      ),   
                 .seq_rden               ( seq_rden                  ),
                 .seq_datain             ( seq_dataout               ),
-                .dataout                (                           ),
-                .dataout_valid          (                           )
+                .from_network_valid	    ( from_network_valid	    ),
+                .from_network_accept    ( from_network_accept	    ),
+                .from_network_payload   ( from_network_payload      ),
+                .to_network_valid		( to_network_valid		    ),
+                .to_network_accept		( to_network_accept		    ),
+                .to_network_payload		( to_network_payload		)         
             );
         end
     endgenerate
