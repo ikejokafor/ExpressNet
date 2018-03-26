@@ -31,10 +31,10 @@
 module cnn_layer_accel_awp #(
     parameter C_NUM_QUADS       = 1,
     parameter C_NUM_NETWORK_IF  = 1,
-    parameter C_PIXEL_WIDTH     = 16,
     parameter C_PAYLOAD_WIDTH   = 128,
     parameter C_NUM_AWE         = 4,
     parameter C_NUM_CE_PER_AWE  = 2,
+    parameter C_PIXEL_WIDTH     = 16,
     parameter C_BRAM_DEPTH      = 1024,
     parameter C_SEQ_DATA_WIDTH  = 16
 ) (
@@ -63,7 +63,7 @@ module cnn_layer_accel_awp #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_PAYLOAD_WIDTH = C_NUM_NETWORK_IF * C_PAYLOAD_WIDTH;
+    localparam C_NET_PYLD_WIDTH = C_NUM_NETWORK_IF * C_PAYLOAD_WIDTH;
     
     
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -77,26 +77,29 @@ module cnn_layer_accel_awp #(
 
 	input	[C_NUM_NETWORK_IF - 1:0]    from_network_valid		;
 	output  [C_NUM_NETWORK_IF - 1:0]    from_network_accept		;
-	input	[C_PAYLOAD_WIDTH  - 1:0]    from_network_payload	;
+	input	[C_NET_PYLD_WIDTH - 1:0]    from_network_payload	;
 
 	output	[C_NUM_NETWORK_IF - 1:0]	to_network_valid		;
 	input	[C_NUM_NETWORK_IF - 1:0]	to_network_accept		;
-	output	[C_PAYLOAD_WIDTH  - 1:0]	to_network_payload		;
+	output	[C_NET_PYLD_WIDTH - 1:0]	to_network_payload		;
     
     
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Wires / Regs
 	//----------------------------------------------------------------------------------------------------------------------------------------------- 
     reg         seq_wren            ;
-    wire        seq_rden            ;
     reg [ 8:0]  seq_wrAddr          ;
+    reg [127:0] seq_datain          ;
+    wire        seq_rden            ;
     reg [11:0]  seq_rdAddr          ;
     reg [15:0]  seq_dataout         ;
 
-    reg         pixel_datain_valid  ;
+
+    reg         pfb_wren            ;
     reg         config_wren         ;
     reg         weight_wren         ;
     genvar      i                   ;
+    reg [127:0] datain              ;
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -111,7 +114,7 @@ module cnn_layer_accel_awp #(
         .clka     ( network_clk             ),
         .wea      ( seq_wren                ),
         .addra    ( seq_wrAddr              ),    
-        .dina     ( from_network_payload    ),
+        .dina     ( seq_datain              ),
         .clkb     ( clk_500MHz              ),
         .enb      ( seq_rden                ),
         .addrb    ( seq_rdAddr              ),
@@ -122,8 +125,8 @@ module cnn_layer_accel_awp #(
     generate
         for(i = 0; i < C_NUM_QUADS; i = i + 1) begin
             cnn_layer_accel_quad #(
-                .C_PIXEL_WIDTH      ( C_PIXEL_WIDTH     ),
-                .C_NUM_NETWORK_IF   ( C_NUM_NETWORK_IF  ),                
+                .C_NUM_NETWORK_IF   ( C_NUM_NETWORK_IF  ), 
+                .C_PIXEL_WIDTH      ( C_PIXEL_WIDTH     ),              
                 .C_PAYLOAD_WIDTH    ( C_PAYLOAD_WIDTH   ),
                 .C_NUM_AWE          ( C_NUM_AWE         ),
                 .C_NUM_CE_PER_AWE   ( C_NUM_CE_PER_AWE  ),
@@ -135,37 +138,51 @@ module cnn_layer_accel_awp #(
                 .network_rst            ( network_rst               ),
                 .clk_500MHz             ( clk_500MHz                ),
                 .accel_rst              ( accel_rst                 ),
-                .pixel_datain_valid     ( pixel_datain_valid        ),
+                .pfb_wren               ( pfb_wren                  ),
                 .weight_wren            ( weight_wren               ),
                 .config_wren            ( config_wren               ),
-                .datain                 ( from_network_payload      ),   
                 .seq_rden               ( seq_rden                  ),
                 .seq_datain             ( seq_dataout               ),
-                .from_network_valid	    ( from_network_valid	    ),
-                .from_network_accept    ( from_network_accept	    ),
-                .from_network_payload   ( from_network_payload      ),
-                .to_network_valid		( to_network_valid		    ),
-                .to_network_accept		( to_network_accept		    ),
-                .to_network_payload		( to_network_payload		)         
+                .datain                 ( datain                    )    
             );
         end
     endgenerate
     
+    /*
+    localparam C_LG2_NUM_QUADS = clog2(C_NUM_QUADS);
+	wire	[C_NUM_QUADS		-1:0]		request;
+	wire											grant_release;
+	wire											grant_valid;
+	wire	[C_LG2_NUM_QUADS	-1:0]		grant;
+	wire	[C_NUM_QUADS		-1:0]		grant_oh;
+    
+    arbitration_nway_single_cycle #(
+        .C_NUM_REQUESTORS (C_NUM_QUADS)
+    )
+    i0_arbitration_nway_single_cycle (
+        clk,
+        rst,
+        requests,
+        grant_release,
+        grant_valid,
+        grant,
+        grant_oh
+    );
+    */   
     
     // BEGIN Network Output Data Logic --------------------------------------------------------------------------------------------------------------
     always@(posedge network_clk) begin
         if(accel_rst) begin
-            seq_wren                <= 0;
-            seq_wrAddr              <= 0;
-            seq_rdAddr              <= 0;
-            config_wren             <= 0;
-            weight_wren             <= 0;
-            pixel_datain_valid      <= 0;
+            pfb_wren        <= 0;
+            seq_wren        <= 0;
+            seq_wrAddr      <= 0;
+            seq_rdAddr      <= 0;
+            config_wren     <= 0;
+            weight_wren     <= 0;
         end else begin
-            seq_wren                <= 0;
+            //seq_wren                <= 0;
             config_wren             <= 0;
             weight_wren             <= 0;
-            pixel_datain_valid      <= 0;
             /*
             if() begin
                 config_wren

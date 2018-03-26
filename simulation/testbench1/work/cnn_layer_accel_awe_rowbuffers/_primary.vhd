@@ -7,17 +7,18 @@ entity cnn_layer_accel_awe_rowbuffers is
         C_SEQ_DATA_WIDTH: integer := 16
     );
     port(
-        clk_500MHz      : in     vl_logic;
-        accel_rst       : in     vl_logic;
+        clk             : in     vl_logic;
+        rst             : in     vl_logic;
         input_row       : in     vl_logic_vector;
         input_col       : in     vl_logic_vector;
         num_input_cols  : in     vl_logic_vector;
-        state           : in     vl_logic_vector(3 downto 0);
+        state           : in     vl_logic_vector(4 downto 0);
         gray_code       : in     vl_logic_vector(1 downto 0);
         seq_datain      : in     vl_logic_vector;
         row_matric      : in     vl_logic;
         pfb_rden        : in     vl_logic;
         cycle_counter   : in     vl_logic_vector(5 downto 0);
+        last_kernel     : in     vl_logic;
         ce0_pixel_datain: in     vl_logic_vector;
         ce1_pixel_datain: in     vl_logic_vector;
         ce0_start       : in     vl_logic;

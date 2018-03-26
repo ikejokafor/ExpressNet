@@ -53,16 +53,16 @@ module xilinx_dual_port_1_clock_ram #(
     input                                       clk;
     input                                       wren;       
     input                                       rden;       
-    output reg  [          C_RAM_WIDTH - 1:0]   dataout;
+    output      [          C_RAM_WIDTH - 1:0]   dataout;
   
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Regs
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     reg     [       C_RAM_WIDTH - 1:0]    BRAM[C_RAM_DEPTH - 1:0];
-    wire    [clog2(C_RAM_DEPTH) - 1:0]    rd_address;
-    reg     [clog2(C_RAM_DEPTH) - 1:0]    rd_addr_plus_one;
- 
+    reg     [       C_RAM_WIDTH - 1:0]    dout_reg0;
+    reg     [       C_RAM_WIDTH - 1:0]    dout_reg1;
+    reg     [       C_RAM_WIDTH - 1:0]    dout_reg2;
 	
 	// BEGIN BRAM Write logic -----------------------------------------------------------------------------------------------------------------------   
     always@(posedge clk) begin
@@ -74,9 +74,13 @@ module xilinx_dual_port_1_clock_ram #(
 
 
     // BEGIN BRAM Read logic ------------------------------------------------------------------------------------------------------------------------     
+    assign dataout = dout_reg2;
+    
     always@(posedge clk) begin
         if(rden) begin
-            dataout <= BRAM[rdAddr];
+            dout_reg0 <= BRAM[rdAddr];
+            dout_reg1 <= dout_reg0;
+            dout_reg2 <= dout_reg1;
         end
     end
     // END BRAM logic -------------------------------------------------------------------------------------------------------------------------------
