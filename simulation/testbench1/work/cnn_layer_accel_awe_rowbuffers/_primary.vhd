@@ -4,7 +4,9 @@ entity cnn_layer_accel_awe_rowbuffers is
     generic(
         C_PIXEL_WIDTH   : integer := 16;
         C_BRAM_DEPTH    : integer := 1024;
-        C_SEQ_DATA_WIDTH: integer := 16
+        C_SEQ_DATA_WIDTH: integer := 16;
+        C_CE0_ROW_MATRIC_DELAY: integer := 1;
+        C_CE1_ROW_MATRIC_DELAY: integer := 2
     );
     port(
         clk             : in     vl_logic;
@@ -15,20 +17,24 @@ entity cnn_layer_accel_awe_rowbuffers is
         state           : in     vl_logic_vector(4 downto 0);
         gray_code       : in     vl_logic_vector(1 downto 0);
         seq_datain      : in     vl_logic_vector;
-        row_matric      : in     vl_logic;
         pfb_rden        : in     vl_logic;
         cycle_counter   : in     vl_logic_vector(5 downto 0);
         last_kernel     : in     vl_logic;
+        row_matric      : in     vl_logic;
         ce0_pixel_datain: in     vl_logic_vector;
         ce1_pixel_datain: in     vl_logic_vector;
         ce0_start       : in     vl_logic;
         ce1_start       : in     vl_logic;
         ce0_pixel_dataout: out    vl_logic_vector;
         ce1_pixel_dataout: out    vl_logic_vector;
-        wrAddr          : in     vl_logic_vector
+        wrAddr          : in     vl_logic_vector;
+        ce0_pixel_dataout_valid: out    vl_logic;
+        ce1_pixel_dataout_valid: out    vl_logic
     );
     attribute mti_svvh_generic_type : integer;
     attribute mti_svvh_generic_type of C_PIXEL_WIDTH : constant is 1;
     attribute mti_svvh_generic_type of C_BRAM_DEPTH : constant is 1;
     attribute mti_svvh_generic_type of C_SEQ_DATA_WIDTH : constant is 1;
+    attribute mti_svvh_generic_type of C_CE0_ROW_MATRIC_DELAY : constant is 1;
+    attribute mti_svvh_generic_type of C_CE1_ROW_MATRIC_DELAY : constant is 1;
 end cnn_layer_accel_awe_rowbuffers;

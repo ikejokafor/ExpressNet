@@ -128,7 +128,7 @@ module testbench_1;
     );
 
  
-    integer fd;
+    integer fd, fd0;
     bit [`PIXEL_WIDTH - 1:0]    arr[0:((ROWS * COLS * 8) - 1)];
     bit [15:0]                  arr2[0:((512 * 8) - 1)];
     int i;
@@ -150,7 +150,7 @@ module testbench_1;
         job_fetch_complete                            = 0;                                        
         config_data                                   = 0;
         config_valid                                  = 0;
-        
+        fd0 = $fopen("seq.txt", "w");
         
         fd = $fopen("map.txt", "w");
         for(k = 0; k < DEPTH; k = k + 1) begin
@@ -164,7 +164,9 @@ module testbench_1;
             $fwrite(fd, "\n");
             $fwrite(fd, "\n");
         end
-        
+        $fclose(fd);
+
+  
         //                 RM   RST    P
         arr2[0] = {3'b0, 1'b0, 1'b1, 1'b1, 10'd0  };
         arr2[1] = {3'b0, 1'b0, 1'b0, 1'b0, 10'd2  };
@@ -284,6 +286,16 @@ module testbench_1;
 
         #(C_PERIOD_100MHz)
         $stop;
+    end
+    
+    always@(posedge clk_500MHz) begin
+        if(i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.ce0_start) begin
+            $fwrite(fd0, "%d\t%d\n", 
+                i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.seq_datain_even, 
+                i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.seq_datain_odd
+            );
+            $fflush(fd0);
+        end
     end
     
 endmodule

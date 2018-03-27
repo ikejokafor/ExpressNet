@@ -61,8 +61,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     last_kernel                 ,
     next_row                    ,
     pixel_valid                 ,
-    pixel_ready                 ,
-    pixel_dataout_valid         
+    pixel_ready                          
 );
 
 
@@ -121,12 +120,12 @@ module cnn_layer_accel_quad_bram_ctrl #(
     input                                   next_row                    ;
     input                                   pixel_valid                 ;
     input                                   pixel_ready                 ;    
-    output                                  pixel_dataout_valid         ;  
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------          
+    wire                                    seq_rden_d                      ;
     reg     [4:0]                           job_accept_r                    ;
     reg                                     job_fetch_acked                 ;
     reg                                     job_fetch_in_progress           ;
@@ -137,7 +136,6 @@ module cnn_layer_accel_quad_bram_ctrl #(
     reg     [                     3:0]      prev_state_0                    ;
     wire                                    cycle_count_inc                 ;
     reg     [                     1:0]      gc                              ;
-    reg                                     pixel_dataout_valid_r           ;
     integer                                 idx                             ;  
     reg     [                     8:0]      pfb_count                       ;
     reg     [                     8:0]      pfb_count_d                     ;
@@ -146,7 +144,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
 	
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
-	//-----------------------------------------------------------------------------------------------------------------------------------------------    
+	//-----------------------------------------------------------------------------------------------------------------------------------------------         
     SRL_bit #(
         .C_CLOCK_CYCLES( 2 )
     ) 
@@ -154,21 +152,21 @@ module cnn_layer_accel_quad_bram_ctrl #(
         .clk        ( clk                   ),
         .rst        ( rst                   ),
         .ce         ( 1'b1                  ),
-        .data_in    ( seq_rden              ),
+        .data_in    ( seq_rden_d            ),
         .data_out   ( cycle_count_inc       )
     );
-    
+   
     
     SRL_bit #(
-        .C_CLOCK_CYCLES( 3 )
+        .C_CLOCK_CYCLES( 2 )
     ) 
-    i1_SRL_bit (
-        .clk        ( clk                       ),
-        .rst        ( rst                       ),
-        .ce         ( 1'b1                      ),
-        .data_in    ( pixel_dataout_valid_r     ),
-        .data_out   ( pixel_dataout_valid       )
-    );
+    i2_SRL_bit (
+        .clk        ( clk           ),
+        .rst        ( rst           ),
+        .ce         ( 1'b1          ),
+        .data_in    ( seq_rden      ),
+        .data_out   ( seq_rden_d    )
+    ); 
    
     
     SRL_bus #(  
@@ -257,7 +255,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
                 ce_start[idx] <= 0;
             end
         end else begin
-            ce_start[0] <= (state_0 == ST_AWE_CE_ACTIVE);
+            ce_start[0] <= (state_0 == ST_AWE_CE_ACTIVE && seq_rden_d);
             for(idx = 1; idx < C_CE_START_WIDTH; idx = idx + 1) begin
                 ce_start[idx] <= ce_start[idx - 1];
             end
@@ -324,7 +322,6 @@ module cnn_layer_accel_quad_bram_ctrl #(
     always@(posedge clk) begin
         if(rst) begin
             pfb_rden                <= 0;
-            pixel_dataout_valid_r   <= 0;
             wrAddr                  <= 0;
             job_accept_r[0]         <= 0;
             job_fetch_request       <= 0;
@@ -334,7 +331,6 @@ module cnn_layer_accel_quad_bram_ctrl #(
             state_0                 <= ST_IDLE_0;
         end else begin
             pfb_rden                <= 0;
-            pixel_dataout_valid_r   <= 0;
             job_accept_r[0]         <= 0;
             job_fetch_request       <= 0;
             job_complete            <= 0;
@@ -350,12 +346,12 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     job_fetch_request 	<= job_fetch_ack  ? 1'b0 : (~job_fetch_acked ? 1'b1 : job_fetch_request);
 				    job_fetch_acked     <= job_fetch_ack  ? 1'b1 :  job_fetch_acked;
                     if(job_fetch_complete) begin
-                        state_0 <= prev_state_0;
+                        job_fetch_acked <= 0;
+                        state_0         <= prev_state_0;
                     end
                 end
                 ST_AWE_CE_PRIM_BUFFER: begin
                     if(pfb_count_d == 0 && input_row != 3) begin
-                        job_fetch_request       <= 1;
                         prev_state_0            <= state_0;
                         state_0                 <= ST_WAIT_PFB_LOAD;
                     end else begin
@@ -371,11 +367,14 @@ module cnn_layer_accel_quad_bram_ctrl #(
                 end
                 ST_AWE_CE_ACTIVE: begin
                     seq_rden <= 1;
-                    pixel_dataout_valid_r   <= 1;
                     // overlap pfb load with execution
-                    //if(pfb_count != num_input_cols && !job_fetch_in_progress) begin
-                    //    job_fetch_request_r[0] <= 1;
-                    //end
+                    if(pfb_count == 0 && !job_fetch_in_progress) begin
+                        job_fetch_request 	<= job_fetch_ack  ? 1'b0 : (~job_fetch_acked ? 1'b1 : job_fetch_request);
+                        job_fetch_acked     <= job_fetch_ack  ? 1'b1 :  job_fetch_acked;
+                    end
+                    if(job_fetch_complete) begin
+                        job_fetch_acked <= 0;
+                    end
                     // overlap row matric with execution
                     if(row_matric && last_kernel) begin
                         wrAddr     <= wrAddr + 1;
@@ -383,7 +382,6 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     end
                     if(output_col == num_input_cols) begin
                         seq_rden                <= 0;
-                        pixel_dataout_valid_r   <= 0;
                         if(output_row == num_input_rows) begin
                             state_0         <= ST_JOB_DONE;
                         end else if(pfb_count != num_input_cols) begin
