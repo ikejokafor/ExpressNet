@@ -18,7 +18,6 @@ entity cnn_layer_accel_awe_rowbuffers is
         gray_code       : in     vl_logic_vector(1 downto 0);
         seq_datain      : in     vl_logic_vector;
         pfb_rden        : in     vl_logic;
-        cycle_counter   : in     vl_logic_vector(5 downto 0);
         last_kernel     : in     vl_logic;
         row_matric      : in     vl_logic;
         ce0_pixel_datain: in     vl_logic_vector;

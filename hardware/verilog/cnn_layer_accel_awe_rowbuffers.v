@@ -44,7 +44,6 @@ module cnn_layer_accel_awe_rowbuffers #(
     gray_code                   ,
     seq_datain                  ,
     pfb_rden                    ,
-    cycle_counter               ,
     last_kernel                 ,
     row_matric                  ,
     ce0_pixel_datain            ,
@@ -93,13 +92,12 @@ module cnn_layer_accel_awe_rowbuffers #(
     input                                   pfb_rden                    ;
     input                                   last_kernel                 ;
     input                                   row_matric                  ;
-    input       [                    5:0]   cycle_counter               ;
     input       [    C_PIXEL_WIDTH - 1:0]   ce0_pixel_datain            ;
     input       [    C_PIXEL_WIDTH - 1:0]   ce1_pixel_datain            ;
     input                                   ce0_start                   ;
     input                                   ce1_start                   ;
-    output reg  [    C_PIXEL_WIDTH - 1:0]   ce0_pixel_dataout           ;
-    output reg  [    C_PIXEL_WIDTH - 1:0]   ce1_pixel_dataout           ;
+    output      [    C_PIXEL_WIDTH - 1:0]   ce0_pixel_dataout           ;
+    output      [    C_PIXEL_WIDTH - 1:0]   ce1_pixel_dataout           ;
     input       [C_LOG2_BRAM_DEPTH - 2:0]   wrAddr                      ;
     output                                  ce0_pixel_dataout_valid     ;
     output                                  ce1_pixel_dataout_valid     ;
@@ -108,6 +106,9 @@ module cnn_layer_accel_awe_rowbuffers #(
  	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
+    reg     [                       5:0]    ce0_cycle_counter       ;
+    reg     [                       5:0]    ce1_cycle_counter       ;
+    
     wire                                    pfb_rden_d              ;
     wire    [   C_LOG2_BRAM_DEPTH - 2:0]    input_col_d             ;
     wire    [   C_LOG2_BRAM_DEPTH - 2:0]    input_row_d             ;
@@ -232,7 +233,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     
     
     SRL_bit #(
-        .C_CLOCK_CYCLES( 4 )
+        .C_CLOCK_CYCLES( 3 )
     ) 
     i1_SRL_bit (
         .clk        ( clk                       ),
@@ -244,7 +245,7 @@ module cnn_layer_accel_awe_rowbuffers #(
   
   
     SRL_bit #(
-        .C_CLOCK_CYCLES( 4 )
+        .C_CLOCK_CYCLES( 3 )
     ) 
     i2_SRL_bit (
         .clk        ( clk                       ),
@@ -359,37 +360,79 @@ module cnn_layer_accel_awe_rowbuffers #(
  
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
     always@(posedge clk) begin
-        if(gray_code == 2'b00 && cycle_counter == 2) begin
+        if(gray_code == 2'b00 && ce0_cycle_counter == 2) begin
             row_buffer_sav_val0 <= bram1_dataout;
-            row_buffer_sav_val1 <= bram3_dataout;
-        end else if(gray_code == 2'b01 && cycle_counter == 2) begin
+        end else if(gray_code == 2'b01 && ce0_cycle_counter == 2) begin
             row_buffer_sav_val0 <= bram0_dataout;
+        end else if(gray_code == 2'b11 && ce0_cycle_counter == 0) begin
+            row_buffer_sav_val0 <= bram1_dataout;
+        end else if(gray_code == 2'b10 && ce0_cycle_counter == 0) begin
+            row_buffer_sav_val0 <= bram0_dataout;
+        end
+    end
+    
+    always@(posedge clk) begin
+        if(gray_code == 2'b00 && ce1_cycle_counter == 2) begin
+            row_buffer_sav_val1 <= bram3_dataout;
+        end else if(gray_code == 2'b01 && ce1_cycle_counter == 2) begin
             row_buffer_sav_val1 <= bram2_dataout;
-        end else if(gray_code == 2'b11 && cycle_counter == 0) begin
-            row_buffer_sav_val0 <= bram1_dataout;
+        end else if(gray_code == 2'b11 && ce1_cycle_counter == 0) begin
             row_buffer_sav_val1 <= bram3_dataout;
-        end else if(gray_code == 2'b10 && cycle_counter == 0) begin
-            row_buffer_sav_val0 <= bram0_dataout;
+        end else if(gray_code == 2'b10 && ce1_cycle_counter == 0) begin
             row_buffer_sav_val1 <= bram2_dataout;
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
  
     
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
+    always@(posedge clk) begin
+        if(rst) begin
+            ce0_cycle_counter <= 0;
+        end else begin
+            if(ce0_pixel_dataout_valid) begin
+                ce0_cycle_counter <= ce0_cycle_counter + 1;
+                if(ce0_cycle_counter == 4) begin
+                    ce0_cycle_counter <= 0;
+                end
+            end
+        end
+    end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
+    
+
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
+    always@(posedge clk) begin
+        if(rst) begin
+            ce1_cycle_counter <= 0;
+        end else begin
+            if(ce1_pixel_dataout_valid) begin
+                ce1_cycle_counter <= ce1_cycle_counter + 1;
+                if(ce1_cycle_counter == 4) begin
+                    ce1_cycle_counter <= 0;
+                end
+            end
+        end
+    end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------    
+
+ 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
-    assign seq_datain_field = seq_datain[`SEQ_DATA_SEQ_FIELD];
-    assign seq_datain_field0 = seq_datain[`SEQ_DATA_SEQ_FIELD0];
-    assign seq_datain_field1 = seq_datain[`SEQ_DATA_SEQ_FIELD1];
-    assign seq_datain_even =    {  
-                                    gray_code[0] ^ seq_datain_field[`SEQ_DATA_SEQ_WIDTH - 1], 
-                                    seq_datain_field1
-                                };
-    assign seq_datain_odd =     {  
-                                    gray_code[1] ^ seq_datain_field[`SEQ_DATA_SEQ_WIDTH - 1], 
-                                    seq_datain_field0,
-                                    seq_datain[0] 
-                                        | seq_datain[`SEQ_DATA_PARITY_FIELD]
-                                };
+    assign ce0_pixel_dataout    = {bram1_dataout, bram0_dataout};
+    assign ce1_pixel_dataout    = {bram3_dataout, bram2_dataout};
+    assign seq_datain_field     = seq_datain[`SEQ_DATA_SEQ_FIELD];
+    assign seq_datain_field0    = seq_datain[`SEQ_DATA_SEQ_FIELD0];
+    assign seq_datain_field1    = seq_datain[`SEQ_DATA_SEQ_FIELD1];
+    assign seq_datain_even      =    {  
+                                        gray_code[0] ^ seq_datain_field[`SEQ_DATA_SEQ_WIDTH - 1], 
+                                        seq_datain_field1
+                                    };
+    assign seq_datain_odd       =   {  
+                                        gray_code[1] ^ seq_datain_field[`SEQ_DATA_SEQ_WIDTH - 1], 
+                                        seq_datain_field0,
+                                        seq_datain[0] 
+                                            | seq_datain[`SEQ_DATA_PARITY_FIELD]
+                                    };
                                 
     always@(posedge clk) begin
         if(rst) begin
@@ -462,9 +505,6 @@ module cnn_layer_accel_awe_rowbuffers #(
                         bram1_rden              <= 1;
                         bram0_rdAddr            <= seq_datain_even;
                         bram1_rdAddr            <= seq_datain_odd;
-                        if(bram0_rden) begin
-                            ce0_pixel_dataout   <= {bram1_dataout, bram0_dataout};
-                        end
                         if(ce0_row_matric && last_kernel) begin
                             if(!(gray_code[0] ^ gray_code[1])) begin
                                 // incoming row
@@ -493,9 +533,6 @@ module cnn_layer_accel_awe_rowbuffers #(
                         bram3_rden              <= 1;
                         bram2_rdAddr            <= seq_datain_even_d;
                         bram3_rdAddr            <= seq_datain_odd_d;
-                        if(bram2_rden) begin
-                            ce1_pixel_dataout   <= {bram3_dataout, bram2_dataout};
-                        end
                         if(ce1_row_matric && last_kernel) begin
                             if(!(gray_code[0] ^ gray_code[1])) begin
                                 // incoming row

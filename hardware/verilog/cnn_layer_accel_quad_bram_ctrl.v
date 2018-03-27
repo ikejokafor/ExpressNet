@@ -51,7 +51,6 @@ module cnn_layer_accel_quad_bram_ctrl #(
     input_col                   ,
     row_matric                  ,
     gray_code                   ,
-    cycle_counter               ,
     pfb_empty                   ,
     pfb_rden                    ,
     pfb_full_count              ,
@@ -112,7 +111,6 @@ module cnn_layer_accel_quad_bram_ctrl #(
     input      [                    8:0]    pfb_full_count              ;
     input                                   row_matric                  ;
     output     [                    1:0]    gray_code                   ;
-    output reg [                    5:0]    cycle_counter               ;
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    wrAddr                      ;
     output reg [ C_CE_START_WIDTH - 1:0]    ce_start                    ;
     output reg                              seq_rden                    ;
@@ -181,22 +179,6 @@ module cnn_layer_accel_quad_bram_ctrl #(
         .data_out   ( pfb_count_d    )
     );   
    
-
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
-    always@(posedge clk) begin
-        if(rst) begin
-            cycle_counter <= 0;
-        end else begin
-            if(state_0 == ST_AWE_CE_ACTIVE && cycle_count_inc) begin
-                cycle_counter <= cycle_counter + 1;
-                if(cycle_counter == 4) begin
-                    cycle_counter <= 0;
-                end
-            end
-        end
-    end
-    // END logic ------------------------------------------------------------------------------------------------------------------------------------
-
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign num_output_rows      = num_input_rows; 
