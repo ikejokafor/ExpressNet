@@ -351,7 +351,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     end
                 end
                 ST_AWE_CE_PRIM_BUFFER: begin
-                    if(pfb_count_d == 0 && input_row != 3) begin
+                    if(pfb_count == 0 && pfb_count_d == 0 && input_row != 3) begin
                         prev_state_0            <= state_0;
                         state_0                 <= ST_WAIT_PFB_LOAD;
                     end else begin

@@ -5,8 +5,8 @@
   <File Type="VDS-TIMINGSUMMARY" Name="xilinx_async_fwft_fifo_count_timing_summary_synth.rpt"/>
   <File Type="VDS-TIMING-PB" Name="xilinx_async_fwft_fifo_count_timing_summary_synth.pb"/>
   <File Type="RDS-RDS" Name="xilinx_async_fwft_fifo_count.vds"/>
-  <File Type="PA-TCL" Name="xilinx_async_fwft_fifo_count.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="xilinx_async_fwft_fifo_count_drc_synth.rpt"/>
+  <File Type="PA-TCL" Name="xilinx_async_fwft_fifo_count.tcl"/>
   <File Type="RDS-UTIL" Name="xilinx_async_fwft_fifo_count_utilization_synth.rpt"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/xilinx_async_fwft_fifo_count">
     <File Path="$PPRDIR/../xilinx_async_fwft_fifo_count/xilinx_async_fwft_fifo_count.xci">

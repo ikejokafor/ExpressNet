@@ -5,8 +5,8 @@
   <File Type="VDS-TIMINGSUMMARY" Name="xilinx_dual_port_2_clock_ram_timing_summary_synth.rpt"/>
   <File Type="VDS-TIMING-PB" Name="xilinx_dual_port_2_clock_ram_timing_summary_synth.pb"/>
   <File Type="RDS-RDS" Name="xilinx_dual_port_2_clock_ram.vds"/>
-  <File Type="PA-TCL" Name="xilinx_dual_port_2_clock_ram.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="xilinx_dual_port_2_clock_ram_drc_synth.rpt"/>
+  <File Type="PA-TCL" Name="xilinx_dual_port_2_clock_ram.tcl"/>
   <File Type="RDS-UTIL" Name="xilinx_dual_port_2_clock_ram_utilization_synth.rpt"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/xilinx_dual_port_2_clock_ram">
     <File Path="$PPRDIR/../xilinx_dual_port_2_clock_ram/xilinx_dual_port_2_clock_ram.xci">
