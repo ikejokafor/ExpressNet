@@ -141,7 +141,7 @@ module testbench_1;
         i0_cnn_layer_accel_quad.num_input_rows_cfg    = ROWS - 1;
         i0_cnn_layer_accel_quad.num_input_cols_cfg    = COLS - 1;
         i0_cnn_layer_accel_quad.pfb_full_count_cfg    = COLS;
-        i0_cnn_layer_accel_quad.last_kernel           = 0;
+        i0_cnn_layer_accel_quad.last_kernel           = 1;
         i0_cnn_layer_accel_quad.next_row              = 0;
         pixel_valid                                   = 0;
         job_start                                     = 0;

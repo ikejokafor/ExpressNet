@@ -127,6 +127,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     reg     [4:0]                           job_accept_r                    ;
     reg                                     job_fetch_acked                 ;
     reg                                     job_fetch_in_progress           ;
+    reg                                     job_complete_acked              ;
     reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_row                      ;  
     reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_col                      ;
     wire    [ C_LOG2_BRAM_DEPTH - 2:0]      num_output_rows                 ;
@@ -308,6 +309,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
             job_accept_r[0]         <= 0;
             job_fetch_request       <= 0;
             job_fetch_acked         <= 0;
+            job_complete_acked      <= 0;
             job_complete            <= 0;
             seq_rden                <= 0;
             state_0                 <= ST_IDLE_0;
@@ -348,21 +350,13 @@ module cnn_layer_accel_quad_bram_ctrl #(
                 end
                 ST_AWE_CE_ACTIVE: begin
                     seq_rden <= 1;
-                    // overlap pfb load with execution
-                    if(pfb_count == 0 && !job_fetch_in_progress) begin
-                        job_fetch_request 	<= job_fetch_ack  ? 1'b0 : (~job_fetch_acked ? 1'b1 : job_fetch_request);
-                        job_fetch_acked     <= job_fetch_ack  ? 1'b1 :  job_fetch_acked;
-                    end
-                    if(job_fetch_complete) begin
-                        job_fetch_acked <= 0;
-                    end
                     // overlap row matric with execution
                     if(row_matric && last_kernel) begin
                         wrAddr     <= wrAddr + 1;
                         pfb_rden   <= 1;
                     end
                     if(output_col == num_input_cols) begin
-                        seq_rden                <= 0;
+                        seq_rden <= 0;
                         if(output_row == num_input_rows) begin
                             state_0         <= ST_JOB_DONE;
                         end else if(pfb_count != num_input_cols) begin
@@ -372,10 +366,11 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     end
                 end
                 ST_JOB_DONE: begin
-                    job_complete <= 1;
-                    if(!job_complete_ack) begin
-                        job_complete    <= 0;
-                        state_0           <= ST_IDLE_0;
+                    job_complete 	    <= job_complete_ack  ? 1'b0 : (~job_complete_acked ? 1'b1 : job_complete);
+				    job_complete_acked  <= job_complete_ack  ? 1'b1 :  job_complete_acked;                  
+                    if(job_complete_ack) begin
+                        job_complete_acked    <= 0;
+                        state_0               <= ST_IDLE_0;
                     end
                 end
             endcase
