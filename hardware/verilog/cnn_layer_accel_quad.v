@@ -41,7 +41,6 @@ module cnn_layer_accel_quad #(
 
     job_start               ,    // Asserted by main SM to request a new convolution/pool operation
     job_accept              ,    // Asserted by quad to accept the job request
-    job_accept_ack          ,
     job_parameters          ,    // Parameters associated with operation being requested
     job_fetch_request       ,    // Asserted by quad to notify main SM to fetch another row of data
     job_fetch_ack           ,    // Asserted by main SM to acknowledge the row fetch request
@@ -80,12 +79,13 @@ module cnn_layer_accel_quad #(
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_LOG2_BRAM_DEPTH        = clog2(C_BRAM_DEPTH);
-    localparam C_PIXEL_DATAOUT_WIDTH    = C_NUM_AWE * C_PIXEL_WIDTH;
+    localparam C_PIXEL_DATAOUT_WIDTH    = C_NUM_AWE * C_NUM_CE_PER_AWE * C_PIXEL_WIDTH;
     localparam C_NUM_PFB                = C_NUM_CE_PER_AWE * C_NUM_AWE;
     localparam C_PIXEL_DOUT_WIDTH       = C_NUM_PFB * C_PIXEL_WIDTH;
     localparam C_PFB_DOUT_WIDTH         = C_NUM_PFB * C_PIXEL_WIDTH;
     localparam C_CE_START_WIDTH         = C_NUM_AWE * C_NUM_CE_PER_AWE;
     localparam C_PFB_COUNT_WIDTH        = C_NUM_PFB * 10;
+    localparam CE_CYCLE_COUNTER_WIDTH   = C_NUM_AWE * 6;
 
     localparam ST_IDLE_0                = 5'b00001;  
     localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
@@ -106,7 +106,6 @@ module cnn_layer_accel_quad #(
     
     input               job_start           ;
     output              job_accept          ;
-    input               job_accept_ack      ;
     input   [127:0]     job_parameters      ;
     output              job_fetch_request   ;
     input               job_fetch_ack       ;
@@ -151,7 +150,6 @@ module cnn_layer_accel_quad #(
     wire    [            C_NUM_PFB - 1:0]   pfb_empty                   ;
     reg     [                        8:0]   pfb_count                   ;
 
-    wire    [                        5:0]   cycle_counter               ;
     wire    [                        4:0]   state_0                     ;
     wire    [                        1:0]   state_1                     ;
     wire    [     C_CE_START_WIDTH - 1:0]   ce_start                    ;
@@ -171,8 +169,7 @@ module cnn_layer_accel_quad #(
     reg                                     next_row                    ;
 
     reg [ 8:0]                              seq_wrAddr                  ;
-    wire                                    seq_rden                    ;
-    reg [11:0]                              seq_rdAddr                  ;
+    wire [11:0]                             seq_rdAddr                  ;
     wire [15:0]                             seq_dataout                 ; 
 
     reg                                     config_wren                 ;      
@@ -226,6 +223,7 @@ module cnn_layer_accel_quad #(
 
             
             cnn_layer_accel_awe_rowbuffers #(
+                .C_NUM_CE_PER_AWE           ( C_NUM_CE_PER_AWE                  ),
                 .C_PIXEL_WIDTH              ( C_PIXEL_WIDTH                     ),
                 .C_BRAM_DEPTH               ( C_BRAM_DEPTH                      ),
                 .C_SEQ_DATA_WIDTH           ( C_SEQ_DATA_WIDTH                  ),
@@ -233,26 +231,26 @@ module cnn_layer_accel_quad #(
                 .C_CE1_ROW_MATRIC_DELAY     ( (i * C_NUM_CE_PER_AWE + 2)        ) 
             ) 
             i0_cnn_layer_accel_awe_rowbuffers (
-                .clk                        ( clk_core                                                                          ),
-                .rst                        ( rst                                                                               ),
-                .input_row                  ( input_row                                                                         ),
-                .input_col                  ( input_col                                                                         ),
-                .num_input_cols             ( num_input_cols_cfg                                                                ),
-                .state                      ( state_0                                                                           ),
-                .gray_code                  ( gray_code                                                                         ),
-                .seq_datain                 ( seq_dataout                                                                       ),              
-                .pfb_rden                   ( pfb_rden                                                                          ),
-                .last_kernel                ( last_kernel                                                                       ),
-                .row_matric                 ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]                                           ),
-                .ce0_pixel_datain           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 0) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]      ),
-                .ce1_pixel_datain           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 1) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]      ),
-                .ce0_start                  ( ce_start[(((i * C_NUM_CE_PER_AWE) + 0) * 1) +: 1]                                 ),
-                .ce1_start                  ( ce_start[(((i * C_NUM_CE_PER_AWE) + 1) * 1) +: 1]                                 ),
-                .ce0_pixel_dataout          ( ce0_pixel_dataout[(i * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]                           ),
-                .ce1_pixel_dataout          ( ce1_pixel_dataout[(i * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]                           ),
-                .wrAddr                     ( wrAddr                                                                            ),
-                .ce0_pixel_dataout_valid    ( ce0_pixel_dataout_valid[i +: 1]                                                   ),
-                .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i +: 1]                                                   )        
+                .clk                        ( clk_core                                                                                          ),
+                .rst                        ( rst                                                                                               ),
+                .input_row                  ( input_row                                                                                         ),
+                .input_col                  ( input_col                                                                                         ),
+                .num_input_cols             ( num_input_cols_cfg                                                                                ),
+                .state                      ( state_0                                                                                           ),
+                .gray_code                  ( gray_code                                                                                         ),
+                .seq_datain                 ( seq_dataout                                                                                       ),              
+                .pfb_rden                   ( pfb_rden                                                                                          ),
+                .last_kernel                ( last_kernel                                                                                       ),
+                .row_matric                 ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]                                                           ),
+                .ce0_pixel_datain           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 0) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]                      ),
+                .ce1_pixel_datain           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 1) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]                      ),
+                .ce0_start                  ( ce_start[(((i * C_NUM_CE_PER_AWE) + 0) * 1) +: 1]                                                 ),
+                .ce1_start                  ( ce_start[(((i * C_NUM_CE_PER_AWE) + 1) * 1) +: 1]                                                 ),
+                .ce0_pixel_dataout          ( ce0_pixel_dataout[(i * (C_PIXEL_WIDTH * C_NUM_CE_PER_AWE)) +: C_PIXEL_WIDTH * C_NUM_CE_PER_AWE]   ),
+                .ce1_pixel_dataout          ( ce1_pixel_dataout[(i * (C_PIXEL_WIDTH * C_NUM_CE_PER_AWE)) +: C_PIXEL_WIDTH * C_NUM_CE_PER_AWE]   ),
+                .wrAddr                     ( wrAddr                                                                                            ),
+                .ce0_pixel_dataout_valid    ( ce0_pixel_dataout_valid[i +: 1]                                                                   ),
+                .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i +: 1]                                                                   )        
             );
         end
     endgenerate
@@ -265,33 +263,34 @@ module cnn_layer_accel_quad #(
         .C_SEQ_DATA_WIDTH   ( C_SEQ_DATA_WIDTH  )  
     )
     i0_cnn_layer_accel_quad_bram_ctrl (
-        .clk                    ( clk_core                                  ),
-        .rst                    ( rst                                       ),
-        .job_start              ( job_start                                 ),
-        .job_accept             ( job_accept                                ),
-        .job_fetch_request      ( job_fetch_request                         ),
-        .job_fetch_ack          ( job_fetch_ack                             ),
-        .job_fetch_complete     ( job_fetch_complete                        ),
-        .job_complete           ( job_complete                              ),
-        .job_complete_ack       ( job_complete_ack                          ),
-        .state_0                ( state_0                                   ),
-        .state_1                ( state_1                                   ),
-        .input_row              ( input_row                                 ),
-        .input_col              ( input_col                                 ),
-        .num_input_cols         ( num_input_cols_cfg                        ),
-        .num_input_rows         ( num_input_rows_cfg                        ),
-        .row_matric             ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]   ),
-        .gray_code              ( gray_code                                 ),
-        .pfb_empty              ( pfb_empty[0 +: 1]                         ),
-        .pfb_rden               ( pfb_rden                                  ),
-        .pfb_full_count         ( pfb_full_count_cfg                        ),
-        .wrAddr                 ( wrAddr                                    ),
-        .ce_start               ( ce_start                                  ),
-        .seq_rden               ( seq_rden                                  ),
-        .last_kernel            ( last_kernel                               ),
-        .next_row               ( next_row                                  ),
-        .pixel_valid            ( pixel_valid                               ),
-        .pixel_ready            ( pixel_ready                               )
+        .clk                    ( clk_core                                          ),
+        .rst                    ( rst                                               ),
+        .job_start              ( job_start                                         ),
+        .job_accept             ( job_accept                                        ),
+        .job_fetch_request      ( job_fetch_request                                 ),
+        .job_fetch_ack          ( job_fetch_ack                                     ),
+        .job_fetch_complete     ( job_fetch_complete                                ),
+        .job_complete           ( job_complete                                      ),
+        .job_complete_ack       ( job_complete_ack                                  ),
+        .state_0                ( state_0                                           ),
+        .state_1                ( state_1                                           ),
+        .input_row              ( input_row                                         ),
+        .input_col              ( input_col                                         ),
+        .num_input_cols         ( num_input_cols_cfg                                ),
+        .num_input_rows         ( num_input_rows_cfg                                ),
+        .row_matric             ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]           ),
+        .gray_code              ( gray_code                                         ),
+        .pfb_empty              ( pfb_empty[0 +: 1]                                 ),
+        .pfb_rden               ( pfb_rden                                          ),
+        .pfb_full_count         ( pfb_full_count_cfg                                ),
+        .wrAddr                 ( wrAddr                                            ),
+        .ce_start               ( ce_start                                          ),
+        .seq_rden               ( seq_rden                                          ),
+        .seq_rdAddr             ( seq_rdAddr                                        ),
+        .last_kernel            ( last_kernel                                       ),
+        .next_row               ( next_row                                          ),
+        .pixel_valid            ( pixel_valid                                       ),
+        .pixel_ready            ( pixel_ready                                       )
     );
 
    
@@ -311,16 +310,6 @@ module cnn_layer_accel_quad #(
             if(config_accept[0] && config_valid) begin
                 seq_wrAddr <= seq_wrAddr + 1;
             end
-        end
-    end
-   
-    always@(posedge clk_core) begin
-        if(rst) begin
-            seq_rdAddr <= 0;
-        end else begin
-            if(seq_rden) begin
-                seq_rdAddr <= seq_rdAddr + 1;
-            end           
         end
     end
     // END Network Output Data Logic ----------------------------------------------------------------------------------------------------------------

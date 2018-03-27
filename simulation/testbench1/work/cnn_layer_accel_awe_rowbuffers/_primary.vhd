@@ -2,6 +2,7 @@ library verilog;
 use verilog.vl_types.all;
 entity cnn_layer_accel_awe_rowbuffers is
     generic(
+        C_NUM_CE_PER_AWE: integer := 2;
         C_PIXEL_WIDTH   : integer := 16;
         C_BRAM_DEPTH    : integer := 1024;
         C_SEQ_DATA_WIDTH: integer := 16;
@@ -27,10 +28,12 @@ entity cnn_layer_accel_awe_rowbuffers is
         ce0_pixel_dataout: out    vl_logic_vector;
         ce1_pixel_dataout: out    vl_logic_vector;
         wrAddr          : in     vl_logic_vector;
+        ce1_cycle_counter: out    vl_logic_vector(5 downto 0);
         ce0_pixel_dataout_valid: out    vl_logic;
         ce1_pixel_dataout_valid: out    vl_logic
     );
     attribute mti_svvh_generic_type : integer;
+    attribute mti_svvh_generic_type of C_NUM_CE_PER_AWE : constant is 1;
     attribute mti_svvh_generic_type of C_PIXEL_WIDTH : constant is 1;
     attribute mti_svvh_generic_type of C_BRAM_DEPTH : constant is 1;
     attribute mti_svvh_generic_type of C_SEQ_DATA_WIDTH : constant is 1;

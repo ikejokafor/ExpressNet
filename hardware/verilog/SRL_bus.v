@@ -54,17 +54,21 @@ module SRL_bus #(
     // BEGIN LOGIC ----------------------------------------------------------------------------------------------------------------------------------
     genvar i;
     generate
-        for(i = 0; i < C_DATA_WIDTH; i = i + 1) begin
-            always@(posedge clk) begin
-                if(rst) begin 
-                    for (srl_index = 0; srl_index < C_DATA_WIDTH; srl_index = srl_index + 1) begin
-                        shift_reg[i] = {C_CLOCK_CYCLES{1'b0}};
+        if(C_CLOCK_CYCLES == 0) begin
+            assign data_out = data_in;
+        end else begin
+            for(i = 0; i < C_DATA_WIDTH; i = i + 1) begin
+                always@(posedge clk) begin
+                    if(rst) begin 
+                        for (srl_index = 0; srl_index < C_DATA_WIDTH; srl_index = srl_index + 1) begin
+                            shift_reg[i] = {C_CLOCK_CYCLES{1'b0}};
+                        end
+                    end else if(ce) begin
+                        shift_reg[i] <= {shift_reg[i][C_CLOCK_CYCLES - 2:0], data_in[i]};
                     end
-                end else if(ce) begin
-                    shift_reg[i] <= {shift_reg[i][C_CLOCK_CYCLES - 2:0], data_in[i]};
-                end
-            end        
-            assign data_out[i] = shift_reg[i][C_CLOCK_CYCLES - 1];
+                end        
+                assign data_out[i] = shift_reg[i][C_CLOCK_CYCLES - 1];
+            end
         end
     endgenerate
     // END LOGIC --------------------------------------------------------------------------------------------------------------------------------------

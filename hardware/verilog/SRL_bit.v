@@ -47,14 +47,19 @@ module SRL_bit #(
     // ----------------------------------------------------------------------------------------------------------------------------------------------
     reg [C_CLOCK_CYCLES - 1:0] shift_reg;
 
-    always @(posedge clk) begin
-        if(rst) begin
-            shift_reg  <= {C_CLOCK_CYCLES{1'b0}};
-        end else if(ce) begin
-            shift_reg  <= {shift_reg[C_CLOCK_CYCLES - 2:0], data_in};
+    generate
+        if(C_CLOCK_CYCLES == 0) begin
+            data_out = data_in;
+        end else begin
+            always @(posedge clk) begin
+                if(rst) begin
+                    shift_reg  <= {C_CLOCK_CYCLES{1'b0}};
+                end else if(ce) begin
+                    shift_reg  <= {shift_reg[C_CLOCK_CYCLES - 2:0], data_in};
+                end
+            end
+          
+            assign data_out = shift_reg[C_CLOCK_CYCLES - 1];
         end
-    end
-  
-    assign data_out = shift_reg[C_CLOCK_CYCLES - 1];
-
+    endgenerate
 endmodule                  

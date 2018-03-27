@@ -3,7 +3,7 @@
 <!--The data in this file is primarily intended for consumption by Xilinx tools.
 The structure and the elements are likely to change over the next few releases.
 This means code written to parse this file will need to be revisited each subsequent release.-->
-<application name="pa" timeStamp="Mon Mar 26 01:48:25 2018">
+<application name="pa" timeStamp="Tue Mar 27 13:28:44 2018">
 <section name="Project Information" visible="false">
 <property name="ProjectID" value="43e421c56ea24253a9d48a4abc8b1359" type="ProjectID"/>
 <property name="ProjectIteration" value="1" type="ProjectIteration"/>
@@ -22,51 +22,39 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="CustomizeCore" value="5" type="JavaHandler"/>
 <property name="EditDelete" value="1" type="JavaHandler"/>
 <property name="NewIPLocationHandler" value="1" type="JavaHandler"/>
-<property name="OpenIPLocationHandler" value="2" type="JavaHandler"/>
-<property name="OpenPreviousIPHandler" value="3" type="JavaHandler"/>
+<property name="OpenIPLocationHandler" value="3" type="JavaHandler"/>
+<property name="OpenPreviousIPHandler" value="4" type="JavaHandler"/>
 <property name="RecustomizeCore" value="6" type="JavaHandler"/>
-<property name="ToolsTemplates" value="4" type="JavaHandler"/>
+<property name="ToolsTemplates" value="5" type="JavaHandler"/>
 </item>
 <item name="Gui Resources Info">
 <property name="PAResourceAtoD.CmdMsgDialog_OK, OK" value="1" type="GuiResourceData"/>
-<property name="PAResourceCommand.PACommandNames_LANGUAGE_TEMPLATES, Language Templates" value="2" type="GuiResourceData"/>
+<property name="PAResourceCommand.PACommandNames_LANGUAGE_TEMPLATES, Language Templates" value="1" type="GuiResourceData"/>
+<property name="PAResourceCommand.PACommandNames_OPEN_IP_LOCATION, Open IP Location..." value="1" type="GuiResourceData"/>
+<property name="PAResourceEtoH.GettingStartedView_MANAGE_IP, Manage IP" value="3" type="GuiResourceData"/>
 <property name="PAResourceEtoH.GettingStartedView_RECENT_IP_LOCATIONS, C:/SOC_IT/cnn_layer_accel/hardware/ip/xcku115, 0" value="1" type="GuiResourceData"/>
 <property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs, Coding Examples, Arithmetic], 5" value="2" type="GuiResourceData"/>
 <property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs, Coding Examples], 4" value="2" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs, Signal, Constant  Variable Declarations, integer], 8" value="2" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs, Signal, Constant  Variable Declarations], 5" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs, System Tasks  Functions, Log base 2 ($clog2" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs, System Tasks  Functions], 10" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs], 3" value="3" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog], 2" value="4" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Device Primitive Instantiation, Artix-7, RAM/ROM, BlockRAM, 18Kb Block RAM Memory (RAMB18E1" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Device Primitive Instantiation, Artix-7, RAM/ROM, BlockRAM], 11" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Device Primitive Instantiation, Artix-7, RAM/ROM], 10" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Device Primitive Instantiation, Artix-7], 4" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Device Primitive Instantiation], 3" value="2" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Coding Examples], 9, true" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Conditional], 10, true" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules, Misc], 14" value="2" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules, RAM, BlockRAM, Simple Dual Port, 1 Clock], 18, false" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules, RAM, BlockRAM, Simple Dual Port], 17" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules, RAM, BlockRAM, Simple Dual Port], 17, true" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules, RAM, BlockRAM], 16" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules, RAM, BlockRAM], 16, true" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules, RAM], 15" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules], 12" value="1" type="GuiResourceData"/>
+<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs, System Tasks  Functions], 6" value="2" type="GuiResourceData"/>
+<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog, Synthesis Constructs], 3" value="1" type="GuiResourceData"/>
+<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, SystemVerilog], 2" value="2" type="GuiResourceData"/>
+<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Example Modules], 12" value="2" type="GuiResourceData"/>
+<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs, Ports], 14" value="2" type="GuiResourceData"/>
 <property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Synthesis Constructs], 6" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog], 0" value="3" type="GuiResourceData"/>
-<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, XDC], 12" value="2" type="GuiResourceData"/>
+<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog, Xilinx Parameterized Macros (XPM" value="4" type="GuiResourceData"/>
+<property name="PAResourceItoN.LanguageTemplatesDialog_TEMPLATES_TREE, [Templates, Verilog], 0" value="1" type="GuiResourceData"/>
+<property name="PAResourceItoN.MainMenuMgr_FILE, File" value="2" type="GuiResourceData"/>
+<property name="PAResourceItoN.MainMenuMgr_FLOW, Flow" value="2" type="GuiResourceData"/>
 <property name="PAResourceItoN.MainMenuMgr_REPORT, Report" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.MainMenuMgr_TOOLS, Tools" value="4" type="GuiResourceData"/>
-<property name="PAResourceItoN.MainMenuMgr_WINDOW, Window" value="2" type="GuiResourceData"/>
-<property name="RDIResource.BaseDialog_CLOSE, Close" value="1" type="GuiResourceData"/>
-<property name="RDIResourceCommand.RDICommands_CUSTOM_COMMANDS, Customize Commands" value="2" type="GuiResourceData"/>
+<property name="PAResourceItoN.MainMenuMgr_TOOLS, Tools" value="6" type="GuiResourceData"/>
+<property name="PAResourceItoN.MainMenuMgr_WINDOW, Window" value="4" type="GuiResourceData"/>
+<property name="RDIResource.AbstractSearchablePanel_SHOW_SEARCH, Templates_search" value="1" type="GuiResourceData"/>
+<property name="RDIResourceCommand.RDICommands_CUSTOM_COMMANDS, Customize Commands" value="3" type="GuiResourceData"/>
 </item>
 <item name="Other">
-<property name="GuiMode" value="35" type="GuiMode"/>
+<property name="GuiMode" value="36" type="GuiMode"/>
 <property name="BatchMode" value="0" type="BatchMode"/>
-<property name="TclMode" value="31" type="TclMode"/>
+<property name="TclMode" value="32" type="TclMode"/>
 </item>
 </section>
 </application>
