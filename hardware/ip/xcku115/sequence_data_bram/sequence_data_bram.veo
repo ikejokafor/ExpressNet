@@ -61,8 +61,8 @@ sequence_data_bram your_instance_name (
   .dina(dina),    // input wire [127 : 0] dina
   .clkb(clkb),    // input wire clkb
   .enb(enb),      // input wire enb
-  .addrb(addrb),  // input wire [8 : 0] addrb
-  .doutb(doutb)  // output wire [127 : 0] doutb
+  .addrb(addrb),  // input wire [11 : 0] addrb
+  .doutb(doutb)  // output wire [15 : 0] doutb
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 

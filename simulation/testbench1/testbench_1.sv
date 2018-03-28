@@ -141,7 +141,7 @@ module testbench_1;
         i0_cnn_layer_accel_quad.num_input_rows_cfg    = ROWS - 1;
         i0_cnn_layer_accel_quad.num_input_cols_cfg    = COLS - 1;
         i0_cnn_layer_accel_quad.pfb_full_count_cfg    = COLS;
-        i0_cnn_layer_accel_quad.last_kernel           = 0;
+        i0_cnn_layer_accel_quad.last_kernel           = 1;
         i0_cnn_layer_accel_quad.next_row              = 0;
         pixel_valid                                   = 0;
         job_start                                     = 0;
@@ -202,33 +202,32 @@ module testbench_1;
    
         i = 1;
         @(posedge clk_100MHz);
-        config_data[127:112]    = arr2[0 + 56]; 
-        config_data[111:96]     = arr2[0 + 48];     
-        config_data[95:80]      = arr2[0 + 40];     
-        config_data[79:64]      = arr2[0 + 32];     
-        config_data[63:48]      = arr2[0 + 24];     
-        config_data[47:32]      = arr2[0 + 16];     
-        config_data[31:16]      = arr2[0 + 8];     
-        config_data[15:0]       = arr2[0 + 0];
+        config_data[127:112]    = arr2[(0 * 8) + 7]; 
+        config_data[111:96]     = arr2[(0 * 8) + 6];     
+        config_data[95:80]      = arr2[(0 * 8) + 5];     
+        config_data[79:64]      = arr2[(0 * 8) + 4];     
+        config_data[63:48]      = arr2[(0 * 8) + 3];     
+        config_data[47:32]      = arr2[(0 * 8) + 2];     
+        config_data[31:16]      = arr2[(0 * 8) + 1];     
+        config_data[15:0]       = arr2[(0 * 8) + 0];
         config_valid[0]         = 1;
         while(i < 512) begin
             @(posedge clk_100MHz);
             if(config_accept[0]) begin
-                config_data[127:112]    = arr2[i + 56]; 
-                config_data[111:96]     = arr2[i + 48];     
-                config_data[95:80]      = arr2[i + 40];     
-                config_data[79:64]      = arr2[i + 32];     
-                config_data[63:48]      = arr2[i + 24];     
-                config_data[47:32]      = arr2[i + 16];     
-                config_data[31:16]      = arr2[i + 8];      
-                config_data[15:0]       = arr2[i + 0];
+                config_data[127:112]    = arr2[(i * 8) + 7]; 
+                config_data[111:96]     = arr2[(i * 8) + 6];     
+                config_data[95:80]      = arr2[(i * 8) + 5];     
+                config_data[79:64]      = arr2[(i * 8) + 4];     
+                config_data[63:48]      = arr2[(i * 8) + 3];     
+                config_data[47:32]      = arr2[(i * 8) + 2];     
+                config_data[31:16]      = arr2[(i * 8) + 1];     
+                config_data[15:0]       = arr2[(i * 8) + 0];
                 i = i + 1;
             end
         end
         @(posedge clk_100MHz);
         config_valid[0]                = 0;
         
-        $stop;    
         
         @(posedge clk_100MHz);
         job_start = 1;
@@ -289,7 +288,7 @@ module testbench_1;
     end
 
     always@(posedge clk_500MHz) begin
-        if(i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.ce0_start) begin
+        if(i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.ce0_execute) begin
             $fwrite(fd0, "%d\t%d\n", 
                 i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.seq_datain_even, 
                 i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.seq_datain_odd

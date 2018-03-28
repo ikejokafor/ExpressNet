@@ -87,7 +87,7 @@ module cnn_layer_accel_quad #(
     localparam C_PFB_COUNT_WIDTH        = C_NUM_PFB * 10;
     localparam CE_CYCLE_COUNTER_WIDTH   = C_NUM_AWE * 6;
 
-    localparam ST_IDLE_0                = 5'b00001;  
+    localparam ST_IDLE                = 5'b00001;  
     localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
     localparam ST_WAIT_PFB_LOAD         = 5'b00100;
     localparam ST_AWE_CE_ACTIVE         = 5'b01000;
@@ -137,6 +137,7 @@ module cnn_layer_accel_quad #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------      
+    wire                                    job_fetch_in_progress       ;
     wire                                    row_matric                  ;
     wire    [                        1:0]   gray_code                   ;
 
@@ -150,9 +151,8 @@ module cnn_layer_accel_quad #(
     wire    [            C_NUM_PFB - 1:0]   pfb_empty                   ;
     reg     [                        8:0]   pfb_count                   ;
 
-    wire    [                        4:0]   state_0                     ;
-    wire    [                        1:0]   state_1                     ;
-    wire    [     C_CE_START_WIDTH - 1:0]   ce_start                    ;
+    wire    [                        4:0]   state                       ; 
+    wire    [     C_CE_START_WIDTH - 1:0]   ce_execute                  ;
     wire    [    C_LOG2_BRAM_DEPTH - 2:0]   input_row                   ;
     wire    [    C_LOG2_BRAM_DEPTH - 2:0]   input_col                   ;
     wire    [    C_LOG2_BRAM_DEPTH - 2:0]   wrAddr                      ;
@@ -237,7 +237,7 @@ module cnn_layer_accel_quad #(
                 .input_row                  ( input_row                                                                                         ),
                 .input_col                  ( input_col                                                                                         ),
                 .num_input_cols             ( num_input_cols_cfg                                                                                ),
-                .state                      ( state_0                                                                                           ),
+                .state                      ( state                                                                                             ),
                 .gray_code                  ( gray_code                                                                                         ),
                 .seq_datain                 ( seq_dataout                                                                                       ),              
                 .pfb_rden                   ( pfb_rden                                                                                          ),
@@ -245,8 +245,8 @@ module cnn_layer_accel_quad #(
                 .row_matric                 ( seq_dataout[`SEQ_DATA_ROW_MATRIC_FIELD]                                                           ),
                 .ce0_pixel_datain           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 0) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]                      ),
                 .ce1_pixel_datain           ( pfb_dataout[(((i * C_NUM_CE_PER_AWE) + 1) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]                      ),
-                .ce0_start                  ( ce_start[(((i * C_NUM_CE_PER_AWE) + 0) * 1) +: 1]                                                 ),
-                .ce1_start                  ( ce_start[(((i * C_NUM_CE_PER_AWE) + 1) * 1) +: 1]                                                 ),
+                .ce0_execute                ( ce_execute[(((i * C_NUM_CE_PER_AWE) + 0) * 1) +: 1]                                               ),
+                .ce1_execute                ( ce_execute[(((i * C_NUM_CE_PER_AWE) + 1) * 1) +: 1]                                               ),
                 .ce0_pixel_dataout          ( ce0_pixel_dataout[(i * (C_PIXEL_WIDTH * C_NUM_CE_PER_AWE)) +: C_PIXEL_WIDTH * C_NUM_CE_PER_AWE]   ),
                 .ce1_pixel_dataout          ( ce1_pixel_dataout[(i * (C_PIXEL_WIDTH * C_NUM_CE_PER_AWE)) +: C_PIXEL_WIDTH * C_NUM_CE_PER_AWE]   ),
                 .wrAddr                     ( wrAddr                                                                                            ),
@@ -269,12 +269,12 @@ module cnn_layer_accel_quad #(
         .job_start              ( job_start                                         ),
         .job_accept             ( job_accept                                        ),
         .job_fetch_request      ( job_fetch_request                                 ),
+        .job_fetch_in_progress  ( job_fetch_in_progress                             ),
         .job_fetch_ack          ( job_fetch_ack                                     ),
         .job_fetch_complete     ( job_fetch_complete                                ),
         .job_complete           ( job_complete                                      ),
         .job_complete_ack       ( job_complete_ack                                  ),
-        .state_0                ( state_0                                           ),
-        .state_1                ( state_1                                           ),
+        .state                  ( state                                             ),
         .input_row              ( input_row                                         ),
         .input_col              ( input_col                                         ),
         .num_input_cols         ( num_input_cols_cfg                                ),
@@ -285,7 +285,7 @@ module cnn_layer_accel_quad #(
         .pfb_rden               ( pfb_rden                                          ),
         .pfb_full_count         ( pfb_full_count_cfg                                ),
         .wrAddr                 ( wrAddr                                            ),
-        .ce_start               ( ce_start                                          ),
+        .ce_execute             ( ce_execute                                        ),
         .seq_rden               ( seq_rden                                          ),
         .seq_rdAddr             ( seq_rdAddr                                        ),
         .last_kernel            ( last_kernel                                       ),
@@ -296,7 +296,7 @@ module cnn_layer_accel_quad #(
 
    
     // BEGIN Network Output Data Logic --------------------------------------------------------------------------------------------------------------
-    assign pixel_ready  = pixel_valid && (state_1 == ST_ROW_REQUEST);
+    assign pixel_ready  = pixel_valid && job_fetch_in_progress;
     assign pfb_wren     = pixel_valid && pixel_ready;
 
     always@(posedge clk_if) begin
@@ -317,24 +317,16 @@ module cnn_layer_accel_quad #(
 
 
 `ifdef SIMULATION
-    string state_0_s;
-    always@(state_0) begin 
-        case(state_0) 
-            ST_IDLE_0:                  state_0_s = "ST_IDLE_0";              
-            ST_AWE_CE_PRIM_BUFFER:      state_0_s = "ST_AWE_CE_PRIM_BUFFER";
-            ST_WAIT_PFB_LOAD:           state_0_s = "ST_WAIT_PFB_LOAD";           
-            ST_AWE_CE_ACTIVE:           state_0_s = "ST_AWE_CE_ACTIVE";
-            ST_JOB_DONE:                state_0_s = "ST_JOB_DONE";
+    string state_s;
+    always@(state) begin 
+        case(state) 
+            ST_IDLE:                    state_s = "ST_IDLE";              
+            ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
+            ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
+            ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
+            ST_JOB_DONE:                state_s = "ST_JOB_DONE";
         endcase
     end
-    
-    string state_1_s;
-    always@(state_1) begin
-        case(state_1)
-            ST_IDLE_1:                  state_1_s = "ST_IDLE_1";             
-            ST_ROW_REQUEST:             state_1_s = "ST_ROW_REQUEST";
-        endcase
-	end
 `endif
     
 endmodule

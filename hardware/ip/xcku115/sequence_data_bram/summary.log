@@ -6,8 +6,8 @@ Memory Type                :     Simple_Dual_Port_RAM
 Port A Read Width          :     [128]
 Port A Write Width         :     [128]
 Memory Depth               :     [512]
-Port B Read Width          :     [128]
-Port B Write Width         :     [128]
+Port B Read Width          :     [16]
+Port B Write Width         :     [16]
 
 ----------------------------------------------------------------------------------
 
@@ -18,5 +18,5 @@ Clock A Frequency          :         [100]
 Port A Enable Rate         :         [100]
 Port A Write Rate          :         [50]
 ----------------------------------------------------------------------------------
-Estimated Power for IP     :     9.980886 mW
+Estimated Power for IP     :     10.706099 mW
 ----------------------------------------------------------------------------------

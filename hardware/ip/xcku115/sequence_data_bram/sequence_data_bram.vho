@@ -60,8 +60,8 @@ COMPONENT sequence_data_bram
     dina : IN STD_LOGIC_VECTOR(127 DOWNTO 0);
     clkb : IN STD_LOGIC;
     enb : IN STD_LOGIC;
-    addrb : IN STD_LOGIC_VECTOR(8 DOWNTO 0);
-    doutb : OUT STD_LOGIC_VECTOR(127 DOWNTO 0)
+    addrb : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
+    doutb : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------

@@ -24,8 +24,8 @@ entity cnn_layer_accel_awe_rowbuffers is
         row_matric      : in     vl_logic;
         ce0_pixel_datain: in     vl_logic_vector;
         ce1_pixel_datain: in     vl_logic_vector;
-        ce0_start       : in     vl_logic;
-        ce1_start       : in     vl_logic;
+        ce0_execute     : in     vl_logic;
+        ce1_execute     : in     vl_logic;
         ce0_pixel_dataout: out    vl_logic_vector;
         ce1_pixel_dataout: out    vl_logic_vector;
         wrAddr          : in     vl_logic_vector;

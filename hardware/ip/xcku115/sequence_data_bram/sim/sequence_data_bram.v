@@ -77,9 +77,9 @@ input wire clkb;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB EN" *)
 input wire enb;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB ADDR" *)
-input wire [8 : 0] addrb;
+input wire [11 : 0] addrb;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB DOUT" *)
-output wire [127 : 0] doutb;
+output wire [15 : 0] doutb;
 
   blk_mem_gen_v8_3_2 #(
     .C_FAMILY("kintexu"),
@@ -125,11 +125,11 @@ output wire [127 : 0] doutb;
     .C_USE_BYTE_WEB(0),
     .C_WEB_WIDTH(1),
     .C_WRITE_MODE_B("WRITE_FIRST"),
-    .C_WRITE_WIDTH_B(128),
-    .C_READ_WIDTH_B(128),
-    .C_WRITE_DEPTH_B(512),
-    .C_READ_DEPTH_B(512),
-    .C_ADDRB_WIDTH(9),
+    .C_WRITE_WIDTH_B(16),
+    .C_READ_WIDTH_B(16),
+    .C_WRITE_DEPTH_B(4096),
+    .C_READ_DEPTH_B(4096),
+    .C_ADDRB_WIDTH(12),
     .C_HAS_MEM_OUTPUT_REGS_A(0),
     .C_HAS_MEM_OUTPUT_REGS_B(1),
     .C_HAS_MUX_OUTPUT_REGS_A(0),
@@ -154,7 +154,7 @@ output wire [127 : 0] doutb;
     .C_DISABLE_WARN_BHV_RANGE(0),
     .C_COUNT_36K_BRAM("2"),
     .C_COUNT_18K_BRAM("0"),
-    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     9.980886 mW")
+    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     10.706099 mW")
   ) inst (
     .clka(clka),
     .rsta(1'D0),
@@ -170,7 +170,7 @@ output wire [127 : 0] doutb;
     .regceb(1'D0),
     .web(1'B0),
     .addrb(addrb),
-    .dinb(128'B0),
+    .dinb(16'B0),
     .doutb(doutb),
     .injectsbiterr(1'D0),
     .injectdbiterr(1'D0),

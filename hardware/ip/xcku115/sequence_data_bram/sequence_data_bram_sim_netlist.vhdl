@@ -1,7 +1,7 @@
 -- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2016.1 (lin64) Build 1538259 Fri Apr  8 15:45:23 MDT 2016
--- Date        : Sun Mar 25 00:35:13 2018
+-- Date        : Wed Mar 28 13:08:10 2018
 -- Host        : redrealm.cse.psu.edu running 64-bit unknown
 -- Command     : write_vhdl -force -mode funcsim
 --               /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/sequence_data_bram/sequence_data_bram_sim_netlist.vhdl
@@ -16,14 +16,14 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity sequence_data_bram_blk_mem_gen_prim_wrapper is
   port (
-    doutb_array : out STD_LOGIC_VECTOR ( 71 downto 0 );
+    doutb_array : out STD_LOGIC_VECTOR ( 8 downto 0 );
     clkb : in STD_LOGIC;
     clka : in STD_LOGIC;
     eccpipece : in STD_LOGIC;
     enb : in STD_LOGIC;
     wea : in STD_LOGIC_VECTOR ( 0 to 0 );
     sleep : in STD_LOGIC;
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
     addra : in STD_LOGIC_VECTOR ( 8 downto 0 );
     dina : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
@@ -40,6 +40,10 @@ architecture STRUCTURE of sequence_data_bram_blk_mem_gen_prim_wrapper is
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_CASDOUTB_UNCONNECTED\ : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_CASDOUTPA_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_CASDOUTPB_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 0 );
+  signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTADOUT_UNCONNECTED\ : STD_LOGIC_VECTOR ( 31 downto 8 );
+  signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTBDOUT_UNCONNECTED\ : STD_LOGIC_VECTOR ( 31 downto 0 );
+  signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTPADOUTP_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 1 );
+  signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTPBDOUTP_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_ECCPARITY_UNCONNECTED\ : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_RDADDRECC_UNCONNECTED\ : STD_LOGIC_VECTOR ( 8 downto 0 );
   attribute box_type : string;
@@ -214,7 +218,7 @@ begin
       IS_RSTREGB_INVERTED => '0',
       RDADDRCHANGEA => "FALSE",
       RDADDRCHANGEB => "FALSE",
-      READ_WIDTH_A => 72,
+      READ_WIDTH_A => 9,
       READ_WIDTH_B => 0,
       RSTREG_PRIORITY_A => "REGCE",
       RSTREG_PRIORITY_B => "REGCE",
@@ -228,8 +232,8 @@ begin
       WRITE_WIDTH_B => 72
     )
         port map (
-      ADDRARDADDR(14 downto 6) => addrb(8 downto 0),
-      ADDRARDADDR(5 downto 0) => B"000000",
+      ADDRARDADDR(14 downto 3) => addrb(11 downto 0),
+      ADDRARDADDR(2 downto 0) => B"000",
       ADDRBWRADDR(14 downto 6) => addra(8 downto 0),
       ADDRBWRADDR(5 downto 0) => B"000000",
       ADDRENA => '0',
@@ -275,22 +279,12 @@ begin
       DINPBDINP(2) => dina(62),
       DINPBDINP(1) => dina(53),
       DINPBDINP(0) => dina(44),
-      DOUTADOUT(31 downto 24) => doutb_array(34 downto 27),
-      DOUTADOUT(23 downto 16) => doutb_array(25 downto 18),
-      DOUTADOUT(15 downto 8) => doutb_array(16 downto 9),
+      DOUTADOUT(31 downto 8) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTADOUT_UNCONNECTED\(31 downto 8),
       DOUTADOUT(7 downto 0) => doutb_array(7 downto 0),
-      DOUTBDOUT(31 downto 24) => doutb_array(70 downto 63),
-      DOUTBDOUT(23 downto 16) => doutb_array(61 downto 54),
-      DOUTBDOUT(15 downto 8) => doutb_array(52 downto 45),
-      DOUTBDOUT(7 downto 0) => doutb_array(43 downto 36),
-      DOUTPADOUTP(3) => doutb_array(35),
-      DOUTPADOUTP(2) => doutb_array(26),
-      DOUTPADOUTP(1) => doutb_array(17),
+      DOUTBDOUT(31 downto 0) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTBDOUT_UNCONNECTED\(31 downto 0),
+      DOUTPADOUTP(3 downto 1) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTPADOUTP_UNCONNECTED\(3 downto 1),
       DOUTPADOUTP(0) => doutb_array(8),
-      DOUTPBDOUTP(3) => doutb_array(71),
-      DOUTPBDOUTP(2) => doutb_array(62),
-      DOUTPBDOUTP(1) => doutb_array(53),
-      DOUTPBDOUTP(0) => doutb_array(44),
+      DOUTPBDOUTP(3 downto 0) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTPBDOUTP_UNCONNECTED\(3 downto 0),
       ECCPARITY(7 downto 0) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_ECCPARITY_UNCONNECTED\(7 downto 0),
       ECCPIPECE => eccpipece,
       ENARDEN => enb,
@@ -316,14 +310,14 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity \sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0\ is
   port (
-    doutb_array : out STD_LOGIC_VECTOR ( 55 downto 0 );
+    DOUTADOUT : out STD_LOGIC_VECTOR ( 6 downto 0 );
     clkb : in STD_LOGIC;
     clka : in STD_LOGIC;
     eccpipece : in STD_LOGIC;
     enb : in STD_LOGIC;
     wea : in STD_LOGIC_VECTOR ( 0 to 0 );
     sleep : in STD_LOGIC;
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
     addra : in STD_LOGIC_VECTOR ( 8 downto 0 );
     dina : in STD_LOGIC_VECTOR ( 55 downto 0 )
   );
@@ -332,21 +326,7 @@ entity \sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0\ is
 end \sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0\;
 
 architecture STRUCTURE of \sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0\ is
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_100\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_108\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_116\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_124\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_140\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_141\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_142\ : STD_LOGIC;
   signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_143\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_144\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_145\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_146\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_147\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_68\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_76\ : STD_LOGIC;
-  signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_84\ : STD_LOGIC;
   signal \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_92\ : STD_LOGIC;
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_CASOUTDBITERR_UNCONNECTED\ : STD_LOGIC;
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_CASOUTSBITERR_UNCONNECTED\ : STD_LOGIC;
@@ -356,6 +336,10 @@ architecture STRUCTURE of \sequence_data_bram_blk_mem_gen_prim_wrapper__paramete
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_CASDOUTB_UNCONNECTED\ : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_CASDOUTPA_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_CASDOUTPB_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 0 );
+  signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTADOUT_UNCONNECTED\ : STD_LOGIC_VECTOR ( 31 downto 8 );
+  signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTBDOUT_UNCONNECTED\ : STD_LOGIC_VECTOR ( 31 downto 0 );
+  signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTPADOUTP_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 1 );
+  signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTPBDOUTP_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_ECCPARITY_UNCONNECTED\ : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_RDADDRECC_UNCONNECTED\ : STD_LOGIC_VECTOR ( 8 downto 0 );
   attribute box_type : string;
@@ -530,7 +514,7 @@ begin
       IS_RSTREGB_INVERTED => '0',
       RDADDRCHANGEA => "FALSE",
       RDADDRCHANGEB => "FALSE",
-      READ_WIDTH_A => 72,
+      READ_WIDTH_A => 9,
       READ_WIDTH_B => 0,
       RSTREG_PRIORITY_A => "REGCE",
       RSTREG_PRIORITY_B => "REGCE",
@@ -544,8 +528,8 @@ begin
       WRITE_WIDTH_B => 72
     )
         port map (
-      ADDRARDADDR(14 downto 6) => addrb(8 downto 0),
-      ADDRARDADDR(5 downto 0) => B"000000",
+      ADDRARDADDR(14 downto 3) => addrb(11 downto 0),
+      ADDRARDADDR(2 downto 0) => B"000",
       ADDRBWRADDR(14 downto 6) => addra(8 downto 0),
       ADDRBWRADDR(5 downto 0) => B"000000",
       ADDRENA => '0',
@@ -593,30 +577,13 @@ begin
       DINBDIN(6 downto 0) => dina(34 downto 28),
       DINPADINP(3 downto 0) => B"0000",
       DINPBDINP(3 downto 0) => B"0000",
-      DOUTADOUT(31) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_68\,
-      DOUTADOUT(30 downto 24) => doutb_array(27 downto 21),
-      DOUTADOUT(23) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_76\,
-      DOUTADOUT(22 downto 16) => doutb_array(20 downto 14),
-      DOUTADOUT(15) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_84\,
-      DOUTADOUT(14 downto 8) => doutb_array(13 downto 7),
+      DOUTADOUT(31 downto 8) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTADOUT_UNCONNECTED\(31 downto 8),
       DOUTADOUT(7) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_92\,
-      DOUTADOUT(6 downto 0) => doutb_array(6 downto 0),
-      DOUTBDOUT(31) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_100\,
-      DOUTBDOUT(30 downto 24) => doutb_array(55 downto 49),
-      DOUTBDOUT(23) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_108\,
-      DOUTBDOUT(22 downto 16) => doutb_array(48 downto 42),
-      DOUTBDOUT(15) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_116\,
-      DOUTBDOUT(14 downto 8) => doutb_array(41 downto 35),
-      DOUTBDOUT(7) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_124\,
-      DOUTBDOUT(6 downto 0) => doutb_array(34 downto 28),
-      DOUTPADOUTP(3) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_140\,
-      DOUTPADOUTP(2) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_141\,
-      DOUTPADOUTP(1) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_142\,
+      DOUTADOUT(6 downto 0) => DOUTADOUT(6 downto 0),
+      DOUTBDOUT(31 downto 0) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTBDOUT_UNCONNECTED\(31 downto 0),
+      DOUTPADOUTP(3 downto 1) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTPADOUTP_UNCONNECTED\(3 downto 1),
       DOUTPADOUTP(0) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_143\,
-      DOUTPBDOUTP(3) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_144\,
-      DOUTPBDOUTP(2) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_145\,
-      DOUTPBDOUTP(1) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_146\,
-      DOUTPBDOUTP(0) => \DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_n_147\,
+      DOUTPBDOUTP(3 downto 0) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_DOUTPBDOUTP_UNCONNECTED\(3 downto 0),
       ECCPARITY(7 downto 0) => \NLW_DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_ECCPARITY_UNCONNECTED\(7 downto 0),
       ECCPIPECE => eccpipece,
       ENARDEN => enb,
@@ -642,14 +609,14 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity sequence_data_bram_blk_mem_gen_prim_width is
   port (
-    doutb_array : out STD_LOGIC_VECTOR ( 71 downto 0 );
+    doutb_array : out STD_LOGIC_VECTOR ( 8 downto 0 );
     clkb : in STD_LOGIC;
     clka : in STD_LOGIC;
     eccpipece : in STD_LOGIC;
     enb : in STD_LOGIC;
     wea : in STD_LOGIC_VECTOR ( 0 to 0 );
     sleep : in STD_LOGIC;
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
     addra : in STD_LOGIC_VECTOR ( 8 downto 0 );
     dina : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
@@ -662,11 +629,11 @@ begin
 \prim_noinit.ram\: entity work.sequence_data_bram_blk_mem_gen_prim_wrapper
      port map (
       addra(8 downto 0) => addra(8 downto 0),
-      addrb(8 downto 0) => addrb(8 downto 0),
+      addrb(11 downto 0) => addrb(11 downto 0),
       clka => clka,
       clkb => clkb,
       dina(71 downto 0) => dina(71 downto 0),
-      doutb_array(71 downto 0) => doutb_array(71 downto 0),
+      doutb_array(8 downto 0) => doutb_array(8 downto 0),
       eccpipece => eccpipece,
       enb => enb,
       sleep => sleep,
@@ -679,14 +646,14 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity \sequence_data_bram_blk_mem_gen_prim_width__parameterized0\ is
   port (
-    doutb_array : out STD_LOGIC_VECTOR ( 55 downto 0 );
+    DOUTADOUT : out STD_LOGIC_VECTOR ( 6 downto 0 );
     clkb : in STD_LOGIC;
     clka : in STD_LOGIC;
     eccpipece : in STD_LOGIC;
     enb : in STD_LOGIC;
     wea : in STD_LOGIC_VECTOR ( 0 to 0 );
     sleep : in STD_LOGIC;
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
     addra : in STD_LOGIC_VECTOR ( 8 downto 0 );
     dina : in STD_LOGIC_VECTOR ( 55 downto 0 )
   );
@@ -698,12 +665,12 @@ architecture STRUCTURE of \sequence_data_bram_blk_mem_gen_prim_width__parameteri
 begin
 \prim_noinit.ram\: entity work.\sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0\
      port map (
+      DOUTADOUT(6 downto 0) => DOUTADOUT(6 downto 0),
       addra(8 downto 0) => addra(8 downto 0),
-      addrb(8 downto 0) => addrb(8 downto 0),
+      addrb(11 downto 0) => addrb(11 downto 0),
       clka => clka,
       clkb => clkb,
       dina(55 downto 0) => dina(55 downto 0),
-      doutb_array(55 downto 0) => doutb_array(55 downto 0),
       eccpipece => eccpipece,
       enb => enb,
       sleep => sleep,
@@ -716,14 +683,14 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity sequence_data_bram_blk_mem_gen_generic_cstr is
   port (
-    doutb : out STD_LOGIC_VECTOR ( 127 downto 0 );
+    doutb : out STD_LOGIC_VECTOR ( 15 downto 0 );
     clkb : in STD_LOGIC;
     clka : in STD_LOGIC;
     eccpipece : in STD_LOGIC;
     enb : in STD_LOGIC;
     wea : in STD_LOGIC_VECTOR ( 0 to 0 );
     sleep : in STD_LOGIC;
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
     addra : in STD_LOGIC_VECTOR ( 8 downto 0 );
     dina : in STD_LOGIC_VECTOR ( 127 downto 0 )
   );
@@ -732,7 +699,7 @@ entity sequence_data_bram_blk_mem_gen_generic_cstr is
 end sequence_data_bram_blk_mem_gen_generic_cstr;
 
 architecture STRUCTURE of sequence_data_bram_blk_mem_gen_generic_cstr is
-  signal doutb_array : STD_LOGIC_VECTOR ( 127 downto 0 );
+  signal doutb_array : STD_LOGIC_VECTOR ( 15 downto 0 );
 begin
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[0]\: unisim.vcomponents.FDRE
     generic map(
@@ -743,116 +710,6 @@ begin
       CE => enb,
       D => doutb_array(0),
       Q => doutb(0),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[100]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(100),
-      Q => doutb(100),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[101]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(101),
-      Q => doutb(101),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[102]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(102),
-      Q => doutb(102),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[103]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(103),
-      Q => doutb(103),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[104]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(104),
-      Q => doutb(104),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[105]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(105),
-      Q => doutb(105),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[106]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(106),
-      Q => doutb(106),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[107]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(107),
-      Q => doutb(107),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[108]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(108),
-      Q => doutb(108),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[109]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(109),
-      Q => doutb(109),
       R => '0'
     );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[10]\: unisim.vcomponents.FDRE
@@ -866,116 +723,6 @@ begin
       Q => doutb(10),
       R => '0'
     );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[110]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(110),
-      Q => doutb(110),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[111]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(111),
-      Q => doutb(111),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[112]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(112),
-      Q => doutb(112),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[113]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(113),
-      Q => doutb(113),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[114]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(114),
-      Q => doutb(114),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[115]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(115),
-      Q => doutb(115),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[116]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(116),
-      Q => doutb(116),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[117]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(117),
-      Q => doutb(117),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[118]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(118),
-      Q => doutb(118),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[119]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(119),
-      Q => doutb(119),
-      R => '0'
-    );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[11]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
@@ -985,94 +732,6 @@ begin
       CE => enb,
       D => doutb_array(11),
       Q => doutb(11),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[120]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(120),
-      Q => doutb(120),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[121]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(121),
-      Q => doutb(121),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[122]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(122),
-      Q => doutb(122),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[123]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(123),
-      Q => doutb(123),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[124]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(124),
-      Q => doutb(124),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[125]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(125),
-      Q => doutb(125),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[126]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(126),
-      Q => doutb(126),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[127]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(127),
-      Q => doutb(127),
       R => '0'
     );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[12]\: unisim.vcomponents.FDRE
@@ -1119,50 +778,6 @@ begin
       Q => doutb(15),
       R => '0'
     );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[16]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(16),
-      Q => doutb(16),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[17]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(17),
-      Q => doutb(17),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[18]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(18),
-      Q => doutb(18),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[19]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(19),
-      Q => doutb(19),
-      R => '0'
-    );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[1]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
@@ -1172,116 +787,6 @@ begin
       CE => enb,
       D => doutb_array(1),
       Q => doutb(1),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[20]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(20),
-      Q => doutb(20),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[21]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(21),
-      Q => doutb(21),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[22]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(22),
-      Q => doutb(22),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[23]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(23),
-      Q => doutb(23),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[24]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(24),
-      Q => doutb(24),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[25]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(25),
-      Q => doutb(25),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[26]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(26),
-      Q => doutb(26),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[27]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(27),
-      Q => doutb(27),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[28]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(28),
-      Q => doutb(28),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[29]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(29),
-      Q => doutb(29),
       R => '0'
     );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[2]\: unisim.vcomponents.FDRE
@@ -1295,116 +800,6 @@ begin
       Q => doutb(2),
       R => '0'
     );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[30]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(30),
-      Q => doutb(30),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[31]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(31),
-      Q => doutb(31),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[32]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(32),
-      Q => doutb(32),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[33]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(33),
-      Q => doutb(33),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[34]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(34),
-      Q => doutb(34),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[35]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(35),
-      Q => doutb(35),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[36]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(36),
-      Q => doutb(36),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[37]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(37),
-      Q => doutb(37),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[38]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(38),
-      Q => doutb(38),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[39]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(39),
-      Q => doutb(39),
-      R => '0'
-    );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[3]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
@@ -1414,116 +809,6 @@ begin
       CE => enb,
       D => doutb_array(3),
       Q => doutb(3),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[40]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(40),
-      Q => doutb(40),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[41]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(41),
-      Q => doutb(41),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[42]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(42),
-      Q => doutb(42),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[43]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(43),
-      Q => doutb(43),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[44]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(44),
-      Q => doutb(44),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[45]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(45),
-      Q => doutb(45),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[46]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(46),
-      Q => doutb(46),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[47]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(47),
-      Q => doutb(47),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[48]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(48),
-      Q => doutb(48),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[49]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(49),
-      Q => doutb(49),
       R => '0'
     );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[4]\: unisim.vcomponents.FDRE
@@ -1537,116 +822,6 @@ begin
       Q => doutb(4),
       R => '0'
     );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[50]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(50),
-      Q => doutb(50),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[51]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(51),
-      Q => doutb(51),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[52]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(52),
-      Q => doutb(52),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[53]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(53),
-      Q => doutb(53),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[54]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(54),
-      Q => doutb(54),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[55]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(55),
-      Q => doutb(55),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[56]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(56),
-      Q => doutb(56),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[57]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(57),
-      Q => doutb(57),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[58]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(58),
-      Q => doutb(58),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[59]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(59),
-      Q => doutb(59),
-      R => '0'
-    );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[5]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
@@ -1656,116 +831,6 @@ begin
       CE => enb,
       D => doutb_array(5),
       Q => doutb(5),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[60]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(60),
-      Q => doutb(60),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[61]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(61),
-      Q => doutb(61),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[62]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(62),
-      Q => doutb(62),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[63]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(63),
-      Q => doutb(63),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[64]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(64),
-      Q => doutb(64),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[65]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(65),
-      Q => doutb(65),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[66]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(66),
-      Q => doutb(66),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[67]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(67),
-      Q => doutb(67),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[68]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(68),
-      Q => doutb(68),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[69]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(69),
-      Q => doutb(69),
       R => '0'
     );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[6]\: unisim.vcomponents.FDRE
@@ -1779,116 +844,6 @@ begin
       Q => doutb(6),
       R => '0'
     );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[70]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(70),
-      Q => doutb(70),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[71]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(71),
-      Q => doutb(71),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[72]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(72),
-      Q => doutb(72),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[73]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(73),
-      Q => doutb(73),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[74]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(74),
-      Q => doutb(74),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[75]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(75),
-      Q => doutb(75),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[76]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(76),
-      Q => doutb(76),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[77]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(77),
-      Q => doutb(77),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[78]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(78),
-      Q => doutb(78),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[79]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(79),
-      Q => doutb(79),
-      R => '0'
-    );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[7]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
@@ -1900,116 +855,6 @@ begin
       Q => doutb(7),
       R => '0'
     );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[80]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(80),
-      Q => doutb(80),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[81]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(81),
-      Q => doutb(81),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[82]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(82),
-      Q => doutb(82),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[83]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(83),
-      Q => doutb(83),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[84]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(84),
-      Q => doutb(84),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[85]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(85),
-      Q => doutb(85),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[86]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(86),
-      Q => doutb(86),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[87]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(87),
-      Q => doutb(87),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[88]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(88),
-      Q => doutb(88),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[89]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(89),
-      Q => doutb(89),
-      R => '0'
-    );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[8]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
@@ -2019,116 +864,6 @@ begin
       CE => enb,
       D => doutb_array(8),
       Q => doutb(8),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[90]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(90),
-      Q => doutb(90),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[91]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(91),
-      Q => doutb(91),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[92]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(92),
-      Q => doutb(92),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[93]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(93),
-      Q => doutb(93),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[94]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(94),
-      Q => doutb(94),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[95]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(95),
-      Q => doutb(95),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[96]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(96),
-      Q => doutb(96),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[97]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(97),
-      Q => doutb(97),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[98]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(98),
-      Q => doutb(98),
-      R => '0'
-    );
-\mux_b_wire.mux_reg.ce_pri.doutb_i_reg[99]\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clkb,
-      CE => enb,
-      D => doutb_array(99),
-      Q => doutb(99),
       R => '0'
     );
 \mux_b_wire.mux_reg.ce_pri.doutb_i_reg[9]\: unisim.vcomponents.FDRE
@@ -2145,11 +880,18 @@ begin
 \ramloop[0].ram.r\: entity work.sequence_data_bram_blk_mem_gen_prim_width
      port map (
       addra(8 downto 0) => addra(8 downto 0),
-      addrb(8 downto 0) => addrb(8 downto 0),
+      addrb(11 downto 0) => addrb(11 downto 0),
       clka => clka,
       clkb => clkb,
-      dina(71 downto 0) => dina(71 downto 0),
-      doutb_array(71 downto 0) => doutb_array(71 downto 0),
+      dina(71 downto 63) => dina(120 downto 112),
+      dina(62 downto 54) => dina(104 downto 96),
+      dina(53 downto 45) => dina(88 downto 80),
+      dina(44 downto 36) => dina(72 downto 64),
+      dina(35 downto 27) => dina(56 downto 48),
+      dina(26 downto 18) => dina(40 downto 32),
+      dina(17 downto 9) => dina(24 downto 16),
+      dina(8 downto 0) => dina(8 downto 0),
+      doutb_array(8 downto 0) => doutb_array(8 downto 0),
       eccpipece => eccpipece,
       enb => enb,
       sleep => sleep,
@@ -2157,12 +899,19 @@ begin
     );
 \ramloop[1].ram.r\: entity work.\sequence_data_bram_blk_mem_gen_prim_width__parameterized0\
      port map (
+      DOUTADOUT(6 downto 0) => doutb_array(15 downto 9),
       addra(8 downto 0) => addra(8 downto 0),
-      addrb(8 downto 0) => addrb(8 downto 0),
+      addrb(11 downto 0) => addrb(11 downto 0),
       clka => clka,
       clkb => clkb,
-      dina(55 downto 0) => dina(127 downto 72),
-      doutb_array(55 downto 0) => doutb_array(127 downto 72),
+      dina(55 downto 49) => dina(127 downto 121),
+      dina(48 downto 42) => dina(111 downto 105),
+      dina(41 downto 35) => dina(95 downto 89),
+      dina(34 downto 28) => dina(79 downto 73),
+      dina(27 downto 21) => dina(63 downto 57),
+      dina(20 downto 14) => dina(47 downto 41),
+      dina(13 downto 7) => dina(31 downto 25),
+      dina(6 downto 0) => dina(15 downto 9),
       eccpipece => eccpipece,
       enb => enb,
       sleep => sleep,
@@ -2175,14 +924,14 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity sequence_data_bram_blk_mem_gen_top is
   port (
-    doutb : out STD_LOGIC_VECTOR ( 127 downto 0 );
+    doutb : out STD_LOGIC_VECTOR ( 15 downto 0 );
     clkb : in STD_LOGIC;
     clka : in STD_LOGIC;
     eccpipece : in STD_LOGIC;
     enb : in STD_LOGIC;
     wea : in STD_LOGIC_VECTOR ( 0 to 0 );
     sleep : in STD_LOGIC;
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
     addra : in STD_LOGIC_VECTOR ( 8 downto 0 );
     dina : in STD_LOGIC_VECTOR ( 127 downto 0 )
   );
@@ -2195,11 +944,11 @@ begin
 \valid.cstr\: entity work.sequence_data_bram_blk_mem_gen_generic_cstr
      port map (
       addra(8 downto 0) => addra(8 downto 0),
-      addrb(8 downto 0) => addrb(8 downto 0),
+      addrb(11 downto 0) => addrb(11 downto 0),
       clka => clka,
       clkb => clkb,
       dina(127 downto 0) => dina(127 downto 0),
-      doutb(127 downto 0) => doutb(127 downto 0),
+      doutb(15 downto 0) => doutb(15 downto 0),
       eccpipece => eccpipece,
       enb => enb,
       sleep => sleep,
@@ -2212,14 +961,14 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity sequence_data_bram_blk_mem_gen_v8_3_2_synth is
   port (
-    doutb : out STD_LOGIC_VECTOR ( 127 downto 0 );
+    doutb : out STD_LOGIC_VECTOR ( 15 downto 0 );
     clkb : in STD_LOGIC;
     clka : in STD_LOGIC;
     eccpipece : in STD_LOGIC;
     enb : in STD_LOGIC;
     wea : in STD_LOGIC_VECTOR ( 0 to 0 );
     sleep : in STD_LOGIC;
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
     addra : in STD_LOGIC_VECTOR ( 8 downto 0 );
     dina : in STD_LOGIC_VECTOR ( 127 downto 0 )
   );
@@ -2232,11 +981,11 @@ begin
 \gnbram.gnativebmg.native_blk_mem_gen\: entity work.sequence_data_bram_blk_mem_gen_top
      port map (
       addra(8 downto 0) => addra(8 downto 0),
-      addrb(8 downto 0) => addrb(8 downto 0),
+      addrb(11 downto 0) => addrb(11 downto 0),
       clka => clka,
       clkb => clkb,
       dina(127 downto 0) => dina(127 downto 0),
-      doutb(127 downto 0) => doutb(127 downto 0),
+      doutb(15 downto 0) => doutb(15 downto 0),
       eccpipece => eccpipece,
       enb => enb,
       sleep => sleep,
@@ -2262,15 +1011,15 @@ entity sequence_data_bram_blk_mem_gen_v8_3_2 is
     enb : in STD_LOGIC;
     regceb : in STD_LOGIC;
     web : in STD_LOGIC_VECTOR ( 0 to 0 );
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
-    dinb : in STD_LOGIC_VECTOR ( 127 downto 0 );
-    doutb : out STD_LOGIC_VECTOR ( 127 downto 0 );
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
+    dinb : in STD_LOGIC_VECTOR ( 15 downto 0 );
+    doutb : out STD_LOGIC_VECTOR ( 15 downto 0 );
     injectsbiterr : in STD_LOGIC;
     injectdbiterr : in STD_LOGIC;
     eccpipece : in STD_LOGIC;
     sbiterr : out STD_LOGIC;
     dbiterr : out STD_LOGIC;
-    rdaddrecc : out STD_LOGIC_VECTOR ( 8 downto 0 );
+    rdaddrecc : out STD_LOGIC_VECTOR ( 11 downto 0 );
     sleep : in STD_LOGIC;
     deepsleep : in STD_LOGIC;
     shutdown : in STD_LOGIC;
@@ -2302,7 +1051,7 @@ entity sequence_data_bram_blk_mem_gen_v8_3_2 is
     s_axi_arvalid : in STD_LOGIC;
     s_axi_arready : out STD_LOGIC;
     s_axi_rid : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    s_axi_rdata : out STD_LOGIC_VECTOR ( 127 downto 0 );
+    s_axi_rdata : out STD_LOGIC_VECTOR ( 15 downto 0 );
     s_axi_rresp : out STD_LOGIC_VECTOR ( 1 downto 0 );
     s_axi_rlast : out STD_LOGIC;
     s_axi_rvalid : out STD_LOGIC;
@@ -2311,12 +1060,12 @@ entity sequence_data_bram_blk_mem_gen_v8_3_2 is
     s_axi_injectdbiterr : in STD_LOGIC;
     s_axi_sbiterr : out STD_LOGIC;
     s_axi_dbiterr : out STD_LOGIC;
-    s_axi_rdaddrecc : out STD_LOGIC_VECTOR ( 8 downto 0 )
+    s_axi_rdaddrecc : out STD_LOGIC_VECTOR ( 11 downto 0 )
   );
   attribute C_ADDRA_WIDTH : integer;
   attribute C_ADDRA_WIDTH of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 9;
   attribute C_ADDRB_WIDTH : integer;
-  attribute C_ADDRB_WIDTH of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 9;
+  attribute C_ADDRB_WIDTH of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 12;
   attribute C_ALGORITHM : integer;
   attribute C_ALGORITHM of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
   attribute C_AXI_ID_WIDTH : integer;
@@ -2360,7 +1109,7 @@ entity sequence_data_bram_blk_mem_gen_v8_3_2 is
   attribute C_EN_SLEEP_PIN : integer;
   attribute C_EN_SLEEP_PIN of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
   attribute C_EST_POWER_SUMMARY : string;
-  attribute C_EST_POWER_SUMMARY of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "Estimated Power for IP     :     9.980886 mW";
+  attribute C_EST_POWER_SUMMARY of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "Estimated Power for IP     :     10.706099 mW";
   attribute C_FAMILY : string;
   attribute C_FAMILY of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "kintexu";
   attribute C_HAS_AXI_ID : integer;
@@ -2412,11 +1161,11 @@ entity sequence_data_bram_blk_mem_gen_v8_3_2 is
   attribute C_READ_DEPTH_A : integer;
   attribute C_READ_DEPTH_A of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 512;
   attribute C_READ_DEPTH_B : integer;
-  attribute C_READ_DEPTH_B of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 512;
+  attribute C_READ_DEPTH_B of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 4096;
   attribute C_READ_WIDTH_A : integer;
   attribute C_READ_WIDTH_A of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 128;
   attribute C_READ_WIDTH_B : integer;
-  attribute C_READ_WIDTH_B of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 128;
+  attribute C_READ_WIDTH_B of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 16;
   attribute C_RSTRAM_A : integer;
   attribute C_RSTRAM_A of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
   attribute C_RSTRAM_B : integer;
@@ -2448,7 +1197,7 @@ entity sequence_data_bram_blk_mem_gen_v8_3_2 is
   attribute C_WRITE_DEPTH_A : integer;
   attribute C_WRITE_DEPTH_A of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 512;
   attribute C_WRITE_DEPTH_B : integer;
-  attribute C_WRITE_DEPTH_B of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 512;
+  attribute C_WRITE_DEPTH_B of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 4096;
   attribute C_WRITE_MODE_A : string;
   attribute C_WRITE_MODE_A of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "NO_CHANGE";
   attribute C_WRITE_MODE_B : string;
@@ -2456,7 +1205,7 @@ entity sequence_data_bram_blk_mem_gen_v8_3_2 is
   attribute C_WRITE_WIDTH_A : integer;
   attribute C_WRITE_WIDTH_A of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 128;
   attribute C_WRITE_WIDTH_B : integer;
-  attribute C_WRITE_WIDTH_B of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 128;
+  attribute C_WRITE_WIDTH_B of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 16;
   attribute C_XDEVICEFAMILY : string;
   attribute C_XDEVICEFAMILY of sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "kintexu";
   attribute ORIG_REF_NAME : string;
@@ -2597,6 +1346,9 @@ begin
   douta(2) <= \<const0>\;
   douta(1) <= \<const0>\;
   douta(0) <= \<const0>\;
+  rdaddrecc(11) <= \<const0>\;
+  rdaddrecc(10) <= \<const0>\;
+  rdaddrecc(9) <= \<const0>\;
   rdaddrecc(8) <= \<const0>\;
   rdaddrecc(7) <= \<const0>\;
   rdaddrecc(6) <= \<const0>\;
@@ -2618,6 +1370,9 @@ begin
   s_axi_bresp(0) <= \<const0>\;
   s_axi_bvalid <= \<const0>\;
   s_axi_dbiterr <= \<const0>\;
+  s_axi_rdaddrecc(11) <= \<const0>\;
+  s_axi_rdaddrecc(10) <= \<const0>\;
+  s_axi_rdaddrecc(9) <= \<const0>\;
   s_axi_rdaddrecc(8) <= \<const0>\;
   s_axi_rdaddrecc(7) <= \<const0>\;
   s_axi_rdaddrecc(6) <= \<const0>\;
@@ -2627,118 +1382,6 @@ begin
   s_axi_rdaddrecc(2) <= \<const0>\;
   s_axi_rdaddrecc(1) <= \<const0>\;
   s_axi_rdaddrecc(0) <= \<const0>\;
-  s_axi_rdata(127) <= \<const0>\;
-  s_axi_rdata(126) <= \<const0>\;
-  s_axi_rdata(125) <= \<const0>\;
-  s_axi_rdata(124) <= \<const0>\;
-  s_axi_rdata(123) <= \<const0>\;
-  s_axi_rdata(122) <= \<const0>\;
-  s_axi_rdata(121) <= \<const0>\;
-  s_axi_rdata(120) <= \<const0>\;
-  s_axi_rdata(119) <= \<const0>\;
-  s_axi_rdata(118) <= \<const0>\;
-  s_axi_rdata(117) <= \<const0>\;
-  s_axi_rdata(116) <= \<const0>\;
-  s_axi_rdata(115) <= \<const0>\;
-  s_axi_rdata(114) <= \<const0>\;
-  s_axi_rdata(113) <= \<const0>\;
-  s_axi_rdata(112) <= \<const0>\;
-  s_axi_rdata(111) <= \<const0>\;
-  s_axi_rdata(110) <= \<const0>\;
-  s_axi_rdata(109) <= \<const0>\;
-  s_axi_rdata(108) <= \<const0>\;
-  s_axi_rdata(107) <= \<const0>\;
-  s_axi_rdata(106) <= \<const0>\;
-  s_axi_rdata(105) <= \<const0>\;
-  s_axi_rdata(104) <= \<const0>\;
-  s_axi_rdata(103) <= \<const0>\;
-  s_axi_rdata(102) <= \<const0>\;
-  s_axi_rdata(101) <= \<const0>\;
-  s_axi_rdata(100) <= \<const0>\;
-  s_axi_rdata(99) <= \<const0>\;
-  s_axi_rdata(98) <= \<const0>\;
-  s_axi_rdata(97) <= \<const0>\;
-  s_axi_rdata(96) <= \<const0>\;
-  s_axi_rdata(95) <= \<const0>\;
-  s_axi_rdata(94) <= \<const0>\;
-  s_axi_rdata(93) <= \<const0>\;
-  s_axi_rdata(92) <= \<const0>\;
-  s_axi_rdata(91) <= \<const0>\;
-  s_axi_rdata(90) <= \<const0>\;
-  s_axi_rdata(89) <= \<const0>\;
-  s_axi_rdata(88) <= \<const0>\;
-  s_axi_rdata(87) <= \<const0>\;
-  s_axi_rdata(86) <= \<const0>\;
-  s_axi_rdata(85) <= \<const0>\;
-  s_axi_rdata(84) <= \<const0>\;
-  s_axi_rdata(83) <= \<const0>\;
-  s_axi_rdata(82) <= \<const0>\;
-  s_axi_rdata(81) <= \<const0>\;
-  s_axi_rdata(80) <= \<const0>\;
-  s_axi_rdata(79) <= \<const0>\;
-  s_axi_rdata(78) <= \<const0>\;
-  s_axi_rdata(77) <= \<const0>\;
-  s_axi_rdata(76) <= \<const0>\;
-  s_axi_rdata(75) <= \<const0>\;
-  s_axi_rdata(74) <= \<const0>\;
-  s_axi_rdata(73) <= \<const0>\;
-  s_axi_rdata(72) <= \<const0>\;
-  s_axi_rdata(71) <= \<const0>\;
-  s_axi_rdata(70) <= \<const0>\;
-  s_axi_rdata(69) <= \<const0>\;
-  s_axi_rdata(68) <= \<const0>\;
-  s_axi_rdata(67) <= \<const0>\;
-  s_axi_rdata(66) <= \<const0>\;
-  s_axi_rdata(65) <= \<const0>\;
-  s_axi_rdata(64) <= \<const0>\;
-  s_axi_rdata(63) <= \<const0>\;
-  s_axi_rdata(62) <= \<const0>\;
-  s_axi_rdata(61) <= \<const0>\;
-  s_axi_rdata(60) <= \<const0>\;
-  s_axi_rdata(59) <= \<const0>\;
-  s_axi_rdata(58) <= \<const0>\;
-  s_axi_rdata(57) <= \<const0>\;
-  s_axi_rdata(56) <= \<const0>\;
-  s_axi_rdata(55) <= \<const0>\;
-  s_axi_rdata(54) <= \<const0>\;
-  s_axi_rdata(53) <= \<const0>\;
-  s_axi_rdata(52) <= \<const0>\;
-  s_axi_rdata(51) <= \<const0>\;
-  s_axi_rdata(50) <= \<const0>\;
-  s_axi_rdata(49) <= \<const0>\;
-  s_axi_rdata(48) <= \<const0>\;
-  s_axi_rdata(47) <= \<const0>\;
-  s_axi_rdata(46) <= \<const0>\;
-  s_axi_rdata(45) <= \<const0>\;
-  s_axi_rdata(44) <= \<const0>\;
-  s_axi_rdata(43) <= \<const0>\;
-  s_axi_rdata(42) <= \<const0>\;
-  s_axi_rdata(41) <= \<const0>\;
-  s_axi_rdata(40) <= \<const0>\;
-  s_axi_rdata(39) <= \<const0>\;
-  s_axi_rdata(38) <= \<const0>\;
-  s_axi_rdata(37) <= \<const0>\;
-  s_axi_rdata(36) <= \<const0>\;
-  s_axi_rdata(35) <= \<const0>\;
-  s_axi_rdata(34) <= \<const0>\;
-  s_axi_rdata(33) <= \<const0>\;
-  s_axi_rdata(32) <= \<const0>\;
-  s_axi_rdata(31) <= \<const0>\;
-  s_axi_rdata(30) <= \<const0>\;
-  s_axi_rdata(29) <= \<const0>\;
-  s_axi_rdata(28) <= \<const0>\;
-  s_axi_rdata(27) <= \<const0>\;
-  s_axi_rdata(26) <= \<const0>\;
-  s_axi_rdata(25) <= \<const0>\;
-  s_axi_rdata(24) <= \<const0>\;
-  s_axi_rdata(23) <= \<const0>\;
-  s_axi_rdata(22) <= \<const0>\;
-  s_axi_rdata(21) <= \<const0>\;
-  s_axi_rdata(20) <= \<const0>\;
-  s_axi_rdata(19) <= \<const0>\;
-  s_axi_rdata(18) <= \<const0>\;
-  s_axi_rdata(17) <= \<const0>\;
-  s_axi_rdata(16) <= \<const0>\;
   s_axi_rdata(15) <= \<const0>\;
   s_axi_rdata(14) <= \<const0>\;
   s_axi_rdata(13) <= \<const0>\;
@@ -2773,11 +1416,11 @@ GND: unisim.vcomponents.GND
 inst_blk_mem_gen: entity work.sequence_data_bram_blk_mem_gen_v8_3_2_synth
      port map (
       addra(8 downto 0) => addra(8 downto 0),
-      addrb(8 downto 0) => addrb(8 downto 0),
+      addrb(11 downto 0) => addrb(11 downto 0),
       clka => clka,
       clkb => clkb,
       dina(127 downto 0) => dina(127 downto 0),
-      doutb(127 downto 0) => doutb(127 downto 0),
+      doutb(15 downto 0) => doutb(15 downto 0),
       eccpipece => eccpipece,
       enb => enb,
       sleep => sleep,
@@ -2796,8 +1439,8 @@ entity sequence_data_bram is
     dina : in STD_LOGIC_VECTOR ( 127 downto 0 );
     clkb : in STD_LOGIC;
     enb : in STD_LOGIC;
-    addrb : in STD_LOGIC_VECTOR ( 8 downto 0 );
-    doutb : out STD_LOGIC_VECTOR ( 127 downto 0 )
+    addrb : in STD_LOGIC_VECTOR ( 11 downto 0 );
+    doutb : out STD_LOGIC_VECTOR ( 15 downto 0 )
   );
   attribute NotValidForBitStream : boolean;
   attribute NotValidForBitStream of sequence_data_bram : entity is true;
@@ -2823,17 +1466,17 @@ architecture STRUCTURE of sequence_data_bram is
   signal NLW_U0_s_axi_wready_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_sbiterr_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_douta_UNCONNECTED : STD_LOGIC_VECTOR ( 127 downto 0 );
-  signal NLW_U0_rdaddrecc_UNCONNECTED : STD_LOGIC_VECTOR ( 8 downto 0 );
+  signal NLW_U0_rdaddrecc_UNCONNECTED : STD_LOGIC_VECTOR ( 11 downto 0 );
   signal NLW_U0_s_axi_bid_UNCONNECTED : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal NLW_U0_s_axi_bresp_UNCONNECTED : STD_LOGIC_VECTOR ( 1 downto 0 );
-  signal NLW_U0_s_axi_rdaddrecc_UNCONNECTED : STD_LOGIC_VECTOR ( 8 downto 0 );
-  signal NLW_U0_s_axi_rdata_UNCONNECTED : STD_LOGIC_VECTOR ( 127 downto 0 );
+  signal NLW_U0_s_axi_rdaddrecc_UNCONNECTED : STD_LOGIC_VECTOR ( 11 downto 0 );
+  signal NLW_U0_s_axi_rdata_UNCONNECTED : STD_LOGIC_VECTOR ( 15 downto 0 );
   signal NLW_U0_s_axi_rid_UNCONNECTED : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal NLW_U0_s_axi_rresp_UNCONNECTED : STD_LOGIC_VECTOR ( 1 downto 0 );
   attribute C_ADDRA_WIDTH : integer;
   attribute C_ADDRA_WIDTH of U0 : label is 9;
   attribute C_ADDRB_WIDTH : integer;
-  attribute C_ADDRB_WIDTH of U0 : label is 9;
+  attribute C_ADDRB_WIDTH of U0 : label is 12;
   attribute C_ALGORITHM : integer;
   attribute C_ALGORITHM of U0 : label is 1;
   attribute C_AXI_ID_WIDTH : integer;
@@ -2877,7 +1520,7 @@ architecture STRUCTURE of sequence_data_bram is
   attribute C_EN_SLEEP_PIN : integer;
   attribute C_EN_SLEEP_PIN of U0 : label is 0;
   attribute C_EST_POWER_SUMMARY : string;
-  attribute C_EST_POWER_SUMMARY of U0 : label is "Estimated Power for IP     :     9.980886 mW";
+  attribute C_EST_POWER_SUMMARY of U0 : label is "Estimated Power for IP     :     10.706099 mW";
   attribute C_FAMILY : string;
   attribute C_FAMILY of U0 : label is "kintexu";
   attribute C_HAS_AXI_ID : integer;
@@ -2929,11 +1572,11 @@ architecture STRUCTURE of sequence_data_bram is
   attribute C_READ_DEPTH_A : integer;
   attribute C_READ_DEPTH_A of U0 : label is 512;
   attribute C_READ_DEPTH_B : integer;
-  attribute C_READ_DEPTH_B of U0 : label is 512;
+  attribute C_READ_DEPTH_B of U0 : label is 4096;
   attribute C_READ_WIDTH_A : integer;
   attribute C_READ_WIDTH_A of U0 : label is 128;
   attribute C_READ_WIDTH_B : integer;
-  attribute C_READ_WIDTH_B of U0 : label is 128;
+  attribute C_READ_WIDTH_B of U0 : label is 16;
   attribute C_RSTRAM_A : integer;
   attribute C_RSTRAM_A of U0 : label is 0;
   attribute C_RSTRAM_B : integer;
@@ -2965,7 +1608,7 @@ architecture STRUCTURE of sequence_data_bram is
   attribute C_WRITE_DEPTH_A : integer;
   attribute C_WRITE_DEPTH_A of U0 : label is 512;
   attribute C_WRITE_DEPTH_B : integer;
-  attribute C_WRITE_DEPTH_B of U0 : label is 512;
+  attribute C_WRITE_DEPTH_B of U0 : label is 4096;
   attribute C_WRITE_MODE_A : string;
   attribute C_WRITE_MODE_A of U0 : label is "NO_CHANGE";
   attribute C_WRITE_MODE_B : string;
@@ -2973,7 +1616,7 @@ architecture STRUCTURE of sequence_data_bram is
   attribute C_WRITE_WIDTH_A : integer;
   attribute C_WRITE_WIDTH_A of U0 : label is 128;
   attribute C_WRITE_WIDTH_B : integer;
-  attribute C_WRITE_WIDTH_B of U0 : label is 128;
+  attribute C_WRITE_WIDTH_B of U0 : label is 16;
   attribute C_XDEVICEFAMILY : string;
   attribute C_XDEVICEFAMILY of U0 : label is "kintexu";
   attribute KEEP_HIERARCHY : string;
@@ -2983,21 +1626,21 @@ begin
 U0: entity work.sequence_data_bram_blk_mem_gen_v8_3_2
      port map (
       addra(8 downto 0) => addra(8 downto 0),
-      addrb(8 downto 0) => addrb(8 downto 0),
+      addrb(11 downto 0) => addrb(11 downto 0),
       clka => clka,
       clkb => clkb,
       dbiterr => NLW_U0_dbiterr_UNCONNECTED,
       deepsleep => '0',
       dina(127 downto 0) => dina(127 downto 0),
-      dinb(127 downto 0) => B"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      dinb(15 downto 0) => B"0000000000000000",
       douta(127 downto 0) => NLW_U0_douta_UNCONNECTED(127 downto 0),
-      doutb(127 downto 0) => doutb(127 downto 0),
+      doutb(15 downto 0) => doutb(15 downto 0),
       eccpipece => '0',
       ena => '0',
       enb => enb,
       injectdbiterr => '0',
       injectsbiterr => '0',
-      rdaddrecc(8 downto 0) => NLW_U0_rdaddrecc_UNCONNECTED(8 downto 0),
+      rdaddrecc(11 downto 0) => NLW_U0_rdaddrecc_UNCONNECTED(11 downto 0),
       regcea => '0',
       regceb => '0',
       rsta => '0',
@@ -3027,8 +1670,8 @@ U0: entity work.sequence_data_bram_blk_mem_gen_v8_3_2
       s_axi_dbiterr => NLW_U0_s_axi_dbiterr_UNCONNECTED,
       s_axi_injectdbiterr => '0',
       s_axi_injectsbiterr => '0',
-      s_axi_rdaddrecc(8 downto 0) => NLW_U0_s_axi_rdaddrecc_UNCONNECTED(8 downto 0),
-      s_axi_rdata(127 downto 0) => NLW_U0_s_axi_rdata_UNCONNECTED(127 downto 0),
+      s_axi_rdaddrecc(11 downto 0) => NLW_U0_s_axi_rdaddrecc_UNCONNECTED(11 downto 0),
+      s_axi_rdata(15 downto 0) => NLW_U0_s_axi_rdata_UNCONNECTED(15 downto 0),
       s_axi_rid(3 downto 0) => NLW_U0_s_axi_rid_UNCONNECTED(3 downto 0),
       s_axi_rlast => NLW_U0_s_axi_rlast_UNCONNECTED,
       s_axi_rready => '0',
