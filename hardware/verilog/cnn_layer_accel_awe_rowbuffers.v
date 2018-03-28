@@ -34,7 +34,8 @@ module cnn_layer_accel_awe_rowbuffers #(
     parameter C_BRAM_DEPTH              = 1024,
     parameter C_SEQ_DATA_WIDTH          = 16,
     parameter C_CE0_ROW_MATRIC_DELAY    = 1,
-    parameter C_CE1_ROW_MATRIC_DELAY    = 2
+    parameter C_CE1_ROW_MATRIC_DELAY    = 2,
+    parameter C_SEQ_DATAIN_DELAY        = 0
 ) (
     clk                         ,          
     rst                         ,     
@@ -54,7 +55,6 @@ module cnn_layer_accel_awe_rowbuffers #(
     ce0_pixel_dataout           ,
     ce1_pixel_dataout           ,
     wrAddr                      ,
-    ce1_cycle_counter           ,
     ce0_pixel_dataout_valid     ,
     ce1_pixel_dataout_valid
 );
@@ -102,7 +102,6 @@ module cnn_layer_accel_awe_rowbuffers #(
     output      [C_CE_PIXEL_DOUT_WIDTH - 1:0]   ce0_pixel_dataout           ;
     output      [C_CE_PIXEL_DOUT_WIDTH - 1:0]   ce1_pixel_dataout           ;
     input       [    C_LOG2_BRAM_DEPTH - 2:0]   wrAddr                      ;
-    output reg  [                        5:0]   ce1_cycle_counter           ;
     output                                      ce0_pixel_dataout_valid     ;
     output                                      ce1_pixel_dataout_valid     ;
     
@@ -110,16 +109,15 @@ module cnn_layer_accel_awe_rowbuffers #(
  	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
+    reg     [                       5:0]    ce1_cycle_counter       ;
     reg                                     ce0_row_rename          ;
     reg                                     ce1_row_rename          ;
     reg     [                       5:0]    ce0_cycle_counter       ;
     
-    wire                                    pfb_rden_d              ;
-    wire    [   C_LOG2_BRAM_DEPTH - 2:0]    input_col_d             ;
-    wire    [   C_LOG2_BRAM_DEPTH - 2:0]    input_row_d             ;
     wire    [       C_PIXEL_WIDTH - 1:0]    ce0_pixel_datain_d      ;
     wire    [       C_PIXEL_WIDTH - 1:0]    ce1_pixel_datain_d      ;
 
+    wire    [    C_SEQ_DATA_WIDTH - 1:0]    seq_datain_d            ;
     wire    [ `SEQ_DATA_SEQ_WIDTH - 1:0]    seq_datain_field        ;
     wire    [`SEQ_DATA_SEQ_WIDTH0 - 1:0]    seq_datain_field0       ;
     wire    [`SEQ_DATA_SEQ_WIDTH1 - 1:0]    seq_datain_field1       ;
@@ -223,19 +221,7 @@ module cnn_layer_accel_awe_rowbuffers #(
         .rden               ( bram3_rden        ),
         .dataout            ( bram3_dataout     )
     );
-    
-    
-    SRL_bit #(
-        .C_CLOCK_CYCLES( 2 )
-    ) 
-    i0_SRL_bit (
-        .clk        ( clk                   ),
-        .rst        ( rst                   ),
-        .ce         ( 1'b1                  ),
-        .data_in    ( pfb_rden              ),
-        .data_out   ( pfb_rden_d            )
-    );
-    
+
     
     SRL_bit #(
         .C_CLOCK_CYCLES( 3 )
@@ -261,6 +247,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     );
     
 
+    // delay bc of different start times and when you can row matric
     SRL_bit #(
         .C_CLOCK_CYCLES( C_CE0_ROW_MATRIC_DELAY )
     ) 
@@ -272,7 +259,8 @@ module cnn_layer_accel_awe_rowbuffers #(
         .data_out   ( ce0_row_matric    )
     );
 
-
+    
+    // delay bc of different start times and when you can row matric
     SRL_bit #(
         .C_CLOCK_CYCLES( C_CE1_ROW_MATRIC_DELAY )
     ) 
@@ -284,33 +272,8 @@ module cnn_layer_accel_awe_rowbuffers #(
         .data_out   ( ce1_row_matric    )
     );
     
-    
-    SRL_bus #(  
-        .C_CLOCK_CYCLES  ( 2                        ),
-        .C_DATA_WIDTH    ( C_LOG2_BRAM_DEPTH - 1    )
-    ) 
-    i0_SRL_bus (
-        .clk        ( clk           ),
-        .ce         ( 1'b1          ),
-        .rst        ( rst           ),
-        .data_in    ( input_col     ),
-        .data_out   ( input_col_d   )
-    );
 
-
-    SRL_bus #(  
-        .C_CLOCK_CYCLES  ( 2                        ),
-        .C_DATA_WIDTH    ( C_LOG2_BRAM_DEPTH - 1    )
-    ) 
-    i1_SRL_bus (
-        .clk        ( clk           ),
-        .ce         ( 1'b1          ),
-        .rst        ( rst           ),
-        .data_in    ( input_row     ),
-        .data_out   ( input_row_d   )
-    );
-
-
+    // delay bc of pfb latency and different start times
     SRL_bus #(  
         .C_CLOCK_CYCLES  ( 2                ),
         .C_DATA_WIDTH    ( C_PIXEL_WIDTH    )
@@ -323,7 +286,8 @@ module cnn_layer_accel_awe_rowbuffers #(
         .data_out   ( ce0_pixel_datain_d    )
     );
 
-
+    
+    // delay bc of pfb latency and different start times
     SRL_bus #(  
         .C_CLOCK_CYCLES  ( 2                ),
         .C_DATA_WIDTH    ( C_PIXEL_WIDTH    )
@@ -336,7 +300,8 @@ module cnn_layer_accel_awe_rowbuffers #(
         .data_out   ( ce1_pixel_datain_d    )
     ); 
 
-
+    
+    // delay for ce1
     SRL_bus #(  
         .C_CLOCK_CYCLES  ( 1                    ),
         .C_DATA_WIDTH    ( `SEQ_DATA_SEQ_WIDTH  )
@@ -349,7 +314,8 @@ module cnn_layer_accel_awe_rowbuffers #(
         .data_out   ( seq_datain_even_d     )
     ); 
 
-
+    
+    // delay for ce1
     SRL_bus #(  
         .C_CLOCK_CYCLES  ( 1                    ),
         .C_DATA_WIDTH    ( `SEQ_DATA_SEQ_WIDTH  )
@@ -361,6 +327,20 @@ module cnn_layer_accel_awe_rowbuffers #(
         .data_in    ( seq_datain_odd        ),
         .data_out   ( seq_datain_odd_d      )
     );     
+ 
+    
+    // delay for seq datain
+    SRL_bus #(  
+        .C_CLOCK_CYCLES  ( C_SEQ_DATAIN_DELAY   ),
+        .C_DATA_WIDTH    ( C_SEQ_DATA_WIDTH     )
+    ) 
+    i6_SRL_bus (
+        .clk        ( clk                   ),
+        .ce         ( 1'b1                  ),
+        .rst        ( rst                   ),
+        .data_in    ( seq_datain            ),
+        .data_out   ( seq_datain_d          )
+    );
  
  
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
@@ -443,9 +423,9 @@ module cnn_layer_accel_awe_rowbuffers #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
     assign ce0_pixel_dataout    = {bram1_dataout, bram0_dataout};
     assign ce1_pixel_dataout    = {bram3_dataout, bram2_dataout};
-    assign seq_datain_field     = seq_datain[`SEQ_DATA_SEQ_FIELD];
-    assign seq_datain_field0    = seq_datain[`SEQ_DATA_SEQ_FIELD0];
-    assign seq_datain_field1    = seq_datain[`SEQ_DATA_SEQ_FIELD1];
+    assign seq_datain_field     = seq_datain_d[`SEQ_DATA_SEQ_FIELD];
+    assign seq_datain_field0    = seq_datain_d[`SEQ_DATA_SEQ_FIELD0];
+    assign seq_datain_field1    = seq_datain_d[`SEQ_DATA_SEQ_FIELD1];
     assign seq_datain_even      =   {  
                                         gray_code[0] ^ seq_datain_field[`SEQ_DATA_SEQ_WIDTH - 1], 
                                         seq_datain_field1
@@ -453,8 +433,8 @@ module cnn_layer_accel_awe_rowbuffers #(
     assign seq_datain_odd       =   {  
                                         gray_code[1] ^ seq_datain_field[`SEQ_DATA_SEQ_WIDTH - 1], 
                                         seq_datain_field0,
-                                        seq_datain[0] 
-                                            | seq_datain[`SEQ_DATA_PARITY_FIELD]
+                                        seq_datain_d[0] 
+                                            | seq_datain_d[`SEQ_DATA_PARITY_FIELD]
                                     };
                                 
     always@(posedge clk) begin
@@ -483,41 +463,41 @@ module cnn_layer_accel_awe_rowbuffers #(
             case(state)           
                 ST_AWE_CE_PRIM_BUFFER: begin
                     // convolution engine 0
-                    if(pfb_rden_d) begin
-                        if(input_row_d == 0 && input_col_d <= num_input_cols) begin
+                    if(pfb_rden) begin
+                        if(input_row == 0 && input_col <= num_input_cols) begin
                             bram0_wren <= 1;
                             bram1_wren <= 1;
-                            bram0_wrAddr <= {1'b0, input_col_d};
-                            bram1_wrAddr <= {1'b0, input_col_d};
-                            bram0_datain <= ce0_pixel_datain_d;
-                            bram1_datain <= ce0_pixel_datain_d;
-                        end else if(input_row_d == 1 && input_col_d <= num_input_cols) begin
+                            bram0_wrAddr <= {1'b0, input_col};
+                            bram1_wrAddr <= {1'b0, input_col};
+                            bram0_datain <= ce0_pixel_datain;
+                            bram1_datain <= ce0_pixel_datain;
+                        end else if(input_row == 1 && input_col <= num_input_cols) begin
                             bram1_wren      <= 1;  
-                            bram1_wrAddr    <= {1'b1, input_col_d};
-                            bram1_datain    <= ce0_pixel_datain_d;
-                        end else if(input_row_d == 2 && input_col_d <= num_input_cols) begin
+                            bram1_wrAddr    <= {1'b1, input_col};
+                            bram1_datain    <= ce0_pixel_datain;
+                        end else if(input_row == 2 && input_col <= num_input_cols) begin
                             bram0_wren      <= 1;
-                            bram0_wrAddr    <= {1'b1, input_col_d};
-                            bram0_datain    <= ce0_pixel_datain_d;
+                            bram0_wrAddr    <= {1'b1, input_col};
+                            bram0_datain    <= ce0_pixel_datain;
                         end
                     end
                     // convolution engine 1
-                    if(pfb_rden_d) begin
-                        if(input_row_d == 0 && input_col_d <= num_input_cols) begin
+                    if(pfb_rden) begin
+                        if(input_row == 0 && input_col <= num_input_cols) begin
                             bram2_wren <= 1;
                             bram3_wren <= 1;
-                            bram2_wrAddr <= {1'b0, input_col_d};
-                            bram3_wrAddr <= {1'b0, input_col_d};
-                            bram2_datain <= ce1_pixel_datain_d;
-                            bram3_datain <= ce1_pixel_datain_d;
-                        end else if(input_row_d == 1 && input_col_d <= num_input_cols) begin
+                            bram2_wrAddr <= {1'b0, input_col};
+                            bram3_wrAddr <= {1'b0, input_col};
+                            bram2_datain <= ce1_pixel_datain;
+                            bram3_datain <= ce1_pixel_datain;
+                        end else if(input_row == 1 && input_col <= num_input_cols) begin
                             bram3_wren <= 1;   
-                            bram3_wrAddr <= {1'b1, input_col_d};
-                            bram3_datain <= ce1_pixel_datain_d;                            
-                        end else if(input_row_d == 2 && input_col_d <= num_input_cols) begin
+                            bram3_wrAddr <= {1'b1, input_col};
+                            bram3_datain <= ce1_pixel_datain;                            
+                        end else if(input_row == 2 && input_col <= num_input_cols) begin
                             bram2_wren <= 1;   
-                            bram2_wrAddr <= {1'b1, input_col_d}; 
-                            bram2_datain <= ce1_pixel_datain_d;                          
+                            bram2_wrAddr <= {1'b1, input_col}; 
+                            bram2_datain <= ce1_pixel_datain;                          
                         end
                     end
                 end

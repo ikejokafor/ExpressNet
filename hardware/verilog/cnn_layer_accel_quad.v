@@ -228,7 +228,8 @@ module cnn_layer_accel_quad #(
                 .C_BRAM_DEPTH               ( C_BRAM_DEPTH                      ),
                 .C_SEQ_DATA_WIDTH           ( C_SEQ_DATA_WIDTH                  ),
                 .C_CE0_ROW_MATRIC_DELAY     ( (i * C_NUM_CE_PER_AWE + 1)        ),      
-                .C_CE1_ROW_MATRIC_DELAY     ( (i * C_NUM_CE_PER_AWE + 2)        ) 
+                .C_CE1_ROW_MATRIC_DELAY     ( (i * C_NUM_CE_PER_AWE + 2)        ),
+                .C_SEQ_DATAIN_DELAY         ( (i * 2)                           )
             ) 
             i0_cnn_layer_accel_awe_rowbuffers (
                 .clk                        ( clk_core                                                                                          ),

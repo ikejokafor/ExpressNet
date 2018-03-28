@@ -219,7 +219,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
             output_row <= 0;
             output_col <= 0;
         end else begin
-            if(output_col == num_output_cols) begin
+            if(output_col == num_output_cols && cycle_counter == 4) begin
                 output_col <= 0;
                 if(last_kernel) begin
                     output_row <= output_row + 1;
@@ -368,7 +368,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
                 end
                 ST_AWE_CE_ACTIVE: begin
                     // overlap row matric with execution
-                    if(row_matric && output_col <= num_output_cols) begin
+                    if(row_matric && output_col <= num_output_cols && last_kernel) begin
                         wrAddr     <= wrAddr + 1;
                         pfb_rden   <= 1;
                     end
@@ -376,9 +376,9 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     if(seq_rden) begin
                         seq_rdAddr <= seq_rdAddr + 1;
                     end 
-                    if(!last_kernel && output_col == num_output_cols) begin
+                    if(!last_kernel && output_col == num_output_cols && cycle_counter == 4) begin
                         seq_rdAddr <= 0;
-                    end else if(output_col == num_input_cols) begin
+                    end else if(output_col == num_input_cols && cycle_counter == 4) begin
                         seq_rden <= 0;
                         if(output_row == num_input_rows) begin
                             state_0         <= ST_JOB_DONE;

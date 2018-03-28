@@ -7,7 +7,8 @@ entity cnn_layer_accel_awe_rowbuffers is
         C_BRAM_DEPTH    : integer := 1024;
         C_SEQ_DATA_WIDTH: integer := 16;
         C_CE0_ROW_MATRIC_DELAY: integer := 1;
-        C_CE1_ROW_MATRIC_DELAY: integer := 2
+        C_CE1_ROW_MATRIC_DELAY: integer := 2;
+        C_SEQ_DATAIN_DELAY: integer := 0
     );
     port(
         clk             : in     vl_logic;
@@ -28,7 +29,6 @@ entity cnn_layer_accel_awe_rowbuffers is
         ce0_pixel_dataout: out    vl_logic_vector;
         ce1_pixel_dataout: out    vl_logic_vector;
         wrAddr          : in     vl_logic_vector;
-        ce1_cycle_counter: out    vl_logic_vector(5 downto 0);
         ce0_pixel_dataout_valid: out    vl_logic;
         ce1_pixel_dataout_valid: out    vl_logic
     );
@@ -39,4 +39,5 @@ entity cnn_layer_accel_awe_rowbuffers is
     attribute mti_svvh_generic_type of C_SEQ_DATA_WIDTH : constant is 1;
     attribute mti_svvh_generic_type of C_CE0_ROW_MATRIC_DELAY : constant is 1;
     attribute mti_svvh_generic_type of C_CE1_ROW_MATRIC_DELAY : constant is 1;
+    attribute mti_svvh_generic_type of C_SEQ_DATAIN_DELAY : constant is 1;
 end cnn_layer_accel_awe_rowbuffers;

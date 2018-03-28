@@ -49,7 +49,7 @@ module SRL_bit #(
 
     generate
         if(C_CLOCK_CYCLES == 0) begin
-            data_out = data_in;
+            assign data_out = data_in;
         end else begin
             always @(posedge clk) begin
                 if(rst) begin
