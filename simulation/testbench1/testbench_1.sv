@@ -69,6 +69,7 @@ module testbench_1;
     reg             job_fetch_complete  ;
     wire            job_complete        ;
     reg             job_complete_ack    ;  
+
     
     clock_gen #(
         .C_PERIOD_BY_2(C_PERIOD_100MHz / 2)
@@ -197,6 +198,13 @@ module testbench_1;
             i = i + 1;
         end
 
+        i = 0;
+        fd = $fopen("seq_value.txt", "w");
+        for(i = 0; i < COLS * 5; i = i + 1) begin           
+            $fwrite(fd, "%h\n", arr2[i]);
+        end
+        $fclose(fd);
+        
         rst = 1;
         #(C_PERIOD_100MHz * 2) rst = 0;
    

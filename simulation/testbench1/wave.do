@@ -150,6 +150,8 @@ add wave -noupdate -group {CTRL
 add wave -noupdate -group {CTRL
 } /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/ce_execute
 add wave -noupdate -group {CTRL
+} /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/ce_execute_d
+add wave -noupdate -group {CTRL
 } /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/clk
 add wave -noupdate -group {CTRL
 } /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/cycle_counter
@@ -225,10 +227,6 @@ add wave -noupdate -group {CTRL
 } /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/seq_rden
 add wave -noupdate -group {CTRL
 } /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/seq_rden_d
-add wave -noupdate -group {CTRL
-} /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/seq_rden_d0
-add wave -noupdate -group {CTRL
-} /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/seq_rden_r
 add wave -noupdate -group {CTRL
 } /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/state
 add wave -noupdate -group {CTRL
@@ -626,7 +624,7 @@ add wave -noupdate -group AWE3 {/testbench_1/i0_cnn_layer_accel_quad/genblk1[3]/
 add wave -noupdate -group AWE3 {/testbench_1/i0_cnn_layer_accel_quad/genblk1[3]/i0_cnn_layer_accel_awe_rowbuffers/state_s}
 add wave -noupdate -group AWE3 {/testbench_1/i0_cnn_layer_accel_quad/genblk1[3]/i0_cnn_layer_accel_awe_rowbuffers/wrAddr}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {7304 ns} 0}
+WaveRestoreCursors {{Cursor 1} {5756 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 272
 configure wave -valuecolwidth 100
@@ -642,4 +640,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {7027 ns} {7563 ns}
+WaveRestoreZoom {5727 ns} {5948 ns}

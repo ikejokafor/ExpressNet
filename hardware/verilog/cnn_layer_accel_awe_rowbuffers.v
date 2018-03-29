@@ -90,7 +90,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     input       [   C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
     input       [   C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
     input       [   C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols              ;
-    input       [                       4:0]    state                       ;
+    input       [                       5:0]    state                       ;
     input       [                       1:0]    gray_code                   ;
     input       [    C_SEQ_DATA_WIDTH - 1:0]    seq_datain                  ;
     input                                       pfb_rden                    ;

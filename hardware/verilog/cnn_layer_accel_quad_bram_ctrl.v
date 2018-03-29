@@ -109,7 +109,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     output     [                    1:0]    gray_code                   ;
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    wrAddr                      ;
     output reg [  C_CE_EXEC_WIDTH - 1:0]    ce_execute                  ;
-    output                                  seq_rden                    ;
+    output reg                              seq_rden                    ;
     output reg [11:0]                       seq_rdAddr                  ;
     input                                   last_kernel                 ;
     
@@ -117,10 +117,10 @@ module cnn_layer_accel_quad_bram_ctrl #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------          
+    wire                                    ce_execute_d                    ;
     reg     [                    10:0]      seq_count                       ;
-    reg     [                    10:0]      seq_full_count                  ;
     reg                                     seq_rden_r                      ;
-    wire                                    seq_rden_d0                     ;
+    reg     [                    10:0]      seq_full_count                  ;
     reg     [                     5:0]      cycle_counter                   ;
     wire                                    seq_rden_d                      ;
     reg     [4:0]                           job_accept_r                    ;
@@ -148,27 +148,27 @@ module cnn_layer_accel_quad_bram_ctrl #(
         .clk        ( clk           ),
         .rst        ( rst           ),
         .ce         ( 1'b1          ),
-        .data_in    ( seq_rden_r    ),
-        .data_out   ( seq_rden_d    )
+        .data_in    ( seq_rden      ),
+        .data_out   ( ce_execute_d  )
     ); 
-    
-    
-    // delay bc of 3 cycle sequence bram read latency to keep reading
+
+
     SRL_bit #(
-        .C_CLOCK_CYCLES( 4 )
+        .C_CLOCK_CYCLES( 3 )
     ) 
     i1_SRL_bit (
         .clk        ( clk           ),
         .rst        ( rst           ),
         .ce         ( 1'b1          ),
         .data_in    ( seq_rden_r    ),
-        .data_out   ( seq_rden_d0   )
-    );
-   
+        .data_out   ( seq_rden_d    )
+    ); 
+    
+
     
     SRL_bus #(  
-        .C_CLOCK_CYCLES  ( 1                ),
-        .C_DATA_WIDTH    ( 9                )
+        .C_CLOCK_CYCLES  ( 1         ),
+        .C_DATA_WIDTH    ( 9         )
     ) 
     i0_SRL_bus (
         .clk        ( clk            ),
@@ -203,7 +203,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
         end else begin
             if(cycle_counter == 4) begin
                 cycle_counter <= 0;
-            end else if((seq_rden || seq_rden_d0) && state == ST_AWE_CE_ACTIVE) begin
+            end else if(ce_execute_d && state == ST_AWE_CE_ACTIVE) begin
                 cycle_counter <= cycle_counter + 1;
             end
         end
@@ -235,7 +235,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
                 ce_execute[idx] <= 0;
             end
         end else begin
-            ce_execute[0] <= (state == ST_AWE_CE_ACTIVE && seq_rden_d);
+            ce_execute[0] <= (state == ST_AWE_CE_ACTIVE && ce_execute_d);
             for(idx = 1; idx < C_CE_EXEC_WIDTH; idx = idx + 1) begin
                 ce_execute[idx] <= ce_execute[idx - 1];
             end
@@ -290,9 +290,9 @@ module cnn_layer_accel_quad_bram_ctrl #(
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
     
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
-    assign seq_rden = seq_rden_r || seq_rden_d0;
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign gray_code = {gc[1], ^gc[1:0]};
+    assign seq_rden  = seq_rden_d || seq_rden_r;
    
     always@(posedge clk) begin
         if(rst) begin
@@ -357,10 +357,10 @@ module cnn_layer_accel_quad_bram_ctrl #(
                         wrAddr <= wrAddr + 1;
                     end
                     // sequence data reading logic
-                    if(seq_count > 0) begin
+                    if(seq_count > 1) begin
                         seq_rden_r <= 1;
                     end
-                    if(seq_rden) begin
+                    if(seq_rden_r) begin
                         seq_count <= seq_count - 1;
                     end
                     if(seq_rdAddr == (seq_full_count - 1)) begin
@@ -371,7 +371,6 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     // next state
                     if(output_col == num_output_cols && output_row == num_output_rows && cycle_counter == 4) begin
                         gc          <= gc + 1;
-                        seq_rdAddr  <= 0;
                         state       <= ST_JOB_DONE;
                     end else if(output_col == num_output_cols && cycle_counter == 4) begin
                         seq_rden_r  <= 0;
@@ -401,7 +400,8 @@ module cnn_layer_accel_quad_bram_ctrl #(
                 end
                 ST_JOB_DONE: begin
                     job_complete 	    <= job_complete_ack  ? 1'b0 : (~job_complete_acked ? 1'b1 : job_complete);
-				    job_complete_acked  <= job_complete_ack  ? 1'b1 :  job_complete_acked;                  
+				    job_complete_acked  <= job_complete_ack  ? 1'b1 :  job_complete_acked; 
+                    seq_rdAddr          <= 0;                    
                     if(job_complete_ack) begin
                         job_complete_acked    <= 0;
                         state               <= ST_IDLE;

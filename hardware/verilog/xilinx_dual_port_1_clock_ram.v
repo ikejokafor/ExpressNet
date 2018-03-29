@@ -63,6 +63,7 @@ module xilinx_dual_port_1_clock_ram #(
     reg     [       C_RAM_WIDTH - 1:0]    dout_reg0;
     reg     [       C_RAM_WIDTH - 1:0]    dout_reg1;
     reg     [       C_RAM_WIDTH - 1:0]    dout_reg2;
+
 	
 	// BEGIN BRAM Write logic -----------------------------------------------------------------------------------------------------------------------   
     always@(posedge clk) begin

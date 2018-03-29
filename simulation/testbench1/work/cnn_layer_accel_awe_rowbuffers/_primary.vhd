@@ -16,7 +16,7 @@ entity cnn_layer_accel_awe_rowbuffers is
         input_row       : in     vl_logic_vector;
         input_col       : in     vl_logic_vector;
         num_input_cols  : in     vl_logic_vector;
-        state           : in     vl_logic_vector(4 downto 0);
+        state           : in     vl_logic_vector(5 downto 0);
         gray_code       : in     vl_logic_vector(1 downto 0);
         seq_datain      : in     vl_logic_vector;
         pfb_rden        : in     vl_logic;
