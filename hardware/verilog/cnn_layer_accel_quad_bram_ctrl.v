@@ -332,7 +332,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     end
                 end
                 ST_AWE_CE_PRIM_BUFFER: begin
-                    if(pfb_count == 0 && pfb_count_d == 0 && input_row < 4) begin
+                    if(pfb_count == 0 && input_row < 4) begin
                         next_state            <= state;
                         state                 <= ST_WAIT_PFB_LOAD;
                     end if(input_row == 3 && pfb_count == pfb_full_count) begin
@@ -370,7 +370,8 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     end
                     // next state
                     if(output_col == num_output_cols && output_row == num_output_rows && cycle_counter == 4) begin
-                        gc          <= gc + 1;
+                        gc          <= 0;
+                        wrAddr      <= 0;
                         state       <= ST_JOB_DONE;
                     end else if(output_col == num_output_cols && cycle_counter == 4) begin
                         seq_rden_r  <= 0;
@@ -388,12 +389,11 @@ module cnn_layer_accel_quad_bram_ctrl #(
                         wrAddr <= wrAddr + 1;
                     end
                     if(pfb_count == 0) begin
+                        gc <= gc + 1;
                         if(input_row != (num_input_rows + 1)) begin
-                            gc          <= gc + 1;
                             next_state  <= ST_AWE_CE_ACTIVE;
                             state       <= ST_WAIT_PFB_LOAD;
-                        end else begin
-                            gc          <= gc + 1;
+                        end else if(!ce_execute) begin
                             state       <= ST_AWE_CE_ACTIVE;
                         end
                     end
@@ -403,8 +403,8 @@ module cnn_layer_accel_quad_bram_ctrl #(
 				    job_complete_acked  <= job_complete_ack  ? 1'b1 :  job_complete_acked; 
                     seq_rdAddr          <= 0;                    
                     if(job_complete_ack) begin
-                        job_complete_acked    <= 0;
-                        state               <= ST_IDLE;
+                        job_complete_acked      <= 0;
+                        state                   <= ST_IDLE;
                     end
                 end
             endcase

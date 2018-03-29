@@ -45,8 +45,8 @@ module testbench_1;
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_LOG2_BRAM_DEPTH    = clog2(`BRAM_DEPTH);
-    localparam ROWS                 = 10;
-    localparam COLS                 = 10;
+    localparam ROWS                 = 20;
+    localparam COLS                 = 20;
     localparam DEPTH                = 8;
     localparam KERNEL_SIZE          = 3;
    
