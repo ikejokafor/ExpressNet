@@ -373,7 +373,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
                         gc          <= 0;
                         wrAddr      <= 0;
                         state       <= ST_JOB_DONE;
-                    end else if(output_col == num_output_cols && output_row != num_output_row && scycle_counter == 4) begin
+                    end else if(output_col == num_output_cols && output_row != num_output_rows && cycle_counter == 4) begin
                         seq_rden_r  <= 0;
                         seq_count   <= seq_full_count;
                         state       <= ST_FIN_ROW_MATRIC;
@@ -396,6 +396,8 @@ module cnn_layer_accel_quad_bram_ctrl #(
                         end else if(!ce_execute) begin
                             state       <= ST_AWE_CE_ACTIVE;
                         end
+                    end else if(!ce_execute) begin
+                        state       <= ST_AWE_CE_ACTIVE;
                     end
                 end
                 ST_JOB_DONE: begin

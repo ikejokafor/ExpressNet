@@ -45,8 +45,8 @@ module testbench_1;
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_LOG2_BRAM_DEPTH    = clog2(`BRAM_DEPTH);
-    localparam ROWS                 = 20;
-    localparam COLS                 = 20;
+    localparam ROWS                 = 10;
+    localparam COLS                 = 10;
     localparam DEPTH                = 8;
     localparam KERNEL_SIZE          = 3;
    
@@ -143,7 +143,7 @@ module testbench_1;
         i0_cnn_layer_accel_quad.num_input_rows_cfg    = ROWS - 1;
         i0_cnn_layer_accel_quad.num_input_cols_cfg    = COLS - 1;
         i0_cnn_layer_accel_quad.pfb_full_count_cfg    = COLS;
-        i0_cnn_layer_accel_quad.last_kernel           = 1;
+        i0_cnn_layer_accel_quad.last_kernel           = 0;
         pixel_valid                                   = 0;
         job_start                                     = 0;
         job_fetch_ack                                 = 0;
@@ -304,6 +304,10 @@ module testbench_1;
         @(posedge clk_100MHz);
         job_complete_ack = 0; 
         $stop;
+    end
+    
+    always@(posedge clk_500MHz) begin
+    
     end
 
     always@(posedge clk_500MHz) begin
