@@ -58,10 +58,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     ce_execute                  ,
     seq_rden                    ,
     seq_rdAddr                  ,
-    last_kernel                 ,
-    next_row                    ,
-    pixel_valid                 ,
-    pixel_ready                          
+    last_kernel                                                           
 );
 
 
@@ -79,15 +76,14 @@ module cnn_layer_accel_quad_bram_ctrl #(
     localparam C_LOG2_SEQ_DATA_DEPTH    = clog2((C_BRAM_DEPTH / 2) * 5);
     localparam C_CE_EXEC_WIDTH          = C_NUM_AWE * C_NUM_CE_PER_AWE; 
 
-    localparam ST_IDLE                  = 5'b00001; 
-    localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
-    localparam ST_WAIT_PFB_LOAD         = 5'b00100;
-    localparam ST_AWE_CE_ACTIVE         = 5'b01000;
-    localparam ST_JOB_DONE              = 5'b10000;
- 
+    localparam ST_IDLE                  = 6'b000001;  
+    localparam ST_AWE_CE_PRIM_BUFFER    = 6'b000010;
+    localparam ST_WAIT_PFB_LOAD         = 6'b000100;
+    localparam ST_AWE_CE_ACTIVE         = 6'b001000;
+    localparam ST_FIN_ROW_MATRIC        = 6'b010000;
+    localparam ST_JOB_DONE              = 6'b100000;
 
     
-
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Inputs / Output Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------   
@@ -103,7 +99,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     input                                   job_fetch_complete          ;
     output reg                              job_complete                ;
     input                                   job_complete_ack            ;
-    output reg [                    4:0]    state                       ;
+    output reg [                    5:0]    state                       ;
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
     input                                   pfb_empty                   ;
@@ -116,14 +112,13 @@ module cnn_layer_accel_quad_bram_ctrl #(
     output                                  seq_rden                    ;
     output reg [11:0]                       seq_rdAddr                  ;
     input                                   last_kernel                 ;
-    input                                   next_row                    ;
-    input                                   pixel_valid                 ;
-    input                                   pixel_ready                 ;    
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------          
+    reg     [                    10:0]      seq_count                       ;
+    reg     [                    10:0]      seq_full_count                  ;
     reg                                     seq_rden_r                      ;
     wire                                    seq_rden_d0                     ;
     reg     [                     5:0]      cycle_counter                   ;
@@ -135,18 +130,17 @@ module cnn_layer_accel_quad_bram_ctrl #(
     reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_col                      ;
     wire    [ C_LOG2_BRAM_DEPTH - 2:0]      num_output_rows                 ;
     wire    [ C_LOG2_BRAM_DEPTH - 2:0]      num_output_cols                 ;
-    reg     [                     3:0]      prev_state                    ;
+    reg     [                     3:0]      next_state                      ;
     reg     [                     1:0]      gc                              ;
     integer                                 idx                             ;  
     reg     [                     8:0]      pfb_count                       ;
     reg     [                     8:0]      pfb_count_d                     ;
     
-  
-	
+  	
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------             
-    // delay bc of 3 cycle sequence bram read latency to start execution
+    // delay bc of 3 cycle sequence bram read latency to start execution of pipeline
     SRL_bit #(
         .C_CLOCK_CYCLES( 2 )
     ) 
@@ -161,7 +155,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     
     // delay bc of 3 cycle sequence bram read latency to keep reading
     SRL_bit #(
-        .C_CLOCK_CYCLES( 3 )
+        .C_CLOCK_CYCLES( 4 )
     ) 
     i1_SRL_bit (
         .clk        ( clk           ),
@@ -194,10 +188,10 @@ module cnn_layer_accel_quad_bram_ctrl #(
             input_row   <= 0;
             input_col   <= 0;
         end else begin
-            if((state == ST_AWE_CE_PRIM_BUFFER && input_col == num_input_cols) || (state == ST_AWE_CE_ACTIVE && input_col == num_input_cols && cycle_counter == 3)) begin
+            if(input_col == num_input_cols) begin
                 input_col  <= 0;
                 input_row  <= input_row + 1;
-            end else if(pfb_rden) begin
+            end else if(pfb_rden && state != ST_FIN_ROW_MATRIC) begin
                 input_col  <= input_col + 1;
             end
         end
@@ -209,7 +203,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
         end else begin
             if(cycle_counter == 4) begin
                 cycle_counter <= 0;
-            end else if(seq_rden || seq_rden_d0) begin
+            end else if((seq_rden || seq_rden_d0) && state == ST_AWE_CE_ACTIVE) begin
                 cycle_counter <= cycle_counter + 1;
             end
         end
@@ -232,22 +226,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
     
-    
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
-    assign gray_code = {gc[1], ^gc[1:0]};
-    
-    always@(posedge clk) begin
-        if(rst) begin
-            gc <= 0;
-        end else begin
-            if(pfb_count == 0 && cycle_counter == 4) begin
-                gc <= gc + 1;
-            end
-        end
-    end
-    // END logic ------------------------------------------------------------------------------------------------------------------------------------
-
-    
+   
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin
         if(rst) begin
@@ -313,7 +292,8 @@ module cnn_layer_accel_quad_bram_ctrl #(
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign seq_rden = seq_rden_r || seq_rden_d0;
-    
+    assign gray_code = {gc[1], ^gc[1:0]};
+   
     always@(posedge clk) begin
         if(rst) begin
             pfb_rden                <= 0;
@@ -325,6 +305,8 @@ module cnn_layer_accel_quad_bram_ctrl #(
             job_complete            <= 0;
             seq_rden_r              <= 0;
             seq_rdAddr              <= 0;
+            gc                      <= 0;
+            seq_count               <= 0;
             state                   <= ST_IDLE;
         end else begin
             pfb_rden                <= 0;
@@ -346,15 +328,16 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     end
                     if(job_fetch_complete) begin
                         job_fetch_acked <= 0;
-                        state         <= prev_state;
+                        state         <= next_state;
                     end
                 end
                 ST_AWE_CE_PRIM_BUFFER: begin
                     if(pfb_count == 0 && pfb_count_d == 0 && input_row < 4) begin
-                        prev_state            <= state;
+                        next_state            <= state;
                         state                 <= ST_WAIT_PFB_LOAD;
                     end if(input_row == 3 && pfb_count == pfb_full_count) begin
-                        state  <= ST_AWE_CE_ACTIVE;
+                        seq_count   <= seq_full_count;
+                        state       <= ST_AWE_CE_ACTIVE;
                     end else begin
                         if(pfb_count > 1) begin
                             pfb_rden <= 1;
@@ -364,36 +347,56 @@ module cnn_layer_accel_quad_bram_ctrl #(
                     end
                 end
                 ST_AWE_CE_ACTIVE: begin
-                    if(pfb_count != 0 || output_row == num_output_rows) begin
-                        // overlap row matric with execution
-                        if(row_matric && output_col <= num_output_cols && last_kernel) begin
-                            wrAddr     <= wrAddr + 1;
-                            pfb_rden   <= 1;
+                    // overlap row matric with execution
+                    if(row_matric && last_kernel && pfb_count != 0) begin
+                        pfb_rden   <= 1;
+                    end
+                    if(row_matric && last_kernel && wrAddr == num_input_cols) begin
+                        wrAddr <= 0;
+                    end else if(row_matric && last_kernel) begin
+                        wrAddr <= wrAddr + 1;
+                    end
+                    // sequence data reading logic
+                    if(seq_count > 0) begin
+                        seq_rden_r <= 1;
+                    end
+                    if(seq_rden) begin
+                        seq_count <= seq_count - 1;
+                    end
+                    if(seq_rdAddr == (seq_full_count - 1)) begin
+                        seq_rdAddr <= 0;
+                    end else if(seq_rden_r) begin
+                        seq_rdAddr <= seq_rdAddr + 1;
+                    end
+                    // next state
+                    if(output_col == num_output_cols && output_row == num_output_rows && cycle_counter == 4) begin
+                        gc          <= gc + 1;
+                        seq_rdAddr  <= 0;
+                        state       <= ST_JOB_DONE;
+                    end else if(output_col == num_output_cols && cycle_counter == 4) begin
+                        seq_rden_r  <= 0;
+                        seq_count   <= seq_full_count;
+                        state       <= ST_FIN_ROW_MATRIC;
+                    end
+                end
+                ST_FIN_ROW_MATRIC: begin
+                    if(row_matric && last_kernel && pfb_count != 0) begin
+                        pfb_rden   <= 1;
+                    end
+                    if(row_matric && last_kernel && wrAddr == num_input_cols) begin
+                        wrAddr <= 0;
+                    end else if(row_matric && last_kernel) begin
+                        wrAddr <= wrAddr + 1;
+                    end
+                    if(pfb_count == 0) begin
+                        if(input_row != (num_input_rows + 1)) begin
+                            gc          <= gc + 1;
+                            next_state  <= ST_AWE_CE_ACTIVE;
+                            state       <= ST_WAIT_PFB_LOAD;
+                        end else begin
+                            gc          <= gc + 1;
+                            state       <= ST_AWE_CE_ACTIVE;
                         end
-                        // overlap row fetch with execution
-                        if(pfb_count == 0 && !job_fetch_in_progress && input_row < num_input_rows) begin
-                            job_fetch_request 	<= job_fetch_ack  ? 1'b0 : (~job_fetch_acked ? 1'b1 : job_fetch_request);
-                            job_fetch_acked     <= job_fetch_ack  ? 1'b1 :  job_fetch_acked;
-                        end
-                        if(job_fetch_complete) begin
-                            job_fetch_acked <= 0;
-                        end
-                        // sequence data reading logic
-                        if(input_col != num_input_cols) begin
-                            seq_rden_r <= 1;
-                        end
-                        if(output_col == num_output_cols && cycle_counter == 4) begin
-                            seq_rdAddr <= 0;
-                        end else if(seq_rden_r) begin
-                            seq_rdAddr <= seq_rdAddr + 1;
-                        end
-                        // next state
-                        if(output_col == num_input_cols && output_row == num_input_rows && cycle_counter == 4 && last_kernel && pfb_count == 0 && !seq_rden_d0) begin
-                            state <= ST_JOB_DONE;
-                        end
-                    end else if(pfb_count == 0 && input_row != num_input_rows) begin
-                        prev_state    <= state;
-                        state         <= ST_WAIT_PFB_LOAD;
                     end
                 end
                 ST_JOB_DONE: begin
@@ -418,10 +421,11 @@ module cnn_layer_accel_quad_bram_ctrl #(
     string state_s;
     always@(state) begin 
         case(state) 
-                ST_IDLE:                  state_s = "ST_IDLE";              
+                ST_IDLE:                    state_s = "ST_IDLE";              
                 ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
                 ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
                 ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
+                ST_FIN_ROW_MATRIC:          state_s = "ST_FIN_ROW_MATRIC";
                 ST_JOB_DONE:                state_s = "ST_JOB_DONE";
         endcase
     end

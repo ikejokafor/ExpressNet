@@ -74,11 +74,12 @@ module cnn_layer_accel_awe_rowbuffers #(
     localparam C_PIXEL_DATAOUT_WIDTH    = C_PIXEL_WIDTH * 4;
     localparam C_CE_PIXEL_DOUT_WIDTH    = C_PIXEL_WIDTH * C_NUM_CE_PER_AWE;
     
-    localparam ST_IDLE                = 5'b00001;  
-    localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
-    localparam ST_WAIT_PFB_LOAD         = 5'b00100;
-    localparam ST_AWE_CE_ACTIVE         = 5'b01000;
-    localparam ST_JOB_DONE              = 5'b10000;
+    localparam ST_IDLE                  = 6'b000001;  
+    localparam ST_AWE_CE_PRIM_BUFFER    = 6'b000010;
+    localparam ST_WAIT_PFB_LOAD         = 6'b000100;
+    localparam ST_AWE_CE_ACTIVE         = 6'b001000;
+    localparam ST_FIN_ROW_MATRIC        = 6'b010000;
+    localparam ST_JOB_DONE              = 6'b100000;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -509,30 +510,6 @@ module cnn_layer_accel_awe_rowbuffers #(
                         bram0_rdAddr            <= seq_datain_even;
                         bram1_rdAddr            <= seq_datain_odd;
                     end
-                    // incoming row
-                    if(ce0_row_matric && last_kernel) begin
-                        if(!(gray_code[0] ^ gray_code[1])) begin
-                            bram1_wren      <= 1;                  
-                            bram1_wrAddr    <= {gray_code[0], wrAddr};
-                            bram1_datain    <= ce0_pixel_datain_d;                 
-                        end else if(gray_code[0] ^ gray_code[1]) begin
-                            bram0_wren      <= 1;
-                            bram0_wrAddr    <= {gray_code[0], wrAddr};
-                            bram0_datain    <= ce0_pixel_datain_d;                                          
-                        end
-                    end
-                    // row rename
-                    if(ce0_row_rename && last_kernel) begin
-                        if(!(gray_code[0] ^ gray_code[1])) begin             
-                            bram0_wren      <= 1;
-                            bram0_wrAddr    <= {gray_code[1], wrAddr};
-                            bram0_datain    <= row_buffer_sav_val0;
-                        end else if(gray_code[0] ^ gray_code[1]) begin                                        
-                            bram1_wren      <= 1;                       
-                            bram1_wrAddr    <= {gray_code[1], wrAddr};
-                            bram1_datain    <= row_buffer_sav_val0;  
-                        end
-                    end
                     //convolution engine 1
                     if(ce1_execute) begin
                         bram2_rden              <= 1;
@@ -540,32 +517,58 @@ module cnn_layer_accel_awe_rowbuffers #(
                         bram2_rdAddr            <= seq_datain_even_d;
                         bram3_rdAddr            <= seq_datain_odd_d;
                     end
-                    // incoming row
-                    if(ce1_row_matric && last_kernel) begin
-                        if(!(gray_code[0] ^ gray_code[1])) begin
-                            bram3_wren      <= 1;                  
-                            bram3_wrAddr    <= {gray_code[0], wrAddr};
-                            bram3_datain    <= ce1_pixel_datain_d;                 
-                        end else if(gray_code[0] ^ gray_code[1]) begin
-                            bram2_wren      <= 1;
-                            bram2_wrAddr    <= {gray_code[0], wrAddr};
-                            bram2_datain    <= ce1_pixel_datain_d;                                          
-                        end
-                    end
-                    // row rename
-                    if(ce1_row_rename && last_kernel) begin
-                        if(!(gray_code[0] ^ gray_code[1])) begin              
-                            bram2_wren      <= 1;
-                            bram2_wrAddr    <= {gray_code[1], wrAddr};
-                            bram2_datain    <= row_buffer_sav_val1;
-                        end else if(gray_code[0] ^ gray_code[1]) begin                                        
-                            bram3_wren      <= 1;                       
-                            bram3_wrAddr    <= {gray_code[1], wrAddr};
-                            bram3_datain    <= row_buffer_sav_val1;  
-                        end
-                    end
                 end
             endcase
+            if(state[3] || state[4]) begin
+                // conv eng 0 incoming row logic
+                if(ce0_row_matric && last_kernel) begin
+                    if(!(gray_code[0] ^ gray_code[1])) begin
+                        bram1_wren      <= 1;                  
+                        bram1_wrAddr    <= {gray_code[0], wrAddr};
+                        bram1_datain    <= ce0_pixel_datain_d;                 
+                    end else if(gray_code[0] ^ gray_code[1]) begin
+                        bram0_wren      <= 1;
+                        bram0_wrAddr    <= {gray_code[0], wrAddr};
+                        bram0_datain    <= ce0_pixel_datain_d;                                          
+                    end
+                end
+                // conv eng 0 row rename logic
+                if(ce0_row_rename && last_kernel) begin
+                    if(!(gray_code[0] ^ gray_code[1])) begin             
+                        bram0_wren      <= 1;
+                        bram0_wrAddr    <= {gray_code[1], wrAddr};
+                        bram0_datain    <= row_buffer_sav_val0;
+                    end else if(gray_code[0] ^ gray_code[1]) begin                                        
+                        bram1_wren      <= 1;                       
+                        bram1_wrAddr    <= {gray_code[1], wrAddr};
+                        bram1_datain    <= row_buffer_sav_val0;  
+                    end
+                end
+                // conv eng 1 incoming row logic
+                if(ce1_row_matric && last_kernel) begin
+                    if(!(gray_code[0] ^ gray_code[1])) begin
+                        bram3_wren      <= 1;                  
+                        bram3_wrAddr    <= {gray_code[0], wrAddr};
+                        bram3_datain    <= ce1_pixel_datain_d;                 
+                    end else if(gray_code[0] ^ gray_code[1]) begin
+                        bram2_wren      <= 1;
+                        bram2_wrAddr    <= {gray_code[0], wrAddr};
+                        bram2_datain    <= ce1_pixel_datain_d;                                          
+                    end
+                end
+                // conv eng 1 row rename logic
+                if(ce1_row_rename && last_kernel) begin
+                    if(!(gray_code[0] ^ gray_code[1])) begin              
+                        bram2_wren      <= 1;
+                        bram2_wrAddr    <= {gray_code[1], wrAddr};
+                        bram2_datain    <= row_buffer_sav_val1;
+                    end else if(gray_code[0] ^ gray_code[1]) begin                                        
+                        bram3_wren      <= 1;                       
+                        bram3_wrAddr    <= {gray_code[1], wrAddr};
+                        bram3_datain    <= row_buffer_sav_val1;  
+                    end
+                end              
+            end
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
@@ -582,6 +585,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                 ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
                 ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
                 ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
+                ST_FIN_ROW_MATRIC:          state_s = "ST_FIN_ROW_MATRIC";
                 ST_JOB_DONE:                state_s = "ST_JOB_DONE";
         endcase
     end

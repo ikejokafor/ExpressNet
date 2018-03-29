@@ -87,14 +87,12 @@ module cnn_layer_accel_quad #(
     localparam C_PFB_COUNT_WIDTH        = C_NUM_PFB * 10;
     localparam CE_CYCLE_COUNTER_WIDTH   = C_NUM_AWE * 6;
 
-    localparam ST_IDLE                = 5'b00001;  
-    localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
-    localparam ST_WAIT_PFB_LOAD         = 5'b00100;
-    localparam ST_AWE_CE_ACTIVE         = 5'b01000;
-    localparam ST_JOB_DONE              = 5'b10000;
- 
-    localparam ST_IDLE_1                = 2'b01;
-    localparam ST_ROW_REQUEST           = 2'b10;
+    localparam ST_IDLE                  = 6'b000001;  
+    localparam ST_AWE_CE_PRIM_BUFFER    = 6'b000010;
+    localparam ST_WAIT_PFB_LOAD         = 6'b000100;
+    localparam ST_AWE_CE_ACTIVE         = 6'b001000;
+    localparam ST_FIN_ROW_MATRIC        = 6'b010000;
+    localparam ST_JOB_DONE              = 6'b100000;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -151,7 +149,7 @@ module cnn_layer_accel_quad #(
     wire    [            C_NUM_PFB - 1:0]   pfb_empty                   ;
     reg     [                        8:0]   pfb_count                   ;
 
-    wire    [                        4:0]   state                       ; 
+    wire    [                        5:0]   state                       ; 
     wire    [     C_CE_START_WIDTH - 1:0]   ce_execute                  ;
     wire    [    C_LOG2_BRAM_DEPTH - 2:0]   input_row                   ;
     wire    [    C_LOG2_BRAM_DEPTH - 2:0]   input_col                   ;
@@ -166,7 +164,6 @@ module cnn_layer_accel_quad #(
     reg     [         15:0]                 kernel_size_cfg             ;
 
     reg                                     last_kernel                 ;
-    reg                                     next_row                    ;
 
     reg [ 8:0]                              seq_wrAddr                  ;
     wire [11:0]                             seq_rdAddr                  ;
@@ -288,10 +285,7 @@ module cnn_layer_accel_quad #(
         .ce_execute             ( ce_execute                                        ),
         .seq_rden               ( seq_rden                                          ),
         .seq_rdAddr             ( seq_rdAddr                                        ),
-        .last_kernel            ( last_kernel                                       ),
-        .next_row               ( next_row                                          ),
-        .pixel_valid            ( pixel_valid                                       ),
-        .pixel_ready            ( pixel_ready                                       )
+        .last_kernel            ( last_kernel                                       )
     );
 
    

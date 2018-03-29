@@ -138,11 +138,11 @@ module testbench_1;
     bit parity0;
     bit parity1;
     initial begin
+        i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.seq_full_count = 5 * COLS;
         i0_cnn_layer_accel_quad.num_input_rows_cfg    = ROWS - 1;
         i0_cnn_layer_accel_quad.num_input_cols_cfg    = COLS - 1;
         i0_cnn_layer_accel_quad.pfb_full_count_cfg    = COLS;
         i0_cnn_layer_accel_quad.last_kernel           = 1;
-        i0_cnn_layer_accel_quad.next_row              = 0;
         pixel_valid                                   = 0;
         job_start                                     = 0;
         job_fetch_ack                                 = 0;
@@ -242,7 +242,8 @@ module testbench_1;
         
         $stop;        
         
-        i = 0;  
+        i = 0; 
+        j = 0;
         while(i < (ROWS * COLS)) begin
             @(posedge clk_100MHz);
             if(job_fetch_request) begin
@@ -283,7 +284,17 @@ module testbench_1;
             end
         end 
 
-        #(C_PERIOD_100MHz)
+        $stop;
+        
+        while(1) begin
+            @(posedge clk_100MHz);
+            if(job_complete) begin
+                job_complete_ack = 1;
+                break;
+            end
+        end
+        @(posedge clk_100MHz);
+        job_complete_ack = 0; 
         $stop;
     end
 
