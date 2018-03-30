@@ -132,6 +132,7 @@ module testbench_1;
     integer fd, fd0;
     bit [`PIXEL_WIDTH - 1:0]    arr[0:((ROWS * COLS * 8) - 1)];
     bit [15:0]                  arr2[0:((512 * 8) - 1)];
+    bit [15:0]                  arr3[0:79];     // for 3x3 kernel, there are 10 values
     int i;
     int j;
     int k;
@@ -143,6 +144,7 @@ module testbench_1;
         i0_cnn_layer_accel_quad.num_input_rows_cfg    = ROWS - 1;
         i0_cnn_layer_accel_quad.num_input_cols_cfg    = COLS - 1;
         i0_cnn_layer_accel_quad.pfb_full_count_cfg    = COLS;
+        i0_cnn_layer_accel_quad.kernel_offset_cfg     = 10;
         i0_cnn_layer_accel_quad.last_kernel           = 0;
         pixel_valid                                   = 0;
         job_start                                     = 0;

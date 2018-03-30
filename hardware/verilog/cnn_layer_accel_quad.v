@@ -162,6 +162,7 @@ module cnn_layer_accel_quad #(
     reg     [          8:0]                 pfb_full_count_cfg          ;
     reg     [         15:0]                 num_kernels_cfg             ;
     reg     [         15:0]                 kernel_size_cfg             ;
+    reg     [         15:0]                 kernel_offset_cfg           ;
 
     reg                                     last_kernel                 ;
 
@@ -174,6 +175,12 @@ module cnn_layer_accel_quad #(
     
     wire   [ C_NUM_AWE - 1:0]               ce0_pixel_dataout_valid     ;
     wire   [ C_NUM_AWE - 1:0]               ce1_pixel_dataout_valid     ;
+    
+   //reg wht_wrAddr  ;
+   //wire wht_rdAddr ;
+   //wire wht_rden   ; 
+   //wire wht_dataout ;
+    
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -216,6 +223,21 @@ module cnn_layer_accel_quad #(
                   .valid            (                                                                               ),
                   .rd_data_count    (                                                                               )
                 );
+                
+                
+                //xilinx_dual_port_1_clock_ram #(
+                //    .C_RAM_WIDTH    ( C_PIXEL_WIDTH      ),      
+                //    .C_RAM_DEPTH    ( C_BRAM_DEPTH       )
+                //) 
+                //weight_table (
+                //    .wrAddr             ( wht_wrAddr                                                                    ),  
+                //    .rdAddr             ( wht_rdAddr                                                                    ),
+                //    .datain             ( config_data[(((i * C_NUM_CE_PER_AWE) + j) * C_PIXEL_WIDTH) +: C_PIXEL_WIDTH]  ),
+                //    .clk                ( clk                                                                           ),    
+                //    .wren               ( config_accept[1] && config_valid                                              ),
+                //    .rden               ( wht_rden                                                                      ),
+                //    .dataout            ( wht_dataout                                                                   )
+                //);               
             end
 
             

@@ -122,19 +122,21 @@ module cnn_layer_accel_quad_bram_ctrl #(
     reg                                     seq_rden_r                      ;
     reg     [                    10:0]      seq_full_count                  ;
     reg     [                     5:0]      cycle_counter                   ;
+    wire    [                     5:0]      cycle_counter_d                 ;
     wire                                    seq_rden_d                      ;
     reg     [4:0]                           job_accept_r                    ;
     reg                                     job_fetch_acked                 ;
     reg                                     job_complete_acked              ;
     reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_row                      ;  
     reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_col                      ;
+    wire    [ C_LOG2_BRAM_DEPTH - 2:0]      output_row_d                    ;  
+    wire    [ C_LOG2_BRAM_DEPTH - 2:0]      output_col_d                    ;  
     wire    [ C_LOG2_BRAM_DEPTH - 2:0]      num_output_rows                 ;
     wire    [ C_LOG2_BRAM_DEPTH - 2:0]      num_output_cols                 ;
     reg     [                     3:0]      next_state                      ;
     reg     [                     1:0]      gc                              ;
     integer                                 idx                             ;  
     reg     [                     8:0]      pfb_count                       ;
-    reg     [                     8:0]      pfb_count_d                     ;
     
   	
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -163,21 +165,47 @@ module cnn_layer_accel_quad_bram_ctrl #(
         .data_in    ( seq_rden_r    ),
         .data_out   ( seq_rden_d    )
     ); 
-    
 
-    
+    // delay for sequence rden to end and change state from ST_AWE_CE_ACTIVE to next state
     SRL_bus #(  
-        .C_CLOCK_CYCLES  ( 1         ),
-        .C_DATA_WIDTH    ( 9         )
+        .C_CLOCK_CYCLES  ( 4                        ),
+        .C_DATA_WIDTH    ( C_LOG2_BRAM_DEPTH - 1    )
     ) 
     i0_SRL_bus (
-        .clk        ( clk            ),
-        .ce         ( 1'b1           ),
-        .rst        ( rst            ),
-        .data_in    ( pfb_count      ),
-        .data_out   ( pfb_count_d    )
-    );   
-   
+        .clk        ( clk               ),
+        .ce         ( 1'b1              ),
+        .rst        ( rst               ),
+        .data_in    ( output_col        ),
+        .data_out   ( output_col_d      )
+    );
+
+    
+    // delay for sequence rden to end and change state from ST_AWE_CE_ACTIVE to next state    
+    SRL_bus #(  
+        .C_CLOCK_CYCLES  ( 4                        ),
+        .C_DATA_WIDTH    ( C_LOG2_BRAM_DEPTH - 1    )
+    ) 
+    i1_SRL_bus (
+        .clk        ( clk               ),
+        .ce         ( 1'b1              ),
+        .rst        ( rst               ),
+        .data_in    ( output_row        ),
+        .data_out   ( output_row_d      )
+    );
+
+    
+    // delay for sequence rden to end and change state from ST_AWE_CE_ACTIVE to next state
+    SRL_bus #(  
+        .C_CLOCK_CYCLES  ( 4                ),
+        .C_DATA_WIDTH    ( 6                )
+    ) 
+    i2_SRL_bus (
+        .clk        ( clk                ),
+        .ce         ( 1'b1               ),
+        .rst        ( rst                ),
+        .data_in    ( cycle_counter      ),
+        .data_out   ( cycle_counter_d    )
+    );    
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign num_output_rows = num_input_rows; 
@@ -203,7 +231,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
         end else begin
             if(cycle_counter == 4) begin
                 cycle_counter <= 0;
-            end else if(ce_execute_d && state == ST_AWE_CE_ACTIVE) begin
+            end else if(seq_rden_r) begin
                 cycle_counter <= cycle_counter + 1;
             end
         end
@@ -235,7 +263,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
                 ce_execute[idx] <= 0;
             end
         end else begin
-            ce_execute[0] <= (state == ST_AWE_CE_ACTIVE && ce_execute_d);
+            ce_execute[0] <= ce_execute_d;
             for(idx = 1; idx < C_CE_EXEC_WIDTH; idx = idx + 1) begin
                 ce_execute[idx] <= ce_execute[idx - 1];
             end
@@ -369,14 +397,16 @@ module cnn_layer_accel_quad_bram_ctrl #(
                         seq_rdAddr <= seq_rdAddr + 1;
                     end
                     // next state
-                    if(output_col == num_output_cols && output_row == num_output_rows && cycle_counter == 4) begin
-                        gc          <= 0;
-                        wrAddr      <= 0;
-                        state       <= ST_JOB_DONE;
-                    end else if(output_col == num_output_cols && output_row != num_output_rows && cycle_counter == 4) begin
-                        seq_rden_r  <= 0;
-                        seq_count   <= seq_full_count;
-                        state       <= ST_FIN_ROW_MATRIC;
+                    if(!seq_rden) begin
+                        if(output_col_d == num_output_cols && output_row_d == num_output_rows && cycle_counter_d == 4) begin
+                            gc          <= 0;
+                            wrAddr      <= 0;
+                            state       <= ST_JOB_DONE;
+                        end else if(output_col_d == num_output_cols && output_row_d != num_output_rows && cycle_counter_d == 4) begin
+                            seq_rden_r  <= 0;
+                            seq_count   <= seq_full_count;
+                            state       <= ST_FIN_ROW_MATRIC;
+                        end
                     end
                 end
                 ST_FIN_ROW_MATRIC: begin
