@@ -168,7 +168,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
 
     // delay for sequence rden to end and change state from ST_AWE_CE_ACTIVE to next state
     SRL_bus #(  
-        .C_CLOCK_CYCLES  ( 4                        ),
+        .C_CLOCK_CYCLES  ( 3                        ),
         .C_DATA_WIDTH    ( C_LOG2_BRAM_DEPTH - 1    )
     ) 
     i0_SRL_bus (
@@ -182,7 +182,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     
     // delay for sequence rden to end and change state from ST_AWE_CE_ACTIVE to next state    
     SRL_bus #(  
-        .C_CLOCK_CYCLES  ( 4                        ),
+        .C_CLOCK_CYCLES  ( 3                        ),
         .C_DATA_WIDTH    ( C_LOG2_BRAM_DEPTH - 1    )
     ) 
     i1_SRL_bus (
@@ -196,7 +196,7 @@ module cnn_layer_accel_quad_bram_ctrl #(
     
     // delay for sequence rden to end and change state from ST_AWE_CE_ACTIVE to next state
     SRL_bus #(  
-        .C_CLOCK_CYCLES  ( 4                ),
+        .C_CLOCK_CYCLES  ( 3                ),
         .C_DATA_WIDTH    ( 6                )
     ) 
     i2_SRL_bus (
@@ -397,16 +397,14 @@ module cnn_layer_accel_quad_bram_ctrl #(
                         seq_rdAddr <= seq_rdAddr + 1;
                     end
                     // next state
-                    if(!seq_rden) begin
-                        if(output_col_d == num_output_cols && output_row_d == num_output_rows && cycle_counter_d == 4) begin
-                            gc          <= 0;
-                            wrAddr      <= 0;
-                            state       <= ST_JOB_DONE;
-                        end else if(output_col_d == num_output_cols && output_row_d != num_output_rows && cycle_counter_d == 4) begin
-                            seq_rden_r  <= 0;
-                            seq_count   <= seq_full_count;
-                            state       <= ST_FIN_ROW_MATRIC;
-                        end
+                    if(output_col_d == num_output_cols && output_row_d == num_output_rows && cycle_counter_d == 4) begin
+                        gc          <= 0;
+                        wrAddr      <= 0;
+                        state       <= ST_JOB_DONE;
+                    end else if(output_col_d == num_output_cols && output_row_d != num_output_rows && cycle_counter_d == 4) begin
+                        seq_rden_r  <= 0;
+                        seq_count   <= seq_full_count;
+                        state       <= ST_FIN_ROW_MATRIC;
                     end
                 end
                 ST_FIN_ROW_MATRIC: begin

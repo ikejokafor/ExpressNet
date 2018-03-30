@@ -145,7 +145,7 @@ module testbench_1;
         i0_cnn_layer_accel_quad.num_input_cols_cfg    = COLS - 1;
         i0_cnn_layer_accel_quad.pfb_full_count_cfg    = COLS;
         i0_cnn_layer_accel_quad.kernel_offset_cfg     = 10;
-        i0_cnn_layer_accel_quad.last_kernel           = 0;
+        i0_cnn_layer_accel_quad.last_kernel           = 1;
         pixel_valid                                   = 0;
         job_start                                     = 0;
         job_fetch_ack                                 = 0;
