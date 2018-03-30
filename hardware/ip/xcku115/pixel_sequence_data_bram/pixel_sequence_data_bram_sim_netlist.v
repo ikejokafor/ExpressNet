@@ -1,20 +1,20 @@
 // Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2016.1 (lin64) Build 1538259 Fri Apr  8 15:45:23 MDT 2016
-// Date        : Wed Mar 28 13:08:10 2018
+// Date        : Fri Mar 30 12:51:50 2018
 // Host        : redrealm.cse.psu.edu running 64-bit unknown
 // Command     : write_verilog -force -mode funcsim
-//               /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/sequence_data_bram/sequence_data_bram_sim_netlist.v
-// Design      : sequence_data_bram
+//               /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/pixel_sequence_data_bram/pixel_sequence_data_bram_sim_netlist.v
+// Design      : pixel_sequence_data_bram
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
 // Device      : xcku115-flva1517-3-e
 // --------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CHECK_LICENSE_TYPE = "sequence_data_bram,blk_mem_gen_v8_3_2,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "blk_mem_gen_v8_3_2,Vivado 2016.1" *) 
+(* CHECK_LICENSE_TYPE = "pixel_sequence_data_bram,blk_mem_gen_v8_3_2,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "blk_mem_gen_v8_3_2,Vivado 2016.1" *) 
 (* NotValidForBitStream *)
-module sequence_data_bram
+module pixel_sequence_data_bram
    (clka,
     wea,
     addra,
@@ -102,7 +102,7 @@ module sequence_data_bram
   (* C_HAS_SOFTECC_OUTPUT_REGS_B = "0" *) 
   (* C_INITA_VAL = "0" *) 
   (* C_INITB_VAL = "0" *) 
-  (* C_INIT_FILE = "sequence_data_bram.mem" *) 
+  (* C_INIT_FILE = "pixel_sequence_data_bram.mem" *) 
   (* C_INIT_FILE_NAME = "no_coe_file_loaded" *) 
   (* C_INTERFACE_TYPE = "0" *) 
   (* C_LOAD_INIT_FILE = "0" *) 
@@ -136,7 +136,7 @@ module sequence_data_bram
   (* C_XDEVICEFAMILY = "kintexu" *) 
   (* KEEP_HIERARCHY = "true" *) 
   (* downgradeipidentifiedwarnings = "yes" *) 
-  sequence_data_bram_blk_mem_gen_v8_3_2 U0
+  pixel_sequence_data_bram_blk_mem_gen_v8_3_2 U0
        (.addra(addra),
         .addrb(addrb),
         .clka(clka),
@@ -203,7 +203,7 @@ module sequence_data_bram
 endmodule
 
 (* ORIG_REF_NAME = "blk_mem_gen_generic_cstr" *) 
-module sequence_data_bram_blk_mem_gen_generic_cstr
+module pixel_sequence_data_bram_blk_mem_gen_generic_cstr
    (doutb,
     clkb,
     clka,
@@ -365,7 +365,7 @@ module sequence_data_bram_blk_mem_gen_generic_cstr
         .D(doutb_array[9]),
         .Q(doutb[9]),
         .R(1'b0));
-  sequence_data_bram_blk_mem_gen_prim_width \ramloop[0].ram.r 
+  pixel_sequence_data_bram_blk_mem_gen_prim_width \ramloop[0].ram.r 
        (.addra(addra),
         .addrb(addrb),
         .clka(clka),
@@ -376,7 +376,7 @@ module sequence_data_bram_blk_mem_gen_generic_cstr
         .enb(enb),
         .sleep(sleep),
         .wea(wea));
-  sequence_data_bram_blk_mem_gen_prim_width__parameterized0 \ramloop[1].ram.r 
+  pixel_sequence_data_bram_blk_mem_gen_prim_width__parameterized0 \ramloop[1].ram.r 
        (.DOUTADOUT(doutb_array[15:9]),
         .addra(addra),
         .addrb(addrb),
@@ -390,7 +390,7 @@ module sequence_data_bram_blk_mem_gen_generic_cstr
 endmodule
 
 (* ORIG_REF_NAME = "blk_mem_gen_prim_width" *) 
-module sequence_data_bram_blk_mem_gen_prim_width
+module pixel_sequence_data_bram_blk_mem_gen_prim_width
    (doutb_array,
     clkb,
     clka,
@@ -423,7 +423,7 @@ module sequence_data_bram_blk_mem_gen_prim_width
   wire sleep;
   wire [0:0]wea;
 
-  sequence_data_bram_blk_mem_gen_prim_wrapper \prim_noinit.ram 
+  pixel_sequence_data_bram_blk_mem_gen_prim_wrapper \prim_noinit.ram 
        (.addra(addra),
         .addrb(addrb),
         .clka(clka),
@@ -437,7 +437,7 @@ module sequence_data_bram_blk_mem_gen_prim_width
 endmodule
 
 (* ORIG_REF_NAME = "blk_mem_gen_prim_width" *) 
-module sequence_data_bram_blk_mem_gen_prim_width__parameterized0
+module pixel_sequence_data_bram_blk_mem_gen_prim_width__parameterized0
    (DOUTADOUT,
     clkb,
     clka,
@@ -470,7 +470,7 @@ module sequence_data_bram_blk_mem_gen_prim_width__parameterized0
   wire sleep;
   wire [0:0]wea;
 
-  sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0 \prim_noinit.ram 
+  pixel_sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0 \prim_noinit.ram 
        (.DOUTADOUT(DOUTADOUT),
         .addra(addra),
         .addrb(addrb),
@@ -484,7 +484,7 @@ module sequence_data_bram_blk_mem_gen_prim_width__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "blk_mem_gen_prim_wrapper" *) 
-module sequence_data_bram_blk_mem_gen_prim_wrapper
+module pixel_sequence_data_bram_blk_mem_gen_prim_wrapper
    (doutb_array,
     clkb,
     clka,
@@ -770,7 +770,7 @@ module sequence_data_bram_blk_mem_gen_prim_wrapper
 endmodule
 
 (* ORIG_REF_NAME = "blk_mem_gen_prim_wrapper" *) 
-module sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0
+module pixel_sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0
    (DOUTADOUT,
     clkb,
     clka,
@@ -1058,7 +1058,7 @@ module sequence_data_bram_blk_mem_gen_prim_wrapper__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "blk_mem_gen_top" *) 
-module sequence_data_bram_blk_mem_gen_top
+module pixel_sequence_data_bram_blk_mem_gen_top
    (doutb,
     clkb,
     clka,
@@ -1091,7 +1091,7 @@ module sequence_data_bram_blk_mem_gen_top
   wire sleep;
   wire [0:0]wea;
 
-  sequence_data_bram_blk_mem_gen_generic_cstr \valid.cstr 
+  pixel_sequence_data_bram_blk_mem_gen_generic_cstr \valid.cstr 
        (.addra(addra),
         .addrb(addrb),
         .clka(clka),
@@ -1117,7 +1117,7 @@ endmodule
 (* C_HAS_MEM_OUTPUT_REGS_B = "1" *) (* C_HAS_MUX_OUTPUT_REGS_A = "0" *) (* C_HAS_MUX_OUTPUT_REGS_B = "1" *) 
 (* C_HAS_REGCEA = "0" *) (* C_HAS_REGCEB = "0" *) (* C_HAS_RSTA = "0" *) 
 (* C_HAS_RSTB = "0" *) (* C_HAS_SOFTECC_INPUT_REGS_A = "0" *) (* C_HAS_SOFTECC_OUTPUT_REGS_B = "0" *) 
-(* C_INITA_VAL = "0" *) (* C_INITB_VAL = "0" *) (* C_INIT_FILE = "sequence_data_bram.mem" *) 
+(* C_INITA_VAL = "0" *) (* C_INITB_VAL = "0" *) (* C_INIT_FILE = "pixel_sequence_data_bram.mem" *) 
 (* C_INIT_FILE_NAME = "no_coe_file_loaded" *) (* C_INTERFACE_TYPE = "0" *) (* C_LOAD_INIT_FILE = "0" *) 
 (* C_MEM_TYPE = "1" *) (* C_MUX_PIPELINE_STAGES = "0" *) (* C_PRIM_TYPE = "1" *) 
 (* C_READ_DEPTH_A = "512" *) (* C_READ_DEPTH_B = "4096" *) (* C_READ_WIDTH_A = "128" *) 
@@ -1129,7 +1129,7 @@ endmodule
 (* C_WRITE_DEPTH_A = "512" *) (* C_WRITE_DEPTH_B = "4096" *) (* C_WRITE_MODE_A = "NO_CHANGE" *) 
 (* C_WRITE_MODE_B = "WRITE_FIRST" *) (* C_WRITE_WIDTH_A = "128" *) (* C_WRITE_WIDTH_B = "16" *) 
 (* C_XDEVICEFAMILY = "kintexu" *) (* ORIG_REF_NAME = "blk_mem_gen_v8_3_2" *) (* downgradeipidentifiedwarnings = "yes" *) 
-module sequence_data_bram_blk_mem_gen_v8_3_2
+module pixel_sequence_data_bram_blk_mem_gen_v8_3_2
    (clka,
     rsta,
     ena,
@@ -1463,7 +1463,7 @@ module sequence_data_bram_blk_mem_gen_v8_3_2
   assign sbiterr = \<const0> ;
   GND GND
        (.G(\<const0> ));
-  sequence_data_bram_blk_mem_gen_v8_3_2_synth inst_blk_mem_gen
+  pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth inst_blk_mem_gen
        (.addra(addra),
         .addrb(addrb),
         .clka(clka),
@@ -1477,7 +1477,7 @@ module sequence_data_bram_blk_mem_gen_v8_3_2
 endmodule
 
 (* ORIG_REF_NAME = "blk_mem_gen_v8_3_2_synth" *) 
-module sequence_data_bram_blk_mem_gen_v8_3_2_synth
+module pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth
    (doutb,
     clkb,
     clka,
@@ -1510,7 +1510,7 @@ module sequence_data_bram_blk_mem_gen_v8_3_2_synth
   wire sleep;
   wire [0:0]wea;
 
-  sequence_data_bram_blk_mem_gen_top \gnbram.gnativebmg.native_blk_mem_gen 
+  pixel_sequence_data_bram_blk_mem_gen_top \gnbram.gnativebmg.native_blk_mem_gen 
        (.addra(addra),
         .addrb(addrb),
         .clka(clka),

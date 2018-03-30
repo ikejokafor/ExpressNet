@@ -2,7 +2,7 @@
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <spirit:vendor>xilinx.com</spirit:vendor>
   <spirit:library>customized_ip</spirit:library>
-  <spirit:name>sequence_data_bram</spirit:name>
+  <spirit:name>pixel_sequence_data_bram</spirit:name>
   <spirit:version>1.0</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
@@ -738,7 +738,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Mar 28 17:06:13 UTC 2018</spirit:value>
+            <spirit:value>Fri Mar 30 16:49:55 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -769,7 +769,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Mar 28 17:06:15 UTC 2018</spirit:value>
+            <spirit:value>Fri Mar 30 16:49:56 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -800,7 +800,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Mar 28 17:06:15 UTC 2018</spirit:value>
+            <spirit:value>Fri Mar 30 16:49:56 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -831,7 +831,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Mar 28 17:06:15 UTC 2018</spirit:value>
+            <spirit:value>Fri Mar 30 16:49:57 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -862,7 +862,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Mar 28 17:06:15 UTC 2018</spirit:value>
+            <spirit:value>Fri Mar 30 16:49:57 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -892,7 +892,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Mar 28 17:06:15 UTC 2018</spirit:value>
+            <spirit:value>Fri Mar 30 16:49:57 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -922,7 +922,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Mar 28 17:06:15 UTC 2018</spirit:value>
+            <spirit:value>Fri Mar 30 16:49:57 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -952,7 +952,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Mar 28 17:08:10 UTC 2018</spirit:value>
+            <spirit:value>Fri Mar 30 16:51:50 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -2540,7 +2540,7 @@
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="STRING">
         <spirit:name>C_INIT_FILE</spirit:name>
-        <spirit:value spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_INIT_FILE">sequence_data_bram.mem</spirit:value>
+        <spirit:value spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_INIT_FILE">pixel_sequence_data_bram.mem</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="INTEGER">
         <spirit:name>C_USE_DEFAULT_DATA</spirit:name>
@@ -2915,18 +2915,18 @@
     <spirit:fileSet>
       <spirit:name>xilinx_veriloginstantiationtemplate_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>sequence_data_bram.vho</spirit:name>
+        <spirit:name>pixel_sequence_data_bram.vho</spirit:name>
         <spirit:userFileType>vhdlTemplate</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>sequence_data_bram.veo</spirit:name>
+        <spirit:name>pixel_sequence_data_bram.veo</spirit:name>
         <spirit:userFileType>verilogTemplate</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>sequence_data_bram_ooc.xdc</spirit:name>
+        <spirit:name>pixel_sequence_data_bram_ooc.xdc</spirit:name>
         <spirit:userFileType>xdc</spirit:userFileType>
         <spirit:userFileType>USED_IN_implementation</spirit:userFileType>
         <spirit:userFileType>USED_IN_out_of_context</spirit:userFileType>
@@ -2946,7 +2946,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_vhdlsynthesiswrapper_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>synth/sequence_data_bram.vhd</spirit:name>
+        <spirit:name>synth/pixel_sequence_data_bram.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
@@ -2964,7 +2964,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_verilogsimulationwrapper_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>sim/sequence_data_bram.v</spirit:name>
+        <spirit:name>sim/pixel_sequence_data_bram.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
@@ -2990,33 +2990,33 @@
     <spirit:fileSet>
       <spirit:name>xilinx_externalfiles_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>sequence_data_bram.dcp</spirit:name>
+        <spirit:name>pixel_sequence_data_bram.dcp</spirit:name>
         <spirit:userFileType>dcp</spirit:userFileType>
         <spirit:userFileType>USED_IN_implementation</spirit:userFileType>
         <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
-        <spirit:name>sequence_data_bram_stub.v</spirit:name>
+        <spirit:name>pixel_sequence_data_bram_stub.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_synth_blackbox_stub</spirit:userFileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
-        <spirit:name>sequence_data_bram_stub.vhdl</spirit:name>
+        <spirit:name>pixel_sequence_data_bram_stub.vhdl</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>USED_IN_synth_blackbox_stub</spirit:userFileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
-        <spirit:name>sequence_data_bram_sim_netlist.v</spirit:name>
+        <spirit:name>pixel_sequence_data_bram_sim_netlist.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
         <spirit:userFileType>USED_IN_single_language</spirit:userFileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
-        <spirit:name>sequence_data_bram_sim_netlist.vhdl</spirit:name>
+        <spirit:name>pixel_sequence_data_bram_sim_netlist.vhdl</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
         <spirit:userFileType>USED_IN_single_language</spirit:userFileType>
@@ -3028,7 +3028,7 @@
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">sequence_data_bram</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">pixel_sequence_data_bram</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>

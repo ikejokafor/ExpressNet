@@ -54,7 +54,7 @@
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-sequence_data_bram your_instance_name (
+pixel_sequence_data_bram your_instance_name (
   .clka(clka),    // input wire clka
   .wea(wea),      // input wire [0 : 0] wea
   .addra(addra),  // input wire [8 : 0] addra
@@ -66,7 +66,7 @@ sequence_data_bram your_instance_name (
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-// You must compile the wrapper file sequence_data_bram.v when simulating
-// the core, sequence_data_bram. When compiling the wrapper file, be sure to
+// You must compile the wrapper file pixel_sequence_data_bram.v when simulating
+// the core, pixel_sequence_data_bram. When compiling the wrapper file, be sure to
 // reference the Verilog simulation library.
 

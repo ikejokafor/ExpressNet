@@ -87,12 +87,7 @@ module testbench_1;
     );
 
     
-    cnn_layer_accel_quad #(       
-        .C_PIXEL_WIDTH     ( `PIXEL_WIDTH      ),
-        .C_NUM_AWE         ( `NUM_AWE          ),
-        .C_NUM_CE_PER_AWE  ( `NUM_CE_PER_AWE   ),
-        .C_BRAM_DEPTH      ( `BRAM_DEPTH       ) 
-    ) 
+    cnn_layer_accel_quad
     i0_cnn_layer_accel_quad (
         .clk_if               ( clk_100MHz   ),  
         .clk_core             ( clk_500MHz   ),  
@@ -182,15 +177,15 @@ module testbench_1;
     
         j = 0;      
         for(i = 5; i < (512 * 5); i = i + 5) begin
-            arr2[i    ] = {3'b0, 1'b0, 1'b1, parity0, arr2[i - 5][`SEQ_DATA_SEQ_FIELD] + 10'd1};
+            arr2[i    ] = {3'b0, 1'b0, 1'b1, parity0, arr2[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
             if((j % 2) == 0) begin
-                arr2[i + 1] = {3'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`SEQ_DATA_SEQ_FIELD]};
+                arr2[i + 1] = {3'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`PIX_SEQ_DATA_SEQ_FIELD]};
             end else begin           
-                arr2[i + 1] = {3'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`SEQ_DATA_SEQ_FIELD] + 10'd2};
+                arr2[i + 1] = {3'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};
             end
-            arr2[i + 2] = {3'b0, 1'b0, 1'b0, 1'b0, arr2[i - 3][`SEQ_DATA_SEQ_FIELD] + 10'd1};
-            arr2[i + 3] = {3'b0, 1'b0, 1'b0, 1'b0, arr2[i - 2][`SEQ_DATA_SEQ_FIELD] + 10'd1};
-            arr2[i + 4] = {3'b0, 1'b1, 1'b0, 1'b0, arr2[i - 1][`SEQ_DATA_SEQ_FIELD] + 10'd1};
+            arr2[i + 2] = {3'b0, 1'b0, 1'b0, 1'b0, arr2[i - 3][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
+            arr2[i + 3] = {3'b0, 1'b0, 1'b0, 1'b0, arr2[i - 2][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
+            arr2[i + 4] = {3'b0, 1'b1, 1'b0, 1'b0, arr2[i - 1][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
             parity0 = ~parity0;
             parity1 = ~parity1;
             j = (j + 1) % 2;
@@ -312,14 +307,14 @@ module testbench_1;
     
     end
 
-    always@(posedge clk_500MHz) begin
-        if(i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.ce0_execute) begin
-            $fwrite(fd0, "%d\t%d\n", 
-                i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.seq_datain_even, 
-                i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.seq_datain_odd
-            );
-            $fflush(fd0);
-        end
-    end
+    //always@(posedge clk_500MHz) begin
+    //    if(i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.ce0_execute) begin
+    //        $fwrite(fd0, "%d\t%d\n", 
+    //            i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.seq_datain_even, 
+    //            i0_cnn_layer_accel_quad.genblk1[0].i0_cnn_layer_accel_awe_rowbuffers.seq_datain_odd
+    //        );
+    //        $fflush(fd0);
+    //    end
+    //end
     
 endmodule

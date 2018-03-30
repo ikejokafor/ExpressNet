@@ -52,7 +52,7 @@
 -- The following code must appear in the VHDL architecture header.
 
 ------------- Begin Cut here for COMPONENT Declaration ------ COMP_TAG
-COMPONENT sequence_data_bram
+COMPONENT pixel_sequence_data_bram
   PORT (
     clka : IN STD_LOGIC;
     wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
@@ -70,7 +70,7 @@ END COMPONENT;
 -- body. Substitute your own instance name and net names.
 
 ------------- Begin Cut here for INSTANTIATION Template ----- INST_TAG
-your_instance_name : sequence_data_bram
+your_instance_name : pixel_sequence_data_bram
   PORT MAP (
     clka => clka,
     wea => wea,
@@ -83,7 +83,7 @@ your_instance_name : sequence_data_bram
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ---------
 
--- You must compile the wrapper file sequence_data_bram.vhd when simulating
--- the core, sequence_data_bram. When compiling the wrapper file, be sure to
+-- You must compile the wrapper file pixel_sequence_data_bram.vhd when simulating
+-- the core, pixel_sequence_data_bram. When compiling the wrapper file, be sure to
 -- reference the VHDL simulation library.
 

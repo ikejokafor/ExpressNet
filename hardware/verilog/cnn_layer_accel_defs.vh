@@ -53,40 +53,42 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // SEQ DATA FIELDS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define SEQ_DATA_SEQ_WIDTH              clog2(`BRAM_DEPTH)
-`define SEQ_DATA_SEQ_LOW                0
-`define SEQ_DATA_SEQ_HIGH               (`SEQ_DATA_SEQ_LOW + `SEQ_DATA_SEQ_WIDTH - 1)
-`define SEQ_DATA_SEQ_FIELD              (`SEQ_DATA_SEQ_HIGH):(`SEQ_DATA_SEQ_LOW)
+`define PIX_SEQ_DATA_SEQ_WIDTH              clog2(`BRAM_DEPTH)
+`define PIX_SEQ_DATA_SEQ_LOW                0
+`define PIX_SEQ_DATA_SEQ_HIGH               (`PIX_SEQ_DATA_SEQ_LOW + `PIX_SEQ_DATA_SEQ_WIDTH - 1)
+`define PIX_SEQ_DATA_SEQ_FIELD              (`PIX_SEQ_DATA_SEQ_HIGH):(`PIX_SEQ_DATA_SEQ_LOW)
 
-`define SEQ_DATA_PARITY_WIDTH           1
-`define SEQ_DATA_PARITY_LOW             (`SEQ_DATA_SEQ_HIGH + 1)
-`define SEQ_DATA_PARITY_HIGH            (`SEQ_DATA_PARITY_LOW + `SEQ_DATA_PARITY_WIDTH - 1)
-`define SEQ_DATA_PARITY_FIELD           (`SEQ_DATA_PARITY_HIGH):(`SEQ_DATA_PARITY_LOW)
+`define PIX_SEQ_DATA_PARITY_WIDTH           1
+`define PIX_SEQ_DATA_PARITY_LOW             (`PIX_SEQ_DATA_SEQ_HIGH + 1)
+`define PIX_SEQ_DATA_PARITY_HIGH            (`PIX_SEQ_DATA_PARITY_LOW + `PIX_SEQ_DATA_PARITY_WIDTH - 1)
+`define PIX_SEQ_DATA_PARITY_FIELD           (`PIX_SEQ_DATA_PARITY_HIGH):(`PIX_SEQ_DATA_PARITY_LOW)
 
-`define SEQ_DATA_MACC_RST_WIDTH         1
-`define SEQ_DATA_MACC_RST_LOW           (`SEQ_DATA_PARITY_HIGH + 1)
-`define SEQ_DATA_MACC_RST_HIGH          (`SEQ_DATA_MACC_RST_LOW + `SEQ_DATA_MACC_RST_WIDTH - 1)
-`define SEQ_DATA_MACC_RST_FIELD         (`SEQ_DATA_MACC_RST_HIGH):(`SEQ_DATA_MACC_RST_LOW)
+`define PIX_SEQ_DATA_MACC_RST_WIDTH         1
+`define PIX_SEQ_DATA_MACC_RST_LOW           (`PIX_SEQ_DATA_PARITY_HIGH + 1)
+`define PIX_SEQ_DATA_MACC_RST_HIGH          (`PIX_SEQ_DATA_MACC_RST_LOW + `PIX_SEQ_DATA_MACC_RST_WIDTH - 1)
+`define PIX_SEQ_DATA_MACC_RST_FIELD         (`PIX_SEQ_DATA_MACC_RST_HIGH):(`PIX_SEQ_DATA_MACC_RST_LOW)
 
-`define SEQ_DATA_ROW_MATRIC_WIDTH       1
-`define SEQ_DATA_ROW_MATRIC_LOW         (`SEQ_DATA_MACC_RST_HIGH + 1)
-`define SEQ_DATA_ROW_MATRIC_HIGH        (`SEQ_DATA_ROW_MATRIC_LOW + `SEQ_DATA_ROW_MATRIC_WIDTH - 1)
-`define SEQ_DATA_ROW_MATRIC_FIELD       (`SEQ_DATA_ROW_MATRIC_HIGH):(`SEQ_DATA_ROW_MATRIC_LOW)
+`define PIX_SEQ_DATA_ROW_MATRIC_WIDTH       1
+`define PIX_SEQ_DATA_ROW_MATRIC_LOW         (`PIX_SEQ_DATA_MACC_RST_HIGH + 1)
+`define PIX_SEQ_DATA_ROW_MATRIC_HIGH        (`PIX_SEQ_DATA_ROW_MATRIC_LOW + `PIX_SEQ_DATA_ROW_MATRIC_WIDTH - 1)
+`define PIX_SEQ_DATA_ROW_MATRIC_FIELD       (`PIX_SEQ_DATA_ROW_MATRIC_HIGH):(`PIX_SEQ_DATA_ROW_MATRIC_LOW)
 
-`define SEQ_DATA_WIDTH                  (`SEQ_DATA_SEQ_WIDTH         + \
-                                         `SEQ_DATA_PARITY_WIDTH      + \
-                                         `SEQ_DATA_MACC_RST_WIDTH    + \
-                                         `SEQ_DATA_ROW_MATRIC_WIDTH)
+`define PIX_SEQ_DATA_WIDTH                  (`PIX_SEQ_DATA_SEQ_WIDTH         + \
+                                             `PIX_SEQ_DATA_PARITY_WIDTH      + \
+                                             `PIX_SEQ_DATA_MACC_RST_WIDTH    + \
+                                             `PIX_SEQ_DATA_ROW_MATRIC_WIDTH)
+                                         
+`define PIX_SEQ_BRAM_DATA_WIDTH             16                                   
 
-`define SEQ_DATA_SEQ_WIDTH0             clog2(`BRAM_DEPTH) - 2
-`define SEQ_DATA_SEQ_LOW0               1
-`define SEQ_DATA_SEQ_HIGH0              (`SEQ_DATA_SEQ_LOW0 + `SEQ_DATA_SEQ_WIDTH0 - 1)
-`define SEQ_DATA_SEQ_FIELD0             (`SEQ_DATA_SEQ_HIGH0):(`SEQ_DATA_SEQ_LOW0)
+`define PIX_SEQ_DATA_SEQ_WIDTH0             clog2(`BRAM_DEPTH) - 2
+`define PIX_SEQ_DATA_SEQ_LOW0               1
+`define PIX_SEQ_DATA_SEQ_HIGH0              (`PIX_SEQ_DATA_SEQ_LOW0 + `PIX_SEQ_DATA_SEQ_WIDTH0 - 1)
+`define PIX_SEQ_DATA_SEQ_FIELD0             (`PIX_SEQ_DATA_SEQ_HIGH0):(`PIX_SEQ_DATA_SEQ_LOW0)
 
-`define SEQ_DATA_SEQ_WIDTH1             clog2(`BRAM_DEPTH) - 1
-`define SEQ_DATA_SEQ_LOW1               0
-`define SEQ_DATA_SEQ_HIGH1              (`SEQ_DATA_SEQ_LOW1 + `SEQ_DATA_SEQ_WIDTH1 - 1)
-`define SEQ_DATA_SEQ_FIELD1             (`SEQ_DATA_SEQ_HIGH1):(`SEQ_DATA_SEQ_LOW1)
+`define PIX_SEQ_DATA_SEQ_WIDTH1             clog2(`BRAM_DEPTH) - 1
+`define PIX_SEQ_DATA_SEQ_LOW1               0
+`define PIX_SEQ_DATA_SEQ_HIGH1              (`PIX_SEQ_DATA_SEQ_LOW1 + `PIX_SEQ_DATA_SEQ_WIDTH1 - 1)
+`define PIX_SEQ_DATA_SEQ_FIELD1             (`PIX_SEQ_DATA_SEQ_HIGH1):(`PIX_SEQ_DATA_SEQ_LOW1)
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
