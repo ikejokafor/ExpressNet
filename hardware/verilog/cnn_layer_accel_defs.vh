@@ -48,6 +48,9 @@
 `define NUM_QUADS                       1     
 `define NUM_AWE                         4
 `define NUM_CE_PER_AWE                  2
+`define NUM_WHT_SEQ_VALUES              5
+`define WHT_SEQ_WIDTH                   4
+`define NUM_WHT_SEQ_TABLE_PER_AWE       4
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------

@@ -83,16 +83,15 @@ module cnn_layer_accel_quad (
     localparam C_WHT_DOUT_WIDTH         = C_NUM_CE * `WEIGHT_WIDTH;
     localparam C_WHT_SEQ_BRAM_ADDR      = clog2(5); 
 
-    localparam ST_IDLE                  = 6'b000001;  
-    localparam ST_AWE_CE_PRIM_BUFFER    = 6'b000010;
-    localparam ST_WAIT_PFB_LOAD         = 6'b000100;
-    localparam ST_AWE_CE_ACTIVE         = 6'b001000;
-    localparam ST_FIN_ROW_MATRIC        = 6'b010000;
-    localparam ST_JOB_DONE              = 6'b100000;
+    localparam ST_IDLE                  = 5'b00001;  
+    localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
+    localparam ST_WAIT_PFB_LOAD         = 5'b00100;
+    localparam ST_AWE_CE_ACTIVE         = 5'b01000;
+    localparam ST_JOB_DONE              = 5'b10000;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	//  Inputs / Output Ports
+	//	Module Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     input               clk_if              ;
     input               clk_core            ;
@@ -145,7 +144,7 @@ module cnn_layer_accel_quad (
     wire    [             C_NUM_CE - 1:0]   pfb_empty                   ;
     reg     [                        8:0]   pfb_count                   ;
 
-    wire    [                        5:0]   state                       ; 
+    wire    [                        4:0]   state                       ; 
     wire    [     C_CE_START_WIDTH - 1:0]   ce_execute                  ;
     wire    [    C_LOG2_BRAM_DEPTH - 2:0]   input_row                   ;
     wire    [    C_LOG2_BRAM_DEPTH - 2:0]   input_col                   ;
@@ -172,19 +171,8 @@ module cnn_layer_accel_quad (
     
     wire   [              `NUM_AWE - 1:0]   ce0_pixel_dataout_valid     ;
     wire   [              `NUM_AWE - 1:0]   ce1_pixel_dataout_valid     ;
-    
-    // reg    [      C_LOG2_BRAM_DEPTH - 1:0]  wht_bram_wrAddr             ;
-    // reg    [      C_LOG2_BRAM_DEPTH - 1:0]  wht_bram_rdAddr             ;
-    // reg                                     wht_bram_rden               ; 
-    // wire   [       C_WHT_DOUT_WIDTH - 1:0]  wht_bram_dataout            ;
-    // 
-    // 
-    // reg    [    C_WHT_SEQ_BRAM_ADDR - 1:0]  wht_seq_bram_wrAddr         ;
-    // reg    [    C_WHT_SEQ_BRAM_ADDR - 1:0]  wht_seq_bram_rdAddr         ;
-    // reg                                     wht_seq_bram_rden           ; 
-    // wire   [   C_WHT_SEQ_DOUT_WIDTH - 1:0]  wht_seq_bram_dataout        ;
-    
-    
+   
+
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -223,33 +211,40 @@ module cnn_layer_accel_quad (
                   .rd_en            ( pfb_rden                                                                      ),
                   .dout             ( pfb_dataout[(((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) +: `PIXEL_WIDTH]     ),
                   .full             (                                                                               ),
-                  .empty            ( pfb_empty[(((i * `NUM_CE_PER_AWE) + j) * 1) +: 1]                             ),
-                  .valid            (                                                                               ),
-                  .rd_data_count    (                                                                               )
+                  .empty            ( pfb_empty[(((i * `NUM_CE_PER_AWE) + j) * 1) +: 1]                             )
                 );
                 
-                
-               // xilinx_simple_dual_port_2_clock_ram #(
-               //     .C_RAM_WIDTH    ( `WEIGHT_WIDTH      ),      
-               //     .C_RAM_DEPTH    ( `BRAM_DEPTH        )
-               // ) 
-               // weight_table (
-               //     .wrAddr             ( wht_bram_wrAddr                                                                   ),  
-               //     .rdAddr             ( wht_bram_rdAddr                                                                   ),
-               //     .datain             ( config_data[(((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) +: `PIXEL_WIDTH]         ),
-               //     .clk_wr             ( clk_if                                                                            ),
-               //     .clk_rd             ( clk_core                                                                          ),    
-               //     .wren               ( config_accept[1] && config_valid                                                  ),
-               //     .rden               ( wht_bram_rden                                                                     ),
-               //     .dataout            ( wht_bram_dataout[(((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) +: `PIXEL_WIDTH]    )
-               // );               
+  
+                xilinx_true_dual_port_no_change_ram #(
+                    .C_RAM_WIDTH    ( `WEIGHT_WIDTH         ),                   
+                    .C_RAM_DEPTH    ( `BRAM_DEPTH           ),
+                    .C_RAM_PERF     ( "HIGH_PERFORMANCE"    )
+                ) 
+                weight_table (
+                    .clkA       ( clk_if ),
+                    .addrA      (),
+                    .wrenA      (),
+                    .dinA       (),
+                    .rdenA      (),
+                    .doutA      (),
+                    .clkB       ( clk_core ),
+                    .addrB      (),
+                    .wrenB      (),
+                    .dinB       (),
+                    .rdenB      (),
+                    .doutB      ()
+                );
             end
 
             
             cnn_layer_accel_awe_rowbuffers #(
-                .C_CE0_ROW_MATRIC_DELAY     ( (i * `NUM_CE_PER_AWE + 1)        ),      
-                .C_CE1_ROW_MATRIC_DELAY     ( (i * `NUM_CE_PER_AWE + 2)        ),
-                .C_SEQ_DATAIN_DELAY         ( (i * 2)                           )
+                .C_CE0_ROW_MATRIC_DELAY         ( (i * `NUM_CE_PER_AWE + 3)        ),      
+                .C_CE1_ROW_MATRIC_DELAY         ( (i * `NUM_CE_PER_AWE + 4)        ),
+                .C_SEQ_DATAIN_DELAY             ( (i * 2)                          ),
+                .C_CE0_ROW_MAT_WR_ADDR_DELAY    ( (i * `NUM_CE_PER_AWE + 4)        ),
+                .C_CE1_ROW_MAT_WR_ADDR_DELAY    ( (i * `NUM_CE_PER_AWE + 5)        ),
+                .C_CE0_ROW_MAT_PX_DIN_DELAY     ( (i * `NUM_CE_PER_AWE + 2)        ), 
+                .C_CE1_ROW_MAT_PX_DIN_DELAY     ( (i * `NUM_CE_PER_AWE + 3)        )       
             ) 
             i0_cnn_layer_accel_awe_rowbuffers (
                 .clk                        ( clk_core                                                                                          ),
@@ -324,13 +319,6 @@ module cnn_layer_accel_quad (
             if(config_accept[0] && config_valid[0]) begin
                 pix_seq_bram_wrAddr <= pix_seq_bram_wrAddr + 1;
             end
-            //// Weight Sequence Data
-            //if(config_valid[1]) begin
-            //    config_accept[1]   <= 1;
-            //end
-            //if(config_accept[1] && config_valid[1]) begin
-            //    wht_seq_bram_wrAddr <= wht_seq_bram_wrAddr + 1;
-            //end
         end
     end
     // END Network Output Data Logic ----------------------------------------------------------------------------------------------------------------
@@ -344,7 +332,6 @@ module cnn_layer_accel_quad (
                 ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
                 ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
                 ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
-                ST_FIN_ROW_MATRIC:          state_s = "ST_FIN_ROW_MATRIC";
                 ST_JOB_DONE:                state_s = "ST_JOB_DONE";
         endcase
     end

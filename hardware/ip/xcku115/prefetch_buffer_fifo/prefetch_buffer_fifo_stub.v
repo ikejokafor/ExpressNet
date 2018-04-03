@@ -1,7 +1,7 @@
 // Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2016.1 (lin64) Build 1538259 Fri Apr  8 15:45:23 MDT 2016
-// Date        : Sat Mar 24 23:26:29 2018
+// Date        : Sat Mar 31 22:56:08 2018
 // Host        : redrealm.cse.psu.edu running 64-bit unknown
 // Command     : write_verilog -force -mode synth_stub
 //               /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/prefetch_buffer_fifo/prefetch_buffer_fifo_stub.v
@@ -14,8 +14,8 @@
 // The synthesis directives are for Synopsys Synplify support to prevent IO buffer insertion.
 // Please paste the declaration into a Verilog source file or add the file as an additional source.
 (* x_core_info = "fifo_generator_v13_1_0,Vivado 2016.1" *)
-module prefetch_buffer_fifo(wr_clk, rd_clk, din, wr_en, rd_en, dout, full, empty, valid, rd_data_count)
-/* synthesis syn_black_box black_box_pad_pin="wr_clk,rd_clk,din[15:0],wr_en,rd_en,dout[15:0],full,empty,valid,rd_data_count[9:0]" */;
+module prefetch_buffer_fifo(wr_clk, rd_clk, din, wr_en, rd_en, dout, full, empty)
+/* synthesis syn_black_box black_box_pad_pin="wr_clk,rd_clk,din[15:0],wr_en,rd_en,dout[15:0],full,empty" */;
   input wr_clk;
   input rd_clk;
   input [15:0]din;
@@ -24,6 +24,4 @@ module prefetch_buffer_fifo(wr_clk, rd_clk, din, wr_en, rd_en, dout, full, empty
   output [15:0]dout;
   output full;
   output empty;
-  output valid;
-  output [9:0]rd_data_count;
 endmodule

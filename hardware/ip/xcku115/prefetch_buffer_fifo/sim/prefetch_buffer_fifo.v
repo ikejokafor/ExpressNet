@@ -61,9 +61,7 @@ module prefetch_buffer_fifo (
   rd_en,
   dout,
   full,
-  empty,
-  valid,
-  rd_data_count
+  empty
 );
 
 (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 write_clk CLK" *)
@@ -82,8 +80,6 @@ output wire [15 : 0] dout;
 output wire full;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *)
 output wire empty;
-output wire valid;
-output wire [9 : 0] rd_data_count;
 
   fifo_generator_v13_1_0 #(
     .C_COMMON_CLOCK(0),
@@ -104,12 +100,12 @@ output wire [9 : 0] rd_data_count;
     .C_HAS_INT_CLK(0),
     .C_HAS_MEMINIT_FILE(0),
     .C_HAS_OVERFLOW(0),
-    .C_HAS_RD_DATA_COUNT(1),
+    .C_HAS_RD_DATA_COUNT(0),
     .C_HAS_RD_RST(0),
     .C_HAS_RST(0),
     .C_HAS_SRST(0),
     .C_HAS_UNDERFLOW(0),
-    .C_HAS_VALID(1),
+    .C_HAS_VALID(0),
     .C_HAS_WR_ACK(0),
     .C_HAS_WR_DATA_COUNT(0),
     .C_HAS_WR_RST(0),
@@ -128,7 +124,7 @@ output wire [9 : 0] rd_data_count;
     .C_PROG_FULL_THRESH_ASSERT_VAL(511),
     .C_PROG_FULL_THRESH_NEGATE_VAL(510),
     .C_PROG_FULL_TYPE(0),
-    .C_RD_DATA_COUNT_WIDTH(10),
+    .C_RD_DATA_COUNT_WIDTH(9),
     .C_RD_DEPTH(512),
     .C_RD_FREQ(1),
     .C_RD_PNTR_WIDTH(9),
@@ -139,10 +135,10 @@ output wire [9 : 0] rd_data_count;
     .C_USE_PIPELINE_REG(0),
     .C_POWER_SAVING_MODE(0),
     .C_USE_FIFO16_FLAGS(0),
-    .C_USE_FWFT_DATA_COUNT(1),
+    .C_USE_FWFT_DATA_COUNT(0),
     .C_VALID_LOW(0),
     .C_WR_ACK_LOW(0),
-    .C_WR_DATA_COUNT_WIDTH(10),
+    .C_WR_DATA_COUNT_WIDTH(9),
     .C_WR_DEPTH(512),
     .C_WR_FREQ(1),
     .C_WR_PNTR_WIDTH(9),
@@ -318,10 +314,10 @@ output wire [9 : 0] rd_data_count;
     .overflow(),
     .empty(empty),
     .almost_empty(),
-    .valid(valid),
+    .valid(),
     .underflow(),
     .data_count(),
-    .rd_data_count(rd_data_count),
+    .rd_data_count(),
     .wr_data_count(),
     .prog_full(),
     .prog_empty(),

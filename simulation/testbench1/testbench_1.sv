@@ -135,7 +135,7 @@ module testbench_1;
     bit parity0;
     bit parity1;
     initial begin
-        i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.seq_full_count = 5 * COLS;
+        i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count = 5 * COLS;
         i0_cnn_layer_accel_quad.num_input_rows_cfg    = ROWS - 1;
         i0_cnn_layer_accel_quad.num_input_cols_cfg    = COLS - 1;
         i0_cnn_layer_accel_quad.pfb_full_count_cfg    = COLS;

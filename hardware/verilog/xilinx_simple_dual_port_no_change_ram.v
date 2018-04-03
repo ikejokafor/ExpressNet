@@ -26,45 +26,53 @@
 //                      
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-module xilinx_dual_port_1_clock_ram #(
-    parameter C_RAM_WIDTH       = 64,                   
-    parameter C_RAM_DEPTH       = 512                   
+function integer clog2;
+    input integer value;
+    begin
+        value = value-1;      
+        for(clog2 = 0; value > 0; clog2 = clog2 + 1)
+            value = value >> 1;
+    end
+endfunction
+
+
+module xilinx_simple_dual_port_no_change_ram #(
+    parameter C_RAM_WIDTH       = 64                ,                   
+    parameter C_RAM_DEPTH       = 512               ,
+    parameter C_RAM_PERF        = "LOW_LATENCY"
 ) (
-    wrAddr,     
-    rdAddr,     
-    datain,        
-    clk,
-    wren,       
-    rden,       
+    wrAddr      ,     
+    rdAddr      ,     
+    datain      ,        
+    clk         ,
+    wren        ,       
+    rden        ,       
     dataout   
 );	
-    // ----------------------------------------------------------------------------------------------------------------------------------------------
-    // Includes
-    // ----------------------------------------------------------------------------------------------------------------------------------------------
-    `include "math.vh"
+	//-----------------------------------------------------------------------------------------------------------------------------------------------
+	//  Local Parameters
+	//-----------------------------------------------------------------------------------------------------------------------------------------------  
+    localparam C_CLG2_RAM_DEPTH = clog2(C_RAM_DEPTH);
   
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Inputs / Output Ports
+	//	Module Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input       [   clog2(C_RAM_DEPTH) - 1:0]   wrAddr;     
-    input       [   clog2(C_RAM_DEPTH) - 1:0]   rdAddr;     
-    input       [          C_RAM_WIDTH - 1:0]   datain;        
-    input                                       clk;
-    input                                       wren;       
-    input                                       rden;       
-    output      [          C_RAM_WIDTH - 1:0]   dataout;
+    input       [C_CLG2_RAM_DEPTH - 1:0]   wrAddr;     
+    input       [C_CLG2_RAM_DEPTH - 1:0]   rdAddr;     
+    input       [     C_RAM_WIDTH - 1:0]   datain;        
+    input                                  clk;
+    input                                  wren;       
+    input                                  rden;       
+    output      [     C_RAM_WIDTH - 1:0]   dataout;
   
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	// Regs
+	// Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     reg     [       C_RAM_WIDTH - 1:0]    BRAM[C_RAM_DEPTH - 1:0];
-    reg     [       C_RAM_WIDTH - 1:0]    dout_reg0;
-    reg     [       C_RAM_WIDTH - 1:0]    dout_reg1;
-    reg     [       C_RAM_WIDTH - 1:0]    dout_reg2;
 
-	
+
 	// BEGIN BRAM Write logic -----------------------------------------------------------------------------------------------------------------------   
     always@(posedge clk) begin
         if(wren) begin
@@ -74,9 +82,14 @@ module xilinx_dual_port_1_clock_ram #(
     // END BRAM Write logic -------------------------------------------------------------------------------------------------------------------------
 
 
-    // BEGIN BRAM Read logic ------------------------------------------------------------------------------------------------------------------------     
+    // BEGIN BRAM Read logic ------------------------------------------------------------------------------------------------------------------------
+generate
+if(C_RAM_PERF == "HIGH_PERFORMANCE") begin
+
+    reg [C_RAM_WIDTH - 1:0] dout_reg0;
+    reg [C_RAM_WIDTH - 1:0] dout_reg1;
+    reg [C_RAM_WIDTH - 1:0] dout_reg2;    
     assign dataout = dout_reg2;
-    
     always@(posedge clk) begin
         if(rden) begin
             dout_reg0 <= BRAM[rdAddr];
@@ -84,6 +97,19 @@ module xilinx_dual_port_1_clock_ram #(
             dout_reg2 <= dout_reg1;
         end
     end
+    
+end else if(C_RAM_PERF == "LOW_LATENCY") begin
+
+    reg [C_RAM_WIDTH - 1:0] dout_reg;
+    assign dataout = dout_reg;        
+    always@(posedge clk) begin
+        if(rden) begin
+            dout_reg <= BRAM[rdAddr];
+        end
+    end
+    
+end
+endgenerate
     // END BRAM logic -------------------------------------------------------------------------------------------------------------------------------
 
 endmodule
