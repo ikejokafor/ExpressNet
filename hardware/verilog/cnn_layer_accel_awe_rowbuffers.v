@@ -29,9 +29,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_awe_rowbuffers #(
+    parameter C_SEQ_DATAIN_DELAY            = 0,
     parameter C_CE0_ROW_MATRIC_DELAY        = 3,
     parameter C_CE1_ROW_MATRIC_DELAY        = 4,
-    parameter C_SEQ_DATAIN_DELAY            = 0,
     parameter C_CE0_ROW_MAT_WR_ADDR_DELAY   = 4,
     parameter C_CE1_ROW_MAT_WR_ADDR_DELAY   = 5,
     parameter C_CE0_ROW_MAT_PX_DIN_DELAY    = 2,
@@ -54,6 +54,8 @@ module cnn_layer_accel_awe_rowbuffers #(
     ce1_execute                 ,
     ce0_pixel_dataout           ,
     ce1_pixel_dataout           ,
+    ce0_cycle_counter           ,
+    ce1_cycle_counter           ,
     row_matric_wrAddr           ,
     ce0_pixel_dataout_valid     ,
     ce1_pixel_dataout_valid
@@ -96,11 +98,13 @@ module cnn_layer_accel_awe_rowbuffers #(
     input                                           last_kernel                 ;
     input                                           row_matric                  ;
     input       [            `PIXEL_WIDTH - 1:0]    ce0_pixel_datain            ;
-    input       [            `PIXEL_WIDTH - 1:0]    ce1_pixel_datain            ;
+    input       [            `PIXEL_WIDTH - 1:0]    ce1_pixel_datain            ;      
     input                                           ce0_execute                 ;
     input                                           ce1_execute                 ;
     output      [   C_CE_PIXEL_DOUT_WIDTH - 1:0]    ce0_pixel_dataout           ;
     output      [   C_CE_PIXEL_DOUT_WIDTH - 1:0]    ce1_pixel_dataout           ;
+    output reg  [                           2:0]    ce0_cycle_counter           ;
+    output reg  [                           2:0]    ce1_cycle_counter           ;        
     input       [       C_LOG2_BRAM_DEPTH - 2:0]    row_matric_wrAddr           ;
     output                                          ce0_pixel_dataout_valid     ;
     output                                          ce1_pixel_dataout_valid     ;
@@ -109,8 +113,6 @@ module cnn_layer_accel_awe_rowbuffers #(
  	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    reg     [                           5:0]    ce0_cycle_counter           ;
-    reg     [                           5:0]    ce1_cycle_counter           ;
     reg                                         ce0_row_rename              ;
     reg                                         ce1_row_rename              ;
     
@@ -157,7 +159,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     reg     [            `PIXEL_WIDTH - 1:0]    bram3_dataout               ;
 
     wire                                        ce0_row_matric              ;
-    wire                                        ce1_row_matric              ;
+    wire                                        ce1_row_matric              ;      
     reg     [       C_LOG2_BRAM_DEPTH - 2:0]    row_matric_ce0_wrAddr       ;
     reg     [       C_LOG2_BRAM_DEPTH - 2:0]    row_matric_ce1_wrAddr       ;
     
@@ -427,7 +429,7 @@ module cnn_layer_accel_awe_rowbuffers #(
             ce0_row_rename <= 0;
         end begin
             ce0_row_rename <= 0;
-            if(ce0_cycle_counter == 2) begin
+            if(ce0_cycle_counter == 2) begin // needs to be a little earlier bc of rden delay
                 ce0_row_rename <= 1;
             end
         end
@@ -450,7 +452,7 @@ module cnn_layer_accel_awe_rowbuffers #(
             ce1_row_rename <= 0;
         end begin
             ce1_row_rename <= 0;
-            if(ce1_cycle_counter == 2) begin
+            if(ce1_cycle_counter == 2) begin    // needs to be a little earlier bc of rden delay
                 ce1_row_rename <= 1;
             end
         end
@@ -602,6 +604,9 @@ module cnn_layer_accel_awe_rowbuffers #(
                             bram3_datain    <= row_buffer_sav_val1;  
                         end
                     end 
+                end
+                default: begin
+                
                 end
             endcase
         end

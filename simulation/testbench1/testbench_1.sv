@@ -44,11 +44,12 @@ module testbench_1;
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_LOG2_BRAM_DEPTH    = clog2(`BRAM_DEPTH);
-    localparam ROWS                 = 10;
-    localparam COLS                 = 10;
-    localparam DEPTH                = 8;
-    localparam KERNEL_SIZE          = 3;
+    localparam C_LOG2_BRAM_DEPTH        = clog2(`BRAM_DEPTH);
+    localparam ROWS                     = 10;
+    localparam COLS                     = 10;
+    localparam DEPTH                    = 8;
+    localparam NUM_KERNEL_3x3_VALUES    = 10;
+    localparam NUM_KERNELS              = 16'd2;
    
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -57,6 +58,10 @@ module testbench_1;
     reg             pixel_valid;
     wire            pixel_ready; 
     reg [127:0]     pixel_data;  
+    
+    reg             weight_valid;
+    wire            weight_ready;
+    reg [127:0]     weight_data;
 
     reg   [3:0]     config_valid; 
     wire [3:0]      config_accept;    
@@ -69,7 +74,18 @@ module testbench_1;
     reg             job_fetch_complete  ;
     wire            job_complete        ;
     reg             job_complete_ack    ;  
-
+    
+    integer fd, fd0;
+    bit [`PIXEL_WIDTH - 1:0]    arr[0:((ROWS * COLS * 8) - 1)];
+    bit [15:0]                  arr2[0:((512 * 8) - 1)];
+    bit [15:0]                  arr3[0:(DEPTH * NUM_KERNEL_3x3_VALUES * NUM_KERNELS)];     // for 3x3 kernel, there are 10 values
+    int i;
+    int j;
+    int k;
+    int n;
+    bit parity0;
+    bit parity1;
+    reg [15:0] kernel_group_cfg;
     
     clock_gen #(
         .C_PERIOD_BY_2(C_PERIOD_100MHz / 2)
@@ -112,7 +128,11 @@ module testbench_1;
 
         .config_valid         ( config_valid    ),  
         .config_accept        ( config_accept   ),  
-        .config_data          ( config_data     ),  
+        .config_data          ( config_data     ), 
+
+        .weight_valid         ( weight_valid   ),  
+        .weight_ready         ( weight_ready  ),  
+        .weight_data          ( weight_data    ),       
 
         .result_valid         (),  
         .result_accept        (),  
@@ -123,32 +143,22 @@ module testbench_1;
         .pixel_data           ( pixel_data   )
     );
 
- 
-    integer fd, fd0;
-    bit [`PIXEL_WIDTH - 1:0]    arr[0:((ROWS * COLS * 8) - 1)];
-    bit [15:0]                  arr2[0:((512 * 8) - 1)];
-    bit [15:0]                  arr3[0:79];     // for 3x3 kernel, there are 10 values
-    int i;
-    int j;
-    int k;
-    int n;
-    bit parity0;
-    bit parity1;
+
     initial begin
-        i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count = 5 * COLS;
-        i0_cnn_layer_accel_quad.num_input_rows_cfg    = ROWS - 1;
-        i0_cnn_layer_accel_quad.num_input_cols_cfg    = COLS - 1;
-        i0_cnn_layer_accel_quad.pfb_full_count_cfg    = COLS;
-        i0_cnn_layer_accel_quad.kernel_offset_cfg     = 10;
-        i0_cnn_layer_accel_quad.last_kernel           = 1;
-        pixel_valid                                   = 0;
-        job_start                                     = 0;
-        job_fetch_ack                                 = 0;
-        job_complete_ack                              = 0;
-        job_fetch_complete                            = 0;                                        
-        config_data                                   = 0;
-        config_valid                                  = 0;
-        fd0 = $fopen("seq.txt", "w");
+        i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count   = 5 * COLS;                                      
+        i0_cnn_layer_accel_quad.kernel_full_count_cfg                                       = 10;
+        i0_cnn_layer_accel_quad.num_input_rows_cfg                                          = ROWS - 1;
+        i0_cnn_layer_accel_quad.num_input_cols_cfg                                          = COLS - 1;
+        i0_cnn_layer_accel_quad.pfb_full_count_cfg                                          = COLS;
+        pixel_valid                                                                         = 0;
+        job_start                                                                           = 0;
+        job_fetch_ack                                                                       = 0;
+        job_complete_ack                                                                    = 0;
+        job_fetch_complete                                                                  = 0;                                        
+        config_data                                                                         = 0;
+        config_valid                                                                        = 0;
+        weight_valid                                                                        = 0;
+        //fd0 = $fopen("seq.txt", "w");
         
         fd = $fopen("map.txt", "w");
         for(k = 0; k < DEPTH; k = k + 1) begin
@@ -164,6 +174,20 @@ module testbench_1;
         end
         $fclose(fd);
 
+        
+        fd = $fopen("kernel.txt", "w");
+        for(k = 0; k < NUM_KERNELS; k = k + 1) begin
+            for(i = 0; i < DEPTH; i = i + 1) begin
+                for(j = 0; j < NUM_KERNEL_3x3_VALUES; j = j + 1) begin
+                    arr3[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] = $urandom_range(1, 10);
+                    $fwrite(fd, "%d ", arr3[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j]);
+                end
+                $fwrite(fd, "\n");
+            end
+            $fwrite(fd, "\n");
+            $fwrite(fd, "\n");
+        end
+        $fclose(fd);
   
         //                 RM   RST    P
         arr2[0] = {3'b0, 1'b0, 1'b1, 1'b1, 10'd0  };
@@ -195,12 +219,12 @@ module testbench_1;
             i = i + 1;
         end
 
-        i = 0;
-        fd = $fopen("seq_value.txt", "w");
-        for(i = 0; i < COLS * 5; i = i + 1) begin           
-            $fwrite(fd, "%h\n", arr2[i]);
-        end
-        $fclose(fd);
+        //i = 0;
+        //fd = $fopen("seq_value.txt", "w");
+        //for(i = 0; i < COLS * 5; i = i + 1) begin           
+        //    $fwrite(fd, "%h\n", arr2[i]);
+        //end
+        //$fclose(fd);
         
         rst = 1;
         #(C_PERIOD_100MHz * 2) rst = 0;
@@ -233,7 +257,78 @@ module testbench_1;
         @(posedge clk_100MHz);
         config_valid[0]                = 0;
         
+        $stop;
         
+        @(posedge clk_500MHz);
+        config_valid[1]         = 1;        
+        config_data[127:112]    = NUM_KERNELS - 1;
+        config_data[111:96]     = NUM_KERNELS - 1;
+        config_data[95:80]      = NUM_KERNELS - 1;
+        config_data[79:64]      = NUM_KERNELS - 1;
+        config_data[63:48]      = NUM_KERNELS - 1;
+        config_data[47:32]      = NUM_KERNELS - 1;
+        config_data[31:16]      = NUM_KERNELS - 1;
+        config_data[15:0]       = NUM_KERNELS - 1;
+        @(posedge clk_500MHz);
+        config_valid[1]         = 0;
+        config_data[127:112]    = 0;
+        config_data[111:96]     = 0;
+        config_data[95:80]      = 0;
+        config_data[79:64]      = 0;
+        config_data[63:48]      = 0;
+        config_data[47:32]      = 0;
+        config_data[31:16]      = 0;
+        config_data[15:0]       = 0;
+        
+        i = 1;
+        j = 0;
+        @(posedge clk_500MHz);
+        weight_data[127:112]                        = arr3[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (7 * NUM_KERNEL_3x3_VALUES) + 0]; 
+        weight_data[111:96]                         = arr3[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (6 * NUM_KERNEL_3x3_VALUES) + 0];     
+        weight_data[95:80]                          = arr3[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (5 * NUM_KERNEL_3x3_VALUES) + 0];     
+        weight_data[79:64]                          = arr3[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (4 * NUM_KERNEL_3x3_VALUES) + 0];     
+        weight_data[63:48]                          = arr3[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (3 * NUM_KERNEL_3x3_VALUES) + 0];     
+        weight_data[47:32]                          = arr3[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (2 * NUM_KERNEL_3x3_VALUES) + 0];     
+        weight_data[31:16]                          = arr3[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (1 * NUM_KERNEL_3x3_VALUES) + 0];     
+        weight_data[15:0]                           = arr3[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (0 * NUM_KERNEL_3x3_VALUES) + 0];
+        weight_valid                                = 1;      
+        kernel_group_cfg                            = 0;
+        config_data                                 = 0;
+        while(j < 2) begin
+            while(i < NUM_KERNEL_3x3_VALUES) begin
+                @(posedge clk_500MHz);
+                if(weight_ready) begin
+                    weight_data[127:112]    = arr3[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (7 * NUM_KERNEL_3x3_VALUES) + i]; 
+                    weight_data[111:96]     = arr3[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (6 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[95:80]      = arr3[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (5 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[79:64]      = arr3[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (4 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[63:48]      = arr3[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (3 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[47:32]      = arr3[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (2 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[31:16]      = arr3[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (1 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[15:0]       = arr3[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (0 * NUM_KERNEL_3x3_VALUES) + i];
+                    i = i + 1;
+                end
+            end
+            kernel_group_cfg = kernel_group_cfg + 1;
+            config_data =   {   
+                                kernel_group_cfg,
+                                kernel_group_cfg,
+                                kernel_group_cfg,
+                                kernel_group_cfg,
+                                kernel_group_cfg,
+                                kernel_group_cfg,
+                                kernel_group_cfg,
+                                kernel_group_cfg
+                            };
+            i = 0;
+            j = j + 1;
+        end
+        @(posedge clk_500MHz);
+        weight_valid                        = 0;  
+
+        $stop;
+
+     
         @(posedge clk_100MHz);
         job_start = 1;
         while(1) begin
@@ -244,7 +339,7 @@ module testbench_1;
         end
         @(posedge clk_100MHz);
         job_start = 0; 
-        
+      
         $stop;        
         
         i = 0; 

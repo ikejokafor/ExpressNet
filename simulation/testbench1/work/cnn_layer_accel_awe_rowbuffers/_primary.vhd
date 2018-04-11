@@ -2,9 +2,9 @@ library verilog;
 use verilog.vl_types.all;
 entity cnn_layer_accel_awe_rowbuffers is
     generic(
+        C_SEQ_DATAIN_DELAY: integer := 0;
         C_CE0_ROW_MATRIC_DELAY: integer := 3;
         C_CE1_ROW_MATRIC_DELAY: integer := 4;
-        C_SEQ_DATAIN_DELAY: integer := 0;
         C_CE0_ROW_MAT_WR_ADDR_DELAY: integer := 4;
         C_CE1_ROW_MAT_WR_ADDR_DELAY: integer := 5;
         C_CE0_ROW_MAT_PX_DIN_DELAY: integer := 2;
@@ -28,14 +28,16 @@ entity cnn_layer_accel_awe_rowbuffers is
         ce1_execute     : in     vl_logic;
         ce0_pixel_dataout: out    vl_logic_vector(31 downto 0);
         ce1_pixel_dataout: out    vl_logic_vector(31 downto 0);
+        ce0_cycle_counter: out    vl_logic_vector(2 downto 0);
+        ce1_cycle_counter: out    vl_logic_vector(2 downto 0);
         row_matric_wrAddr: in     vl_logic_vector;
         ce0_pixel_dataout_valid: out    vl_logic;
         ce1_pixel_dataout_valid: out    vl_logic
     );
     attribute mti_svvh_generic_type : integer;
+    attribute mti_svvh_generic_type of C_SEQ_DATAIN_DELAY : constant is 1;
     attribute mti_svvh_generic_type of C_CE0_ROW_MATRIC_DELAY : constant is 1;
     attribute mti_svvh_generic_type of C_CE1_ROW_MATRIC_DELAY : constant is 1;
-    attribute mti_svvh_generic_type of C_SEQ_DATAIN_DELAY : constant is 1;
     attribute mti_svvh_generic_type of C_CE0_ROW_MAT_WR_ADDR_DELAY : constant is 1;
     attribute mti_svvh_generic_type of C_CE1_ROW_MAT_WR_ADDR_DELAY : constant is 1;
     attribute mti_svvh_generic_type of C_CE0_ROW_MAT_PX_DIN_DELAY : constant is 1;
