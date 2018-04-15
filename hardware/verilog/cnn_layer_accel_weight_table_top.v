@@ -196,7 +196,7 @@ module cnn_layer_accel_weight_table_top #(
             end else if(wht_config_wren) begin
                 kernel_count <= kernel_count + 1;
             end
-            // kernel group cfg
+            // kernel group logic
             if(job_accept || (kernel_group == kernel_full_count_cfg && next_kernel)) begin
                 kernel_group <= 0;
             end else if ((kernel_count == 4'd9 && config_mode) || next_kernel) begin

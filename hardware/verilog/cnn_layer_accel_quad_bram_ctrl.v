@@ -35,7 +35,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     num_input_rows              ,
     job_start                   ,
     job_accept                  ,
-    job_accept_w                ,
     job_fetch_request           ,
     job_fetch_in_progress       ,
     job_fetch_ack               ,
@@ -89,8 +88,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     input      [C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols              ;
     input      [C_LOG2_BRAM_DEPTH - 2:0]    num_input_rows              ;
     input                                   job_start                   ;
-    output                                  job_accept                  ;
-    output                                  job_accept_w                ;
+    output reg                              job_accept                  ;
     output reg                              job_fetch_request           ;
     output reg                              job_fetch_in_progress       ;
     input                                   job_fetch_ack               ;
@@ -122,7 +120,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     reg                                     pix_seq_bram_rden_r             ;
     reg     [                    10:0]      pix_seq_data_full_count         ;
     wire                                    pix_seq_bram_rden_d             ;
-    reg     [4:0]                           job_accept_r                    ;
     reg                                     job_fetch_acked                 ;
     reg                                     job_complete_acked              ;
     reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_row                      ;  
@@ -282,14 +279,12 @@ module cnn_layer_accel_quad_bram_ctrl (
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign gray_code            = {graycode_r[1], ^graycode_r[1:0]};
     assign pix_seq_bram_rden    = pix_seq_bram_rden_d || pix_seq_bram_rden_r;
-    assign job_accept           = |job_accept_r;
-    assign job_accept_w         = job_accept_r[0];
    
     always@(posedge clk) begin
         if(rst) begin
             pfb_rden                <= 0;
             row_matric_wrAddr       <= 0;
-            job_accept_r[0]         <= 0;
+            job_accept              <= 0;
             job_fetch_request       <= 0;
             job_fetch_acked         <= 0;
             job_complete_acked      <= 0;
@@ -297,24 +292,18 @@ module cnn_layer_accel_quad_bram_ctrl (
             pix_seq_bram_rden_r     <= 0;
             pix_seq_bram_rdAddr     <= 0;
             graycode_r              <= 0;
-            pix_seq_data_count      <= 0;
-            for(idx = 1; idx < 5; idx = idx + 1) begin
-                job_accept_r[idx] <= 0;
-            end              
+            pix_seq_data_count      <= 0;          
             state                   <= ST_IDLE;
         end else begin
             pfb_rden                <= 0;
-            job_accept_r[0]         <= 0;
+            job_accept              <= 0;
             job_fetch_request       <= 0;
             job_complete            <= 0;
-            pix_seq_bram_rden_r     <= 0;           
-            for(idx = 1; idx < 5; idx = idx + 1) begin
-                job_accept_r[idx] <= job_accept_r[idx - 1];
-            end            
+            pix_seq_bram_rden_r     <= 0;       
             case(state)            
                 ST_IDLE: begin
                     if(job_start) begin
-                        job_accept_r[0] <= 1;
+                        job_accept      <= 1;
                         state           <= ST_AWE_CE_PRIM_BUFFER;
                     end
                 end
