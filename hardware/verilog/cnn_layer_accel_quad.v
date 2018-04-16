@@ -77,15 +77,14 @@ module cnn_layer_accel_quad (
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_LOG2_BRAM_DEPTH        = clog2(`BRAM_DEPTH);
-    localparam C_NUM_CE                 = `NUM_CE_PER_AWE * `NUM_AWE;    
     localparam C_PIXEL_DATAOUT_WIDTH    = `NUM_AWE * `NUM_CE_PER_AWE * `PIXEL_WIDTH;
-    localparam C_PIXEL_DATAIN_WIDTH     = `NUM_AWE * `PIXEL_WIDTH;
+    localparam C_NUM_CE                 = `NUM_CE_PER_AWE * `NUM_AWE;
+    localparam C_PIXEL_DOUT_WIDTH       = C_NUM_CE * `PIXEL_WIDTH;
     localparam C_PFB_DOUT_WIDTH         = C_NUM_CE * `PIXEL_WIDTH;
     localparam CE_CYCLE_COUNTER_WIDTH   = `NUM_AWE * 6;
     localparam C_WHT_DOUT_WIDTH         = C_NUM_CE * `WEIGHT_WIDTH * `NUM_DSP_PER_ENG;
     localparam C_CE_CYCLE_CNT_WIDTH     = C_NUM_CE * 3;
     localparam C_WHT_TBL_ADDR_WIDTH     = C_NUM_CE * 4;
-    localparam C_RELU_WIDTH             = C_NUM_CE * `PIXEL_WIDTH;
 
     localparam ST_IDLE                  = 5'b00001;  
     localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
@@ -140,16 +139,11 @@ module cnn_layer_accel_quad (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------      
     wire                                    job_fetch_in_progress           ;
     wire                                    job_accept_w                    ;
-    reg     [4:0]                           job_accept_r                    ;
-
     wire    [                        1:0]   gray_code                       ;
 
     wire    [C_PIXEL_DATAOUT_WIDTH - 1:0]   ce0_pixel_dataout               ;
     wire    [C_PIXEL_DATAOUT_WIDTH - 1:0]   ce1_pixel_dataout               ;
-    wire    [ C_PIXEL_DATAIN_WIDTH - 1:0]   ce0_pixel_datain                ;
-    wire    [ C_PIXEL_DATAIN_WIDTH - 1:0]   ce1_pixel_datain                ;
-    
-    
+
     wire                                    pfb_wren                        ;
     wire                                    pfb_rden                        ;
     wire    [     C_PFB_DOUT_WIDTH - 1:0]   pfb_dataout                     ;
@@ -169,7 +163,7 @@ module cnn_layer_accel_quad (
     reg     [                        8:0]   pfb_full_count_cfg              ; 
     reg     [                        7:0]   kernel_full_count_cfg           ;
     reg     [                        6:0]   kernel_group_cfg                ;
-    reg                                     relu_config                     ;
+
     
     wire                                    pix_seq_bram_rden               ;
     reg     [                        8:0]   pix_seq_bram_wrAddr             ;
@@ -194,9 +188,6 @@ module cnn_layer_accel_quad (
     wire   [      C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout                  ;
     wire   [              C_NUM_CE - 1:0]   wht_table_dout_valid            ;
     wire                                    wht_config_wren                 ;
-    wire   [          C_RELU_WIDTH - 1:0]   relu_out                        ;
-    integer                                 idx                             ;
-
 
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -252,10 +243,7 @@ module cnn_layer_accel_quad (
                     .ce0_wht_table_dout         ( wht_table_dout[((((i * `NUM_CE_PER_AWE) + j) * `NUM_DSP_PER_ENG + 0) * `WEIGHT_WIDTH) +: `WEIGHT_WIDTH]       ),
                     .ce1_wht_table_dout         ( wht_table_dout[((((i * `NUM_CE_PER_AWE) + j) * `NUM_DSP_PER_ENG + 1) * `WEIGHT_WIDTH) +: `WEIGHT_WIDTH]       ),
                     .ce_wht_table_dout_valid    ( wht_table_dout_valid[(((i * `NUM_CE_PER_AWE) + j) * 1) +: 1]                                                  )
-                );   
-
-                assign relu_out[(((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
-                    = pfb_dataout[((((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) + (`PIXEL_WIDTH - 1)) +: 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[(((i * `NUM_CE_PER_AWE) + 0) * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
+                );              
             end
 
             
@@ -280,8 +268,8 @@ module cnn_layer_accel_quad (
                 .pfb_rden                   ( pfb_rden                                                                                          ),
                 .last_kernel                ( last_kernel[(C_NUM_CE - 1) +: 1]                                                                  ),
                 .row_matric                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_MATRIC_FIELD]                                                 ),
-                .ce0_pixel_datain           ( ce0_pixel_datain[(i * `PIXEL_WIDTH) +: `PIXEL_WIDTH]                                              ),
-                .ce1_pixel_datain           ( ce1_pixel_datain[(i * `PIXEL_WIDTH) +: `PIXEL_WIDTH]                                              ),
+                .ce0_pixel_datain           ( pfb_dataout[(((i * `NUM_CE_PER_AWE) + 0) * `PIXEL_WIDTH) +: `PIXEL_WIDTH]                         ),
+                .ce1_pixel_datain           ( pfb_dataout[(((i * `NUM_CE_PER_AWE) + 1) * `PIXEL_WIDTH) +: `PIXEL_WIDTH]                         ),
                 .ce0_execute                ( ce_execute[(((i * `NUM_CE_PER_AWE) + 0) * 1) +: 1]                                                ),
                 .ce1_execute                ( ce_execute[(((i * `NUM_CE_PER_AWE) + 1) * 1) +: 1]                                                ),
                 .ce0_pixel_dataout          ( ce0_pixel_dataout[(i * (`PIXEL_WIDTH * `NUM_CE_PER_AWE)) +: (`PIXEL_WIDTH * `NUM_CE_PER_AWE)]     ),
@@ -292,13 +280,6 @@ module cnn_layer_accel_quad (
                 .ce0_pixel_dataout_valid    ( ce0_pixel_dataout_valid[i +: 1]                                                                   ),
                 .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i +: 1]                                                                   )        
             );
-           
-          
-            assign ce0_pixel_datain[(i * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
-                = (relu_config) ? relu_out[(((i * `NUM_CE_PER_AWE) + 0) * `PIXEL_WIDTH) +: `PIXEL_WIDTH] : pfb_dataout[(((i * `NUM_CE_PER_AWE) + 0) * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
-            assign ce1_pixel_datain[(i * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
-                = (relu_config) ? relu_out[(((i * `NUM_CE_PER_AWE) + 1) * `PIXEL_WIDTH) +: `PIXEL_WIDTH] : pfb_dataout[(((i * `NUM_CE_PER_AWE) + 1) * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
-
         end
     endgenerate
     
@@ -353,52 +334,25 @@ module cnn_layer_accel_quad (
         .seq_data_addr      ( cycle_counter         ),
         .wht_data_addr      ( ce1_wht_seq_addr      )
     );
-
+    
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign wht_config_wren  = weight_ready && weight_valid;
-    assign weight_ready     = weight_valid;
-    assign config_mode      = state[0];
+    assign weight_ready    = weight_valid;
+    assign config_mode     = state[0];
     
     always@(posedge clk_core) begin
         if(rst) begin
-            num_input_cols_cfg      <= 0;
-            num_input_rows_cfg      <= 0;
-            pfb_full_count_cfg      <= 0;
-            kernel_full_count_cfg   <= 0;
-            kernel_group_cfg        <= 0;
-            relu_config             <= 0;
-            config_accept[1]        <= 0;
+            config_accept[1] <= 0;
         end else begin
-            config_accept[1]        <= 0;
+            config_accept[1] <= 0;
             if(config_valid[1]) begin
-                config_accept[1]    <= 1;
+                config_accept[1] <= 1;
             end
         end
     end
     // END Logic ------------------------------------------------------------------------------------------------------------------------------------
 
- 
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------     
-    assign job_accept = |job_accept_r;
-
-    always@(*) begin
-        job_accept_r[0] = job_accept_w;
-    end
-    
-    always@(posedge clk_core) begin
-        if(rst) begin
-            for(idx = 1; idx < 5; idx = idx + 1) begin
-                job_accept_r[idx] <= 0;
-            end              
-        end else begin
-            for(idx = 1; idx < 5; idx = idx + 1) begin
-                job_accept_r[idx] <= job_accept_r[idx - 1];
-            end
-        end
-    end
-    // END Logic ------------------------------------------------------------------------------------------------------------------------------------
-    
   
     // BEGIN Network Output Data Logic --------------------------------------------------------------------------------------------------------------
     assign pixel_ready  = pixel_valid && job_fetch_in_progress;

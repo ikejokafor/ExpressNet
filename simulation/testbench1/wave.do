@@ -29,7 +29,6 @@ add wave -noupdate -group TOP_TB /testbench_1/fd
 add wave -noupdate -group TOP_TB /testbench_1/fd0
 add wave -noupdate -group TOP_TB /testbench_1/i
 add wave -noupdate -group TOP_TB /testbench_1/i0
-add wave -noupdate -group TOP_TB /testbench_1/i1
 add wave -noupdate -group TOP_TB /testbench_1/j
 add wave -noupdate -group TOP_TB /testbench_1/job_accept
 add wave -noupdate -group TOP_TB /testbench_1/job_complete
@@ -126,15 +125,11 @@ add wave -noupdate -group {QUAD
 add wave -noupdate -group {QUAD
 } /testbench_1/i0_cnn_layer_accel_quad/gray_code
 add wave -noupdate -group {QUAD
-} /testbench_1/i0_cnn_layer_accel_quad/idx
-add wave -noupdate -group {QUAD
 } /testbench_1/i0_cnn_layer_accel_quad/input_col
 add wave -noupdate -group {QUAD
 } /testbench_1/i0_cnn_layer_accel_quad/input_row
 add wave -noupdate -group {QUAD
 } /testbench_1/i0_cnn_layer_accel_quad/job_accept
-add wave -noupdate -group {QUAD
-} /testbench_1/i0_cnn_layer_accel_quad/job_accept_r
 add wave -noupdate -group {QUAD
 } /testbench_1/i0_cnn_layer_accel_quad/job_accept_w
 add wave -noupdate -group {QUAD
@@ -612,7 +607,7 @@ add wave -noupdate -group {WHT_TBL1
 add wave -noupdate -group {WHT_TBL1
 } {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/genblk1[1]/i0_cnn_layer_accel_weight_table_top/wht_table_rden}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {5872 ns} 0}
+WaveRestoreCursors {{Cursor 1} {296 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 206
 configure wave -valuecolwidth 124
@@ -628,4 +623,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {4869 ns} {5165 ns}
+WaveRestoreZoom {15229 ns} {15525 ns}
