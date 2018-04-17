@@ -101,6 +101,7 @@ module testbench_1;
     wire [31:0] ce1_pixel_dataout;  
     wire [8:0] output_col;
     wire [8:0] output_row; 
+
     
     clock_gen #(
         .C_PERIOD_BY_2(C_PERIOD_100MHz / 2)
@@ -191,13 +192,12 @@ module testbench_1;
     assign ce1_pixel_dataout        = i0_cnn_layer_accel_quad.ce1_pixel_dataout[31:0];
     int i0;
     
-
     always@(posedge clk_500MHz) begin
         if(ce0_pixel_dataout_valid) begin
             for(i0 = 0; i0 < (KERNEL_SIZE * KERNEL_SIZE); i0++) begin
                 if(output_col < COLS - 2 && output_row < ROWS - 2) begin
                     if(arr4[0][output_row][output_col][i0] == ce0_pixel_dataout[31:16] || arr4[0][output_row][output_col][i0] == ce0_pixel_dataout[15:0]) begin
-                        arr5[0][output_col][output_row][i0] = 1;
+                        arr5[0][output_row][output_col][i0] = 1;
                     end
                 end
             end
@@ -274,29 +274,29 @@ module testbench_1;
         arr2[2] = {3'b0, 1'b0, 1'b0, 1'b0, 10'd512};
         arr2[3] = {3'b0, 1'b0, 1'b0, 1'b0, 10'd513};
         arr2[4] = {3'b0, 1'b1, 1'b0, 1'b0, 10'd514};
-        parity0 = 0;
-        parity1 = 1;
-
     
-        j = 0;      
-        for(i = 5; i < (512 * 5); i = i + 5) begin
-            arr2[i    ] = {3'b0, 1'b0, 1'b1, parity0, arr2[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
+        j = 0;
+        fd = $fopen("seq.txt", "w");
+        $fwrite(fd, "%d\t%d\t%d\t%d\t%d\n", arr2[0][9:0], arr2[1][9:0], arr2[2][9:0], arr2[3][9:0], arr2[4][9:0]);       
+        for(i = 5; i < (512 * 5); i = i + 5) begin            
             if((j % 2) == 0) begin
-                arr2[i + 1] = {3'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`PIX_SEQ_DATA_SEQ_FIELD]};
+                arr2[i    ] = {3'b0, 1'b0, 1'b1, 1'b0, arr2[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
+                arr2[i + 1] = {3'b0, 1'b0, 1'b0, 1'b1, arr2[i - 4][`PIX_SEQ_DATA_SEQ_FIELD]};
             end else begin           
-                arr2[i + 1] = {3'b0, 1'b0, 1'b0, parity1, arr2[i - 4][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};
+                arr2[i    ] = {3'b0, 1'b0, 1'b1, 1'b1, arr2[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
+                arr2[i + 1] = {3'b0, 1'b0, 1'b0, 1'b0, arr2[i - 4][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};
             end
             arr2[i + 2] = {3'b0, 1'b0, 1'b0, 1'b0, arr2[i - 3][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
             arr2[i + 3] = {3'b0, 1'b0, 1'b0, 1'b0, arr2[i - 2][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
             arr2[i + 4] = {3'b0, 1'b1, 1'b0, 1'b0, arr2[i - 1][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
-            parity0 = ~parity0;
-            parity1 = ~parity1;
             j = (j + 1) % 2;
+            $fwrite(fd, "%d\t%d\t%d\t%d\t%d\n", arr2[i][9:0], arr2[i + 1][9:0], arr2[i + 2][9:0], arr2[i + 3][9:0], arr2[i + 4][9:0]);
         end
         while(i < (512 * 8)) begin
             arr2[i] = 0;
             i = i + 1;
         end
+        $fclose(fd);
 
         
         rst = 1;

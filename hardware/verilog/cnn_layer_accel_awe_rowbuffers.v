@@ -118,9 +118,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     wire    [            `PIXEL_WIDTH - 1:0]    ce1_pixel_datain_d          ;
     
     wire    [`PIX_SEQ_BRAM_DATA_WIDTH - 1:0]    pix_seq_datain_d            ;
-    wire    [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]    pix_seq_datain_field        ;
     wire    [`PIX_SEQ_DATA_SEQ_WIDTH0 - 1:0]    pix_seq_datain_field0       ;
-    wire    [`PIX_SEQ_DATA_SEQ_WIDTH1 - 1:0]    pix_seq_datain_field1       ;
     wire    [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]    pix_seq_datain_even         ;
     wire    [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]    pix_seq_datain_even_d       ;
     wire    [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]    pix_seq_datain_odd          ;
@@ -461,15 +459,13 @@ module cnn_layer_accel_awe_rowbuffers #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign ce0_pixel_dataout        = {bram1_dataout, bram0_dataout};
     assign ce1_pixel_dataout        = {bram3_dataout, bram2_dataout};
-    assign pix_seq_datain_field     = pix_seq_datain_d[`PIX_SEQ_DATA_SEQ_FIELD];
     assign pix_seq_datain_field0    = pix_seq_datain_d[`PIX_SEQ_DATA_SEQ_FIELD0];
-    assign pix_seq_datain_field1    = pix_seq_datain_d[`PIX_SEQ_DATA_SEQ_FIELD1];
     assign pix_seq_datain_even      =   {  
-                                            gray_code[0] ^ pix_seq_datain_field[`PIX_SEQ_DATA_SEQ_WIDTH - 1], 
-                                            pix_seq_datain_field1
+                                            gray_code[1] ^ pix_seq_datain_d[`PIX_SEQ_DATA_SEQ_FIELD1],
+                                            pix_seq_datain_d[`PIX_SEQ_DATA_SEQ_FIELD2]
                                         };
     assign pix_seq_datain_odd       =   {  
-                                            gray_code[1] ^ pix_seq_datain_field[`PIX_SEQ_DATA_SEQ_WIDTH - 1], 
+                                            gray_code[0] ^ pix_seq_datain_d[`PIX_SEQ_DATA_SEQ_FIELD1], 
                                             pix_seq_datain_field0,
                                             pix_seq_datain_d[0] 
                                                 | pix_seq_datain_d[`PIX_SEQ_DATA_PARITY_FIELD]
@@ -562,7 +558,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                             bram1_datain    <= ce0_pixel_datain_d;                 
                         end else if(gray_code[0] ^ gray_code[1]) begin
                             bram0_wren      <= 1;
-                            bram0_wrAddr    <= {gray_code[0], row_matric_ce0_wrAddr};
+                            bram0_wrAddr    <= {gray_code[1], row_matric_ce0_wrAddr};
                             bram0_datain    <= ce0_pixel_datain_d;                                          
                         end
                     end
@@ -574,10 +570,14 @@ module cnn_layer_accel_awe_rowbuffers #(
                             bram0_datain    <= row_buffer_sav_val0;
                         end else if(gray_code[0] ^ gray_code[1]) begin                                        
                             bram1_wren      <= 1;                       
-                            bram1_wrAddr    <= {gray_code[1], row_matric_ce0_wrAddr};
+                            bram1_wrAddr    <= {gray_code[0], row_matric_ce0_wrAddr};
                             bram1_datain    <= row_buffer_sav_val0;  
                         end
                     end
+                    
+                    
+                    
+                    
                     // conv eng 1 incoming row logic
                     if(ce1_row_matric && last_kernel) begin
                         if(!(gray_code[0] ^ gray_code[1])) begin
@@ -586,7 +586,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                             bram3_datain    <= ce1_pixel_datain_d;                 
                         end else if(gray_code[0] ^ gray_code[1]) begin
                             bram2_wren      <= 1;
-                            bram2_wrAddr    <= {gray_code[0], row_matric_ce1_wrAddr};
+                            bram2_wrAddr    <= {gray_code[1], row_matric_ce1_wrAddr};
                             bram2_datain    <= ce1_pixel_datain_d;                                          
                         end
                     end
@@ -598,7 +598,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                             bram2_datain    <= row_buffer_sav_val1;
                         end else if(gray_code[0] ^ gray_code[1]) begin                                        
                             bram3_wren      <= 1;                       
-                            bram3_wrAddr    <= {gray_code[1], row_matric_ce1_wrAddr};
+                            bram3_wrAddr    <= {gray_code[0], row_matric_ce1_wrAddr};
                             bram3_datain    <= row_buffer_sav_val1;  
                         end
                     end 

@@ -243,7 +243,6 @@ add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/job_fetch_in_progress
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/job_fetch_request
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/job_start
-add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/last_col
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/last_kernel
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/next_kernel
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/next_state
@@ -296,7 +295,6 @@ add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/job_fetch_in_progress
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/job_fetch_request
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/job_start
-add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/last_col
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/last_kernel
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/next_kernel
 add wave -noupdate -group CTRL /testbench_1/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/next_state
@@ -606,8 +604,104 @@ add wave -noupdate -group {WHT_TBL1
 } {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/genblk1[1]/i0_cnn_layer_accel_weight_table_top/wht_table_addrA_cfg}
 add wave -noupdate -group {WHT_TBL1
 } {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/genblk1[1]/i0_cnn_layer_accel_weight_table_top/wht_table_rden}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/BRAM}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/C_CLG2_RAM_DEPTH}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/C_RAM_DEPTH}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/C_RAM_PERF}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/C_RAM_WIDTH}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/clk}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/datain}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/dataout}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/rdAddr}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/rden}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/wrAddr}
+add wave -noupdate -group {BRAM0
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i0_xilinx_simple_dual_port_no_change_ram/wren}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/BRAM}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/C_CLG2_RAM_DEPTH}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/C_RAM_DEPTH}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/C_RAM_PERF}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/C_RAM_WIDTH}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/clk}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/datain}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/dataout}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/rdAddr}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/rden}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/wrAddr}
+add wave -noupdate -group {BRAM1
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i1_xilinx_simple_dual_port_no_change_ram/wren}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/BRAM}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/C_CLG2_RAM_DEPTH}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/C_RAM_DEPTH}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/C_RAM_PERF}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/C_RAM_WIDTH}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/clk}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/datain}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/dataout}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/rdAddr}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/rden}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/wrAddr}
+add wave -noupdate -group {BRAM2
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i2_xilinx_simple_dual_port_no_change_ram/wren}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/BRAM}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/C_CLG2_RAM_DEPTH}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/C_RAM_DEPTH}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/C_RAM_PERF}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/C_RAM_WIDTH}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/clk}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/datain}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/dataout}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/rdAddr}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/rden}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/wrAddr}
+add wave -noupdate -group {BRAM3
+} -radix unsigned {/testbench_1/i0_cnn_layer_accel_quad/genblk1[0]/i0_cnn_layer_accel_awe_rowbuffers/i3_xilinx_simple_dual_port_no_change_ram/wren}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {296 ns} 0}
+WaveRestoreCursors {{Cursor 1} {5346 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 206
 configure wave -valuecolwidth 124
@@ -623,4 +717,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {15229 ns} {15525 ns}
+WaveRestoreZoom {5328 ns} {5401 ns}

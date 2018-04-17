@@ -139,6 +139,7 @@ module cnn_layer_accel_quad (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------      
     wire                                    job_fetch_in_progress           ;
     wire                                    job_accept_w                    ;
+    reg     [4:0]                           job_accept_r                    ;
     wire    [                        1:0]   gray_code                       ;
 
     wire    [C_PIXEL_DATAOUT_WIDTH - 1:0]   ce0_pixel_dataout               ;
@@ -188,7 +189,7 @@ module cnn_layer_accel_quad (
     wire   [      C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout                  ;
     wire   [              C_NUM_CE - 1:0]   wht_table_dout_valid            ;
     wire                                    wht_config_wren                 ;
-
+    integer                                 idx                             ;
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -334,7 +335,28 @@ module cnn_layer_accel_quad (
         .seq_data_addr      ( cycle_counter         ),
         .wht_data_addr      ( ce1_wht_seq_addr      )
     );
+  
+
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------     
+    assign job_accept = |job_accept_r;
+
+    always@(*) begin
+        job_accept_r[0] = job_accept_w;
+    end
     
+    always@(posedge clk_core) begin
+        if(rst) begin
+            for(idx = 1; idx < 5; idx = idx + 1) begin
+                job_accept_r[idx] <= 0;
+            end              
+        end else begin
+            for(idx = 1; idx < 5; idx = idx + 1) begin
+                job_accept_r[idx] <= job_accept_r[idx - 1];
+            end
+        end
+    end
+    // END Logic ------------------------------------------------------------------------------------------------------------------------------------  
+
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign wht_config_wren  = weight_ready && weight_valid;

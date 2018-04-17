@@ -89,11 +89,15 @@
 `define PIX_SEQ_DATA_SEQ_HIGH0              (`PIX_SEQ_DATA_SEQ_LOW0 + `PIX_SEQ_DATA_SEQ_WIDTH0 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD0             (`PIX_SEQ_DATA_SEQ_HIGH0):(`PIX_SEQ_DATA_SEQ_LOW0)
 
-`define PIX_SEQ_DATA_SEQ_WIDTH1             clog2(`BRAM_DEPTH) - 1
-`define PIX_SEQ_DATA_SEQ_LOW1               0
+`define PIX_SEQ_DATA_SEQ_WIDTH1             1
+`define PIX_SEQ_DATA_SEQ_LOW1               clog2(`BRAM_DEPTH) - 1
 `define PIX_SEQ_DATA_SEQ_HIGH1              (`PIX_SEQ_DATA_SEQ_LOW1 + `PIX_SEQ_DATA_SEQ_WIDTH1 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD1             (`PIX_SEQ_DATA_SEQ_HIGH1):(`PIX_SEQ_DATA_SEQ_LOW1)
 
+`define PIX_SEQ_DATA_SEQ_WIDTH2             clog2(`BRAM_DEPTH) -1
+`define PIX_SEQ_DATA_SEQ_LOW2               0
+`define PIX_SEQ_DATA_SEQ_HIGH2              (`PIX_SEQ_DATA_SEQ_LOW2 + `PIX_SEQ_DATA_SEQ_WIDTH2 - 1)
+`define PIX_SEQ_DATA_SEQ_FIELD2             (`PIX_SEQ_DATA_SEQ_HIGH2):(`PIX_SEQ_DATA_SEQ_LOW2)
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // TILE ROUTER FIELDS

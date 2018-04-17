@@ -181,7 +181,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign num_output_rows  = num_input_rows; 
     assign num_output_cols  = num_input_cols;
-    assign last_col         = (output_col == num_output_cols);
     
     always@(posedge clk) begin
         if(rst) begin
@@ -371,7 +370,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                         pix_seq_data_count  <= pix_seq_data_full_count;
                         if(next_state[4]) begin
                             graycode_r <= 0;
-                        end else begin
+                        end else if(last_kernel) begin
                             graycode_r <= graycode_r + 1;
                         end
                         state <= next_state;
