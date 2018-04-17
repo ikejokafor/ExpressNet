@@ -413,9 +413,9 @@ module cnn_layer_accel_awe_rowbuffers #(
             row_buffer_sav_val0 <= bram1_dataout;
         end else if(gray_code == 2'b01 && ce0_cycle_counter == 2) begin
             row_buffer_sav_val0 <= bram0_dataout;
-        end else if(gray_code == 2'b11 && ce0_cycle_counter == 0) begin
+        end else if(gray_code == 2'b11 && ce0_cycle_counter == 2) begin
             row_buffer_sav_val0 <= bram1_dataout;
-        end else if(gray_code == 2'b10 && ce0_cycle_counter == 0) begin
+        end else if(gray_code == 2'b10 && ce0_cycle_counter == 2) begin
             row_buffer_sav_val0 <= bram0_dataout;
         end
     end
@@ -436,9 +436,9 @@ module cnn_layer_accel_awe_rowbuffers #(
             row_buffer_sav_val1 <= bram3_dataout;
         end else if(gray_code == 2'b01 && ce1_cycle_counter == 2) begin
             row_buffer_sav_val1 <= bram2_dataout;
-        end else if(gray_code == 2'b11 && ce1_cycle_counter == 0) begin
+        end else if(gray_code == 2'b11 && ce1_cycle_counter == 2) begin
             row_buffer_sav_val1 <= bram3_dataout;
-        end else if(gray_code == 2'b10 && ce1_cycle_counter == 0) begin
+        end else if(gray_code == 2'b10 && ce1_cycle_counter == 2) begin
             row_buffer_sav_val1 <= bram2_dataout;
         end
     end
@@ -574,10 +574,6 @@ module cnn_layer_accel_awe_rowbuffers #(
                             bram1_datain    <= row_buffer_sav_val0;  
                         end
                     end
-                    
-                    
-                    
-                    
                     // conv eng 1 incoming row logic
                     if(ce1_row_matric && last_kernel) begin
                         if(!(gray_code[0] ^ gray_code[1])) begin
