@@ -27,6 +27,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module testbench_1;
 
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+	//	Clock and Reset
+	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     parameter C_PERIOD_100MHz = 10;    
     parameter C_PERIOD_500MHz = 2; 
     reg rst;
@@ -51,6 +54,7 @@ module testbench_1;
     localparam NUM_KERNEL_3x3_VALUES    = 10;
     localparam KERNEL_SIZE              = 3;
     localparam NUM_KERNELS              = 16'd2;
+    localparam NUM_CE_PER_QUAD          = `NUM_AWE * `NUM_CE_PER_AWE;
    
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -75,6 +79,7 @@ module testbench_1;
     reg             job_fetch_complete  ;
     wire            job_complete        ;
     reg             job_complete_ack    ;  
+    genvar          g;
     
     integer fd, fd0;
     bit [`PIXEL_WIDTH - 1:0]    arr[0:((ROWS * COLS * 8) - 1)];
@@ -91,18 +96,24 @@ module testbench_1;
     int n0;
     int n1;
     int z;
-    bit parity0;
-    bit parity1;
+    int i0;
     reg [15:0] kernel_group_cfg;
     
-    wire ce0_pixel_dataout_valid;
-    wire ce1_pixel_dataout_valid;
-    wire [31:0] ce0_pixel_dataout;      
-    wire [31:0] ce1_pixel_dataout;  
-    wire [8:0] output_col;
-    wire [8:0] output_row; 
-
+    logic        ce0_pixel_dataout_valid[`NUM_AWE - 1:0];
+    logic        ce1_pixel_dataout_valid[`NUM_AWE - 1:0];
+    logic [31:0] ce0_pixel_dataout[`NUM_AWE - 1:0];      
+    logic [31:0] ce1_pixel_dataout[`NUM_AWE - 1:0];  
+    logic [ 8:0] output_col0[`NUM_AWE - 1:0];
+    logic [ 8:0] output_row0[`NUM_AWE - 1:0]; 
+    logic [ 8:0] output_col1[`NUM_AWE - 1:0];
+    logic [ 8:0] output_row1[`NUM_AWE - 1:0];
+    logic [ 7:0] cycle_counter0[`NUM_AWE - 1:0];
+    logic [ 7:0] cycle_counter1[`NUM_AWE - 1:0]; 
+ 
     
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+	//	Module Instantiations
+	//-----------------------------------------------------------------------------------------------------------------------------------------------        
     clock_gen #(
         .C_PERIOD_BY_2(C_PERIOD_100MHz / 2)
     )
@@ -159,50 +170,91 @@ module testbench_1;
         .pixel_data           ( pixel_data   )
     );
     
-    
-    SRL_bus #(
-        .C_CLOCK_CYCLES  ( 3 + 4 ),
-        .C_DATA_WIDTH    ( 9     )
-    ) 
-    i0_SRL_bus (
-        .clk        ( clk_500MHz    ),
-        .ce         ( 1'b1          ),
-        .rst        ( rst           ),
-        .data_in    ( i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.output_col    ),
-        .data_out   ( output_col    )
-    );
-   
-   
-    SRL_bus #(
-        .C_CLOCK_CYCLES  ( 3 + 4 ),
-        .C_DATA_WIDTH    ( 9     )
-    ) 
-    i1_SRL_bus (
-        .clk        ( clk_500MHz    ),
-        .ce         ( 1'b1          ),
-        .rst        ( rst           ),
-        .data_in    ( i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.output_row    ),
-        .data_out   ( output_row    )
-    );
-    
+    generate
+        for(g = 0; g < `NUM_AWE; g = g + 1) begin
 
-    assign ce0_pixel_dataout_valid  = i0_cnn_layer_accel_quad.ce0_pixel_dataout_valid[0];
-    assign ce1_pixel_dataout_valid  = i0_cnn_layer_accel_quad.ce1_pixel_dataout_valid[0];  
-    assign ce0_pixel_dataout        = i0_cnn_layer_accel_quad.ce0_pixel_dataout[31:0];
-    assign ce1_pixel_dataout        = i0_cnn_layer_accel_quad.ce1_pixel_dataout[31:0];
-    int i0;
-    
-    always@(posedge clk_500MHz) begin
-        if(ce0_pixel_dataout_valid) begin
-            for(i0 = 0; i0 < (KERNEL_SIZE * KERNEL_SIZE); i0++) begin
-                if(output_col < COLS - 2 && output_row < ROWS - 2) begin
-                    if(arr4[0][output_row][output_col][i0] == ce0_pixel_dataout[31:16] || arr4[0][output_row][output_col][i0] == ce0_pixel_dataout[15:0]) begin
-                        arr5[0][output_row][output_col][i0] = 1;
+            assign ce0_pixel_dataout_valid[g]           = i0_cnn_layer_accel_quad.ce0_pixel_dataout_valid[g];
+            assign ce1_pixel_dataout_valid[g]           = i0_cnn_layer_accel_quad.ce1_pixel_dataout_valid[g];  
+            assign ce0_pixel_dataout[g][31:0]           = i0_cnn_layer_accel_quad.ce0_pixel_dataout[g * 32 +: 32];
+            assign ce1_pixel_dataout[g][31:0]           = i0_cnn_layer_accel_quad.ce1_pixel_dataout[g * 32 +: 32];
+
+            
+            always@(posedge clk_500MHz) begin
+                if(rst) begin
+                    output_col0[g]      <= 0;
+                    output_row0[g]      <= 0;
+                    cycle_counter0[g]   <= 0;
+                end else begin
+                    if(cycle_counter0[g] == 4) begin
+                        cycle_counter0[g] <= 0;
+                    end else if(ce0_pixel_dataout_valid[g]) begin
+                        cycle_counter0[g] <= cycle_counter0[g] + 1;
+                    end 
+                    if(cycle_counter0[g] == 4) begin
+                        if(output_col0[g] == COLS - 1) begin
+                            output_col0[g]  <= 0;
+                            if(i0_cnn_layer_accel_quad.last_kernel[NUM_CE_PER_QUAD - 1]) begin
+                                output_row0[g]  <= output_row0[g] + 1;
+                            end
+                        end else if(ce0_pixel_dataout_valid[g]) begin
+                            output_col0[g]  <= output_col0[g] + 1;
+                        end
                     end
                 end
             end
-        end
-    end
+            
+            always@(posedge clk_500MHz) begin
+                if(rst) begin
+                    output_col1[g]      <= 0;
+                    output_row1[g]      <= 0;
+                    cycle_counter1[g]   <= 0;
+                end else begin
+                    if(cycle_counter1[g] == 4) begin
+                        cycle_counter1[g] <= 0;
+                    end else if(ce1_pixel_dataout_valid[g]) begin
+                        cycle_counter1[g] <= cycle_counter1[g] + 1;
+                    end 
+                    if(cycle_counter1[g] == 4) begin
+                        if(output_col1[g] == COLS - 1) begin
+                            output_col1[g]  <= 0;
+                            if(i0_cnn_layer_accel_quad.last_kernel[NUM_CE_PER_QUAD - 1]) begin
+                                output_row1[g]  <= output_row1[g] + 1;
+                            end
+                        end else if(ce1_pixel_dataout_valid[g]) begin
+                            output_col1[g]  <= output_col1[g] + 1;
+                        end
+                    end
+                end
+            end
+            
+            always@(posedge clk_500MHz) begin
+                if(ce0_pixel_dataout_valid[g]) begin
+                    for(i0 = 0; i0 < (KERNEL_SIZE * KERNEL_SIZE); i0++) begin
+                        if(output_row0[g]  < COLS - 2 && output_col0[g]  < ROWS - 2) begin
+                            if(arr4[g * 2][output_row0[g]][output_col0[g]][i0] == ce0_pixel_dataout[g][31:16] 
+                                || arr4[g * 2][output_row0[g]][output_col0[g]][i0] == ce0_pixel_dataout[g][15:0]) begin
+                                arr5[g * 2][output_row0[g] ][output_col0[g]][i0] = 1;
+                            end
+                        end
+                    end
+                end
+            end
+            
+            always@(posedge clk_500MHz) begin
+                if(ce0_pixel_dataout_valid[g]) begin
+                    for(i0 = 0; i0 < (KERNEL_SIZE * KERNEL_SIZE); i0++) begin
+                        if(output_row1[g]  < COLS - 2 && output_col1[g]  < ROWS - 2) begin
+                            if(arr4[g * 2 + 1][output_row1[g]][output_col1[g]][i0] == ce1_pixel_dataout[g][31:16] 
+                                || arr4[g * 2 + 1][output_row1[g]][output_col1[g]][i0] == ce1_pixel_dataout[g][15:0]) begin
+                                arr5[g * 2 + 1][output_row1[g] ][output_col1[g]][i0] = 1;
+                            end
+                        end
+                    end
+                end
+            end
+            
+        end    
+    endgenerate
     
     initial begin
         i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count   = 5 * COLS;                                      
@@ -330,7 +382,6 @@ module testbench_1;
         @(posedge clk_100MHz);
         config_valid[0]                = 0;
         
-        $stop;
         
         @(posedge clk_500MHz);
         config_valid[1]         = 1;        
@@ -399,8 +450,6 @@ module testbench_1;
         @(posedge clk_500MHz);
         weight_valid                        = 0;  
 
-        $stop;
-
      
         @(posedge clk_100MHz);
         job_start = 1;
@@ -412,8 +461,7 @@ module testbench_1;
         end
         @(posedge clk_100MHz);
         job_start = 0; 
-      
-        $stop;        
+
         
         i = 0; 
         j = 0;
@@ -457,7 +505,6 @@ module testbench_1;
             end
         end 
 
-        $stop;
         
         while(1) begin
             @(posedge clk_100MHz);
@@ -468,6 +515,22 @@ module testbench_1;
         end
         @(posedge clk_100MHz);
         job_complete_ack = 0; 
+        
+
+        for(i = 0; i < DEPTH; i++) begin
+            for(a = 0; a < ROWS; a++) begin
+                for(b = 0; b < COLS; b++) begin
+                    for(n = 0; n < (KERNEL_SIZE * KERNEL_SIZE); n++) begin
+                        if(!arr5[i][a][b][n]) begin
+                            $display("Bad");
+                            $stop;
+                        end
+                    end
+                end
+            end
+        end
+        
+        $display("Good");
         $stop;
     end
     
