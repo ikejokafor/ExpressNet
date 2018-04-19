@@ -86,57 +86,57 @@ module cnn_layer_accel_quad_bram_ctrl (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    input                                   clk                         ;   
-    input                                   rst                         ;
-    input      [C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols              ;
-    input      [C_LOG2_BRAM_DEPTH - 2:0]    num_input_rows              ;
-    input                                   job_start                   ;
-    output reg                              job_accept                  ;
-    output reg                              job_fetch_request           ;
-    output reg                              job_fetch_in_progress       ;
-    input                                   job_fetch_ack               ;
-    input                                   job_fetch_complete          ;
-    output reg                              job_complete                ;
-    input                                   job_complete_ack            ;
-    output reg [                    5:0]    state                       ;
-    output reg [C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
-    output reg [C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
-    input                                   pfb_empty                   ;
-    output reg                              pfb_rden                    ;
-    input      [                    8:0]    pfb_full_count              ;
-    input                                   row_matric                  ;
-    output     [                    1:0]    gray_code                   ;
-    output reg [C_LOG2_BRAM_DEPTH - 2:0]    row_matric_wrAddr           ;
-    output reg [         C_NUM_CE - 1:0]    ce_execute                  ;
-    output reg [                    2:0]    cycle_counter               ;
-    input      [                    2:0]    last_awe_ce1_cyc_counter    ;
-    output reg                              pix_seq_bram_rden           ;
-    output reg [11:0]                       pix_seq_bram_rdAddr         ;
-    output reg [         C_NUM_CE - 1:0]    next_kernel                 ;
-    input                                   last_kernel                 ;
-    input                                   pipeline_flushed            ;
+    input  logic                              clk                         ;   
+    input  logic                              rst                         ;
+    input  logic   [C_LOG2_BRAM_DEPTH - 2:0]  num_input_cols              ;
+    input  logic   [C_LOG2_BRAM_DEPTH - 2:0]  num_input_rows              ;
+    input  logic                              job_start                   ;
+    output logic                              job_accept                  ;
+    output logic                              job_fetch_request           ;
+    output logic                              job_fetch_in_progress       ;
+    input  logic                              job_fetch_ack               ;
+    input  logic                              job_fetch_complete          ;
+    output logic                              job_complete                ;
+    input  logic                              job_complete_ack            ;
+    output logic [                    5:0]    state                       ;
+    output logic [C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
+    output logic [C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
+    input  logic                              pfb_empty                   ;
+    output logic                              pfb_rden                    ;
+    input  logic [                    8:0]    pfb_full_count              ;
+    input  logic                              row_matric                  ;
+    output logic [                    1:0]    gray_code                   ;
+    output logic [C_LOG2_BRAM_DEPTH - 2:0]    row_matric_wrAddr           ;
+    output logic [         C_NUM_CE - 1:0]    ce_execute                  ;
+    output logic [                    2:0]    cycle_counter               ;
+    input  logic [                    2:0]    last_awe_ce1_cyc_counter    ;
+    output logic                              pix_seq_bram_rden           ;
+    output logic [11:0]                       pix_seq_bram_rdAddr         ;
+    output logic [         C_NUM_CE - 1:0]    next_kernel                 ;
+    input  logic                              last_kernel                 ;
+    input  logic                              pipeline_flushed            ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------          
-    wire                                    ce_execute_d                    ;
-    reg     [                    10:0]      pix_seq_data_count              ;
-    reg                                     pix_seq_bram_rden_r             ;
-    reg     [                    10:0]      pix_seq_data_full_count         ;
-    wire                                    pix_seq_bram_rden_d             ;
-    reg                                     job_fetch_acked                 ;
-    reg                                     job_complete_acked              ;
-    reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_row                      ;  
-    reg     [ C_LOG2_BRAM_DEPTH - 2:0]      output_col                      ;
-    wire    [ C_LOG2_BRAM_DEPTH - 2:0]      num_output_rows                 ;
-    wire    [ C_LOG2_BRAM_DEPTH - 2:0]      num_output_cols                 ;
-    reg     [                     4:0]      next_state                      ;
-    reg     [                     4:0]      return_state                    ;
-    reg     [                     1:0]      graycode_r                      ;
-    integer                                 idx                             ;  
-    reg     [                     8:0]      pfb_count                       ;
-    genvar                                  i                               ;
+    logic                                    ce_execute_d                    ;
+    logic     [                    10:0]     pix_seq_data_count              ;
+    logic                                    pix_seq_bram_rden_r             ;
+    logic     [                    10:0]     pix_seq_data_full_count         ;
+    logic                                    pix_seq_bram_rden_d             ;
+    logic                                    job_fetch_acked                 ;
+    logic                                    job_complete_acked              ;
+    logic     [ C_LOG2_BRAM_DEPTH - 2:0]     output_row                      ;  
+    logic     [ C_LOG2_BRAM_DEPTH - 2:0]     output_col                      ;
+    logic     [ C_LOG2_BRAM_DEPTH - 2:0]     num_output_rows                 ;
+    logic     [ C_LOG2_BRAM_DEPTH - 2:0]     num_output_cols                 ;
+    logic     [                     4:0]     next_state                      ;
+    logic     [                     4:0]     return_state                    ;
+    logic     [                     1:0]     graycode_r                      ;
+    integer                                  idx                             ;  
+    logic     [                     8:0]     pfb_count                       ;
+    genvar                                   i                               ;
 
   	
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -370,7 +370,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                             next_state      <= ST_AWE_CE_ACTIVE;
                         end
                     end
-                    if(!ce_execute && i0_cnn_layer_accel_quad.genblk1[3].i0_cnn_layer_accel_awe_rowbuffers.ce1_cycle_counter == 4) begin
+                    if(!ce_execute && last_awe_ce1_cyc_counter == 4) begin
                         row_matric_wrAddr   <= 0;
                         pix_seq_data_count  <= pix_seq_data_full_count;
                         if(next_state[4]) begin

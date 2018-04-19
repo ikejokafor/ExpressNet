@@ -99,105 +99,105 @@ module cnn_layer_accel_quad (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input               clk_if              ;
-    input               clk_core            ;
-    input               rst                 ;
-    
-    input               job_start           ;
-    output              job_accept          ;
-    input   [127:0]     job_parameters      ;
-    output              job_fetch_request   ;
-    input               job_fetch_ack       ;
-    input               job_fetch_complete  ;
-    output              job_complete        ;
-    input               job_complete_ack    ;
-    
-    input               cascade_in_valid    ;
-    output              cascade_in_ready    ;
-    input   [127:0]     cascade_in_data     ;
-    
-    output              cascade_out_valid   ;
-    input               cascade_out_ready   ;
-    output  [127:0]     cascade_out_data    ;
-    
-    input   [3:0]       config_valid        ;
-    output reg  [3:0]   config_accept       ;
-    input   [127:0]     config_data         ;
-    
-    input               weight_valid        ;
-    output reg          weight_ready        ;
-    input [127:0]       weight_data         ;
-    
-    output              result_valid        ;
-    input               result_accept       ;
-    output  [127:0]     result_data         ;
+    input  logic            clk_if              ;
+    input  logic            clk_core            ;
+    input  logic            rst                 ;
 
-    input               pixel_valid         ;
-    output reg          pixel_ready         ;
-    input [127:0]       pixel_data          ;
+    input  logic            job_start           ;
+    output logic            job_accept          ;
+    input  logic [127:0]    job_parameters      ;
+    output logic            job_fetch_request   ;
+    input  logic            job_fetch_ack       ;
+    input  logic            job_fetch_complete  ;
+    output logic            job_complete        ;
+    input  logic            job_complete_ack    ;
+    
+    input  logic            cascade_in_valid    ;
+    output logic            cascade_in_ready    ;
+    input  logic [127:0]    cascade_in_data     ;
+    
+    output logic            cascade_out_valid   ;
+    input  logic            cascade_out_ready   ;
+    output logic [127:0]    cascade_out_data    ;
+    
+    input  logic [  3:0]    config_valid        ;
+    output logic [  3:0]    config_accept       ;
+    input  logic [127:0]    config_data         ;
+    
+    input  logic            weight_valid        ;
+    output logic            weight_ready        ;
+    input  logic [127:0]    weight_data         ;
+    
+    output logic            result_valid        ;
+    input  logic            result_accept       ;
+    output logic [127:0]    result_data         ;
+
+    input  logic            pixel_valid         ;
+    output logic            pixel_ready         ;
+    input  logic [127:0]    pixel_data          ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------      
-    wire                                    job_fetch_in_progress           ;
-    wire                                    job_accept_w                    ;
-    reg     [4:0]                           job_accept_r                    ;
-    wire    [                        1:0]   gray_code                       ;
+    logic                                    job_fetch_in_progress           ;
+    logic                                    job_accept_w                    ;
+    logic    [4:0]                           job_accept_r                    ;
+    logic    [                        1:0]   gray_code                       ;
 
-    wire    [C_PIXEL_DATAOUT_WIDTH - 1:0]   ce0_pixel_dataout               ;
-    wire    [C_PIXEL_DATAOUT_WIDTH - 1:0]   ce1_pixel_dataout               ;
-    wire    [ C_PIXEL_DATAIN_WIDTH - 1:0]   ce0_pixel_datain                ;
-    wire    [ C_PIXEL_DATAIN_WIDTH - 1:0]   ce1_pixel_datain                ;
+    logic    [C_PIXEL_DATAOUT_WIDTH - 1:0]   ce0_pixel_dataout               ;
+    logic    [C_PIXEL_DATAOUT_WIDTH - 1:0]   ce1_pixel_dataout               ;
+    logic    [ C_PIXEL_DATAIN_WIDTH - 1:0]   ce0_pixel_datain                ;
+    logic    [ C_PIXEL_DATAIN_WIDTH - 1:0]   ce1_pixel_datain                ;
     
-    wire                                    pfb_wren                        ;
-    wire                                    pfb_rden                        ;
-    wire    [     C_PFB_DOUT_WIDTH - 1:0]   pfb_dataout                     ;
-    wire    [             C_NUM_CE - 1:0]   pfb_empty                       ;
-    reg     [                        8:0]   pfb_count                       ;
+    logic                                    pfb_wren                        ;
+    logic                                    pfb_rden                        ;
+    logic    [         `PIXEL_WIDTH - 1:0]   pfb_dataout[C_NUM_CE - 1:0]     ;
+    logic    [             C_NUM_CE - 1:0]   pfb_empty                       ;
+    logic    [                        8:0]   pfb_count                       ;
 
-    wire    [             C_NUM_CE - 1:0]   ce_execute                      ;
-    wire    [ C_CE_CYCLE_CNT_WIDTH - 1:0]   ce_cycle_counter                ;
-    wire    [    C_LOG2_BRAM_DEPTH - 2:0]   input_row                       ;
-    wire    [    C_LOG2_BRAM_DEPTH - 2:0]   input_col                       ;
-    wire    [    C_LOG2_BRAM_DEPTH - 2:0]   row_matric_wrAddr               ;
-    genvar                                  i                               ;
-    genvar                                  j                               ;
+    logic    [             C_NUM_CE - 1:0]   ce_execute                      ;
+    logic    [ C_CE_CYCLE_CNT_WIDTH - 1:0]   ce_cycle_counter                ;
+    logic    [    C_LOG2_BRAM_DEPTH - 2:0]   input_row                       ;
+    logic    [    C_LOG2_BRAM_DEPTH - 2:0]   input_col                       ;
+    logic    [    C_LOG2_BRAM_DEPTH - 2:0]   row_matric_wrAddr               ;
+    genvar                                   i                               ;
+    genvar                                   j                               ;
 
-    reg     [                        8:0]   num_input_cols_cfg              ;
-    reg     [                        8:0]   num_input_rows_cfg              ;
-    reg     [                        8:0]   pfb_full_count_cfg              ; 
-    reg     [                        7:0]   kernel_full_count_cfg           ;
-    reg     [                        6:0]   kernel_group_cfg                ;
+    logic    [                        8:0]   num_input_cols_cfg              ;
+    logic    [                        8:0]   num_input_rows_cfg              ;
+    logic    [                        8:0]   pfb_full_count_cfg              ; 
+    logic    [                        7:0]   kernel_full_count_cfg           ;
+    logic    [                        6:0]   kernel_group_cfg                ;
 
     
-    wire                                    pix_seq_bram_rden               ;
-    reg     [                        8:0]   pix_seq_bram_wrAddr             ;
-    wire    [                       11:0]   pix_seq_bram_rdAddr             ;
-    wire    [                       15:0]   pix_seq_bram_dout               ;
+    logic                                    pix_seq_bram_rden               ;
+    logic    [                        8:0]   pix_seq_bram_wrAddr             ;
+    logic    [                       11:0]   pix_seq_bram_rdAddr             ;
+    logic    [                       15:0]   pix_seq_bram_dout               ;
 
-    reg                                     kernel_config_valid             ;
-    reg                                     config_mode                     ;      
+    logic                                    kernel_config_valid             ;
+    logic                                    config_mode                     ;      
     
-    wire   [                         2:0]   cycle_counter                   ;
-    wire   [              `NUM_AWE - 1:0]   ce0_pixel_dataout_valid         ;
-    wire   [              `NUM_AWE - 1:0]   ce1_pixel_dataout_valid         ;
+    logic   [                         2:0]   cycle_counter                   ;
+    logic   [              `NUM_AWE - 1:0]   ce0_pixel_dataout_valid         ;
+    logic   [              `NUM_AWE - 1:0]   ce1_pixel_dataout_valid         ;
     
-    wire   [              C_NUM_CE - 1:0]   next_kernel                     ;  
-    wire   [              C_NUM_CE - 1:0]   last_kernel                     ;
+    logic   [              C_NUM_CE - 1:0]   next_kernel                     ;  
+    logic   [              C_NUM_CE - 1:0]   last_kernel                     ;
     
-    wire   [                         3:0]   quad_wht_ctrl_state             ;
-    wire   [                         5:0]   state                           ;
+    logic   [                         3:0]   quad_wht_ctrl_state             ;
+    logic   [                         5:0]   state                           ;
   
-    wire   [                         3:0]   ce0_wht_seq_addr                ;
-    wire   [                         3:0]   ce1_wht_seq_addr                ;
-    wire   [      C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout                  ;
-    wire   [              C_NUM_CE - 1:0]   wht_table_dout_valid            ;
-    wire                                    wht_config_wren                 ;
-    wire   [          C_RELU_WIDTH - 1:0]   relu_out                        ; 
-    reg                                     relu_cfg                        ;
-    integer                                 idx                             ;
-    wire                                    pipeline_flushed                ;
+    logic   [                         3:0]   ce0_wht_seq_addr                ;
+    logic   [                         3:0]   ce1_wht_seq_addr                ;
+    logic   [      C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout                  ;
+    logic   [              C_NUM_CE - 1:0]   wht_table_dout_valid            ;
+    logic                                    wht_config_wren                 ;
+    logic   [          C_RELU_WIDTH - 1:0]   relu_out                        ; 
+    logic                                    relu_cfg                        ;
+    integer                                  idx                             ;
+    logic                                    pipeline_flushed                ;
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -216,8 +216,8 @@ module cnn_layer_accel_quad (
     
     
     generate
-        for(i = 0; i < `NUM_AWE; i = i + 1) begin
-            for(j = 0; j < `NUM_CE_PER_AWE; j = j + 1) begin             
+        for(i = 0; i < `NUM_AWE; i = i + 1) begin: LBL_0
+            for(j = 0; j < `NUM_CE_PER_AWE; j = j + 1) begin: LBL_1             
                 prefetch_buffer_fifo
                 i0_prefetch_buffer_fifo (
                   .wr_clk           ( clk_if                                                                        ),
@@ -225,7 +225,7 @@ module cnn_layer_accel_quad (
                   .din              ( pixel_data[(((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) +: `PIXEL_WIDTH]      ),
                   .wr_en            ( pfb_wren                                                                      ),
                   .rd_en            ( pfb_rden                                                                      ),
-                  .dout             ( pfb_dataout[(((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) +: `PIXEL_WIDTH]     ),
+                  .dout             ( pfb_dataout[i * `NUM_CE_PER_AWE + j]                                          ),
                   .full             (                                                                               ),
                   .empty            ( pfb_empty[(((i * `NUM_CE_PER_AWE) + j) * 1) +: 1]                             )
                 );
@@ -255,7 +255,7 @@ module cnn_layer_accel_quad (
                 );      
 
                 assign relu_out[(((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
-                    = pfb_dataout[((((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) + (`PIXEL_WIDTH - 1)) +: 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[(((i * `NUM_CE_PER_AWE) + j) * `PIXEL_WIDTH) +: `PIXEL_WIDTH];                
+                    = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[i * `NUM_CE_PER_AWE + j];                
             end
 
             
@@ -294,9 +294,9 @@ module cnn_layer_accel_quad (
             );
             
             assign ce0_pixel_datain[(i * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
-                = (relu_cfg) ? relu_out[(((i * `NUM_CE_PER_AWE) + 0) * `PIXEL_WIDTH) +: `PIXEL_WIDTH] : pfb_dataout[(((i * `NUM_CE_PER_AWE) + 0) * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
+                = (relu_cfg) ? relu_out[(((i * `NUM_CE_PER_AWE) + 0) * `PIXEL_WIDTH) +: `PIXEL_WIDTH] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
             assign ce1_pixel_datain[(i * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
-                = (relu_cfg) ? relu_out[(((i * `NUM_CE_PER_AWE) + 1) * `PIXEL_WIDTH) +: `PIXEL_WIDTH] : pfb_dataout[(((i * `NUM_CE_PER_AWE) + 1) * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
+                = (relu_cfg) ? relu_out[(((i * `NUM_CE_PER_AWE) + 1) * `PIXEL_WIDTH) +: `PIXEL_WIDTH] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
         end
     endgenerate
     

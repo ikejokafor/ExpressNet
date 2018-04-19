@@ -63,39 +63,39 @@ module cnn_layer_accel_weight_table_top #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input                               clk                         ;
-    input                               rst                         ;
-    input                               config_mode                 ;
-    input                               job_accept                  ;
-    input                               next_kernel                 ;
-    output                              last_kernel                 ;
-    input                               kernel_config_valid         ;
-    input   [                   15:0]   kernel_full_count           ;
-    input                               wht_config_wren             ;
-    input   [                   15:0]   wht_config_data             ;
-    input   [                    3:0]   ce0_wht_seq_addr            ;
-    input   [                    3:0]   ce1_wht_seq_addr            ;
-    input                               ce_execute                  ;
-    input   [                    2:0]   ce_cycle_counter            ;
-    output  [ C_WHT_DOUT_WIDTH - 1:0]   ce0_wht_table_dout          ;
-    output  [ C_WHT_DOUT_WIDTH - 1:0]   ce1_wht_table_dout          ;
-    output                              ce_wht_table_dout_valid     ;
+    input   logic                             clk                         ;
+    input   logic                             rst                         ;
+    input   logic                             config_mode                 ;
+    input   logic                             job_accept                  ;
+    input   logic                             next_kernel                 ;
+    output  logic                             last_kernel                 ;
+    input   logic                             kernel_config_valid         ;
+    input   logic [                   15:0]   kernel_full_count           ;
+    input   logic                             wht_config_wren             ;
+    input   logic [                   15:0]   wht_config_data             ;
+    input   logic [                    3:0]   ce0_wht_seq_addr            ;
+    input   logic [                    3:0]   ce1_wht_seq_addr            ;
+    input   logic                             ce_execute                  ;
+    input   logic [                    2:0]   ce_cycle_counter            ;
+    output  logic [ C_WHT_DOUT_WIDTH - 1:0]   ce0_wht_table_dout          ;
+    output  logic [ C_WHT_DOUT_WIDTH - 1:0]   ce1_wht_table_dout          ;
+    output  logic                             ce_wht_table_dout_valid     ;
  
  
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    wire    [    C_CLG2_BRAM_A_DEPTH - 1:0]     wht_table_addrA             ;
-    wire    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addrA_cfg         ;
-    wire    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce0_wht_table_addr_w        ;
-    wire    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce0_wht_table_addr          ;
-    wire    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce1_wht_table_addr_w        ;   
-    wire    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce1_wht_table_addr          ;
-    reg     [                          5:0]     kernel_full_count_cfg       ;
-    reg     [                          5:0]     kernel_group                ;
-    reg     [                          3:0]     kernel_count                ;
-    reg                                         wht_table_rden              ;
-    wire                                        next_kernel_d               ;
+    logic    [    C_CLG2_BRAM_A_DEPTH - 1:0]     wht_table_addrA             ;
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addrA_cfg         ;
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce0_wht_table_addr_w        ;
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce0_wht_table_addr          ;
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce1_wht_table_addr_w        ;   
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce1_wht_table_addr          ;
+    logic    [                          5:0]     kernel_full_count_cfg       ;
+    logic    [                          5:0]     kernel_group                ;
+    logic    [                          3:0]     kernel_count                ;
+    logic                                        wht_table_rden              ;
+    logic                                        next_kernel_d               ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------

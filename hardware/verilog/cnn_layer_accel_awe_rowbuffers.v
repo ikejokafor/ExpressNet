@@ -85,80 +85,80 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input                                           clk                         ;
-    input                                           rst                         ;
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols              ;
-    input       [                           5:0]    state                       ;
-    input       [                           1:0]    gray_code                   ;
-    input       [`PIX_SEQ_BRAM_DATA_WIDTH - 1:0]    pix_seq_datain              ;
-    input                                           pfb_rden                    ;
-    input                                           last_kernel                 ;
-    input                                           row_matric                  ;
-    input       [            `PIXEL_WIDTH - 1:0]    ce0_pixel_datain            ;
-    input       [            `PIXEL_WIDTH - 1:0]    ce1_pixel_datain            ;      
-    input                                           ce0_execute                 ;
-    input                                           ce1_execute                 ;
-    output      [   C_CE_PIXEL_DOUT_WIDTH - 1:0]    ce0_pixel_dataout           ;
-    output      [   C_CE_PIXEL_DOUT_WIDTH - 1:0]    ce1_pixel_dataout           ;
-    output reg  [                           2:0]    ce0_cycle_counter           ;
-    output reg  [                           2:0]    ce1_cycle_counter           ;        
-    input       [       C_LOG2_BRAM_DEPTH - 2:0]    row_matric_wrAddr           ;
-    output                                          ce0_pixel_dataout_valid     ;
-    output                                          ce1_pixel_dataout_valid     ;
+    input  logic                                        clk                         ;
+    input  logic                                        rst                         ;
+    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
+    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
+    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols              ;
+    input  logic    [                           5:0]    state                       ;
+    input  logic    [                           1:0]    gray_code                   ;
+    input  logic    [`PIX_SEQ_BRAM_DATA_WIDTH - 1:0]    pix_seq_datain              ;
+    input  logic                                        pfb_rden                    ;
+    input  logic                                        last_kernel                 ;
+    input  logic                                        row_matric                  ;
+    input  logic    [            `PIXEL_WIDTH - 1:0]    ce0_pixel_datain            ;
+    input  logic    [            `PIXEL_WIDTH - 1:0]    ce1_pixel_datain            ;      
+    input  logic                                        ce0_execute                 ;
+    input  logic                                        ce1_execute                 ;
+    output logic    [   C_CE_PIXEL_DOUT_WIDTH - 1:0]    ce0_pixel_dataout           ;
+    output logic    [   C_CE_PIXEL_DOUT_WIDTH - 1:0]    ce1_pixel_dataout           ;
+    output logic    [                           2:0]    ce0_cycle_counter           ;
+    output logic    [                           2:0]    ce1_cycle_counter           ;        
+    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    row_matric_wrAddr           ;
+    output logic                                        ce0_pixel_dataout_valid     ;
+    output logic                                        ce1_pixel_dataout_valid     ;
     
     
  	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    reg                                         ce0_row_rename              ;
-    reg                                         ce1_row_rename              ;
-    
-    wire    [            `PIXEL_WIDTH - 1:0]    ce0_pixel_datain_d          ;
-    wire    [            `PIXEL_WIDTH - 1:0]    ce1_pixel_datain_d          ;
-    
-    wire    [`PIX_SEQ_BRAM_DATA_WIDTH - 1:0]    pix_seq_datain_d            ;
-    wire    [`PIX_SEQ_DATA_SEQ_WIDTH0 - 1:0]    pix_seq_datain_field0       ;
-    wire    [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]    pix_seq_datain_even         ;
-    wire    [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]    pix_seq_datain_even_d       ;
-    wire    [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]    pix_seq_datain_odd          ;
-    wire    [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]    pix_seq_datain_odd_d        ;
-    reg     [            `PIXEL_WIDTH - 1:0]    row_buffer_sav_val0         ;
-    reg     [            `PIXEL_WIDTH - 1:0]    row_buffer_sav_val1         ;
+    logic                                        ce0_row_rename              ;
+    logic                                        ce1_row_rename              ;
 
-    reg     [       C_LOG2_BRAM_DEPTH - 1:0]    bram0_wrAddr                ;
-    reg     [       C_LOG2_BRAM_DEPTH - 1:0]    bram0_rdAddr                ;
-    reg     [            `PIXEL_WIDTH - 1:0]    bram0_datain                ;
-    reg                                         bram0_wren                  ;
-    reg                                         bram0_rden                  ;
-    reg     [            `PIXEL_WIDTH - 1:0]    bram0_dataout               ;
+    logic   [            `PIXEL_WIDTH - 1:0]     ce0_pixel_datain_d          ;
+    logic   [            `PIXEL_WIDTH - 1:0]     ce1_pixel_datain_d          ;
+  
+    logic   [`PIX_SEQ_BRAM_DATA_WIDTH - 1:0]     pix_seq_datain_d            ;
+    logic   [`PIX_SEQ_DATA_SEQ_WIDTH0 - 1:0]     pix_seq_datain_field0       ;
+    logic   [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]     pix_seq_datain_even         ;
+    logic   [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]     pix_seq_datain_even_d       ;
+    logic   [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]     pix_seq_datain_odd          ;
+    logic   [ `PIX_SEQ_DATA_SEQ_WIDTH - 1:0]     pix_seq_datain_odd_d        ;
+    logic   [            `PIXEL_WIDTH - 1:0]     row_buffer_sav_val0         ;
+    logic   [            `PIXEL_WIDTH - 1:0]     row_buffer_sav_val1         ;
+  
+    logic   [       C_LOG2_BRAM_DEPTH - 1:0]     bram0_wrAddr                ;
+    logic   [       C_LOG2_BRAM_DEPTH - 1:0]     bram0_rdAddr                ;
+    logic   [            `PIXEL_WIDTH - 1:0]     bram0_datain                ;
+    logic                                        bram0_wren                  ;
+    logic                                        bram0_rden                  ;
+    logic   [            `PIXEL_WIDTH - 1:0]     bram0_dataout               ;
+   
+    logic   [       C_LOG2_BRAM_DEPTH - 1:0]     bram1_wrAddr                ;
+    logic   [       C_LOG2_BRAM_DEPTH - 1:0]     bram1_rdAddr                ;
+    logic   [            `PIXEL_WIDTH - 1:0]     bram1_datain                ;
+    logic                                        bram1_wren                  ;
+    logic                                        bram1_rden                  ;
+    logic   [            `PIXEL_WIDTH - 1:0]     bram1_dataout               ;
+ 
+    logic   [       C_LOG2_BRAM_DEPTH - 1:0]     bram2_wrAddr                ;
+    logic   [       C_LOG2_BRAM_DEPTH - 1:0]     bram2_rdAddr                ;
+    logic   [            `PIXEL_WIDTH - 1:0]     bram2_datain                ;
+    logic                                        bram2_wren                  ;
+    logic                                        bram2_rden                  ;
+    logic   [            `PIXEL_WIDTH - 1:0]     bram2_dataout               ;
 
-    reg     [       C_LOG2_BRAM_DEPTH - 1:0]    bram1_wrAddr                ;
-    reg     [       C_LOG2_BRAM_DEPTH - 1:0]    bram1_rdAddr                ;
-    reg     [            `PIXEL_WIDTH - 1:0]    bram1_datain                ;
-    reg                                         bram1_wren                  ;
-    reg                                         bram1_rden                  ;
-    reg     [            `PIXEL_WIDTH - 1:0]    bram1_dataout               ;
+    logic   [       C_LOG2_BRAM_DEPTH - 1:0]     bram3_wrAddr                ;
+    logic   [       C_LOG2_BRAM_DEPTH - 1:0]     bram3_rdAddr                ;
+    logic   [            `PIXEL_WIDTH - 1:0]     bram3_datain                ;
+    logic                                        bram3_wren                  ;
+    logic                                        bram3_rden                  ;
+    logic   [            `PIXEL_WIDTH - 1:0]     bram3_dataout               ;
 
-    reg     [       C_LOG2_BRAM_DEPTH - 1:0]    bram2_wrAddr                ;
-    reg     [       C_LOG2_BRAM_DEPTH - 1:0]    bram2_rdAddr                ;
-    reg     [            `PIXEL_WIDTH - 1:0]    bram2_datain                ;
-    reg                                         bram2_wren                  ;
-    reg                                         bram2_rden                  ;
-    reg     [            `PIXEL_WIDTH - 1:0]    bram2_dataout               ;
-
-    reg     [       C_LOG2_BRAM_DEPTH - 1:0]    bram3_wrAddr                ;
-    reg     [       C_LOG2_BRAM_DEPTH - 1:0]    bram3_rdAddr                ;
-    reg     [            `PIXEL_WIDTH - 1:0]    bram3_datain                ;
-    reg                                         bram3_wren                  ;
-    reg                                         bram3_rden                  ;
-    reg     [            `PIXEL_WIDTH - 1:0]    bram3_dataout               ;
-
-    wire                                        ce0_row_matric              ;
-    wire                                        ce1_row_matric              ;      
-    reg     [       C_LOG2_BRAM_DEPTH - 2:0]    row_matric_ce0_wrAddr       ;
-    reg     [       C_LOG2_BRAM_DEPTH - 2:0]    row_matric_ce1_wrAddr       ;
+    logic                                        ce0_row_matric              ;
+    logic                                        ce1_row_matric              ;      
+    logic   [       C_LOG2_BRAM_DEPTH - 2:0]     row_matric_ce0_wrAddr       ;
+    logic   [       C_LOG2_BRAM_DEPTH - 2:0]     row_matric_ce1_wrAddr       ;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
