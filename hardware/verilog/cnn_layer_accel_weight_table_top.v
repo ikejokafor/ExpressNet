@@ -95,6 +95,7 @@ module cnn_layer_accel_weight_table_top #(
     reg     [                          5:0]     kernel_group                ;
     reg     [                          3:0]     kernel_count                ;
     reg                                         wht_table_rden              ;
+    wire                                        next_kernel_d               ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -122,6 +123,19 @@ module cnn_layer_accel_weight_table_top #(
         .data_in    ( kernel_group == kernel_full_count_cfg && !config_mode ),
         .data_out   ( last_kernel                                           )
     );
+    
+
+    SRL_bit #(
+        .C_CLOCK_CYCLES ( 6 )   // seq data 3 cycle latency and bram 3 cycle read latency
+    ) 
+    i2_SRL_bit (
+        .clk        ( clk               ),
+        .rst        ( rst               ),
+        .ce         ( 1'b1              ),
+        .data_in    ( next_kernel       ),
+        .data_out   ( next_kernel_d     )
+    );    
+    
     
     
     SRL_bus #(  
@@ -197,9 +211,9 @@ module cnn_layer_accel_weight_table_top #(
                 kernel_count <= kernel_count + 1;
             end
             // kernel group logic
-            if(job_accept || (kernel_group == kernel_full_count_cfg && next_kernel)) begin
+            if(job_accept || (kernel_group == kernel_full_count_cfg && next_kernel_d)) begin
                 kernel_group <= 0;
-            end else if ((kernel_count == 4'd9 && config_mode) || next_kernel) begin
+            end else if ((kernel_count == 4'd9 && config_mode) || next_kernel_d) begin
                 kernel_group <= kernel_group + 1;
             end
             if(ce_execute) begin

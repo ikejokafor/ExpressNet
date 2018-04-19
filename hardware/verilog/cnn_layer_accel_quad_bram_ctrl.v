@@ -52,6 +52,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     row_matric_wrAddr           ,
     ce_execute                  ,
     cycle_counter               ,
+    last_awe_ce1_cyc_counter    ,
     pix_seq_bram_rden           ,
     pix_seq_bram_rdAddr         ,
     next_kernel                 ,
@@ -106,6 +107,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    row_matric_wrAddr           ;
     output reg [         C_NUM_CE - 1:0]    ce_execute                  ;
     output reg [                    2:0]    cycle_counter               ;
+    input      [                    2:0]    last_awe_ce1_cyc_counter    ;
     output reg                              pix_seq_bram_rden           ;
     output reg [11:0]                       pix_seq_bram_rdAddr         ;
     output reg [         C_NUM_CE - 1:0]    next_kernel                 ;
