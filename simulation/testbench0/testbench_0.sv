@@ -518,11 +518,11 @@ module testbench_0;
         
 
         for(i = 0; i < DEPTH; i++) begin
-            for(a = 0; a < ROWS; a++) begin
-                for(b = 0; b < COLS; b++) begin
+            for(a = 0; a < (ROWS - 2); a++) begin
+                for(b = 0; b < (COLS - 2); b++) begin
                     for(n = 0; n < (KERNEL_SIZE * KERNEL_SIZE); n++) begin
                         if(!arr5[i][a][b][n]) begin
-                            $display("Bad");
+                            $display("Bad at %d %d %d %d", i, a, b, n);
                             $stop;
                         end
                     end

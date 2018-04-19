@@ -88,11 +88,12 @@ module cnn_layer_accel_quad (
     localparam C_WHT_TBL_ADDR_WIDTH     = C_NUM_CE * 4;
     localparam C_RELU_WIDTH             = C_NUM_CE * `PIXEL_WIDTH;
     
-    localparam ST_IDLE                  = 5'b00001;  
-    localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
-    localparam ST_WAIT_PFB_LOAD         = 5'b00100;
-    localparam ST_AWE_CE_ACTIVE         = 5'b01000;
-    localparam ST_JOB_DONE              = 5'b10000;
+    localparam ST_IDLE                  = 6'b000001;  
+    localparam ST_AWE_CE_PRIM_BUFFER    = 6'b000010;
+    localparam ST_WAIT_PFB_LOAD         = 6'b000100;
+    localparam ST_AWE_CE_ACTIVE         = 6'b001000;
+    localparam ST_WAIT_JOB_DONE         = 6'b010000;
+    localparam ST_SEND_COMPLETE         = 6'b100000;
    
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -186,7 +187,7 @@ module cnn_layer_accel_quad (
     wire   [              C_NUM_CE - 1:0]   last_kernel                     ;
     
     wire   [                         3:0]   quad_wht_ctrl_state             ;
-    wire   [                         4:0]   state                           ;
+    wire   [                         5:0]   state                           ;
   
     wire   [                         3:0]   ce0_wht_seq_addr                ;
     wire   [                         3:0]   ce1_wht_seq_addr                ;
@@ -196,6 +197,7 @@ module cnn_layer_accel_quad (
     wire   [          C_RELU_WIDTH - 1:0]   relu_out                        ; 
     reg                                     relu_cfg                        ;
     integer                                 idx                             ;
+    wire                                    pipeline_flushed                ;
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -323,12 +325,13 @@ module cnn_layer_accel_quad (
         .pfb_full_count             ( pfb_full_count_cfg                                                        ),
         .row_matric_wrAddr          ( row_matric_wrAddr                                                         ),
         .ce_execute                 ( ce_execute                                                                ),
-        .last_awe_ce1_cyc_counter   ( ce_cycle_counter[((C_NUM_CE - 1) * 3) +: 3]     ),
+        .last_awe_ce1_cyc_counter   ( ce_cycle_counter[((C_NUM_CE - 1) * 3) +: 3]                               ),
         .cycle_counter              ( cycle_counter                                                             ),
         .pix_seq_bram_rden          ( pix_seq_bram_rden                                                         ),
         .pix_seq_bram_rdAddr        ( pix_seq_bram_rdAddr                                                       ),
         .next_kernel                ( next_kernel                                                               ),
-        .last_kernel                ( last_kernel[(C_NUM_CE - 1) +: 1]                                          )
+        .last_kernel                ( last_kernel[(C_NUM_CE - 1) +: 1]                                          ),
+        .pipeline_flushed           ( pipeline_flushed                                                          )
     );
     
     
@@ -376,8 +379,9 @@ module cnn_layer_accel_quad (
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign wht_config_wren  = weight_ready && weight_valid;
-    assign weight_ready    = weight_valid;
-    assign config_mode     = state[0];
+    assign weight_ready     = weight_valid;
+    assign config_mode      = state[0];
+    assign pipeline_flushed = !(|ce0_pixel_dataout_valid) && !(|ce1_pixel_dataout_valid) && !(|wht_table_dout_valid);
     
     always@(posedge clk_core) begin
         if(rst) begin
@@ -423,7 +427,8 @@ module cnn_layer_accel_quad (
             ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
             ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
             ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
-            ST_JOB_DONE:                state_s = "ST_JOB_DONE";
+            ST_WAIT_JOB_DONE:           state_s = "ST_WAIT_JOB_DONE";
+            ST_SEND_COMPLETE:           state_s = "ST_SEND_COMPLETE";
         endcase
     end
 `endif

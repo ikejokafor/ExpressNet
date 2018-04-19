@@ -56,7 +56,8 @@ module cnn_layer_accel_quad_bram_ctrl (
     pix_seq_bram_rden           ,
     pix_seq_bram_rdAddr         ,
     next_kernel                 ,
-    last_kernel                 
+    last_kernel                 ,
+    pipeline_flushed                
 );
 
 
@@ -74,12 +75,13 @@ module cnn_layer_accel_quad_bram_ctrl (
     localparam C_LOG2_SEQ_DATA_DEPTH    = clog2((`BRAM_DEPTH / 2) * 5);
     localparam C_NUM_CE                 = `NUM_AWE * `NUM_CE_PER_AWE; 
 
-    localparam ST_IDLE                  = 5'b00001;  
-    localparam ST_AWE_CE_PRIM_BUFFER    = 5'b00010;
-    localparam ST_WAIT_PFB_LOAD         = 5'b00100;
-    localparam ST_AWE_CE_ACTIVE         = 5'b01000;
-    localparam ST_JOB_DONE              = 5'b10000;
-
+    localparam ST_IDLE                  = 6'b000001;  
+    localparam ST_AWE_CE_PRIM_BUFFER    = 6'b000010;
+    localparam ST_WAIT_PFB_LOAD         = 6'b000100;
+    localparam ST_AWE_CE_ACTIVE         = 6'b001000;
+    localparam ST_WAIT_JOB_DONE         = 6'b010000;
+    localparam ST_SEND_COMPLETE         = 6'b100000;
+    
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
@@ -96,7 +98,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     input                                   job_fetch_complete          ;
     output reg                              job_complete                ;
     input                                   job_complete_ack            ;
-    output reg [                    4:0]    state                       ;
+    output reg [                    5:0]    state                       ;
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
     output reg [C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
     input                                   pfb_empty                   ;
@@ -112,6 +114,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     output reg [11:0]                       pix_seq_bram_rdAddr         ;
     output reg [         C_NUM_CE - 1:0]    next_kernel                 ;
     input                                   last_kernel                 ;
+    input                                   pipeline_flushed            ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -357,7 +360,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                     end
                     // next state
                     if(output_col == num_output_cols && output_row == num_output_rows && cycle_counter == 4 && last_kernel) begin
-                        next_state          <= ST_JOB_DONE;
+                        next_state          <= ST_WAIT_JOB_DONE;
                     end else if(output_col == num_output_cols && output_row != num_output_rows && cycle_counter == 4) begin
                         pix_seq_bram_rden_r  <= 0;
                         if(input_row != (num_input_rows + 1) && last_kernel) begin
@@ -367,7 +370,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                             next_state      <= ST_AWE_CE_ACTIVE;
                         end
                     end
-                    if(!ce_execute && pix_seq_data_count == 0) begin
+                    if(!ce_execute && i0_cnn_layer_accel_quad.genblk1[3].i0_cnn_layer_accel_awe_rowbuffers.ce1_cycle_counter == 4) begin
                         row_matric_wrAddr   <= 0;
                         pix_seq_data_count  <= pix_seq_data_full_count;
                         if(next_state[4]) begin
@@ -378,9 +381,14 @@ module cnn_layer_accel_quad_bram_ctrl (
                         state <= next_state;
                     end
                 end
-                ST_JOB_DONE: begin
-                    job_complete 	    <= job_complete_ack  ? 1'b0 : (~job_complete_acked ? 1'b1 : job_complete);
-				    job_complete_acked  <= job_complete_ack  ? 1'b1 :  job_complete_acked; 
+                ST_WAIT_JOB_DONE: begin            
+                    if(pipeline_flushed) begin
+                        state  <= ST_SEND_COMPLETE;
+                    end
+                end
+                ST_SEND_COMPLETE: begin
+                    job_complete 	            <= job_complete_ack  ? 1'b0 : (~job_complete_acked ? 1'b1 : job_complete);
+				    job_complete_acked          <= job_complete_ack  ? 1'b1 :  job_complete_acked; 
                     pix_seq_bram_rdAddr          <= 0;                    
                     if(job_complete_ack) begin
                         job_complete_acked      <= 0;
@@ -404,22 +412,24 @@ module cnn_layer_accel_quad_bram_ctrl (
     string state_s;
     always@(state) begin 
         case(state) 
-                ST_IDLE:                    state_s = "ST_IDLE";              
-                ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
-                ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
-                ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
-                ST_JOB_DONE:                state_s = "ST_JOB_DONE";
+            ST_IDLE:                    state_s = "ST_IDLE";              
+            ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
+            ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
+            ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
+            ST_WAIT_JOB_DONE:           state_s = "ST_WAIT_JOB_DONE";
+            ST_SEND_COMPLETE:           state_s = "ST_SEND_COMPLETE";
         endcase
     end
     
     string next_state_s;
-    always@(state) begin 
-        case(state) 
-                ST_IDLE:                    next_state_s = "NEXT_ST_IDLE";              
-                ST_AWE_CE_PRIM_BUFFER:      next_state_s = "NEXT_ST_AWE_CE_PRIM_BUFFER";
-                ST_WAIT_PFB_LOAD:           next_state_s = "NEXT_ST_WAIT_PFB_LOAD";           
-                ST_AWE_CE_ACTIVE:           next_state_s = "NEXT_ST_AWE_CE_ACTIVE";
-                ST_JOB_DONE:                next_state_s = "NEXT_ST_JOB_DONE";
+    always@(next_state) begin 
+        case(next_state) 
+            ST_IDLE:                    next_state_s = "NEXT_ST_IDLE";              
+            ST_AWE_CE_PRIM_BUFFER:      next_state_s = "NEXT_ST_AWE_CE_PRIM_BUFFER";
+            ST_WAIT_PFB_LOAD:           next_state_s = "NEXT_ST_WAIT_PFB_LOAD";           
+            ST_AWE_CE_ACTIVE:           next_state_s = "NEXT_ST_AWE_CE_ACTIVE";
+            ST_WAIT_JOB_DONE:           next_state_s = "NEXT_ST_WAIT_JOB_DONE";
+            ST_SEND_COMPLETE:           next_state_s = "NEXT_ST_SEND_COMPLETE";
         endcase
     end
 `endif
