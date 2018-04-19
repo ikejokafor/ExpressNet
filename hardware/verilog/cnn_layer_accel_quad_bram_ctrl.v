@@ -409,6 +409,17 @@ module cnn_layer_accel_quad_bram_ctrl (
                 ST_JOB_DONE:                state_s = "ST_JOB_DONE";
         endcase
     end
+    
+    string next_state_s;
+    always@(state) begin 
+        case(state) 
+                ST_IDLE:                    next_state_s = "NEXT_ST_IDLE";              
+                ST_AWE_CE_PRIM_BUFFER:      next_state_s = "NEXT_ST_AWE_CE_PRIM_BUFFER";
+                ST_WAIT_PFB_LOAD:           next_state_s = "NEXT_ST_WAIT_PFB_LOAD";           
+                ST_AWE_CE_ACTIVE:           next_state_s = "NEXT_ST_AWE_CE_ACTIVE";
+                ST_JOB_DONE:                next_state_s = "NEXT_ST_JOB_DONE";
+        endcase
+    end
 `endif
 
 
