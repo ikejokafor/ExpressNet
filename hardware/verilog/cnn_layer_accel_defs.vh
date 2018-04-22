@@ -40,24 +40,22 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 //	Utilities
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define UNPACK_ARRAY_1D(PK_WIDTH, PK_LEN, PK_SRC, PK_DEST)                                                                  \
-    genvar unpk_idx;                                                                                                        \
-    generate                                                                                                                \
-        for(unpk_idx = 0; unpk_idx < (PK_LEN); unpk_idx = unpk_idx + 1) begin                                               \
-            assign PK_DEST[unpk_idx][PK_WIDTH- 1:0] = PK_SRC[(PK_WIDTH * unpk_idx) +: PK_WIDTH];                            \
-        end                                                                                                                 \
-    endgenerate
+`define UNPACK_ARRAY_1D(PK_WIDTH, PK_LEN, PK_SRC, PK_DEST, g)                        \
+    generate                                                                         \
+        for(g = 0; g < (PK_LEN); g = g + 1) begin                                    \
+            assign PK_DEST[g][PK_WIDTH - 1:0] = PK_SRC[(PK_WIDTH * g) +: PK_WIDTH];  \
+        end                                                                          \
+    endgenerate                                                                      \
 
-`define PACK_ARRAY_1D(PK_WIDTH, PK_LEN, PK_SRC, PK_DEST)                                                                    \
-    genvar pk_idx;                                                                                                          \
-    generate                                                                                                                \
-        for(pk_idx = 0; pk_idx < (PK_LEN); pk_idx = pk_idx + 1) begin                                                       \
-            assign PK_DEST[(PK_WIDTH * pk_idx) +: PK_WIDTH] = PK_SRC[pk_idx][PK_WIDTH- 1:0];                                \
-        end                                                                                                                 \
-    endgenerate                                                                                                             \
+`define PACK_ARRAY_1D(PK_WIDTH, PK_LEN, PK_SRC, PK_DEST, g)                             \
+    generate                                                                            \
+        for(g = 0; g < (PK_LEN); g = g + 1) begin                                       \
+            assign PK_DEST[(PK_WIDTH * g) +: PK_WIDTH] = PK_SRC[g][PK_WIDTH - 1:0];     \
+        end                                                                             \
+    endgenerate                                                                         \
 
 
-    //-----------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------
 //	MSC
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 `define PIXEL_WIDTH                     16
@@ -70,7 +68,7 @@
 `define NUM_CE_PER_AWE                  2
 `define NUM_WHT_SEQ_VALUES              5
 `define WHT_SEQ_WIDTH                   4
-`define NUM_DSP_PER_ENG                 2
+`define NUM_DSP_PER_CE                  2
 `define NUM_WHT_SEQ_TABLE_PER_AWE       4
 
 

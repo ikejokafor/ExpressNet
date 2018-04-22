@@ -25,18 +25,19 @@
 // Additional Comments:
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-module testbench_0;
-
-    //-----------------------------------------------------------------------------------------------------------------------------------------------
-	//	Clock and Reset
-	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    parameter C_PERIOD_100MHz = 10;    
-    parameter C_PERIOD_500MHz = 2; 
-    logic rst;
-    logic clk_100MHz;
-    logic clk_500MHz;
-
-
+module test_0_wrapper #(
+    parameter ROWS              = 20 ,
+    parameter COLS              = 20 ,
+    parameter DEPTH             = 8  ,
+    parameter KERNEL_SIZE       = 3  ,
+    parameter NUM_KERNELS       = 5  ,
+    parameter C_PERIOD_100MHz   = 10 ,
+    parameter C_PERIOD_500MHz   = 2 
+) (
+    input logic clk_100MHz    ,
+    input logic clk_500MHz    ,
+    input logic rst           
+);
   	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -48,15 +49,10 @@ module testbench_0;
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_LOG2_BRAM_DEPTH        = clog2(`BRAM_DEPTH);
-    localparam ROWS                     = 10;
-    localparam COLS                     = 10;
-    localparam DEPTH                    = 8;
     localparam NUM_KERNEL_3x3_VALUES    = 10;
-    localparam KERNEL_SIZE              = 3;
-    localparam NUM_KERNELS              = 16'd2;
     localparam NUM_CE_PER_QUAD          = `NUM_AWE * `NUM_CE_PER_AWE;
-   
 
+    
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
@@ -82,11 +78,13 @@ module testbench_0;
     genvar           g;
     
     integer fd, fd0;
-    logic [`PIXEL_WIDTH - 1:0]    pixel_data_sim[0:((ROWS * COLS * 8) - 1)];
+    logic [`PIXEL_WIDTH - 1:0]    pix_data_sim[0:((ROWS * COLS * 8) - 1)];
+    int                           pix_data_sol[0:(DEPTH - 1)][0:((ROWS - 2) - 1)][0:((COLS - 2) - 1)][0:((KERNEL_SIZE * KERNEL_SIZE) - 1)];
+    int                           pix_data_result[0:(DEPTH - 1)][0:((ROWS - 2) - 1)][0:((COLS - 2) - 1)][0:((KERNEL_SIZE * KERNEL_SIZE) - 1)];    
     logic [15:0]                  pix_seq_data_sim[0:((512 * 8) - 1)];
-    logic [15:0]                  kernel_data_sim[0:((DEPTH * NUM_KERNEL_3x3_VALUES * NUM_KERNELS) - 1)];     // for 3x3 kernel, there are 10 values
-    int                           pix_seq_data_sol[0:(DEPTH - 1)][0:((ROWS - 2) - 1)][0:((COLS - 2) - 1)][0:((KERNEL_SIZE * KERNEL_SIZE) - 1)];
-    int                           pix_seq_data_result[0:(DEPTH - 1)][0:((ROWS - 2) - 1)][0:((COLS - 2) - 1)][0:((KERNEL_SIZE * KERNEL_SIZE) - 1)];
+    logic [15:0]                  kernel_data_sim[0:((DEPTH * NUM_KERNEL_3x3_VALUES * NUM_KERNELS) - 1)];
+   // logic [15:0]                  kernel_data_sim[0:((DEPTH * NUM_KERNEL_3x3_VALUES * NUM_KERNELS) - 1)];
+
     logic [15:0] kernel_group_cfg;  
     int i;
     int j;
@@ -170,13 +168,15 @@ module testbench_0;
         .pixel_data           ( pixel_data   )
     );
     
+
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------  
     generate
         for(g = 0; g < `NUM_AWE; g = g + 1) begin
 
             assign ce0_pixel_dataout_valid[g]           = i0_cnn_layer_accel_quad.ce0_pixel_dataout_valid[g];
             assign ce1_pixel_dataout_valid[g]           = i0_cnn_layer_accel_quad.ce1_pixel_dataout_valid[g];  
-            assign ce0_pixel_dataout[g][31:0]           = i0_cnn_layer_accel_quad.ce0_pixel_dataout[g * 32 +: 32];
-            assign ce1_pixel_dataout[g][31:0]           = i0_cnn_layer_accel_quad.ce1_pixel_dataout[g * 32 +: 32];
+            assign ce0_pixel_dataout[g]                 = i0_cnn_layer_accel_quad.ce0_pixel_dataout[g];
+            assign ce1_pixel_dataout[g]                 = i0_cnn_layer_accel_quad.ce1_pixel_dataout[g];
 
             
             always@(posedge clk_500MHz) begin
@@ -231,9 +231,9 @@ module testbench_0;
                 if(ce0_pixel_dataout_valid[g]) begin
                     for(i0 = 0; i0 < (KERNEL_SIZE * KERNEL_SIZE); i0++) begin
                         if(output_row0[g]  < COLS - 2 && output_col0[g]  < ROWS - 2) begin
-                            if(pix_seq_data_sol[g * 2][output_row0[g]][output_col0[g]][i0] == ce0_pixel_dataout[g][31:16] 
-                                || pix_seq_data_sol[g * 2][output_row0[g]][output_col0[g]][i0] == ce0_pixel_dataout[g][15:0]) begin
-                                pix_seq_data_result[g * 2][output_row0[g] ][output_col0[g]][i0] = 1;
+                            if(pix_data_sol[g * 2][output_row0[g]][output_col0[g]][i0] == ce0_pixel_dataout[g][31:16] 
+                                || pix_data_sol[g * 2][output_row0[g]][output_col0[g]][i0] == ce0_pixel_dataout[g][15:0]) begin
+                                pix_data_result[g * 2][output_row0[g] ][output_col0[g]][i0] = 1;
                             end
                         end
                     end
@@ -244,9 +244,9 @@ module testbench_0;
                 if(ce0_pixel_dataout_valid[g]) begin
                     for(i0 = 0; i0 < (KERNEL_SIZE * KERNEL_SIZE); i0++) begin
                         if(output_row1[g]  < COLS - 2 && output_col1[g]  < ROWS - 2) begin
-                            if(pix_seq_data_sol[g * 2 + 1][output_row1[g]][output_col1[g]][i0] == ce1_pixel_dataout[g][31:16] 
-                                || pix_seq_data_sol[g * 2 + 1][output_row1[g]][output_col1[g]][i0] == ce1_pixel_dataout[g][15:0]) begin
-                                pix_seq_data_result[g * 2 + 1][output_row1[g] ][output_col1[g]][i0] = 1;
+                            if(pix_data_sol[g * 2 + 1][output_row1[g]][output_col1[g]][i0] == ce1_pixel_dataout[g][31:16] 
+                                || pix_data_sol[g * 2 + 1][output_row1[g]][output_col1[g]][i0] == ce1_pixel_dataout[g][15:0]) begin
+                                pix_data_result[g * 2 + 1][output_row1[g] ][output_col1[g]][i0] = 1;
                             end
                         end
                     end
@@ -255,6 +255,8 @@ module testbench_0;
             
         end    
     endgenerate
+ 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
+    
     
     initial begin
         // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
@@ -279,8 +281,8 @@ module testbench_0;
         for(k = 0; k < DEPTH; k = k + 1) begin
             for(i = 0; i < ROWS; i = i + 1) begin
                 for(j = 0; j < COLS; j = j + 1) begin
-                    pixel_data_sim[(k * ROWS + i) * COLS + j] = $urandom_range(1, 65535);
-                    $fwrite(fd, "%d ", pixel_data_sim[(k * ROWS + i) * COLS + j]);
+                    pix_data_sim[(k * ROWS + i) * COLS + j] = $urandom_range(1, 65535);
+                    $fwrite(fd, "%d ", pix_data_sim[(k * ROWS + i) * COLS + j]);
                 end
                 $fwrite(fd, "\n");
             end
@@ -300,8 +302,8 @@ module testbench_0;
                     for(n0 = 0; n0 < KERNEL_SIZE; n0 = n0 + 1) begin
                         b = j;
                         for(n1 = 0; n1 < KERNEL_SIZE; n1 = n1 + 1) begin
-                            pix_seq_data_sol[k][i][j][z] = pixel_data_sim[(k * ROWS + a) * COLS + b];
-                            pix_seq_data_result[k][i][j][z] = 0;
+                            pix_data_sol[k][i][j][z] = pix_data_sim[(k * ROWS + a) * COLS + b];
+                            pix_data_result[k][i][j][z] = 0;
                             b++;
                             z++;
                         end
@@ -318,7 +320,7 @@ module testbench_0;
         for(k = 0; k < NUM_KERNELS; k = k + 1) begin
             for(i = 0; i < DEPTH; i = i + 1) begin
                 for(j = 0; j < NUM_KERNEL_3x3_VALUES; j = j + 1) begin
-                    kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] = $urandom_range(1, 10);
+                    kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] = $urandom_range(1, 100);
                     $fwrite(fd, "%d ", kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j]);
                 end
                 $fwrite(fd, "\n");
@@ -331,7 +333,7 @@ module testbench_0;
  
 
         // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------          
-        //                 RM   RST    P
+        //                            RM   RST    P
         pix_seq_data_sim[0] = {3'b0, 1'b0, 1'b1, 1'b1, 10'd0  };
         pix_seq_data_sim[1] = {3'b0, 1'b0, 1'b0, 1'b0, 10'd2  };
         pix_seq_data_sim[2] = {3'b0, 1'b0, 1'b0, 1'b0, 10'd512};
@@ -362,12 +364,6 @@ module testbench_0;
         $fclose(fd);
  	    // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
-        
-        // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------                  
-        rst = 1;
-        #(C_PERIOD_100MHz * 2) rst = 0;
- 	    // END logic ------------------------------------------------------------------------------------------------------------------------------------
- 
  
         // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------                  
         i = 1;
@@ -492,27 +488,27 @@ module testbench_0;
                 @(posedge clk_100MHz);
                 job_fetch_ack = 0;
                 pixel_valid  = 1;
-                pixel_data[127:112]     = pixel_data_sim[(7 * (ROWS * COLS)) + i];
-                pixel_data[111:96]      = pixel_data_sim[(6 * (ROWS * COLS)) + i];          
-                pixel_data[95:80]       = pixel_data_sim[(5 * (ROWS * COLS)) + i];           
-                pixel_data[79:64]       = pixel_data_sim[(4 * (ROWS * COLS)) + i];           
-                pixel_data[63:48]       = pixel_data_sim[(3 * (ROWS * COLS)) + i];           
-                pixel_data[47:32]       = pixel_data_sim[(2 * (ROWS * COLS)) + i];            
-                pixel_data[31:16]       = pixel_data_sim[(1 * (ROWS * COLS)) + i];           
-                pixel_data[15:0]        = pixel_data_sim[(0 * (ROWS * COLS)) + i];
+                pixel_data[127:112]     = pix_data_sim[(7 * (ROWS * COLS)) + i];
+                pixel_data[111:96]      = pix_data_sim[(6 * (ROWS * COLS)) + i];          
+                pixel_data[95:80]       = pix_data_sim[(5 * (ROWS * COLS)) + i];           
+                pixel_data[79:64]       = pix_data_sim[(4 * (ROWS * COLS)) + i];           
+                pixel_data[63:48]       = pix_data_sim[(3 * (ROWS * COLS)) + i];           
+                pixel_data[47:32]       = pix_data_sim[(2 * (ROWS * COLS)) + i];            
+                pixel_data[31:16]       = pix_data_sim[(1 * (ROWS * COLS)) + i];           
+                pixel_data[15:0]        = pix_data_sim[(0 * (ROWS * COLS)) + i];
                 j                       = i + 1;
                 n                       = 0;
                 while(n < COLS) begin
                     @(posedge clk_100MHz);
                     if(pixel_ready) begin
-                        pixel_data[127:112]  = pixel_data_sim[(7 * (ROWS * COLS)) + j];
-                        pixel_data[111:96]   = pixel_data_sim[(6 * (ROWS * COLS)) + j];          
-                        pixel_data[95:80]    = pixel_data_sim[(5 * (ROWS * COLS)) + j];           
-                        pixel_data[79:64]    = pixel_data_sim[(4 * (ROWS * COLS)) + j];           
-                        pixel_data[63:48]    = pixel_data_sim[(3 * (ROWS * COLS)) + j];           
-                        pixel_data[47:32]    = pixel_data_sim[(2 * (ROWS * COLS)) + j];            
-                        pixel_data[31:16]    = pixel_data_sim[(1 * (ROWS * COLS)) + j];           
-                        pixel_data[15:0]     = pixel_data_sim[(0 * (ROWS * COLS)) + j];
+                        pixel_data[127:112]  = pix_data_sim[(7 * (ROWS * COLS)) + j];
+                        pixel_data[111:96]   = pix_data_sim[(6 * (ROWS * COLS)) + j];          
+                        pixel_data[95:80]    = pix_data_sim[(5 * (ROWS * COLS)) + j];           
+                        pixel_data[79:64]    = pix_data_sim[(4 * (ROWS * COLS)) + j];           
+                        pixel_data[63:48]    = pix_data_sim[(3 * (ROWS * COLS)) + j];           
+                        pixel_data[47:32]    = pix_data_sim[(2 * (ROWS * COLS)) + j];            
+                        pixel_data[31:16]    = pix_data_sim[(1 * (ROWS * COLS)) + j];           
+                        pixel_data[15:0]     = pix_data_sim[(0 * (ROWS * COLS)) + j];
                         j                   = j + 1;
                         n                   = n + 1;
                     end
@@ -545,8 +541,8 @@ module testbench_0;
             for(a = 0; a < (ROWS - 2); a++) begin
                 for(b = 0; b < (COLS - 2); b++) begin
                     for(n = 0; n < (KERNEL_SIZE * KERNEL_SIZE); n++) begin
-                        if(!pix_seq_data_result[i][a][b][n]) begin
-                            $display("Bad at %d %d %d %d", i, a, b, n);
+                        if(!pix_data_result[i][a][b][n]) begin
+                            $display("Failed at: %d %d %d %d", i, a, b, n);
                             $stop;
                         end
                     end
@@ -554,7 +550,7 @@ module testbench_0;
             end
         end
         
-        $display("Good");
+        $display("Passed");
         $stop;
   	    // END logic ------------------------------------------------------------------------------------------------------------------------------------        
     end

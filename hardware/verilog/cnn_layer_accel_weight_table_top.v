@@ -37,13 +37,12 @@ module cnn_layer_accel_weight_table_top #(
     kernel_full_count           ,    
     wht_config_wren             ,
     wht_config_data             ,
-    ce0_wht_seq_addr            ,
-    ce1_wht_seq_addr            ,
+    wht_seq_addr0               ,
+    wht_seq_addr1               ,
     ce_execute                  ,
     ce_cycle_counter            ,    
-    ce0_wht_table_dout          ,   
-    ce1_wht_table_dout          ,   
-    ce_wht_table_dout_valid       
+    wht_table_dout              ,   
+    wht_table_dout_valid       
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -57,7 +56,7 @@ module cnn_layer_accel_weight_table_top #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	localparam C_CLG2_BRAM_A_DEPTH          = clog2(`BRAM_DEPTH);
     localparam C_CLG2_BRAM_B_DEPTH          = clog2(`BRAM_DEPTH);
-    localparam C_WHT_DOUT_WIDTH             = `WEIGHT_WIDTH; 
+    localparam C_WHT_DOUT_WIDTH             = `WEIGHT_WIDTH * `NUM_DSP_PER_CE; 
 
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -73,13 +72,12 @@ module cnn_layer_accel_weight_table_top #(
     input   logic [                   15:0]   kernel_full_count           ;
     input   logic                             wht_config_wren             ;
     input   logic [                   15:0]   wht_config_data             ;
-    input   logic [                    3:0]   ce0_wht_seq_addr            ;
-    input   logic [                    3:0]   ce1_wht_seq_addr            ;
+    input   logic [                    3:0]   wht_seq_addr0               ;
+    input   logic [                    3:0]   wht_seq_addr1               ;
     input   logic                             ce_execute                  ;
     input   logic [                    2:0]   ce_cycle_counter            ;
-    output  logic [ C_WHT_DOUT_WIDTH - 1:0]   ce0_wht_table_dout          ;
-    output  logic [ C_WHT_DOUT_WIDTH - 1:0]   ce1_wht_table_dout          ;
-    output  logic                             ce_wht_table_dout_valid     ;
+    output  logic [ C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout              ;
+    output  logic                             wht_table_dout_valid        ;
  
  
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -87,16 +85,18 @@ module cnn_layer_accel_weight_table_top #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     logic    [    C_CLG2_BRAM_A_DEPTH - 1:0]     wht_table_addrA             ;
     logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addrA_cfg         ;
-    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce0_wht_table_addr_w        ;
-    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce0_wht_table_addr          ;
-    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce1_wht_table_addr_w        ;   
-    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     ce1_wht_table_addr          ;
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addr0_w           ;
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addr0             ;
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addr1_w           ;   
+    logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addr1             ;
     logic    [                          5:0]     kernel_full_count_cfg       ;
     logic    [                          5:0]     kernel_group                ;
     logic    [                          3:0]     kernel_count                ;
     logic                                        wht_table_rden              ;
     logic                                        next_kernel_d               ;
-    
+    logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout0             ;
+    logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout1             ;
+   
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -109,7 +109,7 @@ module cnn_layer_accel_weight_table_top #(
         .rst        ( rst                       ),
         .ce         ( 1'b1                      ),
         .data_in    ( wht_table_rden            ),
-        .data_out   ( ce_wht_table_dout_valid   )
+        .data_out   ( wht_table_dout_valid      )
     );
 
     
@@ -143,11 +143,11 @@ module cnn_layer_accel_weight_table_top #(
         .C_DATA_WIDTH    ( C_CLG2_BRAM_A_DEPTH      )
     ) 
     i0_SRL_bus (
-        .clk        ( clk                   ),
-        .ce         ( 1'b1                  ),
-        .rst        ( rst                   ),
-        .data_in    ( ce0_wht_table_addr_w  ),
-        .data_out   ( ce0_wht_table_addr    )
+        .clk        ( clk                ),
+        .ce         ( 1'b1               ),
+        .rst        ( rst                ),
+        .data_in    ( wht_table_addr0_w  ),
+        .data_out   ( wht_table_addr0    )
     );
     
     
@@ -156,11 +156,11 @@ module cnn_layer_accel_weight_table_top #(
         .C_DATA_WIDTH    ( C_CLG2_BRAM_B_DEPTH      )
     ) 
     i1_SRL_bus (
-        .clk        ( clk                   ),
-        .ce         ( 1'b1                  ),
-        .rst        ( rst                   ),
-        .data_in    ( ce1_wht_table_addr_w  ),
-        .data_out   ( ce1_wht_table_addr    )
+        .clk        ( clk                ),
+        .ce         ( 1'b1               ),
+        .rst        ( rst                ),
+        .data_in    ( wht_table_addr1_w  ),
+        .data_out   ( wht_table_addr1    )
     );
     
 
@@ -177,21 +177,22 @@ module cnn_layer_accel_weight_table_top #(
         .wrenA      ( wht_config_wren       ),
         .dinA       ( wht_config_data       ),
         .rdenA      ( wht_table_rden        ),
-        .doutA      ( ce0_wht_table_dout    ),
+        .doutA      ( wht_table_dout0       ),
         .clkB       ( clk                   ),
-        .addrB      ( ce1_wht_table_addr    ),
+        .addrB      ( wht_table_addr1       ),
         .wrenB      (                       ),
         .dinB       (                       ),
         .rdenB      ( wht_table_rden        ),
-        .doutB      ( ce1_wht_table_dout    )
+        .doutB      ( wht_table_dout1       )
     );
     
 
 	// BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
     assign wht_table_addrA_cfg      = {kernel_group      ,   kernel_count       };
-    assign ce0_wht_table_addr_w     = {kernel_group      ,   ce0_wht_seq_addr   };
-    assign ce1_wht_table_addr_w     = {kernel_group      ,   ce1_wht_seq_addr   };
-    assign wht_table_addrA          = (config_mode) ? wht_table_addrA_cfg : ce0_wht_table_addr;
+    assign wht_table_addr0_w        = {kernel_group      ,   wht_seq_addr0      };
+    assign wht_table_addr1_w        = {kernel_group      ,   wht_seq_addr1      };
+    assign wht_table_addrA          = (config_mode) ? wht_table_addrA_cfg : wht_table_addr0;
+    assign wht_table_dout           = {wht_table_dout1, wht_table_dout0};
     
     always@(posedge clk) begin
         if(rst) begin
