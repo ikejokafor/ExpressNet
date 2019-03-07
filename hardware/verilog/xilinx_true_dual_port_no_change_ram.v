@@ -26,14 +26,7 @@
 //                      
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function integer clog2;
-    input integer value;
-    begin
-        value = value-1;      
-        for(clog2 = 0; value > 0; clog2 = clog2 + 1)
-            value = value >> 1;
-    end
-endfunction
+`include "math.vh"
 
 
 module xilinx_true_dual_port_no_change_ram #(
@@ -132,9 +125,9 @@ endgenerate
     
 
 	// BEGIN BRAM Port B Write logic ----------------------------------------------------------------------------------------------------------------
-    always@(posedge clkA) begin
-        if(wrenA) begin
-            BRAM[addrA] <= dinA;
+    always@(posedge clkB) begin
+        if(wrenB) begin
+            BRAM[addrB] <= dinB;
         end
     end
     // END BRAM Port B Write logic ------------------------------------------------------------------------------------------------------------------

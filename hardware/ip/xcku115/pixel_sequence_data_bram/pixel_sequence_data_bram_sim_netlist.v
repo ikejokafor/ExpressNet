@@ -1,7 +1,7 @@
 // Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2016.1 (lin64) Build 1538259 Fri Apr  8 15:45:23 MDT 2016
-// Date        : Fri Mar 30 12:51:50 2018
+// Tool Version: Vivado v.2016.4 (lin64) Build 1733598 Wed Dec 14 22:35:42 MST 2016
+// Date        : Wed May  2 17:06:45 2018
 // Host        : redrealm.cse.psu.edu running 64-bit unknown
 // Command     : write_verilog -force -mode funcsim
 //               /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/pixel_sequence_data_bram/pixel_sequence_data_bram_sim_netlist.v
@@ -12,7 +12,7 @@
 // --------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CHECK_LICENSE_TYPE = "pixel_sequence_data_bram,blk_mem_gen_v8_3_2,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "blk_mem_gen_v8_3_2,Vivado 2016.1" *) 
+(* CHECK_LICENSE_TYPE = "pixel_sequence_data_bram,blk_mem_gen_v8_3_5,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "blk_mem_gen_v8_3_5,Vivado 2016.4" *) 
 (* NotValidForBitStream *)
 module pixel_sequence_data_bram
    (clka,
@@ -134,9 +134,8 @@ module pixel_sequence_data_bram
   (* C_WRITE_WIDTH_A = "128" *) 
   (* C_WRITE_WIDTH_B = "16" *) 
   (* C_XDEVICEFAMILY = "kintexu" *) 
-  (* KEEP_HIERARCHY = "true" *) 
   (* downgradeipidentifiedwarnings = "yes" *) 
-  pixel_sequence_data_bram_blk_mem_gen_v8_3_2 U0
+  pixel_sequence_data_bram_blk_mem_gen_v8_3_5 U0
        (.addra(addra),
         .addrb(addrb),
         .clka(clka),
@@ -1128,8 +1127,8 @@ endmodule
 (* C_USE_URAM = "0" *) (* C_WEA_WIDTH = "1" *) (* C_WEB_WIDTH = "1" *) 
 (* C_WRITE_DEPTH_A = "512" *) (* C_WRITE_DEPTH_B = "4096" *) (* C_WRITE_MODE_A = "NO_CHANGE" *) 
 (* C_WRITE_MODE_B = "WRITE_FIRST" *) (* C_WRITE_WIDTH_A = "128" *) (* C_WRITE_WIDTH_B = "16" *) 
-(* C_XDEVICEFAMILY = "kintexu" *) (* ORIG_REF_NAME = "blk_mem_gen_v8_3_2" *) (* downgradeipidentifiedwarnings = "yes" *) 
-module pixel_sequence_data_bram_blk_mem_gen_v8_3_2
+(* C_XDEVICEFAMILY = "kintexu" *) (* ORIG_REF_NAME = "blk_mem_gen_v8_3_5" *) (* downgradeipidentifiedwarnings = "yes" *) 
+module pixel_sequence_data_bram_blk_mem_gen_v8_3_5
    (clka,
     rsta,
     ena,
@@ -1463,7 +1462,7 @@ module pixel_sequence_data_bram_blk_mem_gen_v8_3_2
   assign sbiterr = \<const0> ;
   GND GND
        (.G(\<const0> ));
-  pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth inst_blk_mem_gen
+  pixel_sequence_data_bram_blk_mem_gen_v8_3_5_synth inst_blk_mem_gen
        (.addra(addra),
         .addrb(addrb),
         .clka(clka),
@@ -1476,8 +1475,8 @@ module pixel_sequence_data_bram_blk_mem_gen_v8_3_2
         .wea(wea));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_v8_3_2_synth" *) 
-module pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth
+(* ORIG_REF_NAME = "blk_mem_gen_v8_3_5_synth" *) 
+module pixel_sequence_data_bram_blk_mem_gen_v8_3_5_synth
    (doutb,
     clkb,
     clka,

@@ -1,4 +1,4 @@
-`timescale 1ns / 1ns
+`timescale 1ns / 1ps
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Company:      
 //        
@@ -64,7 +64,10 @@ module SRL_bus #(
                             shift_reg[i] = {C_CLOCK_CYCLES{1'b0}};
                         end
                     end else if(ce) begin
-                        shift_reg[i] <= {shift_reg[i][C_CLOCK_CYCLES - 2:0], data_in[i]};
+                        if(C_CLOCK_CYCLES == 1)
+                            shift_reg[i] <= {data_in[i]};
+                        else    
+                            shift_reg[i] <= {shift_reg[i][C_CLOCK_CYCLES - 2:0], data_in[i]};
                     end
                 end        
                 assign data_out[i] = shift_reg[i][C_CLOCK_CYCLES - 1];

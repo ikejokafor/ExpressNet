@@ -3,14 +3,14 @@
 #
 # Tips:
 #   IF STATEMENT EXAMPLE:
-#       set(SRCS src.cpp)
-#       if(WIN32)
-#           set(SRCS ${SRCS} win_src.cpp)
+#       SET(SRCS src.cpp)
+#       IF(WIN32)
+#           SET(SRCS ${SRCS} win_src.cpp)
 #       elseif(UNIX)
-#           set(SRCS ${SRCS} unix_src.cpp)
-#       else()
+#           SET(SRCS ${SRCS} unix_src.cpp)
+#       ELSE()
 
-#       endif()
+#       ENDIF()
 #
 #   Make with Debug (Default)
 #       $ cd <path_to_cmakelist.txt>
@@ -65,11 +65,11 @@ ADD_LIBRARY(${TARGET_NAME} STATIC ${TARGET_SRCS} ${TARGET_HEADERS})
 
 
 # BEGIN Debug / Release Settings --------------------------------------------------------------------------------------------------------------------
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Debug)
-endif()
-set(CMAKLE_CXX_FLAGS_DEBUG "-g")
-set(CMAKLE_CXX_FLAGS_RELEASE "-O3")
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Debug)
+ENDIF()
+SET(CMAKLE_CXX_FLAGS_DEBUG "-g")
+SET(CMAKLE_CXX_FLAGS_RELEASE "-O3")
 # END Debug / Release Settings ----------------------------------------------------------------------------------------------------------------------
 
 

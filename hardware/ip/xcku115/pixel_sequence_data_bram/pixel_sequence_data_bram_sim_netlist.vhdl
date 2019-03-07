@@ -1,7 +1,7 @@
 -- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2016.1 (lin64) Build 1538259 Fri Apr  8 15:45:23 MDT 2016
--- Date        : Fri Mar 30 12:51:50 2018
+-- Tool Version: Vivado v.2016.4 (lin64) Build 1733598 Wed Dec 14 22:35:42 MST 2016
+-- Date        : Wed May  2 17:06:45 2018
 -- Host        : redrealm.cse.psu.edu running 64-bit unknown
 -- Command     : write_vhdl -force -mode funcsim
 --               /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/pixel_sequence_data_bram/pixel_sequence_data_bram_sim_netlist.vhdl
@@ -959,7 +959,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth is
+entity pixel_sequence_data_bram_blk_mem_gen_v8_3_5_synth is
   port (
     doutb : out STD_LOGIC_VECTOR ( 15 downto 0 );
     clkb : in STD_LOGIC;
@@ -973,10 +973,10 @@ entity pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth is
     dina : in STD_LOGIC_VECTOR ( 127 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth : entity is "blk_mem_gen_v8_3_2_synth";
-end pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth;
+  attribute ORIG_REF_NAME of pixel_sequence_data_bram_blk_mem_gen_v8_3_5_synth : entity is "blk_mem_gen_v8_3_5_synth";
+end pixel_sequence_data_bram_blk_mem_gen_v8_3_5_synth;
 
-architecture STRUCTURE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth is
+architecture STRUCTURE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5_synth is
 begin
 \gnbram.gnativebmg.native_blk_mem_gen\: entity work.pixel_sequence_data_bram_blk_mem_gen_top
      port map (
@@ -996,7 +996,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity pixel_sequence_data_bram_blk_mem_gen_v8_3_2 is
+entity pixel_sequence_data_bram_blk_mem_gen_v8_3_5 is
   port (
     clka : in STD_LOGIC;
     rsta : in STD_LOGIC;
@@ -1063,158 +1063,158 @@ entity pixel_sequence_data_bram_blk_mem_gen_v8_3_2 is
     s_axi_rdaddrecc : out STD_LOGIC_VECTOR ( 11 downto 0 )
   );
   attribute C_ADDRA_WIDTH : integer;
-  attribute C_ADDRA_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 9;
+  attribute C_ADDRA_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 9;
   attribute C_ADDRB_WIDTH : integer;
-  attribute C_ADDRB_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 12;
+  attribute C_ADDRB_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 12;
   attribute C_ALGORITHM : integer;
-  attribute C_ALGORITHM of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_ALGORITHM of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_AXI_ID_WIDTH : integer;
-  attribute C_AXI_ID_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 4;
+  attribute C_AXI_ID_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 4;
   attribute C_AXI_SLAVE_TYPE : integer;
-  attribute C_AXI_SLAVE_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_AXI_SLAVE_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_AXI_TYPE : integer;
-  attribute C_AXI_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_AXI_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_BYTE_SIZE : integer;
-  attribute C_BYTE_SIZE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 9;
+  attribute C_BYTE_SIZE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 9;
   attribute C_COMMON_CLK : integer;
-  attribute C_COMMON_CLK of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_COMMON_CLK of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_COUNT_18K_BRAM : string;
-  attribute C_COUNT_18K_BRAM of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "0";
+  attribute C_COUNT_18K_BRAM of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "0";
   attribute C_COUNT_36K_BRAM : string;
-  attribute C_COUNT_36K_BRAM of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "2";
+  attribute C_COUNT_36K_BRAM of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "2";
   attribute C_CTRL_ECC_ALGO : string;
-  attribute C_CTRL_ECC_ALGO of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "NONE";
+  attribute C_CTRL_ECC_ALGO of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "NONE";
   attribute C_DEFAULT_DATA : string;
-  attribute C_DEFAULT_DATA of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "0";
+  attribute C_DEFAULT_DATA of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "0";
   attribute C_DISABLE_WARN_BHV_COLL : integer;
-  attribute C_DISABLE_WARN_BHV_COLL of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_DISABLE_WARN_BHV_COLL of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_DISABLE_WARN_BHV_RANGE : integer;
-  attribute C_DISABLE_WARN_BHV_RANGE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_DISABLE_WARN_BHV_RANGE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_ELABORATION_DIR : string;
-  attribute C_ELABORATION_DIR of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "./";
+  attribute C_ELABORATION_DIR of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "./";
   attribute C_ENABLE_32BIT_ADDRESS : integer;
-  attribute C_ENABLE_32BIT_ADDRESS of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_ENABLE_32BIT_ADDRESS of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_EN_DEEPSLEEP_PIN : integer;
-  attribute C_EN_DEEPSLEEP_PIN of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_EN_DEEPSLEEP_PIN of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_EN_ECC_PIPE : integer;
-  attribute C_EN_ECC_PIPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_EN_ECC_PIPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_EN_RDADDRA_CHG : integer;
-  attribute C_EN_RDADDRA_CHG of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_EN_RDADDRA_CHG of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_EN_RDADDRB_CHG : integer;
-  attribute C_EN_RDADDRB_CHG of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_EN_RDADDRB_CHG of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_EN_SAFETY_CKT : integer;
-  attribute C_EN_SAFETY_CKT of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_EN_SAFETY_CKT of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_EN_SHUTDOWN_PIN : integer;
-  attribute C_EN_SHUTDOWN_PIN of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_EN_SHUTDOWN_PIN of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_EN_SLEEP_PIN : integer;
-  attribute C_EN_SLEEP_PIN of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_EN_SLEEP_PIN of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_EST_POWER_SUMMARY : string;
-  attribute C_EST_POWER_SUMMARY of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "Estimated Power for IP     :     10.706099 mW";
+  attribute C_EST_POWER_SUMMARY of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "Estimated Power for IP     :     10.706099 mW";
   attribute C_FAMILY : string;
-  attribute C_FAMILY of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "kintexu";
+  attribute C_FAMILY of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "kintexu";
   attribute C_HAS_AXI_ID : integer;
-  attribute C_HAS_AXI_ID of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_AXI_ID of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_ENA : integer;
-  attribute C_HAS_ENA of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_ENA of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_ENB : integer;
-  attribute C_HAS_ENB of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_HAS_ENB of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_HAS_INJECTERR : integer;
-  attribute C_HAS_INJECTERR of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_INJECTERR of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_MEM_OUTPUT_REGS_A : integer;
-  attribute C_HAS_MEM_OUTPUT_REGS_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_MEM_OUTPUT_REGS_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_MEM_OUTPUT_REGS_B : integer;
-  attribute C_HAS_MEM_OUTPUT_REGS_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_HAS_MEM_OUTPUT_REGS_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_HAS_MUX_OUTPUT_REGS_A : integer;
-  attribute C_HAS_MUX_OUTPUT_REGS_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_MUX_OUTPUT_REGS_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_MUX_OUTPUT_REGS_B : integer;
-  attribute C_HAS_MUX_OUTPUT_REGS_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_HAS_MUX_OUTPUT_REGS_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_HAS_REGCEA : integer;
-  attribute C_HAS_REGCEA of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_REGCEA of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_REGCEB : integer;
-  attribute C_HAS_REGCEB of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_REGCEB of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_RSTA : integer;
-  attribute C_HAS_RSTA of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_RSTA of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_RSTB : integer;
-  attribute C_HAS_RSTB of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_RSTB of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_SOFTECC_INPUT_REGS_A : integer;
-  attribute C_HAS_SOFTECC_INPUT_REGS_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_SOFTECC_INPUT_REGS_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_HAS_SOFTECC_OUTPUT_REGS_B : integer;
-  attribute C_HAS_SOFTECC_OUTPUT_REGS_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_HAS_SOFTECC_OUTPUT_REGS_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_INITA_VAL : string;
-  attribute C_INITA_VAL of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "0";
+  attribute C_INITA_VAL of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "0";
   attribute C_INITB_VAL : string;
-  attribute C_INITB_VAL of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "0";
+  attribute C_INITB_VAL of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "0";
   attribute C_INIT_FILE : string;
-  attribute C_INIT_FILE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "pixel_sequence_data_bram.mem";
+  attribute C_INIT_FILE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "pixel_sequence_data_bram.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "no_coe_file_loaded";
   attribute C_INTERFACE_TYPE : integer;
-  attribute C_INTERFACE_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_INTERFACE_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_LOAD_INIT_FILE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_MEM_TYPE : integer;
-  attribute C_MEM_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_MEM_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_MUX_PIPELINE_STAGES : integer;
-  attribute C_MUX_PIPELINE_STAGES of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_MUX_PIPELINE_STAGES of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_PRIM_TYPE : integer;
-  attribute C_PRIM_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_PRIM_TYPE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_READ_DEPTH_A : integer;
-  attribute C_READ_DEPTH_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 512;
+  attribute C_READ_DEPTH_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 512;
   attribute C_READ_DEPTH_B : integer;
-  attribute C_READ_DEPTH_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 4096;
+  attribute C_READ_DEPTH_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 4096;
   attribute C_READ_WIDTH_A : integer;
-  attribute C_READ_WIDTH_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 128;
+  attribute C_READ_WIDTH_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 128;
   attribute C_READ_WIDTH_B : integer;
-  attribute C_READ_WIDTH_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 16;
+  attribute C_READ_WIDTH_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 16;
   attribute C_RSTRAM_A : integer;
-  attribute C_RSTRAM_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_RSTRAM_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_RSTRAM_B : integer;
-  attribute C_RSTRAM_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_RSTRAM_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_RST_PRIORITY_A : string;
-  attribute C_RST_PRIORITY_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "CE";
+  attribute C_RST_PRIORITY_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "CE";
   attribute C_RST_PRIORITY_B : string;
-  attribute C_RST_PRIORITY_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "CE";
+  attribute C_RST_PRIORITY_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "CE";
   attribute C_SIM_COLLISION_CHECK : string;
-  attribute C_SIM_COLLISION_CHECK of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "ALL";
+  attribute C_SIM_COLLISION_CHECK of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "ALL";
   attribute C_USE_BRAM_BLOCK : integer;
-  attribute C_USE_BRAM_BLOCK of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_USE_BRAM_BLOCK of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_USE_BYTE_WEA : integer;
-  attribute C_USE_BYTE_WEA of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_USE_BYTE_WEA of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_USE_BYTE_WEB : integer;
-  attribute C_USE_BYTE_WEB of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_USE_BYTE_WEB of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_USE_DEFAULT_DATA : integer;
-  attribute C_USE_DEFAULT_DATA of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_USE_DEFAULT_DATA of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_USE_ECC : integer;
-  attribute C_USE_ECC of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_USE_ECC of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_USE_SOFTECC : integer;
-  attribute C_USE_SOFTECC of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_USE_SOFTECC of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_USE_URAM : integer;
-  attribute C_USE_URAM of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 0;
+  attribute C_USE_URAM of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 0;
   attribute C_WEA_WIDTH : integer;
-  attribute C_WEA_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_WEA_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_WEB_WIDTH : integer;
-  attribute C_WEB_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 1;
+  attribute C_WEB_WIDTH of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 1;
   attribute C_WRITE_DEPTH_A : integer;
-  attribute C_WRITE_DEPTH_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 512;
+  attribute C_WRITE_DEPTH_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 512;
   attribute C_WRITE_DEPTH_B : integer;
-  attribute C_WRITE_DEPTH_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 4096;
+  attribute C_WRITE_DEPTH_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 4096;
   attribute C_WRITE_MODE_A : string;
-  attribute C_WRITE_MODE_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "NO_CHANGE";
+  attribute C_WRITE_MODE_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "NO_CHANGE";
   attribute C_WRITE_MODE_B : string;
-  attribute C_WRITE_MODE_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "WRITE_FIRST";
+  attribute C_WRITE_MODE_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "WRITE_FIRST";
   attribute C_WRITE_WIDTH_A : integer;
-  attribute C_WRITE_WIDTH_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 128;
+  attribute C_WRITE_WIDTH_A of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 128;
   attribute C_WRITE_WIDTH_B : integer;
-  attribute C_WRITE_WIDTH_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is 16;
+  attribute C_WRITE_WIDTH_B of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is 16;
   attribute C_XDEVICEFAMILY : string;
-  attribute C_XDEVICEFAMILY of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "kintexu";
+  attribute C_XDEVICEFAMILY of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "kintexu";
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "blk_mem_gen_v8_3_2";
+  attribute ORIG_REF_NAME of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "blk_mem_gen_v8_3_5";
   attribute downgradeipidentifiedwarnings : string;
-  attribute downgradeipidentifiedwarnings of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 : entity is "yes";
-end pixel_sequence_data_bram_blk_mem_gen_v8_3_2;
+  attribute downgradeipidentifiedwarnings of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 : entity is "yes";
+end pixel_sequence_data_bram_blk_mem_gen_v8_3_5;
 
-architecture STRUCTURE of pixel_sequence_data_bram_blk_mem_gen_v8_3_2 is
+architecture STRUCTURE of pixel_sequence_data_bram_blk_mem_gen_v8_3_5 is
   signal \<const0>\ : STD_LOGIC;
 begin
   dbiterr <= \<const0>\;
@@ -1413,7 +1413,7 @@ GND: unisim.vcomponents.GND
      port map (
       G => \<const0>\
     );
-inst_blk_mem_gen: entity work.pixel_sequence_data_bram_blk_mem_gen_v8_3_2_synth
+inst_blk_mem_gen: entity work.pixel_sequence_data_bram_blk_mem_gen_v8_3_5_synth
      port map (
       addra(8 downto 0) => addra(8 downto 0),
       addrb(11 downto 0) => addrb(11 downto 0),
@@ -1445,11 +1445,11 @@ entity pixel_sequence_data_bram is
   attribute NotValidForBitStream : boolean;
   attribute NotValidForBitStream of pixel_sequence_data_bram : entity is true;
   attribute CHECK_LICENSE_TYPE : string;
-  attribute CHECK_LICENSE_TYPE of pixel_sequence_data_bram : entity is "pixel_sequence_data_bram,blk_mem_gen_v8_3_2,{}";
+  attribute CHECK_LICENSE_TYPE of pixel_sequence_data_bram : entity is "pixel_sequence_data_bram,blk_mem_gen_v8_3_5,{}";
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of pixel_sequence_data_bram : entity is "yes";
   attribute x_core_info : string;
-  attribute x_core_info of pixel_sequence_data_bram : entity is "blk_mem_gen_v8_3_2,Vivado 2016.1";
+  attribute x_core_info of pixel_sequence_data_bram : entity is "blk_mem_gen_v8_3_5,Vivado 2016.4";
 end pixel_sequence_data_bram;
 
 architecture STRUCTURE of pixel_sequence_data_bram is
@@ -1619,11 +1619,9 @@ architecture STRUCTURE of pixel_sequence_data_bram is
   attribute C_WRITE_WIDTH_B of U0 : label is 16;
   attribute C_XDEVICEFAMILY : string;
   attribute C_XDEVICEFAMILY of U0 : label is "kintexu";
-  attribute KEEP_HIERARCHY : string;
-  attribute KEEP_HIERARCHY of U0 : label is "true";
   attribute downgradeipidentifiedwarnings of U0 : label is "yes";
 begin
-U0: entity work.pixel_sequence_data_bram_blk_mem_gen_v8_3_2
+U0: entity work.pixel_sequence_data_bram_blk_mem_gen_v8_3_5
      port map (
       addra(8 downto 0) => addra(8 downto 0),
       addrb(11 downto 0) => addrb(11 downto 0),

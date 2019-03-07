@@ -1,3 +1,18 @@
+2016.4:
+ * Version 8.3 (Rev. 5)
+ * General: Fixes for behavioral Model issues when built-IN ECC is enabled (to be consistent with RTL)
+
+2016.3:
+ * Version 8.3 (Rev. 4)
+ * Feature Enhancement: URAM addressing updates while calling XPM_Memory when 32-bit addressing is enabled
+ * Other: Enable support for future devices
+ * Other: Source HDL files are concatenated into a single file to speed up synthesis and simulation. No changes required by the user
+
+2016.2:
+ * Version 8.3 (Rev. 3)
+ * updated the IP,not to set WRITE_DEPTH parameter to 8192 everytime when the mode is switched to BRAM_Controller
+ * Updated the IP to support the device package changes
+
 2016.1:
  * Version 8.3 (Rev. 2)
  * Updated the IP to deliver only verilog behavioral model

@@ -1,0 +1,14 @@
+1) fill window with the same 1x1 kernel
+    Con: to be efficient bc would need to stride by window size would immediately need the next 3 rows and would need to load all three rows
+            if iddnt stride by 3, then would waste cycles on data alrdy calculated
+2) Put different pixel depths into window
+    Pro: does not break pipeline at all
+    Con: would need to reorder incoming pixel data somehow, either in hardware or software but will add latency
+3) Put different kernels in same window
+    Con: Would need to matriculate weight values; also need to keep up with the results of 9 different kernels so some buffer is needed
+    
+ 
+We go with option 32. To accomodate 
+    Solution we put col * (numkernel_per_fas_store_context) buffer at each FAS unit
+        depending on 3x3 or 1x1 we do a store or strided store to the buffer
+        then ship off to ddr memory

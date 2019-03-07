@@ -1,4 +1,4 @@
-`timescale 1ns / 1ns
+`timescale 1ns / 1ps
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //        
 // Engineer:    
@@ -55,7 +55,10 @@ module SRL_bit #(
                 if(rst) begin
                     shift_reg  <= {C_CLOCK_CYCLES{1'b0}};
                 end else if(ce) begin
-                    shift_reg  <= {shift_reg[C_CLOCK_CYCLES - 2:0], data_in};
+                    if(C_CLOCK_CYCLES == 1)
+                        shift_reg  <= {data_in};
+                    else    
+                        shift_reg  <= {shift_reg[C_CLOCK_CYCLES - 2:0], data_in};
                 end
             end
           

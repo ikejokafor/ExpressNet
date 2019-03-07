@@ -70,6 +70,18 @@
 `define WHT_SEQ_WIDTH                   4
 `define NUM_DSP_PER_CE                  2
 `define NUM_WHT_SEQ_TABLE_PER_AWE       4
+`define DATA_WIDTH                      16
+`define MAX_STRIDE                      11
+`define CYCLE_COUNT                     4   // num cycles to output a 3x3 window in our arch
+`define KERNEL_3x3_COUNT_FULL_CFG       10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
+`define WINDOW_3x3_NUM_CYCLES           5
+`define NUM_CE_PER_QUAD                `NUM_AWE * `NUM_CE_PER_AWE
+`define MIN_NUM_ROWS                    19
+`define MIN_NUM_COLS                    19
+`define MAX_NUM_ROWS                    512
+`define MAX_NUM_COLS                    512
+`define MAX_KERNEL_DEPTH                `NUM_CE_PER_QUAD
+`define MAX_BRAM_3x3_KERNELS            102  // floor(`BRAM_DEPTH / `KERNEL_3x3_COUNT_FULL_CFG)
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -95,10 +107,17 @@
 `define PIX_SEQ_DATA_ROW_MATRIC_HIGH        (`PIX_SEQ_DATA_ROW_MATRIC_LOW + `PIX_SEQ_DATA_ROW_MATRIC_WIDTH - 1)
 `define PIX_SEQ_DATA_ROW_MATRIC_FIELD       (`PIX_SEQ_DATA_ROW_MATRIC_HIGH):(`PIX_SEQ_DATA_ROW_MATRIC_LOW)
 
-`define PIX_SEQ_DATA_WIDTH                  (`PIX_SEQ_DATA_SEQ_WIDTH         + \
-                                             `PIX_SEQ_DATA_PARITY_WIDTH      + \
-                                             `PIX_SEQ_DATA_MACC_RST_WIDTH    + \
-                                             `PIX_SEQ_DATA_ROW_MATRIC_WIDTH)
+`define PIX_SEQ_DATA_ROW_RENAME_WIDTH       1
+`define PIX_SEQ_DATA_ROW_RENAME_LOW         (`PIX_SEQ_DATA_ROW_MATRIC_HIGH + 1)
+`define PIX_SEQ_DATA_ROW_RENAME_HIGH        (`PIX_SEQ_DATA_ROW_RENAME_LOW + `PIX_SEQ_DATA_ROW_RENAME_WIDTH - 1)
+`define PIX_SEQ_DATA_ROW_RENAME_FIELD       (`PIX_SEQ_DATA_ROW_RENAME_HIGH):(`PIX_SEQ_DATA_ROW_RENAME_LOW)
+
+
+//`define PIX_SEQ_DATA_WIDTH                  (`PIX_SEQ_DATA_SEQ_WIDTH         + \
+//                                             `PIX_SEQ_DATA_PARITY_WIDTH      + \
+//                                             `PIX_SEQ_DATA_MACC_RST_WIDTH    + \  
+//                                             `PIX_SEQ_DATA_ROW_MATRIC_WIDTH  + \
+//											 `PIX_SEQ_DATA_ROW_RENAME_WIDTH)
                                          
 `define PIX_SEQ_BRAM_DATA_WIDTH             16                                   
 

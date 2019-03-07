@@ -1,4 +1,4 @@
-`timescale 1ns / 1ns
+`timescale 1ns / 1ps
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Company:			
 //				
@@ -31,8 +31,8 @@ module cnn_layer_accel_weight_table_top #(
     rst                         ,
     config_mode                 ,
     job_accept                  ,
-    next_kernel                 ,
-    last_kernel                 ,
+	next_kernel                 ,
+	last_kernel                 ,
     kernel_config_valid         ,
     kernel_full_count           ,    
     wht_config_wren             ,
@@ -40,7 +40,8 @@ module cnn_layer_accel_weight_table_top #(
     wht_seq_addr0               ,
     wht_seq_addr1               ,
     ce_execute                  ,
-    ce_cycle_counter            ,    
+    ce_cycle_counter            , 
+    output_stride               ,	
     wht_table_dout              ,   
     wht_table_dout_valid       
 );
@@ -66,8 +67,8 @@ module cnn_layer_accel_weight_table_top #(
     input   logic                             rst                         ;
     input   logic                             config_mode                 ;
     input   logic                             job_accept                  ;
-    input   logic                             next_kernel                 ;
-    output  logic                             last_kernel                 ;
+	input   logic                             next_kernel                 ;
+	output  logic                             last_kernel                 ;
     input   logic                             kernel_config_valid         ;
     input   logic [                   15:0]   kernel_full_count           ;
     input   logic                             wht_config_wren             ;
@@ -76,6 +77,7 @@ module cnn_layer_accel_weight_table_top #(
     input   logic [                    3:0]   wht_seq_addr1               ;
     input   logic                             ce_execute                  ;
     input   logic [                    2:0]   ce_cycle_counter            ;
+	input   logic [                    2:0]   output_stride		          ;
     output  logic [ C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout              ;
     output  logic                             wht_table_dout_valid        ;
  
@@ -94,8 +96,9 @@ module cnn_layer_accel_weight_table_top #(
     logic    [                          3:0]     kernel_count                ;
     logic                                        wht_table_rden              ;
     logic                                        next_kernel_d               ;
-    logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout0             ;
+	logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout0             ;
     logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout1             ;
+	
    
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -120,7 +123,7 @@ module cnn_layer_accel_weight_table_top #(
         .clk        ( clk                                                   ),
         .rst        ( rst                                                   ),
         .ce         ( 1'b1                                                  ),
-        .data_in    ( kernel_group == kernel_full_count_cfg && !config_mode ),
+        .data_in    ( ((kernel_group == kernel_full_count_cfg && !config_mode) || (output_stride != 0)) ),
         .data_out   ( last_kernel                                           )
     );
     
@@ -136,7 +139,7 @@ module cnn_layer_accel_weight_table_top #(
         .data_out   ( next_kernel_d     )
     );    
     
-    
+       
     
     SRL_bus #(  
         .C_CLOCK_CYCLES  ( C_CE_WHT_SEQ_ADDR_DELAY  ),
@@ -192,15 +195,15 @@ module cnn_layer_accel_weight_table_top #(
     assign wht_table_addr0_w        = {kernel_group      ,   wht_seq_addr0      };
     assign wht_table_addr1_w        = {kernel_group      ,   wht_seq_addr1      };
     assign wht_table_addrA          = (config_mode) ? wht_table_addrA_cfg : wht_table_addr0;
-    assign wht_table_dout           = {wht_table_dout1, wht_table_dout0};
-    
+	assign wht_table_dout           = {wht_table_dout1   ,   wht_table_dout0    };  
+   
     always@(posedge clk) begin
         if(rst) begin
             kernel_full_count_cfg   <= 0;
             kernel_count            <= 0;
             kernel_group            <= 0;
             wht_table_rden          <= 0;
-        end else begin
+		end else begin
             wht_table_rden          <= 0;
             if(kernel_config_valid) begin
                 kernel_full_count_cfg <= kernel_full_count;
@@ -212,14 +215,16 @@ module cnn_layer_accel_weight_table_top #(
                 kernel_count <= kernel_count + 1;
             end
             // kernel group logic
-            if(job_accept || (kernel_group == kernel_full_count_cfg && next_kernel_d)) begin
+            if(job_accept || (kernel_group == kernel_full_count_cfg && (next_kernel_d) )) begin
                 kernel_group <= 0;
-            end else if ((kernel_count == 4'd9 && config_mode) || next_kernel_d) begin
+            end else if ((kernel_count == 4'd9 && config_mode) || next_kernel_d ) begin
                 kernel_group <= kernel_group + 1;
             end
             if(ce_execute) begin
                 wht_table_rden <= 1;
-            end         
+			end 
+		
+			
         end
     end
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------
