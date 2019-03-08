@@ -76,10 +76,10 @@
 `define KERNEL_3x3_COUNT_FULL_CFG       10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
 `define WINDOW_3x3_NUM_CYCLES           5
 `define NUM_CE_PER_QUAD                `NUM_AWE * `NUM_CE_PER_AWE
-`define MIN_NUM_ROWS                    19
-`define MIN_NUM_COLS                    19
-`define MAX_NUM_ROWS                    512
-`define MAX_NUM_COLS                    512
+`define MIN_NUM_INPUT_ROWS              19
+`define MIN_NUM_INPUT_COLS              19
+`define MAX_NUM_INPUT_ROWS              512
+`define MAX_NUM_INPUT_COLS              512
 `define MAX_KERNEL_DEPTH                `NUM_CE_PER_QUAD
 `define MAX_BRAM_3x3_KERNELS            102  // floor(`BRAM_DEPTH / `KERNEL_3x3_COUNT_FULL_CFG)
 
@@ -118,7 +118,7 @@
 //                                             `PIX_SEQ_DATA_MACC_RST_WIDTH    + \  
 //                                             `PIX_SEQ_DATA_ROW_MATRIC_WIDTH  + \
 //											 `PIX_SEQ_DATA_ROW_RENAME_WIDTH)
-                                         
+
 `define PIX_SEQ_BRAM_DATA_WIDTH             16                                   
 
 `define PIX_SEQ_DATA_SEQ_WIDTH0             clog2(`BRAM_DEPTH) - 2

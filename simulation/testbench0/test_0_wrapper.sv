@@ -1016,7 +1016,7 @@ module test_0_wrapper #(
 		    for(i = 0; i < DEPTH; i = i + 1) begin
                 for(j = 0; j < NUM_KERNEL_3x3_VALUES; j = j + 1) begin
 				    if (j != NUM_KERNEL_3x3_VALUES -1 )
-						kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] =  $urandom_range(1,1);
+						kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] =  $urandom_range(1,10);
 					else
 						kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] =  0;
                     $fwrite(fd, "%d ", kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j]);

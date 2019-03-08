@@ -33,7 +33,7 @@
 `include "cnn_layer_accel_quad_intf.sv"
 
 
-function cnl_sc0_generator createTest(int num_rows, int num_cols, int depth, int num_kernels, int kernel_size, int stride);
+function cnl_sc0_generator createTest(int num_input_rows, int num_input_cols, int depth, int num_kernels, int kernel_size, int stride, int padding);
     cnl_sc0_generator   test        ;
     int i                           ;
     int j                           ;
@@ -41,19 +41,20 @@ function cnl_sc0_generator createTest(int num_rows, int num_cols, int depth, int
     
     
     test = new();
-    test.m_rows = num_rows;
-    test.m_cols = num_cols;
+    test.m_num_input_rows = num_input_rows;
+    test.m_num_input_cols = num_input_cols;
     test.m_depth = depth;
     test.m_num_kernels = num_kernels;
     test.m_kernel_size = kernel_size;
     test.m_stride = stride;
+    test.m_padding = padding;
     
     
-    test.m_pix_data = new[depth * num_rows * num_cols];
+    test.m_pix_data = new[depth * num_input_rows * num_input_cols];
     for(k = 0; k < depth; k = k + 1) begin
-        for(i = 0; i < num_rows; i = i + 1) begin
-            for(j = 0; j < num_cols; j = j + 1) begin
-                test.m_pix_data[(k * num_rows + i) * num_cols + j] = $urandom_range(1, 10);
+        for(i = 0; i < num_input_rows; i = i + 1) begin
+            for(j = 0; j < num_input_cols; j = j + 1) begin
+                test.m_pix_data[(k * num_input_rows + i) * num_input_cols + j] = $urandom_range(1, 10);
             end
         end
     end
@@ -73,15 +74,17 @@ function cnl_sc0_generator createTest(int num_rows, int num_cols, int depth, int
     end
 
 
-    $display("// Created Test ---------------------------------------------");
-    $display("Num Rows:            %d", test.m_rows                         );
-    $display("Num Cols:            %d", test.m_cols                         );
-    $display("Num Depth:           %d", test.m_depth                        );
-    $display("Num kernels:         %d", test.m_num_kernels                  );
-    $display("Num Kernel size:     %d", test.m_kernel_size                  );
-    $display("Pixel data size:     %d", test.m_pix_data.size()              );
-    $display("Kernel data size     %d", test.m_kernel_data.size()           );
-    $display("// Created Test ---------------------------------------------");
+    $display("// Created Test ----------------------------------------------");
+    $display("// Num Rows:            %d", test.m_num_input_rows             );
+    $display("// Num Cols:            %d", test.m_num_input_cols             );
+    $display("// Num Depth:           %d", test.m_depth                      );
+    $display("// Num kernels:         %d", test.m_num_kernels                );
+    $display("// Num Kernel size:     %d", test.m_kernel_size                );
+    $display("// Stride               %d", test.m_stride                     );
+    $display("// Padding:             %d", test.m_padding                    );
+    $display("// Pixel data size:     %d", test.m_pix_data.size()            );
+    $display("// Kernel data size     %d", test.m_kernel_data.size()         );
+    $display("// Created Test ----------------------------------------------");
     $display("\n");
     
     
@@ -95,7 +98,7 @@ module testbench;
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     parameter C_PERIOD_100MHz = 10;    
     parameter C_PERIOD_500MHz = 2; 
-    parameter C_NUM_TESTS = 0;
+    parameter C_NUM_TESTS = 1;
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -254,9 +257,9 @@ module testbench;
     
     initial begin
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
-        test = createTest(20, 20, `NUM_CE_PER_QUAD, 5, 3, 1);
+        test = createTest(20, 20, `NUM_CE_PER_QUAD, 5, 3, 1, 0);
         test_queue.push_back(test);
-        test = createTest(25, 25, `NUM_CE_PER_QUAD, 5, 3, 1);
+        test = createTest(25, 25, `NUM_CE_PER_QUAD, 5, 3, 1, 0);
         test_queue.push_back(test);
         env = new(i0_quad_intf, test_queue.size() + C_NUM_TESTS, test_queue);
         env.build();

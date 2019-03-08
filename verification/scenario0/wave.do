@@ -160,8 +160,8 @@ add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_a
 add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/next_kernel
 add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/next_state
 add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/next_state_s
-add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/num_input_cols
-add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/num_input_rows
+add wave -noupdate -group CTRL -radix unsigned /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/num_input_cols
+add wave -noupdate -group CTRL -radix unsigned /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/num_input_rows
 add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/num_output_cols
 add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/num_output_rows
 add wave -noupdate -group CTRL /testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/output_col
@@ -222,8 +222,8 @@ add wave -noupdate -group WHT_TBL_TOP {/testbench/i0_cnn_layer_accel_quad/AWE[3]
 add wave -noupdate -group WHT_TBL_TOP {/testbench/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_dout_valid}
 add wave -noupdate -group WHT_TBL_TOP {/testbench/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_rden}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {0 ps} 0}
-quietly wave cursor active 0
+WaveRestoreCursors {{Cursor 1} {44153114 ps} 0}
+quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -238,4 +238,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {14571330 ps} {78129930 ps}
+WaveRestoreZoom {0 ps} {174098400 ps}

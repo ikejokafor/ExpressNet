@@ -40,6 +40,7 @@
 
 
 class sc0_asrtParams_t extends asrtParams_t;
+    virtual cnn_layer_accel_quad_intf quad_intf;
 endclass: sc0_asrtParams_t
 
 
@@ -51,6 +52,10 @@ endclass: cnl_sc0_assertion
 
 function cnl_sc0_assertion::new(asrtParams_t asrtParams = null);
 
+
+    if(asrtParams != null) begin
+    
+    end
 endfunction: new
 
 

@@ -70,7 +70,8 @@ class cnl_sc0_environment #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz
     cnl_sc0_monitor                     m_monitor;
     cnl_sc0_assertion                   m_assetion;
     mailbox                             m_DUT_rdy;
-    event                               m_simOver;
+    mailbox                             m_mon_rdy;
+    mailbox                             m_simOver;
 endclass: cnl_sc0_environment
 
 
@@ -90,8 +91,10 @@ function void cnl_sc0_environment::build();
     m_drvParams = new();
     m_monParams = new();
     m_scoreParams = new();
-    m_asrtParams = new();
+    m_asrtParams = new();    
     m_DUT_rdy = new();
+    m_mon_rdy = new();
+    m_simOver = new();
     
     
     m_agentParams.agent2driverMB = m_agent2driverMB;
@@ -100,13 +103,16 @@ function void cnl_sc0_environment::build();
     m_agentParams.test_queue = m_test_queue;
     m_agentParams.numTests = m_numTests;
     m_agentParams.DUT_rdy = m_DUT_rdy;
+    m_agentParams.quad_intf = m_quad_intf;
     m_drvParams.agent2driverMB = m_agent2driverMB;
     m_drvParams.quad_intf = m_quad_intf;
+    m_drvParams.mon_rdy = m_mon_rdy;
     m_monParams.monitor2scoreboardMB = m_monitor2scoreboardMB;
     m_monParams.numTests = m_numTests;
     m_monParams.DUT_rdy = m_DUT_rdy;
     m_monParams.quad_intf = m_quad_intf;
     m_monParams.agent2monitorMB = m_agent2monitorMB;
+    m_monParams.mon_rdy = m_mon_rdy;
     m_scoreParams.agent2scoreboardMB = m_agent2scoreboardMB;
     m_scoreParams.monitor2scoreboardMB = m_monitor2scoreboardMB;
     m_scoreParams.simOver = m_simOver;
@@ -124,7 +130,7 @@ endfunction: build
 
 task cnl_sc0_environment::run();
     int signal;
-    
+
 
     m_quad_intf.rst <= 1;
     #(C_PERIOD_100MHz * 10) m_quad_intf.rst <= 0;    // 10 cycle rst asserted is arbitrairy
@@ -138,7 +144,11 @@ task cnl_sc0_environment::run();
         m_assetion.run();
     join_none
     m_DUT_rdy.put(signal);
-    wait(m_simOver.triggered);
+    
+    
+    while(!m_simOver.try_get(signal)) begin
+        @(m_quad_intf.clk_if);
+    end
     $stop;
 endtask: run
 
