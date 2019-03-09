@@ -83,6 +83,7 @@ task cnl_sc0_agent::run();
         if(m_DUT_rdy.try_get(signal)) begin      
             if(m_test_queue.size() > 0) begin
                 test = m_test_queue.pop_front();
+                test.plain2bits();
                 m_agent2scoreboardMB.put(test);
                 m_agent2monitorMB.put(test);
                 m_agent2driverMB.put(test);            
@@ -115,6 +116,7 @@ task cnl_sc0_agent::run();
             $display("// Kernel data size     %d", test.m_kernel_data.size()         );
             $display("// Created Test ----------------------------------------------");
             $display("\n");
+            test.plain2bits();
             m_agent2scoreboardMB.put(test);
             m_agent2monitorMB.put(test);
             m_agent2driverMB.put(test);        

@@ -81,11 +81,12 @@ task cnl_sc0_scoreboard::run();
 
     i = 0;
     while(i < m_numTests) begin
-        @(m_quad_intf.clk_if);
+        @(m_quad_intf.clk_if_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
+            sol = new();
             createSolution(test, sol);
             forever begin
-                @(m_quad_intf.clk_if);
+                @(m_quad_intf.clk_if_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
                     $display("// Checking Test ---------------------------------------------");
                     $display("// Num Rows:            %d", test.m_num_input_rows             );
@@ -121,83 +122,148 @@ endtask: run
 
 
 function void cnl_sc0_scoreboard::createSolution(generator test, DUToutput sol);
-    // cnl_sc0_generator sc0_test;
-    // cnl_sc0_DUTOutput sc0_sol;
-    // sc0_DUTOutParams_t sc0_DUTOutParams;
-    // int i;
-    // int j;
-    // int k;
-    // int a;
-    // int b;
-    // int kr;
-    // int kc;
-    // int m;
-    // int x;
-    // int y;
-    // 
-    // 
-    // $cast(sc0_test, test);
-    // $cast(sc0_sol, sol);
-    // sc0_DUTOutParams                    = new();
-    // sc0_DUTOutParams.num_kernels        = sc0_test.m_num_kernels;
-    // sc0_DUTOutParams.num_output_rows    = ((sc0_test.m_num_input_rows - sc0_test.m_kernel_size + (2 * sc0_test.m_padding)) / sc0_test.m_stride) + 1;       
-    // sc0_DUTOutParams.num_output_cols    = ((sc0_test.m_num_input_cols - sc0_test.m_kernel_size + (2 * sc0_test.m_padding)) / sc0_test.m_stride) + 1;       
-    // sc0_sol                             = new(sc0_DUTOutParams);
-    // 
-    // 
-    // for(m = 0; m < sc0_DUTOutParams.num_kernels; m = m + 1) begin
-    //     a = 0;
-    //     for(x = 0; x < sc0_DUTOutParams.num_output_rows; x = x + 1) begin
-    //         b = 0;
-    //         for(y = 0; y < sc0_DUTOutParams.num_output_cols; y = y + 1) begin
-    //             sc0_sol.m_conv_map[(m * sc0_DUTOutParams.num_output_rows + x) * sc0_DUTOutParams.num_output_cols + y] = 0;
-    //             for(k = 0; k < sc0_test.m_depth; k = k + 1) begin
-    //                 kr = 0;
-    //                 for(i = a - sc0_test.m_padding; kr < sc0_test.m_kernel_size; i = i + 1) begin
-    //                     kc = 0;
-    //                     for(j = b - sc0_test.m_padding; kc < sc0_test.m_kernel_size; j = j + 1) begin
-    //                         if((i >= 0 && j >= 0) && (i < sc0_test.m_num_input_rows && j < sc0_test.m_num_input_cols)) begin                      
-    //                             sc0_sol.m_conv_map[(m * sc0_DUTOutParams.num_output_rows + x) * sc0_DUTOutParams.num_output_cols + y] 
-    //                                 = sc0_sol.m_conv_map[(m * sc0_DUTOutParams.num_output_rows + x) * sc0_DUTOutParams.num_output_cols + y] +
-    //                                 (sc0_test.m_pix_data_sim[(k * sc0_test.m_num_input_rows + i) * sc0_test.m_num_input_cols + j]
-    //                                 * sc0_test.m_kernel_data_sim[((m * sc0_test.m_depth + k) * sc0_test.m_kernel_size + kr) * sc0_test.m_kernel_size + kc]);
-    //                         end
-    //                         kc = kc + 1;
-    //                     end
-    //                     kr = kr + 1;
-    //                 end
-    //             end
-    //             b = b + sc0_test.m_stride;
-    //         end
-    //         a = a + sc0_test.m_stride;
-    //     end
-    // end
+    cnl_sc0_generator sc0_test;
+    cnl_sc0_DUTOutput sc0_sol;
+    int i;
+    int j;
+    int k;
+    int a;
+    int b;
+    int kr;
+    int kc;
+    int m;
+    int x;
+    int y;
+    int depth;
+    int num_kernels;
+    int num_output_rows;
+    int num_output_cols;
+    int kernel_size;
+    int padding;
+    int stride;
+    int num_input_rows;
+    int num_input_cols;
+    logic[15:0] pix_data_sim[];
+    logic[15:0] kernel_data_sim[];
     
+
+    $cast(sc0_test, test);
+    $cast(sc0_sol, sol);    
+    depth                               = sc0_test.m_depth;
+    num_input_rows                      = sc0_test.m_num_input_rows;
+    num_input_cols                      = sc0_test.m_num_input_cols;    
+    kernel_size                         = sc0_test.m_kernel_size;
+    padding                             = sc0_test.m_padding;
+    stride                              = sc0_test.m_stride;
+    pix_data_sim                        = sc0_test.m_pix_data_sim;
+    kernel_data_sim                     = sc0_test.m_kernel_data_sim;
+    sc0_sol.m_num_kernels               = sc0_test.m_num_kernels;
+    sc0_sol.m_num_output_rows           = ((num_input_rows - kernel_size + (2 * padding)) / stride) + 1;
+    sc0_sol.m_num_output_cols           = ((num_input_cols - kernel_size + (2 * padding)) / stride) + 1;
+    sc0_sol.m_conv_map                  = new[sc0_sol.m_num_kernels * sc0_sol.m_num_output_rows * sc0_sol.m_num_output_cols];
+    num_kernels                         = sc0_sol.m_num_kernels; 
+    num_output_rows                     = sc0_sol.m_num_output_rows;
+    num_output_cols                     = sc0_sol.m_num_output_cols;
+
+    
+    for(m = 0; m < num_kernels; m = m + 1) begin
+        a = 0;
+        for(x = 0; x < num_output_rows; x = x + 1) begin
+            b = 0;
+            for(y = 0; y < num_output_cols; y = y + 1) begin
+                sc0_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y] = 0;
+                for(k = 0; k < depth; k = k + 1) begin
+                    kr = 0;
+                    for(i = a - padding; kr < kernel_size; i = i + 1) begin
+                        kc = 0;
+                        for(j = b - padding; kc < kernel_size; j = j + 1) begin
+                            if((i >= 0 && j >= 0) && (i < num_input_rows && j < num_input_cols)) begin                      
+                                sc0_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y] 
+                                    = sc0_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y] +
+                                    (pix_data_sim[(k * num_input_rows + i) * num_input_cols + j]
+                                    * kernel_data_sim[((m * depth + k) * kernel_size + kr) * kernel_size + kc]);
+                            end
+                            kc = kc + 1;
+                        end
+                        kr = kr + 1;
+                    end
+                end
+                b = b + stride;
+            end
+            a = a + stride;
+        end
+    end
 endfunction: createSolution
 
 
 function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
-    // cnl_sc0_DUTOutput sc0_query;
-    // cnl_sc0_DUTOutput sc0_sol;
-    // int i;
-    // int j;
-    // int k;
-    // 
-    // 
-    // $cast(sc0_query, query);
-    // $cast(sc0_sol, sol);
-    // 
-    // 
-    // for(k = 0; k < sc0_sol.m_num_kernels; k = k + 1) begin
-    //     for(i = 0; i < sc0_sol.m_num_output_rows; i = i + 1) begin
-    //         for(j = 0; j < sc0_sol.m_num_output_cols; j = j + 1) begin
-    //             if(sc0_sol.m_conv_map[(k * sc0_sol.m_num_output_rows + i) * sc0_sol.m_num_output_cols + j] 
-    //                 != sc0_query.m_conv_map[(k * sc0_query.m_num_output_rows + i) * sc0_query.m_num_output_cols + j]) begin
-    //                 $stop;
-    //             end
-    //         end
-    //     end
-    // end
+    cnl_sc0_DUTOutput sc0_query;
+    cnl_sc0_DUTOutput sc0_sol;
+    int i;
+    int j;
+    int k;
+    int num_kernels;      
+    int num_output_rows;  
+    int num_output_cols;
+    int num_sim_output_rows;   
+    int num_sim_output_cols;    
+    logic [15:0] sol_conv_map[];
+    logic [15:0] qry_conv_map[];
+    integer fd;
+    
+    
+    $cast(sc0_query, query);
+    $cast(sc0_sol, sol);
+    num_kernels            = sc0_sol.m_num_kernels;
+    num_output_rows        = sc0_sol.m_num_output_rows;
+    num_output_cols        = sc0_sol.m_num_output_cols;
+    num_sim_output_rows    = sc0_query.m_num_sim_output_rows;
+    num_sim_output_cols    = sc0_query.m_num_sim_output_cols;    
+    sol_conv_map           = sc0_sol.m_conv_map;
+    qry_conv_map           = sc0_query.m_conv_map;
+    
+    
+    for(k = 0; k < num_kernels; k = k + 1) begin
+        for(i = 0; i < num_output_rows; i = i + 1) begin
+            for(j = 0; j < num_output_cols; j = j + 1) begin
+                if(sol_conv_map[(k * num_output_rows + i) * num_output_cols + j] 
+                    != qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]) begin
+                    $stop;
+                end
+            end
+        end
+    end
+    
+    
+    fd = $fopen("map.txt", "w");
+    for(k = 0; k < num_kernels; k = k + 1) begin
+        for(i = 0; i < num_output_rows; i = i + 1) begin
+            for(j = 0; j < num_output_cols; j = j + 1) begin
+                $fwrite(fd, "%d ", sol_conv_map[(k * num_output_rows + i) * num_output_cols + j]);
+            end
+            $fwrite(fd, "\n");
+        end
+        $fwrite(fd, "\n");
+        $fwrite(fd, "\n");
+    end
+    $fclose(fd);
+        
+        
+    fd = $fopen("map0.txt", "w");
+    for(k = 0; k < num_kernels; k = k + 1) begin
+        for(i = 0; i < num_output_rows; i = i + 1) begin
+            for(j = 0; j < num_output_cols; j = j + 1) begin
+                $fwrite(fd, "%d ", qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]);
+            end
+            $fwrite(fd, "\n");
+        end
+        $fwrite(fd, "\n");
+        $fwrite(fd, "\n");
+    end
+    $fclose(fd);
+    
+    
+    return 0;
 endfunction: checkSolution
 
 

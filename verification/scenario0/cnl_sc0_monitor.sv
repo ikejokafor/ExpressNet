@@ -78,82 +78,44 @@ task cnl_sc0_monitor::run();
     int j;
     int k;
     int signal;
+    int num_kernels;
+    int num_sim_output_rows;
+    int num_sim_output_cols;
     
 
-    // for(n = 0; n < m_numTests; n = n + 1) begin
-    //     @(m_quad_intf.clk_if);
-    //     if(m_agent2monitorMB.try_get(test)) begin
-    //         sc0_DUTOutParams                    = new();
-    //         sc0_DUTOutParams.num_kernels        = test.m_num_kernels;
-    //         sc0_DUTOutParams.num_output_rows    = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
-    //         sc0_DUTOutParams.num_output_cols    = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
-    //         query                               = new(sc0_DUTOutParams);
-    //         m_mon_rdy.put(signal);
-    //         
-    //         
-    //         @(m_quad_intf.clk_if);
-    //         for(i = 0; i < query.m_num_kernels; i = i + 1) begin
-    //             for(j = 0; j < query.m_num_output_rows; j = j + 1) begin
-    //                 for(k = 0; k < query.m_num_output_cols; k = k + 1) begin
-    //                     // if() begin
-    //                     //     // query.m_conv_map[(k * query.num_output_rows + i) * query.num_output_cols + j]
-    //                     // end
-    //                 end
-    //             end
-    //         end
-    //         m_monitor2scoreboardMB.put(query);
-    //         $display("// Finished Test ---------------------------------------------");
-    //         $display("// Num Input Rows:      %d", test.m_num_input_rows                );
-    //         $display("// Num Input Cols:      %d", test.m_num_input_cols                );
-    //         $display("// Num Depth:           %d", test.m_depth                         );
-    //         $display("// Num kernels:         %d", test.m_num_kernels                   );
-    //         $display("// Num Kernel size:     %d", test.m_kernel_size                   );
-    //         $display("// Stride               %d", test.m_stride                        );
-    //         $display("// Padding:             %d", test.m_padding                       );
-    //         $display("// Pixel data size:     %d", test.m_pix_data.size()               );
-    //         $display("// Kernel data size     %d", test.m_kernel_data.size()            );
-    //         $display("// Finished Test ---------------------------------------------");
-    //         $display("\n");
-    //         $display("//-------------------------------------------");
-    //         $display("// DUT ready for next test");
-    //         $display("//-------------------------------------------");
-    //         $display("\n");
-    //         m_DUT_rdy.put(signal);
-    //     end
-    // end
-    // 
-    // 
-    // forever begin
-    //     @(m_quad_intf.clk_if_cb);
-    //     if(m_quad_intf.clk_if_cb.job_complete) begin
-    //         m_quad_intf.clk_if_cb.job_complete_ack <= 1;
-    //         break;
-    //     end
-    // end
-    // @(m_quad_intf.clk_if_cb);
-    // m_quad_intf.clk_if_cb.job_complete_ack <= 0;
-    
-    
-    
-    i = 0;
-    while(i < m_numTests) begin    
-        @(m_quad_intf.clk_if);
+    n = 0;
+    while(n < m_numTests) begin
+        @(m_quad_intf.clk_core_cb);
         if(m_agent2monitorMB.try_get(test)) begin
+            sc0_DUTOutParams                        = new();
+            sc0_DUTOutParams.num_kernels            = test.m_num_kernels;
+            sc0_DUTOutParams.num_output_rows        = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
+            sc0_DUTOutParams.num_output_cols        = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
+            sc0_DUTOutParams.num_sim_output_rows    = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;    // might need to double check this
+            sc0_DUTOutParams.num_sim_output_cols    = test.m_num_input_cols;
+            query                                   = new(sc0_DUTOutParams);
             m_mon_rdy.put(signal);
-            forever begin
-                @(m_quad_intf.clk_if_cb);
-                if(m_quad_intf.clk_if_cb.job_complete) begin
-                    m_quad_intf.clk_if_cb.job_complete_ack <= 1;
-                    break;
+            
+            
+            num_kernels             = query.m_num_kernels;
+            num_sim_output_rows     = query.m_num_sim_output_rows;
+            num_sim_output_cols     = query.m_num_sim_output_cols;
+            for(j = 0; j < num_sim_output_rows; j = j + 1) begin
+                for(i = 0; i < num_kernels; i = i + 1) begin
+                    k = 0;
+                    while(k < num_sim_output_cols) begin
+                        @(m_quad_intf.clk_core_cb);
+                        if(m_quad_intf.clk_core_cb.result_valid) begin
+                            query.m_conv_map[(i * num_sim_output_rows + j) * num_sim_output_cols + k] = m_quad_intf.clk_core_cb.result_data;
+                            k = k + 1;
+                        end
+                    end
                 end
             end
-            @(m_quad_intf.clk_if_cb);
-            m_quad_intf.clk_if_cb.job_complete_ack <= 0;
-            // query = new();
             m_monitor2scoreboardMB.put(query);
             $display("// Finished Test ---------------------------------------------");
-            $display("// Num Rows:            %d", test.m_num_input_rows             );
-            $display("// Num Cols:            %d", test.m_num_input_cols             );
+            $display("// Num Input Rows:      %d", test.m_num_input_rows             );
+            $display("// Num Input Cols:      %d", test.m_num_input_cols             );
             $display("// Num Depth:           %d", test.m_depth                      );
             $display("// Num kernels:         %d", test.m_num_kernels                );
             $display("// Num Kernel size:     %d", test.m_kernel_size                );
@@ -164,13 +126,62 @@ task cnl_sc0_monitor::run();
             $display("// Finished Test ---------------------------------------------");
             $display("\n");
             $display("//-------------------------------------------");
-            $display("DUT ready for next test");
+            $display("// DUT ready for next test");
             $display("//-------------------------------------------");
             $display("\n");
             m_DUT_rdy.put(signal);
-            i = i + 1;
+            n = n + 1;
         end
     end
+
+
+    forever begin
+        @(m_quad_intf.clk_if_cb);
+        if(m_quad_intf.clk_if_cb.job_complete) begin
+            m_quad_intf.clk_if_cb.job_complete_ack <= 1;
+            break;
+        end
+    end
+    @(m_quad_intf.clk_if_cb);
+    m_quad_intf.clk_if_cb.job_complete_ack <= 0;
+
+
+    // i = 0;
+    // while(i < m_numTests) begin    
+    //     @(m_quad_intf.clk_if);
+    //     if(m_agent2monitorMB.try_get(test)) begin
+    //         m_mon_rdy.put(signal);
+    //         forever begin
+    //             @(m_quad_intf.clk_if_cb);
+    //             if(m_quad_intf.clk_if_cb.job_complete) begin
+    //                 m_quad_intf.clk_if_cb.job_complete_ack <= 1;
+    //                 break;
+    //             end
+    //         end
+    //         @(m_quad_intf.clk_if_cb);
+    //         m_quad_intf.clk_if_cb.job_complete_ack <= 0;
+    //         // query = new();
+    //         m_monitor2scoreboardMB.put(query);
+    //         $display("// Finished Test ---------------------------------------------");
+    //         $display("// Num Rows:            %d", test.m_num_input_rows             );
+    //         $display("// Num Cols:            %d", test.m_num_input_cols             );
+    //         $display("// Num Depth:           %d", test.m_depth                      );
+    //         $display("// Num kernels:         %d", test.m_num_kernels                );
+    //         $display("// Num Kernel size:     %d", test.m_kernel_size                );
+    //         $display("// Stride               %d", test.m_stride                     );
+    //         $display("// Padding:             %d", test.m_padding                    );
+    //         $display("// Pixel data size:     %d", test.m_pix_data.size()            );
+    //         $display("// Kernel data size     %d", test.m_kernel_data.size()         );
+    //         $display("// Finished Test ---------------------------------------------");
+    //         $display("\n");
+    //         $display("//-------------------------------------------");
+    //         $display("DUT ready for next test");
+    //         $display("//-------------------------------------------");
+    //         $display("\n");
+    //         m_DUT_rdy.put(signal);
+    //         i = i + 1;
+    //     end
+    // end
 
 endtask: run
 

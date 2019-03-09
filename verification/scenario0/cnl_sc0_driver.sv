@@ -76,7 +76,7 @@ task cnl_sc0_driver::run();
     int signal;
     
 
-    @(m_quad_intf.clk_if);
+    @(m_quad_intf.clk_if_cb);
     m_quad_intf.clk_if_cb.job_start                                                                 <= 0;
     m_quad_intf.clk_if_cb.job_fetch_ack                                                             <= 0;
     m_quad_intf.clk_if_cb.job_complete_ack                                                          <= 0;
@@ -88,11 +88,10 @@ task cnl_sc0_driver::run();
     m_quad_intf.clk_if_cb.config_data                                                               <= 0;
     m_quad_intf.clk_if_cb.config_valid                                                              <= 0;
     forever begin
-        @(m_quad_intf.clk_if);
+        @(m_quad_intf.clk_if_cb);
         if(m_agent2driverMB.try_get(test)) begin
-            @(m_quad_intf.clk_if);
-            if(m_mon_rdy.try_get(signal)) begin        
-                test.plain2bits();  
+            @(m_quad_intf.clk_if_cb);
+            if(m_mon_rdy.try_get(signal)) begin
                 // BEGIN logic --------------------------------------------------------------------------------------------------------------------------      
                 testbench.i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count     = (`WINDOW_3x3_NUM_CYCLES * test.m_num_input_cols) ;                                      
                 testbench.i0_cnn_layer_accel_quad.kernel_full_count_cfg                                         = `KERNEL_3x3_COUNT_FULL_CFG;

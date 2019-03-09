@@ -43,6 +43,8 @@ class sc0_DUTOutParams_t extends DUTOutParams_t;
     int num_kernels;
     int num_output_rows;
     int num_output_cols;
+    int num_sim_output_rows;
+    int num_sim_output_cols;    
 endclass: sc0_DUTOutParams_t
 
 
@@ -54,6 +56,8 @@ class cnl_sc0_DUTOutput extends DUToutput;
     int m_num_kernels;
     int m_num_output_rows;
     int m_num_output_cols;
+    int m_num_sim_output_rows;
+    int m_num_sim_output_cols;
     logic [15:0] m_conv_map[];
 endclass: cnl_sc0_DUTOutput
 
@@ -61,12 +65,15 @@ endclass: cnl_sc0_DUTOutput
 function cnl_sc0_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
     sc0_DUTOutParams_t sc0_DUTOutParams;
 
+
     if(DUTOutParams != null) begin
         $cast(sc0_DUTOutParams, DUTOutParams);
-        m_num_kernels       = sc0_DUTOutParams.num_kernels;
-        m_num_output_rows   = sc0_DUTOutParams.num_output_rows;      
-        m_num_output_cols   = sc0_DUTOutParams.num_output_cols;
-        m_conv_map          = new[sc0_DUTOutParams.num_kernels * sc0_DUTOutParams.num_output_rows * sc0_DUTOutParams.num_output_cols];
+        m_num_kernels           = sc0_DUTOutParams.num_kernels;
+        m_num_output_rows       = sc0_DUTOutParams.num_output_rows;      
+        m_num_output_cols       = sc0_DUTOutParams.num_output_cols;
+        m_num_sim_output_rows   = sc0_DUTOutParams.num_sim_output_rows;  
+        m_num_sim_output_cols   = sc0_DUTOutParams.num_sim_output_cols;  
+        m_conv_map              = new[m_num_kernels * m_num_sim_output_rows * m_num_sim_output_cols];
     end
 endfunction: new
 

@@ -74,6 +74,7 @@
 `define MAX_STRIDE                      11
 `define CYCLE_COUNT                     4   // num cycles to output a 3x3 window in our arch
 `define KERNEL_3x3_COUNT_FULL_CFG       10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
+`define KERNEL_BLOCK_SIZE               16
 `define WINDOW_3x3_NUM_CYCLES           5
 `define NUM_CE_PER_QUAD                `NUM_AWE * `NUM_CE_PER_AWE
 `define MIN_NUM_INPUT_ROWS              19
@@ -81,7 +82,7 @@
 `define MAX_NUM_INPUT_ROWS              512
 `define MAX_NUM_INPUT_COLS              512
 `define MAX_KERNEL_DEPTH                `NUM_CE_PER_QUAD
-`define MAX_BRAM_3x3_KERNELS            102  // floor(`BRAM_DEPTH / `KERNEL_3x3_COUNT_FULL_CFG)
+`define MAX_BRAM_3x3_KERNELS            64  // floor(`BRAM_DEPTH / `KERNEL_BLOCK_SIZE)
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------

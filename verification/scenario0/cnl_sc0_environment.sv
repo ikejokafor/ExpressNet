@@ -45,7 +45,6 @@
 `include "cnl_sc0_assertion.sv"
 
 
-
 class cnl_sc0_environment #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz);
     extern function new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, cnl_sc0_generator test_queue[$]);
     extern function void build();
