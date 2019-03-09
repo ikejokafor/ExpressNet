@@ -81,6 +81,7 @@ task cnl_sc0_monitor::run();
     int num_kernels;
     int num_sim_output_rows;
     int num_sim_output_cols;
+    int stride;
     
 
     n = 0;
@@ -95,19 +96,20 @@ task cnl_sc0_monitor::run();
             sc0_DUTOutParams.num_sim_output_cols    = test.m_num_input_cols;
             query                                   = new(sc0_DUTOutParams);
             m_mon_rdy.put(signal);
+            stride                                  = test.m_stride;
+            num_kernels                             = query.m_num_kernels;
+            num_sim_output_rows                     = query.m_num_sim_output_rows;
+            num_sim_output_cols                     = query.m_num_sim_output_cols;
             
             
-            num_kernels             = query.m_num_kernels;
-            num_sim_output_rows     = query.m_num_sim_output_rows;
-            num_sim_output_cols     = query.m_num_sim_output_cols;
-            for(j = 0; j < num_sim_output_rows; j = j + 1) begin
+            for(j = 0; j < num_sim_output_rows; j = j + stride) begin
                 for(i = 0; i < num_kernels; i = i + 1) begin
                     k = 0;
                     while(k < num_sim_output_cols) begin
                         @(m_quad_intf.clk_core_cb);
                         if(m_quad_intf.clk_core_cb.result_valid) begin
                             query.m_conv_map[(i * num_sim_output_rows + j) * num_sim_output_cols + k] = m_quad_intf.clk_core_cb.result_data;
-                            k = k + 1;
+                            k = k + stride;
                         end
                     end
                 end

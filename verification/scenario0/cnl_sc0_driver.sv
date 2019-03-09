@@ -87,6 +87,16 @@ task cnl_sc0_driver::run();
     m_quad_intf.clk_if_cb.pixel_data                                                                <= 0;
     m_quad_intf.clk_if_cb.config_data                                                               <= 0;
     m_quad_intf.clk_if_cb.config_valid                                                              <= 0;
+    m_quad_intf.job_start                                                                           <= 0;
+    m_quad_intf.job_fetch_ack                                                                       <= 0;
+    m_quad_intf.job_complete_ack                                                                    <= 0;
+    m_quad_intf.job_fetch_complete                                                                  <= 0;
+    m_quad_intf.weight_valid                                                                        <= 0;
+    m_quad_intf.weight_data                                                                         <= 0;
+    m_quad_intf.pixel_valid                                                                         <= 0;
+    m_quad_intf.pixel_data                                                                          <= 0;
+    m_quad_intf.config_data                                                                         <= 0;
+    m_quad_intf.config_valid                                                                        <= 0;   
     forever begin
         @(m_quad_intf.clk_if_cb);
         if(m_agent2driverMB.try_get(test)) begin

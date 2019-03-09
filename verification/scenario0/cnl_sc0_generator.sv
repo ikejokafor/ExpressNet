@@ -80,6 +80,7 @@ function cnl_sc0_generator::new(genParams_t genParams = null);
     int i;
     int j;
 
+    
     // Note: The code below will work for 3x3. Has not been tested for 1x1
     // RM = Row matriculate
     // RST = Reset MACC reg
@@ -118,26 +119,31 @@ function void cnl_sc0_generator::plain2bits();
     int i;
     int j;
     int k;
-    
+    integer fd;
 
-    m_pix_data_sim = new[m_depth * m_num_input_rows * m_num_input_cols];
+
+    m_pix_data_sim = new[m_pix_data.size()];
+    foreach(m_pix_data[i]) begin
+        m_pix_data_sim[i] = m_pix_data[i];
+    end
+    
+    fd = $fopen("map.txt", "w");
     for(k = 0; k < m_depth; k = k + 1) begin
         for(i = 0; i < m_num_input_rows; i = i + 1) begin
             for(j = 0; j < m_num_input_cols; j = j + 1) begin
-                m_pix_data_sim[(k * m_num_input_rows + i) * m_num_input_cols + j] = m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j];
+                $fwrite(fd, "%d ", m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j]);
             end
+            $fwrite(fd, "\n");
         end
+        $fwrite(fd, "\n");
+        $fwrite(fd, "\n");
     end
+    $fclose(fd);
     
     
-    m_kernel_data_sim = new[m_num_kernels * m_depth * `KERNEL_3x3_COUNT_FULL_CFG];
-    for(k = 0; k < m_num_kernels; k = k + 1) begin
-        for(i = 0; i < m_depth; i = i + 1) begin
-            for(j = 0; j < `KERNEL_3x3_COUNT_FULL_CFG; j = j + 1) begin
-                m_kernel_data_sim[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j]
-                    = m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j];
-            end
-        end
+    m_kernel_data_sim = new[m_kernel_data.size()];    
+    foreach(m_kernel_data[i]) begin
+        m_kernel_data_sim[i] = m_kernel_data[i];
     end
 endfunction: plain2bits
 
@@ -150,22 +156,23 @@ function void cnl_sc0_generator::post_randomize();
     int i;
     int j;
     int k;
+    integer fd;
 
-    
+
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
     foreach(m_pix_data[i]) begin
-        m_pix_data[i] = $urandom_range(1, 10);
+        m_pix_data[i] = $urandom_range(0, 0);
     end
-
     
-    m_kernel_data = new[m_num_kernels * m_depth * `KERNEL_3x3_COUNT_FULL_CFG];
+    
+    m_kernel_data = new[m_num_kernels * m_depth * `KERNEL_3x3_COUNT_FULL_CFG]; 
     for(k = 0; k < m_num_kernels; k = k + 1) begin
         for(i = 0; i < m_depth; i = i + 1) begin
             for(j = 0; j < `KERNEL_3x3_COUNT_FULL_CFG; j = j + 1) begin
-                if (j != `KERNEL_3x3_COUNT_FULL_CFG - 1) begin
-                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] =  $urandom_range(1,10);
+                if(j != `KERNEL_3x3_COUNT_FULL_CFG - 1) begin
+                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = $urandom_range(0, 0);
                 end else begin
-                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] =  0;
+                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = 0;
                 end
             end
         end
