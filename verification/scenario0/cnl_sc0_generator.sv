@@ -127,7 +127,7 @@ function void cnl_sc0_generator::plain2bits();
         m_pix_data_sim[i] = m_pix_data[i];
     end
     
-    fd = $fopen("map.txt", "w");
+    fd = $fopen("map_windows.txt", "w");
     for(k = 0; k < m_depth; k = k + 1) begin
         for(i = 0; i < m_num_input_rows; i = i + 1) begin
             for(j = 0; j < m_num_input_cols; j = j + 1) begin

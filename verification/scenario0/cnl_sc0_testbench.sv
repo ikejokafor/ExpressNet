@@ -21,7 +21,7 @@
 //
 //
 //
-// Additional Comments:     Scenario 0 Checks the output of the row buffers
+// Additional Comments:     Scenario 0 Checks the output of the row buffers and weight table
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -51,21 +51,18 @@ function cnl_sc0_generator createTest(int num_input_rows, int num_input_cols, in
     
     
     test.m_pix_data = new[depth * num_input_rows * num_input_cols];
-    for(k = 0; k < depth; k = k + 1) begin
-        for(i = 0; i < num_input_rows; i = i + 1) begin
-            for(j = 0; j < num_input_cols; j = j + 1) begin
-                test.m_pix_data[(k * num_input_rows + i) * num_input_cols + j] = $urandom_range(1, 10);
-            end
-        end
-    end
+    foreach(test.m_pix_data[i]) begin
+        // test.m_pix_data[i] = $urandom_range(1, 1);
+        test.m_pix_data[i] = 2;       
+    end 
 
-    
+
     test.m_kernel_data = new[num_kernels * depth * `KERNEL_3x3_COUNT_FULL_CFG];
     for(k = 0; k < num_kernels; k = k + 1) begin
         for(i = 0; i < depth; i = i + 1) begin
             for(j = 0; j < `KERNEL_3x3_COUNT_FULL_CFG; j = j + 1) begin
-                if (j != `KERNEL_3x3_COUNT_FULL_CFG -1 ) begin
-                    test.m_kernel_data[(k * depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = $urandom_range(1, 10);
+                if (j != `KERNEL_3x3_COUNT_FULL_CFG - 1) begin
+                    test.m_kernel_data[(k * depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = $urandom_range(1, 1);
                 end else begin
                     test.m_kernel_data[(k * depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] =  0;
                 end

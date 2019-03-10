@@ -102,6 +102,18 @@ task cnl_sc0_driver::run();
         if(m_agent2driverMB.try_get(test)) begin
             @(m_quad_intf.clk_if_cb);
             if(m_mon_rdy.try_get(signal)) begin
+                $display("// Running Test ----------------------------------------------");
+                $display("// Num Rows:            %d", test.m_num_input_rows             );
+                $display("// Num Cols:            %d", test.m_num_input_cols             );
+                $display("// Num Depth:           %d", test.m_depth                      );
+                $display("// Num kernels:         %d", test.m_num_kernels                );
+                $display("// Num Kernel size:     %d", test.m_kernel_size                );
+                $display("// Stride               %d", test.m_stride                     );
+                $display("// Padding:             %d", test.m_padding                    );
+                $display("// Pixel data size:     %d", test.m_pix_data.size()            );
+                $display("// Kernel data size     %d", test.m_kernel_data.size()         );
+                $display("// Running Test ---------------------------------------------");
+                $display("\n");
                 // BEGIN logic --------------------------------------------------------------------------------------------------------------------------      
                 testbench.i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count     = (`WINDOW_3x3_NUM_CYCLES * test.m_num_input_cols) ;                                      
                 testbench.i0_cnn_layer_accel_quad.kernel_full_count_cfg                                         = `KERNEL_3x3_COUNT_FULL_CFG;
