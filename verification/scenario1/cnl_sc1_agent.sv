@@ -79,26 +79,14 @@ task cnl_sc1_agent::run();
     
     i = 0;
     while(i < m_numTests) begin
-        @(m_quad_intf.clk_if);
+        @(m_quad_intf.clk_if_cb);
         if(m_DUT_rdy.try_get(signal)) begin      
             if(m_test_queue.size() > 0) begin
                 test = m_test_queue.pop_front();
                 test.plain2bits();
                 m_agent2scoreboardMB.put(test);
                 m_agent2monitorMB.put(test);
-                m_agent2driverMB.put(test);            
-                $display("// Running Test ----------------------------------------------");
-                $display("// Num Rows:            %d", test.m_num_input_rows             );
-                $display("// Num Cols:            %d", test.m_num_input_cols             );
-                $display("// Num Depth:           %d", test.m_depth                      );
-                $display("// Num kernels:         %d", test.m_num_kernels                );
-                $display("// Num Kernel size:     %d", test.m_kernel_size                );
-                $display("// Stride               %d", test.m_stride                     );
-                $display("// Padding:             %d", test.m_padding                    );
-                $display("// Pixel data size:     %d", test.m_pix_data.size()            );
-                $display("// Kernel data size     %d", test.m_kernel_data.size()         );
-                $display("// Running Test ---------------------------------------------");
-                $display("\n");
+                m_agent2driverMB.put(test);
                 i = i + 1;
                 continue;
             end
@@ -119,18 +107,7 @@ task cnl_sc1_agent::run();
             test.plain2bits();
             m_agent2scoreboardMB.put(test);
             m_agent2monitorMB.put(test);
-            m_agent2driverMB.put(test);        
-            $display("// Running Test ----------------------------------------------");
-            $display("// Num Rows:            %d", test.m_num_input_rows             );
-            $display("// Num Cols:            %d", test.m_num_input_cols             );
-            $display("// Num Depth:           %d", test.m_depth                      );
-            $display("// Num kernels:         %d", test.m_num_kernels                );
-            $display("// Num Kernel size:     %d", test.m_kernel_size                );
-            $display("// Stride               %d", test.m_stride                     );
-            $display("// Padding:             %d", test.m_padding                    );
-            $display("// Pixel data size:     %d", test.m_pix_data.size()            );
-            $display("// Kernel data size     %d", test.m_kernel_data.size()         );
-            $display("// Running Test ----------------------------------------------");
+            m_agent2driverMB.put(test);
             $display("\n");
             i = i + 1;
         end
