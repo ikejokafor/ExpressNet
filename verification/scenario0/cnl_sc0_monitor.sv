@@ -86,7 +86,7 @@ task cnl_sc0_monitor::run();
 
     n = 0;
     while(n < m_numTests) begin
-        @(m_quad_intf.clk_core_cb);
+        @(m_quad_intf.clk_if_cb);
         if(m_agent2monitorMB.try_get(test)) begin
             sc0_DUTOutParams                        = new();
             sc0_DUTOutParams.num_kernels            = test.m_num_kernels;
@@ -115,6 +115,17 @@ task cnl_sc0_monitor::run();
                 end
             end
             m_monitor2scoreboardMB.put(query);
+            
+            
+            forever begin
+                @(m_quad_intf.clk_if_cb);
+                if(m_quad_intf.clk_if_cb.job_complete) begin
+                    m_quad_intf.clk_if_cb.job_complete_ack <= 1;
+                    break;
+                end
+            end
+            @(m_quad_intf.clk_if_cb);
+            m_quad_intf.clk_if_cb.job_complete_ack <= 0;
             $display("// Finished Test ---------------------------------------------");
             $display("// Num Input Rows:      %d", test.m_num_input_rows             );
             $display("// Num Input Cols:      %d", test.m_num_input_cols             );
@@ -133,22 +144,8 @@ task cnl_sc0_monitor::run();
             $display("\n");
             m_DUT_rdy.put(signal);
             n = n + 1;
-            
-            
-            forever begin
-                @(m_quad_intf.clk_if_cb);
-                if(m_quad_intf.clk_if_cb.job_complete) begin
-                    m_quad_intf.clk_if_cb.job_complete_ack <= 1;
-                    break;
-                end
-            end
-            @(m_quad_intf.clk_if_cb);
-            m_quad_intf.clk_if_cb.job_complete_ack <= 0;
         end
     end
-
-
-
 
 
     // i = 0;

@@ -183,12 +183,12 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUToutput sol);
                                 sc0_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y] 
                                     = sc0_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y] +
                                     (pix_data_sim[(k * num_input_rows + i) * num_input_cols + j]
-                                    * kernel_data_sim[(m * depth + k) * `KERNEL_3x3_COUNT_FULL_CFG + n]);    // you are indexing into kernel_data_sim wrong
+                                    * kernel_data_sim[(m * depth + k) * `KERNEL_3x3_COUNT_FULL_CFG + n]);
                             end
                             kc = kc + 1;
+                            n = n + 1;
                         end
                         kr = kr + 1;
-                        n = n + 1;
                     end
                 end
                 b = b + stride;
@@ -212,7 +212,7 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
     int num_sim_output_cols;    
     logic [15:0] sol_conv_map[];
     logic [15:0] qry_conv_map[];
-    // integer fd;
+    integer fd;
     
     
     $cast(sc0_query, query);
@@ -226,32 +226,32 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
     qry_conv_map           = sc0_query.m_conv_map;
 
     
-    // fd = $fopen("map.txt", "w");
-    // for(k = 0; k < num_kernels; k = k + 1) begin
-    //     for(i = 0; i < num_output_rows; i = i + 1) begin
-    //         for(j = 0; j < num_output_cols; j = j + 1) begin
-    //             $fwrite(fd, "%d ", sol_conv_map[(k * num_output_rows + i) * num_output_cols + j]);
-    //         end
-    //         $fwrite(fd, "\n");
-    //     end
-    //     $fwrite(fd, "\n");
-    //     $fwrite(fd, "\n");
-    // end
-    // $fclose(fd);
-    //     
-    //     
-    // fd = $fopen("map0.txt", "w");
-    // for(k = 0; k < num_kernels; k = k + 1) begin
-    //     for(i = 0; i < num_sim_output_rows; i = i + 1) begin
-    //         for(j = 0; j < num_sim_output_cols; j = j + 1) begin
-    //             $fwrite(fd, "%d ", qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]);
-    //         end
-    //         $fwrite(fd, "\n");
-    //     end
-    //     $fwrite(fd, "\n");
-    //     $fwrite(fd, "\n");
-    // end
-    // $fclose(fd);
+    fd = $fopen("sol_conv_map.txt", "w");
+    for(k = 0; k < num_kernels; k = k + 1) begin
+        for(i = 0; i < num_output_rows; i = i + 1) begin
+            for(j = 0; j < num_output_cols; j = j + 1) begin
+                $fwrite(fd, "%d ", sol_conv_map[(k * num_output_rows + i) * num_output_cols + j]);
+            end
+            $fwrite(fd, "\n");
+        end
+        $fwrite(fd, "\n");
+        $fwrite(fd, "\n");
+    end
+    $fclose(fd);
+        
+        
+    fd = $fopen("qry_conv_map.txt", "w");
+    for(k = 0; k < num_kernels; k = k + 1) begin
+        for(i = 0; i < num_output_rows; i = i + 1) begin
+            for(j = 0; j < num_output_cols; j = j + 1) begin
+                $fwrite(fd, "%d ", qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]);
+            end
+            $fwrite(fd, "\n");
+        end
+        $fwrite(fd, "\n");
+        $fwrite(fd, "\n");
+    end
+    $fclose(fd);
     
     
     for(k = 0; k < num_kernels; k = k + 1) begin
@@ -259,7 +259,6 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
             for(j = 0; j < num_output_cols; j = j + 1) begin
                 if(sol_conv_map[(k * num_output_rows + i) * num_output_cols + j] 
                     != qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]) begin
-                    $stop;
                 end
             end
         end

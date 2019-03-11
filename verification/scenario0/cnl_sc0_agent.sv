@@ -79,7 +79,7 @@ task cnl_sc0_agent::run();
     
     i = 0;
     while(i < m_numTests) begin
-        @(m_quad_intf.clk_if);
+        @(m_quad_intf.clk_if_cb);
         if(m_DUT_rdy.try_get(signal)) begin      
             if(m_test_queue.size() > 0) begin
                 test = m_test_queue.pop_front();
@@ -87,11 +87,16 @@ task cnl_sc0_agent::run();
                 m_agent2scoreboardMB.put(test);
                 m_agent2monitorMB.put(test);
                 m_agent2driverMB.put(test);
-                i = i + 1;
                 continue;
+            end else begin
+                test = new();
+                void'(test.randomize());
+                test.plain2bits();
+                m_agent2scoreboardMB.put(test);
+                m_agent2monitorMB.put(test);
+                m_agent2driverMB.put(test);
+                $display("\n");
             end
-            test = new();
-            void'(test.randomize());
             $display("// Created Test ----------------------------------------------");
             $display("// Num Rows:            %d", test.m_num_input_rows             );
             $display("// Num Cols:            %d", test.m_num_input_cols             );
@@ -104,10 +109,6 @@ task cnl_sc0_agent::run();
             $display("// Kernel data size     %d", test.m_kernel_data.size()         );
             $display("// Created Test ----------------------------------------------");
             $display("\n");
-            test.plain2bits();
-            m_agent2scoreboardMB.put(test);
-            m_agent2monitorMB.put(test);
-            m_agent2driverMB.put(test);
             i = i + 1;
         end
     end

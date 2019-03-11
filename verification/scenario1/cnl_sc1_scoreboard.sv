@@ -259,7 +259,6 @@ function int cnl_sc1_scoreboard::checkSolution(DUToutput query, DUToutput sol);
             for(j = 0; j < num_output_cols; j = j + 1) begin
                 if(sol_conv_map[(k * num_output_rows + i) * num_output_cols + j] 
                     != qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]) begin
-                    $stop;
                 end
             end
         end

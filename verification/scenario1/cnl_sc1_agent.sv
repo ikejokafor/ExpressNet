@@ -87,11 +87,16 @@ task cnl_sc1_agent::run();
                 m_agent2scoreboardMB.put(test);
                 m_agent2monitorMB.put(test);
                 m_agent2driverMB.put(test);
-                i = i + 1;
                 continue;
+            end else begin
+                test = new();
+                void'(test.randomize());
+                test.plain2bits();
+                m_agent2scoreboardMB.put(test);
+                m_agent2monitorMB.put(test);
+                m_agent2driverMB.put(test);
+                $display("\n");
             end
-            test = new();
-            void'(test.randomize());
             $display("// Created Test ----------------------------------------------");
             $display("// Num Rows:            %d", test.m_num_input_rows             );
             $display("// Num Cols:            %d", test.m_num_input_cols             );
@@ -103,11 +108,6 @@ task cnl_sc1_agent::run();
             $display("// Pixel data size:     %d", test.m_pix_data.size()            );
             $display("// Kernel data size     %d", test.m_kernel_data.size()         );
             $display("// Created Test ----------------------------------------------");
-            $display("\n");
-            test.plain2bits();
-            m_agent2scoreboardMB.put(test);
-            m_agent2monitorMB.put(test);
-            m_agent2driverMB.put(test);
             $display("\n");
             i = i + 1;
         end

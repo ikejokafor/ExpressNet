@@ -44,11 +44,23 @@ class sc0_genParams_t extends genParams_t;
 endclass: sc0_genParams_t
 
 
+class sc0_crtTestParams_t extends crtTestParams_t;
+    int num_input_rows;
+    int num_input_cols;
+    int depth;
+    int num_kernels;
+    int kernel_size;
+    int stride;
+    int padding;
+endclass: sc0_crtTestParams_t
+
+
 class cnl_sc0_generator extends generator;
     extern function new(genParams_t genParams = null);
+    extern function void createTest(crtTestParams_t params);
     extern function void plain2bits();
-    extern function void pre_randomize();
-    extern function void post_randomize();   
+    extern function void post_randomize();
+    
 
     rand int m_num_input_rows                                                           ;
     rand int m_num_input_cols                                                           ;
@@ -115,30 +127,55 @@ function cnl_sc0_generator::new(genParams_t genParams = null);
 endfunction: new
 
 
+function void cnl_sc0_generator::createTest(crtTestParams_t params);
+    sc0_crtTestParams_t     sc0_crtTestParams   ;
+    int                     i                   ;
+    int                     j                   ;
+    int                     k                   ;
+
+    
+    $cast(sc0_crtTestParams, params);
+    m_num_input_rows = sc0_crtTestParams.num_input_rows;
+    m_num_input_cols = sc0_crtTestParams.num_input_cols;
+    m_depth = sc0_crtTestParams.depth;
+    m_num_kernels = sc0_crtTestParams.num_kernels;
+    m_kernel_size = sc0_crtTestParams.kernel_size;
+    m_stride = sc0_crtTestParams.stride;
+    m_padding = sc0_crtTestParams.padding;
+    
+    
+    m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
+    for(k = 0; k < m_depth; k = k + 1) begin
+        for(i = 0; i < m_num_input_rows; i = i + 1) begin
+            for(j = 0; j < m_num_input_cols; j = j + 1) begin
+                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(1, 10);
+            end
+        end
+    end
+
+    
+    m_kernel_data = new[m_num_kernels * m_depth * `KERNEL_3x3_COUNT_FULL_CFG];
+    for(k = 0; k < m_num_kernels; k = k + 1) begin
+        for(i = 0; i < m_depth; i = i + 1) begin
+            for(j = 0; j < `KERNEL_3x3_COUNT_FULL_CFG; j = j + 1) begin
+                if (j != `KERNEL_3x3_COUNT_FULL_CFG -1 ) begin
+                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = $urandom_range(1, 10);
+                end else begin
+                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] =  0;
+                end
+            end
+        end
+    end
+
+
+endfunction: createTest
+
+
 function void cnl_sc0_generator::plain2bits();
-    int i;
-    int j;
-    int k;
-    integer fd;
-
-
     m_pix_data_sim = new[m_pix_data.size()];
     foreach(m_pix_data[i]) begin
         m_pix_data_sim[i] = m_pix_data[i];
     end
-    
-    fd = $fopen("map_windows.txt", "w");
-    for(k = 0; k < m_depth; k = k + 1) begin
-        for(i = 0; i < m_num_input_rows; i = i + 1) begin
-            for(j = 0; j < m_num_input_cols; j = j + 1) begin
-                $fwrite(fd, "%d ", m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j]);
-            end
-            $fwrite(fd, "\n");
-        end
-        $fwrite(fd, "\n");
-        $fwrite(fd, "\n");
-    end
-    $fclose(fd);
     
     
     m_kernel_data_sim = new[m_kernel_data.size()];    
@@ -148,29 +185,24 @@ function void cnl_sc0_generator::plain2bits();
 endfunction: plain2bits
 
 
-function void cnl_sc0_generator::pre_randomize();
-endfunction: pre_randomize
-
-
 function void cnl_sc0_generator::post_randomize();
     int i;
     int j;
     int k;
-    integer fd;
 
 
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
     foreach(m_pix_data[i]) begin
-        m_pix_data[i] = $urandom_range(0, 0);
+        m_pix_data[i] = $urandom_range(1, 10);
     end
-    
-    
+ 
+
     m_kernel_data = new[m_num_kernels * m_depth * `KERNEL_3x3_COUNT_FULL_CFG]; 
     for(k = 0; k < m_num_kernels; k = k + 1) begin
         for(i = 0; i < m_depth; i = i + 1) begin
             for(j = 0; j < `KERNEL_3x3_COUNT_FULL_CFG; j = j + 1) begin
                 if(j != `KERNEL_3x3_COUNT_FULL_CFG - 1) begin
-                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = $urandom_range(0, 0);
+                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = $urandom_range(1, 10);
                 end else begin
                     m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = 0;
                 end

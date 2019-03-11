@@ -14,5 +14,4 @@ verification/scenario1/work/*
 verification/scenario1/vsim.wlf
 verification/scenario1/tcl_stacktrace.txt
 verification/scenario1/wlf*
-
 IMPORTANT.txt

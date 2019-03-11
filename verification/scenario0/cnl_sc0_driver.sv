@@ -112,8 +112,7 @@ task cnl_sc0_driver::run();
                 $display("// Padding:             %d", test.m_padding                    );
                 $display("// Pixel data size:     %d", test.m_pix_data.size()            );
                 $display("// Kernel data size     %d", test.m_kernel_data.size()         );
-                $display("// Running Test ---------------------------------------------");
-                $display("\n");
+                $display("// Running Test ----------------------------------------------");
                 // BEGIN logic --------------------------------------------------------------------------------------------------------------------------      
                 testbench.i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count     = (`WINDOW_3x3_NUM_CYCLES * test.m_num_input_cols) ;                                      
                 testbench.i0_cnn_layer_accel_quad.kernel_full_count_cfg                                         = `KERNEL_3x3_COUNT_FULL_CFG;
