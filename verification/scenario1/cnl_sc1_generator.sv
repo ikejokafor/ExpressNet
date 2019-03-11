@@ -141,7 +141,7 @@ function void cnl_sc1_generator::post_randomize();
 
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
     foreach(m_pix_data[i]) begin
-        m_pix_data[i] = $urandom_range(0, 0);
+        m_pix_data[i] = $urandom_range(1, 10);
     end
  
 
@@ -150,7 +150,7 @@ function void cnl_sc1_generator::post_randomize();
         for(i = 0; i < m_depth; i = i + 1) begin
             for(j = 0; j < `KERNEL_3x3_COUNT_FULL_CFG; j = j + 1) begin
                 if(j != `KERNEL_3x3_COUNT_FULL_CFG - 1) begin
-                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = $urandom_range(0, 0);
+                    m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = $urandom_range(1, 10);
                 end else begin
                     m_kernel_data[(k * m_depth + i) * `KERNEL_3x3_COUNT_FULL_CFG + j] = 0;
                 end

@@ -969,7 +969,7 @@ module test_0_wrapper #(
         for(k = 0; k < DEPTH; k = k + 1) begin
             for(i = 0; i < ROWS; i = i + 1) begin
                 for(j = 0; j < COLS; j = j + 1) begin
-                    pix_data_sim[(k * ROWS + i) * COLS + j] = $urandom_range(1, 10/*65535*/);
+                    pix_data_sim[(k * ROWS + i) * COLS + j] = $urandom_range(1, 4/*65535*/);
                     $fwrite(fd, "%d ", pix_data_sim[(k * ROWS + i) * COLS + j]);
                 end
                 $fwrite(fd, "\n");
@@ -1016,7 +1016,7 @@ module test_0_wrapper #(
 		    for(i = 0; i < DEPTH; i = i + 1) begin
                 for(j = 0; j < NUM_KERNEL_3x3_VALUES; j = j + 1) begin
 				    if (j != NUM_KERNEL_3x3_VALUES -1 )
-						kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] =  $urandom_range(1,10);
+						kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] =  $urandom_range(1 ,4);
 					else
 						kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j] =  0;
                     $fwrite(fd, "%d ", kernel_data_sim[(k * DEPTH + i) * NUM_KERNEL_3x3_VALUES + j]);

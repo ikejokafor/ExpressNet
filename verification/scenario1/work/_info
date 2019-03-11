@@ -5,1104 +5,1448 @@ cModel Technology
 Z0 dC:\IkennaWorkSpace\cnn_layer_accel\verification\scenario0
 vawe_dsp_input_mux
 Z1 DXx6 sv_std 3 std 0 22 F[19LRNL:5;XmIFh[XOPn1
-Z2 Vmj[0Xd;6HJkP_Rof2NEOc0
+Vmj[0Xd;6HJkP_Rof2NEOc0
 r1
 31
-Z3 IQZ_=Y[dZoPdQ:nU5bN?f81
+IQZ_=Y[dZoPdQ:nU5bN?f81
 S1
-Z4 dC:\IkennaWorkSpace\cnn_layer_accel\verification\scenario0
-Z5 w1549944482
-Z6 8../../hardware/verilog/awe_dsp_input_mux.v
-Z7 F../../hardware/verilog/awe_dsp_input_mux.v
-Z8 FC:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh
+Z2 dC:\IkennaWorkSpace\cnn_layer_accel\verification\scenario1
+w1549948082
+8../../hardware/verilog/awe_dsp_input_mux.v
+F../../hardware/verilog/awe_dsp_input_mux.v
+Z3 FC:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh
 L0 1
-Z9 OL;L;10.1c;51
-Z10 o-lint -sv -work work -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
-Z11 !s92 -lint -sv +define+SIMULATION -work work +incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include +incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/ -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
-Z12 !s100 UL3@TLRaO36]IeNnLK56I1
-Z13 !s105 awe_dsp_input_mux_v_unit
-Z14 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/awe_dsp_input_mux.v|
-Z15 !s108 1552160569.064000
-Z16 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|../../hardware/verilog/awe_dsp_input_mux.v|
+Z4 OL;L;10.1c;51
+Z5 o-lint -sv -work work -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
+Z6 !s92 -lint -sv +define+SIMULATION -work work +incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include +incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/ -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
 !s85 0
+!s100 UL3@TLRaO36]IeNnLK56I1
+!s105 awe_dsp_input_mux_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/awe_dsp_input_mux.v|
+!s108 1552278868.277000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|../../hardware/verilog/awe_dsp_input_mux.v|
 !i10b 1
 vclock_gen
 R1
-Z17 !s100 8^TXa2lcYz3nGUccQH1mU0
-Z18 IXPI1le9<ImJ6i7k<PX2NF1
-Z19 VHhXY88h]>Q25M]^i3@inF0
-Z20 !s105 clock_gen_v_unit
-S1
-R4
-Z21 w1551927514
-Z22 8../clock_gen.v
-Z23 F../clock_gen.v
-L0 27
-R9
+VHhXY88h]>Q25M]^i3@inF0
 r1
 31
-Z24 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|../clock_gen.v|
-R10
-Z25 !s92 -lint -sv +define+SIMULATION -work work +incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include +incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/ +incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/ +incdir+C:/IkennaWorkSpace/verif_lib/ -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
-Z26 !s108 1552161089.812000
-Z27 !s107 ../clock_gen.v|
-!i10b 1
+IXPI1le9<ImJ6i7k<PX2NF1
+S1
+R2
+w1551931114
+8../clock_gen.v
+F../clock_gen.v
+L0 27
+R4
+R5
+Z7 !s92 -lint -sv +define+SIMULATION -work work +incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include +incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/ +incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/ +incdir+C:/IkennaWorkSpace/verif_lib/ -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
 !s85 0
+!s100 8^TXa2lcYz3nGUccQH1mU0
+!s105 clock_gen_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|../clock_gen.v|
+!s108 1552278865.573000
+!s107 ../clock_gen.v|
+!i10b 1
 Xcnl_sc0_agent_sv_unit
 R1
-Z28 IN127:jgd1=dMH7`lJh:IS1
-Z29 VN127:jgd1=dMH7`lJh:IS1
+IN127:jgd1=dMH7`lJh:IS1
+VN127:jgd1=dMH7`lJh:IS1
 S1
-R4
-Z30 w1552160476
-Z31 8./cnl_sc0_agent.sv
-Z32 F./cnl_sc0_agent.sv
-Z33 FC:/IkennaWorkSpace/verif_lib//agent.sv
-Z34 FC:/IkennaWorkSpace/verif_lib//verification_defs.svh
-Z35 FC:/IkennaWorkSpace/verif_lib//generator.sv
-R34
-Z36 FC:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh
-Z37 FC:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh
-Z38 FC:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv
-Z39 Fcnl_sc0_generator.sv
-R35
-R36
-R38
+Z8 dC:\IkennaWorkSpace\cnn_layer_accel\verification\scenario0
+Z9 w1552160476
+8./cnl_sc0_agent.sv
+F./cnl_sc0_agent.sv
+Z10 FC:/IkennaWorkSpace/verif_lib//agent.sv
+Z11 FC:/IkennaWorkSpace/verif_lib//verification_defs.svh
+Z12 FC:/IkennaWorkSpace/verif_lib//generator.sv
+R11
+Z13 FC:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh
+Z14 FC:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh
+Z15 FC:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv
+Z16 Fcnl_sc0_generator.sv
+R12
+R13
+R15
 L2 5
-R9
+R4
 r1
 31
-R10
-R25
-Z40 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_agent.sv|
-Z41 !s100 39g4F2cOaX8T]j_g1U@K=0
-Z42 !s108 1552160567.070000
-Z43 !s107 cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//agent.sv|./cnl_sc0_agent.sv|
+R5
+R7
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_agent.sv|
+!s100 39g4F2cOaX8T]j_g1U@K=0
+!s108 1552160567.070000
+!s107 cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//agent.sv|./cnl_sc0_agent.sv|
 !i10b 1
 !i103 1
 !s85 0
 Xcnl_sc0_driver_sv_unit
 R1
-Z44 VhQ8O]<A4gmzYlY9_M[WIn2
+VhQ8O]<A4gmzYlY9_M[WIn2
 r1
 31
-Z45 IhQ8O]<A4gmzYlY9_M[WIn2
+IhQ8O]<A4gmzYlY9_M[WIn2
 S1
-R4
-R30
-Z46 8./cnl_sc0_driver.sv
-Z47 F./cnl_sc0_driver.sv
-Z48 FC:/IkennaWorkSpace/verif_lib//driver.sv
-R34
-R39
-R35
-R34
-R36
-R37
-R38
-R36
-R38
-Z49 FC:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv
-L2 5
+R8
 R9
-Z50 !s108 1552160567.184000
-Z51 !s107 C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//driver.sv|./cnl_sc0_driver.sv|
-Z52 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_driver.sv|
-R10
-R25
-Z53 !s100 Va;XeM91[ZHAXMT1^`hci2
+Z17 8./cnl_sc0_driver.sv
+Z18 F./cnl_sc0_driver.sv
+Z19 FC:/IkennaWorkSpace/verif_lib//driver.sv
+R11
+R16
+R12
+R11
+R13
+R14
+R15
+R13
+R15
+Z20 FC:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv
+L2 5
+R4
+Z21 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_driver.sv|
+R5
+R7
+!s108 1552160567.184000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//driver.sv|./cnl_sc0_driver.sv|
+!s100 Va;XeM91[ZHAXMT1^`hci2
 !s85 0
 !i10b 1
 !i103 1
 Xcnl_sc0_DUToutput_sv_unit
 R1
-Z54 IW=TO;f?zNQB9RN?:MJXNA2
-Z55 VW=TO;f?zNQB9RN?:MJXNA2
+IW=TO;f?zNQB9RN?:MJXNA2
+VW=TO;f?zNQB9RN?:MJXNA2
 S1
-R4
-Z56 w1552107132
-Z57 8./cnl_sc0_DUToutput.sv
-Z58 F./cnl_sc0_DUToutput.sv
-R36
-R37
-R38
-Z59 FC:/IkennaWorkSpace/verif_lib//DUTOutput.sv
-R34
+R8
+w1552107132
+8./cnl_sc0_DUToutput.sv
+F./cnl_sc0_DUToutput.sv
+R13
+R14
+R15
+Z22 FC:/IkennaWorkSpace/verif_lib//DUTOutput.sv
+R11
 L2 6
-R9
+R4
 r1
 31
-R10
-R25
-Z60 ncnl_sc0_@d@u@toutput_sv_unit
-Z61 !s100 5NSNUbXTkZl@`jDamP7=a2
-Z62 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_DUToutput.sv|
-Z63 !s108 1552160567.330000
-Z64 !s107 C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//DUTOutput.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_DUToutput.sv|
+R5
+R7
+ncnl_sc0_@d@u@toutput_sv_unit
+!s100 5NSNUbXTkZl@`jDamP7=a2
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_DUToutput.sv|
+!s108 1552160567.330000
+!s107 C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//DUTOutput.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_DUToutput.sv|
 !i10b 1
 !i103 1
 !s85 0
 Xcnl_sc0_environment_sv_unit
 R1
-Z65 VoKQMgXU1l7^7UDj4dYNM10
+VoKQMgXU1l7^7UDj4dYNM10
 r1
 31
-Z66 IoKQMgXU1l7^7UDj4dYNM10
+IoKQMgXU1l7^7UDj4dYNM10
 S1
-R4
-R30
-Z67 8./cnl_sc0_environment.sv
-Z68 F./cnl_sc0_environment.sv
-R36
-R37
-R38
-R49
-R39
-R35
-R34
-R36
-R38
-Z69 Fcnl_sc0_agent.sv
-R33
-R34
-R35
-R36
-R38
-R39
-Z70 Fcnl_sc0_driver.sv
-R48
-R34
-R39
-R36
-R38
-R49
-Z71 Fcnl_sc0_scoreboard.sv
-Z72 FC:/IkennaWorkSpace/verif_lib//scoreboard.sv
-R34
-R35
-Z73 FC:/IkennaWorkSpace/verif_lib//DUToutput.sv
-R34
-R36
-R38
-R39
-Z74 Fcnl_sc0_DUTOutput.sv
-R36
-R38
-R73
-Z75 Fcnl_sc0_monitor.sv
-R36
-R38
-Z76 FC:/IkennaWorkSpace/verif_lib//monitor.sv
-R34
-R74
-R39
-Z77 Fcnl_sc0_assertion.sv
-R36
-R38
-Z78 FC:/IkennaWorkSpace/verif_lib//assertion.sv
-R34
-L2 6
+R8
 R9
+8./cnl_sc0_environment.sv
+F./cnl_sc0_environment.sv
+R13
+R14
+R15
+R20
+R16
+R12
+R11
+R13
+R15
+Z23 Fcnl_sc0_agent.sv
 R10
-R25
-Z79 !s108 1552160566.523000
-Z80 !s107 C:/IkennaWorkSpace/verif_lib//assertion.sv|cnl_sc0_assertion.sv|C:/IkennaWorkSpace/verif_lib//monitor.sv|cnl_sc0_monitor.sv|cnl_sc0_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|cnl_sc0_scoreboard.sv|C:/IkennaWorkSpace/verif_lib//driver.sv|cnl_sc0_driver.sv|C:/IkennaWorkSpace/verif_lib//agent.sv|cnl_sc0_agent.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_environment.sv|
-Z81 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_environment.sv|
-Z82 !s100 P7YnQG5a2<EI<c?8<G<092
+R11
+R12
+R13
+R15
+R16
+Z24 Fcnl_sc0_driver.sv
+R19
+R11
+R16
+R13
+R15
+R20
+Z25 Fcnl_sc0_scoreboard.sv
+Z26 FC:/IkennaWorkSpace/verif_lib//scoreboard.sv
+R11
+R12
+Z27 FC:/IkennaWorkSpace/verif_lib//DUToutput.sv
+R11
+R13
+R15
+R16
+Z28 Fcnl_sc0_DUTOutput.sv
+R13
+R15
+R27
+Z29 Fcnl_sc0_monitor.sv
+R13
+R15
+Z30 FC:/IkennaWorkSpace/verif_lib//monitor.sv
+R11
+R28
+R16
+Z31 Fcnl_sc0_assertion.sv
+R13
+R15
+Z32 FC:/IkennaWorkSpace/verif_lib//assertion.sv
+R11
+L2 6
+R4
+R5
+R7
+!s108 1552160566.523000
+!s107 C:/IkennaWorkSpace/verif_lib//assertion.sv|cnl_sc0_assertion.sv|C:/IkennaWorkSpace/verif_lib//monitor.sv|cnl_sc0_monitor.sv|cnl_sc0_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|cnl_sc0_scoreboard.sv|C:/IkennaWorkSpace/verif_lib//driver.sv|cnl_sc0_driver.sv|C:/IkennaWorkSpace/verif_lib//agent.sv|cnl_sc0_agent.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_environment.sv|
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_environment.sv|
+!s100 P7YnQG5a2<EI<c?8<G<092
 !s85 0
 !i10b 1
 !i103 1
 Xcnl_sc0_generator_sv_unit
 R1
-Z83 I152X3cT5o4A04ZHJNQc@H2
-Z84 V152X3cT5o4A04ZHJNQc@H2
+I152X3cT5o4A04ZHJNQc@H2
+V152X3cT5o4A04ZHJNQc@H2
 S1
-R4
-R30
-Z85 8./cnl_sc0_generator.sv
-Z86 F./cnl_sc0_generator.sv
-R35
-R34
-R36
-R37
-R38
-L2 5
+R8
 R9
+8./cnl_sc0_generator.sv
+F./cnl_sc0_generator.sv
+R12
+R11
+R13
+R14
+R15
+L2 5
+R4
 r1
 31
-R10
-R25
-Z87 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_generator.sv|
-Z88 !s100 >:mIkG:11LZNWHcDPnMbI2
-Z89 !s108 1552160566.693000
-Z90 !s107 C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|./cnl_sc0_generator.sv|
+R5
+R7
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_generator.sv|
+!s100 >:mIkG:11LZNWHcDPnMbI2
+!s108 1552160566.693000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|./cnl_sc0_generator.sv|
 !i10b 1
 !i103 1
 !s85 0
 Xcnl_sc0_monitor_sv_unit
 R1
-Z91 I`Nm^VZnV9<MSWbSGZK_2z2
-Z92 V`Nm^VZnV9<MSWbSGZK_2z2
+I`Nm^VZnV9<MSWbSGZK_2z2
+V`Nm^VZnV9<MSWbSGZK_2z2
 S1
-R4
-R30
-Z93 8./cnl_sc0_monitor.sv
-Z94 F./cnl_sc0_monitor.sv
-R36
-R37
-R38
-R76
-R34
-R74
-R36
-R38
-R59
-R34
-R39
-R35
-R34
-R36
-R38
-L2 6
+R8
 R9
+8./cnl_sc0_monitor.sv
+F./cnl_sc0_monitor.sv
+R13
+R14
+R15
+R30
+R11
+R28
+R13
+R15
+R22
+R11
+R16
+R12
+R11
+R13
+R15
+L2 6
+R4
 r1
 31
-R10
-R25
-Z95 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_monitor.sv|
-Z96 !s100 J3`f;WkFB;0J6J7HUfR>43
-Z97 !s108 1552160566.810000
-Z98 !s107 C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace/verif_lib//DUTOutput.sv|cnl_sc0_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//monitor.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_monitor.sv|
+R5
+R7
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_monitor.sv|
+!s100 J3`f;WkFB;0J6J7HUfR>43
+!s108 1552160566.810000
+!s107 C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace/verif_lib//DUTOutput.sv|cnl_sc0_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//monitor.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_monitor.sv|
 !i10b 1
 !i103 1
 !s85 0
 Xcnl_sc0_scoreboard_sv_unit
 R1
-Z99 IIfaIc8TNJM_40l`9ijRCI1
-Z100 VIfaIc8TNJM_40l`9ijRCI1
+IIfaIc8TNJM_40l`9ijRCI1
+VIfaIc8TNJM_40l`9ijRCI1
 S1
-R4
-R30
-Z101 8./cnl_sc0_scoreboard.sv
-Z102 F./cnl_sc0_scoreboard.sv
-R72
-R34
-R35
-R34
-R73
-R34
-R36
-R37
-R38
-R39
-R35
-R36
-R38
-R74
-R36
-R38
-R73
-L2 5
+R8
 R9
+8./cnl_sc0_scoreboard.sv
+F./cnl_sc0_scoreboard.sv
+R26
+R11
+R12
+R11
+R27
+R11
+R13
+R14
+R15
+R16
+R12
+R13
+R15
+R28
+R13
+R15
+R27
+L2 5
+R4
 r1
 31
-R10
-R25
-Z103 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_scoreboard.sv|
-Z104 !s100 gPZHN[l_fcDEWWnfNYeHe0
-Z105 !s108 1552160566.954000
-Z106 !s107 cnl_sc0_DUTOutput.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|./cnl_sc0_scoreboard.sv|
+R5
+R7
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_scoreboard.sv|
+!s100 gPZHN[l_fcDEWWnfNYeHe0
+!s108 1552160566.954000
+!s107 cnl_sc0_DUTOutput.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|./cnl_sc0_scoreboard.sv|
 !i10b 1
 !i103 1
 !s85 0
 Xcnl_sc0_testbench_sv_unit
 R1
-Z107 V`N`^EQ9GEog<AQb@283:S0
+V`N`^EQ9GEog<AQb@283:S0
 r1
 31
-Z108 I`N`^EQ9GEog<AQb@283:S0
+I`N`^EQ9GEog<AQb@283:S0
 S1
-R4
-R30
-Z109 8./cnl_sc0_testbench.sv
-Z110 F./cnl_sc0_testbench.sv
-R36
-R37
-R38
-R39
-R35
-R34
-R36
-R38
-Z111 Fcnl_sc0_environment.sv
-R36
-R38
-R49
-R39
-R69
-R33
-R34
-R35
-R36
-R38
-R39
-R70
-R48
-R34
-R39
-R36
-R38
-R49
-R71
-R72
-R34
-R35
-R73
-R34
-R36
-R38
-R39
-R74
-R36
-R38
-R73
-R75
-R36
-R38
-R76
-R34
-R74
-R39
-R77
-R36
-R38
-R78
-R34
-R49
-L2 6
+R8
 R9
-Z112 !s108 1552160566.330000
-Z113 !s107 C:/IkennaWorkSpace/verif_lib//assertion.sv|cnl_sc0_assertion.sv|C:/IkennaWorkSpace/verif_lib//monitor.sv|cnl_sc0_monitor.sv|cnl_sc0_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|cnl_sc0_scoreboard.sv|C:/IkennaWorkSpace/verif_lib//driver.sv|cnl_sc0_driver.sv|C:/IkennaWorkSpace/verif_lib//agent.sv|cnl_sc0_agent.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|cnl_sc0_environment.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_testbench.sv|
-Z114 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_testbench.sv|
+8./cnl_sc0_testbench.sv
+F./cnl_sc0_testbench.sv
+R13
+R14
+R15
+R16
+R12
+R11
+R13
+R15
+Fcnl_sc0_environment.sv
+R13
+R15
+R20
+R16
+R23
 R10
+R11
+R12
+R13
+R15
+R16
+R24
+R19
+R11
+R16
+R13
+R15
+R20
 R25
-Z115 !s100 `hQEo<@4LOO=c<ZeU>UBS3
+R26
+R11
+R12
+R27
+R11
+R13
+R15
+R16
+R28
+R13
+R15
+R27
+R29
+R13
+R15
+R30
+R11
+R28
+R16
+R31
+R13
+R15
+R32
+R11
+R20
+L2 6
+R4
+R5
+R7
+!s108 1552160566.330000
+!s107 C:/IkennaWorkSpace/verif_lib//assertion.sv|cnl_sc0_assertion.sv|C:/IkennaWorkSpace/verif_lib//monitor.sv|cnl_sc0_monitor.sv|cnl_sc0_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|cnl_sc0_scoreboard.sv|C:/IkennaWorkSpace/verif_lib//driver.sv|cnl_sc0_driver.sv|C:/IkennaWorkSpace/verif_lib//agent.sv|cnl_sc0_agent.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|cnl_sc0_environment.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_testbench.sv|
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc0_testbench.sv|
+!s100 `hQEo<@4LOO=c<ZeU>UBS3
 !s85 0
+!i10b 1
+!i103 1
+Xcnl_sc1_agent_sv_unit
+R1
+IohQg@[@9nMkk>`GC1OC`Y0
+VohQg@[@9nMkk>`GC1OC`Y0
+S1
+R2
+Z33 w1552277459
+8./cnl_sc1_agent.sv
+F./cnl_sc1_agent.sv
+R10
+R11
+R12
+R11
+R13
+R14
+R15
+Z34 Fcnl_sc1_generator.sv
+R12
+R13
+R15
+L2 5
+R4
+r1
+31
+R5
+R7
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc1_agent.sv|
+!s100 b9>X06^YNY;4Pi6YcUGBK3
+!s108 1552278866.436000
+!s107 cnl_sc1_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//agent.sv|./cnl_sc1_agent.sv|
+!i10b 1
+!i103 1
+!s85 0
+Xcnl_sc1_driver_sv_unit
+R1
+VML>;jCTjHK]eF1[<72Z?^2
+r1
+31
+IML>;jCTjHK]eF1[<72Z?^2
+S1
+R2
+R33
+Z35 8./cnl_sc1_driver.sv
+Z36 F./cnl_sc1_driver.sv
+R19
+R11
+R34
+R12
+R11
+R13
+R14
+R15
+R13
+R15
+R20
+L2 5
+R4
+Z37 !s108 1552278866.543000
+Z38 !s107 C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc1_generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//driver.sv|./cnl_sc1_driver.sv|
+Z39 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc1_driver.sv|
+R5
+R7
+!s85 0
+!s100 `_PPJX3XCmQFST1cmoMD61
+!i10b 1
+!i103 1
+Xcnl_sc1_DUToutput_sv_unit
+R1
+Iio<o1l[SSgT7PDhNI]1zf0
+Vio<o1l[SSgT7PDhNI]1zf0
+S1
+R2
+Z40 w1552167224
+8./cnl_sc1_DUToutput.sv
+F./cnl_sc1_DUToutput.sv
+R13
+R14
+R15
+R22
+R11
+L2 6
+R4
+r1
+31
+R5
+R7
+ncnl_sc1_@d@u@toutput_sv_unit
+!s100 3YOM@ZPTJ<El[CZG65?ig1
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc1_DUToutput.sv|
+!s108 1552278866.678000
+!s107 C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//DUTOutput.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc1_DUToutput.sv|
+!i10b 1
+!i103 1
+!s85 0
+Xcnl_sc1_environment_sv_unit
+R1
+VO20P0kQzbUg2LjZ672OOf2
+r1
+31
+IO20P0kQzbUg2LjZ672OOf2
+S1
+R2
+Z41 w1552278850
+8./cnl_sc1_environment.sv
+F./cnl_sc1_environment.sv
+R13
+R14
+R15
+R20
+R34
+R12
+R11
+R13
+R15
+Z42 Fcnl_sc1_agent.sv
+R10
+R11
+R12
+R13
+R15
+R34
+Z43 Fcnl_sc1_driver.sv
+R19
+R11
+R34
+R13
+R15
+R20
+Z44 Fcnl_sc1_scoreboard.sv
+R26
+R11
+R12
+R27
+R11
+R13
+R15
+R34
+Z45 Fcnl_sc1_DUTOutput.sv
+R13
+R15
+R27
+Z46 Fcnl_sc1_monitor.sv
+R13
+R15
+R30
+R11
+R45
+R34
+Z47 Fcnl_sc1_assertion.sv
+R13
+R15
+R32
+R11
+L2 6
+R4
+R5
+R7
+!s108 1552278865.952000
+!s107 C:/IkennaWorkSpace/verif_lib//assertion.sv|cnl_sc1_assertion.sv|C:/IkennaWorkSpace/verif_lib//monitor.sv|cnl_sc1_monitor.sv|cnl_sc1_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|cnl_sc1_scoreboard.sv|C:/IkennaWorkSpace/verif_lib//driver.sv|cnl_sc1_driver.sv|C:/IkennaWorkSpace/verif_lib//agent.sv|cnl_sc1_agent.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc1_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc1_environment.sv|
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc1_environment.sv|
+!s100 Z153HDiYH^KAj_1FcGAE_1
+!s85 0
+!i10b 1
+!i103 1
+Xcnl_sc1_generator_sv_unit
+R1
+IbKhW[fk[^f?aU@oc07`QT3
+VbKhW[fk[^f?aU@oc07`QT3
+S1
+R2
+R33
+8./cnl_sc1_generator.sv
+F./cnl_sc1_generator.sv
+R12
+R11
+R13
+R14
+R15
+L2 5
+R4
+r1
+31
+R5
+R7
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc1_generator.sv|
+!s100 HT7lR@`5T>^6dnF>fT9Mc2
+!s108 1552278866.106000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|./cnl_sc1_generator.sv|
+!i10b 1
+!i103 1
+!s85 0
+Xcnl_sc1_monitor_sv_unit
+R1
+I<FdE5dANl3^@k40:SgVh21
+V<FdE5dANl3^@k40:SgVh21
+S1
+R2
+R33
+8./cnl_sc1_monitor.sv
+F./cnl_sc1_monitor.sv
+R13
+R14
+R15
+R30
+R11
+R45
+R13
+R15
+R22
+R11
+R34
+R12
+R11
+R13
+R15
+L2 6
+R4
+r1
+31
+R5
+R7
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc1_monitor.sv|
+!s100 SNFH8;UQ32j>9n90oDzb;0
+!s108 1552278866.212000
+!s107 C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc1_generator.sv|C:/IkennaWorkSpace/verif_lib//DUTOutput.sv|cnl_sc1_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//monitor.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc1_monitor.sv|
+!i10b 1
+!i103 1
+!s85 0
+Xcnl_sc1_scoreboard_sv_unit
+R1
+I_[NJ90APVYX]S8idS^bc81
+V_[NJ90APVYX]S8idS^bc81
+S1
+R2
+R41
+8./cnl_sc1_scoreboard.sv
+F./cnl_sc1_scoreboard.sv
+R26
+R11
+R12
+R11
+R27
+R11
+R13
+R14
+R15
+R34
+R12
+R13
+R15
+R45
+R13
+R15
+R27
+L2 5
+R4
+r1
+31
+R5
+R7
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc1_scoreboard.sv|
+!s100 12Ked8Y]hF^G5F3W_i_Be0
+!s108 1552278866.321000
+!s107 cnl_sc1_DUTOutput.sv|cnl_sc1_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//generator.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|./cnl_sc1_scoreboard.sv|
+!i10b 1
+!i103 1
+!s85 0
+Xcnl_sc1_testbench_sv_unit
+R1
+VPRf5[RfgZJPX08<inY7TC3
+r1
+31
+IPRf5[RfgZJPX08<inY7TC3
+S1
+R2
+R41
+Z48 8./cnl_sc1_testbench.sv
+Z49 F./cnl_sc1_testbench.sv
+R13
+R14
+R15
+R34
+R12
+R11
+R13
+R15
+Fcnl_sc1_environment.sv
+R13
+R15
+R20
+R34
+R42
+R10
+R11
+R12
+R13
+R15
+R34
+R43
+R19
+R11
+R34
+R13
+R15
+R20
+R44
+R26
+R11
+R12
+R27
+R11
+R13
+R15
+R34
+R45
+R13
+R15
+R27
+R46
+R13
+R15
+R30
+R11
+R45
+R34
+R47
+R13
+R15
+R32
+R11
+R20
+L2 6
+R4
+Z50 !s108 1552278865.777000
+Z51 !s107 C:/IkennaWorkSpace/verif_lib//assertion.sv|cnl_sc1_assertion.sv|C:/IkennaWorkSpace/verif_lib//monitor.sv|cnl_sc1_monitor.sv|cnl_sc1_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|cnl_sc1_scoreboard.sv|C:/IkennaWorkSpace/verif_lib//driver.sv|cnl_sc1_driver.sv|C:/IkennaWorkSpace/verif_lib//agent.sv|cnl_sc1_agent.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|cnl_sc1_environment.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc1_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc1_testbench.sv|
+Z52 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/verification/|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|+incdir+C:/IkennaWorkSpace/verif_lib/|./cnl_sc1_testbench.sv|
+R5
+R7
+!s85 0
+!s100 WCa7QXIHOa0G3@:kbLAFK1
 !i10b 1
 !i103 1
 vcnn_layer_accel_awe_dsps
 R1
-Z116 V0P=nKOkHXHV>Pf38`7g=k3
+V0P=nKOkHXHV>Pf38`7g=k3
 r1
 31
-Z117 IM3aA1QNg9^`hlW5FO<LRD1
+IM3aA1QNg9^`hlW5FO<LRD1
 S1
-R4
-Z118 w1552069824
-Z119 8../../hardware/verilog/cnn_layer_accel_awe_dsps.v
-Z120 F../../hardware/verilog/cnn_layer_accel_awe_dsps.v
-R36
-R37
-R8
-R37
+R2
+Z53 w1552073424
+8../../hardware/verilog/cnn_layer_accel_awe_dsps.v
+F../../hardware/verilog/cnn_layer_accel_awe_dsps.v
+R13
+R14
+R3
+R14
 L0 27
-R9
-R10
-R11
-Z121 !s100 EAa<j1I6Wd7`3I6z1O:DD0
-Z122 !s105 cnn_layer_accel_awe_dsps_v_unit
-Z123 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_awe_dsps.v|
-Z124 !s108 1552160568.610000
-Z125 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|../../hardware/verilog/cnn_layer_accel_awe_dsps.v|
+R4
+R5
+R6
 !s85 0
+!s100 EAa<j1I6Wd7`3I6z1O:DD0
+!s105 cnn_layer_accel_awe_dsps_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_awe_dsps.v|
+!s108 1552278867.831000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|../../hardware/verilog/cnn_layer_accel_awe_dsps.v|
 !i10b 1
 vcnn_layer_accel_awe_rowbuffers
 R1
-Z126 V7XbjPVH`?=I9=Z8>dZYST3
+V7XbjPVH`?=I9=Z8>dZYST3
 r1
 31
-Z127 IOoN5:1IAz_?RFTbf@ZLLG3
+IOoN5:1IAz_?RFTbf@ZLLG3
 S1
-R4
-R118
-Z128 8../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v
-Z129 F../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v
-R37
-R36
-R37
+R2
+R53
+8../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v
+F../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v
+R14
+R13
+R14
 L0 31
-R9
-R10
-R11
-Z130 !s100 W@YGMJ35LK@hLWmDT>93^2
-Z131 !s105 cnn_layer_accel_awe_rowbuffers_v_unit
-Z132 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v|
-Z133 !s108 1552160567.440000
-Z134 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v|
+R4
+R5
+R6
 !s85 0
+!s100 W@YGMJ35LK@hLWmDT>93^2
+!s105 cnn_layer_accel_awe_rowbuffers_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v|
+!s108 1552278866.783000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v|
 !i10b 1
 vcnn_layer_accel_ce_dsps
 R1
-Z135 V5T^[ZI>H]?o6N;aTCH2TU1
+V5T^[ZI>H]?o6N;aTCH2TU1
 r1
 31
-Z136 I[_<I=mP7XUoMm5hBU4PI<0
+I[_<I=mP7XUoMm5hBU4PI<0
 S1
-R4
-Z137 w1550772821
-Z138 8../../hardware/verilog/cnn_layer_accel_ce_dsps.v
-Z139 F../../hardware/verilog/cnn_layer_accel_ce_dsps.v
-R8
+R2
+w1550776421
+8../../hardware/verilog/cnn_layer_accel_ce_dsps.v
+F../../hardware/verilog/cnn_layer_accel_ce_dsps.v
+R3
 L0 3
-R9
-R10
-R11
-Z140 !s100 >L0SXX?4jS6Vn4=fPj7Jz3
-Z141 !s105 cnn_layer_accel_ce_dsps_v_unit
-Z142 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_ce_dsps.v|
-Z143 !s108 1552160568.723000
-Z144 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|../../hardware/verilog/cnn_layer_accel_ce_dsps.v|
+R4
+R5
+R6
 !s85 0
+!s100 >L0SXX?4jS6Vn4=fPj7Jz3
+!s105 cnn_layer_accel_ce_dsps_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_ce_dsps.v|
+!s108 1552278867.938000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|../../hardware/verilog/cnn_layer_accel_ce_dsps.v|
 !i10b 1
 vcnn_layer_accel_ce_macc_0
 R1
-Z145 VC7z[i?@5EmM5oLjSHWQ;X3
+VC7z[i?@5EmM5oLjSHWQ;X3
 r1
 31
-Z146 I[@E^Cec2]`kN]@1Fd@me?2
+I[@E^Cec2]`kN]@1Fd@me?2
 S1
-R4
-Z147 w1550027677
-Z148 8../../hardware/verilog/cnn_layer_accel_ce_macc_0.v
-Z149 F../../hardware/verilog/cnn_layer_accel_ce_macc_0.v
-R8
+R2
+w1550031277
+8../../hardware/verilog/cnn_layer_accel_ce_macc_0.v
+F../../hardware/verilog/cnn_layer_accel_ce_macc_0.v
+R3
 L0 25
-R9
-R10
-R11
-Z150 !s100 oWiLT4KEGU]_hDJ0O6P8f1
-Z151 !s105 cnn_layer_accel_ce_macc_0_v_unit
-Z152 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_ce_macc_0.v|
-Z153 !s108 1552160568.840000
-Z154 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|../../hardware/verilog/cnn_layer_accel_ce_macc_0.v|
+R4
+R5
+R6
 !s85 0
+!s100 oWiLT4KEGU]_hDJ0O6P8f1
+!s105 cnn_layer_accel_ce_macc_0_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_ce_macc_0.v|
+!s108 1552278868.073000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|../../hardware/verilog/cnn_layer_accel_ce_macc_0.v|
 !i10b 1
 vcnn_layer_accel_ce_macc_1
 R1
-Z155 V2=nocX9MakP[`5H0D>7f=3
+V2=nocX9MakP[`5H0D>7f=3
 r1
 31
-Z156 IgILkL_b[MPQJES2U[kMKd2
+IgILkL_b[MPQJES2U[kMKd2
 S1
-R4
-Z157 w1550027689
-Z158 8../../hardware/verilog/cnn_layer_accel_ce_macc_1.v
-Z159 F../../hardware/verilog/cnn_layer_accel_ce_macc_1.v
-R8
+R2
+w1550031289
+8../../hardware/verilog/cnn_layer_accel_ce_macc_1.v
+F../../hardware/verilog/cnn_layer_accel_ce_macc_1.v
+R3
 L0 25
-R9
-R10
-R11
-Z160 !s100 mncA@QJ5jdLO05i[8>O];2
-Z161 !s105 cnn_layer_accel_ce_macc_1_v_unit
-Z162 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_ce_macc_1.v|
-Z163 !s108 1552160568.950000
-Z164 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|../../hardware/verilog/cnn_layer_accel_ce_macc_1.v|
+R4
+R5
+R6
 !s85 0
+!s100 mncA@QJ5jdLO05i[8>O];2
+!s105 cnn_layer_accel_ce_macc_1_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_ce_macc_1.v|
+!s108 1552278868.176000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|../../hardware/verilog/cnn_layer_accel_ce_macc_1.v|
 !i10b 1
 vcnn_layer_accel_quad
 R1
-Z165 V2FNd13ZUzXMchZW1f0S`03
+V2FNd13ZUzXMchZW1f0S`03
 r1
 31
-Z166 IB@4k5S2CZb4Rm><ff:a9R3
+IB@4k5S2CZb4Rm><ff:a9R3
 S1
-R4
-R118
-Z167 8../../hardware/verilog/cnn_layer_accel_quad.v
-Z168 F../../hardware/verilog/cnn_layer_accel_quad.v
-R37
-R36
-R37
-R8
+R2
+R53
+8../../hardware/verilog/cnn_layer_accel_quad.v
+F../../hardware/verilog/cnn_layer_accel_quad.v
+R14
+R13
+R14
+R3
 L0 31
-R9
-R10
-R11
-Z169 !s100 >`XZ9d1JU[ZZbD@zkGcO90
-Z170 !s105 cnn_layer_accel_quad_v_unit
-Z171 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_quad.v|
-Z172 !s108 1552160567.932000
-Z173 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_quad.v|
+R4
+R5
+R6
 !s85 0
+!s100 >`XZ9d1JU[ZZbD@zkGcO90
+!s105 cnn_layer_accel_quad_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_quad.v|
+!s108 1552278867.213000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//awe.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_quad.v|
 !i10b 1
 vcnn_layer_accel_quad_bram_ctrl
 R1
-Z174 V8[]6EaLa2FM^4SzQjoO^[1
+V8[]6EaLa2FM^4SzQjoO^[1
 r1
 31
-Z175 IShQ8?=IN;[hIZ4M^JY;gX2
+IShQ8?=IN;[hIZ4M^JY;gX2
 S1
-R4
-R118
-Z176 8../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v
-Z177 F../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v
-R37
-R36
-R37
+R2
+R53
+8../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v
+F../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v
+R14
+R13
+R14
 L0 31
-R9
-R10
-R11
-Z178 !s100 0THo:PDZ;KoFYc<Y<`VI?3
-Z179 !s105 cnn_layer_accel_quad_bram_ctrl_v_unit
-Z180 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v|
-Z181 !s108 1552160567.819000
-Z182 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v|
+R4
+R5
+R6
 !s85 0
+!s100 0THo:PDZ;KoFYc<Y<`VI?3
+!s105 cnn_layer_accel_quad_bram_ctrl_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v|
+!s108 1552278867.109000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v|
 !i10b 1
 Ycnn_layer_accel_quad_intf
-!i10b 1
-!s100 j[nmz3ObeTh[EG?6lXg6K1
-IfG`1?i8No]JzGz4mn`UEX0
-V`JN@9S9cnhjKRR_L]QIcM3
-Z183 !s105 cnl_sc0_testbench_sv_unit
-S1
-R4
-Z184 w1552026977
-R49
-R109
-R110
-L0 33
-R9
+R1
+DXx4 work 22 cnl_sc1_driver_sv_unit 0 22 ML>;jCTjHK]eF1[<72Z?^2
+V80L`N8E:kPcOlZh<hElT[3
 r1
-!s85 0
 31
-!s108 1552161090.040000
-!s107 C:/IkennaWorkSpace/verif_lib//assertion.sv|cnl_sc0_assertion.sv|C:/IkennaWorkSpace/verif_lib//monitor.sv|cnl_sc0_monitor.sv|cnl_sc0_DUTOutput.sv|C:/IkennaWorkSpace/verif_lib//DUToutput.sv|C:/IkennaWorkSpace/verif_lib//scoreboard.sv|cnl_sc0_scoreboard.sv|C:/IkennaWorkSpace/verif_lib//driver.sv|cnl_sc0_driver.sv|C:/IkennaWorkSpace/verif_lib//agent.sv|cnl_sc0_agent.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|cnl_sc0_environment.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|./cnl_sc0_testbench.sv|
-R114
-R10
-R25
+ID`78?n^hnD30YQRCY2?HO2
+S1
+R2
+R40
+R20
+R35
+R36
+L0 33
+R4
+R37
+R38
+R39
+R5
+R7
+!s85 0
+!s100 gMT>nY2;dkC5jTM]dYgDD0
+!s105 cnl_sc1_driver_sv_unit
+!i10b 1
 vcnn_layer_accel_weight_sequence_table0
 R1
-Z185 Vn;`ZBciY;FRR3J4j01GLe1
+Vn;`ZBciY;FRR3J4j01GLe1
 r1
 31
-Z186 IhBDOlKBeV4^T;bfWYQR@l1
+IhBDOlKBeV4^T;bfWYQR@l1
 S1
-R4
-R118
-Z187 8../../hardware/verilog/cnn_layer_accel_weight_sequence_table0.v
-Z188 F../../hardware/verilog/cnn_layer_accel_weight_sequence_table0.v
-R37
-R36
-R37
+R2
+R53
+8../../hardware/verilog/cnn_layer_accel_weight_sequence_table0.v
+F../../hardware/verilog/cnn_layer_accel_weight_sequence_table0.v
+R14
+R13
+R14
 L0 27
-R9
-R10
-R11
-Z189 !s100 Cc[_58RVcWGUGc89bCzMD3
-Z190 !s105 cnn_layer_accel_weight_sequence_table0_v_unit
-Z191 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_weight_sequence_table0.v|
-Z192 !s108 1552160568.384000
-Z193 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_weight_sequence_table0.v|
+R4
+R5
+R6
 !s85 0
+!s100 Cc[_58RVcWGUGc89bCzMD3
+!s105 cnn_layer_accel_weight_sequence_table0_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_weight_sequence_table0.v|
+!s108 1552278867.631000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_weight_sequence_table0.v|
 !i10b 1
 vcnn_layer_accel_weight_sequence_table1
 R1
-Z194 VXl=_DXBoM>]i@ARDn3=mz3
+VXl=_DXBoM>]i@ARDn3=mz3
 r1
 31
-Z195 IKf3Ilh^2YN1mzIii0N_TW2
+IKf3Ilh^2YN1mzIii0N_TW2
 S1
-R4
-R118
-Z196 8../../hardware/verilog/cnn_layer_accel_weight_sequence_table1.v
-Z197 F../../hardware/verilog/cnn_layer_accel_weight_sequence_table1.v
-R37
-R36
-R37
+R2
+R53
+8../../hardware/verilog/cnn_layer_accel_weight_sequence_table1.v
+F../../hardware/verilog/cnn_layer_accel_weight_sequence_table1.v
+R14
+R13
+R14
 L0 27
-R9
-R10
-R11
-Z198 !s100 R2><<c@aUPHFg5hNkidVd2
-Z199 !s105 cnn_layer_accel_weight_sequence_table1_v_unit
-Z200 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_weight_sequence_table1.v|
-Z201 !s108 1552160568.500000
-Z202 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_weight_sequence_table1.v|
+R4
+R5
+R6
 !s85 0
+!s100 R2><<c@aUPHFg5hNkidVd2
+!s105 cnn_layer_accel_weight_sequence_table1_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_weight_sequence_table1.v|
+!s108 1552278867.731000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_weight_sequence_table1.v|
 !i10b 1
 vcnn_layer_accel_weight_table_top
 R1
-Z203 V;29TUcz8Q86SC<0ZkfEjf3
+V;29TUcz8Q86SC<0ZkfEjf3
 r1
 31
-Z204 I2E;k>Tjc?B=WJ<[H9FbzU1
+I2E;k>Tjc?B=WJ<[H9FbzU1
 S1
-R4
-R118
-Z205 8../../hardware/verilog/cnn_layer_accel_weight_table_top.v
-Z206 F../../hardware/verilog/cnn_layer_accel_weight_table_top.v
-R37
-R36
-R37
+R2
+R53
+8../../hardware/verilog/cnn_layer_accel_weight_table_top.v
+F../../hardware/verilog/cnn_layer_accel_weight_table_top.v
+R14
+R13
+R14
 L0 27
-R9
-R10
-R11
-Z207 !s100 =TH1`GgSQGZAY2c3TMe7;1
-Z208 !s105 cnn_layer_accel_weight_table_top_v_unit
-Z209 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_weight_table_top.v|
-Z210 !s108 1552160568.270000
-Z211 !s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_weight_table_top.v|
+R4
+R5
+R6
 !s85 0
+!s100 =TH1`GgSQGZAY2c3TMe7;1
+!s105 cnn_layer_accel_weight_table_top_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/cnn_layer_accel_weight_table_top.v|
+!s108 1552278867.528000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/cnn_layer_accel_weight_table_top.v|
 !i10b 1
-vLK2z+52xV7vO41yPY5b/uGBcqMSzgjl9fmuIpa+4uPo=
+ve5Pm5yyYSfFgNzzeNgtb2dh6T2Slpxe1gLIWoQGyEuM=
 R1
-Z212 V`hEDLm83I[jbl1BY@iLEi1
+V`hEDLm83I[jbl1BY@iLEi1
 r1
 31
-Z213 ITXUFnXdjEU5Jlzela<gLM1
+ITXUFnXdjEU5Jlzela<gLM1
 S1
 d.
-Z214 Fnofile
+Fnofile
 L0 55
-R9
-R10
-R11
-Z215 n49bcc50
-Z216 !s100 MI1BWB7S=TJ:VOe4VCVd<2
-Z217 !s105 fifo_generator_v13_1_rfs_v_unit
-Z218 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/hdl/fifo_generator_v13_1_rfs.v|
-Z219 !s108 1552160569.174000
-Z220 !s107 ../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/hdl/fifo_generator_v13_1_rfs.v|
+R4
+R5
+R6
+n49bcc50
 !i10b 0
 !s85 0
-!i8a 1357760928
+!s100 MI1BWB7S=TJ:VOe4VCVd<2
+!s105 fifo_generator_v13_1_rfs_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/hdl/fifo_generator_v13_1_rfs.v|
+!s108 1552278868.397000
+!s107 ../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/hdl/fifo_generator_v13_1_rfs.v|
+!i8a 852216224
 vfifo_generator_v13_1_0_axic_reg_slice
 R1
-Z221 Ib0MDI5dfFWXoC:2EXJ]GD0
-Z222 VIdS7WzHQ:GljF4[L1WhcF0
-Z223 !s105 fifo_generator_vlog_beh_v_unit
+Ib0MDI5dfFWXoC:2EXJ]GD0
+VIdS7WzHQ:GljF4[L1WhcF0
+Z54 !s105 fifo_generator_vlog_beh_v_unit
 S1
+R2
+Z55 w1522551474
+Z56 8../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v
+Z57 F../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v
+L0 10198
 R4
-Z224 w1522547874
-Z225 8../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v
-Z226 F../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v
-Z227 L0 10198
-R9
 r1
 31
-Z228 !s108 1552160569.963000
-Z229 !s107 ../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v|
-Z230 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v|
-R10
-R11
-Z231 !s100 h1<2h=:F__fBZW0>aZ9ZO2
+Z58 !s108 1552278869.196000
+Z59 !s107 ../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v|
+Z60 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v|
+R5
+R6
+!s100 h1<2h=:F__fBZW0>aZ9ZO2
 !i10b 1
 !s85 0
 vfifo_generator_v13_1_0_beh_ver_ll_afifo
 R1
-Z232 InI`TYRX[1i0iE;J5;3_3W1
-Z233 VB6`2k;_iUWK_fYDEMb[Ae2
-R223
+InI`TYRX[1i0iE;J5;3_3W1
+VB6`2k;_iUWK_fYDEMb[Ae2
+R54
 S1
+R2
+R55
+R56
+R57
+L0 6894
 R4
-R224
-R225
-R226
-Z234 L0 6894
-R9
 r1
 31
-R228
-R229
-R230
-R10
-R11
-Z235 !s100 ZK[JL_;KgNje:?AcQQMCa3
+R58
+R59
+R60
+R5
+R6
+!s100 ZK[JL_;KgNje:?AcQQMCa3
 !i10b 1
 !s85 0
 vfifo_generator_v13_1_0_bhv_ver_as
 R1
-Z236 V3FRz=Eo94JckO^ZUBZ=7m0
+V3FRz=Eo94JckO^ZUBZ=7m0
 r1
 31
-Z237 IlPUnjG:ZS3TdzI`g^ENRk3
-R223
+IlPUnjG:ZS3TdzI`g^ENRk3
+R54
 S1
+R2
+R55
+R56
+R57
+L0 4959
 R4
-R224
-R225
-R226
-Z238 L0 4959
-R9
-R228
-R229
-R230
-R10
-R11
-Z239 !s100 C0O5R;]EMURFDEKlJkAj:1
+R58
+R59
+R60
+R5
+R6
 !s85 0
+!s100 C0O5R;]EMURFDEKlJkAj:1
 !i10b 1
 vfifo_generator_v13_1_0_bhv_ver_preload0
 R1
-Z240 VFg=ZAJ>QDI1o[_RGH38Ci1
+VFg=ZAJ>QDI1o[_RGH38Ci1
 r1
 31
-Z241 IZbCFfWcQ`Ob=Z0ZBXYHTC3
-R223
+IZbCFfWcQ`Ob=Z0ZBXYHTC3
+R54
 S1
+R2
+R55
+R56
+R57
+L0 9135
 R4
-R224
-R225
-R226
-Z242 L0 9135
-R9
-R228
-R229
-R230
-R10
-R11
-Z243 !s100 Y4GgLniDnP^TWhcKH7j@]1
+R58
+R59
+R60
+R5
+R6
 !s85 0
+!s100 Y4GgLniDnP^TWhcKH7j@]1
 !i10b 1
 vfifo_generator_v13_1_0_bhv_ver_ss
 R1
-Z244 IWm8T_dJI<QYmQT[z`kj_G0
-Z245 VP83_BCaZ8l@U6OLA<fV;e1
-R223
+IWm8T_dJI<QYmQT[z`kj_G0
+VP83_BCaZ8l@U6OLA<fV;e1
+R54
 S1
+R2
+R55
+R56
+R57
+L0 7022
 R4
-R224
-R225
-R226
-Z246 L0 7022
-R9
 r1
 31
-R228
-R229
-R230
-R10
-R11
-Z247 !s100 f5XK87495:h<W<o<YCDhk1
+R58
+R59
+R60
+R5
+R6
+!s100 f5XK87495:h<W<o<YCDhk1
 !i10b 1
 !s85 0
 vfifo_generator_v13_1_0_CONV_VER
 R1
-Z248 VLS:AQj:<Wh@NmCZ6B:mFN3
+VLS:AQj:<Wh@NmCZ6B:mFN3
 r1
 31
-Z249 IgNC8nKI09Vh??h@j4_PdD1
-R223
+IgNC8nKI09Vh??h@j4_PdD1
+R54
 S1
+R2
+R55
+R56
+R57
+L0 3355
 R4
-R224
-R225
-R226
-Z250 L0 3355
-R9
-R228
-R229
-R230
-R10
-R11
-Z251 nfifo_generator_v13_1_0_@c@o@n@v_@v@e@r
-Z252 !s100 E0MB_zK?84Xb>Yg_S3CJm1
+R58
+R59
+R60
+R5
+R6
+nfifo_generator_v13_1_0_@c@o@n@v_@v@e@r
 !s85 0
+!s100 E0MB_zK?84Xb>Yg_S3CJm1
 !i10b 1
 vfifo_generator_v13_1_0_sync_stage
 R1
-Z253 V_kc4MV^=T6:nW8L7Z3Nd?1
+V_kc4MV^=T6:nW8L7Z3Nd?1
 r1
-31
-Z254 I3M0h^Q;QTWdF1Q=S8@G>M2
-R223
-S1
-R4
-R224
-R225
-R226
-Z255 L0 4938
-R9
-R228
-R229
-R230
-R10
-R11
-Z256 !s100 ``im4kfmKEfm=7FzmMG;b1
 !s85 0
+31
+I3M0h^Q;QTWdF1Q=S8@G>M2
+R54
+S1
+R2
+R55
+R56
+R57
+L0 4938
+R4
+R58
+R59
+R60
+R5
+R6
+!s100 ``im4kfmKEfm=7FzmMG;b1
 !i10b 1
 vfifo_generator_vlog_beh
 R1
-Z257 VcWO1^T6h<`SZ>LFiXj]FY3
+VcWO1^T6h<`SZ>LFiXj]FY3
 r1
 31
-Z258 I=1W5@>6ek:^<@Lb]1eLg83
-R223
+I=1W5@>6ek:^<@Lb]1eLg83
+R54
 S1
-R4
-R224
-R225
-R226
+R2
+R55
+R56
+R57
 L0 98
-R9
-R228
-R229
-R230
-R10
-R11
-Z259 !s100 oa7?oF7z]HI8CEkJ]GhQS1
+R4
+R58
+R59
+R60
+R5
+R6
 !s85 0
+!s100 oa7?oF7z]HI8CEkJ]GhQS1
 !i10b 1
 vglbl
 R1
-Z260 !s100 N>9]3DeVLnPmbNNIi_:EX2
-Z261 I7al>[k_]bhW8586<`ZUSP0
-Z262 VM[9mS]S:KA1i4VeCMX35[3
-Z263 !s105 glbl_v_unit
-S1
-R4
-Z264 w1485222234
-Z265 8C:/Xilinx/Vivado/2016.4/data/verilog/src//glbl.v
-Z266 FC:/Xilinx/Vivado/2016.4/data/verilog/src//glbl.v
-L0 6
-R9
+VM[9mS]S:KA1i4VeCMX35[3
 r1
 31
-Z267 !s90 -reportprogress|300|-lint|-sv|-work|work|C:/Xilinx/Vivado/2016.4/data/verilog/src//glbl.v|
-R10
-Z268 !s108 1552161089.680000
-Z269 !s107 C:/Xilinx/Vivado/2016.4/data/verilog/src//glbl.v|
-!i10b 1
+I7al>[k_]bhW8586<`ZUSP0
+S1
+R2
+w1485225834
+8C:/Xilinx/Vivado/2016.4/data/verilog/src//glbl.v
+FC:/Xilinx/Vivado/2016.4/data/verilog/src//glbl.v
+L0 6
+R4
+R5
 !s85 0
+!s100 N>9]3DeVLnPmbNNIi_:EX2
+!s105 glbl_v_unit
+!s90 -reportprogress|300|-lint|-sv|-work|work|C:/Xilinx/Vivado/2016.4/data/verilog/src//glbl.v|
+!s108 1552278865.471000
+!s107 C:/Xilinx/Vivado/2016.4/data/verilog/src//glbl.v|
+!i10b 1
 vpixel_sequence_data_bram
 R1
-Z270 Vz3O2oTCeT51zj=c3lGgOR1
+Vz3O2oTCeT51zj=c3lGgOR1
 r1
 31
-Z271 I:aG`XkO5n:l=CXfaDkQ072
+I:aG`XkO5n:l=CXfaDkQ072
 S1
-R4
-Z272 w1525291486
-Z273 8../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v
-Z274 F../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v
+R2
+w1525295086
+8../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v
+F../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v
 L0 56
-R9
-R10
-R11
-Z275 !s100 KRkzKlN9=8O7I5TTkX;z31
-Z276 !s105 pixel_sequence_data_bram_v_unit
-Z277 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v|
-Z278 !s108 1552160570.413000
-Z279 !s107 ../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v|
+R4
+R5
+R6
 !s85 0
+!s100 KRkzKlN9=8O7I5TTkX;z31
+!s105 pixel_sequence_data_bram_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v|
 !i10b 1
+!s108 1552278869.580000
+!s107 ../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v|
 vprefetch_buffer_fifo
 R1
-Z280 VkKa>OYkNe`cokb223fQA=2
+VkKa>OYkNe`cokb223fQA=2
 r1
 31
-Z281 I[jd<lm9@_Ib4Dz0M7`QE63
+I[jd<lm9@_Ib4Dz0M7`QE63
 S1
-R4
-R224
-Z282 8../../hardware/ip/xcku115/prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v
-Z283 F../../hardware/ip/xcku115/prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v
+R2
+R55
+8../../hardware/ip/xcku115/prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v
+F../../hardware/ip/xcku115/prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v
 L0 56
-R9
-R10
-R11
-Z284 !s100 1ic1AD`CRM_6ljjD0co]m2
-Z285 !s105 prefetch_buffer_fifo_v_unit
-Z286 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/ip/xcku115/prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v|
-Z287 !s108 1552160570.290000
-Z288 !s107 ../../hardware/ip/xcku115/prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v|
+R4
+R5
+R6
 !s85 0
+!s100 1ic1AD`CRM_6ljjD0co]m2
+!s105 prefetch_buffer_fifo_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/ip/xcku115/prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v|
+!s108 1552278869.479000
+!s107 ../../hardware/ip/xcku115/prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v|
 !i10b 1
 vSRL_bit
 R1
-Z289 VSzkm<j03c_6z?69S?8WV[0
+VSzkm<j03c_6z?69S?8WV[0
 r1
 31
-Z290 I:33>fiD5L0QXWA9?:VF`:2
+I:33>fiD5L0QXWA9?:VF`:2
 S1
-R4
-Z291 w1550621538
-Z292 8../../hardware/verilog/SRL_bit.v
-Z293 F../../hardware/verilog/SRL_bit.v
+R2
+w1550625138
+8../../hardware/verilog/SRL_bit.v
+F../../hardware/verilog/SRL_bit.v
 L0 26
-R9
-R10
-R11
-Z294 n@s@r@l_bit
-Z295 !s100 Qk0BljY>:`ogS`lJd8C?[2
-Z296 !s105 SRL_bit_v_unit
-Z297 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/SRL_bit.v|
-Z298 !s108 1552160568.054000
-Z299 !s107 ../../hardware/verilog/SRL_bit.v|
+R4
+R5
+R6
+n@s@r@l_bit
 !s85 0
+!s100 Qk0BljY>:`ogS`lJd8C?[2
+!s105 SRL_bit_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/SRL_bit.v|
+!s108 1552278867.325000
+!s107 ../../hardware/verilog/SRL_bit.v|
 !i10b 1
 vSRL_bus
 R1
-Z300 V8T3?5dWGDW9^YhDI8LAO83
+V8T3?5dWGDW9^YhDI8LAO83
 r1
 31
-Z301 I@@0V4:YhBMFZz>f9FhH;f0
+I@@0V4:YhBMFZz>f9FhH;f0
 S1
-R4
-Z302 w1550621440
-Z303 8../../hardware/verilog/SRL_bus.v
-Z304 F../../hardware/verilog/SRL_bus.v
+R2
+w1550625040
+8../../hardware/verilog/SRL_bus.v
+F../../hardware/verilog/SRL_bus.v
 L0 27
-R9
-R10
-R11
-Z305 n@s@r@l_bus
-Z306 !s100 B__YoCRVQ`]Qeda`hTf;j0
-Z307 !s105 SRL_bus_v_unit
-Z308 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/SRL_bus.v|
-Z309 !s108 1552160568.163000
-Z310 !s107 ../../hardware/verilog/SRL_bus.v|
+R4
+R5
+R6
+n@s@r@l_bus
 !s85 0
+!s100 B__YoCRVQ`]Qeda`hTf;j0
+!s105 SRL_bus_v_unit
+!s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/SRL_bus.v|
+!s108 1552278867.427000
+!s107 ../../hardware/verilog/SRL_bus.v|
 !i10b 1
 Ysys_synch_intf
 R1
-Z311 DXx4 work 22 cnl_sc0_driver_sv_unit 0 22 aLNjo:gZ[3JCfYeJ>QO<]2
-Z312 VP`@^:cUUF@zVhfH5RXPV;2
+DXx4 work 22 cnl_sc0_driver_sv_unit 0 22 aLNjo:gZ[3JCfYeJ>QO<]2
+VP`@^:cUUF@zVhfH5RXPV;2
 r1
 31
-Z313 IP?]:EN8AK8@eAzP4z=OT>3
-Z314 !s105 cnl_sc0_driver_sv_unit
+IP?]:EN8AK8@eAzP4z=OT>3
 S1
-R4
-Z315 w1551896944
-Z316 FC:/IkennaWorkSpace/verif_lib//sys_synch_intf.sv
-R46
-R47
+R8
+w1551896944
+FC:/IkennaWorkSpace/verif_lib//sys_synch_intf.sv
+R17
+R18
 L0 33
-R9
-R52
-R10
-R25
-Z317 !s108 1551926998.266000
-Z318 !s107 C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace/verif_lib//sys_synch_intf.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//driver.sv|./cnl_sc0_driver.sv|
-Z319 !s100 DonTJOjlE=Z>9]A;<Z1@e0
+R4
+R21
+R5
+R7
+!s105 cnl_sc0_driver_sv_unit
+!s108 1551926998.266000
+!s107 C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv|C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_verif_defs.sv|C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh|C:/IkennaWorkSpace/verif_lib//generator.sv|cnl_sc0_generator.sv|C:/IkennaWorkSpace/verif_lib//sys_synch_intf.sv|C:/IkennaWorkSpace/verif_lib//verification_defs.svh|C:/IkennaWorkSpace/verif_lib//driver.sv|./cnl_sc0_driver.sv|
+!s100 DonTJOjlE=Z>9]A;<Z1@e0
 !s85 0
 !i10b 1
 vtestbench
 R1
-Z320 DXx4 work 25 cnl_sc0_testbench_sv_unit 0 22 `N`^EQ9GEog<AQb@283:S0
-Z321 VI?ZT@d:5P]2nOP`8NW=XF3
+DXx4 work 25 cnl_sc1_testbench_sv_unit 0 22 PRf5[RfgZJPX08<inY7TC3
+VI?ZT@d:5P]2nOP`8NW=XF3
 r1
 31
-Z322 IQDzU2768=oPVci2z@3gg00
+IMahBzGU;E9FAYS_je_LSW3
 S1
-R4
-R184
-R109
-R110
+R2
+w1552277467
+R48
+R49
 L0 95
-R9
-R112
-R113
-R114
-R10
-R25
-Z323 !s100 :DfeK4IX]k?_NWPcH?dKe2
-R183
+R4
+R50
+R51
+R52
+R5
+R7
 !s85 0
+!s100 _YK;5z<m1FhlahUojZXiZ0
+!s105 cnl_sc1_testbench_sv_unit
 !i10b 1
 vxilinx_simple_dual_port_no_change_ram
 R1
-Z324 DXx4 work 44 xilinx_simple_dual_port_no_change_ram_v_unit 0 22 X]lXJcbSLSlP:K;^=U7I^2
-Z325 V6;YIcdYh<hg8z;A_@0`7F1
+DXx4 work 44 xilinx_simple_dual_port_no_change_ram_v_unit 0 22 X]lXJcbSLSlP:K;^=U7I^2
+V6;YIcdYh<hg8z;A_@0`7F1
 r1
 31
-Z326 IQ]3GQ`nedHWn>0gKR`Enb0
+IQ]3GQ`nedHWn>0gKR`Enb0
 S1
-R4
-Z327 w1524089926
-Z328 8../../hardware/verilog/xilinx_simple_dual_port_no_change_ram.v
-Z329 F../../hardware/verilog/xilinx_simple_dual_port_no_change_ram.v
+R2
+Z61 w1524093526
+Z62 8../../hardware/verilog/xilinx_simple_dual_port_no_change_ram.v
+Z63 F../../hardware/verilog/xilinx_simple_dual_port_no_change_ram.v
 L0 39
-R9
-Z330 !s108 1552160567.553000
-Z331 !s107 ../../hardware/verilog/xilinx_simple_dual_port_no_change_ram.v|
-Z332 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/xilinx_simple_dual_port_no_change_ram.v|
-R10
-R11
-Z333 !s100 NH@UU]T_oMoG?]0M[j9cN3
-Z334 !s105 xilinx_simple_dual_port_no_change_ram_v_unit
+R4
+Z64 !s108 1552278866.886000
+Z65 !s107 ../../hardware/verilog/xilinx_simple_dual_port_no_change_ram.v|
+Z66 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/xilinx_simple_dual_port_no_change_ram.v|
+R5
+R6
 !s85 0
+!s100 NH@UU]T_oMoG?]0M[j9cN3
+!s105 xilinx_simple_dual_port_no_change_ram_v_unit
 !i10b 1
 Xxilinx_simple_dual_port_no_change_ram_v_unit
 R1
-Z335 VX]lXJcbSLSlP:K;^=U7I^2
+VX]lXJcbSLSlP:K;^=U7I^2
 r1
 31
-Z336 IX]lXJcbSLSlP:K;^=U7I^2
+IX]lXJcbSLSlP:K;^=U7I^2
 S1
-R4
-R327
-R328
-R329
+R2
+R61
+R62
+R63
 L0 29
-R9
-R330
-R331
-R332
-R10
-R11
-Z337 !s100 f[dAJbo_;^FjbfHNPT[lB0
+R4
+R64
+R65
+R66
+R5
+R6
 !s85 0
+!s100 f[dAJbo_;^FjbfHNPT[lB0
 !i10b 1
 !i103 1
 vxilinx_true_dual_port_no_change_ram
 R1
-Z338 DXx4 work 42 xilinx_true_dual_port_no_change_ram_v_unit 0 22 0:TQKhh1:hk>c9V4E^gCS2
-Z339 V4V7;5W2fMz6T<Ug2ZRgNX2
+DXx4 work 42 xilinx_true_dual_port_no_change_ram_v_unit 0 22 0:TQKhh1:hk>c9V4E^gCS2
+V4V7;5W2fMz6T<Ug2ZRgNX2
 r1
 31
-Z340 IO9B89jh`Aze?dPDE3DjeA2
+IO9B89jh`Aze?dPDE3DjeA2
 S1
-R4
-Z341 w1550801216
-Z342 8../../hardware/verilog/xilinx_true_dual_port_no_change_ram.v
-Z343 F../../hardware/verilog/xilinx_true_dual_port_no_change_ram.v
+R2
+Z67 w1550804816
+Z68 8../../hardware/verilog/xilinx_true_dual_port_no_change_ram.v
+Z69 F../../hardware/verilog/xilinx_true_dual_port_no_change_ram.v
 L0 32
-R9
-Z344 !s108 1552160567.684000
-Z345 !s107 C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/xilinx_true_dual_port_no_change_ram.v|
-Z346 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/xilinx_true_dual_port_no_change_ram.v|
-R10
-R11
-Z347 !s100 Y6?:3^dKl^gTlZC6QDYc71
-Z348 !s105 xilinx_true_dual_port_no_change_ram_v_unit
+R4
+Z70 !s108 1552278866.997000
+Z71 !s107 C:/IkennaWorkSpace//soc_it_common/hardware/include/math.vh|../../hardware/verilog/xilinx_true_dual_port_no_change_ram.v|
+Z72 !s90 -reportprogress|300|-lint|-sv|+define+SIMULATION|-work|work|+incdir+C:/IkennaWorkSpace//soc_it_common/hardware/include|+incdir+C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/|../../hardware/verilog/xilinx_true_dual_port_no_change_ram.v|
+R5
+R6
 !s85 0
+!s100 Y6?:3^dKl^gTlZC6QDYc71
+!s105 xilinx_true_dual_port_no_change_ram_v_unit
 !i10b 1
 Xxilinx_true_dual_port_no_change_ram_v_unit
 R1
-Z349 V0:TQKhh1:hk>c9V4E^gCS2
+V0:TQKhh1:hk>c9V4E^gCS2
 r1
 31
-Z350 I0:TQKhh1:hk>c9V4E^gCS2
+I0:TQKhh1:hk>c9V4E^gCS2
 S1
-R4
-R341
-R342
-R343
-R37
+R2
+R67
+R68
+R69
+R14
 L1 6
-R9
-R344
-R345
-R346
-R10
-R11
-Z351 !s100 Q>::IJDbT;MX0;LS<=N[;1
+R4
+R70
+R71
+R72
+R5
+R6
 !s85 0
+!s100 Q>::IJDbT;MX0;LS<=N[;1
 !i10b 1
 !i103 1
