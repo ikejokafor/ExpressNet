@@ -25,8 +25,8 @@
 //
 //
 //
-// Additional Comments:    This class drives the appropiate signals to recieve outputs from the DUT, transforms them into
-//                              a more readable format, and passes it to the checker
+// Additional Comments:    This class checks assertions of the DUT
+//
 //                              
 //                          
 //                          

@@ -75,6 +75,7 @@ class cnl_sc0_generator extends generator;
     logic [15:0] m_pix_data_sim[]                                                       ;
     logic [15:0] m_kernel_data_sim[]                                                    ;
 
+    
     constraint c0 {      
         solve m_num_input_rows before m_num_input_cols;
         m_num_input_rows inside {[`MIN_NUM_INPUT_ROWS:`MAX_NUM_INPUT_ROWS]};
@@ -152,7 +153,7 @@ function void cnl_sc0_generator::createTest(crtTestParams_t params);
             end
         end
     end
-
+    
     
     m_kernel_data = new[m_num_kernels * m_depth * `KERNEL_3x3_COUNT_FULL_CFG];
     for(k = 0; k < m_num_kernels; k = k + 1) begin
@@ -166,8 +167,20 @@ function void cnl_sc0_generator::createTest(crtTestParams_t params);
             end
         end
     end
-
-
+    
+    
+    $display("// Created Specific Test -------------------------------------");
+    $display("// Num Rows:            %d", m_num_input_rows                  );
+    $display("// Num Cols:            %d", m_num_input_cols                  );
+    $display("// Num Depth:           %d", m_depth                           );
+    $display("// Num kernels:         %d", m_num_kernels                     );
+    $display("// Num Kernel size:     %d", m_kernel_size                     );
+    $display("// Stride               %d", m_stride                          );
+    $display("// Padding:             %d", m_padding                         );
+    $display("// Pixel data size:     %d", m_pix_data.size()                 );
+    $display("// Kernel data size     %d", m_kernel_data.size()              );
+    $display("// Created Specific Test -------------------------------------");
+    $display("\n");
 endfunction: createTest
 
 
@@ -195,8 +208,8 @@ function void cnl_sc0_generator::post_randomize();
     foreach(m_pix_data[i]) begin
         m_pix_data[i] = $urandom_range(1, 10);
     end
- 
-
+    
+    
     m_kernel_data = new[m_num_kernels * m_depth * `KERNEL_3x3_COUNT_FULL_CFG]; 
     for(k = 0; k < m_num_kernels; k = k + 1) begin
         for(i = 0; i < m_depth; i = i + 1) begin

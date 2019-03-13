@@ -39,5 +39,5 @@ vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_co
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ ../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v
 
 
-vsim +notimingchecks -novopt -L work -L verif_lib -L soc_it_common -L soc_it_capi -L secureip -L unisims_ver -L simprims_ver -L unimacro_ver -L unifast_ver  -L blk_mem_gen_v8_3_5 -fsmdebug -c +nowarnTSCALE work.glbl work.testbench
+vsim +notimingchecks -novopt -L work -L verif_lib -L soc_it_common -L soc_it_capi -L secureip -L unisims_ver -L simprims_ver -L unimacro_ver -L unifast_ver  -L blk_mem_gen_v8_3_5 -fsmdebug -c +nowarnTSCALE work.glbl work.cnl_sc1_testbench
 do wave.do

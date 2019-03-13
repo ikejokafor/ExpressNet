@@ -31,44 +31,87 @@
 
 
 interface cnn_layer_accel_quad_intf (
-    input  logic            clk_if              ,
-    input  logic            clk_core            ,
-    output  logic           rst                 ,
-
-    output logic            job_start           ,
-    input  logic            job_accept          ,
-    output logic [127:0]    job_parameters      ,
-    input  logic            job_fetch_request   ,
-    output logic            job_fetch_ack       ,
-    output logic            job_fetch_complete  ,
-    input  logic            job_complete        ,
-    output logic            job_complete_ack    ,
-
-    output logic            cascade_in_valid    ,
-    input  logic            cascade_in_ready    ,
-    output logic [127:0]    cascade_in_data     ,
-
-    input  logic            cascade_out_valid   ,
-    output logic            cascade_out_ready   ,
-    input  logic [127:0]    cascade_out_data    ,
-
-    output logic [  3:0]    config_valid        ,
-    input  logic [  3:0]    config_accept       ,
-    output logic [127:0]    config_data         ,
-
-    output logic            weight_valid        ,
-    input  logic            weight_ready        ,
-    output logic [127:0]    weight_data         ,
-
-    input  logic            result_valid        ,
-    output logic            result_accept       ,
-    input  logic [15:0]     result_data         ,
-
-    output logic            pixel_valid         ,
-    input  logic            pixel_ready         ,
-    output logic [127:0]    pixel_data          
+    clk_if              ,
+    clk_core            ,
+    rst                 ,
+    
+    job_start           ,
+    job_accept          ,
+    job_parameters      ,
+    job_fetch_request   ,
+    job_fetch_ack       ,
+    job_fetch_complete  ,
+    job_complete        ,
+    job_complete_ack    ,
+    
+    cascade_in_valid    ,
+    cascade_in_ready    ,
+    cascade_in_data     ,
+    
+    cascade_out_valid   ,
+    cascade_out_ready   ,
+    cascade_out_data    ,
+    
+    config_valid        ,
+    config_accept       ,
+    config_data         ,
+    
+    weight_valid        ,
+    weight_ready        ,
+    weight_data         ,
+    
+    result_valid        ,
+    result_accept       ,
+    result_data         ,
+    
+    pixel_valid         ,
+    pixel_ready         ,
+    pixel_data          
 );
+	//-----------------------------------------------------------------------------------------------------------------------------------------------
+	//	Interface Ports
+	//-----------------------------------------------------------------------------------------------------------------------------------------------
+    input  logic            clk_if              ;
+    input  logic            clk_core            ;
+    output  logic           rst                 ;
 
+    output logic            job_start           ;
+    input  logic            job_accept          ;
+    output logic [127:0]    job_parameters      ;
+    input  logic            job_fetch_request   ;
+    output logic            job_fetch_ack       ;
+    output logic            job_fetch_complete  ;
+    input  logic            job_complete        ;
+    output logic            job_complete_ack    ;
+
+    output logic            cascade_in_valid    ;
+    input  logic            cascade_in_ready    ;
+    output logic [127:0]    cascade_in_data     ;
+
+    input  logic            cascade_out_valid   ;
+    output logic            cascade_out_ready   ;
+    input  logic [127:0]    cascade_out_data    ;
+  
+    output logic [  3:0]    config_valid        ;
+    input  logic [  3:0]    config_accept       ;
+    output logic [127:0]    config_data         ;
+
+    output logic            weight_valid        ;
+    input  logic            weight_ready        ;
+    output logic [127:0]    weight_data         ;
+
+    input  logic            result_valid        ;
+    output logic            result_accept       ;
+    input  logic [15:0]     result_data         ;
+
+    output logic            pixel_valid         ;
+    input  logic            pixel_ready         ;
+    output logic [127:0]    pixel_data          ;
+
+    
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+	//	Clocking Blocks
+	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	clocking clk_if_cb @(posedge clk_if);
         output job_start           ;
         input  job_accept          ;

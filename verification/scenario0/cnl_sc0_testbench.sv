@@ -26,14 +26,17 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-`include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
-`include "cnl_sc0_generator.sv"
-`include "cnl_sc0_environment.sv"
-`include "cnn_layer_accel_quad_intf.sv"
+module cnl_sc0_testbench;
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+    //	Includes
+    //----------------------------------------------------------------------------------------------------------------------------------------------- 
+    `include "cnn_layer_accel_defs.vh"
+    `include "cnn_layer_accel_verif_defs.sv"
+    `include "cnl_sc0_generator.sv"
+    `include "cnl_sc0_environment.sv"
+    `include "cnn_layer_accel_quad_intf.sv"
 
 
-module testbench;
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
@@ -83,6 +86,12 @@ module testbench;
     logic [127:0]    pixel_data             ;
 
 
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+	//  Local Parameters
+	//-----------------------------------------------------------------------------------------------------------------------------------------------
+    localparam C_PIXEL_DATAOUT_WIDTH    = `NUM_CE_PER_AWE * `PIXEL_WIDTH;
+    
+    
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Verification Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
@@ -93,6 +102,8 @@ module testbench;
     cnl_sc0_generator test;
     sc0_crtTestParams_t sc0_crtTestParams;
     cnl_sc0_generator test_queue[$];
+    virtual cnn_layer_accel_awe_rowbuffers_intf awe_buf_intf_arr[`NUM_AWE];
+    genvar g;
 
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -194,13 +205,30 @@ module testbench;
         .pixel_ready          ( pixel_ready           ),
         .pixel_data           ( pixel_data            )
     );
-
     
+
+    // see if bind feature in systemverilog can do this in a less verbose way
+    // this example http://www.asic-world.com/systemverilog/assertions22.html can also be used to make the variable names here smaller
+    //   instaniate multiple binding_modules then connect them to interface, then create an interface array
+    for(g = 0; g < `NUM_AWE; g = g + 1) begin 
+        cnn_layer_accel_awe_rowbuffers_intf
+        i_cnn_layer_accel_awe_rowbuffers_intf (
+            .clk                         ( clk_core                                                                                         ),          
+            .ce0_pixel_dataout           ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce0_pixel_dataout               ),
+            .ce1_pixel_dataout           ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce1_pixel_dataout               ),
+            .ce0_pixel_dataout_valid     ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce0_pixel_dataout_valid         ),
+            .ce1_pixel_dataout_valid     ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce1_pixel_dataout_valid         ),
+            .ce0_last_kernel             ( i0_cnn_layer_accel_quad.AWE[g].AWE_BUF_WHT[0].i0_cnn_layer_accel_weight_table_top.last_kernel    ),
+            .ce1_last_kernel             ( i0_cnn_layer_accel_quad.AWE[g].AWE_BUF_WHT[1].i0_cnn_layer_accel_weight_table_top.last_kernel    )
+        );
+        assign awe_buf_intf_arr[g] = cnl_sc0_testbench.AWE_RB_INTF[g].i_cnn_layer_accel_awe_rowbuffers_intf;
+    end    
+
+
+ 
     initial begin
-        // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
+        // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------        
         sc0_crtTestParams = new();
-        
-        
         sc0_crtTestParams.num_input_rows = 20;
         sc0_crtTestParams.num_input_cols = 20;
         sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
@@ -212,7 +240,7 @@ module testbench;
         test.createTest(sc0_crtTestParams);
         test_queue.push_back(test);
         
-        
+        sc0_crtTestParams = new();
         sc0_crtTestParams.num_input_rows = 25;
         sc0_crtTestParams.num_input_cols = 25;
         sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
@@ -223,9 +251,9 @@ module testbench;
         test = new();
         test.createTest(sc0_crtTestParams);
         test_queue.push_back(test);
-        
-        
-        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue);
+    
+
+        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, awe_buf_intf_arr, `NUM_AWE);
         env.build();
         fork
             env.run();

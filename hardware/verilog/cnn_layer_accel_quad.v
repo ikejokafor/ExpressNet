@@ -299,7 +299,7 @@ module cnn_layer_accel_quad (
                     .job_accept                 ( job_accept_w                                      ),
                     .next_kernel                ( next_kernel[i * `NUM_CE_PER_AWE + j]              ),
 					.last_kernel                ( last_kernel[i * `NUM_CE_PER_AWE + j]              ),
-                    .kernel_config_valid        ( config_valid[1] && config_accept[1]               ),
+                    .kernel_config_valid        ( config_valid[1]                                   ),
                     .kernel_full_count          ( config_data_arr[i * `NUM_CE_PER_AWE + j]          ), 
                     .wht_config_wren            ( wht_config_wren                                   ),
                     .wht_config_data            ( weight_data_arr[i * `NUM_CE_PER_AWE + j]          ),

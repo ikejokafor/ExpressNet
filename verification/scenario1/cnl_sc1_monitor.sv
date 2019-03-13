@@ -146,45 +146,6 @@ task cnl_sc1_monitor::run();
             n = n + 1;
         end
     end
-
-
-    // i = 0;
-    // while(i < m_numTests) begin    
-    //     @(m_quad_intf.clk_if);
-    //     if(m_agent2monitorMB.try_get(test)) begin
-    //         m_mon_rdy.put(signal);
-    //         forever begin
-    //             @(m_quad_intf.clk_if_cb);
-    //             if(m_quad_intf.clk_if_cb.job_complete) begin
-    //                 m_quad_intf.clk_if_cb.job_complete_ack <= 1;
-    //                 break;
-    //             end
-    //         end
-    //         @(m_quad_intf.clk_if_cb);
-    //         m_quad_intf.clk_if_cb.job_complete_ack <= 0;
-    //         // query = new();
-    //         m_monitor2scoreboardMB.put(query);
-    //         $display("// Finished Test ---------------------------------------------");
-    //         $display("// Num Rows:            %d", test.m_num_input_rows             );
-    //         $display("// Num Cols:            %d", test.m_num_input_cols             );
-    //         $display("// Num Depth:           %d", test.m_depth                      );
-    //         $display("// Num kernels:         %d", test.m_num_kernels                );
-    //         $display("// Num Kernel size:     %d", test.m_kernel_size                );
-    //         $display("// Stride               %d", test.m_stride                     );
-    //         $display("// Padding:             %d", test.m_padding                    );
-    //         $display("// Pixel data size:     %d", test.m_pix_data.size()            );
-    //         $display("// Kernel data size     %d", test.m_kernel_data.size()         );
-    //         $display("// Finished Test ---------------------------------------------");
-    //         $display("\n");
-    //         $display("//-------------------------------------------");
-    //         $display("DUT ready for next test");
-    //         $display("//-------------------------------------------");
-    //         $display("\n");
-    //         m_DUT_rdy.put(signal);
-    //         i = i + 1;
-    //     end
-    // end
-
 endtask: run
 
 

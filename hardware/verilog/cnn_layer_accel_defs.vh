@@ -58,6 +58,7 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 //	MSC
 //-----------------------------------------------------------------------------------------------------------------------------------------------
+`define WINDOW_3x3_NUM_CYCLES           5    // num cycles to output a 3x3 window in our arch
 `define PIXEL_WIDTH                     16
 `define WEIGHT_WIDTH                    16
 `define BRAM_DEPTH                      1024
@@ -72,10 +73,9 @@
 `define NUM_WHT_SEQ_TABLE_PER_AWE       4
 `define DATA_WIDTH                      16
 `define MAX_STRIDE                      11
-`define CYCLE_COUNT                     4   // num cycles to output a 3x3 window in our arch
+`define CYCLE_COUNT                     `WINDOW_3x3_NUM_CYCLES - 1
 `define KERNEL_3x3_COUNT_FULL_CFG       10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
 `define KERNEL_BLOCK_SIZE               16
-`define WINDOW_3x3_NUM_CYCLES           5
 `define NUM_CE_PER_QUAD                `NUM_AWE * `NUM_CE_PER_AWE
 `define MIN_NUM_INPUT_ROWS              19
 `define MIN_NUM_INPUT_COLS              19
@@ -132,7 +132,7 @@
 `define PIX_SEQ_DATA_SEQ_HIGH1              (`PIX_SEQ_DATA_SEQ_LOW1 + `PIX_SEQ_DATA_SEQ_WIDTH1 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD1             (`PIX_SEQ_DATA_SEQ_HIGH1):(`PIX_SEQ_DATA_SEQ_LOW1)
 
-`define PIX_SEQ_DATA_SEQ_WIDTH2             clog2(`BRAM_DEPTH) -1
+`define PIX_SEQ_DATA_SEQ_WIDTH2             clog2(`BRAM_DEPTH) - 1
 `define PIX_SEQ_DATA_SEQ_LOW2               0
 `define PIX_SEQ_DATA_SEQ_HIGH2              (`PIX_SEQ_DATA_SEQ_LOW2 + `PIX_SEQ_DATA_SEQ_WIDTH2 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD2             (`PIX_SEQ_DATA_SEQ_HIGH2):(`PIX_SEQ_DATA_SEQ_LOW2)

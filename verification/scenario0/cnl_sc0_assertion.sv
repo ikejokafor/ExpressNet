@@ -25,8 +25,8 @@
 //
 //
 //
-// Additional Comments:    This class drives the appropiate signals to recieve outputs from the DUT, transforms them into
-//                              a more readable format, and passes it to the checker
+// Additional Comments:    This class checks assertions of the DUT
+//
 //                              
 //                          
 //                          
@@ -37,6 +37,7 @@
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.sv"
 `include "assertion.sv"
+`include "cnn_layer_accel_quad_intf.sv"
 
 
 class sc0_asrtParams_t extends asrtParams_t;
@@ -47,14 +48,19 @@ endclass: sc0_asrtParams_t
 class cnl_sc0_assertion extends assertion;
     extern function new(asrtParams_t asrtParams = null);
     extern task run();
+    
+    
+    virtual cnn_layer_accel_quad_intf m_quad_intf;
 endclass: cnl_sc0_assertion
 
 
 function cnl_sc0_assertion::new(asrtParams_t asrtParams = null);
-
-
-    if(asrtParams != null) begin
+    sc0_asrtParams_t sc0_asrtParams;
     
+    
+    $cast(sc0_asrtParams, asrtParams);
+    if(sc0_asrtParams != null) begin
+        m_quad_intf = sc0_asrtParams.quad_intf;
     end
 endfunction: new
 

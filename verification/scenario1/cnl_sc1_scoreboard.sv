@@ -226,32 +226,32 @@ function int cnl_sc1_scoreboard::checkSolution(DUToutput query, DUToutput sol);
     qry_conv_map           = sc1_query.m_conv_map;
 
     
-    fd = $fopen("sol_conv_map.txt", "w");
-    for(k = 0; k < num_kernels; k = k + 1) begin
-        for(i = 0; i < num_output_rows; i = i + 1) begin
-            for(j = 0; j < num_output_cols; j = j + 1) begin
-                $fwrite(fd, "%d ", sol_conv_map[(k * num_output_rows + i) * num_output_cols + j]);
-            end
-            $fwrite(fd, "\n");
-        end
-        $fwrite(fd, "\n");
-        $fwrite(fd, "\n");
-    end
-    $fclose(fd);
-        
-        
-    fd = $fopen("qry_conv_map.txt", "w");
-    for(k = 0; k < num_kernels; k = k + 1) begin
-        for(i = 0; i < num_output_rows; i = i + 1) begin
-            for(j = 0; j < num_output_cols; j = j + 1) begin
-                $fwrite(fd, "%d ", qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]);
-            end
-            $fwrite(fd, "\n");
-        end
-        $fwrite(fd, "\n");
-        $fwrite(fd, "\n");
-    end
-    $fclose(fd);
+    // fd = $fopen("sol_conv_map.txt", "w");
+    // for(k = 0; k < num_kernels; k = k + 1) begin
+    //     for(i = 0; i < num_output_rows; i = i + 1) begin
+    //         for(j = 0; j < num_output_cols; j = j + 1) begin
+    //             $fwrite(fd, "%d ", sol_conv_map[(k * num_output_rows + i) * num_output_cols + j]);
+    //         end
+    //         $fwrite(fd, "\n");
+    //     end
+    //     $fwrite(fd, "\n");
+    //     $fwrite(fd, "\n");
+    // end
+    // $fclose(fd);
+    //     
+    //     
+    // fd = $fopen("qry_conv_map.txt", "w");
+    // for(k = 0; k < num_kernels; k = k + 1) begin
+    //     for(i = 0; i < num_output_rows; i = i + 1) begin
+    //         for(j = 0; j < num_output_cols; j = j + 1) begin
+    //             $fwrite(fd, "%d ", qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]);
+    //         end
+    //         $fwrite(fd, "\n");
+    //     end
+    //     $fwrite(fd, "\n");
+    //     $fwrite(fd, "\n");
+    // end
+    // $fclose(fd);
     
     
     for(k = 0; k < num_kernels; k = k + 1) begin
@@ -259,6 +259,7 @@ function int cnl_sc1_scoreboard::checkSolution(DUToutput query, DUToutput sol);
             for(j = 0; j < num_output_cols; j = j + 1) begin
                 if(sol_conv_map[(k * num_output_rows + i) * num_output_cols + j] 
                     != qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j]) begin
+                    $stop;
                 end
             end
         end

@@ -166,8 +166,6 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
             end
         end
     end
-
-
 endfunction: createTest
 
 

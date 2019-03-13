@@ -7,6 +7,7 @@ vlog -lint -sv -work work $env(GLBL_PATH)/glbl.v
 # Verification Files
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+C:/IkennaWorkSpace/verif_lib/ ../clock_gen.v
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+C:/IkennaWorkSpace/verif_lib/ ../cnn_layer_accel_quad_intf.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+C:/IkennaWorkSpace/verif_lib/ ../cnn_layer_accel_awe_rowbuffers_intf.sv
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+C:/IkennaWorkSpace/verif_lib/ ./cnl_sc0_testbench.sv
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+C:/IkennaWorkSpace/verif_lib/ ./cnl_sc0_environment.sv
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+C:/IkennaWorkSpace/verif_lib/ ./cnl_sc0_generator.sv
@@ -39,5 +40,5 @@ vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_co
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ ../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v
 
 
-vsim +notimingchecks -novopt -L work -L verif_lib -L soc_it_common -L soc_it_capi -L secureip -L unisims_ver -L simprims_ver -L unimacro_ver -L unifast_ver  -L blk_mem_gen_v8_3_5 -fsmdebug -c +nowarnTSCALE work.glbl work.testbench
+vsim +notimingchecks -novopt -L work -L verif_lib -L soc_it_common -L soc_it_capi -L secureip -L unisims_ver -L simprims_ver -L unimacro_ver -L unifast_ver  -L blk_mem_gen_v8_3_5 -fsmdebug -c +nowarnTSCALE work.glbl work.cnl_sc0_testbench
 do wave.do
