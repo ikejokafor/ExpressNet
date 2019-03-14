@@ -141,12 +141,14 @@ function void cnl_sc0_environment::build();
         m_monParams_arr[i].agent2monitorMB = m_agent2monitorMB_arr[i];
         m_monParams_arr[i].mon_rdy = m_mon_rdy_arr[i];
         m_monParams_arr[i].awe_buf_intf = m_awe_buf_intf_arr[i];
+        m_monParams_arr[i].tid = i;
         m_scoreParams_arr[i].agent2scoreboardMB = m_agent2scoreboardMB_arr[i];
         m_scoreParams_arr[i].monitor2scoreboardMB = m_monitor2scoreboardMB_arr[i];
         m_scoreParams_arr[i].scbd_done = m_scbd_done_arr[i];
         m_scoreParams_arr[i].numTests = m_numTests;
         m_scoreParams_arr[i].quad_intf = m_quad_intf;
         m_scoreParams_arr[i].depth_offset = i * `NUM_CE_PER_AWE;
+        m_scoreParams_arr[i].tid = i;
         m_scoreboard_arr[i] = new(m_scoreParams_arr[i]);
         m_monitor_arr[i] = new(m_monParams_arr[i]);        
     end

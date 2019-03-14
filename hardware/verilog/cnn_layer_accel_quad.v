@@ -353,7 +353,12 @@ module cnn_layer_accel_quad (
 				.ce0_move_one_row_down      ( move_one_row_down[ i * `NUM_CE_PER_AWE + 0]           ),
 				.ce1_move_one_row_down      ( move_one_row_down[ i * `NUM_CE_PER_AWE + 1]           ),
                 .ce0_pixel_dataout_valid    ( ce0_pixel_dataout_valid[i]                            ),
-                .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i]                            ) 
+                .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i]                            )
+`ifdef SIMULATION                
+                ,
+                .ce0_last_kernel            ( last_kernel[(i * 2) + 0]                              ),
+                .ce1_last_kernel            ( last_kernel[(i * 2) + 1]                              )
+`endif
             );
 			
 			if (i == 0 ) begin

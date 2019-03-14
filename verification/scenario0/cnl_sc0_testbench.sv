@@ -210,7 +210,7 @@ module cnl_sc0_testbench;
     // see if bind feature in systemverilog can do this in a less verbose way
     // this example http://www.asic-world.com/systemverilog/assertions22.html can also be used to make the variable names here smaller
     //   instaniate multiple binding_modules then connect them to interface, then create an interface array
-    for(g = 0; g < `NUM_AWE; g = g + 1) begin 
+    for(g = 0; g < `NUM_AWE; g = g + 1) begin: AWE_RB_INTF
         cnn_layer_accel_awe_rowbuffers_intf
         i_cnn_layer_accel_awe_rowbuffers_intf (
             .clk                         ( clk_core                                                                                         ),          
@@ -218,8 +218,14 @@ module cnl_sc0_testbench;
             .ce1_pixel_dataout           ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce1_pixel_dataout               ),
             .ce0_pixel_dataout_valid     ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce0_pixel_dataout_valid         ),
             .ce1_pixel_dataout_valid     ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce1_pixel_dataout_valid         ),
-            .ce0_last_kernel             ( i0_cnn_layer_accel_quad.AWE[g].AWE_BUF_WHT[0].i0_cnn_layer_accel_weight_table_top.last_kernel    ),
-            .ce1_last_kernel             ( i0_cnn_layer_accel_quad.AWE[g].AWE_BUF_WHT[1].i0_cnn_layer_accel_weight_table_top.last_kernel    )
+            .output_row_ce0              ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.output_row_ce0                  ),
+            .output_row_ce1              ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.output_row_ce1                  ),
+            .output_col_ce0              ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.output_col_ce0                  ),
+            .output_col_ce1              ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.output_col_ce1                  ),
+            .ce0_last_kernel             ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce0_last_kernel                 ),
+            .ce1_last_kernel             ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce1_last_kernel                 ),
+            .ce0_cycle_counter           ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce0_cycle_counter               ),         
+            .ce1_cycle_counter           ( i0_cnn_layer_accel_quad.AWE[g].i0_cnn_layer_accel_awe_rowbuffers.ce1_cycle_counter               )
         );
         assign awe_buf_intf_arr[g] = cnl_sc0_testbench.AWE_RB_INTF[g].i_cnn_layer_accel_awe_rowbuffers_intf;
     end    

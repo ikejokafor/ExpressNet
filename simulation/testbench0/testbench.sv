@@ -57,11 +57,11 @@ module testbench;
 
     
     test_0_wrapper #(
-        .ROWS               ( 20                ),
-        .COLS               ( 20                ),
+        .ROWS               ( 25                ),
+        .COLS               ( 25                ),
         .DEPTH              ( 8                 ),
         .KERNEL_SIZE        ( 3                 ),
-        .NUM_KERNELS        ( 5                 ),
+        .NUM_KERNELS        ( 4                 ),
         .C_PERIOD_100MHz    ( C_PERIOD_100MHz   ),
         .C_PERIOD_500MHz    ( C_PERIOD_500MHz   )
     )

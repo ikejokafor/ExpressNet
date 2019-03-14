@@ -44,6 +44,7 @@
 class sc0_scoreParams_t extends scoreParams_t;
     virtual cnn_layer_accel_quad_intf quad_intf;
     int depth_offset;
+    int tid;
 endclass: sc0_scoreParams_t
 
 
@@ -56,6 +57,7 @@ class cnl_sc0_scoreboard extends scoreboard;
 
     virtual cnn_layer_accel_quad_intf m_quad_intf; 
     int m_depth_offset;
+    int m_tid;
 endclass: cnl_sc0_scoreboard
 
 
@@ -70,6 +72,7 @@ function cnl_sc0_scoreboard::new(scoreParams_t scoreParams = null);
         m_scbd_done = sc0_scoreParams.scbd_done;
         m_numTests = sc0_scoreParams.numTests;
         m_depth_offset = sc0_scoreParams.depth_offset;
+        m_tid = sc0_scoreParams.tid;
     end
 endfunction: new
 
@@ -78,21 +81,28 @@ task cnl_sc0_scoreboard::run();
     cnl_sc0_generator test;
     cnl_sc0_DUTOutput query;
     cnl_sc0_DUTOutput sol;
+    sc0_DUTOutParams_t sc0_DUTOutParams;
     int i;
     int signal;
 
 
     i = 0;
     while(i < m_numTests) begin
-        @(m_quad_intf.clk_if_cb);
+        @(m_quad_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
-            sol = new();
+            sc0_DUTOutParams                        = new();
+
+            sc0_DUTOutParams.num_output_rows        = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
+            sc0_DUTOutParams.num_output_cols        = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
+            sc0_DUTOutParams.num_sim_output_rows    = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;
+            sc0_DUTOutParams.num_sim_output_cols    = test.m_num_input_cols;
+            sc0_DUTOutParams.kernel_size            = test.m_kernel_size;
+            sc0_DUTOutParams.depth_offset           = m_depth_offset;
+            sol = new(sc0_DUTOutParams);            
             createSolution(test, sol);
             forever begin
-                @(m_quad_intf.clk_if_cb);
+                @(m_quad_intf.clk_core_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
-                
-                
                     $display("// Checking Test ---------------------------------------------");
                     $display("// Num Rows:            %d", test.m_num_input_rows             );
                     $display("// Num Cols:            %d", test.m_num_input_cols             );
@@ -105,17 +115,17 @@ task cnl_sc0_scoreboard::run();
                     $display("// Kernel data size     %d", test.m_kernel_data.size()         );
                     $display("// Checking Test ---------------------------------------------");
                     $display("\n");
-                    // if(checkSolution(query, sol)) begin
-                    //     $display("// -----------------------------------------------------------");
-                    //     $display("// Test Failed");
-                    //     $display("// -----------------------------------------------------------");
-                    //     $display("\n");
-                    // end else begin
-                    //     $display("// -----------------------------------------------------------");
-                    //     $display("// Test Passed");
-                    //     $display("// -----------------------------------------------------------");
-                    //     $display("\n");
-                    // end
+                    if(checkSolution(query, sol)) begin
+                        $display("// -----------------------------------------------------------");
+                        $display("// Test Failed");
+                        $display("// -----------------------------------------------------------");
+                        $display("\n");
+                    end else begin
+                        $display("// -----------------------------------------------------------");
+                        $display("// Test Passed");
+                        $display("// -----------------------------------------------------------");
+                        $display("\n");
+                    end
                     break;
                 end
             end
@@ -141,7 +151,6 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUToutput sol);
     int y;
     int n;
     int t;
-    int depth;
     int num_kernels;
     int num_output_rows;
     int num_output_cols;
@@ -155,31 +164,16 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUToutput sol);
     
 
     $cast(sc0_test, test);
-    $cast(sc0_sol, sol);    
-    depth                               = sc0_test.m_depth;
+    $cast(sc0_sol, sol);
     num_input_rows                      = sc0_test.m_num_input_rows;
     num_input_cols                      = sc0_test.m_num_input_cols;    
     kernel_size                         = sc0_test.m_kernel_size;
     padding                             = sc0_test.m_padding;
     stride                              = sc0_test.m_stride;
     pix_data_sim                        = sc0_test.m_pix_data_sim;
-    sc0_sol.m_num_output_rows           = ((num_input_rows - kernel_size + (2 * padding)) / stride) + 1;
-    sc0_sol.m_num_output_cols           = ((num_input_cols - kernel_size + (2 * padding)) / stride) + 1;
     num_output_rows                     = sc0_sol.m_num_output_rows;
-    num_output_cols                     = sc0_sol.m_num_output_cols;   
+    num_output_cols                     = sc0_sol.m_num_output_cols;
     
-    
-    sc0_sol.m_pix_data_sol = new[`NUM_CE_PER_AWE];
-    foreach(sc0_sol.m_pix_data_sol[i]) begin
-        sc0_sol.m_pix_data_sol[i] = new[num_output_rows];
-        foreach(sc0_sol.m_pix_data_sol[i, ii]) begin
-            sc0_sol.m_pix_data_sol[i][ii] = new[num_output_cols];
-            foreach(sc0_sol.m_pix_data_sol[i, ii, iii]) begin
-                sc0_sol.m_pix_data_sol[i][ii][iii] = new[`KERNEL_3x3_COUNT_FULL_CFG];
-            end
-        end
-    end    
-
     
     t = 0;
     for(m = m_depth_offset; m <(m_depth_offset + `NUM_CE_PER_AWE); m = m + 1) begin
@@ -193,7 +187,7 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUToutput sol);
                     kc = 0;
                     for(j = b - padding; kc < kernel_size; j = j + 1) begin
                         if((i >= 0 && j >= 0) && (i < num_input_rows && j < num_input_cols)) begin                      
-                            sc0_sol.m_pix_data_sol[t][x][y][n] 
+                            sc0_sol.m_pix_data_sol[t][x][y][n].pixel 
                                 = pix_data_sim[(m * num_input_rows + i) * num_input_cols + j];
                         end
                         kc = kc + 1;
@@ -217,13 +211,12 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
     int j;
     int k;
     int n;
-    int depth;      
     int num_output_rows;  
     int num_output_cols;
     int num_sim_output_rows;   
     int num_sim_output_cols;    
-    logic [15:0] sol_conv_map[][][][];
-    logic [15:0] qry_conv_map[][][][];
+    sc0_datum_t sol_conv_map[][][][];
+    sc0_datum_t qry_conv_map[][][][];    
     integer fd;
     
     
@@ -242,7 +235,7 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
                 for(n = 0; n < `KERNEL_3x3_COUNT_FULL_CFG; n = n + 1) begin
-                    $fwrite(fd, "%d ", sol_conv_map[k][i][j][n]);
+                    $fwrite(fd, "%d ", sol_conv_map[k][i][j][n].pixel);
                 end
             end
             $fwrite(fd, "\n");
@@ -251,14 +244,14 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
         $fwrite(fd, "\n");
     end
     $fclose(fd);
-        
-        
+
+
     fd = $fopen("qry_conv_map.txt", "w");
     for(k = 0; k < `NUM_CE_PER_AWE; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
                 for(n = 0; n < `KERNEL_3x3_COUNT_FULL_CFG; n = n + 1) begin
-                    $fwrite(fd, "%d ", qry_conv_map[k][i][j][n]);
+                    $fwrite(fd, "%d ", qry_conv_map[k][i][j][n].pixel);
                 end
             end
             $fwrite(fd, "\n");
@@ -272,10 +265,14 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
     for(k = 0; k < `NUM_CE_PER_AWE; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                for(n = 0; n < `KERNEL_3x3_COUNT_FULL_CFG; n = n + 1) begin
-                    if(sol_conv_map[k][i][j][n] 
-                        != qry_conv_map[k][i][j][n]) begin
+                for(n = 0; n < `KERNEL_3x3_COUNT_FULL_CFG - 1; n = n + 1) begin
+                    if(sol_conv_map[k][i][j][n].pixel 
+                        == qry_conv_map[k][i][j][n].pixel) begin
+                        break;
                     end
+                end
+                if(n == `KERNEL_3x3_COUNT_FULL_CFG - 1) begin
+                    $stop;
                 end
             end
         end

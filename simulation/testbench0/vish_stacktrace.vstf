@@ -525,3 +525,19 @@ Exception c0000005 has occurred at address 402370ff. Traceback:
 StackWalk failed 0
 # End of Stack Trace
 
+# Current time Wed Mar 13 16:56:58 2019
+# ModelSim Stack Trace
+# Program = vish
+# Id = "10.1c"
+# Version = "2012.07"
+# Date = "Jul 28 2012"
+# Platform = win64
+
+Exception c0000005 has occurred at address 74128415. Traceback:
+# 0    0x74128415: 'strspn + 0x59'
+# 1    0x4006f8aa: '<unknown (@0x4006f8aa)>'
+# 2    0x00000001: '<unknown (@0x1)>'
+# 3    0x1224b4a0: '<unknown (@0x1224b4a0)>'
+StackWalk failed 487
+# End of Stack Trace
+
