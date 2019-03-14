@@ -112,33 +112,31 @@ task cnl_sc0_monitor::run();
                     break;
                 end else begin
                     if(m_awe_buf_intf.clk_cb.ce0_pixel_dataout_valid && m_awe_buf_intf.clk_cb.ce0_last_kernel) begin
-                        query.m_pix_data_sol[0][m_awe_buf_intf.clk_cb.output_row_ce0][m_awe_buf_intf.clk_cb.output_col_ce0][(m_awe_buf_intf.clk_cb.ce0_cycle_counter * 2) + 0].sim_time = $time;
-                        query.m_pix_data_sol[0][m_awe_buf_intf.clk_cb.output_row_ce0][m_awe_buf_intf.clk_cb.output_col_ce0][(m_awe_buf_intf.clk_cb.ce0_cycle_counter * 2) + 0].pixel = m_awe_buf_intf.clk_cb.ce0_pixel_dataout[31:16];
-                        query.m_pix_data_sol[0][m_awe_buf_intf.clk_cb.output_row_ce0][m_awe_buf_intf.clk_cb.output_col_ce0][(m_awe_buf_intf.clk_cb.ce0_cycle_counter * 2) + 1].sim_time = $time;
-                        query.m_pix_data_sol[0][m_awe_buf_intf.clk_cb.output_row_ce0][m_awe_buf_intf.clk_cb.output_col_ce0][(m_awe_buf_intf.clk_cb.ce0_cycle_counter * 2) + 1].pixel = m_awe_buf_intf.clk_cb.ce0_pixel_dataout[ 15:0];
+                        query.m_pix_data[0][m_awe_buf_intf.clk_cb.output_row_ce0][m_awe_buf_intf.clk_cb.output_col_ce0][(m_awe_buf_intf.clk_cb.ce0_cycle_counter * 2) + 0].sim_time = $time * 1000;
+                        query.m_pix_data[0][m_awe_buf_intf.clk_cb.output_row_ce0][m_awe_buf_intf.clk_cb.output_col_ce0][(m_awe_buf_intf.clk_cb.ce0_cycle_counter * 2) + 0].pixel = m_awe_buf_intf.clk_cb.ce0_pixel_dataout[31:16];
+                        query.m_pix_data[0][m_awe_buf_intf.clk_cb.output_row_ce0][m_awe_buf_intf.clk_cb.output_col_ce0][(m_awe_buf_intf.clk_cb.ce0_cycle_counter * 2) + 1].sim_time = $time * 1000;
+                        query.m_pix_data[0][m_awe_buf_intf.clk_cb.output_row_ce0][m_awe_buf_intf.clk_cb.output_col_ce0][(m_awe_buf_intf.clk_cb.ce0_cycle_counter * 2) + 1].pixel = m_awe_buf_intf.clk_cb.ce0_pixel_dataout[ 15:0];
                     end
                     if(m_awe_buf_intf.clk_cb.ce1_pixel_dataout_valid && m_awe_buf_intf.clk_cb.ce1_last_kernel) begin
-                        query.m_pix_data_sol[1][m_awe_buf_intf.clk_cb.output_row_ce1][m_awe_buf_intf.clk_cb.output_col_ce1][(m_awe_buf_intf.clk_cb.ce1_cycle_counter * 2) + 0].sim_time = $time;
-                        query.m_pix_data_sol[1][m_awe_buf_intf.clk_cb.output_row_ce1][m_awe_buf_intf.clk_cb.output_col_ce1][(m_awe_buf_intf.clk_cb.ce1_cycle_counter * 2) + 0].pixel = m_awe_buf_intf.clk_cb.ce1_pixel_dataout[31:16];
-                        query.m_pix_data_sol[1][m_awe_buf_intf.clk_cb.output_row_ce1][m_awe_buf_intf.clk_cb.output_col_ce1][(m_awe_buf_intf.clk_cb.ce1_cycle_counter * 2) + 1].sim_time = $time;
-                        query.m_pix_data_sol[1][m_awe_buf_intf.clk_cb.output_row_ce1][m_awe_buf_intf.clk_cb.output_col_ce1][(m_awe_buf_intf.clk_cb.ce1_cycle_counter * 2) + 1].pixel = m_awe_buf_intf.clk_cb.ce1_pixel_dataout[ 15:0];
+                        query.m_pix_data[1][m_awe_buf_intf.clk_cb.output_row_ce1][m_awe_buf_intf.clk_cb.output_col_ce1][(m_awe_buf_intf.clk_cb.ce1_cycle_counter * 2) + 0].sim_time = $time * 1000;
+                        query.m_pix_data[1][m_awe_buf_intf.clk_cb.output_row_ce1][m_awe_buf_intf.clk_cb.output_col_ce1][(m_awe_buf_intf.clk_cb.ce1_cycle_counter * 2) + 0].pixel = m_awe_buf_intf.clk_cb.ce1_pixel_dataout[31:16];
+                        query.m_pix_data[1][m_awe_buf_intf.clk_cb.output_row_ce1][m_awe_buf_intf.clk_cb.output_col_ce1][(m_awe_buf_intf.clk_cb.ce1_cycle_counter * 2) + 1].sim_time = $time * 1000;
+                        query.m_pix_data[1][m_awe_buf_intf.clk_cb.output_row_ce1][m_awe_buf_intf.clk_cb.output_col_ce1][(m_awe_buf_intf.clk_cb.ce1_cycle_counter * 2) + 1].pixel = m_awe_buf_intf.clk_cb.ce1_pixel_dataout[ 15:0];
                     end
                 end
             end
 
 
             m_monitor2scoreboardMB.put(query);
-            $display("// Finished Test ---------------------------------------------");
-            $display("// Num Input Rows:      %d", test.m_num_input_rows             );
-            $display("// Num Input Cols:      %d", test.m_num_input_cols             );
-            $display("// Num Depth:           %d", test.m_depth                      );
-            $display("// Num kernels:         %d", test.m_num_kernels                );
-            $display("// Num Kernel size:     %d", test.m_kernel_size                );
-            $display("// Stride               %d", test.m_stride                     );
-            $display("// Padding:             %d", test.m_padding                    );
-            $display("// Pixel data size:     %d", test.m_pix_data.size()            );
-            $display("// Kernel data size     %d", test.m_kernel_data.size()         );
-            $display("// Finished Test ---------------------------------------------");
+            $display("// Finished Test ----------------------------------------------");
+            $display("// Num Input Rows:      %0d", test.m_num_input_rows             );
+            $display("// Num Input Cols:      %0d", test.m_num_input_cols             );
+            $display("// Num Depth:           %0d", test.m_depth                      );
+            $display("// Num kernels:         %0d", test.m_num_kernels                );
+            $display("// Num Kernel size:     %0d", test.m_kernel_size                );
+            $display("// Stride               %0d", test.m_stride                     );
+            $display("// Padding:             %0d", test.m_padding                    );
+            $display("// Finished Test ----------------------------------------------");
             $display("\n");
             $display("//-------------------------------------------");
             $display("// DUT ready for next test");

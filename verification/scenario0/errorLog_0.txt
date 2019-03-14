@@ -1,0 +1,4 @@
+Expected window row0 9 218 144; row1 4 136 232; row2 42 199 179
+For AWE 0, depth 0, at output row 0, output col 0
+Recieved window row0 218 9 144; row1 144 4 42; row2 136, 199, 232
+At times row0 14684000 14684000 14688000; row1 14688000 14692000 14692000; row2 14696000, 14696000, 14700000

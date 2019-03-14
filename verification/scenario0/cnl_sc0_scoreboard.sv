@@ -103,17 +103,15 @@ task cnl_sc0_scoreboard::run();
             forever begin
                 @(m_quad_intf.clk_core_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
-                    $display("// Checking Test ---------------------------------------------");
-                    $display("// Num Rows:            %d", test.m_num_input_rows             );
-                    $display("// Num Cols:            %d", test.m_num_input_cols             );
-                    $display("// Num Depth:           %d", test.m_depth                      );
-                    $display("// Num kernels:         %d", test.m_num_kernels                );
-                    $display("// Num Kernel size:     %d", test.m_kernel_size                );
-                    $display("// Stride               %d", test.m_stride                     );
-                    $display("// Padding:             %d", test.m_padding                    );
-                    $display("// Pixel data size:     %d", test.m_pix_data.size()            );
-                    $display("// Kernel data size     %d", test.m_kernel_data.size()         );
-                    $display("// Checking Test ---------------------------------------------");
+                    $display("// Checking Test ----------------------------------------------");
+                    $display("// Num Rows:            %0d", test.m_num_input_rows             );
+                    $display("// Num Cols:            %0d", test.m_num_input_cols             );
+                    $display("// Num Depth:           %0d", test.m_depth                      );
+                    $display("// Num kernels:         %0d", test.m_num_kernels                );
+                    $display("// Num Kernel size:     %0d", test.m_kernel_size                );
+                    $display("// Stride               %0d", test.m_stride                     );
+                    $display("// Padding:             %0d", test.m_padding                    );
+                    $display("// Checking Test ----------------------------------------------");
                     $display("\n");
                     if(checkSolution(query, sol)) begin
                         $display("// -----------------------------------------------------------");
@@ -187,7 +185,7 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUToutput sol);
                     kc = 0;
                     for(j = b - padding; kc < kernel_size; j = j + 1) begin
                         if((i >= 0 && j >= 0) && (i < num_input_rows && j < num_input_cols)) begin                      
-                            sc0_sol.m_pix_data_sol[t][x][y][n].pixel 
+                            sc0_sol.m_pix_data[t][x][y][n].pixel 
                                 = pix_data_sim[(m * num_input_rows + i) * num_input_cols + j];
                         end
                         kc = kc + 1;
@@ -218,25 +216,27 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
     sc0_datum_t sol_conv_map[][][][];
     sc0_datum_t qry_conv_map[][][][];    
     integer fd;
-    
-    
+    string str;
+
     $cast(sc0_query, query);
     $cast(sc0_sol, sol);
     num_output_rows        = sc0_sol.m_num_output_rows;
     num_output_cols        = sc0_sol.m_num_output_cols;
     num_sim_output_rows    = sc0_query.m_num_sim_output_rows;
     num_sim_output_cols    = sc0_query.m_num_sim_output_cols;    
-    sol_conv_map           = sc0_sol.m_pix_data_sol;
-    qry_conv_map           = sc0_query.m_pix_data_sol;
+    sol_conv_map           = sc0_sol.m_pix_data;
+    qry_conv_map           = sc0_query.m_pix_data;
     
     
-    fd = $fopen("sol_conv_map.txt", "w");
+    str.itoa(m_tid);
+    fd = $fopen({"sol_conv_map_", str, ".txt"}, "w");
     for(k = 0; k < `NUM_CE_PER_AWE; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                for(n = 0; n < `KERNEL_3x3_COUNT_FULL_CFG; n = n + 1) begin
-                    $fwrite(fd, "%d ", sol_conv_map[k][i][j][n].pixel);
+                for(n = 0; n < (`KERNEL_3x3_COUNT_FULL_CFG - 1); n = n + 1) begin
+                    $fwrite(fd, "%0d,", sol_conv_map[k][i][j][n].pixel);
                 end
+                $fwrite(fd, ";\t\t");
             end
             $fwrite(fd, "\n");
         end
@@ -246,13 +246,15 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
     $fclose(fd);
 
 
-    fd = $fopen("qry_conv_map.txt", "w");
+    str.itoa(m_tid);
+    fd = $fopen({"qry_conv_map_", str, ".txt"}, "w");
     for(k = 0; k < `NUM_CE_PER_AWE; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
                 for(n = 0; n < `KERNEL_3x3_COUNT_FULL_CFG; n = n + 1) begin
-                    $fwrite(fd, "%d ", qry_conv_map[k][i][j][n].pixel);
+                    $fwrite(fd, "%0d,", qry_conv_map[k][i][j][n].pixel);
                 end
+                $fwrite(fd, ";\t\t");
             end
             $fwrite(fd, "\n");
         end
@@ -271,9 +273,46 @@ function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
                         break;
                     end
                 end
-                if(n == `KERNEL_3x3_COUNT_FULL_CFG - 1) begin
+                // if(n == `KERNEL_3x3_COUNT_FULL_CFG - 1) begin
+                    str.itoa(m_tid);
+                    fd = $fopen({"errorLog_", str, ".txt"}, "w");
+                    $fwrite(fd, "Expected window row0 %0d %0d %0d; row1 %0d %0d %0d; row2 %0d %0d %0d\n", 
+                        sol_conv_map[k][i][j][0].pixel,
+                        sol_conv_map[k][i][j][1].pixel,
+                        sol_conv_map[k][i][j][2].pixel, 
+                        sol_conv_map[k][i][j][3].pixel,
+                        sol_conv_map[k][i][j][4].pixel,
+                        sol_conv_map[k][i][j][5].pixel,
+                        sol_conv_map[k][i][j][6].pixel,
+                        sol_conv_map[k][i][j][7].pixel, 
+                        sol_conv_map[k][i][j][8].pixel
+                    );
+                    $fwrite(fd, "For AWE %0d, depth %0d, at output row %0d, output col %0d\n", m_tid, m_tid * 2 + k, i, j);
+                    $fwrite(fd, "Recieved window row0 %0d %0d %0d; row1 %0d %0d %0d; row2 %0d, %0d, %0d\n",
+                        qry_conv_map[k][i][j][0].pixel,
+                        qry_conv_map[k][i][j][1].pixel,
+                        qry_conv_map[k][i][j][2].pixel,
+                        qry_conv_map[k][i][j][3].pixel,
+                        qry_conv_map[k][i][j][4].pixel,
+                        qry_conv_map[k][i][j][5].pixel,
+                        qry_conv_map[k][i][j][6].pixel,
+                        qry_conv_map[k][i][j][7].pixel,
+                        qry_conv_map[k][i][j][8].pixel
+                    );
+                    $fwrite(fd, "At times row0 %0d %0d %0d; row1 %0d %0d %0d; row2 %0d, %0d, %0d\n",
+                        qry_conv_map[k][i][j][0].sim_time,
+                        qry_conv_map[k][i][j][1].sim_time,
+                        qry_conv_map[k][i][j][2].sim_time,
+                        qry_conv_map[k][i][j][3].sim_time,
+                        qry_conv_map[k][i][j][4].sim_time,
+                        qry_conv_map[k][i][j][5].sim_time,
+                        qry_conv_map[k][i][j][6].sim_time,
+                        qry_conv_map[k][i][j][7].sim_time,
+                        qry_conv_map[k][i][j][8].sim_time
+                    );
+                    $fclose(fd);
                     $stop;
-                end
+                // end
             end
         end
     end 

@@ -149,7 +149,7 @@ function void cnl_sc0_generator::createTest(crtTestParams_t params);
     for(k = 0; k < m_depth; k = k + 1) begin
         for(i = 0; i < m_num_input_rows; i = i + 1) begin
             for(j = 0; j < m_num_input_cols; j = j + 1) begin
-                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(1, 10);
+                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(1, 250);
             end
         end
     end
@@ -169,17 +169,15 @@ function void cnl_sc0_generator::createTest(crtTestParams_t params);
     end
     
     
-    $display("// Created Specific Test -------------------------------------");
-    $display("// Num Rows:            %d", m_num_input_rows                  );
-    $display("// Num Cols:            %d", m_num_input_cols                  );
-    $display("// Num Depth:           %d", m_depth                           );
-    $display("// Num kernels:         %d", m_num_kernels                     );
-    $display("// Num Kernel size:     %d", m_kernel_size                     );
-    $display("// Stride               %d", m_stride                          );
-    $display("// Padding:             %d", m_padding                         );
-    $display("// Pixel data size:     %d", m_pix_data.size()                 );
-    $display("// Kernel data size     %d", m_kernel_data.size()              );
-    $display("// Created Specific Test -------------------------------------");
+    $display("// Created Specific Test --------------------------------------");
+    $display("// Num Rows:            %0d", m_num_input_rows                  );
+    $display("// Num Cols:            %0d", m_num_input_cols                  );
+    $display("// Num Depth:           %0d", m_depth                           );
+    $display("// Num kernels:         %0d", m_num_kernels                     );
+    $display("// Num Kernel size:     %0d", m_kernel_size                     );
+    $display("// Stride               %0d", m_stride                          );
+    $display("// Padding:             %0d", m_padding                         );
+    $display("// Created Specific Test --------------------------------------");
     $display("\n");
 endfunction: createTest
 

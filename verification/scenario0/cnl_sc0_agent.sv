@@ -74,13 +74,17 @@ endfunction : new
 
 task cnl_sc0_agent::run();
     int i;
+    int j;
+    int k;
     int n;
+    int t;
     int signal;
     cnl_sc0_generator test;
+    integer fd;
 
     
-    i = 0;
-    while(i < m_numTests) begin
+    t = 0;
+    while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         n = 0;
         while(n < m_num_mon) begin
@@ -96,25 +100,39 @@ task cnl_sc0_agent::run();
             test = new();
             void'(test.randomize());
             $display("// Created Random Test ---------------------------------------");
-            $display("// Num Rows:            %d", test.m_num_input_rows             );
-            $display("// Num Cols:            %d", test.m_num_input_cols             );
-            $display("// Num Depth:           %d", test.m_depth                      );
-            $display("// Num kernels:         %d", test.m_num_kernels                );
-            $display("// Num Kernel size:     %d", test.m_kernel_size                );
-            $display("// Stride               %d", test.m_stride                     );
-            $display("// Padding:             %d", test.m_padding                    );
-            $display("// Pixel data size:     %d", test.m_pix_data.size()            );
-            $display("// Kernel data size     %d", test.m_kernel_data.size()         );
+            $display("// Num Rows:            %0d", test.m_num_input_rows             );
+            $display("// Num Cols:            %0d", test.m_num_input_cols             );
+            $display("// Num Depth:           %0d", test.m_depth                      );
+            $display("// Num kernels:         %0d", test.m_num_kernels                );
+            $display("// Num Kernel size:     %0d", test.m_kernel_size                );
+            $display("// Stride               %0d", test.m_stride                     );
+            $display("// Padding:             %0d", test.m_padding                    );
+            $display("// Pixel data size:     %0d", test.m_pix_data.size()            );
+            $display("// Kernel data size     %0d", test.m_kernel_data.size()         );
             $display("// Created Random Test ---------------------------------------");
             $display("\n");
             test.plain2bits();
         end
+        
+        
+        fd = $fopen("map.txt", "w");
+        for(k = 0; k < test.m_depth; k = k + 1) begin
+            for(i = 0; i < test.m_num_input_rows; i = i + 1) begin
+                for(j = 0; j < test.m_num_input_cols; j = j + 1) begin
+                    $fwrite(fd, "%d ", test.m_pix_data_sim[(k * test.m_num_input_rows + i) * test.m_num_input_cols + j]);
+                end
+                $fwrite(fd, "\n");
+            end
+            $fwrite(fd, "\n");
+            $fwrite(fd, "\n");
+        end
+        $fclose(fd);
         m_agent2driverMB.put(test);
         for(n = 0; n < m_num_mon; n = n + 1) begin
             m_agent2scoreboardMB_arr[n].put(test);
             m_agent2monitorMB_arr[n].put(test);
         end
-        i = i + 1;
+        t = t + 1;
     end
 endtask: run
 

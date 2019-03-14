@@ -395,3 +395,12 @@ do startsim0.do
 # ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(472): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v(36).
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl
+# ** Warning: (vsim-WLF-5000) WLF file currently in use: vsim.wlf
+# 
+#           File in use by: eng107  Hostname: CSE-P351MDL20  ProcessID: 11936
+# 
+#           Attempting to use alternate WLF file "./wlftknw4y2".
+# ** Warning: (vsim-WLF-5001) Could not open WLF file: vsim.wlf
+# 
+#           Using alternate file: ./wlftknw4y2
+# 
