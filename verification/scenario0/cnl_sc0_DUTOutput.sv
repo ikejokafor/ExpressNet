@@ -66,7 +66,7 @@ class cnl_sc0_DUTOutput extends DUToutput;
     int m_num_sim_output_cols;    
     int m_kernel_size;
     int m_depth_offset;
-    sc0_datum_t m_pix_data[][][][];
+    sc0_datum_t m_pix_data[];
 endclass: cnl_sc0_DUTOutput
 
 
@@ -83,16 +83,7 @@ function cnl_sc0_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
         m_kernel_size           = sc0_DUTOutParams.kernel_size;
         m_depth_offset          = sc0_DUTOutParams.depth_offset;
         
-        m_pix_data = new[`NUM_CE_PER_AWE];
-        foreach(m_pix_data[i]) begin
-            m_pix_data[i] = new[m_num_sim_output_rows];
-            foreach(m_pix_data[i, ii]) begin
-                m_pix_data[i][ii] = new[m_num_sim_output_cols];
-                foreach(m_pix_data[i, ii, iii]) begin
-                    m_pix_data[i][ii][iii] = new[`KERNEL_3x3_COUNT_FULL_CFG];
-                end
-            end
-        end
+        m_pix_data = new[`NUM_CE_PER_AWE * m_num_sim_output_rows * m_num_sim_output_cols * `KERNEL_3x3_COUNT_FULL_CFG];
     end
 endfunction: new
 

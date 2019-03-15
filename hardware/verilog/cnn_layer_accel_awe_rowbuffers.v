@@ -97,9 +97,9 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     input  logic                                        clk                         ;
     input  logic                                        rst                         ;
-    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
-    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
-    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    num_input_cols              ;
+    input  logic    [       C_LOG2_BRAM_DEPTH - 1:0]    input_row                   ;
+    input  logic    [       C_LOG2_BRAM_DEPTH - 1:0]    input_col                   ;
+    input  logic    [       C_LOG2_BRAM_DEPTH - 1:0]    num_input_cols              ;
 	input  logic    [                           2:0]    convolution_stride          ;
     input  logic    [                           5:0]    state                       ;
     input  logic    [                           1:0]    gray_code                   ;

@@ -149,7 +149,7 @@ function void cnl_sc0_generator::createTest(crtTestParams_t params);
     for(k = 0; k < m_depth; k = k + 1) begin
         for(i = 0; i < m_num_input_rows; i = i + 1) begin
             for(j = 0; j < m_num_input_cols; j = j + 1) begin
-                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(1, 250);
+                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(1, 65535);
             end
         end
     end

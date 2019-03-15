@@ -93,9 +93,9 @@ module cnn_layer_accel_quad_bram_ctrl (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     input  logic                              clk                         ;   
     input  logic                              rst                         ;
-	input  logic   [C_LOG2_BRAM_DEPTH - 2:0]  num_input_cols              ;
+	input  logic   [C_LOG2_BRAM_DEPTH - 1:0]  num_input_cols              ;
 	input  logic   [                    2:0]  convolution_stride          ;  
-    input  logic   [C_LOG2_BRAM_DEPTH - 2:0]  num_input_rows              ;
+    input  logic   [C_LOG2_BRAM_DEPTH - 1:0]  num_input_rows              ;
 	input  logic   [                    4:0]  kernel_size				  ;	
     input  logic                              job_start                   ;
     output logic                              job_accept                  ;
@@ -106,12 +106,12 @@ module cnn_layer_accel_quad_bram_ctrl (
     output logic                              job_complete                ;
     input  logic                              job_complete_ack            ;
     output logic [                    5:0]    state                       ;
-    output logic [C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
-    output logic [C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
+    output logic [C_LOG2_BRAM_DEPTH - 1:0]    input_row                   ;
+    output logic [C_LOG2_BRAM_DEPTH - 1:0]    input_col                   ;
 	output logic [					  2:0]    output_stride               ;
 	input  logic                              pfb_empty                   ;
     output logic                              pfb_rden                    ;
-    input  logic [                    8:0]    pfb_full_count              ;
+    input  logic [                    9:0]    pfb_full_count              ;
     input  logic                              row_matric                  ;
     output logic [                    1:0]    gray_code                   ;
     output logic [C_LOG2_BRAM_DEPTH - 2:0]    row_matric_wrAddr           ;
@@ -119,7 +119,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     output logic [                    2:0]    cycle_counter               ;
     input  logic [                    2:0]    last_awe_ce1_cyc_counter    ;
     output logic                              pix_seq_bram_rden           ;
-    output logic [11:0]                       pix_seq_bram_rdAddr         ;
+    output logic [                   11:0]    pix_seq_bram_rdAddr         ;
     output logic [         C_NUM_CE - 1:0]    next_kernel                 ;
 	output logic [         C_NUM_CE - 1:0]    move_one_row_down          ;
     input  logic                              last_kernel                 ;
@@ -130,27 +130,24 @@ module cnn_layer_accel_quad_bram_ctrl (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------          
-    logic                                    ce_execute_d                    ;
 	logic                                    ce_execute_w                    ;
-    logic     [                    10:0]     pix_seq_data_count              ;
+    logic     [                    11:0]     pix_seq_data_count              ;
     logic                                    pix_seq_bram_rden_r             ;
 	(* mark_debug = "true" *) 
-    logic     [                    10:0]     pix_seq_data_full_count         ;
+    logic     [                    11:0]     pix_seq_data_full_count         ;
     logic                                    pix_seq_bram_rden_d             ;
 	logic                                    pix_seq_bram_rden_d1             ;
     logic                                    job_fetch_acked                 ;
     logic                                    job_complete_acked              ;
-    logic     [ C_LOG2_BRAM_DEPTH - 2:0]     output_row                      ;  
-	logic     [ C_LOG2_BRAM_DEPTH - 2:0]     output_col                      ;
-	logic     [ C_LOG2_BRAM_DEPTH - 2:0]     output_col_d                    ;
-	logic     [                     2:0]     cycle_counter_d                 ;
-	logic     [ C_LOG2_BRAM_DEPTH - 2:0]     num_output_rows                 ;
-    logic     [ C_LOG2_BRAM_DEPTH - 2:0]     num_output_cols                 ;
-    logic     [                     4:0]     next_state                      ;
-    logic     [                     4:0]     return_state                    ;
+    logic     [ C_LOG2_BRAM_DEPTH - 1:0]     output_row                      ;  
+	logic     [ C_LOG2_BRAM_DEPTH - 1:0]     output_col                      ;
+	logic     [ C_LOG2_BRAM_DEPTH - 1:0]     num_output_rows                 ;
+    logic     [ C_LOG2_BRAM_DEPTH - 1:0]     num_output_cols                 ;
+    logic     [                     5:0]     next_state                      ;
+    logic     [                     5:0]     return_state                    ;
     logic     [                     1:0]     graycode_r                      ;
     integer                                  idx                             ;  
-    logic     [                     8:0]     pfb_count                       ;
+    logic     [                     9:0]     pfb_count                       ;
 	logic                                    ce_move_one_row_down            ;
 	logic                                    ce_move_one_row_down_d          ;
     genvar                                   i                               ;
@@ -458,7 +455,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                     // next state
                     if(output_col == num_output_cols && output_row == num_output_rows && cycle_counter == `CYCLE_COUNT && last_kernel) begin
                         next_state          <= ST_WAIT_JOB_DONE;
-                    end else if(output_col == num_output_cols && output_row != num_output_rows && cycle_counter== `CYCLE_COUNT) begin
+                    end else if(output_col == num_output_cols && output_row != num_output_rows && cycle_counter == `CYCLE_COUNT) begin
                         pix_seq_bram_rden_r  <= 0;
                         if(input_row < (num_input_rows + 1) && last_kernel) begin
                             return_state    <= ST_AWE_CE_ACTIVE;
@@ -507,7 +504,7 @@ module cnn_layer_accel_quad_bram_ctrl (
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
-    	
+
     
     // DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
 	// DEBUG ----------------------------------------------------------------------------------------------------------------------------------------

@@ -171,17 +171,17 @@ module cnn_layer_accel_quad (
 
     logic    [             C_NUM_CE - 1:0]   ce_execute                       	;
     logic    [                        2:0]   ce_cycle_counter[C_NUM_CE - 1:0] 	;
-    logic    [    C_LOG2_BRAM_DEPTH - 2:0]   input_row                        	;
-    logic    [    C_LOG2_BRAM_DEPTH - 2:0]   input_col                        	;
+    logic    [    C_LOG2_BRAM_DEPTH - 1:0]   input_row                        	;
+    logic    [    C_LOG2_BRAM_DEPTH - 1:0]   input_col                        	;
     logic    [    C_LOG2_BRAM_DEPTH - 2:0]   row_matric_wrAddr                	;
     genvar                                   i                                	;
     genvar                                   j                                	;
 	(* mark_debug = "true" *) 
-    logic    [                        8:0]   num_input_cols_cfg              	;
+    logic    [                        9:0]   num_input_cols_cfg              	;
 	(* mark_debug = "true" *) 
-    logic    [                        8:0]   num_input_rows_cfg              	;
+    logic    [                        9:0]   num_input_rows_cfg              	;
 	(* mark_debug = "true" *) 
-    logic    [                        8:0]   pfb_full_count_cfg              	; 
+    logic    [                        9:0]   pfb_full_count_cfg              	; 
 	(* mark_debug = "true" *) 
     logic    [                        7:0]   kernel_full_count_cfg           	;
 	(* mark_debug = "true" *) 
@@ -213,7 +213,6 @@ module cnn_layer_accel_quad (
     
     logic   [                         3:0]   quad_wht_ctrl_state             	;
     logic   [                         5:0]   state                           	;
-	logic   [                         5:0]   state_d                           	;
   
     logic   [                         3:0]   wht_seq_addr0                      ;
     logic   [                         3:0]   wht_seq_addr1                      ;

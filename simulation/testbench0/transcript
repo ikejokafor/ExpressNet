@@ -277,13 +277,13 @@ do startsim0.do
 # 
 # ** Warning: (vsim-3722) ../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v(4145): [TFMPC] - Missing connection for port 'USERDBITERR_BOTH'.
 # 
-# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(362): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(45).
+# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(361): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(45).
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(392): [PCDPC] - Port size (48 or 48) does not match connection size (32) for port 'cascade_datain'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_dsps.v(38).
+# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(391): [PCDPC] - Port size (48 or 48) does not match connection size (32) for port 'cascade_datain'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_dsps.v(38).
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps
-# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(392): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'cascade_datain_valid'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_dsps.v(40).
+# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(391): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'cascade_datain_valid'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_dsps.v(40).
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps
 # ** Warning: (vsim-8607) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
@@ -316,7 +316,7 @@ do startsim0.do
 # 
 # ** Warning: (vsim-3722) ../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v(4145): [TFMPC] - Missing connection for port 'USERDBITERR_BOTH'.
 # 
-# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(362): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(45).
+# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(361): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(45).
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/i0_cnn_layer_accel_awe_rowbuffers
 # ** Warning: (vsim-8607) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
@@ -349,7 +349,7 @@ do startsim0.do
 # 
 # ** Warning: (vsim-3722) ../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v(4145): [TFMPC] - Missing connection for port 'USERDBITERR_BOTH'.
 # 
-# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(362): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(45).
+# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(361): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(45).
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/i0_cnn_layer_accel_awe_rowbuffers
 # ** Warning: (vsim-8607) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
@@ -382,25 +382,149 @@ do startsim0.do
 # 
 # ** Warning: (vsim-3722) ../../hardware/ip/xcku115/prefetch_buffer_fifo/fifo_generator_v13_1_0/simulation/fifo_generator_vlog_beh.v(4145): [TFMPC] - Missing connection for port 'USERDBITERR_BOTH'.
 # 
-# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(362): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(45).
+# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(361): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(45).
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/i0_cnn_layer_accel_awe_rowbuffers
 # ** Warning: (vsim-8607) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
 # 
 # ** Warning: (vsim-8607) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
 # 
-# ** Warning: (vsim-3017) ../../hardware/verilog/cnn_layer_accel_quad.v(472): [TFMPC] - Too few port connections. Expected 35, found 34.
+# ** Warning: (vsim-3017) ../../hardware/verilog/cnn_layer_accel_quad.v(471): [TFMPC] - Too few port connections. Expected 35, found 34.
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl
-# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(472): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v(36).
+# ** Warning: (vsim-3015) ../../hardware/verilog/cnn_layer_accel_quad.v(471): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'convolution_stride'. The port definition is at: ../../hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v(36).
 # 
 #         Region: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl
 # ** Warning: (vsim-WLF-5000) WLF file currently in use: vsim.wlf
 # 
 #           File in use by: eng107  Hostname: CSE-P351MDL20  ProcessID: 11936
 # 
-#           Attempting to use alternate WLF file "./wlftknw4y2".
+#           Attempting to use alternate WLF file "./wlft4q24f6".
 # ** Warning: (vsim-WLF-5001) Could not open WLF file: vsim.wlf
 # 
-#           Using alternate file: ./wlftknw4y2
+#           Using alternate file: ./wlft4q24f6
 # 
+# ** Error: (vish-4014) No objects found matching '/testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/ce_execute_d'.
+# Executing ONERROR command at macro ./wave.do line 135
+run -all
+# Block Memory Generator module testbench.i0_test_0_wrapper.i0_cnn_layer_accel_quad.i0_pixel_sequence_data_bram.inst.native_mem_module.blk_mem_gen_v8_3_5_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
+# WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
+# WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(532): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(671): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(672): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(532): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(671): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(672): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
+# WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(532): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(671): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(672): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(532): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(671): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(672): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
+# WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(532): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(671): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(672): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(532): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(671): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(672): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
+# WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(532): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(671): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(672): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(532): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(671): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(672): Index xxxxx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[3]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[2]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[1]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i0_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(664): Index xxxzx into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
+# ** Warning: (vsim-8233) ../../hardware/verilog/cnn_layer_accel_ce_dsps.v(665): Index xxxxz into array dimension [12:0] is out of bounds.
+#    Time: 0 ps  Iteration: 1  Instance: /testbench/i0_test_0_wrapper/i0_cnn_layer_accel_quad/AWE[0]/genblk2/i0_cnn_layer_accel_awe_dsps/i1_cnn_layer_accel_ce_dsps
