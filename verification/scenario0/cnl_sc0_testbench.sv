@@ -235,32 +235,8 @@ module cnl_sc0_testbench;
     initial begin
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------        
         sc0_crtTestParams = new();
-        sc0_crtTestParams.num_input_rows = 500;
-        sc0_crtTestParams.num_input_cols = 500;
-        sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc0_crtTestParams.num_kernels = 5;
-        sc0_crtTestParams.kernel_size = 3;
-        sc0_crtTestParams.stride = 1;
-        sc0_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc0_crtTestParams);
-        test_queue.push_back(test);
-        
-        sc0_crtTestParams = new();
         sc0_crtTestParams.num_input_rows = 512;
         sc0_crtTestParams.num_input_cols = 512;
-        sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc0_crtTestParams.num_kernels = 64;
-        sc0_crtTestParams.kernel_size = 3;
-        sc0_crtTestParams.stride = 1;
-        sc0_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc0_crtTestParams);
-        test_queue.push_back(test);
-        
-        sc0_crtTestParams = new();
-        sc0_crtTestParams.num_input_rows = 19;
-        sc0_crtTestParams.num_input_cols = 19;
         sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
         sc0_crtTestParams.num_kernels = 1;
         sc0_crtTestParams.kernel_size = 3;
@@ -270,29 +246,42 @@ module cnl_sc0_testbench;
         test.createTest(sc0_crtTestParams);
         test_queue.push_back(test);
         
-        sc0_crtTestParams = new();
-        sc0_crtTestParams.num_input_rows = 19;
-        sc0_crtTestParams.num_input_cols = 19;
-        sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc0_crtTestParams.num_kernels = 64;
-        sc0_crtTestParams.kernel_size = 3;
-        sc0_crtTestParams.stride = 1;
-        sc0_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc0_crtTestParams);
-        test_queue.push_back(test);
+        // sc0_crtTestParams = new();
+        // sc0_crtTestParams.num_input_rows = 512;
+        // sc0_crtTestParams.num_input_cols = 512;
+        // sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // sc0_crtTestParams.num_kernels = 64;
+        // sc0_crtTestParams.kernel_size = 3;
+        // sc0_crtTestParams.stride = 1;
+        // sc0_crtTestParams.padding = 0;
+        // test = new();
+        // test.createTest(sc0_crtTestParams);
+        // test_queue.push_back(test);
+        // 
+        // sc0_crtTestParams = new();
+        // sc0_crtTestParams.num_input_rows = 19;
+        // sc0_crtTestParams.num_input_cols = 19;
+        // sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // sc0_crtTestParams.num_kernels = 1;
+        // sc0_crtTestParams.kernel_size = 3;
+        // sc0_crtTestParams.stride = 1;
+        // sc0_crtTestParams.padding = 0;
+        // test = new();
+        // test.createTest(sc0_crtTestParams);
+        // test_queue.push_back(test);
+        // 
+        // sc0_crtTestParams = new();
+        // sc0_crtTestParams.num_input_rows = 19;
+        // sc0_crtTestParams.num_input_cols = 19;
+        // sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // sc0_crtTestParams.num_kernels = 64;
+        // sc0_crtTestParams.kernel_size = 3;
+        // sc0_crtTestParams.stride = 1;
+        // sc0_crtTestParams.padding = 0;
+        // test = new();
+        // test.createTest(sc0_crtTestParams);
+        // test_queue.push_back(test);
 
-        sc0_crtTestParams = new();
-        sc0_crtTestParams.num_input_rows = 20;
-        sc0_crtTestParams.num_input_cols = 20;
-        sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc0_crtTestParams.num_kernels = 5;
-        sc0_crtTestParams.kernel_size = 3;
-        sc0_crtTestParams.stride = 1;
-        sc0_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc0_crtTestParams);
-        test_queue.push_back(test);
 
         // sc0_crtTestParams = new();
         // sc0_crtTestParams.num_input_rows = 25;

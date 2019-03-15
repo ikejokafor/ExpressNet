@@ -1230,7 +1230,6 @@ module test_0_wrapper #(
         
         // send kernel data down
         i = 1;
-        j = 0;
         @(posedge clk_500MHz);
         weight_data[127:112]                        = kernel_data_sim[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (7 * NUM_KERNEL_3x3_VALUES) + 0]; 
         weight_data[111:96]                         = kernel_data_sim[(0 * NUM_KERNEL_3x3_VALUES * DEPTH) + (6 * NUM_KERNEL_3x3_VALUES) + 0];     
@@ -1243,18 +1242,18 @@ module test_0_wrapper #(
         weight_valid                                = 1;      
         kernel_group_cfg                            = 0;
         config_data                                 = 0;
-        while(j < NUM_KERNELS) begin
+        while(kernel_group_cfg < NUM_KERNELS) begin
             while(i < NUM_KERNEL_3x3_VALUES) begin
                 @(posedge clk_500MHz);
                 if(weight_ready) begin
-                    weight_data[127:112]    = kernel_data_sim[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (7 * NUM_KERNEL_3x3_VALUES) + i]; 
-                    weight_data[111:96]     = kernel_data_sim[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (6 * NUM_KERNEL_3x3_VALUES) + i];     
-                    weight_data[95:80]      = kernel_data_sim[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (5 * NUM_KERNEL_3x3_VALUES) + i];     
-                    weight_data[79:64]      = kernel_data_sim[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (4 * NUM_KERNEL_3x3_VALUES) + i];     
-                    weight_data[63:48]      = kernel_data_sim[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (3 * NUM_KERNEL_3x3_VALUES) + i];     
-                    weight_data[47:32]      = kernel_data_sim[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (2 * NUM_KERNEL_3x3_VALUES) + i];     
-                    weight_data[31:16]      = kernel_data_sim[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (1 * NUM_KERNEL_3x3_VALUES) + i];     
-                    weight_data[15:0]       = kernel_data_sim[(j * NUM_KERNEL_3x3_VALUES * DEPTH) + (0 * NUM_KERNEL_3x3_VALUES) + i];
+                    weight_data[127:112]    = kernel_data_sim[(kernel_group_cfg * NUM_KERNEL_3x3_VALUES * DEPTH) + (7 * NUM_KERNEL_3x3_VALUES) + i]; 
+                    weight_data[111:96]     = kernel_data_sim[(kernel_group_cfg * NUM_KERNEL_3x3_VALUES * DEPTH) + (6 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[95:80]      = kernel_data_sim[(kernel_group_cfg * NUM_KERNEL_3x3_VALUES * DEPTH) + (5 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[79:64]      = kernel_data_sim[(kernel_group_cfg * NUM_KERNEL_3x3_VALUES * DEPTH) + (4 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[63:48]      = kernel_data_sim[(kernel_group_cfg * NUM_KERNEL_3x3_VALUES * DEPTH) + (3 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[47:32]      = kernel_data_sim[(kernel_group_cfg * NUM_KERNEL_3x3_VALUES * DEPTH) + (2 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[31:16]      = kernel_data_sim[(kernel_group_cfg * NUM_KERNEL_3x3_VALUES * DEPTH) + (1 * NUM_KERNEL_3x3_VALUES) + i];     
+                    weight_data[15:0]       = kernel_data_sim[(kernel_group_cfg * NUM_KERNEL_3x3_VALUES * DEPTH) + (0 * NUM_KERNEL_3x3_VALUES) + i];
                     i = i + 1;
                 end
             end
@@ -1270,7 +1269,6 @@ module test_0_wrapper #(
                                 kernel_group_cfg
                             };
             i = 0;
-            j = j + 1;
         end
         @(posedge clk_500MHz);
         weight_valid                        = 0;  

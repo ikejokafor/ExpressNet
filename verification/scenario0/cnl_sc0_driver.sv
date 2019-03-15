@@ -208,7 +208,6 @@ task cnl_sc0_driver::run();
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
             // send kernel data down
             i = 1;
-            j = 0;
             @(m_quad_intf.clk_core_cb);
             m_quad_intf.clk_core_cb.weight_data[127:112]                <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL_CFG) + 0]; 
             m_quad_intf.clk_core_cb.weight_data[111:96]                 <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (6 * `KERNEL_3x3_COUNT_FULL_CFG) + 0];     
@@ -221,18 +220,18 @@ task cnl_sc0_driver::run();
             m_quad_intf.clk_core_cb.weight_valid                        <= 1;      
             kernel_group_cfg                                             = 0;
             m_quad_intf.clk_if_cb.config_data                           <= 0;
-            while(j < test.m_num_kernels) begin
+            while(kernel_group_cfg < test.m_num_kernels) begin
                 while(i < `KERNEL_3x3_COUNT_FULL_CFG) begin
                     @(m_quad_intf.clk_core_cb);
                     if(m_quad_intf.clk_core_cb.weight_ready) begin
-                        m_quad_intf.clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(j * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL_CFG) + i]; 
-                        m_quad_intf.clk_core_cb.weight_data[111:96]     <= test.m_kernel_data_sim[(j * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (6 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[95:80]      <= test.m_kernel_data_sim[(j * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (5 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[79:64]      <= test.m_kernel_data_sim[(j * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (4 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[63:48]      <= test.m_kernel_data_sim[(j * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (3 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[47:32]      <= test.m_kernel_data_sim[(j * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (2 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[31:16]      <= test.m_kernel_data_sim[(j * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (1 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[15:0]       <= test.m_kernel_data_sim[(j * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (0 * `KERNEL_3x3_COUNT_FULL_CFG) + i];
+                        m_quad_intf.clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL_CFG) + i]; 
+                        m_quad_intf.clk_core_cb.weight_data[111:96]     <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (6 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[95:80]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (5 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[79:64]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (4 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[63:48]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (3 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[47:32]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (2 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[31:16]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (1 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[15:0]       <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (0 * `KERNEL_3x3_COUNT_FULL_CFG) + i];
                         i = i + 1;
                     end
                 end
@@ -248,7 +247,6 @@ task cnl_sc0_driver::run();
                                                             kernel_group_cfg
                                                         };
                 i = 0;
-                j = j + 1;
             end
             @(m_quad_intf.clk_core_cb);
             m_quad_intf.clk_core_cb.weight_valid <= 0;  

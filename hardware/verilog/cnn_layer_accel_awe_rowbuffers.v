@@ -97,8 +97,8 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     input  logic                                        clk                         ;
     input  logic                                        rst                         ;
-    input  logic    [       C_LOG2_BRAM_DEPTH - 1:0]    input_row                   ;
-    input  logic    [       C_LOG2_BRAM_DEPTH - 1:0]    input_col                   ;
+    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    input_row                   ;
+    input  logic    [       C_LOG2_BRAM_DEPTH - 2:0]    input_col                   ;
     input  logic    [       C_LOG2_BRAM_DEPTH - 1:0]    num_input_cols              ;
 	input  logic    [                           2:0]    convolution_stride          ;
     input  logic    [                           5:0]    state                       ;
@@ -187,6 +187,8 @@ module cnn_layer_accel_awe_rowbuffers #(
 	
 	logic                                        ce0_reset_counters		     ;
 	logic             							 ce1_reset_counters		     ;
+    logic                                        ce0_rename_condition        ;
+    logic                                        ce1_rename_condition        ;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -505,7 +507,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
     always@(posedge clk) begin
-        if(rst  | ce0_reset_counters) begin
+        if(rst | ce0_reset_counters) begin
             ce0_cycle_counter <= 0;
         end else begin
             if(ce0_pixel_dataout_valid | ce0_cycle_counter_incr ) begin

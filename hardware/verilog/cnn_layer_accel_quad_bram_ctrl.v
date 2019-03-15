@@ -62,7 +62,7 @@ module cnn_layer_accel_quad_bram_ctrl (
 	move_one_row_down			,
     last_kernel                 ,
     pipeline_flushed            ,
-    wht_sequence_selector       ,    
+    wht_sequence_selector         
 );
 
 
