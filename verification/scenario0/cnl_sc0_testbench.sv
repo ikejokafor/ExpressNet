@@ -179,7 +179,7 @@ module cnl_sc0_testbench;
         
        .output_row                      ( i0_cnn_layer_accel_quad.output_row                    ),
        .output_col                      ( i0_cnn_layer_accel_quad.output_col                    ),
-       .depth                           ( i0_cnn_layer_accel_quad.depth                         )
+       .output_depth                    ( i0_cnn_layer_accel_quad.output_depth                  )
 	);
   
     

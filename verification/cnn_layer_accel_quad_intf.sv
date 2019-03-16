@@ -83,7 +83,7 @@ interface cnn_layer_accel_quad_intf (
     
     output_row                      ,
     output_col                      ,
-    depth
+    output_depth
     
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ interface cnn_layer_accel_quad_intf (
     
     input int               output_row                      ;
     input int               output_col                      ;
-    input int               depth                           ;
+    input int               output_depth                    ;
 
     
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -199,7 +199,7 @@ interface cnn_layer_accel_quad_intf (
         
         input  output_row          ;
         input  output_col          ;
-        input  depth               ;
+        input  output_depth        ;
 	endclocking
 
 

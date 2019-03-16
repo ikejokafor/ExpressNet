@@ -82,7 +82,7 @@ task cnl_sc1_monitor::run();
     int num_sim_output_rows;
     int num_sim_output_cols;
     int stride;
-    int depth;
+    int output_depth;
     
 
     t = 0;
@@ -95,7 +95,7 @@ task cnl_sc1_monitor::run();
             sc1_DUTOutParams.num_output_cols        = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
             sc1_DUTOutParams.num_sim_output_rows    = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;    // might need to double check this
             sc1_DUTOutParams.num_sim_output_cols    = test.m_num_input_cols;
-            depth                                   = test.m_num_kernels;
+            output_depth                            = test.m_num_kernels;
             query                                   = new(sc1_DUTOutParams);
             m_mon_rdy.put(signal);
             stride                                  = test.m_stride;
@@ -106,10 +106,10 @@ task cnl_sc1_monitor::run();
             
             forever begin
                 @(m_quad_intf.clk_core_cb);
-                if(m_quad_intf.clk_core_cb.output_row == num_sim_output_rows && m_quad_intf.clk_core_cb.output_col == num_sim_output_cols && m_quad_intf.clk_core_cb.depth == depth) begin
+                if(m_quad_intf.clk_core_cb.output_row == num_sim_output_rows && m_quad_intf.clk_core_cb.output_col == num_sim_output_cols && m_quad_intf.clk_core_cb.output_depth == output_depth) begin
                     break;
                 end else if(m_quad_intf.clk_core_cb.result_valid) begin
-                    query.m_conv_map[(m_quad_intf.clk_core_cb.depth * num_sim_output_rows + m_quad_intf.clk_core_cb.output_row) * num_sim_output_cols + m_quad_intf.clk_core_cb.output_col].pixel = m_quad_intf.clk_core_cb.result_data;
+                    query.m_conv_map[(m_quad_intf.clk_core_cb.output_depth * num_sim_output_rows + m_quad_intf.clk_core_cb.output_row) * num_sim_output_cols + m_quad_intf.clk_core_cb.output_col].pixel = m_quad_intf.clk_core_cb.result_data;
                 end
             end
             

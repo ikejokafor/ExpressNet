@@ -570,27 +570,27 @@ module cnn_layer_accel_quad (
     
     int output_row;
     int output_col;
-    int depth;
+    int output_depth;
     always@(posedge clk_core) begin
         if(rst) begin
-            output_row <= 0;
-            output_col <= 0;
-            depth      <= 0;
+            output_row      <= 0;
+            output_col      <= 0;
+            output_depth    <= 0;
         end else begin
             case(state)
                 ST_IDLE: begin
-                    output_row <= 0;
-                    output_col <= 0;
-                    depth      <= 0;
+                    output_row      <= 0;
+                    output_col      <= 0;
+                    output_depth    <= 0;
                 end
                 ST_AWE_CE_ACTIVE: begin
                     if(result_valid) begin
                         if(output_col == num_output_cols_cfg) begin
                             output_col <= 0;
-                            if(depth == (num_kernel_cfg - 1)) begin
+                            if(output_depth == (num_kernel_cfg - 1)) begin
                                 output_row <= output_row + 1;
                             end else begin
-                                depth      <= depth + 1;
+                                output_depth      <= output_depth + 1;
                             end
                         end else begin
                             output_col <= output_col + 1;
