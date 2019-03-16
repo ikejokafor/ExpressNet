@@ -44,13 +44,14 @@ class sc1_DUTOutParams_t extends DUTOutParams_t;
     int num_output_rows;
     int num_output_cols;
     int num_sim_output_rows;
-    int num_sim_output_cols;    
+    int num_sim_output_cols;  
+    int depth;
 endclass: sc1_DUTOutParams_t
 
 
 typedef struct {
     int sim_time;
-    logic pixel;
+    logic [15:0] pixel;
 } sc1_datum_t;
 
 
@@ -64,6 +65,7 @@ class cnl_sc1_DUTOutput extends DUToutput;
     int m_num_output_cols;
     int m_num_sim_output_rows;
     int m_num_sim_output_cols;
+    int m_depth;
     sc1_datum_t m_conv_map[];
 endclass: cnl_sc1_DUTOutput
 
@@ -78,7 +80,8 @@ function cnl_sc1_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
         m_num_output_rows       = sc1_DUTOutParams.num_output_rows;      
         m_num_output_cols       = sc1_DUTOutParams.num_output_cols;
         m_num_sim_output_rows   = sc1_DUTOutParams.num_sim_output_rows;  
-        m_num_sim_output_cols   = sc1_DUTOutParams.num_sim_output_cols;  
+        m_num_sim_output_cols   = sc1_DUTOutParams.num_sim_output_cols;
+        m_depth                 = sc1_DUTOutParams.depth;
         m_conv_map              = new[m_num_kernels * m_num_sim_output_rows * m_num_sim_output_cols];
     end
 endfunction: new

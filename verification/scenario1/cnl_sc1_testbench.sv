@@ -230,10 +230,10 @@ module cnl_sc1_testbench;
         // test_queue.push_back(test);
         
         
-        sc1_crtTestParams.num_input_rows = 25;
-        sc1_crtTestParams.num_input_cols = 25;
+        sc1_crtTestParams.num_input_rows = 24;
+        sc1_crtTestParams.num_input_cols = 24;
         sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 5;
+        sc1_crtTestParams.num_kernels = 7;
         sc1_crtTestParams.kernel_size = 3;
         sc1_crtTestParams.stride = 1;
         sc1_crtTestParams.padding = 0;

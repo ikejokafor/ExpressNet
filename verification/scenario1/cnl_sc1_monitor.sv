@@ -106,7 +106,7 @@ task cnl_sc1_monitor::run();
             
             forever begin
                 @(m_quad_intf.clk_core_cb);
-                if(m_quad_intf.clk_core_cb.output_row == num_sim_output_rows && m_quad_intf.clk_core_cb.output_col == num_sim_output_cols && m_quad_intf.clk_core_cb.output_depth == output_depth) begin
+                if(m_quad_intf.clk_core_cb.output_row == (num_sim_output_rows - 1) && m_quad_intf.clk_core_cb.output_col == (num_sim_output_cols - 1) && m_quad_intf.clk_core_cb.output_depth == (output_depth - 1)) begin
                     break;
                 end else if(m_quad_intf.clk_core_cb.result_valid) begin
                     query.m_conv_map[(m_quad_intf.clk_core_cb.output_depth * num_sim_output_rows + m_quad_intf.clk_core_cb.output_row) * num_sim_output_cols + m_quad_intf.clk_core_cb.output_col].pixel = m_quad_intf.clk_core_cb.result_data;

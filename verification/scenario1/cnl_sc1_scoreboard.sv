@@ -87,6 +87,8 @@ task cnl_sc1_scoreboard::run();
         if(m_agent2scoreboardMB.try_get(test)) begin
             sc1_DUTOutParams                        = new();
 
+            sc1_DUTOutParams.depth                  = test.m_depth;
+            sc1_DUTOutParams.num_kernels            = test.m_num_kernels;
             sc1_DUTOutParams.num_output_rows        = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
             sc1_DUTOutParams.num_output_cols        = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
             sc1_DUTOutParams.num_sim_output_rows    = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;
@@ -166,18 +168,21 @@ function void cnl_sc1_scoreboard::createSolution(generator test, DUToutput sol);
     padding                             = sc1_test.m_padding;
     stride                              = sc1_test.m_stride;
     pix_data_sim                        = sc1_test.m_pix_data_sim;
+    kernel_data_sim                     = sc1_test.m_kernel_data_sim;
     num_output_rows                     = sc1_sol.m_num_output_rows;
     num_output_cols                     = sc1_sol.m_num_output_cols;
     num_sim_output_rows                 = sc1_sol.m_num_sim_output_rows;
     num_sim_output_cols                 = sc1_sol.m_num_sim_output_cols;
-
+    num_kernels                         = sc1_sol.m_num_kernels;
+    depth                               = sc1_sol.m_depth;
+    
     
     for(m = 0; m < num_kernels; m = m + 1) begin
         a = 0;
         for(x = 0; x < num_output_rows; x = x + 1) begin
             b = 0;
             for(y = 0; y < num_output_cols; y = y + 1) begin
-                sc1_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y].pixel = 0;
+                sc1_sol.m_conv_map[(m * num_sim_output_rows + x) * num_sim_output_cols + y].pixel = 0;
                 for(k = 0; k < depth; k = k + 1) begin
                     kr = 0;
                     n = 0;
@@ -262,7 +267,7 @@ function int cnl_sc1_scoreboard::checkSolution(DUToutput query, DUToutput sol);
     for(k = 0; k < num_kernels; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                if(sol_conv_map[(k * num_output_rows + i) * num_output_cols + j].pixel
+                if(sol_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j].pixel
                     != qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j].pixel) begin
                     $stop;
                 end
