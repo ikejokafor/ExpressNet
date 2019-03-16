@@ -48,6 +48,12 @@ class sc1_DUTOutParams_t extends DUTOutParams_t;
 endclass: sc1_DUTOutParams_t
 
 
+typedef struct {
+    int sim_time;
+    logic pixel;
+} sc1_datum_t;
+
+
 class cnl_sc1_DUTOutput extends DUToutput;
     extern function new(DUTOutParams_t DUTOutParams = null);
     extern function void bits2plain();
@@ -58,7 +64,7 @@ class cnl_sc1_DUTOutput extends DUToutput;
     int m_num_output_cols;
     int m_num_sim_output_rows;
     int m_num_sim_output_cols;
-    logic [15:0] m_conv_map[];
+    sc1_datum_t m_conv_map[];
 endclass: cnl_sc1_DUTOutput
 
 

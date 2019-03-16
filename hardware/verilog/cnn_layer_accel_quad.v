@@ -189,6 +189,11 @@ module cnn_layer_accel_quad (
 	(* mark_debug = "true" *) 
     logic    [                        6:0]   convolution_stride_cfg    		 	;
 	logic    [                        4:0]   kernel_size_cfg    		 		;
+    logic    [                        4:0]   padding_cfg                        ;
+    logic    [                        6:0]   num_kernel_cfg                     ;
+    logic    [                        9:0]   num_output_rows_cfg                ;
+    logic    [                        9:0]   num_output_cols_cfg                ;
+    logic    [                       11:0]   pix_seq_data_full_count_cfg        ;
 
     
     logic                                    pix_seq_bram_rden               	;
@@ -463,9 +468,10 @@ module cnn_layer_accel_quad (
         .cycle_counter              ( cycle_counter                                         ),
         .pix_seq_bram_rden          ( pix_seq_bram_rden                                     ),
         .pix_seq_bram_rdAddr        ( pix_seq_bram_rdAddr                                   ),
+        .pix_seq_data_full_count    ( pix_seq_data_full_count_cfg                           ),
         .next_kernel                ( next_kernel                                           ),
 		.move_one_row_down          ( move_one_row_down                                     ),
-        .last_kernel                ( last_kernel[C_NUM_CE - 1 ]                             ),
+        .last_kernel                ( last_kernel[C_NUM_CE - 1 ]                            ),
 		.pipeline_flushed           ( pipeline_flushed                                      ),
         .wht_sequence_selector      ( wht_sequence_selector                                 )		
     );
@@ -518,10 +524,24 @@ module cnn_layer_accel_quad (
 
     always@(posedge clk_if) begin
         if(rst) begin
-            config_accept[0]            <= 0;
-            pix_seq_bram_wrAddr         <= 0;
+`ifndef VERIFICATION        
+            num_input_cols_cfg              <= 0;
+            num_input_rows_cfg              <= 0;
+            pfb_full_count_cfg              <= 0;
+            kernel_full_count_cfg           <= 0;
+            kernel_group_cfg                <= 0;
+            convolution_stride_cfg          <= 0;
+            kernel_size_cfg    		        <= 0;
+            padding_cfg                     <= 0;
+            num_kernel_cfg                  <= 0;
+            num_output_rows_cfg             <= 0;
+            num_output_cols_cfg             <= 0;
+            pix_seq_data_full_count_cfg     <= 0;
+`endif            
+            config_accept[0]                <= 0;
+            pix_seq_bram_wrAddr             <= 0;
         end else begin
-            config_accept[0]            <= 0;           
+            config_accept[0]                <= 0;           
             // Pixel Sequence Data
             if(config_valid[0]) begin
                 config_accept[0]   <= 1;
@@ -545,6 +565,40 @@ module cnn_layer_accel_quad (
             ST_WAIT_JOB_DONE:           state_s = "ST_WAIT_JOB_DONE";
             ST_SEND_COMPLETE:           state_s = "ST_SEND_COMPLETE";
         endcase
+    end
+    
+    
+    int output_row;
+    int output_col;
+    int depth;
+    always@(posedge clk_core) begin
+        if(rst) begin
+            output_row <= 0;
+            output_col <= 0;
+            depth      <= 0;
+        end else begin
+            case(state)
+                ST_IDLE: begin
+                    output_row <= 0;
+                    output_col <= 0;
+                    depth      <= 0;
+                end
+                ST_AWE_CE_ACTIVE: begin
+                    if(result_valid) begin
+                        if(output_col == num_output_cols_cfg) begin
+                            output_col <= 0;
+                            if(depth == (num_kernel_cfg - 1)) begin
+                                output_row <= output_row + 1;
+                            end else begin
+                                depth      <= depth + 1;
+                            end
+                        end else begin
+                            output_col <= output_col + 1;
+                        end
+                    end
+                end            
+            endcase
+        end    
     end
 `endif
     

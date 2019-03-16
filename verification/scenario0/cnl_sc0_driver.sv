@@ -122,23 +122,27 @@ task cnl_sc0_driver::run();
             $display("// Padding:             %0d", test.m_padding                    );
             $display("// Running Test -----------------------------------------------");
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------      
-            $root.cnl_sc0_testbench.i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count     = (`WINDOW_3x3_NUM_CYCLES * test.m_num_input_cols) ;                                      
-            $root.cnl_sc0_testbench.i0_cnn_layer_accel_quad.kernel_full_count_cfg                                         = `KERNEL_3x3_COUNT_FULL_CFG;
-            $root.cnl_sc0_testbench.i0_cnn_layer_accel_quad.num_input_rows_cfg                                            = test.m_num_input_rows - 1;
-            $root.cnl_sc0_testbench.i0_cnn_layer_accel_quad.num_input_cols_cfg                                            = test.m_num_input_cols - 1;
-            $root.cnl_sc0_testbench.i0_cnn_layer_accel_quad.pfb_full_count_cfg                                            = test.m_num_input_cols;
-            $root.cnl_sc0_testbench.i0_cnn_layer_accel_quad.convolution_stride_cfg                                        = test.m_stride;
-            $root.cnl_sc0_testbench.i0_cnn_layer_accel_quad.kernel_size_cfg    		                                    = test.m_kernel_size;
-            m_quad_intf.job_start                                                                                       <= 0;
-            m_quad_intf.job_fetch_ack                                                                                   <= 0;
-            m_quad_intf.job_complete_ack                                                                                <= 0;
-            m_quad_intf.job_fetch_complete                                                                              <= 0;
-            m_quad_intf.weight_valid                                                                                    <= 0;
-            m_quad_intf.weight_data                                                                                     <= 0;
-            m_quad_intf.pixel_valid                                                                                     <= 0;
-            m_quad_intf.pixel_data                                                                                      <= 0;
-            m_quad_intf.config_data                                                                                     <= 0;
-            m_quad_intf.config_valid                                                                                    <= 0;
+            m_quad_intf.pix_seq_data_full_count_cfg                                   = (`WINDOW_3x3_NUM_CYCLES * test.m_num_input_cols) ;                                      
+            m_quad_intf.kernel_full_count_cfg                                         = `KERNEL_3x3_COUNT_FULL_CFG;
+            m_quad_intf.num_input_rows_cfg                                            = test.m_num_input_rows - 1;
+            m_quad_intf.num_input_cols_cfg                                            = test.m_num_input_cols - 1;
+            m_quad_intf.pfb_full_count_cfg                                            = test.m_num_input_cols;
+            m_quad_intf.convolution_stride_cfg                                        = test.m_stride;
+            m_quad_intf.kernel_size_cfg    		                                      = test.m_kernel_size;
+            m_quad_intf.padding_cfg                                                   = test.m_padding;
+            m_quad_intf.num_kernel_cfg                                                = test.m_num_kernels;
+            m_quad_intf.num_output_rows_cfg                                           =  ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
+            m_quad_intf.num_output_cols_cfg                                           =  test.m_num_input_cols - 1;          
+            m_quad_intf.job_start                                                     <= 0;
+            m_quad_intf.job_fetch_ack                                                 <= 0;
+            m_quad_intf.job_complete_ack                                              <= 0;
+            m_quad_intf.job_fetch_complete                                            <= 0;
+            m_quad_intf.weight_valid                                                  <= 0;
+            m_quad_intf.weight_data                                                   <= 0;
+            m_quad_intf.pixel_valid                                                   <= 0;
+            m_quad_intf.pixel_data                                                    <= 0;
+            m_quad_intf.config_data                                                   <= 0;
+            m_quad_intf.config_valid                                                  <= 0;
             // END logic ----------------------------------------------------------------------------------------------------------------------------
             
 

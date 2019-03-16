@@ -31,104 +31,152 @@
 
 
 interface cnn_layer_accel_quad_intf (
-    clk_if              ,
-    clk_core            ,
-    rst                 ,
+    clk_if                          ,
+    clk_core                        ,
+    rst                             ,
+
+    job_start                       ,
+    job_accept                      ,
+    job_parameters                  ,
+    job_fetch_request               ,
+    job_fetch_ack                   ,
+    job_fetch_complete              ,
+    job_complete                    ,
+    job_complete_ack                ,
+
+    cascade_in_valid                ,
+    cascade_in_ready                ,
+    cascade_in_data                 ,
+
+    cascade_out_valid               ,
+    cascade_out_ready               ,
+    cascade_out_data                ,
+
+    config_valid                    ,
+    config_accept                   ,
+    config_data                     ,
+
+    weight_valid                    ,
+    weight_ready                    ,
+    weight_data                     ,
+
+    result_valid                    ,
+    result_accept                   ,
+    result_data                     ,
+
+    pixel_valid                     ,
+    pixel_ready                     ,
+    pixel_data                      ,
+
+    num_input_cols_cfg              ,
+    num_input_rows_cfg              ,
+    pfb_full_count_cfg              ,
+    kernel_full_count_cfg           ,
+    kernel_group_cfg                ,
+    convolution_stride_cfg          , 
+    kernel_size_cfg    		        ,
+    padding_cfg                     ,
+    num_kernel_cfg                  ,
+    num_output_rows_cfg             ,
+    num_output_cols_cfg             ,
+    pix_seq_data_full_count_cfg     ,
     
-    job_start           ,
-    job_accept          ,
-    job_parameters      ,
-    job_fetch_request   ,
-    job_fetch_ack       ,
-    job_fetch_complete  ,
-    job_complete        ,
-    job_complete_ack    ,
+    output_row                      ,
+    output_col                      ,
+    depth
     
-    cascade_in_valid    ,
-    cascade_in_ready    ,
-    cascade_in_data     ,
-    
-    cascade_out_valid   ,
-    cascade_out_ready   ,
-    cascade_out_data    ,
-    
-    config_valid        ,
-    config_accept       ,
-    config_data         ,
-    
-    weight_valid        ,
-    weight_ready        ,
-    weight_data         ,
-    
-    result_valid        ,
-    result_accept       ,
-    result_data         ,
-    
-    pixel_valid         ,
-    pixel_ready         ,
-    pixel_data          
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Interface Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input  logic            clk_if              ;
-    input  logic            clk_core            ;
-    output  logic           rst                 ;
+    input  logic            clk_if                          ;
+    input  logic            clk_core                        ;
+    output  logic           rst                             ;
 
-    output logic            job_start           ;
-    input  logic            job_accept          ;
-    output logic [127:0]    job_parameters      ;
-    input  logic            job_fetch_request   ;
-    output logic            job_fetch_ack       ;
-    output logic            job_fetch_complete  ;
-    input  logic            job_complete        ;
-    output logic            job_complete_ack    ;
+    output logic            job_start                       ;
+    input  logic            job_accept                      ;
+    output logic [127:0]    job_parameters                  ;
+    input  logic            job_fetch_request               ;
+    output logic            job_fetch_ack                   ;
+    output logic            job_fetch_complete              ;
+    input  logic            job_complete                    ;
+    output logic            job_complete_ack                ;
 
-    output logic            cascade_in_valid    ;
-    input  logic            cascade_in_ready    ;
-    output logic [127:0]    cascade_in_data     ;
+    output logic            cascade_in_valid                ;
+    input  logic            cascade_in_ready                ;
+    output logic [127:0]    cascade_in_data                 ;
 
-    input  logic            cascade_out_valid   ;
-    output logic            cascade_out_ready   ;
-    input  logic [127:0]    cascade_out_data    ;
-  
-    output logic [  3:0]    config_valid        ;
-    input  logic [  3:0]    config_accept       ;
-    output logic [127:0]    config_data         ;
+    input  logic            cascade_out_valid               ;
+    output logic            cascade_out_ready               ;
+    input  logic [127:0]    cascade_out_data                ;
 
-    output logic            weight_valid        ;
-    input  logic            weight_ready        ;
-    output logic [127:0]    weight_data         ;
+    output logic [  3:0]    config_valid                    ;
+    input  logic [  3:0]    config_accept                   ;
+    output logic [127:0]    config_data                     ;
 
-    input  logic            result_valid        ;
-    output logic            result_accept       ;
-    input  logic [15:0]     result_data         ;
+    output logic            weight_valid                    ;
+    input  logic            weight_ready                    ;
+    output logic [127:0]    weight_data                     ;
 
-    output logic            pixel_valid         ;
-    input  logic            pixel_ready         ;
-    output logic [127:0]    pixel_data          ;
+    input  logic            result_valid                    ;
+    output logic            result_accept                   ;
+    input  logic [15:0]     result_data                     ;
+
+    output logic            pixel_valid                     ;
+    input  logic            pixel_ready                     ;
+    output logic [127:0]    pixel_data                      ;
+    
+    output logic [   9:0]    num_input_cols_cfg              ;
+    output logic [   9:0]    num_input_rows_cfg              ;
+    output logic [   9:0]    pfb_full_count_cfg              ;
+    output logic [   7:0]    kernel_full_count_cfg           ;
+    output logic [   6:0]    kernel_group_cfg                ;
+    output logic [   6:0]    convolution_stride_cfg          ;
+	output logic [   4:0]    kernel_size_cfg    		     ;
+    output logic [   4:0]    padding_cfg                     ;
+    output logic [   6:0]    num_kernel_cfg                  ;
+    output logic [   9:0]    num_output_rows_cfg             ;
+    output logic [   9:0]    num_output_cols_cfg             ;
+    output logic [  11:0]    pix_seq_data_full_count_cfg     ;
+    
+    input int               output_row                      ;
+    input int               output_col                      ;
+    input int               depth                           ;
 
     
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Clocking Blocks
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	clocking clk_if_cb @(posedge clk_if);
-        output job_start           ;
-        input  job_accept          ;
-        output job_parameters      ;
-        input  job_fetch_request   ;
-        output job_fetch_ack       ;
-        output job_fetch_complete  ;
-        input  job_complete        ;
-        output job_complete_ack    ;
+        output job_start                      ;
+        input  job_accept                     ;
+        output job_parameters                 ;
+        input  job_fetch_request              ;
+        output job_fetch_ack                  ;
+        output job_fetch_complete             ;
+        input  job_complete                   ;
+        output job_complete_ack               ;
+       
+        output config_valid                   ;
+        input  config_accept                  ;
+        output config_data                    ;
         
-        output config_valid        ;
-        input  config_accept       ;
-        output config_data         ;
-
-        output pixel_valid         ;
-        input  pixel_ready         ;
-        output pixel_data          ;
+        output pixel_valid                    ;
+        input  pixel_ready                    ;
+        output pixel_data                     ;
+        
+        output num_input_cols_cfg              ;
+        output num_input_rows_cfg              ;
+        output pfb_full_count_cfg              ;
+        output kernel_full_count_cfg           ;
+        output kernel_group_cfg                ;
+        output convolution_stride_cfg          ; 
+        output kernel_size_cfg    		       ; 
+        output padding_cfg                     ;
+        output num_kernel_cfg                  ;
+        output num_output_rows_cfg             ;
+        output num_output_cols_cfg             ;
+        output pix_seq_data_full_count_cfg     ;        
 	endclocking
 
 
@@ -148,6 +196,10 @@ interface cnn_layer_accel_quad_intf (
         input  result_valid        ;
         output result_accept       ;
         input  result_data         ;
+        
+        input  output_row          ;
+        input  output_col          ;
+        input  depth               ;
 	endclocking
 
 

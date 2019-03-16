@@ -45,7 +45,6 @@
 class sc0_monParams_t extends monParams_t;
     virtual cnn_layer_accel_quad_intf quad_intf;
     virtual cnn_layer_accel_awe_rowbuffers_intf awe_buf_intf;
-    int tid;
 endclass: sc0_monParams_t;
 
 
@@ -56,13 +55,13 @@ class cnl_sc0_monitor extends monitor;
     
     virtual cnn_layer_accel_quad_intf m_quad_intf;
     virtual cnn_layer_accel_awe_rowbuffers_intf m_awe_buf_intf;
-    int m_tid;
 endclass: cnl_sc0_monitor
 
 
 function cnl_sc0_monitor::new(monParams_t monParams = null);
     sc0_monParams_t sc0_monParams;
-    
+  
+  
     if(monParams != null) begin
         $cast(sc0_monParams, monParams);
         m_monitor2scoreboardMB = sc0_monParams.monitor2scoreboardMB;

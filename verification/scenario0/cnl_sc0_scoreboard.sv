@@ -44,7 +44,6 @@
 class sc0_scoreParams_t extends scoreParams_t;
     virtual cnn_layer_accel_quad_intf quad_intf;
     int depth_offset;
-    int tid;
 endclass: sc0_scoreParams_t
 
 
@@ -57,7 +56,6 @@ class cnl_sc0_scoreboard extends scoreboard;
 
     virtual cnn_layer_accel_quad_intf m_quad_intf; 
     int m_depth_offset;
-    int m_tid;
 endclass: cnl_sc0_scoreboard
 
 

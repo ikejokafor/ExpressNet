@@ -59,33 +59,34 @@ function cnl_sc1_monitor::new(monParams_t monParams = null);
     sc1_monParams_t sc1_monParams;
     
     
-    $cast(sc1_monParams, monParams);
-    m_monitor2scoreboardMB = sc1_monParams.monitor2scoreboardMB;
-    m_agent2monitorMB = sc1_monParams.agent2monitorMB;    
-    m_numTests = sc1_monParams.numTests;
-    m_DUT_rdy = sc1_monParams.DUT_rdy;
-    m_quad_intf = sc1_monParams.quad_intf;
-    m_mon_rdy = sc1_monParams.mon_rdy;
+    if(monParams != null) begin
+        $cast(sc1_monParams, monParams);
+        m_monitor2scoreboardMB = sc1_monParams.monitor2scoreboardMB;
+        m_agent2monitorMB = sc1_monParams.agent2monitorMB;    
+        m_numTests = sc1_monParams.numTests;
+        m_DUT_rdy = sc1_monParams.DUT_rdy;
+        m_quad_intf = sc1_monParams.quad_intf;
+        m_mon_rdy = sc1_monParams.mon_rdy;
+        m_tid = sc1_monParams.tid;
+    end
 endfunction: new
 
 
 task cnl_sc1_monitor::run();
-    int n;
     sc1_DUTOutParams_t sc1_DUTOutParams;
     cnl_sc1_DUTOutput query;
     cnl_sc1_generator test;
-    int i;
-    int j;
-    int k;
+    int t;
     int signal;
     int num_kernels;
     int num_sim_output_rows;
     int num_sim_output_cols;
     int stride;
+    int depth;
     
 
-    n = 0;
-    while(n < m_numTests) begin
+    t = 0;
+    while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         if(m_agent2monitorMB.try_get(test)) begin
             sc1_DUTOutParams                        = new();
@@ -94,6 +95,7 @@ task cnl_sc1_monitor::run();
             sc1_DUTOutParams.num_output_cols        = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
             sc1_DUTOutParams.num_sim_output_rows    = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;    // might need to double check this
             sc1_DUTOutParams.num_sim_output_cols    = test.m_num_input_cols;
+            depth                                   = test.m_num_kernels;
             query                                   = new(sc1_DUTOutParams);
             m_mon_rdy.put(signal);
             stride                                  = test.m_stride;
@@ -102,30 +104,17 @@ task cnl_sc1_monitor::run();
             num_sim_output_cols                     = query.m_num_sim_output_cols;
             
             
-            for(j = 0; j < num_sim_output_rows; j = j + stride) begin
-                for(i = 0; i < num_kernels; i = i + 1) begin
-                    k = 0;
-                    while(k < num_sim_output_cols) begin
-                        @(m_quad_intf.clk_core_cb);
-                        if(m_quad_intf.clk_core_cb.result_valid) begin
-                            query.m_conv_map[(i * num_sim_output_rows + j) * num_sim_output_cols + k] = m_quad_intf.clk_core_cb.result_data;
-                            k = k + stride;
-                        end
-                    end
-                end
-            end
-            m_monitor2scoreboardMB.put(query);
-            
-            
             forever begin
-                @(m_quad_intf.clk_if_cb);
-                if(m_quad_intf.clk_if_cb.job_complete) begin
-                    m_quad_intf.clk_if_cb.job_complete_ack <= 1;
+                @(m_quad_intf.clk_core_cb);
+                if(m_quad_intf.clk_core_cb.output_row == num_sim_output_rows && m_quad_intf.clk_core_cb.output_col == num_sim_output_cols && m_quad_intf.clk_core_cb.depth == depth) begin
                     break;
+                end else if(m_quad_intf.clk_core_cb.result_valid) begin
+                    query.m_conv_map[(m_quad_intf.clk_core_cb.depth * num_sim_output_rows + m_quad_intf.clk_core_cb.output_row) * num_sim_output_cols + m_quad_intf.clk_core_cb.output_col].pixel = m_quad_intf.clk_core_cb.result_data;
                 end
             end
-            @(m_quad_intf.clk_if_cb);
-            m_quad_intf.clk_if_cb.job_complete_ack <= 0;
+            
+
+            m_monitor2scoreboardMB.put(query);
             $display("// Finished Test ---------------------------------------------");
             $display("// Num Input Rows:      %d", test.m_num_input_rows             );
             $display("// Num Input Cols:      %d", test.m_num_input_cols             );
@@ -143,7 +132,7 @@ task cnl_sc1_monitor::run();
             $display("//-------------------------------------------");
             $display("\n");
             m_DUT_rdy.put(signal);
-            n = n + 1;
+            t = t + 1;
         end
     end
 endtask: run

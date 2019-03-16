@@ -58,6 +58,8 @@ module cnn_layer_accel_quad_bram_ctrl (
     last_awe_ce1_cyc_counter    ,
     pix_seq_bram_rden           ,
     pix_seq_bram_rdAddr         ,
+    pix_seq_data_full_count     ,
+
     next_kernel                 ,
 	move_one_row_down			,
     last_kernel                 ,
@@ -120,8 +122,9 @@ module cnn_layer_accel_quad_bram_ctrl (
     input  logic [                    2:0]    last_awe_ce1_cyc_counter    ;
     output logic                              pix_seq_bram_rden           ;
     output logic [                   11:0]    pix_seq_bram_rdAddr         ;
+    input  logic [                   11:0]    pix_seq_data_full_count     ;
     output logic [         C_NUM_CE - 1:0]    next_kernel                 ;
-	output logic [         C_NUM_CE - 1:0]    move_one_row_down          ;
+	output logic [         C_NUM_CE - 1:0]    move_one_row_down           ;
     input  logic                              last_kernel                 ;
     input  logic                              pipeline_flushed            ;
 	output logic                              wht_sequence_selector       ;
@@ -134,7 +137,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     logic     [                    11:0]     pix_seq_data_count              ;
     logic                                    pix_seq_bram_rden_r             ;
 	(* mark_debug = "true" *) 
-    logic     [                    11:0]     pix_seq_data_full_count         ;
     logic                                    pix_seq_bram_rden_d             ;
 	logic                                    pix_seq_bram_rden_d1             ;
     logic                                    job_fetch_acked                 ;
@@ -320,7 +322,6 @@ module cnn_layer_accel_quad_bram_ctrl (
             end
         end
     end 
-
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
     
    

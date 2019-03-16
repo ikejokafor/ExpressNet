@@ -61,56 +61,78 @@ function cnl_sc1_agent::new(agentParams_t agentParams = null);
     if(agentParams != null) begin
         $cast(sc1_agentParams, agentParams);
         m_agent2driverMB = sc1_agentParams.agent2driverMB;
-        m_agent2scoreboardMB  = sc1_agentParams.agent2scoreboardMB;
-        m_agent2monitorMB = sc1_agentParams.agent2monitorMB;
+        m_agent2scoreboardMB_arr  = sc1_agentParams.agent2scoreboardMB_arr;
+        m_agent2monitorMB_arr = sc1_agentParams.agent2monitorMB_arr;
         m_numTests = sc1_agentParams.numTests;
         m_test_queue = sc1_agentParams.test_queue;
-        m_DUT_rdy = sc1_agentParams.DUT_rdy;
+        m_DUT_rdy_arr = sc1_agentParams.DUT_rdy_arr;
         m_quad_intf = sc1_agentParams.quad_intf;
+        m_num_mon = sc1_agentParams.num_mon;
     end
 endfunction : new
 
 
 task cnl_sc1_agent::run();
     int i;
+    int j;
+    int k;
+    int n;
+    int t;
     int signal;
     cnl_sc1_generator test;
+    integer fd;
 
     
-    i = 0;
-    while(i < m_numTests) begin
+    t = 0;
+    while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
-        if(m_DUT_rdy.try_get(signal)) begin      
-            if(m_test_queue.size() > 0) begin
-                test = m_test_queue.pop_front();
-                test.plain2bits();
-                m_agent2scoreboardMB.put(test);
-                m_agent2monitorMB.put(test);
-                m_agent2driverMB.put(test);
-                continue;
-            end else begin
-                test = new();
-                void'(test.randomize());
-                test.plain2bits();
-                m_agent2scoreboardMB.put(test);
-                m_agent2monitorMB.put(test);
-                m_agent2driverMB.put(test);
-                $display("\n");
+        n = 0;
+        while(n < m_num_mon) begin
+            @(m_quad_intf.clk_if_cb);
+            if(m_DUT_rdy_arr[n].try_get(signal)) begin
+                n = n + 1;
             end
-            $display("// Created Test ----------------------------------------------");
-            $display("// Num Rows:            %d", test.m_num_input_rows             );
-            $display("// Num Cols:            %d", test.m_num_input_cols             );
-            $display("// Num Depth:           %d", test.m_depth                      );
-            $display("// Num kernels:         %d", test.m_num_kernels                );
-            $display("// Num Kernel size:     %d", test.m_kernel_size                );
-            $display("// Stride               %d", test.m_stride                     );
-            $display("// Padding:             %d", test.m_padding                    );
-            $display("// Pixel data size:     %d", test.m_pix_data.size()            );
-            $display("// Kernel data size     %d", test.m_kernel_data.size()         );
-            $display("// Created Test ----------------------------------------------");
+        end  
+        if(m_test_queue.size() > 0) begin
+            test = m_test_queue.pop_front();
+            test.plain2bits();
+        end else begin
+            test = new();
+            void'(test.randomize());
+            $display("// Created Random Test ---------------------------------------");
+            $display("// Num Rows:            %0d", test.m_num_input_rows             );
+            $display("// Num Cols:            %0d", test.m_num_input_cols             );
+            $display("// Num Depth:           %0d", test.m_depth                      );
+            $display("// Num kernels:         %0d", test.m_num_kernels                );
+            $display("// Num Kernel size:     %0d", test.m_kernel_size                );
+            $display("// Stride               %0d", test.m_stride                     );
+            $display("// Padding:             %0d", test.m_padding                    );
+            $display("// Pixel data size:     %0d", test.m_pix_data.size()            );
+            $display("// Kernel data size     %0d", test.m_kernel_data.size()         );
+            $display("// Created Random Test ---------------------------------------");
             $display("\n");
-            i = i + 1;
+            test.plain2bits();
         end
+        
+        
+        fd = $fopen("map.txt", "w");
+        for(k = 0; k < test.m_depth; k = k + 1) begin
+            for(i = 0; i < test.m_num_input_rows; i = i + 1) begin
+                for(j = 0; j < test.m_num_input_cols; j = j + 1) begin
+                    $fwrite(fd, "%d ", test.m_pix_data_sim[(k * test.m_num_input_rows + i) * test.m_num_input_cols + j]);
+                end
+                $fwrite(fd, "\n");
+            end
+            $fwrite(fd, "\n");
+            $fwrite(fd, "\n");
+        end
+        $fclose(fd);
+        m_agent2driverMB.put(test);
+        for(n = 0; n < m_num_mon; n = n + 1) begin
+            m_agent2scoreboardMB_arr[n].put(test);
+            m_agent2monitorMB_arr[n].put(test);
+        end
+        t = t + 1;
     end
 endtask: run
 

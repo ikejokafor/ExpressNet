@@ -5451,3 +5451,5 @@ run -all
 # Passed Kernal Test
 # Passed Convolution Test
 # Break in Module test_0_wrapper at ./test_0_wrapper.sv line 1380
+pwd
+# C:/IkennaWorkSpace/cnn_layer_accel/simulation/testbench0
