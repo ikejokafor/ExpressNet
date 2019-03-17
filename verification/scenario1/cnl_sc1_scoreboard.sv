@@ -106,8 +106,6 @@ task cnl_sc1_scoreboard::run();
                     $display("// Num Kernel size:     %d", test.m_kernel_size                );
                     $display("// Stride               %d", test.m_stride                     );
                     $display("// Padding:             %d", test.m_padding                    );
-                    $display("// Pixel data size:     %d", test.m_pix_data.size()            );
-                    $display("// Kernel data size     %d", test.m_kernel_data.size()         );
                     $display("// Checking Test ---------------------------------------------");
                     $display("\n");
                     if(checkSolution(query, sol)) begin

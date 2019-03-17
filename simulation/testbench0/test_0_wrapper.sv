@@ -32,6 +32,7 @@ module test_0_wrapper #(
     parameter KERNEL_SIZE       = 3  ,
     parameter NUM_KERNELS       = 5  ,
 	parameter STRIDE            = 1  ,
+    parameter PADDING           = 0  ,
     parameter C_PERIOD_100MHz   = 10 ,
     parameter C_PERIOD_500MHz   = 2 
 ) (
@@ -978,23 +979,29 @@ module test_0_wrapper #(
 	//END ---------------------------------------------------------------------------------------------------------------------------------------------------
 	
     initial begin
+        wait(!rst);	
+    
         // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
         // Set config Regs
-        i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count   = (5 *COLS ) ;                                      
-        i0_cnn_layer_accel_quad.kernel_full_count_cfg                                       = 10;
-        i0_cnn_layer_accel_quad.num_input_rows_cfg                                          = ROWS - 1;
-        i0_cnn_layer_accel_quad.num_input_cols_cfg                                          = COLS - 1;
-        i0_cnn_layer_accel_quad.pfb_full_count_cfg                                          = COLS;
-		i0_cnn_layer_accel_quad.convolution_stride_cfg                                      = STRIDE;
-		i0_cnn_layer_accel_quad.kernel_size_cfg    		                                    = KERNEL_SIZE;
-        pixel_valid                                                                         = 0;
-        job_start                                                                           = 0;
-        job_fetch_ack                                                                       = 0;
-        job_complete_ack                                                                    = 0;
-        job_fetch_complete                                                                  = 0;                                        
-        config_data                                                                         = 0;
-        config_valid                                                                        = 0;
-        weight_valid                                                                        = 0;
+        i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg    = (`WINDOW_3x3_NUM_CYCLES * COLS ) ;                                      
+        i0_cnn_layer_accel_quad.kernel_full_count_cfg          = `KERNEL_3x3_COUNT_FULL_CFG;
+        i0_cnn_layer_accel_quad.num_input_rows_cfg             = ROWS - 1;
+        i0_cnn_layer_accel_quad.num_input_cols_cfg             = COLS - 1;
+        i0_cnn_layer_accel_quad.pfb_full_count_cfg             = COLS;
+		i0_cnn_layer_accel_quad.convolution_stride_cfg         = STRIDE;
+		i0_cnn_layer_accel_quad.kernel_size_cfg    		       = KERNEL_SIZE;
+        i0_cnn_layer_accel_quad.padding_cfg                    = PADDING;
+        i0_cnn_layer_accel_quad.num_kernel_cfg                 = NUM_KERNELS; 
+        i0_cnn_layer_accel_quad.num_output_rows_cfg            = ((ROWS - KERNEL_SIZE + (2 * PADDING)) / STRIDE);
+        i0_cnn_layer_accel_quad.num_output_cols_cfg            = COLS - 1;
+        pixel_valid                                            = 0;
+        job_start                                              = 0;
+        job_fetch_ack                                          = 0;
+        job_complete_ack                                       = 0;
+        job_fetch_complete                                     = 0;                                        
+        config_data                                            = 0;
+        config_valid                                           = 0;
+        weight_valid                                           = 0;
  	    // END logic ------------------------------------------------------------------------------------------------------------------------------------
        
         
@@ -1111,7 +1118,7 @@ module test_0_wrapper #(
         j = 0;
         fd = $fopen("seq.txt", "w");
         $fwrite(fd, "%d\t%d\t%d\t%d\t%d\n", pix_seq_data_sim[0][9:0], pix_seq_data_sim[1][9:0], pix_seq_data_sim[2][9:0], pix_seq_data_sim[3][9:0], pix_seq_data_sim[4][9:0]);       
-        for(i = 5; i < (25 * 5); i = i + 5) begin            
+        for(i = 5; i < (`MAX_NUM_INPUT_COLS * `WINDOW_3x3_NUM_CYCLES); i = i + 5) begin            
             if((j % 2) == 0) begin
                 pix_seq_data_sim[i    ] = {3'b0, 1'b0, 1'b1, 1'b0, pix_seq_data_sim[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
                 pix_seq_data_sim[i + 1] = {3'b0, 1'b0, 1'b0, 1'b1, pix_seq_data_sim[i - 4][`PIX_SEQ_DATA_SEQ_FIELD]};
@@ -1125,7 +1132,7 @@ module test_0_wrapper #(
             j = (j + 1) % 2;
             $fwrite(fd, "%d\t%d\t%d\t%d\t%d\n", pix_seq_data_sim[i][9:0], pix_seq_data_sim[i + 1][9:0], pix_seq_data_sim[i + 2][9:0], pix_seq_data_sim[i + 3][9:0], pix_seq_data_sim[i + 4][9:0]);
         end
-        while(i < (512 * 8)) begin
+        while(i < (`MAX_NUM_INPUT_COLS * `NUM_CE_PER_QUAD)) begin
             pix_seq_data_sim[i] = 0;
             i = i + 1;
         end
@@ -1364,17 +1371,18 @@ module test_0_wrapper #(
        
   	    // END logic ------------------------------------------------------------------------------------------------------------------------------------        
 		
-		//    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
-        // for(i = 0; i < NUM_KERNELS; i++) begin
-        //     for(a = 0; a < NUM_OUTPUT_ROWS; a= a + STRIDE) begin
-        //         for(b = 0; b < NUM_OUTPUT_COLS; b = b + STRIDE) begin
-        //             if(convolution_map_result[i][a][b] != convolution_map_sol[i][a][b] ) begin
-        //                 $display("Failed at: %d %d %d Expected value : %d : Actual Value : %d", i, a, b, convolution_map_sol[i][a][b],convolution_map_result[i][a][b] );
-		// 				$stop;
-        //             end
-        //         end
-        //     end
-        // end
+        
+		// BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
+        for(i = 0; i < NUM_KERNELS; i++) begin
+            for(a = 0; a < NUM_OUTPUT_ROWS; a= a + STRIDE) begin
+                for(b = 0; b < NUM_OUTPUT_COLS; b = b + STRIDE) begin
+                    if(convolution_map_result[i][a][b] != convolution_map_sol[i][a][b] ) begin
+                        $display("Failed at: %d %d %d Expected value : %d : Actual Value : %d", i, a, b, convolution_map_sol[i][a][b],convolution_map_result[i][a][b] );
+						$stop;
+                    end
+                end
+            end
+        end
         
         $display("Passed Convolution Test");
         $stop;

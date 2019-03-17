@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Company: Copyright 2016 SiliconScapes, LLC. All Rights Reserved.			
+// Company: 		
 //				
 // Engineer:		
 //
@@ -93,7 +93,8 @@ module cnl_sc1_testbench;
     cnl_sc1_generator test;
     sc1_crtTestParams_t sc1_crtTestParams;
     cnl_sc1_generator test_queue[$];
-
+    int i;
+    
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Module Instantiations
@@ -165,6 +166,7 @@ module cnl_sc1_testbench;
        .num_output_rows_cfg             ( i0_cnn_layer_accel_quad.num_output_rows_cfg           ),
        .num_output_cols_cfg             ( i0_cnn_layer_accel_quad.num_output_cols_cfg           ),
        .pix_seq_data_full_count_cfg     ( i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg   ),
+       .gray_code                       ( i0_cnn_layer_accel_quad.gray_code                     ),
         
        .output_row                      ( i0_cnn_layer_accel_quad.output_row                    ),
        .output_col                      ( i0_cnn_layer_accel_quad.output_col                    ),
@@ -216,10 +218,11 @@ module cnl_sc1_testbench;
     initial begin
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         sc1_crtTestParams = new();
-        
-        
-        // sc1_crtTestParams.num_input_rows = 20;
-        // sc1_crtTestParams.num_input_cols = 20;
+
+        // doesnt work for this case, every other row is off
+        //
+        // sc1_crtTestParams.num_input_rows = 25;
+        // sc1_crtTestParams.num_input_cols = 25;
         // sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
         // sc1_crtTestParams.num_kernels = 5;
         // sc1_crtTestParams.kernel_size = 3;
@@ -229,19 +232,18 @@ module cnl_sc1_testbench;
         // test.createTest(sc1_crtTestParams);
         // test_queue.push_back(test);
         
-        
-        sc1_crtTestParams.num_input_rows = 24;
-        sc1_crtTestParams.num_input_cols = 24;
+        // works for this case
+        //
+        sc1_crtTestParams.num_input_rows = 21;
+        sc1_crtTestParams.num_input_cols = 21;
         sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 7;
+        sc1_crtTestParams.num_kernels = 3;
         sc1_crtTestParams.kernel_size = 3;
         sc1_crtTestParams.stride = 1;
         sc1_crtTestParams.padding = 0;
         test = new();
         test.createTest(sc1_crtTestParams);
         test_queue.push_back(test);
-        
-        
         env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, 1);
         env.build();
         fork

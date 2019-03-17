@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Company: Copyright 2016 SiliconScapes, LLC. All Rights Reserved.			
+// Company:		
 //				
 // Engineer:		
 //
@@ -176,7 +176,8 @@ module cnl_sc0_testbench;
        .num_output_rows_cfg             ( i0_cnn_layer_accel_quad.num_output_rows_cfg           ),
        .num_output_cols_cfg             ( i0_cnn_layer_accel_quad.num_output_cols_cfg           ),
        .pix_seq_data_full_count_cfg     ( i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg   ),
-        
+       .gray_code                       ( i0_cnn_layer_accel_quad.gray_code                     ),
+       
        .output_row                      ( i0_cnn_layer_accel_quad.output_row                    ),
        .output_col                      ( i0_cnn_layer_accel_quad.output_col                    ),
        .output_depth                    ( i0_cnn_layer_accel_quad.output_depth                  )
@@ -224,9 +225,6 @@ module cnl_sc0_testbench;
     );
     
 
-    // see if bind feature in systemverilog can do this in a less verbose way
-    // this example http://www.asic-world.com/systemverilog/assertions22.html can also be used to make the variable names here smaller
-    //   instaniate multiple binding_modules then connect them to interface, then create an interface array
     for(g = 0; g < `NUM_AWE; g = g + 1) begin: AWE_RB_INTF
         cnn_layer_accel_awe_rowbuffers_intf
         i_cnn_layer_accel_awe_rowbuffers_intf (
@@ -250,67 +248,18 @@ module cnl_sc0_testbench;
 
  
     initial begin
-        // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------        
+        // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         sc0_crtTestParams = new();
-        sc0_crtTestParams.num_input_rows = 512;
-        sc0_crtTestParams.num_input_cols = 512;
+        sc0_crtTestParams.num_input_rows = 25;
+        sc0_crtTestParams.num_input_cols = 25;
         sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc0_crtTestParams.num_kernels = 1;
+        sc0_crtTestParams.num_kernels = 5;
         sc0_crtTestParams.kernel_size = 3;
         sc0_crtTestParams.stride = 1;
         sc0_crtTestParams.padding = 0;
         test = new();
         test.createTest(sc0_crtTestParams);
         test_queue.push_back(test);
-        
-        // sc0_crtTestParams = new();
-        // sc0_crtTestParams.num_input_rows = 512;
-        // sc0_crtTestParams.num_input_cols = 512;
-        // sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // sc0_crtTestParams.num_kernels = 64;
-        // sc0_crtTestParams.kernel_size = 3;
-        // sc0_crtTestParams.stride = 1;
-        // sc0_crtTestParams.padding = 0;
-        // test = new();
-        // test.createTest(sc0_crtTestParams);
-        // test_queue.push_back(test);
-        // 
-        // sc0_crtTestParams = new();
-        // sc0_crtTestParams.num_input_rows = 19;
-        // sc0_crtTestParams.num_input_cols = 19;
-        // sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // sc0_crtTestParams.num_kernels = 1;
-        // sc0_crtTestParams.kernel_size = 3;
-        // sc0_crtTestParams.stride = 1;
-        // sc0_crtTestParams.padding = 0;
-        // test = new();
-        // test.createTest(sc0_crtTestParams);
-        // test_queue.push_back(test);
-        // 
-        // sc0_crtTestParams = new();
-        // sc0_crtTestParams.num_input_rows = 19;
-        // sc0_crtTestParams.num_input_cols = 19;
-        // sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // sc0_crtTestParams.num_kernels = 64;
-        // sc0_crtTestParams.kernel_size = 3;
-        // sc0_crtTestParams.stride = 1;
-        // sc0_crtTestParams.padding = 0;
-        // test = new();
-        // test.createTest(sc0_crtTestParams);
-        // test_queue.push_back(test);
-
-
-        // sc0_crtTestParams = new();
-        // sc0_crtTestParams.num_input_rows = 25;
-        // sc0_crtTestParams.num_input_cols = 25;
-        // sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // sc0_crtTestParams.num_kernels = 5;
-        // sc0_crtTestParams.kernel_size = 3;
-        // sc0_crtTestParams.stride = 1;
-        // sc0_crtTestParams.padding = 0;
-        // test = new();
-        // test.createTest(sc0_crtTestParams);
-        // test_queue.push_back(test);
     
 
         env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, awe_buf_intf_arr, `NUM_AWE);

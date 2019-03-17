@@ -61,7 +61,7 @@ module testbench;
         .COLS               ( 20               ),
         .DEPTH              ( 8                 ),
         .KERNEL_SIZE        ( 3                 ),
-        .NUM_KERNELS        (  1                ),
+        .NUM_KERNELS        ( 1                ),
         .C_PERIOD_100MHz    ( C_PERIOD_100MHz   ),
         .C_PERIOD_500MHz    ( C_PERIOD_500MHz   )
     )

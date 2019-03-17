@@ -91,7 +91,6 @@ module cnn_layer_accel_weight_sequence_table0 (
             sequence_data3[3'd2] <= 4'd3;
             sequence_data3[3'd3] <= 4'd4;
             sequence_data3[3'd4] <= 4'd5;   
-                                      
         end else begin
             if(((gray_code == 2'b00) || (gray_code == 2'b11)) & sequence_selector) begin
                 wht_data_addr <= sequence_data0[seq_data_addr];

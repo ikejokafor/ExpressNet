@@ -587,12 +587,12 @@ module cnn_layer_accel_quad (
                     output_col <= 0;
                     if(output_depth == (num_kernel_cfg - 1)) begin
                         output_depth <= 0;
-                        output_row   <= output_row + 1;
+                        output_row   <= output_row + convolution_stride_cfg;
                     end else begin
-                        output_depth      <= output_depth + 1;
+                        output_depth      <= output_depth + convolution_stride_cfg;
                     end
                 end else begin
-                    output_col <= output_col + 1;
+                    output_col <= output_col + convolution_stride_cfg;
                 end
             end
         end    

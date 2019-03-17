@@ -133,7 +133,7 @@ task cnl_sc1_driver::run();
             m_quad_intf.kernel_size_cfg    		                                      = test.m_kernel_size;
             m_quad_intf.padding_cfg                                                   = test.m_padding;
             m_quad_intf.num_kernel_cfg                                                = test.m_num_kernels;
-            m_quad_intf.num_output_rows_cfg                                           =  ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride);
+            m_quad_intf.num_output_rows_cfg                                           =  ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
             m_quad_intf.num_output_cols_cfg                                           =  test.m_num_input_cols - 1;
             m_quad_intf.job_start                                                     <= 0;
             m_quad_intf.job_fetch_ack                                                 <= 0;

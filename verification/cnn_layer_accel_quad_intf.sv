@@ -80,10 +80,11 @@ interface cnn_layer_accel_quad_intf (
     num_output_rows_cfg             ,
     num_output_cols_cfg             ,
     pix_seq_data_full_count_cfg     ,
+    gray_code                       ,
     
     output_row                      ,
     output_col                      ,
-    output_depth
+    output_depth    
     
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -138,6 +139,7 @@ interface cnn_layer_accel_quad_intf (
     output logic [   9:0]    num_output_rows_cfg             ;
     output logic [   9:0]    num_output_cols_cfg             ;
     output logic [  11:0]    pix_seq_data_full_count_cfg     ;
+    input  logic [   1:0]    gray_code                       ;
     
     input int               output_row                      ;
     input int               output_col                      ;
@@ -200,6 +202,8 @@ interface cnn_layer_accel_quad_intf (
         input  output_row          ;
         input  output_col          ;
         input  output_depth        ;
+        
+        input  gray_code           ;
 	endclocking
 
 

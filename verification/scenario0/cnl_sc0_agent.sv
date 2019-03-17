@@ -99,7 +99,7 @@ task cnl_sc0_agent::run();
         end else begin
             test = new();
             void'(test.randomize());
-            $display("// Created Random Test ---------------------------------------");
+            $display("// Created Random Test ----------------------------------------");
             $display("// Num Rows:            %0d", test.m_num_input_rows             );
             $display("// Num Cols:            %0d", test.m_num_input_cols             );
             $display("// Num Depth:           %0d", test.m_depth                      );
@@ -107,9 +107,7 @@ task cnl_sc0_agent::run();
             $display("// Num Kernel size:     %0d", test.m_kernel_size                );
             $display("// Stride               %0d", test.m_stride                     );
             $display("// Padding:             %0d", test.m_padding                    );
-            $display("// Pixel data size:     %0d", test.m_pix_data.size()            );
-            $display("// Kernel data size     %0d", test.m_kernel_data.size()         );
-            $display("// Created Random Test ---------------------------------------");
+            $display("// Created Random Test ----------------------------------------");
             $display("\n");
             test.plain2bits();
         end

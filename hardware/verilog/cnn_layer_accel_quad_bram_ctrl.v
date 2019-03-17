@@ -287,19 +287,21 @@ module cnn_layer_accel_quad_bram_ctrl (
     // END logic ------------------------------------------------------------------------------------------------------------------------------------	
 
 
-    //Added by geetha for sequencing weight correctly 	
+    // Added by geetha for sequencing weight correctly 	
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
-        always@(posedge clk) begin 
-            if(rst) begin 
+    always@(posedge clk) begin 
+        if(rst) begin 
+            wht_sequence_selector <= 1'b1;
+        end else begin 
+            if(!ce_execute && last_awe_ce1_cyc_counter == 4) begin
                 wht_sequence_selector <= 1'b1;
-            end else begin 
-                if(wht_sequence_selector & (cycle_counter == `CYCLE_COUNT) & (convolution_stride == 1)) begin 
-                    wht_sequence_selector <= 1'b0 ;
-                end else if (!wht_sequence_selector & (cycle_counter == `CYCLE_COUNT)& (convolution_stride == 1)) begin 
-                    wht_sequence_selector <= 1'b1 ;
-                end
+            end else if(wht_sequence_selector & (cycle_counter == `CYCLE_COUNT) & (convolution_stride == 1)) begin 
+                wht_sequence_selector <= 1'b0 ;
+            end else if (!wht_sequence_selector & (cycle_counter == `CYCLE_COUNT) & (convolution_stride == 1)) begin 
+                wht_sequence_selector <= 1'b1 ;
             end
-        end				
+        end
+    end				
     // END logic ------------------------------------------------------------------------------------------------------------------------------------	
     
     
@@ -453,7 +455,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                     end else if(pix_seq_bram_rden_r) begin
                         pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                     end
-                    // next state
+                    // next state logic
                     if(output_col == num_output_cols && output_row == num_output_rows && cycle_counter == `CYCLE_COUNT && last_kernel) begin
                         next_state          <= ST_WAIT_JOB_DONE;
                     end else if(output_col == num_output_cols && output_row != num_output_rows && cycle_counter == `CYCLE_COUNT) begin

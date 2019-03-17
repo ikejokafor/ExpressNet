@@ -99,7 +99,7 @@ task cnl_sc1_agent::run();
         end else begin
             test = new();
             void'(test.randomize());
-            $display("// Created Random Test ---------------------------------------");
+            $display("// Created Random Test ----------------------------------------");
             $display("// Num Rows:            %0d", test.m_num_input_rows             );
             $display("// Num Cols:            %0d", test.m_num_input_cols             );
             $display("// Num Depth:           %0d", test.m_depth                      );
@@ -107,9 +107,7 @@ task cnl_sc1_agent::run();
             $display("// Num Kernel size:     %0d", test.m_kernel_size                );
             $display("// Stride               %0d", test.m_stride                     );
             $display("// Padding:             %0d", test.m_padding                    );
-            $display("// Pixel data size:     %0d", test.m_pix_data.size()            );
-            $display("// Kernel data size     %0d", test.m_kernel_data.size()         );
-            $display("// Created Random Test ---------------------------------------");
+            $display("// Created Random Test ----------------------------------------");
             $display("\n");
             test.plain2bits();
         end
@@ -127,6 +125,29 @@ task cnl_sc1_agent::run();
             $fwrite(fd, "\n");
         end
         $fclose(fd);
+        
+        
+
+        fd = $fopen("kernel_map.txt", "w");
+        for(n = 0; n < test.m_num_kernels; n = n + 1) begin
+            $fwrite(fd, "Kernel %d\n", n);
+            $fwrite(fd, "\n");
+            $fwrite(fd, "\n");
+            $fwrite(fd, "\n");
+            for(k = 0; k < test.m_depth; k = k + 1) begin
+                $fwrite(fd, "Depth %d\n", k);
+                $fwrite(fd, "\n");
+                for(i = 0; i < test.m_kernel_size; i = i + 1) begin
+                    for(j = 0; j < test.m_kernel_size; j = j + 1) begin
+                        $fwrite(fd, "%d ", test.m_kernel_data[((n * test.m_depth + k) * test.m_kernel_size + i) * test.m_kernel_size + j]);
+                    end
+                    $fwrite(fd, "\n");
+                end
+            end
+        end
+        $fclose(fd);
+        
+        
         m_agent2driverMB.put(test);
         for(n = 0; n < m_num_mon; n = n + 1) begin
             m_agent2scoreboardMB_arr[n].put(test);
