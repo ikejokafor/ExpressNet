@@ -33,6 +33,8 @@ module cnn_layer_accel_quad_bram_ctrl (
     rst                         ,
     num_input_cols              ,
     num_input_rows              ,
+    num_output_rows             ,
+    num_output_cols             ,
 	convolution_stride          ,
 	kernel_size                 ,
     job_start                   ,
@@ -59,7 +61,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     pix_seq_bram_rden           ,
     pix_seq_bram_rdAddr         ,
     pix_seq_data_full_count     ,
-
     next_kernel                 ,
 	move_one_row_down			,
     last_kernel                 ,
@@ -98,6 +99,8 @@ module cnn_layer_accel_quad_bram_ctrl (
 	input  logic   [C_LOG2_BRAM_DEPTH - 1:0]  num_input_cols              ;
 	input  logic   [                    2:0]  convolution_stride          ;  
     input  logic   [C_LOG2_BRAM_DEPTH - 1:0]  num_input_rows              ;
+    input logic    [ C_LOG2_BRAM_DEPTH - 1:0] num_output_rows             ;
+    input logic    [ C_LOG2_BRAM_DEPTH - 1:0] num_output_cols             ;
 	input  logic   [                    4:0]  kernel_size				  ;	
     input  logic                              job_start                   ;
     output logic                              job_accept                  ;
@@ -143,8 +146,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     logic                                    job_complete_acked              ;
     logic     [ C_LOG2_BRAM_DEPTH - 1:0]     output_row                      ;  
 	logic     [ C_LOG2_BRAM_DEPTH - 1:0]     output_col                      ;
-	logic     [ C_LOG2_BRAM_DEPTH - 1:0]     num_output_rows                 ;
-    logic     [ C_LOG2_BRAM_DEPTH - 1:0]     num_output_cols                 ;
     logic     [                     5:0]     next_state                      ;
     logic     [                     5:0]     return_state                    ;
     logic     [                     1:0]     graycode_r                      ;
@@ -232,12 +233,7 @@ module cnn_layer_accel_quad_bram_ctrl (
    
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
 	/* output map  rows = ((INPUT_ROWS + 2* PADDING - KERNEL_SIZE )/ STRIDE ) + 1 */
-    assign num_output_rows  = /*(convolution_stride == 1) ? (num_input_rows) : 
-                              (convolution_stride == 2) ? ((num_input_rows) >> 1):*/num_input_rows;
-	/* output map  cols = ((INPUT_COLS + 2* PADDING - KERNEL_SIZE )/ STRIDE ) + 1 */						  
-    assign num_output_cols  = (convolution_stride == 1) ? (num_input_cols) : 
-                              (convolution_stride == 2) ? ((num_input_cols) >> 1) + 3 :num_input_cols;
-    
+
     always@(posedge clk) begin
         if(rst) begin
             input_row   <= 0;
@@ -293,7 +289,7 @@ module cnn_layer_accel_quad_bram_ctrl (
         if(rst) begin 
             wht_sequence_selector <= 1'b1;
         end else begin 
-            if(!ce_execute && last_awe_ce1_cyc_counter == 4) begin
+            if(!ce_execute && last_awe_ce1_cyc_counter == `CYCLE_COUNT) begin
                 wht_sequence_selector <= 1'b1;
             end else if(wht_sequence_selector & (cycle_counter == `CYCLE_COUNT) & (convolution_stride == 1)) begin 
                 wht_sequence_selector <= 1'b0 ;

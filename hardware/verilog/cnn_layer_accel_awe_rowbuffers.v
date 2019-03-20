@@ -540,9 +540,9 @@ module cnn_layer_accel_awe_rowbuffers #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
 	//assign ce0_rename_condition = (((ce0_cycle_counter == 2 ) && (convolution_stride== 1)) || (((ce0_cycle_counter == 3) || (ce0_cycle_counter == 2)) && (convolution_stride == 2)))? 1:0;
 	assign ce0_rename_condition = ce0_row_rename;
-	
 	assign ce0_reset_counters = (~ce0_pixel_dataout_valid & ~ce0_cycle_counter_incr);
-		
+
+    // need to save value beforehand bc we overlapp execution with row matriculation / renaming and rowbuffer BRAM's only have 1 read port
     always@(posedge clk) begin
         if(gray_code == 2'b00 && ce0_rename_condition) begin
             row_buffer_sav_val0 <= bram1_dataout;
@@ -568,9 +568,9 @@ module cnn_layer_accel_awe_rowbuffers #(
     
 	//assign ce1_rename_condition = (((ce1_cycle_counter == 2 ) && (convolution_stride== 1)) || (((ce1_cycle_counter == 3) || (ce1_cycle_counter == 2)) && (convolution_stride == 2)))? 1: 0;
 	assign ce1_rename_condition = ce1_row_rename;
-	
 	assign ce1_reset_counters = (~ce1_pixel_dataout_valid & ~ce1_cycle_counter_incr);
-	
+
+    // need to save value beforehand bc we overlapp execution with row matriculation / renaming and rowbuffer BRAM's only have 1 read port
     always@(posedge clk) begin
         if(gray_code == 2'b00 && ce1_rename_condition) begin
             row_buffer_sav_val1 <= bram3_dataout;
@@ -697,11 +697,11 @@ module cnn_layer_accel_awe_rowbuffers #(
             endcase
             // conv eng 0 incoming row logic
             if(ce0_row_matric && last_kernel) begin
-                if(!(gray_code[0] ^ gray_code[1])) begin
+                if(!(gray_code[0] ^ gray_code[1])) begin    // gray_code == 00 or gray_code == 11
                     bram1_wren      <= 1;                  
                     bram1_wrAddr    <= {gray_code[0], row_matric_ce0_wrAddr};
                     bram1_datain    <= ce0_pixel_datain_d;                 
-                end else if(gray_code[0] ^ gray_code[1]) begin
+                end else if(gray_code[0] ^ gray_code[1]) begin   // gray_code == 01 or gray_code == 10  
                     bram0_wren      <= 1;
                     bram0_wrAddr    <= {gray_code[1], row_matric_ce0_wrAddr};
                     bram0_datain    <= ce0_pixel_datain_d;                                          
@@ -709,7 +709,7 @@ module cnn_layer_accel_awe_rowbuffers #(
             end
             // conv eng 0 row rename logic
             if(ce0_row_rename_d && last_kernel) begin
-                if(!(gray_code[0] ^ gray_code[1])) begin             
+                if(!(gray_code[0] ^ gray_code[1])) begin          
                     bram0_wren      <= 1;
                     bram0_wrAddr    <= {gray_code[1], row_rename_ce0_wrAddr};
                     bram0_datain    <= row_buffer_sav_val0;

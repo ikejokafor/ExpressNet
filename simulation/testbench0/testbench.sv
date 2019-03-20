@@ -56,16 +56,34 @@ module testbench;
     );
 
     
-    test_0_wrapper #(
+    // test_0_wrapper #(
+    //     .ROWS               ( 20               ),
+    //     .COLS               ( 20               ),
+    //     .DEPTH              ( 8                 ),
+    //     .KERNEL_SIZE        ( 3                 ),
+    //     .NUM_KERNELS        ( 1                ),
+    //     .C_PERIOD_100MHz    ( C_PERIOD_100MHz   ),
+    //     .C_PERIOD_500MHz    ( C_PERIOD_500MHz   )
+    // )
+    // i0_test_0_wrapper (
+    //     .clk_100MHz     ( clk_100MHz ),
+    //     .clk_500MHz     ( clk_500MHz ),
+    //     .rst            ( rst        )
+    // );
+    
+    
+    test_1_wrapper #(
         .ROWS               ( 20               ),
         .COLS               ( 20               ),
         .DEPTH              ( 8                 ),
         .KERNEL_SIZE        ( 3                 ),
         .NUM_KERNELS        ( 1                ),
+        .STRIDE             ( 2                ),
+       
         .C_PERIOD_100MHz    ( C_PERIOD_100MHz   ),
         .C_PERIOD_500MHz    ( C_PERIOD_500MHz   )
     )
-    i0_test_0_wrapper (
+    i0_test_1_wrapper (
         .clk_100MHz     ( clk_100MHz ),
         .clk_500MHz     ( clk_500MHz ),
         .rst            ( rst        )

@@ -25,7 +25,7 @@
 // Additional Comments:
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-module test_0_wrapper #(
+module test_1_wrapper #(
     parameter ROWS              = 20 ,
     parameter COLS              = 20 ,
     parameter DEPTH             = 8  ,
@@ -949,13 +949,17 @@ module test_0_wrapper #(
     
         // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
         // Set config Regs
-        i0_cnn_layer_accel_quad.i0_cnn_layer_accel_quad_bram_ctrl.pix_seq_data_full_count   = (5 *COLS >> 1) + 3*5 ;                                      
+        i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg                                 = (`WINDOW_3x3_NUM_CYCLES * COLS ) ;                                       
         i0_cnn_layer_accel_quad.kernel_full_count_cfg                                       = 10;
         i0_cnn_layer_accel_quad.num_input_rows_cfg                                          = ROWS - 1;
         i0_cnn_layer_accel_quad.num_input_cols_cfg                                          = COLS - 1;
         i0_cnn_layer_accel_quad.pfb_full_count_cfg                                          = COLS;
 		i0_cnn_layer_accel_quad.convolution_stride_cfg                                      = STRIDE;
 		i0_cnn_layer_accel_quad.kernel_size_cfg    		                                    = KERNEL_SIZE;
+        i0_cnn_layer_accel_quad.num_kernel_cfg                                              = NUM_KERNELS; 
+        i0_cnn_layer_accel_quad.padding_cfg                                                 = PADDING;
+        i0_cnn_layer_accel_quad.num_output_rows_cfg            = ((ROWS - KERNEL_SIZE + (2 * PADDING)) / STRIDE);
+        i0_cnn_layer_accel_quad.num_output_cols_cfg            = (COLS - 1) >> 1 - 1;      
         pixel_valid                                                                         = 0;
         job_start                                                                           = 0;
         job_fetch_ack                                                                       = 0;

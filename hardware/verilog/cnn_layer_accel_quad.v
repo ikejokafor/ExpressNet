@@ -455,6 +455,8 @@ module cnn_layer_accel_quad (
 		.output_stride				( output_stride                                         ),
         .num_input_cols             ( num_input_cols_cfg                                    ),
         .num_input_rows             ( num_input_rows_cfg                                    ),
+        .num_output_rows            ( num_output_rows_cfg                                   ),
+        .num_output_cols            ( num_output_cols_cfg                                   ),        
 		.convolution_stride         ( convolution_stride_cfg                                ),
 		.kernel_size                ( kernel_size_cfg										),
         .row_matric                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_MATRIC_FIELD]     ),
