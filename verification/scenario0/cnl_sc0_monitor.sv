@@ -94,14 +94,14 @@ task cnl_sc0_monitor::run();
         @(m_quad_intf.clk_if_cb);
         if(m_agent2monitorMB.try_get(test)) begin
             sc0_DUTOutParams                        = new();
-            sc0_DUTOutParams.num_output_rows        = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
-            sc0_DUTOutParams.num_output_cols        = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
-            sc0_DUTOutParams.num_sim_output_rows    = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;    // might need to double check this
-            sc0_DUTOutParams.num_sim_output_cols    = test.m_num_input_cols;
+            sc0_DUTOutParams.num_output_rows        = test.m_num_output_rows;
+            sc0_DUTOutParams.num_output_cols        = test.m_num_output_cols;
+            sc0_DUTOutParams.num_sim_output_rows    = test.m_num_sim_output_rows;
+            sc0_DUTOutParams.num_sim_output_cols    = test.m_num_sim_output_cols;
             query                                   = new(sc0_DUTOutParams);
             stride                                  = test.m_stride;
-            num_sim_output_rows                     = query.m_num_sim_output_rows;
-            num_sim_output_cols                     = query.m_num_sim_output_cols;
+            num_sim_output_rows                     = test.m_num_sim_output_rows;
+            num_sim_output_cols                     = test.m_num_sim_output_cols;
             m_mon_rdy.put(signal);
 
 

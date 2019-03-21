@@ -91,10 +91,10 @@ task cnl_sc1_monitor::run();
         if(m_agent2monitorMB.try_get(test)) begin
             sc1_DUTOutParams                        = new();
             sc1_DUTOutParams.num_kernels            = test.m_num_kernels;
-            sc1_DUTOutParams.num_output_rows        = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
-            sc1_DUTOutParams.num_output_cols        = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
-            sc1_DUTOutParams.num_sim_output_rows    = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;    // might need to double check this
-            sc1_DUTOutParams.num_sim_output_cols    = test.m_num_input_cols;
+            sc1_DUTOutParams.num_output_rows        = test.m_num_output_rows;
+            sc1_DUTOutParams.num_output_cols        = test.m_num_output_cols;
+            sc1_DUTOutParams.num_sim_output_rows    = test.m_num_sim_output_rows;
+            sc1_DUTOutParams.num_sim_output_cols    = test.m_num_sim_output_cols;
             output_depth                            = test.m_num_kernels;
             query                                   = new(sc1_DUTOutParams);
             m_mon_rdy.put(signal);

@@ -123,7 +123,7 @@ module cnn_layer_accel_weight_table_top #(
         .clk        ( clk                                                   ),
         .rst        ( rst                                                   ),
         .ce         ( 1'b1                                                  ),
-        .data_in    ( ((kernel_group == kernel_full_count_cfg && !config_mode) || (output_stride != 0)) ),
+        .data_in    ( kernel_group == kernel_full_count_cfg && !config_mode ),
         .data_out   ( last_kernel                                           )
     );
     
@@ -139,7 +139,7 @@ module cnn_layer_accel_weight_table_top #(
         .data_out   ( next_kernel_d     )
     );    
     
-       
+
     
     SRL_bus #(  
         .C_CLOCK_CYCLES  ( C_CE_WHT_SEQ_ADDR_DELAY  ),
@@ -222,9 +222,7 @@ module cnn_layer_accel_weight_table_top #(
             end
             if(ce_execute) begin
                 wht_table_rden <= 1;
-			end 
-		
-			
+			end
         end
     end
 	// END logic ------------------------------------------------------------------------------------------------------------------------------------

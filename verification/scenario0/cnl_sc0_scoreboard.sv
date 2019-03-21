@@ -89,11 +89,10 @@ task cnl_sc0_scoreboard::run();
         @(m_quad_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
             sc0_DUTOutParams                        = new();
-
-            sc0_DUTOutParams.num_output_rows        = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
-            sc0_DUTOutParams.num_output_cols        = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 1;
-            sc0_DUTOutParams.num_sim_output_rows    = ((test.m_num_input_cols - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;
-            sc0_DUTOutParams.num_sim_output_cols    = test.m_num_input_cols;
+            sc0_DUTOutParams.num_output_rows        = test.m_num_output_rows;
+            sc0_DUTOutParams.num_output_cols        = test.m_num_output_cols;
+            sc0_DUTOutParams.num_sim_output_rows    = test.m_num_sim_output_rows;
+            sc0_DUTOutParams.num_sim_output_cols    = test.m_num_sim_output_cols;
             sc0_DUTOutParams.kernel_size            = test.m_kernel_size;
             sc0_DUTOutParams.depth_offset           = m_depth_offset;
             sol = new(sc0_DUTOutParams);            

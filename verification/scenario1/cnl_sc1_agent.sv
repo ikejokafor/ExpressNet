@@ -147,6 +147,9 @@ task cnl_sc1_agent::run();
         end
         $fclose(fd);
         
+        if(test.m_stride >= 3) begin
+            $stop;
+        end
         
         m_agent2driverMB.put(test);
         for(n = 0; n < m_num_mon; n = n + 1) begin

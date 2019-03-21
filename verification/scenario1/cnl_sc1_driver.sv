@@ -79,7 +79,9 @@ task cnl_sc1_driver::run();
     int t;
     int kernel_group_cfg;
     int signal;
-    
+    shortreal tmp_m_num_input_cols;
+    shortreal tmp_pix_seq_data_full_count_cfg;
+
 
     m_quad_intf.clk_if_cb.job_start             <= 0;
     m_quad_intf.clk_if_cb.job_fetch_ack         <= 0;
@@ -107,6 +109,8 @@ task cnl_sc1_driver::run();
     while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         if(m_agent2driverMB.try_get(test)) begin
+            tmp_m_num_input_cols              = test.m_num_input_cols;
+            tmp_pix_seq_data_full_count_cfg   = `WINDOW_3x3_NUM_CYCLES * $ceil(tmp_m_num_input_cols / 2);   
             @(m_quad_intf.clk_if_cb);
             while(i < m_num_mon) begin
                 @(m_quad_intf.clk_core_cb);
@@ -123,18 +127,18 @@ task cnl_sc1_driver::run();
             $display("// Stride               %0d", test.m_stride                     );
             $display("// Padding:             %0d", test.m_padding                    );
             $display("// Running Test -----------------------------------------------");
-            // BEGIN logic --------------------------------------------------------------------------------------------------------------------------      
-            m_quad_intf.pix_seq_data_full_count_cfg                                   = (`WINDOW_3x3_NUM_CYCLES * test.m_num_input_cols) ;                                      
+            // BEGIN logic -------------------------------------------------------------------------------------------------------------------------- 
+            m_quad_intf.pix_seq_data_full_count_cfg                                   = (test.m_stride == 1) ? (`WINDOW_3x3_NUM_CYCLES * test.m_num_input_cols) : (test.m_stride == 2) ? tmp_pix_seq_data_full_count_cfg : 0;
             m_quad_intf.kernel_full_count_cfg                                         = `KERNEL_3x3_COUNT_FULL_CFG;
             m_quad_intf.num_input_rows_cfg                                            = test.m_num_input_rows - 1;
             m_quad_intf.num_input_cols_cfg                                            = test.m_num_input_cols - 1;
-            m_quad_intf.pfb_full_count_cfg                                            = test.m_num_input_cols;
+            m_quad_intf.num_output_rows_cfg                                           = test.m_num_output_rows_cfg;
+            m_quad_intf.num_output_cols_cfg                                           = test.m_num_output_cols_cfg;             
+            m_quad_intf.pfb_full_count_cfg                                            = test.m_num_input_cols;         
             m_quad_intf.convolution_stride_cfg                                        = test.m_stride;
             m_quad_intf.kernel_size_cfg    		                                      = test.m_kernel_size;
             m_quad_intf.padding_cfg                                                   = test.m_padding;
             m_quad_intf.num_kernel_cfg                                                = test.m_num_kernels;
-            m_quad_intf.num_output_rows_cfg                                           = ((test.m_num_input_rows - test.m_kernel_size + (2 * test.m_padding)) / test.m_stride) + 2;
-            m_quad_intf.num_output_cols_cfg                                           = test.m_num_input_cols - 1;
             m_quad_intf.job_start                                                     <= 0;
             m_quad_intf.job_fetch_ack                                                 <= 0;
             m_quad_intf.job_complete_ack                                              <= 0;
@@ -275,7 +279,7 @@ task cnl_sc1_driver::run();
 
             i = 0; 
             j = 0;
-            while(i < (test.m_num_input_rows * test.m_num_input_cols) ) begin
+            while(i < (test.m_num_input_rows * test.m_num_input_cols)) begin
                 @(m_quad_intf.clk_if_cb);
                 if(m_quad_intf.clk_if_cb.job_fetch_request) begin
                     m_quad_intf.clk_if_cb.job_fetch_ack <= 1;                

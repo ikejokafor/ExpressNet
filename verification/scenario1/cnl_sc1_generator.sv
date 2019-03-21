@@ -64,6 +64,12 @@ class cnl_sc1_generator extends generator;
 
     rand int m_num_input_rows                                                           ;
     rand int m_num_input_cols                                                           ;
+    int      m_num_output_rows_cfg                                                      ;
+    int      m_num_output_cols_cfg                                                      ;
+    int      m_num_output_rows                                                          ;
+    int      m_num_output_cols                                                          ;    
+    int      m_num_sim_output_rows                                                      ;
+    int      m_num_sim_output_cols                                                      ;    
     rand int m_depth                                                                    ;
     rand int m_num_kernels                                                              ;
     rand int m_kernel_size                                                              ;
@@ -93,13 +99,15 @@ endfunction: new
 
 
 function void cnl_sc1_generator::createTest(crtTestParams_t params);
-    sc1_crtTestParams_t     sc1_crtTestParams   ;
-    int                     i                   ;
-    int                     j                   ;
-    int                     k                   ;
-    int                     a                   ;
-    int                     b                   ;
-
+    sc1_crtTestParams_t sc1_crtTestParams;
+    int i;
+    int j;
+    int k;
+    int a;
+    int b;
+    shortreal tmp_num_output_rows_cfg;
+    shortreal tmp_num_output_cols_cfg;
+    
     
     $cast(sc1_crtTestParams, params);
     m_num_input_rows = sc1_crtTestParams.num_input_rows;
@@ -109,6 +117,16 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
     m_kernel_size = sc1_crtTestParams.kernel_size;
     m_stride = sc1_crtTestParams.stride;
     m_padding = sc1_crtTestParams.padding;
+ 
+
+    tmp_num_output_rows_cfg   = m_num_input_rows;
+    tmp_num_output_cols_cfg   = m_num_input_cols;
+    m_num_output_rows_cfg     = (m_stride == 1) ? m_num_input_rows - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
+    m_num_output_cols_cfg     = (m_stride == 1) ? m_num_input_cols - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
+    m_num_output_rows         = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+    m_num_output_cols         = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+    m_num_sim_output_rows     = (m_stride == 1) ? ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 2 : (m_stride == 2) ? $ceil(tmp_num_output_rows_cfg / 2) - 1 : 0;
+    m_num_sim_output_cols     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? $ceil(tmp_num_output_cols_cfg / 2) : 0;
     
     
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
@@ -149,7 +167,7 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
         m_pix_seq_data_sim[4] = {3'b0, 1'b1, 1'b0, 1'b0, 10'd514};
 
         j = 0;
-        for(i = 5; i < (`MAX_NUM_INPUT_COLS * `WINDOW_3x3_NUM_CYCLES); i = i + 5) begin            
+        for(i = `WINDOW_3x3_NUM_CYCLES; i < (`MAX_NUM_INPUT_COLS * `WINDOW_3x3_NUM_CYCLES); i = i + `WINDOW_3x3_NUM_CYCLES) begin            
             if((j % 2) == 0) begin
                 m_pix_seq_data_sim[i    ] = {3'b0, 1'b0, 1'b1, 1'b0, m_pix_seq_data_sim[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
                 m_pix_seq_data_sim[i + 1] = {3'b0, 1'b0, 1'b0, 1'b1, m_pix_seq_data_sim[i - 4][`PIX_SEQ_DATA_SEQ_FIELD]};
@@ -173,7 +191,7 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
         // SEQ = sequence value
         // RR = row rename flag
         //
-        //                            RM   RST    P        SEQ
+        //                         RR   RM   RST    P     SEQ
         m_pix_seq_data_sim[0] = {3'b0, 1'b0, 1'b1, 1'b1, 10'd0  };
         m_pix_seq_data_sim[1] = {3'b0, 1'b0, 1'b0, 1'b0, 10'd2  };
         m_pix_seq_data_sim[2] = {3'b1, 1'b0, 1'b0, 1'b0, 10'd512};
@@ -181,7 +199,7 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
         m_pix_seq_data_sim[4] = {3'b0, 1'b1, 1'b0, 1'b0, 10'd514};
     
         j = 0;
-        for(i = 5; i < (`MAX_NUM_INPUT_COLS * `WINDOW_3x3_NUM_CYCLES); i = i + 5) begin
+        for(i = `WINDOW_3x3_NUM_CYCLES; i < ((`MAX_NUM_INPUT_COLS / 2) * `WINDOW_3x3_NUM_CYCLES); i = i + `WINDOW_3x3_NUM_CYCLES) begin
             m_pix_seq_data_sim[i    ] = {3'b0, 1'b0, 1'b1, 1'b1, m_pix_seq_data_sim[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};
             m_pix_seq_data_sim[i + 1] = {3'b0, 1'b0, 1'b0, 1'b0, m_pix_seq_data_sim[i - 4][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};
             m_pix_seq_data_sim[i + 2] = {3'b1, 1'b0, 1'b0, 1'b0, m_pix_seq_data_sim[i - 3][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};
@@ -216,6 +234,7 @@ function void cnl_sc1_generator::plain2bits();
     int a;
     int b;
     int n;
+
     
     
     m_pix_data_sim = new[m_pix_data.size()];
@@ -246,6 +265,18 @@ function void cnl_sc1_generator::post_randomize();
     int j;
     int a;
     int b;
+    shortreal tmp_num_output_rows_cfg;
+    shortreal tmp_num_output_cols_cfg;    
+    
+    
+    tmp_num_output_rows_cfg   = m_num_input_rows;
+    tmp_num_output_cols_cfg   = m_num_input_cols;
+    m_num_output_rows_cfg     = (m_stride == 1) ? m_num_input_rows : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
+    m_num_output_cols_cfg     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
+    m_num_output_rows         = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+    m_num_output_cols         = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+    m_num_sim_output_rows     = (m_stride == 1) ? ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 2 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
+    m_num_sim_output_cols     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;             
 
 
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
@@ -281,7 +312,7 @@ function void cnl_sc1_generator::post_randomize();
         m_pix_seq_data_sim[4] = {3'b0, 1'b1, 1'b0, 1'b0, 10'd514};
 
         j = 0;
-        for(i = 5; i < (`MAX_NUM_INPUT_COLS * `WINDOW_3x3_NUM_CYCLES); i = i + 5) begin            
+        for(i = `WINDOW_3x3_NUM_CYCLES; i < (`MAX_NUM_INPUT_COLS * `WINDOW_3x3_NUM_CYCLES); i = i + `WINDOW_3x3_NUM_CYCLES) begin            
             if((j % 2) == 0) begin
                 m_pix_seq_data_sim[i    ] = {3'b0, 1'b0, 1'b1, 1'b0, m_pix_seq_data_sim[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd1};
                 m_pix_seq_data_sim[i + 1] = {3'b0, 1'b0, 1'b0, 1'b1, m_pix_seq_data_sim[i - 4][`PIX_SEQ_DATA_SEQ_FIELD]};
@@ -310,7 +341,7 @@ function void cnl_sc1_generator::post_randomize();
         m_pix_seq_data_sim[4] = {3'b0, 1'b1, 1'b0, 1'b0, 10'd514};
     
         j = 0;
-        for(i = 5; i < (`MAX_NUM_INPUT_COLS * `WINDOW_3x3_NUM_CYCLES); i = i + 5) begin
+        for(i = `WINDOW_3x3_NUM_CYCLES; i < ((`MAX_NUM_INPUT_COLS / 2) * `WINDOW_3x3_NUM_CYCLES); i = i + `WINDOW_3x3_NUM_CYCLES) begin
             m_pix_seq_data_sim[i    ] = {3'b0, 1'b0, 1'b1, 1'b1, m_pix_seq_data_sim[i - 5][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};
             m_pix_seq_data_sim[i + 1] = {3'b0, 1'b0, 1'b0, 1'b0, m_pix_seq_data_sim[i - 4][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};
             m_pix_seq_data_sim[i + 2] = {3'b1, 1'b0, 1'b0, 1'b0, m_pix_seq_data_sim[i - 3][`PIX_SEQ_DATA_SEQ_FIELD] + 10'd2};

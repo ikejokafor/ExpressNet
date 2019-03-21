@@ -26,14 +26,17 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-`include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
-`include "cnl_sc1_generator.sv"
-`include "cnl_sc1_environment.sv"
-`include "cnn_layer_accel_quad_intf.sv"
-
-
 module cnl_sc1_testbench;
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+	//	Includes
+	//-----------------------------------------------------------------------------------------------------------------------------------------------  
+    `include "cnn_layer_accel_defs.vh"
+    `include "cnn_layer_accel_verif_defs.sv"
+    `include "cnl_sc1_generator.sv"
+    `include "cnl_sc1_environment.sv"
+    `include "cnn_layer_accel_quad_intf.sv"
+
+
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
@@ -232,10 +235,10 @@ module cnl_sc1_testbench;
         // test_queue.push_back(test);
         
 
-        sc1_crtTestParams.num_input_rows = 20;
-        sc1_crtTestParams.num_input_cols = 20;
+        sc1_crtTestParams.num_input_rows = 31;
+        sc1_crtTestParams.num_input_cols = 31;
         sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 1;
+        sc1_crtTestParams.num_kernels = 2;
         sc1_crtTestParams.kernel_size = 3;
         sc1_crtTestParams.stride = 1;
         sc1_crtTestParams.padding = 0;
