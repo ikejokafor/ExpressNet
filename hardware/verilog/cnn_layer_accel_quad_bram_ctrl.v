@@ -284,7 +284,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             output_stride <= 0;
         end else begin
             if(convolution_stride > 1) begin
-                if(last_awe_ce1_cyc_counter == `CYCLE_COUNT && !ce_execute && output_stride == (convolution_stride - 1)) begin
+                if((last_awe_ce1_cyc_counter == `CYCLE_COUNT && !ce_execute && output_stride == (convolution_stride - 1)) || (job_complete_ack)) begin
                     output_stride <= 0;
                 end else if(last_awe_ce1_cyc_counter == `CYCLE_COUNT && !ce_execute && last_kernel) begin
                     output_stride <= output_stride + 1;

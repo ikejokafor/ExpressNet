@@ -34,6 +34,46 @@ module SRL_bus #(
     data_in,
     data_out
 );
+`ifdef SIMULATION
+    // ----------------------------------------------------------------------------------------------------------------------------------------------
+    // Inputs / Outputs
+    // ----------------------------------------------------------------------------------------------------------------------------------------------
+    input  logic                        clk;
+    input  logic                        ce;
+    input  logic                        rst;
+    input  logic [C_DATA_WIDTH - 1:0]   data_in;
+    output logic [C_DATA_WIDTH - 1:0]   data_out;   
+  
+  
+    // ----------------------------------------------------------------------------------------------------------------------------------------------
+    // Local Variables
+    // ----------------------------------------------------------------------------------------------------------------------------------------------    
+    reg   [C_DATA_WIDTH - 1:0]    shift_reg[C_CLOCK_CYCLES - 1:0];
+    integer                       srl_index;
+ 
+ 
+    // BEGIN LOGIC ----------------------------------------------------------------------------------------------------------------------------------
+    generate
+        if(C_CLOCK_CYCLES == 0) begin
+            assign data_out = data_in;
+        end else begin
+            assign data_out = shift_reg[C_CLOCK_CYCLES - 1];
+            always@(posedge clk) begin
+                if(rst) begin
+                    for(srl_index = 0; srl_index < C_CLOCK_CYCLES; srl_index = srl_index + 1) begin
+                        shift_reg[srl_index] <= 0;
+                    end
+                end else if(ce) begin
+                    shift_reg[0] <= data_in;
+                    for(srl_index = 1; srl_index < C_CLOCK_CYCLES; srl_index = srl_index + 1) begin
+                        shift_reg[srl_index] <= shift_reg[srl_index - 1];
+                    end
+                end
+            end 
+        end
+    endgenerate 
+    // END LOGIC --------------------------------------------------------------------------------------------------------------------------------------
+`else
     // ----------------------------------------------------------------------------------------------------------------------------------------------
     // Inputs / Outputs
     // ----------------------------------------------------------------------------------------------------------------------------------------------
@@ -45,14 +85,14 @@ module SRL_bus #(
   
   
     // ----------------------------------------------------------------------------------------------------------------------------------------------
-    // Regs / Integers
+    // Local Variables
     // ----------------------------------------------------------------------------------------------------------------------------------------------    
     reg   [C_CLOCK_CYCLES - 1:0]    shift_reg [C_DATA_WIDTH - 1:0];
     integer                         srl_index;
+    genvar i;
   
   
     // BEGIN LOGIC ----------------------------------------------------------------------------------------------------------------------------------
-    genvar i;
     generate
         if(C_CLOCK_CYCLES == 0) begin
             assign data_out = data_in;
@@ -64,10 +104,11 @@ module SRL_bus #(
                             shift_reg[i] = {C_CLOCK_CYCLES{1'b0}};
                         end
                     end else if(ce) begin
-                        if(C_CLOCK_CYCLES == 1)
+                        if(C_CLOCK_CYCLES == 1) begin
                             shift_reg[i] <= {data_in[i]};
-                        else    
+                        end else begin  
                             shift_reg[i] <= {shift_reg[i][C_CLOCK_CYCLES - 2:0], data_in[i]};
+                        end
                     end
                 end        
                 assign data_out[i] = shift_reg[i][C_CLOCK_CYCLES - 1];
@@ -76,5 +117,6 @@ module SRL_bus #(
     endgenerate
     // END LOGIC --------------------------------------------------------------------------------------------------------------------------------------
 
+`endif
 
 endmodule          

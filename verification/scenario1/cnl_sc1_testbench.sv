@@ -235,8 +235,19 @@ module cnl_sc1_testbench;
         // test_queue.push_back(test);
         
 
-        sc1_crtTestParams.num_input_rows = 31;
-        sc1_crtTestParams.num_input_cols = 31;
+        sc1_crtTestParams.num_input_rows = 30;
+        sc1_crtTestParams.num_input_cols = 30;
+        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        sc1_crtTestParams.num_kernels = 2;
+        sc1_crtTestParams.kernel_size = 3;
+        sc1_crtTestParams.stride = 2;
+        sc1_crtTestParams.padding = 0;
+        test = new();
+        test.createTest(sc1_crtTestParams);
+        test_queue.push_back(test);
+        
+        sc1_crtTestParams.num_input_rows = 30;
+        sc1_crtTestParams.num_input_cols = 30;
         sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
         sc1_crtTestParams.num_kernels = 2;
         sc1_crtTestParams.kernel_size = 3;
