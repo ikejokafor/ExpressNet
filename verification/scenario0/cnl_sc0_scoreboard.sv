@@ -50,8 +50,8 @@ endclass: sc0_scoreParams_t
 class cnl_sc0_scoreboard extends scoreboard;
     extern function new(scoreParams_t scoreParams = null);
     extern task run();
-    extern function void createSolution(generator test, DUToutput sol);
-    extern function int checkSolution(DUToutput query, DUToutput sol);
+    extern function void createSolution(generator test, DUTOutput sol);
+    extern function int checkSolution(DUTOutput query, DUTOutput sol);
     
 
     virtual cnn_layer_accel_quad_intf m_quad_intf; 
@@ -131,7 +131,7 @@ task cnl_sc0_scoreboard::run();
 endtask: run
 
 
-function void cnl_sc0_scoreboard::createSolution(generator test, DUToutput sol);
+function void cnl_sc0_scoreboard::createSolution(generator test, DUTOutput sol);
     cnl_sc0_generator sc0_test;
     cnl_sc0_DUTOutput sc0_sol;
     int i;
@@ -203,7 +203,7 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUToutput sol);
 endfunction: createSolution
 
 
-function int cnl_sc0_scoreboard::checkSolution(DUToutput query, DUToutput sol);
+function int cnl_sc0_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     cnl_sc0_DUTOutput sc0_query;
     cnl_sc0_DUTOutput sc0_sol;
     int i;

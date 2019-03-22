@@ -1,3 +1,23 @@
+2016.4:
+ * Version 13.1 (Rev. 3)
+ * Port Change: None
+ * Bug Fix: HASH(0x11ab1080)
+ * Feature Enhancement: None
+ * Revision change in one or more subcores
+
+2016.3:
+ * Version 13.1 (Rev. 2)
+ * Port Change: wr_rst_busy and rd_rst_busy ports made available if safety circuit is enabled
+ * Bug Fix: HASH(0x11ab0fb0)
+ * Feature Enhancement: Safety circuit is made independent of Output Register and Enable Reset Synchronization options
+ * Other: Added support for future devices
+ * Other: Source HDL files are concatenated into a single file to speed up synthesis and simulation. No changes required by the user
+ * Revision change in one or more subcores
+
+2016.2:
+ * Version 13.1 (Rev. 1)
+ * Revision change in one or more subcores
+
 2016.1:
  * Version 13.1
  * Delivering only Verilog behavioral model.

@@ -55,7 +55,7 @@ typedef struct {
 } sc0_datum_t;
 
 
-class cnl_sc0_DUTOutput extends DUToutput;
+class cnl_sc0_DUTOutput extends DUTOutput;
     extern function new(DUTOutParams_t DUTOutParams = null);
     extern function void bits2plain();
     

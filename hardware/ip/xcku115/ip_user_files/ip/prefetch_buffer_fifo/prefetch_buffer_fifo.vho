@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2018 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2019 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -47,7 +47,7 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:ip:fifo_generator:13.1
--- IP Revision: 0
+-- IP Revision: 3
 
 -- The following code must appear in the VHDL architecture header.
 
@@ -61,9 +61,7 @@ COMPONENT prefetch_buffer_fifo
     rd_en : IN STD_LOGIC;
     dout : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
     full : OUT STD_LOGIC;
-    empty : OUT STD_LOGIC;
-    valid : OUT STD_LOGIC;
-    rd_data_count : OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
+    empty : OUT STD_LOGIC
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------
@@ -81,9 +79,7 @@ your_instance_name : prefetch_buffer_fifo
     rd_en => rd_en,
     dout => dout,
     full => full,
-    empty => empty,
-    valid => valid,
-    rd_data_count => rd_data_count
+    empty => empty
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ---------
 

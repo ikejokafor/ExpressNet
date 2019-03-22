@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2018 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2019 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -48,7 +48,7 @@
 
 
 // IP VLNV: xilinx.com:ip:fifo_generator:13.1
-// IP Revision: 0
+// IP Revision: 3
 
 `timescale 1ns/1ps
 
@@ -81,7 +81,7 @@ output wire full;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *)
 output wire empty;
 
-  fifo_generator_v13_1_0 #(
+  fifo_generator_v13_1_3 #(
     .C_COMMON_CLOCK(0),
     .C_SELECT_XPM(0),
     .C_COUNT_TYPE(0),
@@ -206,10 +206,10 @@ output wire empty;
     .C_APPLICATION_TYPE_RACH(0),
     .C_APPLICATION_TYPE_RDCH(0),
     .C_APPLICATION_TYPE_AXIS(0),
-    .C_PRIM_FIFO_TYPE_WACH("8kx4"),
+    .C_PRIM_FIFO_TYPE_WACH("512x36"),
     .C_PRIM_FIFO_TYPE_WDCH("512x72"),
-    .C_PRIM_FIFO_TYPE_WRCH("8kx4"),
-    .C_PRIM_FIFO_TYPE_RACH("1kx36"),
+    .C_PRIM_FIFO_TYPE_WRCH("512x36"),
+    .C_PRIM_FIFO_TYPE_RACH("512x36"),
     .C_PRIM_FIFO_TYPE_RDCH("512x72"),
     .C_PRIM_FIFO_TYPE_AXIS("1kx18"),
     .C_USE_ECC_WACH(0),

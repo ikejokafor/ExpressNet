@@ -3,12 +3,12 @@
 <!--                                                         -->
 <!-- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="17" Path="C:/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/managed_ip_project/managed_ip_project.xpr">
+<Project Version="7" Minor="17" Path="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcku115/managed_ip_project/managed_ip_project.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="4d8a71adc8ff4e299094bd4348bcb81c"/>
     <Option Name="Part" Val="xcku115-flva1517-3-e"/>
-    <Option Name="CompiledLibDir" Val="$PCACHEDIR/compile_simlib"/>
+    <Option Name="CompiledLibDir" Val="$PPRDIR/../../../../../simulation"/>
     <Option Name="CompiledLibDirXSim" Val=""/>
     <Option Name="CompiledLibDirModelSim" Val="$PCACHEDIR/compile_simlib/modelsim"/>
     <Option Name="CompiledLibDirQuesta" Val="$PCACHEDIR/compile_simlib/questa"/>
@@ -36,13 +36,13 @@
     <Option Name="WTVcsLaunchSim" Val="0"/>
     <Option Name="WTRivieraLaunchSim" Val="0"/>
     <Option Name="WTActivehdlLaunchSim" Val="0"/>
-    <Option Name="WTXSimExportSim" Val="5"/>
-    <Option Name="WTModelSimExportSim" Val="5"/>
-    <Option Name="WTQuestaExportSim" Val="5"/>
-    <Option Name="WTIesExportSim" Val="5"/>
-    <Option Name="WTVcsExportSim" Val="5"/>
-    <Option Name="WTRivieraExportSim" Val="5"/>
-    <Option Name="WTActivehdlExportSim" Val="5"/>
+    <Option Name="WTXSimExportSim" Val="6"/>
+    <Option Name="WTModelSimExportSim" Val="6"/>
+    <Option Name="WTQuestaExportSim" Val="6"/>
+    <Option Name="WTIesExportSim" Val="6"/>
+    <Option Name="WTVcsExportSim" Val="6"/>
+    <Option Name="WTRivieraExportSim" Val="6"/>
+    <Option Name="WTActivehdlExportSim" Val="6"/>
     <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
     <Option Name="XSimRadix" Val="hex"/>
     <Option Name="XSimTimeUnit" Val="ns"/>
@@ -52,13 +52,6 @@
   <FileSets Version="1" Minor="31">
     <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
       <Filter Type="Srcs"/>
-      <File Path="$PPRDIR/../prefetch_buffer_fifo/prefetch_buffer_fifo.xci">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../pixel_sequence_data_bram/pixel_sequence_data_bram.xci">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -87,15 +80,16 @@
         <Option Name="SrcSet" Val="sources_1"/>
       </Config>
     </FileSet>
-    <FileSet Name="xilinx_async_fwft_fifo_count" Type="BlockSrcs" RelSrcDir="$PSRCDIR/xilinx_async_fwft_fifo_count">
+    <FileSet Name="prefetch_buffer_fifo" Type="BlockSrcs" RelSrcDir="$PSRCDIR/prefetch_buffer_fifo">
+      <File Path="$PPRDIR/../prefetch_buffer_fifo/prefetch_buffer_fifo.xci">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
-        <Option Name="TopModule" Val="xilinx_async_fwft_fifo_count"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="xilinx_dual_port_2_clock_ram" Type="BlockSrcs" RelSrcDir="$PSRCDIR/xilinx_dual_port_2_clock_ram">
-      <Config>
-        <Option Name="TopModule" Val="xilinx_dual_port_2_clock_ram"/>
+        <Option Name="TopModule" Val="prefetch_buffer_fifo"/>
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
@@ -111,11 +105,14 @@
     <Simulator Name="Questa">
       <Option Name="Description" Val="Questa Advanced Simulator"/>
     </Simulator>
+    <Simulator Name="IES">
+      <Option Name="Description" Val="Incisive Enterprise Simulator (IES)"/>
+    </Simulator>
+    <Simulator Name="VCS">
+      <Option Name="Description" Val="Verilog Compiler Simulator (VCS)"/>
+    </Simulator>
     <Simulator Name="Riviera">
       <Option Name="Description" Val="Riviera-PRO Simulator"/>
-    </Simulator>
-    <Simulator Name="ActiveHDL">
-      <Option Name="Description" Val="Active-HDL Simulator"/>
     </Simulator>
   </Simulators>
   <Runs Version="1" Minor="10">
@@ -126,17 +123,11 @@
       </Strategy>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
-    <Run Id="xilinx_async_fwft_fifo_count_synth_1" Type="Ft3:Synth" SrcSet="xilinx_async_fwft_fifo_count" Part="xcku115-flva1517-3-e" ConstrsSet="xilinx_async_fwft_fifo_count" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/xilinx_async_fwft_fifo_count_synth_1" IncludeInArchive="true">
+    <Run Id="prefetch_buffer_fifo_synth_1" Type="Ft3:Synth" SrcSet="prefetch_buffer_fifo" Part="xcku115-flva1517-3-e" ConstrsSet="prefetch_buffer_fifo" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/prefetch_buffer_fifo_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-    </Run>
-    <Run Id="xilinx_dual_port_2_clock_ram_synth_1" Type="Ft3:Synth" SrcSet="xilinx_dual_port_2_clock_ram" Part="xcku115-flva1517-3-e" ConstrsSet="xilinx_dual_port_2_clock_ram" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/xilinx_dual_port_2_clock_ram_synth_1" IncludeInArchive="true">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
+          <Desc>Vivado Synthesis Defaults</Desc>
+        </StratHandle>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -157,24 +148,11 @@
       </Strategy>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
-    <Run Id="xilinx_async_fwft_fifo_count_impl_1" Type="Ft2:EntireDesign" Part="xcku115-flva1517-3-e" ConstrsSet="xilinx_async_fwft_fifo_count" Description="Default settings for Implementation." SynthRun="xilinx_async_fwft_fifo_count_synth_1" IncludeInArchive="false">
+    <Run Id="prefetch_buffer_fifo_impl_1" Type="Ft2:EntireDesign" Part="xcku115-flva1517-3-e" ConstrsSet="prefetch_buffer_fifo" Description="Default settings for Implementation." SynthRun="prefetch_buffer_fifo_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-    </Run>
-    <Run Id="xilinx_dual_port_2_clock_ram_impl_1" Type="Ft2:EntireDesign" Part="xcku115-flva1517-3-e" ConstrsSet="xilinx_dual_port_2_clock_ram" Description="Default settings for Implementation." SynthRun="xilinx_dual_port_2_clock_ram_synth_1" IncludeInArchive="false">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
+          <Desc>Default settings for Implementation.</Desc>
+        </StratHandle>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
