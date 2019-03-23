@@ -1,5 +1,6 @@
 vlib work
 
+
 # Xilinx Lib
 vlog -lint -sv -work work $env(GLBL_PATH)/glbl.v
 
@@ -33,6 +34,7 @@ vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(S
 vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ ../../hardware/verilog/cnn_layer_accel_ce_macc_0.v
 vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ ../../hardware/verilog/cnn_layer_accel_ce_macc_1.v
 vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ ../../hardware/verilog/awe_dsp_input_mux.v
+
 
 # Xilinx IP
 vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ ../../hardware/ip/xcku115/prefetch_buffer_fifo/simulation/fifo_generator_vlog_beh.v

@@ -867,7 +867,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                     output_col_ce1 <= 0;                    
                 end
                 ST_AWE_CE_ACTIVE: begin
-                    if(ce0_cycle_counter == `CYCLE_COUNT) begin
+                    if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                         if(output_col_ce0 == num_input_cols) begin
                             output_col_ce0 <= 0;
                             if(ce0_last_kernel) begin
@@ -877,7 +877,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                             output_col_ce0 <= output_col_ce0 + 1;
                         end
                     end
-                    if(ce1_cycle_counter == `CYCLE_COUNT) begin
+                    if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                         if(output_col_ce1 == num_input_cols) begin
                             output_col_ce1  <= 0;
                             if(ce1_last_kernel) begin

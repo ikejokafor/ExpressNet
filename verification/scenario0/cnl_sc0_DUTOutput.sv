@@ -83,7 +83,7 @@ function cnl_sc0_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
         m_kernel_size           = sc0_DUTOutParams.kernel_size;
         m_depth_offset          = sc0_DUTOutParams.depth_offset;
         
-        m_pix_data = new[`NUM_CE_PER_AWE * m_num_sim_output_rows * m_num_sim_output_cols * `KERNEL_3x3_COUNT_FULL_CFG];
+        m_pix_data = new[`NUM_CE_PER_AWE * m_num_sim_output_rows * m_num_sim_output_cols * `KERNEL_3x3_COUNT_FULL];
     end
 endfunction: new
 

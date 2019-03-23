@@ -99,15 +99,19 @@ task cnl_sc0_agent::run();
         end else begin
             test = new();
             void'(test.randomize());
-            $display("// Created Random Test ----------------------------------------");
-            $display("// Num Rows:            %0d", test.m_num_input_rows             );
-            $display("// Num Cols:            %0d", test.m_num_input_cols             );
-            $display("// Num Depth:           %0d", test.m_depth                      );
-            $display("// Num kernels:         %0d", test.m_num_kernels                );
-            $display("// Num Kernel size:     %0d", test.m_kernel_size                );
-            $display("// Stride               %0d", test.m_stride                     );
-            $display("// Padding:             %0d", test.m_padding                    );
-            $display("// Created Random Test ----------------------------------------");
+            $display("// Created Random Test ------------------------------------------");
+            $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
+            $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
+            $display("// Input Depth:           %0d", test.m_depth                      );
+            $display("// Num kernels:           %0d", test.m_num_kernels                );
+            $display("// Num Kernel size:       %0d", test.m_kernel_size                );
+            $display("// Stride                 %0d", test.m_stride                     );
+            $display("// Padding:               %0d", test.m_padding                    );
+            $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
+            $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
+            $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
+            $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
+            $display("// Created Random Test ------------------------------------------");
             $display("\n");
             test.plain2bits();
         end

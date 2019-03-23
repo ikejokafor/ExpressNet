@@ -97,15 +97,19 @@ task cnl_sc1_scoreboard::run();
             forever begin
                 @(m_quad_intf.clk_core_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
-                    $display("// Checking Test ---------------------------------------------");
-                    $display("// Num Rows:            %d", test.m_num_input_rows             );
-                    $display("// Num Cols:            %d", test.m_num_input_cols             );
-                    $display("// Num Depth:           %d", test.m_depth                      );
-                    $display("// Num kernels:         %d", test.m_num_kernels                );
-                    $display("// Num Kernel size:     %d", test.m_kernel_size                );
-                    $display("// Stride               %d", test.m_stride                     );
-                    $display("// Padding:             %d", test.m_padding                    );
-                    $display("// Checking Test ---------------------------------------------");
+                    $display("// Checking Test ------------------------------------------------");
+                    $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
+                    $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
+                    $display("// Input Depth:           %0d", test.m_depth                      );
+                    $display("// Num kernels:           %0d", test.m_num_kernels                );
+                    $display("// Num Kernel size:       %0d", test.m_kernel_size                );
+                    $display("// Stride                 %0d", test.m_stride                     );
+                    $display("// Padding:               %0d", test.m_padding                    );
+                    $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
+                    $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
+                    $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
+                    $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
+                    $display("// Checking Test ------------------------------------------------");
                     $display("\n");
                     if(checkSolution(query, sol)) begin
                         $display("// -----------------------------------------------------------");
@@ -190,7 +194,7 @@ function void cnl_sc1_scoreboard::createSolution(generator test, DUTOutput sol);
                                 sc1_sol.m_conv_map[(m * num_sim_output_rows + x) * num_sim_output_cols + y].pixel
                                     = sc1_sol.m_conv_map[(m * num_sim_output_rows + x) * num_sim_output_cols + y].pixel +
                                     (pix_data_sim[(k * num_input_rows + i) * num_input_cols + j]
-                                    * kernel_data_sim[(m * depth + k) * `KERNEL_3x3_COUNT_FULL_CFG + n]);
+                                    * kernel_data_sim[(m * depth + k) * `KERNEL_3x3_COUNT_FULL + n]);
                             end
                             kc = kc + 1;
                             n = n + 1;
@@ -266,7 +270,7 @@ function int cnl_sc1_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
             for(j = 0; j < num_output_cols; j = j + 1) begin
                 if(sol_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j].pixel
                     != qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j].pixel) begin
-                   // $stop;
+                   $stop;
                 end
             end
         end

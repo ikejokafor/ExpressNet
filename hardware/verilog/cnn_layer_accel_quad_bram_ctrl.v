@@ -218,7 +218,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                 next_kernel[idx] <= 0;
             end
         end else begin
-            next_kernel[0] <= (output_col == num_output_cols && cycle_counter == `CYCLE_COUNT && !ce_move_one_row_down);
+            next_kernel[0] <= (output_col == num_output_cols && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_move_one_row_down);
             for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
                 next_kernel[idx] <= next_kernel[idx - 1];
             end
@@ -268,7 +268,7 @@ module cnn_layer_accel_quad_bram_ctrl (
         if(rst) begin
             cycle_counter <= 0;
         end else begin
-            if(cycle_counter == `CYCLE_COUNT) begin
+            if(cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                 cycle_counter <= 0;
             end else if(pix_seq_bram_rden_r) begin
                 cycle_counter <= cycle_counter + 1;
@@ -284,9 +284,9 @@ module cnn_layer_accel_quad_bram_ctrl (
             output_stride <= 0;
         end else begin
             if(convolution_stride > 1) begin
-                if((last_awe_ce1_cyc_counter == `CYCLE_COUNT && !ce_execute && output_stride == (convolution_stride - 1)) || (job_complete_ack)) begin
+                if((last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && output_stride == (convolution_stride - 1)) || (job_complete_ack)) begin
                     output_stride <= 0;
-                end else if(last_awe_ce1_cyc_counter == `CYCLE_COUNT && !ce_execute && last_kernel) begin
+                end else if(last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && last_kernel) begin
                     output_stride <= output_stride + 1;
                 end
             end
@@ -301,11 +301,11 @@ module cnn_layer_accel_quad_bram_ctrl (
         if(rst) begin 
             wht_sequence_selector <= 1'b1;
         end else begin 
-            if(!ce_execute && last_awe_ce1_cyc_counter == `CYCLE_COUNT) begin
+            if(!ce_execute && last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                 wht_sequence_selector <= 1'b1;
-            end else if(wht_sequence_selector && (cycle_counter == `CYCLE_COUNT) && (convolution_stride == 1)) begin 
+            end else if(wht_sequence_selector && (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) && (convolution_stride == 1)) begin 
                 wht_sequence_selector <= 1'b0 ;
-            end else if (!wht_sequence_selector && (cycle_counter == `CYCLE_COUNT) && (convolution_stride == 1)) begin 
+            end else if (!wht_sequence_selector && (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) && (convolution_stride == 1)) begin 
                 wht_sequence_selector <= 1'b1 ;
             end
         end
@@ -322,12 +322,12 @@ module cnn_layer_accel_quad_bram_ctrl (
             if(job_complete_ack) begin
                 output_col  <= 0;
                 output_row  <= 0;
-            end else if(output_col == num_output_cols && cycle_counter == `CYCLE_COUNT) begin
+            end else if(output_col == num_output_cols && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                 output_col <= 0;
                 if(last_kernel && (output_stride == 0 || input_row == num_input_rows)) begin
                     output_row <= output_row + 1;
                 end
-            end else if(cycle_counter == `CYCLE_COUNT) begin
+            end else if(cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                 output_col <= output_col + 1;
             end
         end
@@ -475,20 +475,22 @@ module cnn_layer_accel_quad_bram_ctrl (
                         pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                     end
                     // next state logic
-                    if(output_col == num_output_cols && output_row == num_output_rows && cycle_counter == `CYCLE_COUNT && last_kernel) begin
-                        next_state          <= ST_WAIT_JOB_DONE;
-                    end else if(output_col == num_output_cols && output_row != num_output_rows && cycle_counter == `CYCLE_COUNT) begin
+                    if(pfb_count == 0 && last_kernel && input_row == (num_input_rows + 1) && output_row == num_output_rows) begin
+                        next_state <= ST_WAIT_JOB_DONE;
+                    end else if(pfb_count == 0 && (last_kernel || ce_move_one_row_down) && input_row < (num_input_rows + 1)) begin
                         pix_seq_bram_rden_r  <= 0;
-                        if(input_row < (num_input_rows + 1) && (last_kernel || ce_move_one_row_down)) begin
-                            return_state    <= ST_AWE_CE_ACTIVE;
-                            next_state      <= ST_WAIT_PFB_LOAD;
-                        end else begin
-                            next_state      <= ST_AWE_CE_ACTIVE;
-                        end
+                        return_state    <= ST_AWE_CE_ACTIVE;
+                        next_state      <= ST_WAIT_PFB_LOAD;
+                    end else begin
+                        next_state      <= ST_AWE_CE_ACTIVE;
                     end
-                    if((!ce_execute && last_awe_ce1_cyc_counter == `CYCLE_COUNT)) begin
+                    if(!ce_execute && last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                         row_matric_wrAddr   <= 0;
-						pix_seq_data_count  <= pix_seq_data_full_count;
+                        if(next_state[4]) begin
+                            pix_seq_data_count <= 0;
+                        end else begin
+                            pix_seq_data_count  <= pix_seq_data_full_count;
+                        end
 						pix_seq_bram_rdAddr <= 0;
 						if(next_state[4]) begin
                             graycode_r <= 0;

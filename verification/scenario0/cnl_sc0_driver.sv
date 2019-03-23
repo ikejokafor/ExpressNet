@@ -118,18 +118,23 @@ task cnl_sc0_driver::run();
                     i = i + 1;
                 end
             end
-            $display("// Running Test -----------------------------------------------");
-            $display("// Num Rows:            %0d", test.m_num_input_rows             );
-            $display("// Num Cols:            %0d", test.m_num_input_cols             );
-            $display("// Num Depth:           %0d", test.m_depth                      );
-            $display("// Num kernels:         %0d", test.m_num_kernels                );
-            $display("// Num Kernel size:     %0d", test.m_kernel_size                );
-            $display("// Stride               %0d", test.m_stride                     );
-            $display("// Padding:             %0d", test.m_padding                    );
-            $display("// Running Test -----------------------------------------------");
+            $display("// Running Test -------------------------------------------------");
+            $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
+            $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
+            $display("// Input Depth:           %0d", test.m_depth                      );
+            $display("// Num kernels:           %0d", test.m_num_kernels                );
+            $display("// Num Kernel size:       %0d", test.m_kernel_size                );
+            $display("// Stride                 %0d", test.m_stride                     );
+            $display("// Padding:               %0d", test.m_padding                    );
+            $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
+            $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
+            $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
+            $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
+            $display("// Running Test -------------------------------------------------");
+            $display("\n");
             // BEGIN logic -------------------------------------------------------------------------------------------------------------------------- 
             m_quad_intf.pix_seq_data_full_count_cfg                                   = (test.m_stride == 1) ? (`WINDOW_3x3_NUM_CYCLES * test.m_num_input_cols) : (test.m_stride == 2) ? tmp_pix_seq_data_full_count_cfg : 0;
-            m_quad_intf.kernel_full_count_cfg                                         = `KERNEL_3x3_COUNT_FULL_CFG;
+            m_quad_intf.kernel_full_count_cfg                                         = `KERNEL_3x3_COUNT_FULL;
             m_quad_intf.num_input_rows_cfg                                            = test.m_num_input_rows - 1;
             m_quad_intf.num_input_cols_cfg                                            = test.m_num_input_cols - 1;
             m_quad_intf.num_output_rows_cfg                                           = test.m_num_output_rows_cfg;
@@ -219,29 +224,29 @@ task cnl_sc0_driver::run();
             // send kernel data down
             i = 1;
             @(m_quad_intf.clk_core_cb);
-            m_quad_intf.clk_core_cb.weight_data[127:112]                <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL_CFG) + 0]; 
-            m_quad_intf.clk_core_cb.weight_data[111:96]                 <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (6 * `KERNEL_3x3_COUNT_FULL_CFG) + 0];     
-            m_quad_intf.clk_core_cb.weight_data[95:80]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (5 * `KERNEL_3x3_COUNT_FULL_CFG) + 0];     
-            m_quad_intf.clk_core_cb.weight_data[79:64]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (4 * `KERNEL_3x3_COUNT_FULL_CFG) + 0];     
-            m_quad_intf.clk_core_cb.weight_data[63:48]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (3 * `KERNEL_3x3_COUNT_FULL_CFG) + 0];     
-            m_quad_intf.clk_core_cb.weight_data[47:32]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (2 * `KERNEL_3x3_COUNT_FULL_CFG) + 0];     
-            m_quad_intf.clk_core_cb.weight_data[31:16]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (1 * `KERNEL_3x3_COUNT_FULL_CFG) + 0];     
-            m_quad_intf.clk_core_cb.weight_data[15:0]                   <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (0 * `KERNEL_3x3_COUNT_FULL_CFG) + 0];
+            m_quad_intf.clk_core_cb.weight_data[127:112]                <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL) + 0]; 
+            m_quad_intf.clk_core_cb.weight_data[111:96]                 <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (6 * `KERNEL_3x3_COUNT_FULL) + 0];     
+            m_quad_intf.clk_core_cb.weight_data[95:80]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (5 * `KERNEL_3x3_COUNT_FULL) + 0];     
+            m_quad_intf.clk_core_cb.weight_data[79:64]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (4 * `KERNEL_3x3_COUNT_FULL) + 0];     
+            m_quad_intf.clk_core_cb.weight_data[63:48]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (3 * `KERNEL_3x3_COUNT_FULL) + 0];     
+            m_quad_intf.clk_core_cb.weight_data[47:32]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (2 * `KERNEL_3x3_COUNT_FULL) + 0];     
+            m_quad_intf.clk_core_cb.weight_data[31:16]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (1 * `KERNEL_3x3_COUNT_FULL) + 0];     
+            m_quad_intf.clk_core_cb.weight_data[15:0]                   <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (0 * `KERNEL_3x3_COUNT_FULL) + 0];
             m_quad_intf.clk_core_cb.weight_valid                        <= 1;      
             kernel_group_cfg                                             = 0;
             m_quad_intf.clk_if_cb.config_data                           <= 0;
             while(kernel_group_cfg < test.m_num_kernels) begin
-                while(i < `KERNEL_3x3_COUNT_FULL_CFG) begin
+                while(i < `KERNEL_3x3_COUNT_FULL) begin
                     @(m_quad_intf.clk_core_cb);
                     if(m_quad_intf.clk_core_cb.weight_ready) begin
-                        m_quad_intf.clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL_CFG) + i]; 
-                        m_quad_intf.clk_core_cb.weight_data[111:96]     <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (6 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[95:80]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (5 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[79:64]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (4 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[63:48]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (3 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[47:32]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (2 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[31:16]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (1 * `KERNEL_3x3_COUNT_FULL_CFG) + i];     
-                        m_quad_intf.clk_core_cb.weight_data[15:0]       <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL_CFG * test.m_depth) + (0 * `KERNEL_3x3_COUNT_FULL_CFG) + i];
+                        m_quad_intf.clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL) + i]; 
+                        m_quad_intf.clk_core_cb.weight_data[111:96]     <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (6 * `KERNEL_3x3_COUNT_FULL) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[95:80]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (5 * `KERNEL_3x3_COUNT_FULL) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[79:64]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (4 * `KERNEL_3x3_COUNT_FULL) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[63:48]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (3 * `KERNEL_3x3_COUNT_FULL) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[47:32]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (2 * `KERNEL_3x3_COUNT_FULL) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[31:16]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (1 * `KERNEL_3x3_COUNT_FULL) + i];     
+                        m_quad_intf.clk_core_cb.weight_data[15:0]       <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (0 * `KERNEL_3x3_COUNT_FULL) + i];
                         i = i + 1;
                     end
                 end

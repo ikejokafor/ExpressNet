@@ -73,9 +73,10 @@
 `define NUM_WHT_SEQ_TABLE_PER_AWE       4
 `define DATA_WIDTH                      16
 `define MAX_STRIDE                      11
-`define CYCLE_COUNT                     `WINDOW_3x3_NUM_CYCLES - 1
-`define KERNEL_3x3_COUNT_FULL_CFG       10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
-`define KERNEL_BLOCK_SIZE               16
+`define WINDOW_3x3_NUM_CYCLES_MINUS_1  `WINDOW_3x3_NUM_CYCLES - 1
+`define KERNEL_3x3_COUNT_FULL           10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
+`define KERNEL_3x3_COUNT_FULL_MINUS_1   `KERNEL_3x3_COUNT_FULL - 1
+`define KERNEL_BLOCK_SIZE               16  // every 3x3 kernel window takes up 16 slots
 `define NUM_CE_PER_QUAD                `NUM_AWE * `NUM_CE_PER_AWE
 `define MIN_NUM_INPUT_ROWS              19
 `define MIN_NUM_INPUT_COLS              19
