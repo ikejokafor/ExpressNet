@@ -222,7 +222,7 @@ module cnl_sc1_testbench;
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         sc1_crtTestParams = new();     
         
-                sc1_crtTestParams.num_input_rows = 20;
+        sc1_crtTestParams.num_input_rows = 20;
         sc1_crtTestParams.num_input_cols = 20;
         sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
         sc1_crtTestParams.num_kernels = 2;

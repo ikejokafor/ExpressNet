@@ -132,7 +132,7 @@ task cnl_sc0_monitor::run();
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
             $display("// Input Depth:           %0d", test.m_depth                      );
             $display("// Num kernels:           %0d", test.m_num_kernels                );
-            $display("// Num Kernel size:       %0d", test.m_kernel_size                );
+            $display("// Kernel size:           %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );

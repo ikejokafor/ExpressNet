@@ -215,15 +215,19 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
   	// END logic ------------------------------------------------------------------------------------------------------------------------------------
    
     
-    $display("// Created Specific Test --------------------------------------");
-    $display("// Num Rows:            %0d", m_num_input_rows                  );
-    $display("// Num Cols:            %0d", m_num_input_cols                  );
-    $display("// Num Depth:           %0d", m_depth                           );
-    $display("// Num kernels:         %0d", m_num_kernels                     );
-    $display("// Num Kernel size:     %0d", m_kernel_size                     );
-    $display("// Stride               %0d", m_stride                          );
-    $display("// Padding:             %0d", m_padding                         );
-    $display("// Created Specific Test --------------------------------------");
+    $display("// Created Specific Test ----------------------------------------");
+    $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
+    $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
+    $display("// Input Depth:           %0d", test.m_depth                      );
+    $display("// Num kernels:           %0d", test.m_num_kernels                );
+    $display("// Kernel size:           %0d", test.m_kernel_size                );
+    $display("// Stride                 %0d", test.m_stride                     );
+    $display("// Padding:               %0d", test.m_padding                    );
+    $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
+    $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
+    $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
+    $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
+    $display("// Created Specific Test ----------------------------------------");
     $display("\n");
 endfunction: createTest
 
