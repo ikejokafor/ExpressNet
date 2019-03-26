@@ -68,6 +68,7 @@ function cnl_sc1_agent::new(agentParams_t agentParams = null);
         m_DUT_rdy_arr = sc1_agentParams.DUT_rdy_arr;
         m_quad_intf = sc1_agentParams.quad_intf;
         m_num_mon = sc1_agentParams.num_mon;
+        m_runForever = sc1_agentParams.runForever;
     end
 endfunction : new
 
@@ -104,7 +105,7 @@ task cnl_sc1_agent::run();
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
             $display("// Input Depth:           %0d", test.m_depth                      );
             $display("// Num kernels:           %0d", test.m_num_kernels                );
-            $display("// Kernel size:           %0d", test.m_kernel_size                );
+            $display("// Num Kernel size:       %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
@@ -160,7 +161,9 @@ task cnl_sc1_agent::run();
             m_agent2scoreboardMB_arr[n].put(test);
             m_agent2monitorMB_arr[n].put(test);
         end
-        t = t + 1;
+        if(!m_runForever) begin
+            t = t + 1;
+        end
     end
 endtask: run
 

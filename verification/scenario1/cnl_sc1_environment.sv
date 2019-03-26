@@ -46,7 +46,7 @@
 
 
 class cnl_sc1_environment #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz);
-    extern function new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, cnl_sc1_generator test_queue[$], int num_mon);
+    extern function new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, cnl_sc1_generator test_queue[$], int num_mon, bool runForever);
     extern function void build();
     extern task run();
  
@@ -72,11 +72,12 @@ class cnl_sc1_environment #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz
     mailbox                             m_mon_rdy_arr[];
     mailbox                             m_scbd_done_arr[];
     int m_num_mon; 
-    int m_num_scbd;   
+    int m_num_scbd; 
+    bool m_runForever;
 endclass: cnl_sc1_environment
 
 
-function cnl_sc1_environment::new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, cnl_sc1_generator test_queue[$], int num_mon);
+function cnl_sc1_environment::new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, cnl_sc1_generator test_queue[$], int num_mon, bool runForever);
     m_quad_intf                 = quad_intf;    
     m_numTests                  = numTests;
     m_test_queue                = test_queue;
@@ -92,6 +93,7 @@ function cnl_sc1_environment::new(virtual cnn_layer_accel_quad_intf quad_intf, i
     m_scbd_done_arr             = new[num_mon];
     m_scoreboard_arr            = new[num_mon];
     m_monitor_arr               = new[num_mon];
+    m_runForever                = runForever;
 endfunction: new
 
 
@@ -123,11 +125,13 @@ function void cnl_sc1_environment::build();
     m_agentParams.DUT_rdy_arr = m_DUT_rdy_arr;
     m_agentParams.quad_intf = m_quad_intf;
     m_agentParams.num_mon = m_num_mon;
+    m_agentParams.runForever = m_runForever;
     m_drvParams.agent2driverMB = m_agent2driverMB;
     m_drvParams.quad_intf = m_quad_intf;
     m_drvParams.mon_rdy_arr = m_mon_rdy_arr;
     m_drvParams.num_mon = m_num_mon;
     m_drvParams.numTests = m_numTests;
+    m_drvParams.runForever = m_runForever;
     m_agent = new(m_agentParams);
     m_driver = new(m_drvParams);
     m_assetion = new(m_asrtParams);    
@@ -139,12 +143,14 @@ function void cnl_sc1_environment::build();
         m_monParams_arr[i].agent2monitorMB = m_agent2monitorMB_arr[i];
         m_monParams_arr[i].mon_rdy = m_mon_rdy_arr[i];
         m_monParams_arr[i].tid = i;
+        m_monParams_arr[i].runForever = m_runForever;
         m_scoreParams_arr[i].agent2scoreboardMB = m_agent2scoreboardMB_arr[i];
         m_scoreParams_arr[i].monitor2scoreboardMB = m_monitor2scoreboardMB_arr[i];
         m_scoreParams_arr[i].scbd_done = m_scbd_done_arr[i];
         m_scoreParams_arr[i].numTests = m_numTests;
         m_scoreParams_arr[i].quad_intf = m_quad_intf;
         m_scoreParams_arr[i].tid = i;
+        m_scoreParams_arr[i].runForever = m_runForever;
         m_scoreboard_arr[i] = new(m_scoreParams_arr[i]);
         m_monitor_arr[i] = new(m_monParams_arr[i]);        
     end

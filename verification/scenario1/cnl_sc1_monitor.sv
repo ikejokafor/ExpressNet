@@ -68,6 +68,7 @@ function cnl_sc1_monitor::new(monParams_t monParams = null);
         m_quad_intf = sc1_monParams.quad_intf;
         m_mon_rdy = sc1_monParams.mon_rdy;
         m_tid = sc1_monParams.tid;
+        m_runForever = sc1_monParams.runForever;
     end
 endfunction: new
 
@@ -120,13 +121,13 @@ task cnl_sc1_monitor::run();
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
             $display("// Input Depth:           %0d", test.m_depth                      );
             $display("// Num kernels:           %0d", test.m_num_kernels                );
-            $display("// Kernel size:           %0d", test.m_kernel_size                );
+            $display("// Num Kernel size:       %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
             $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
             $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
-            $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        );  
+            $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
             $display("// Finished Test ------------------------------------------------");
             $display("\n");
             $display("//-------------------------------------------");
@@ -134,7 +135,9 @@ task cnl_sc1_monitor::run();
             $display("//-------------------------------------------");
             $display("\n");
             m_DUT_rdy.put(signal);
-            t = t + 1;
+            if(!m_runForever) begin
+                t = t + 1;
+            end
         end
     end
 endtask: run

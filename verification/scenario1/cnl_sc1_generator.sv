@@ -88,7 +88,7 @@ class cnl_sc1_generator extends generator;
         m_depth == `NUM_CE_PER_QUAD;
         m_kernel_size == 3;
         m_num_kernels inside {[1:`MAX_BRAM_3x3_KERNELS]};
-        m_stride == 2;
+        m_stride inside {[1:2]};
         m_padding == 0;
     }
 endclass: cnl_sc1_generator
@@ -216,17 +216,17 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
    
     
     $display("// Created Specific Test ----------------------------------------");
-    $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
-    $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
-    $display("// Input Depth:           %0d", test.m_depth                      );
-    $display("// Num kernels:           %0d", test.m_num_kernels                );
-    $display("// Kernel size:           %0d", test.m_kernel_size                );
-    $display("// Stride                 %0d", test.m_stride                     );
-    $display("// Padding:               %0d", test.m_padding                    );
-    $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
-    $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
-    $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
-    $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
+    $display("// Num Input Rows:        %0d", m_num_input_rows                  );
+    $display("// Num Input Cols:        %0d", m_num_input_cols                  );
+    $display("// Input Depth:           %0d", m_depth                           );
+    $display("// Num kernels:           %0d", m_num_kernels                     );
+    $display("// Num Kernel size:       %0d", m_kernel_size                     );
+    $display("// Stride                 %0d", m_stride                          );
+    $display("// Padding:               %0d", m_padding                         );
+    $display("// Num Output Rows:       %0d", m_num_output_rows                 );
+    $display("// Num Output Cols:       %0d", m_num_output_cols                 );
+    $display("// Num Sim Output Rows:   %0d", m_num_sim_output_rows             );
+    $display("// Num Sim Output Cols:   %0d", m_num_sim_output_cols             ); 
     $display("// Created Specific Test ----------------------------------------");
     $display("\n");
 endfunction: createTest
@@ -275,12 +275,12 @@ function void cnl_sc1_generator::post_randomize();
     
     tmp_num_output_rows_cfg   = m_num_input_rows;
     tmp_num_output_cols_cfg   = m_num_input_cols;
-    m_num_output_rows_cfg     = (m_stride == 1) ? m_num_input_rows : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
-    m_num_output_cols_cfg     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
+    m_num_output_rows_cfg     = (m_stride == 1) ? m_num_input_rows - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
+    m_num_output_cols_cfg     = (m_stride == 1) ? m_num_input_cols - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
     m_num_output_rows         = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
     m_num_output_cols         = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
-    m_num_sim_output_rows     = (m_stride == 1) ? ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 2 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
-    m_num_sim_output_cols     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;             
+    m_num_sim_output_rows     = (m_stride == 1) ? ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 2 : (m_stride == 2) ? $ceil(tmp_num_output_rows_cfg / 2) - 1 : 0;
+    m_num_sim_output_cols     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? $ceil(tmp_num_output_cols_cfg / 2) : 0;           
 
 
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];

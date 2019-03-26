@@ -68,6 +68,7 @@ function cnl_sc1_scoreboard::new(scoreParams_t scoreParams = null);
         m_scbd_done = sc1_scoreParams.scbd_done;
         m_numTests = sc1_scoreParams.numTests;
         m_tid = sc1_scoreParams.tid;
+        m_runForever = sc1_scoreParams.runForever;
     end
 endfunction: new
 
@@ -77,12 +78,12 @@ task cnl_sc1_scoreboard::run();
     cnl_sc1_DUTOutput query;
     cnl_sc1_DUTOutput sol;
     sc1_DUTOutParams_t sc1_DUTOutParams;
-    int i;
+    int t;
     int signal;
 
 
-    i = 0;
-    while(i < m_numTests) begin
+    t = 0;
+    while(t < m_numTests) begin
         @(m_quad_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
             sc1_DUTOutParams                        = new();
@@ -102,7 +103,7 @@ task cnl_sc1_scoreboard::run();
                     $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
                     $display("// Input Depth:           %0d", test.m_depth                      );
                     $display("// Num kernels:           %0d", test.m_num_kernels                );
-                    $display("// Kernel size:           %0d", test.m_kernel_size                );
+                    $display("// Num Kernel size:       %0d", test.m_kernel_size                );
                     $display("// Stride                 %0d", test.m_stride                     );
                     $display("// Padding:               %0d", test.m_padding                    );
                     $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
@@ -125,7 +126,9 @@ task cnl_sc1_scoreboard::run();
                     break;
                 end
             end
-            i = i + 1;
+            if(!m_runForever) begin
+                t = t + 1;
+            end
         end
     end
     m_scbd_done.put(signal);

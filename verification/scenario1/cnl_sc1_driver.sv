@@ -67,6 +67,7 @@ function cnl_sc1_driver::new(drvParams_t drvParams = null);
         m_mon_rdy_arr = sc1_drvParams.mon_rdy_arr;
         m_num_mon = sc1_drvParams.num_mon;
         m_numTests = sc1_drvParams.numTests;
+        m_runForever = sc1_drvParams.runForever;
     end
 endfunction: new
 
@@ -123,7 +124,7 @@ task cnl_sc1_driver::run();
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
             $display("// Input Depth:           %0d", test.m_depth                      );
             $display("// Num kernels:           %0d", test.m_num_kernels                );
-            $display("// Kernel size:           %0d", test.m_kernel_size                );
+            $display("// Num Kernel size:       %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
@@ -337,7 +338,9 @@ task cnl_sc1_driver::run();
             end
             @(m_quad_intf.clk_if_cb);
             m_quad_intf.clk_if_cb.job_complete_ack <= 0;
-            t = t + 1;
+            if(!m_runForever) begin
+                t = t + 1;
+            end
             // END logic ----------------------------------------------------------------------------------------------------------------------------
         end
     end

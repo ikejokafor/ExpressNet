@@ -42,7 +42,7 @@ module cnl_sc1_testbench;
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     parameter C_PERIOD_100MHz = 10;    
     parameter C_PERIOD_500MHz = 2; 
-    parameter C_NUM_RAND_TESTS = 0;
+    parameter C_NUM_RAND_TESTS = 1;
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -222,104 +222,53 @@ module cnl_sc1_testbench;
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         sc1_crtTestParams = new();     
         
-        sc1_crtTestParams.num_input_rows = 20;
-        sc1_crtTestParams.num_input_cols = 20;
-        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 2;
-        sc1_crtTestParams.kernel_size = 3;
-        sc1_crtTestParams.stride = 2;
-        sc1_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc1_crtTestParams);
-        test_queue.push_back(test);
+        // sc1_crtTestParams.num_input_rows = 512;
+        // sc1_crtTestParams.num_input_cols = 512;
+        // sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // sc1_crtTestParams.num_kernels = 1;
+        // sc1_crtTestParams.kernel_size = 3;
+        // sc1_crtTestParams.stride = 1;
+        // sc1_crtTestParams.padding = 0;
+        // test = new();
+        // test.createTest(sc1_crtTestParams);
+        // test_queue.push_back(test);
 
-        sc1_crtTestParams.num_input_rows = 19;
-        sc1_crtTestParams.num_input_cols = 19;
-        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 1;
-        sc1_crtTestParams.kernel_size = 3;
-        sc1_crtTestParams.stride = 1;
-        sc1_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc1_crtTestParams);
-        test_queue.push_back(test);
+        // sc1_crtTestParams.num_input_rows = 512;
+        // sc1_crtTestParams.num_input_cols = 512;
+        // sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // sc1_crtTestParams.num_kernels = 64;
+        // sc1_crtTestParams.kernel_size = 3;
+        // sc1_crtTestParams.stride = 1;
+        // sc1_crtTestParams.padding = 0;
+        // test = new();
+        // test.createTest(sc1_crtTestParams);
+        // test_queue.push_back(test);
         
         
-        sc1_crtTestParams.num_input_rows = 19;
-        sc1_crtTestParams.num_input_cols = 19;
-        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 2;
-        sc1_crtTestParams.kernel_size = 3;
-        sc1_crtTestParams.stride = 1;
-        sc1_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc1_crtTestParams);
-        test_queue.push_back(test);
-        
-        
-        sc1_crtTestParams.num_input_rows = 19;
-        sc1_crtTestParams.num_input_cols = 19;
-        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 1;
-        sc1_crtTestParams.kernel_size = 3;
-        sc1_crtTestParams.stride = 2;
-        sc1_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc1_crtTestParams);
-        test_queue.push_back(test);
-        
-        
-        sc1_crtTestParams.num_input_rows = 19;
-        sc1_crtTestParams.num_input_cols = 19;
-        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 2;
-        sc1_crtTestParams.kernel_size = 3;
-        sc1_crtTestParams.stride = 2;
-        sc1_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc1_crtTestParams);
-        test_queue.push_back(test);
-        
-        sc1_crtTestParams.num_input_rows = 20;
-        sc1_crtTestParams.num_input_cols = 20;
-        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 1;
-        sc1_crtTestParams.kernel_size = 3;
-        sc1_crtTestParams.stride = 1;
-        sc1_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc1_crtTestParams);
-        test_queue.push_back(test);
-        
-        
-        sc1_crtTestParams.num_input_rows = 20;
-        sc1_crtTestParams.num_input_cols = 20;
-        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 2;
-        sc1_crtTestParams.kernel_size = 3;
-        sc1_crtTestParams.stride = 1;
-        sc1_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc1_crtTestParams);
-        test_queue.push_back(test);
-        
-        
-        sc1_crtTestParams.num_input_rows = 20;
-        sc1_crtTestParams.num_input_cols = 20;
-        sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        sc1_crtTestParams.num_kernels = 1;
-        sc1_crtTestParams.kernel_size = 3;
-        sc1_crtTestParams.stride = 2;
-        sc1_crtTestParams.padding = 0;
-        test = new();
-        test.createTest(sc1_crtTestParams);
-        test_queue.push_back(test);
-        
-        
+        // sc1_crtTestParams.num_input_rows = 512;
+        // sc1_crtTestParams.num_input_cols = 512;
+        // sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // sc1_crtTestParams.num_kernels = 1;
+        // sc1_crtTestParams.kernel_size = 3;
+        // sc1_crtTestParams.stride = 2;
+        // sc1_crtTestParams.padding = 0;
+        // test = new();
+        // test.createTest(sc1_crtTestParams);
+        // test_queue.push_back(test);
 
-        
-        
-        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, 1);
+
+        //sc1_crtTestParams.num_input_rows = 512;
+        //sc1_crtTestParams.num_input_cols = 512;
+        //sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        //sc1_crtTestParams.num_kernels = 64;
+        //sc1_crtTestParams.kernel_size = 3;
+        //sc1_crtTestParams.stride = 2;
+        //sc1_crtTestParams.padding = 0;
+        //test = new();
+        //test.createTest(sc1_crtTestParams);
+        //test_queue.push_back(test);
+
+        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, 1, TRUE);
         env.build();
         fork
             env.run();
