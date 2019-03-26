@@ -94,9 +94,11 @@ module cnl_sc1_testbench;
         .C_PERIOD_500MHz ( C_PERIOD_500MHz ) 
     ) env;
     cnl_sc1_generator test;
+    sc1_genParams_t sc1_genParams;
     sc1_crtTestParams_t sc1_crtTestParams;
     cnl_sc1_generator test_queue[$];
     int i;
+    int ti;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -221,7 +223,11 @@ module cnl_sc1_testbench;
     initial begin
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         sc1_crtTestParams = new();     
+        ti = 0;
         
+        
+        // sc1_genParams = new();
+        // sc1_genParams.ti = ti;  
         // sc1_crtTestParams.num_input_rows = 512;
         // sc1_crtTestParams.num_input_cols = 512;
         // sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
@@ -229,10 +235,14 @@ module cnl_sc1_testbench;
         // sc1_crtTestParams.kernel_size = 3;
         // sc1_crtTestParams.stride = 1;
         // sc1_crtTestParams.padding = 0;
-        // test = new();
+        // test = new(sc1_genParams);
         // test.createTest(sc1_crtTestParams);
         // test_queue.push_back(test);
+        // ti = ti + 1;
 
+
+        // sc1_genParams = new();
+        // sc1_genParams.ti = ti; 
         // sc1_crtTestParams.num_input_rows = 512;
         // sc1_crtTestParams.num_input_cols = 512;
         // sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
@@ -240,11 +250,14 @@ module cnl_sc1_testbench;
         // sc1_crtTestParams.kernel_size = 3;
         // sc1_crtTestParams.stride = 1;
         // sc1_crtTestParams.padding = 0;
-        // test = new();
+        // test = new(sc1_genParams);
         // test.createTest(sc1_crtTestParams);
         // test_queue.push_back(test);
+        // ti = ti + 1;
         
         
+        // sc1_genParams = new();       
+        // sc1_genParams.ti = ti;       
         // sc1_crtTestParams.num_input_rows = 512;
         // sc1_crtTestParams.num_input_cols = 512;
         // sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
@@ -252,21 +265,26 @@ module cnl_sc1_testbench;
         // sc1_crtTestParams.kernel_size = 3;
         // sc1_crtTestParams.stride = 2;
         // sc1_crtTestParams.padding = 0;
-        // test = new();
+        // test = new(sc1_genParams);
         // test.createTest(sc1_crtTestParams);
         // test_queue.push_back(test);
+        // ti = ti + 1;
 
 
-        //sc1_crtTestParams.num_input_rows = 512;
-        //sc1_crtTestParams.num_input_cols = 512;
-        //sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        //sc1_crtTestParams.num_kernels = 64;
-        //sc1_crtTestParams.kernel_size = 3;
-        //sc1_crtTestParams.stride = 2;
-        //sc1_crtTestParams.padding = 0;
-        //test = new();
-        //test.createTest(sc1_crtTestParams);
-        //test_queue.push_back(test);
+        // sc1_genParams = new();
+        // sc1_genParams.ti = ti; 
+        // sc1_crtTestParams.num_input_rows = 512;
+        // sc1_crtTestParams.num_input_cols = 512;
+        // sc1_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // sc1_crtTestParams.num_kernels = 64;
+        // sc1_crtTestParams.kernel_size = 3;
+        // sc1_crtTestParams.stride = 2;
+        // sc1_crtTestParams.padding = 0;
+        // test = new(sc1_genParams);
+        // test.createTest(sc1_crtTestParams);
+        // test_queue.push_back(test);
+        // ti = ti + 1;
+
 
         env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, 1, TRUE);
         env.build();

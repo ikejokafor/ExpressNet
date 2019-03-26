@@ -79,12 +79,17 @@ task cnl_sc1_agent::run();
     int k;
     int n;
     int t;
+    int ti;
+    int ti_offset;
     int signal;
     cnl_sc1_generator test;
+    sc1_genParams_t sc1_genParams;
     integer fd;
 
     
     t = 0;
+    ti = 0;
+    ti_offset = m_test_queue.size();
     while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         n = 0;
@@ -98,14 +103,18 @@ task cnl_sc1_agent::run();
             test = m_test_queue.pop_front();
             test.plain2bits();
         end else begin
-            test = new();
+            sc1_genParams = new();
+            sc1_genParams.ti = ti + ti_offset;
+            test = new(sc1_genParams);
+            ti = ti + 1;
             void'(test.randomize());
             $display("// Created Random Test ------------------------------------------");
+            $display("// Test Index:            %0d", test.m_ti                         );            
             $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
             $display("// Input Depth:           %0d", test.m_depth                      );
-            $display("// Num kernels:           %0d", test.m_num_kernels                );
-            $display("// Num Kernel size:       %0d", test.m_kernel_size                );
+            $display("// Num Kernels:           %0d", test.m_num_kernels                );
+            $display("// Kernel size:           %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );

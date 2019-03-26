@@ -95,6 +95,13 @@ endclass: cnl_sc1_generator
 
 
 function cnl_sc1_generator::new(genParams_t genParams = null);
+    sc1_genParams_t sc1_genParams;
+
+
+    if(genParams != null) begin
+        $cast(sc1_genParams, genParams);
+        m_ti = sc1_genParams.ti;
+    end
 endfunction: new
 
 
@@ -216,11 +223,12 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
    
     
     $display("// Created Specific Test ----------------------------------------");
+    $display("// Test Index:            %0d", m_ti                              );
     $display("// Num Input Rows:        %0d", m_num_input_rows                  );
     $display("// Num Input Cols:        %0d", m_num_input_cols                  );
     $display("// Input Depth:           %0d", m_depth                           );
-    $display("// Num kernels:           %0d", m_num_kernels                     );
-    $display("// Num Kernel size:       %0d", m_kernel_size                     );
+    $display("// Num Kernels:           %0d", m_num_kernels                     );
+    $display("// Kernel size:           %0d", m_kernel_size                     );
     $display("// Stride                 %0d", m_stride                          );
     $display("// Padding:               %0d", m_padding                         );
     $display("// Num Output Rows:       %0d", m_num_output_rows                 );

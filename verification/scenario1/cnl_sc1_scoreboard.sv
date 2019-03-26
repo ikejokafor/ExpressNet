@@ -99,11 +99,12 @@ task cnl_sc1_scoreboard::run();
                 @(m_quad_intf.clk_core_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
                     $display("// Checking Test ------------------------------------------------");
+                    $display("// Test Index:            %0d", test.m_ti                         ); 
                     $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
                     $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
                     $display("// Input Depth:           %0d", test.m_depth                      );
-                    $display("// Num kernels:           %0d", test.m_num_kernels                );
-                    $display("// Num Kernel size:       %0d", test.m_kernel_size                );
+                    $display("// Num Kernels:           %0d", test.m_num_kernels                );
+                    $display("// Kernel size:           %0d", test.m_kernel_size                );
                     $display("// Stride                 %0d", test.m_stride                     );
                     $display("// Padding:               %0d", test.m_padding                    );
                     $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
@@ -113,14 +114,14 @@ task cnl_sc1_scoreboard::run();
                     $display("// Checking Test ------------------------------------------------");
                     $display("\n");
                     if(checkSolution(query, sol)) begin
-                        $display("// --------------------------------------------------------------");
+                        $display("//---------------------------------------------------------------");
                         $display("// Test Failed");
-                        $display("// --------------------------------------------------------------");
+                        $display("//---------------------------------------------------------------");
                         $display("\n");
                     end else begin
-                        $display("// --------------------------------------------------------------");
+                        $display("//---------------------------------------------------------------");
                         $display("// Test Passed");
-                        $display("// --------------------------------------------------------------");
+                        $display("//---------------------------------------------------------------");
                         $display("\n");
                     end
                     break;
