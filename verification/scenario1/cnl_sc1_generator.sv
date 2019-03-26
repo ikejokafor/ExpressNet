@@ -133,7 +133,7 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
     for(k = 0; k < m_depth; k = k + 1) begin
         for(i = 0; i < m_num_input_rows; i = i + 1) begin
             for(j = 0; j < m_num_input_cols; j = j + 1) begin
-                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(1, 50);
+                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
             end
         end
     end
@@ -144,7 +144,7 @@ function void cnl_sc1_generator::createTest(crtTestParams_t params);
         for(j = 0; j < m_depth; j = j + 1) begin
             for(a = 0; a < m_kernel_size; a = a + 1) begin
                 for(b = 0; b < m_kernel_size; b = b + 1) begin
-                    m_kernel_data[((i * m_depth + j) * m_kernel_size + a) * m_kernel_size + b] = $urandom_range(1, 50);
+                    m_kernel_data[((i * m_depth + j) * m_kernel_size + a) * m_kernel_size + b] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
                 end
             end
         end
@@ -285,7 +285,7 @@ function void cnl_sc1_generator::post_randomize();
 
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
     foreach(m_pix_data[i]) begin
-        m_pix_data[i] = $urandom_range(1, 50);
+        m_pix_data[i] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
     end
  
 
@@ -294,7 +294,7 @@ function void cnl_sc1_generator::post_randomize();
         for(j = 0; j < m_depth; j = j + 1) begin
             for(a = 0; a < m_kernel_size; a = a + 1) begin
                 for(b = 0; b < m_kernel_size; b = b + 1) begin
-                    m_kernel_data[((i * m_depth + j) * m_kernel_size + a) * m_kernel_size + b] = $urandom_range(1, 50);
+                    m_kernel_data[((i * m_depth + j) * m_kernel_size + a) * m_kernel_size + b] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
                 end
             end
         end

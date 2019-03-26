@@ -130,9 +130,9 @@ task cnl_sc1_monitor::run();
             $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
             $display("// Finished Test ------------------------------------------------");
             $display("\n");
-            $display("//-------------------------------------------");
+            $display("//---------------------------------------------------------------");
             $display("// DUT ready for next test");
-            $display("//-------------------------------------------");
+            $display("//---------------------------------------------------------------");
             $display("\n");
             m_DUT_rdy.put(signal);
             if(!m_runForever) begin

@@ -2,7 +2,8 @@
 `define __CNN_LAYER_ACCEL_VERIF_DEFS__
 
 
-
+`define MAX_RND_VALUE 0
+`define MIN_RND_VALUE 25
 
 
 `endif
