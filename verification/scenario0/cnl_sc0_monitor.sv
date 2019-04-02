@@ -34,12 +34,14 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-`include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
 `include "monitor.sv"
+`include "cnl_sc0_defs.vh"
+`include "cnn_layer_accel_defs.vh"
+`include "cnn_layer_accel_verif_defs.svh"
+`include "cnn_layer_accel_awe_rowbuffers_intf.sv"
 `include "cnl_sc0_DUTOutput.sv"
 `include "cnl_sc0_generator.sv"
-`include "cnn_layer_accel_awe_rowbuffers_intf.sv"
+
 
 
 class sc0_monParams_t extends monParams_t;
@@ -72,6 +74,7 @@ function cnl_sc0_monitor::new(monParams_t monParams = null);
         m_mon_rdy = sc0_monParams.mon_rdy;
         m_awe_buf_intf = sc0_monParams.awe_buf_intf;
         m_tid = sc0_monParams.tid;
+        m_runForever = sc0_monParams.runForever;        
     end
 endfunction: new
 
@@ -80,7 +83,7 @@ task cnl_sc0_monitor::run();
     sc0_DUTOutParams_t sc0_DUTOutParams;
     cnl_sc0_DUTOutput query;
     cnl_sc0_generator test;
-    int i;
+    int t;
     int n;
     int signal;
     int num_kernels;
@@ -89,8 +92,8 @@ task cnl_sc0_monitor::run();
     int stride;
 
 
-    i = 0;
-    while(i < m_numTests) begin
+    t = 0;
+    while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         if(m_agent2monitorMB.try_get(test)) begin
             sc0_DUTOutParams                        = new();
@@ -128,10 +131,11 @@ task cnl_sc0_monitor::run();
 
             m_monitor2scoreboardMB.put(query);
             $display("// Finished Test ------------------------------------------------");
+            $display("// Test Index:            %0d", test.m_ti                         ); 
             $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
             $display("// Input Depth:           %0d", test.m_depth                      );
-            $display("// Num kernels:           %0d", test.m_num_kernels                );
+            $display("// Num Kernels:           %0d", test.m_num_kernels                );
             $display("// Kernel size:           %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
@@ -141,12 +145,14 @@ task cnl_sc0_monitor::run();
             $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
             $display("// Finished Test ------------------------------------------------");
             $display("\n");
-            $display("//-------------------------------------------");
+            $display("//---------------------------------------------------------------");
             $display("// DUT ready for next test");
-            $display("//-------------------------------------------");
+            $display("//---------------------------------------------------------------");
             $display("\n");
             m_DUT_rdy.put(signal);
-            i = i + 1;
+            if(!m_runForever) begin
+                t = t + 1;
+            end
         end
     end
 endtask: run

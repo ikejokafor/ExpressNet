@@ -1,0 +1,40 @@
+# Current time Tue Mar 19 22:59:59 2019
+# ModelSim Stack Trace
+# Program = vish
+# Id = "10.1c"
+# Version = "2012.07"
+# Date = "Jul 28 2012"
+# Platform = win64
+
+Exception c0000005 has occurred at address 402f8585. Traceback:
+# 0    0x402f8585: 'Ucdb_Init + 0xa57b5'
+# 1    0x114dc490: '<unknown (@0x114dc490)>'
+# 2    0xe221e4df: '<unknown (@0xe221e4df)>'
+# 3    0x0f85b450: '<unknown (@0xf85b450)>'
+# 4    0xe221e4df: '<unknown (@0xe221e4df)>'
+# 5    0x5716c6c0: 'iob + 0xf0'
+# 6    0x570f0486: 'fread_nolock_s + 0x1d6'
+# 7    0x00000001: '<unknown (@0x1)>'
+# 8    0x00000001: '<unknown (@0x1)>'
+# 9    0x005e95b8: '<unknown (@0x5e95b8)>'
+# 10   0x005e95b4: '<unknown (@0x5e95b4)>'
+# 11   0xce133357: '<unknown (@0xce133357)>'
+# 12   0x570eef35: 'unlock_file + 0x45'
+# 13   0x00000001: '<unknown (@0x1)>'
+# 14   0x005e9470: '<unknown (@0x5e9470)>'
+# 15   0x570f05cf: 'fread_s + 0x97'
+# 16   0x00001000: '<unknown (@0x1000)>'
+# 17   0x005e9471: '<unknown (@0x5e9471)>'
+# 18   0xfffffffe: '<unknown (@0xfffffffe)>'
+# 19   0x5716c6c0: 'iob + 0xf0'
+# 20   0x5716c6c0: 'iob + 0xf0'
+# 21   0x5716c6c0: 'iob + 0xf0'
+# 22   0x00000001: '<unknown (@0x1)>'
+# 23   0x570f0610: 'fread + 0x18'
+# 24   0x402afa65: 'Ucdb_Init + 0x5cc95'
+# 25   0x0ed1bf40: '<unknown (@0xed1bf40)>'
+# 26   0x402aee9c: 'Ucdb_Init + 0x5c0cc'
+# 27   0x402f923c: 'Ucdb_Init + 0xa646c'
+StackWalk failed 0
+# End of Stack Trace
+

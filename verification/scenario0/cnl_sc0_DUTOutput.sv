@@ -34,9 +34,10 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-`include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
 `include "DUTOutput.sv"
+`include "cnl_sc0_defs.vh"
+`include "cnn_layer_accel_defs.vh"
+`include "cnn_layer_accel_verif_defs.svh"
 
 
 class sc0_DUTOutParams_t extends DUTOutParams_t;

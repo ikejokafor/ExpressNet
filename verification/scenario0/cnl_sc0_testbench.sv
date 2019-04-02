@@ -30,11 +30,13 @@ module cnl_sc0_testbench;
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //	Includes
     //----------------------------------------------------------------------------------------------------------------------------------------------- 
+    `include "cnl_sc0_defs.vh"
     `include "cnn_layer_accel_defs.vh"
-    `include "cnn_layer_accel_verif_defs.sv"
+    `include "cnn_layer_accel_verif_defs.svh"
+    `include "cnn_layer_accel_quad_intf.sv"    
     `include "cnl_sc0_generator.sv"
     `include "cnl_sc0_environment.sv"
-    `include "cnn_layer_accel_quad_intf.sv"
+
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -104,7 +106,9 @@ module cnl_sc0_testbench;
     cnl_sc0_generator test_queue[$];
     virtual cnn_layer_accel_awe_rowbuffers_intf awe_buf_intf_arr[`NUM_AWE];
     genvar g;
-
+    int i;
+    int ti;
+    
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Module Instantiations
@@ -250,6 +254,8 @@ module cnl_sc0_testbench;
     initial begin
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         sc0_crtTestParams = new();
+        ti = 0;
+        
         sc0_crtTestParams.num_input_rows = 25;
         sc0_crtTestParams.num_input_cols = 25;
         sc0_crtTestParams.depth = `NUM_CE_PER_QUAD;
@@ -262,7 +268,7 @@ module cnl_sc0_testbench;
         test_queue.push_back(test);
     
 
-        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, awe_buf_intf_arr, `NUM_AWE);
+        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, awe_buf_intf_arr, `NUM_AWE, FALSE);
         env.build();
         fork
             env.run();

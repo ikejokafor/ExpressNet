@@ -35,8 +35,9 @@
 
 
 `include "agent.sv"
+`include "cnl_sc0_defs.vh"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 `include "cnl_sc0_generator.sv"
 
 
@@ -68,6 +69,7 @@ function cnl_sc0_agent::new(agentParams_t agentParams = null);
         m_DUT_rdy_arr = sc0_agentParams.DUT_rdy_arr;
         m_quad_intf = sc0_agentParams.quad_intf;
         m_num_mon = sc0_agentParams.num_mon;
+        m_runForever = sc0_agentParams.runForever;
     end
 endfunction : new
 
@@ -78,12 +80,17 @@ task cnl_sc0_agent::run();
     int k;
     int n;
     int t;
+    int ti;
+    int ti_offset;
     int signal;
     cnl_sc0_generator test;
+    sc0_genParams_t sc0_genParams;    
     integer fd;
 
     
     t = 0;
+    ti = 0;
+    ti_offset = m_test_queue.size();
     while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         n = 0;
@@ -97,13 +104,17 @@ task cnl_sc0_agent::run();
             test = m_test_queue.pop_front();
             test.plain2bits();
         end else begin
-            test = new();
+            sc0_genParams = new();
+            sc0_genParams.ti = ti + ti_offset;
+            test = new(sc0_genParams);
+            ti = ti + 1;
             void'(test.randomize());
             $display("// Created Random Test ------------------------------------------");
+            $display("// Test Index:            %0d", test.m_ti                         );            
             $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
             $display("// Input Depth:           %0d", test.m_depth                      );
-            $display("// Num kernels:           %0d", test.m_num_kernels                );
+            $display("// Num Kernels:           %0d", test.m_num_kernels                );
             $display("// Kernel size:           %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );

@@ -35,8 +35,9 @@
 
 
 `include "scoreboard.sv"
+`include "cnl_sc0_defs.vh"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 `include "cnl_sc0_generator.sv"
 `include "cnl_sc0_DUTOutput.sv"
 
@@ -71,6 +72,7 @@ function cnl_sc0_scoreboard::new(scoreParams_t scoreParams = null);
         m_numTests = sc0_scoreParams.numTests;
         m_depth_offset = sc0_scoreParams.depth_offset;
         m_tid = sc0_scoreParams.tid;
+        m_runForever = sc0_scoreParams.runForever;
     end
 endfunction: new
 
@@ -80,12 +82,12 @@ task cnl_sc0_scoreboard::run();
     cnl_sc0_DUTOutput query;
     cnl_sc0_DUTOutput sol;
     sc0_DUTOutParams_t sc0_DUTOutParams;
-    int i;
+    int t;
     int signal;
 
 
-    i = 0;
-    while(i < m_numTests) begin
+    t = 0;
+    while(t < m_numTests) begin
         @(m_quad_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
             sc0_DUTOutParams                        = new();
@@ -101,34 +103,37 @@ task cnl_sc0_scoreboard::run();
                 @(m_quad_intf.clk_core_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
                     $display("// Checking Test ------------------------------------------------");
+                    $display("// Test Index:            %0d", test.m_ti                         ); 
                     $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
                     $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
                     $display("// Input Depth:           %0d", test.m_depth                      );
-                    $display("// Num kernels:           %0d", test.m_num_kernels                );
+                    $display("// Num Kernels:           %0d", test.m_num_kernels                );
                     $display("// Kernel size:           %0d", test.m_kernel_size                );
                     $display("// Stride                 %0d", test.m_stride                     );
                     $display("// Padding:               %0d", test.m_padding                    );
                     $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
                     $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
                     $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
-                    $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        );
+                    $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
                     $display("// Checking Test ------------------------------------------------");
                     $display("\n");
                     if(checkSolution(query, sol)) begin
-                        $display("// -----------------------------------------------------------");
+                        $display("//---------------------------------------------------------------");
                         $display("// Test Failed");
-                        $display("// -----------------------------------------------------------");
+                        $display("//---------------------------------------------------------------");
                         $display("\n");
                     end else begin
-                        $display("// -----------------------------------------------------------");
-                        $display("// Test Passed");
-                        $display("// -----------------------------------------------------------");
+                        $display("//---------------------------------------------------------------");
+                        $display("// Test Failed");
+                        $display("//---------------------------------------------------------------");
                         $display("\n");
                     end
                     break;
                 end
             end
-            i = i + 1;
+            if(!m_runForever) begin
+                t = t + 1;
+            end
         end
     end
     m_scbd_done.put(signal);
@@ -238,7 +243,7 @@ function int cnl_sc0_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < `NUM_CE_PER_AWE; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                for(n = 0; n < (`KERNEL_3x3_COUNT_FULL_CFG - 1); n = n + 1) begin
+                for(n = 0; n < (`KERNEL_3x3_COUNT_FULL - 1); n = n + 1) begin
                     $fwrite(fd, "%0d,", sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + n].pixel); 
                 end
                 $fwrite(fd, ";\t\t");

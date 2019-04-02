@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2016.1 (64-bit)
+# SW Build 1538259 on Fri Apr  8 15:45:23 MDT 2016
+# IP Build 1537824 on Fri Apr  8 04:28:57 MDT 2016
+# Start of session at: Tue Mar 20 15:44:03 2018
+# Process ID: 9069
+# Current directory: /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/managed_ip_project/managed_ip_project.runs/xilinx_dual_port_2_clock_ram_synth_1
+# Command line: vivado -log xilinx_dual_port_2_clock_ram.vds -mode batch -messageDb vivado.pb -notrace -source xilinx_dual_port_2_clock_ram.tcl
+# Log file: /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/managed_ip_project/managed_ip_project.runs/xilinx_dual_port_2_clock_ram_synth_1/xilinx_dual_port_2_clock_ram.vds
+# Journal file: /home/mdl/izo5011/SOC_IT/cnn_layer_accel/hardware/ip/xcku115/managed_ip_project/managed_ip_project.runs/xilinx_dual_port_2_clock_ram_synth_1/vivado.jou
+#-----------------------------------------------------------
+source xilinx_dual_port_2_clock_ram.tcl -notrace

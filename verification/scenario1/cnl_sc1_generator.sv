@@ -36,6 +36,7 @@
 
 
 `include "generator.sv"
+`include "cnl_sc1_defs.svh"
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.sv"
 
@@ -75,6 +76,7 @@ class cnl_sc1_generator extends generator;
     rand int m_kernel_size                                                              ;
     rand int m_stride                                                                   ;
     rand int m_padding                                                                  ;
+    rand bool upsample                                                                  ;    
     int m_pix_data[]                                                                    ;
     int m_kernel_data[]                                                                 ;
     logic [15:0] m_pix_seq_data_sim[0:((`MAX_NUM_INPUT_COLS * `NUM_CE_PER_QUAD) - 1)]   ;
@@ -90,6 +92,7 @@ class cnl_sc1_generator extends generator;
         m_num_kernels inside {[1:`MAX_BRAM_3x3_KERNELS]};
         m_stride inside {[1:2]};
         m_padding == 0;
+        m_upsample == 0;
     }
 endclass: cnl_sc1_generator
 

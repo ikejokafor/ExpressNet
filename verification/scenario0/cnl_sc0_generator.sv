@@ -36,8 +36,9 @@
 
 
 `include "generator.sv"
+`include "cnl_sc0_defs.svh"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 
 
 class sc0_genParams_t extends genParams_t;
@@ -75,6 +76,7 @@ class cnl_sc0_generator extends generator;
     rand int m_kernel_size                                                              ;
     rand int m_stride                                                                   ;
     rand int m_padding                                                                  ;
+    rand bool upsample                                                                  ;
     int m_pix_data[]                                                                    ;
     int m_kernel_data[]                                                                 ;
     logic [15:0] m_pix_seq_data_sim[0:((`MAX_NUM_INPUT_COLS * `NUM_CE_PER_QUAD) - 1)]   ;
@@ -88,13 +90,21 @@ class cnl_sc0_generator extends generator;
         m_depth == `NUM_CE_PER_QUAD;
         m_kernel_size == 3;
         m_num_kernels inside {[1:`MAX_BRAM_3x3_KERNELS]};
-        m_stride == 2;
+        m_stride inside {[1:2]};
         m_padding == 0;
+        m_upsample == 0;    
     }
 endclass: cnl_sc0_generator
 
 
 function cnl_sc0_generator::new(genParams_t genParams = null);
+    sc0_genParams_t sc0_genParams;
+
+
+    if(genParams != null) begin
+        $cast(sc0_genParams, genParams);
+        m_ti = sc0_genParams.ti;
+    end
 endfunction: new
 
 
@@ -133,7 +143,7 @@ function void cnl_sc0_generator::createTest(crtTestParams_t params);
     for(k = 0; k < m_depth; k = k + 1) begin
         for(i = 0; i < m_num_input_rows; i = i + 1) begin
             for(j = 0; j < m_num_input_cols; j = j + 1) begin
-                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(1, 50);
+                m_pix_data[(k * m_num_input_rows + i) * m_num_input_cols + j] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
             end
         end
     end
@@ -144,7 +154,7 @@ function void cnl_sc0_generator::createTest(crtTestParams_t params);
         for(j = 0; j < m_depth; j = j + 1) begin
             for(a = 0; a < m_kernel_size; a = a + 1) begin
                 for(b = 0; b < m_kernel_size; b = b + 1) begin
-                    m_kernel_data[((i * m_depth + j) * m_kernel_size + a) * m_kernel_size + b] = $urandom_range(1, 50);
+                    m_kernel_data[((i * m_depth + j) * m_kernel_size + a) * m_kernel_size + b] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
                 end
             end
         end
@@ -216,10 +226,11 @@ function void cnl_sc0_generator::createTest(crtTestParams_t params);
    
     
     $display("// Created Specific Test ----------------------------------------");
+    $display("// Test Index:            %0d", m_ti                              );
     $display("// Num Input Rows:        %0d", m_num_input_rows                  );
     $display("// Num Input Cols:        %0d", m_num_input_cols                  );
     $display("// Input Depth:           %0d", m_depth                           );
-    $display("// Num kernels:           %0d", m_num_kernels                     );
+    $display("// Num Kernels:           %0d", m_num_kernels                     );
     $display("// Kernel size:           %0d", m_kernel_size                     );
     $display("// Stride                 %0d", m_stride                          );
     $display("// Padding:               %0d", m_padding                         );
@@ -275,17 +286,17 @@ function void cnl_sc0_generator::post_randomize();
     
     tmp_num_output_rows_cfg   = m_num_input_rows;
     tmp_num_output_cols_cfg   = m_num_input_cols;
-    m_num_output_rows_cfg     = (m_stride == 1) ? m_num_input_rows : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
-    m_num_output_cols_cfg     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
+    m_num_output_rows_cfg     = (m_stride == 1) ? m_num_input_rows - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
+    m_num_output_cols_cfg     = (m_stride == 1) ? m_num_input_cols - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
     m_num_output_rows         = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
     m_num_output_cols         = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
-    m_num_sim_output_rows     = (m_stride == 1) ? ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 2 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
-    m_num_sim_output_cols     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;             
+    m_num_sim_output_rows     = (m_stride == 1) ? ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 2 : (m_stride == 2) ? $ceil(tmp_num_output_rows_cfg / 2) - 1 : 0;
+    m_num_sim_output_cols     = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? $ceil(tmp_num_output_cols_cfg / 2) : 0;           
 
 
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
     foreach(m_pix_data[i]) begin
-        m_pix_data[i] = $urandom_range(1, 50);
+        m_pix_data[i] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
     end
  
 
@@ -294,7 +305,7 @@ function void cnl_sc0_generator::post_randomize();
         for(j = 0; j < m_depth; j = j + 1) begin
             for(a = 0; a < m_kernel_size; a = a + 1) begin
                 for(b = 0; b < m_kernel_size; b = b + 1) begin
-                    m_kernel_data[((i * m_depth + j) * m_kernel_size + a) * m_kernel_size + b] = $urandom_range(1, 50);
+                    m_kernel_data[((i * m_depth + j) * m_kernel_size + a) * m_kernel_size + b] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
                 end
             end
         end

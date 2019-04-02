@@ -35,10 +35,11 @@
 
 
 `include "driver.sv"
-`include "cnl_sc0_generator.sv"
+`include "cnl_sc0_defs.vh"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 `include "cnn_layer_accel_quad_intf.sv"
+`include "cnl_sc0_generator.sv"
 
 
 class sc0_drvParams_t extends drvParams_t;
@@ -67,6 +68,7 @@ function cnl_sc0_driver::new(drvParams_t drvParams = null);
         m_mon_rdy_arr = sc0_drvParams.mon_rdy_arr;
         m_num_mon = sc0_drvParams.num_mon;
         m_numTests = sc0_drvParams.numTests;
+        m_runForever = sc0_drvParams.runForever;        
     end
 endfunction: new
 
@@ -119,11 +121,12 @@ task cnl_sc0_driver::run();
                 end
             end
             $display("// Running Test -------------------------------------------------");
+            $display("// Test Index:            %0d", test.m_ti                         ); 
             $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
             $display("// Input Depth:           %0d", test.m_depth                      );
-            $display("// Num kernels:           %0d", test.m_num_kernels                );
-            $display("// Num Kernel size:       %0d", test.m_kernel_size                );
+            $display("// Num Kernels:           %0d", test.m_num_kernels                );
+            $display("// Kernel size:           %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
@@ -143,6 +146,7 @@ task cnl_sc0_driver::run();
             m_quad_intf.convolution_stride_cfg                                        = test.m_stride;
             m_quad_intf.kernel_size_cfg    		                                      = test.m_kernel_size;
             m_quad_intf.padding_cfg                                                   = test.m_padding;
+            m_quad_intf.upsample_cfg                                                  = test.m_upsample;
             m_quad_intf.num_kernel_cfg                                                = test.m_num_kernels;
             m_quad_intf.job_start                                                     <= 0;
             m_quad_intf.job_fetch_ack                                                 <= 0;
@@ -337,7 +341,9 @@ task cnl_sc0_driver::run();
             end
             @(m_quad_intf.clk_if_cb);
             m_quad_intf.clk_if_cb.job_complete_ack <= 0;
-            t = t + 1;
+            if(!m_runForever) begin
+                t = t + 1;
+            end
             // END logic ----------------------------------------------------------------------------------------------------------------------------
         end
     end

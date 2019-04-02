@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="prefetch_buffer_fifo_synth_1" LaunchPart="xcku115-flva1517-3-e" LaunchTime="1552600009">
+  <File Type="VDS-TIMING-PB" Name="prefetch_buffer_fifo_timing_summary_synth.pb"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="prefetch_buffer_fifo_timing_summary_synth.rpt"/>
+  <File Type="RDS-RDS" Name="prefetch_buffer_fifo.vds"/>
+  <File Type="PA-TCL" Name="prefetch_buffer_fifo.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="prefetch_buffer_fifo_drc_synth.rpt"/>
+  <File Type="RDS-UTIL" Name="prefetch_buffer_fifo_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="prefetch_buffer_fifo_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="prefetch_buffer_fifo.dcp"/>
+  <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/prefetch_buffer_fifo">
+    <File Path="$PPRDIR/../prefetch_buffer_fifo/prefetch_buffer_fifo.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="prefetch_buffer_fifo"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="BlockSrcs" RelSrcDir="$PSRCDIR/prefetch_buffer_fifo">
+    <File Path="$PPRDIR/../prefetch_buffer_fifo/prefetch_buffer_fifo.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="prefetch_buffer_fifo"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
+      <Desc>Vivado Synthesis Defaults</Desc>
+    </StratHandle>
+    <Step Id="synth_design"/>
+  </Strategy>
+</GenRun>

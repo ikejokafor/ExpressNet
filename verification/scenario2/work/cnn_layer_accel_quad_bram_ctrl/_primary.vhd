@@ -1,0 +1,43 @@
+library verilog;
+use verilog.vl_types.all;
+entity cnn_layer_accel_quad_bram_ctrl is
+    port(
+        clk             : in     vl_logic;
+        rst             : in     vl_logic;
+        num_input_cols  : in     vl_logic_vector;
+        num_input_rows  : in     vl_logic_vector;
+        num_output_rows : in     vl_logic_vector;
+        num_output_cols : in     vl_logic_vector;
+        convolution_stride: in     vl_logic_vector(2 downto 0);
+        kernel_size     : in     vl_logic_vector(4 downto 0);
+        job_start       : in     vl_logic;
+        job_accept      : out    vl_logic;
+        job_fetch_request: out    vl_logic;
+        job_fetch_in_progress: out    vl_logic;
+        job_fetch_ack   : in     vl_logic;
+        job_fetch_complete: in     vl_logic;
+        job_complete    : out    vl_logic;
+        job_complete_ack: in     vl_logic;
+        state           : out    vl_logic_vector(5 downto 0);
+        input_row       : out    vl_logic_vector;
+        input_col       : out    vl_logic_vector;
+        output_stride   : out    vl_logic_vector(2 downto 0);
+        row_matric      : in     vl_logic;
+        gray_code       : out    vl_logic_vector(1 downto 0);
+        pfb_rden        : out    vl_logic;
+        pfb_full_count  : in     vl_logic_vector(9 downto 0);
+        row_matric_wrAddr: out    vl_logic_vector;
+        ce_execute      : out    vl_logic_vector(7 downto 0);
+        cycle_counter   : out    vl_logic_vector(2 downto 0);
+        last_awe_ce1_cyc_counter: in     vl_logic_vector(2 downto 0);
+        pix_seq_bram_rden: out    vl_logic;
+        pix_seq_bram_rdAddr: out    vl_logic_vector(11 downto 0);
+        pix_seq_data_full_count: in     vl_logic_vector(11 downto 0);
+        next_kernel     : out    vl_logic_vector(7 downto 0);
+        move_one_row_down: out    vl_logic_vector(7 downto 0);
+        last_kernel     : in     vl_logic;
+        pipeline_flushed: in     vl_logic;
+        wht_sequence_selector: out    vl_logic;
+        rst_addr        : out    vl_logic
+    );
+end cnn_layer_accel_quad_bram_ctrl;
