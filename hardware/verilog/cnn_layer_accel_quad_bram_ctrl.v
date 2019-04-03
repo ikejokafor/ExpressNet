@@ -80,8 +80,8 @@ module cnn_layer_accel_quad_bram_ctrl (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------     
-    localparam C_LOG2_BRAM_DEPTH        = clog2(`BRAM_DEPTH);
-    localparam C_LOG2_SEQ_DATA_DEPTH    = clog2((`BRAM_DEPTH / 2) * 5);
+    localparam C_LOG2_BRAM_DEPTH        = clog2(`ROW_BUF_BRAM_DEPTH);
+    localparam C_LOG2_SEQ_DATA_DEPTH    = clog2((`ROW_BUF_BRAM_DEPTH / 2) * 5);
     localparam C_NUM_CE                 = `NUM_AWE * `NUM_CE_PER_AWE; 
 
     localparam ST_IDLE                  = 6'b000001;  

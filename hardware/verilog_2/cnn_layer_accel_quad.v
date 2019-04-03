@@ -74,10 +74,10 @@ module cnn_layer_accel_quad (
     `include "awe.vh"
 
 
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = clog2(`ROW_BUF_BRAM_DEPTH);
+    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = clog2(`ROW_BUF_BRAM_DEPTH); 
     localparam C_PIXEL_DATAOUT_WIDTH        = `NUM_CE_PER_AWE * `PIXEL_WIDTH;
     localparam C_PIXEL_DATAIN_WIDTH         = `NUM_AWE * `PIXEL_WIDTH;    
     localparam C_NUM_CE                     = `NUM_CE_PER_AWE * `NUM_AWE;
@@ -193,12 +193,12 @@ module cnn_layer_accel_quad (
     logic    [                            9:0]  num_output_cols_cfg                             ;
     logic    [                           11:0]  pix_seq_data_full_count_cfg                     ;
     logic                                       upsample_cfg                                    ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  padded_num_input_cols_cfg                       ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  padded_num_input_rows_cfg                       ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  cropd_input_col_start_cfg                       ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  cropd_input_row_start_cfg                       ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  cropd_input_col_end_cfg                         ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  cropd_input_row_end_cfg                         ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  pded_num_input_cols_cfg                         ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  pded_num_input_rows_cfg                         ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_start_cfg                        ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_start_cfg                        ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_end_cfg                          ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_end_cfg                          ;
 
     logic                                       pix_seq_bram_rden               	            ;
     logic    [                            8:0]  pix_seq_bram_wrAddr             	            ;
@@ -289,22 +289,26 @@ module cnn_layer_accel_quad (
                 i0_cnn_layer_accel_prefetch_buffer (
                     .wr_clk                   ( clk_if                                    ),
                     .rd_clk                   ( clk_core                                  ),
+                    .rst                      ( rst                                       ),
                     .din                      ( pixel_data_arr[i * `NUM_CE_PER_AWE + j]   ),
                     .wr_en                    ( pfb_wren                                  ),
                     .rd_en                    ( pfb_rden                                  ),
                     .dout                     ( pfb_dataout[i * `NUM_CE_PER_AWE + j]      ),
                     .padding                  ( padding_cfg                               ),
                     .upsample                 ( upsample_cfg                              ),
-                    .padded_num_input_cols    ( padded_num_input_cols_cfg                 ),
-                    .padded_num_input_rows    ( padded_num_input_rows_cfg                 ),
-                    .cropd_input_col_start    ( cropd_input_col_start_cfg                 ),
-                    .cropd_input_row_start    ( cropd_input_row_start_cfg                 ),
-                    .cropd_input_col_end      ( cropd_input_col_end_cfg                   ),
-                    .cropd_input_row_end      ( cropd_input_row_end_cfg                   ),
+                    .input_col                ( input_col                                 ),
+                    .input_row                ( input_row                                 ),
+                    .pded_num_input_cols      ( pded_num_input_cols_cfg                   ),
+                    .pded_num_input_rows      ( pded_num_input_rows_cfg                   ),
+                    .crpd_input_col_start     ( crpd_input_col_start_cfg                  ),
+                    .crpd_input_row_start     ( crpd_input_row_start_cfg                  ),
+                    .crpd_input_col_end       ( crpd_input_col_end_cfg                    ),
+                    .crpd_input_row_end       ( crpd_input_row_end_cfg                    ),
                     .job_fetch_ack            ( job_fetch_ack                             ),
-                    .job_complete_ack         ( job_complete_ack                          )
+                    .job_complete_ack         ( job_complete_ack                          ),
+                    .rst_addr                 ( rst_addr                                  )
                 );
-                
+
 
                 cnn_layer_accel_weight_table_top #(
                     .C_CE_WHT_SEQ_ADDR_DELAY   ( ((i * `NUM_CE_PER_AWE + j) + 3) )
@@ -329,7 +333,6 @@ module cnn_layer_accel_quad (
                     .wht_table_dout_valid       ( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + j]  )
                 ); 
                 
- 		
 
                 assign relu_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[i * `NUM_CE_PER_AWE + j];                
             end
@@ -554,12 +557,12 @@ module cnn_layer_accel_quad (
             num_output_cols_cfg             <= 0;
             pix_seq_data_full_count_cfg     <= 0;
             upsample_cfg                    <= 0;
-            padded_num_input_cols_cfg       <= 0;
-            padded_num_input_rows_cfg       <= 0;
-            cropd_input_col_start_cfg       <= 0;
-            cropd_input_row_start_cfg       <= 0;
-            cropd_input_col_end_cfg         <= 0;
-            cropd_input_row_end_cfg         <= 0;
+            pded_num_input_cols_cfg       <= 0;
+            pded_num_input_rows_cfg       <= 0;
+            crpd_input_col_start_cfg       <= 0;
+            crpd_input_row_start_cfg       <= 0;
+            crpd_input_col_end_cfg         <= 0;
+            crpd_input_row_end_cfg         <= 0;
 `endif            
             config_accept[0]                <= 0;
             pix_seq_bram_wrAddr             <= 0;

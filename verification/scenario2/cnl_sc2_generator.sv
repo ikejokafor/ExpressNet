@@ -38,7 +38,7 @@
 `include "generator.sv"
 `include "cnl_sc2_verif_defs.svh"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 
 
 class `scX_genParams_t extends genParams_t;
@@ -77,12 +77,12 @@ class `cnl_scX_generator extends generator;
     rand int m_stride                                                                   ;
     rand int m_padding                                                                  ;
     rand bool m_upsample                                                                ;
-    int padded_num_input_cols_cfg                                                       ;
-    int padded_num_input_rows_cfg                                                       ;
-    int cropd_input_col_start_cfg                                                       ;
-    int cropd_input_row_start_cfg                                                       ;
-    int cropd_input_col_end_cfg                                                         ;
-    int cropd_input_row_end_cfg                                                         ;
+    int m_pded_num_input_cols_cfg                                                       ;
+    int m_pded_num_input_rows_cfg                                                       ;
+    int m_crpd_input_col_start_cfg                                                      ;
+    int m_crpd_input_row_start_cfg                                                      ;
+    int m_crpd_input_col_end_cfg                                                        ;
+    int m_crpd_input_row_end_cfg                                                        ;
     int m_pix_data[]                                                                    ;
     int m_kernel_data[]                                                                 ;
     logic [15:0] m_pix_seq_data_sim[0:((`MAX_NUM_INPUT_COLS * `NUM_CE_PER_QUAD) - 1)]   ;
@@ -97,8 +97,8 @@ class `cnl_scX_generator extends generator;
         m_kernel_size == 3;
         m_num_kernels inside {[1:`MAX_BRAM_3x3_KERNELS]};
         m_stride inside {[1:2]};
-        m_padding == inside {[0:`MAX_PADDING]};
-        m_upsample == inside {[0:1]};
+        m_padding inside {[0:`MAX_PADDING]};
+        m_upsample inside {[0:1]};
     }
 endclass: `cnl_scX_generator
 
@@ -240,6 +240,7 @@ function void `cnl_scX_generator::createTest(crtTestParams_t params);
     $display("// Kernel size:           %0d", m_kernel_size                     );
     $display("// Stride                 %0d", m_stride                          );
     $display("// Padding:               %0d", m_padding                         );
+    $display("// Upsample               %0d", m_upsample                        );
     $display("// Num Output Rows:       %0d", m_num_output_rows                 );
     $display("// Num Output Cols:       %0d", m_num_output_cols                 );
     $display("// Num Sim Output Rows:   %0d", m_num_sim_output_rows             );
@@ -376,6 +377,16 @@ function void `cnl_scX_generator::post_randomize();
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+    
+    
+    // m_pded_num_input_cols_cfg
+    // m_pded_num_input_rows_cfg
+    // m_crpd_input_col_start_cfg
+    // m_crpd_input_row_start_cfg
+    // m_crpd_input_col_end_cfg  
+    // m_crpd_input_row_end_cfg  
 endfunction: post_randomize
 
 

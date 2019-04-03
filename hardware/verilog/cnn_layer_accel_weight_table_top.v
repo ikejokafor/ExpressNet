@@ -55,8 +55,8 @@ module cnn_layer_accel_weight_table_top #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	localparam C_CLG2_BRAM_A_DEPTH          = clog2(`BRAM_DEPTH);
-    localparam C_CLG2_BRAM_B_DEPTH          = clog2(`BRAM_DEPTH);
+	localparam C_CLG2_BRAM_A_DEPTH          = clog2(`WHT_TBL_BRAM_DEPTH);
+    localparam C_CLG2_BRAM_B_DEPTH          = clog2(`WHT_TBL_BRAM_DEPTH);
     localparam C_WHT_DOUT_WIDTH             = `WEIGHT_WIDTH * `NUM_DSP_PER_CE; 
 
 
@@ -169,7 +169,7 @@ module cnn_layer_accel_weight_table_top #(
 
     xilinx_true_dual_port_no_change_ram #(
         .C_RAM_A_WIDTH      ( `WEIGHT_WIDTH                 ),                   
-        .C_RAM_A_DEPTH      ( `BRAM_DEPTH                   ),
+        .C_RAM_A_DEPTH      ( `WHT_TBL_BRAM_DEPTH                   ),
         .C_RAM_B_WIDTH      ( `WEIGHT_WIDTH                 ),
         .C_PORT_A_RAM_PERF  ( "PORT_A_HIGH_PERFORMANCE"     ),
         .C_PORT_B_RAM_PERF  ( "PORT_B_HIGH_PERFORMANCE"     )

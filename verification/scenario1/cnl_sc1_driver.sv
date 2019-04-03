@@ -37,7 +37,7 @@
 `include "driver.sv"
 `include "cnl_sc1_generator.sv"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 `include "cnn_layer_accel_quad_intf.sv"
 
 

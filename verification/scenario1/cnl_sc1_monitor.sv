@@ -35,7 +35,7 @@
 
 
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 `include "monitor.sv"
 `include "cnl_sc1_DUTOutput.sv"
 `include "cnl_sc1_generator.sv"

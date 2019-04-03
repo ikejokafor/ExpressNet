@@ -61,7 +61,8 @@
 `define WINDOW_3x3_NUM_CYCLES           5    // num cycles to output a 3x3 window in our arch
 `define PIXEL_WIDTH                     16
 `define WEIGHT_WIDTH                    16
-`define BRAM_DEPTH                      1024
+`define ROW_BUF_BRAM_DEPTH              1024
+`define WHT_TBL_BRAM_DEPTH              1024
 `define CONFIG_3x3                      1'b0
 `define CONFIG_5x5                      1'b1
 `define NUM_QUADS                       1     
@@ -83,13 +84,15 @@
 `define MAX_NUM_INPUT_ROWS              512
 `define MAX_NUM_INPUT_COLS              512
 `define MAX_KERNEL_DEPTH                `NUM_CE_PER_QUAD
-`define MAX_BRAM_3x3_KERNELS            64  // floor(`BRAM_DEPTH / `KERNEL_BLOCK_SIZE)
+`define MAX_BRAM_3x3_KERNELS            64  // floor(`ROW_BUF_BRAM_DEPTH / `KERNEL_BLOCK_SIZE)
+`define MAX_PADDING                     1
+`define MAX_UPSAMPLE                    2
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // SEQ DATA FIELDS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define PIX_SEQ_DATA_SEQ_WIDTH              clog2(`BRAM_DEPTH)
+`define PIX_SEQ_DATA_SEQ_WIDTH              clog2(`ROW_BUF_BRAM_DEPTH)
 `define PIX_SEQ_DATA_SEQ_LOW                0
 `define PIX_SEQ_DATA_SEQ_HIGH               (`PIX_SEQ_DATA_SEQ_LOW + `PIX_SEQ_DATA_SEQ_WIDTH - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD              (`PIX_SEQ_DATA_SEQ_HIGH):(`PIX_SEQ_DATA_SEQ_LOW)
@@ -123,17 +126,17 @@
 
 `define PIX_SEQ_BRAM_DATA_WIDTH             16                                   
 
-`define PIX_SEQ_DATA_SEQ_WIDTH0             clog2(`BRAM_DEPTH) - 2
+`define PIX_SEQ_DATA_SEQ_WIDTH0             clog2(`ROW_BUF_BRAM_DEPTH) - 2
 `define PIX_SEQ_DATA_SEQ_LOW0               1
 `define PIX_SEQ_DATA_SEQ_HIGH0              (`PIX_SEQ_DATA_SEQ_LOW0 + `PIX_SEQ_DATA_SEQ_WIDTH0 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD0             (`PIX_SEQ_DATA_SEQ_HIGH0):(`PIX_SEQ_DATA_SEQ_LOW0)
 
 `define PIX_SEQ_DATA_SEQ_WIDTH1             1
-`define PIX_SEQ_DATA_SEQ_LOW1               clog2(`BRAM_DEPTH) - 1
+`define PIX_SEQ_DATA_SEQ_LOW1               clog2(`ROW_BUF_BRAM_DEPTH) - 1
 `define PIX_SEQ_DATA_SEQ_HIGH1              (`PIX_SEQ_DATA_SEQ_LOW1 + `PIX_SEQ_DATA_SEQ_WIDTH1 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD1             (`PIX_SEQ_DATA_SEQ_HIGH1):(`PIX_SEQ_DATA_SEQ_LOW1)  // MSB of seq value
 
-`define PIX_SEQ_DATA_SEQ_WIDTH2             clog2(`BRAM_DEPTH) - 1
+`define PIX_SEQ_DATA_SEQ_WIDTH2             clog2(`ROW_BUF_BRAM_DEPTH) - 1
 `define PIX_SEQ_DATA_SEQ_LOW2               0
 `define PIX_SEQ_DATA_SEQ_HIGH2              (`PIX_SEQ_DATA_SEQ_LOW2 + `PIX_SEQ_DATA_SEQ_WIDTH2 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD2             (`PIX_SEQ_DATA_SEQ_HIGH2):(`PIX_SEQ_DATA_SEQ_LOW2)  // seq value minus the MSB

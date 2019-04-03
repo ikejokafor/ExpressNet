@@ -39,11 +39,17 @@ entity cnn_layer_accel_quad_intf is
         convolution_stride_cfg: out    vl_logic_vector(6 downto 0);
         kernel_size_cfg : out    vl_logic_vector(4 downto 0);
         padding_cfg     : out    vl_logic_vector(4 downto 0);
+        upsample_cfg    : out    vl_logic;
         num_kernel_cfg  : out    vl_logic_vector(6 downto 0);
         num_output_rows_cfg: out    vl_logic_vector(9 downto 0);
         num_output_cols_cfg: out    vl_logic_vector(9 downto 0);
         pix_seq_data_full_count_cfg: out    vl_logic_vector(11 downto 0);
-        gray_code       : in     vl_logic_vector(1 downto 0);
+        pded_num_input_cols_cfg: out    vl_logic_vector;
+        pded_num_input_rows_cfg: out    vl_logic_vector;
+        crpd_input_col_start_cfg: out    vl_logic_vector;
+        crpd_input_row_start_cfg: out    vl_logic_vector;
+        crpd_input_col_end_cfg: out    vl_logic_vector;
+        crpd_input_row_end_cfg: out    vl_logic_vector;
         output_row      : in     integer;
         output_col      : in     integer;
         output_depth    : in     integer

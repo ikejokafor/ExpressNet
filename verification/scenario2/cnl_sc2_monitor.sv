@@ -37,7 +37,7 @@
 `include "monitor.sv"
 `include "cnl_sc2_verif_defs.svh"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 `include "cnl_sc2_DUTOutput.sv"
 `include "cnl_sc2_generator.sv"
 
@@ -126,7 +126,7 @@ task `cnl_scX_monitor::run();
             $display("// Kernel size:           %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
-            $display("// UpSample:              $0d", test.m_upsample                   );
+            $display("// UpSample:              %0d", test.m_upsample                   );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
             $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
             $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );

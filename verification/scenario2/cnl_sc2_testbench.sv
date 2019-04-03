@@ -32,7 +32,7 @@ module cnl_sc2_testbench;
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     `include "cnl_sc2_verif_defs.svh"
     `include "cnn_layer_accel_defs.vh"
-    `include "cnn_layer_accel_verif_defs.sv"
+    `include "cnn_layer_accel_verif_defs.svh"
     `include "cnl_sc2_generator.sv"
     `include "cnl_sc2_environment.sv"
     `include "cnn_layer_accel_quad_intf.sv"
@@ -43,7 +43,7 @@ module cnl_sc2_testbench;
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     parameter C_PERIOD_100MHz = 10;    
     parameter C_PERIOD_500MHz = 2; 
-    parameter C_NUM_RAND_TESTS = 1;
+    parameter C_NUM_RAND_TESTS = 0;
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -168,12 +168,18 @@ module cnl_sc2_testbench;
        .convolution_stride_cfg          ( i0_cnn_layer_accel_quad.convolution_stride_cfg        ),
        .kernel_size_cfg    		        ( i0_cnn_layer_accel_quad.kernel_size_cfg    	        ),
        .padding_cfg                     ( i0_cnn_layer_accel_quad.padding_cfg                   ),
+       .upsample_cfg                    ( i0_cnn_layer_accel_quad.upsample_cfg                  ),
        .num_kernel_cfg                  ( i0_cnn_layer_accel_quad.num_kernel_cfg                ),
        .num_output_rows_cfg             ( i0_cnn_layer_accel_quad.num_output_rows_cfg           ),
        .num_output_cols_cfg             ( i0_cnn_layer_accel_quad.num_output_cols_cfg           ),
        .pix_seq_data_full_count_cfg     ( i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg   ),
-       .gray_code                       ( i0_cnn_layer_accel_quad.gray_code                     ),
-        
+       .pded_num_input_cols_cfg       ( i0_cnn_layer_accel_quad.pded_num_input_cols_cfg     ),
+       .pded_num_input_rows_cfg       ( i0_cnn_layer_accel_quad.pded_num_input_rows_cfg     ),
+       .crpd_input_col_start_cfg       ( i0_cnn_layer_accel_quad.crpd_input_col_start_cfg     ),
+       .crpd_input_row_start_cfg       ( i0_cnn_layer_accel_quad.crpd_input_row_start_cfg     ),
+       .crpd_input_col_end_cfg         ( i0_cnn_layer_accel_quad.crpd_input_col_end_cfg       ),
+       .crpd_input_row_end_cfg         ( i0_cnn_layer_accel_quad.crpd_input_row_end_cfg       ),
+       
        .output_row                      ( i0_cnn_layer_accel_quad.output_row                    ),
        .output_col                      ( i0_cnn_layer_accel_quad.output_col                    ),
        .output_depth                    ( i0_cnn_layer_accel_quad.output_depth                  )
@@ -227,67 +233,22 @@ module cnl_sc2_testbench;
         ti = 0;
         
         
-        // `scX_genParams = new();
-        // `scX_genParams.ti = ti;  
-        // `scX_crtTestParams.num_input_rows = 512;
-        // `scX_crtTestParams.num_input_cols = 512;
-        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // `scX_crtTestParams.num_kernels = 1;
-        // `scX_crtTestParams.kernel_size = 3;
-        // `scX_crtTestParams.stride = 1;
-        // `scX_crtTestParams.padding = 0;
-        // test = new(`scX_genParams);
-        // test.createTest(`scX_crtTestParams);
-        // test_queue.push_back(test);
-        // ti = ti + 1;
+        `scX_genParams = new();
+        `scX_genParams.ti = ti;  
+        `scX_crtTestParams.num_input_rows = 20;
+        `scX_crtTestParams.num_input_cols = 20;
+        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        `scX_crtTestParams.num_kernels = 3;
+        `scX_crtTestParams.kernel_size = 3;
+        `scX_crtTestParams.stride = 1;
+        `scX_crtTestParams.padding = 0;
+        test = new(`scX_genParams);
+        test.createTest(`scX_crtTestParams);
+        test_queue.push_back(test);
+        ti = ti + 1;
 
 
-        // `scX_genParams = new();
-        // `scX_genParams.ti = ti; 
-        // `scX_crtTestParams.num_input_rows = 512;
-        // `scX_crtTestParams.num_input_cols = 512;
-        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // `scX_crtTestParams.num_kernels = 64;
-        // `scX_crtTestParams.kernel_size = 3;
-        // `scX_crtTestParams.stride = 1;
-        // `scX_crtTestParams.padding = 0;
-        // test = new(`scX_genParams);
-        // test.createTest(`scX_crtTestParams);
-        // test_queue.push_back(test);
-        // ti = ti + 1;
-        
-        
-        // `scX_genParams = new();       
-        // `scX_genParams.ti = ti;       
-        // `scX_crtTestParams.num_input_rows = 512;
-        // `scX_crtTestParams.num_input_cols = 512;
-        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // `scX_crtTestParams.num_kernels = 1;
-        // `scX_crtTestParams.kernel_size = 3;
-        // `scX_crtTestParams.stride = 2;
-        // `scX_crtTestParams.padding = 0;
-        // test = new(`scX_genParams);
-        // test.createTest(`scX_crtTestParams);
-        // test_queue.push_back(test);
-        // ti = ti + 1;
-
-
-        // `scX_genParams = new();
-        // `scX_genParams.ti = ti; 
-        // `scX_crtTestParams.num_input_rows = 512;
-        // `scX_crtTestParams.num_input_cols = 512;
-        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // `scX_crtTestParams.num_kernels = 64;
-        // `scX_crtTestParams.kernel_size = 3;
-        // `scX_crtTestParams.stride = 2;
-        // `scX_crtTestParams.padding = 0;
-        // test = new(`scX_genParams);
-        // test.createTest(`scX_crtTestParams);
-        // test_queue.push_back(test);
-        // ti = ti + 1;
-
-
-        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, 1, TRUE);
+        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, 1, FALSE);
         env.build();
         fork
             env.run();

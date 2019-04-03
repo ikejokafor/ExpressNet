@@ -77,7 +77,7 @@ module cnn_layer_accel_quad (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_LOG2_BRAM_DEPTH        = clog2(`BRAM_DEPTH);
+    localparam C_LOG2_BRAM_DEPTH        = clog2(`ROW_BUF_BRAM_DEPTH);
     localparam C_PIXEL_DATAOUT_WIDTH    = `NUM_CE_PER_AWE * `PIXEL_WIDTH;
     localparam C_PIXEL_DATAIN_WIDTH     = `NUM_AWE * `PIXEL_WIDTH;    
     localparam C_NUM_CE                 = `NUM_CE_PER_AWE * `NUM_AWE;

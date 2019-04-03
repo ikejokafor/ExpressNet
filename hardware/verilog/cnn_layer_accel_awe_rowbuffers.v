@@ -80,7 +80,7 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_LOG2_BRAM_DEPTH        = clog2(`BRAM_DEPTH);
+    localparam C_LOG2_BRAM_DEPTH        = clog2(`ROW_BUF_BRAM_DEPTH);
     localparam C_PIXEL_DATAOUT_WIDTH    = `PIXEL_WIDTH * 4;
     localparam C_CE_PIXEL_DOUT_WIDTH    = `PIXEL_WIDTH * `NUM_CE_PER_AWE;
     
@@ -203,7 +203,7 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     xilinx_simple_dual_port_no_change_ram #(
         .C_RAM_WIDTH    ( `PIXEL_WIDTH          ),      
-        .C_RAM_DEPTH    ( `BRAM_DEPTH           ),
+        .C_RAM_DEPTH    ( `ROW_BUF_BRAM_DEPTH           ),
         .C_RAM_PERF     ( "HIGH_PERFORMANCE"    )
     ) 
     i0_xilinx_simple_dual_port_no_change_ram (
@@ -219,7 +219,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     
     xilinx_simple_dual_port_no_change_ram #(
         .C_RAM_WIDTH    ( `PIXEL_WIDTH          ),      
-        .C_RAM_DEPTH    ( `BRAM_DEPTH           ),
+        .C_RAM_DEPTH    ( `ROW_BUF_BRAM_DEPTH           ),
         .C_RAM_PERF     ( "HIGH_PERFORMANCE"    )
     ) 
     i1_xilinx_simple_dual_port_no_change_ram (
@@ -235,7 +235,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     
     xilinx_simple_dual_port_no_change_ram #(
         .C_RAM_WIDTH    ( `PIXEL_WIDTH          ),      
-        .C_RAM_DEPTH    ( `BRAM_DEPTH           ),
+        .C_RAM_DEPTH    ( `ROW_BUF_BRAM_DEPTH           ),
         .C_RAM_PERF     ( "HIGH_PERFORMANCE"    )
     ) 
     i2_xilinx_simple_dual_port_no_change_ram (
@@ -251,7 +251,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     
     xilinx_simple_dual_port_no_change_ram #(
         .C_RAM_WIDTH    ( `PIXEL_WIDTH          ),      
-        .C_RAM_DEPTH    ( `BRAM_DEPTH           ),
+        .C_RAM_DEPTH    ( `ROW_BUF_BRAM_DEPTH           ),
         .C_RAM_PERF     ( "HIGH_PERFORMANCE"    )
     ) 
     i3_xilinx_simple_dual_port_no_change_ram (

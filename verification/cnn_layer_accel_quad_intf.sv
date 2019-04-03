@@ -76,17 +76,37 @@ interface cnn_layer_accel_quad_intf (
     convolution_stride_cfg          , 
     kernel_size_cfg    		        ,
     padding_cfg                     ,
+    upsample_cfg                    ,
     num_kernel_cfg                  ,
     num_output_rows_cfg             ,
     num_output_cols_cfg             ,
     pix_seq_data_full_count_cfg     ,
-    gray_code                       ,
+    pded_num_input_cols_cfg       ,
+    pded_num_input_rows_cfg       ,
+    crpd_input_col_start_cfg       ,
+    crpd_input_row_start_cfg       ,
+    crpd_input_col_end_cfg         ,
+    crpd_input_row_end_cfg         ,
     
     output_row                      ,
     output_col                      ,
     output_depth    
     
 );
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+	//	Includes
+	//-----------------------------------------------------------------------------------------------------------------------------------------------  
+    `include "math.vh"
+    `include "cnn_layer_accel_defs.vh"
+    `include "cnn_layer_accel_verif_defs.svh"
+    
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+	//  Local Parameters
+	//-----------------------------------------------------------------------------------------------------------------------------------------------
+    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = clog2(`ROW_BUF_BRAM_DEPTH);
+
+    
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Interface Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -135,11 +155,19 @@ interface cnn_layer_accel_quad_intf (
     output logic [   6:0]    convolution_stride_cfg          ;
 	output logic [   4:0]    kernel_size_cfg    		     ;
     output logic [   4:0]    padding_cfg                     ;
+    output logic             upsample_cfg                    ;
     output logic [   6:0]    num_kernel_cfg                  ;
     output logic [   9:0]    num_output_rows_cfg             ;
     output logic [   9:0]    num_output_cols_cfg             ;
     output logic [  11:0]    pix_seq_data_full_count_cfg     ;
-    input  logic [   1:0]    gray_code                       ;
+
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] pded_num_input_cols_cfg ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] pded_num_input_rows_cfg ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_start_cfg ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_start_cfg ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_end_cfg   ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_end_cfg   ;
+
     
     input int               output_row                      ;
     input int               output_col                      ;
@@ -175,10 +203,17 @@ interface cnn_layer_accel_quad_intf (
         output convolution_stride_cfg          ; 
         output kernel_size_cfg    		       ; 
         output padding_cfg                     ;
+        output upsample_cfg                    ;
         output num_kernel_cfg                  ;
         output num_output_rows_cfg             ;
         output num_output_cols_cfg             ;
-        output pix_seq_data_full_count_cfg     ;        
+        output pix_seq_data_full_count_cfg     ;
+        output pded_num_input_cols_cfg         ; 
+        output pded_num_input_rows_cfg         ;
+        output crpd_input_col_start_cfg        ;
+        output crpd_input_row_start_cfg        ;
+        output crpd_input_col_end_cfg          ;
+        output crpd_input_row_end_cfg          ;
 	endclocking
 
 
@@ -202,9 +237,7 @@ interface cnn_layer_accel_quad_intf (
         input  output_row          ;
         input  output_col          ;
         input  output_depth        ;
-        
-        input  gray_code           ;
-	endclocking
+    endclocking
 
 
 endinterface: cnn_layer_accel_quad_intf

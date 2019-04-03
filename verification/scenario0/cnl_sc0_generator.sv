@@ -76,7 +76,7 @@ class cnl_sc0_generator extends generator;
     rand int m_kernel_size                                                              ;
     rand int m_stride                                                                   ;
     rand int m_padding                                                                  ;
-    rand bool upsample                                                                  ;
+    rand bool m_upsample                                                                ;
     int m_pix_data[]                                                                    ;
     int m_kernel_data[]                                                                 ;
     logic [15:0] m_pix_seq_data_sim[0:((`MAX_NUM_INPUT_COLS * `NUM_CE_PER_QUAD) - 1)]   ;

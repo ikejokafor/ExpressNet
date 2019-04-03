@@ -385,7 +385,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     assign gray_code                = {graycode_r[1], ^graycode_r[1:0]};
     assign pix_seq_bram_rden        = pix_seq_bram_rden_d || pix_seq_bram_rden_r || pix_seq_bram_rden_d1;
     // delay bc of 3 cycle sequence bram read latency to start execution of pipeline
-	assign ce_execute_w             = pix_seq_bram_rden_r /*& (output_stride ==0)*/;    
+	assign ce_execute_w             = pix_seq_bram_rden_r;
     assign ce_move_one_row_down     = (output_stride != 0);
     assign rst_addr                 = rst_addr_r;
    
@@ -430,6 +430,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                 end
                 ST_AWE_CE_PRIM_BUFFER: begin
                     if(pfb_count == 0 && input_row < 4) begin
+                        rst_addr_r              <= 1;
                         return_state            <= state;
                         state                   <= ST_WAIT_PFB_LOAD;
                     end if(input_row == 3 && pfb_count == pfb_full_count) begin
@@ -466,9 +467,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                     if(pix_seq_bram_rden_r) begin
                         pix_seq_data_count <= pix_seq_data_count - 1;
                     end
-                    if(pix_seq_bram_rdAddr == (pix_seq_data_full_count - 1)) begin
-                        pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1/*0*/;
-                    end else if(pix_seq_bram_rden_r) begin
+                    if(pix_seq_bram_rden_r || (pix_seq_bram_rdAddr == (pix_seq_data_full_count - 1))) begin
                         pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                     end
                     // next state logic
@@ -506,7 +505,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                 ST_SEND_COMPLETE: begin
                     job_complete 	            <= job_complete_ack  ? 1'b0 : (~job_complete_acked ? 1'b1 : job_complete);
 				    job_complete_acked          <= job_complete_ack  ? 1'b1 :  job_complete_acked; 
-                    pix_seq_bram_rdAddr          <= 0;                    
+                    pix_seq_bram_rdAddr         <= 0;                    
                     if(job_complete_ack) begin
                         job_complete_acked      <= 0;
                         state                   <= ST_IDLE;

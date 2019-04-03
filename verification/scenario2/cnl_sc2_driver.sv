@@ -37,7 +37,7 @@
 `include "driver.sv"
 `include "cnl_sc2_generator.sv"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 `include "cnn_layer_accel_quad_intf.sv"
 
 
@@ -128,6 +128,7 @@ task `cnl_scX_driver::run();
             $display("// Kernel size:           %0d", test.m_kernel_size                );
             $display("// Stride                 %0d", test.m_stride                     );
             $display("// Padding:               %0d", test.m_padding                    );
+            $display("// Upsample               %0d", test.m_upsample                   );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
             $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
             $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
@@ -146,12 +147,12 @@ task `cnl_scX_driver::run();
             m_quad_intf.kernel_size_cfg    		                                      = test.m_kernel_size;
             m_quad_intf.padding_cfg                                                   = test.m_padding;
             m_quad_intf.upsample_cfg                                                  = test.m_upsample;
-            m_quad_intf.padded_num_input_cols_cfg                                     = ;
-            m_quad_intf.padded_num_input_rows_cfg                                     = ;
-            m_quad_intf.cropd_input_col_start_cfg                                     = ;
-            m_quad_intf.cropd_input_row_start_cfg                                     = ;
-            m_quad_intf.cropd_input_col_end_cfg                                       = ;
-            m_quad_intf.cropd_input_row_end_cfg                                       = ;
+            m_quad_intf.pded_num_input_cols_cfg                                     = test.m_pded_num_input_cols_cfg;
+            m_quad_intf.pded_num_input_rows_cfg                                     = test.m_pded_num_input_rows_cfg;
+            m_quad_intf.crpd_input_col_start_cfg                                     = test.m_crpd_input_col_start_cfg;
+            m_quad_intf.crpd_input_row_start_cfg                                     = test.m_crpd_input_row_start_cfg;
+            m_quad_intf.crpd_input_col_end_cfg                                       = test.m_crpd_input_col_end_cfg;
+            m_quad_intf.crpd_input_row_end_cfg                                       = test.m_crpd_input_row_end_cfg;
             m_quad_intf.num_kernel_cfg                                                = test.m_num_kernels;
             m_quad_intf.job_start                                                     <= 0;
             m_quad_intf.job_fetch_ack                                                 <= 0;

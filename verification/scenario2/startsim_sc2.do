@@ -6,16 +6,16 @@ vlog -lint -sv -work work $env(GLBL_PATH)/glbl.v
 
 
 # Verification Files
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ../clock_gen.v
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ../cnn_layer_accel_quad_intf.sv
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_testbench.sv
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_environment.sv
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_generator.sv
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_monitor.sv
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_scoreboard.sv
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_agent.sv
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_driver.sv
-vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_DUTOutput.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ../clock_gen.v
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ../cnn_layer_accel_quad_intf.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_testbench.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_environment.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_generator.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_monitor.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_scoreboard.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_agent.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_driver.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ ./cnl_sc2_DUTOutput.sv
 
 
 # Accel
@@ -36,6 +36,7 @@ vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(S
 vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ ../../hardware/verilog_2/cnn_layer_accel_ce_macc_0.v
 vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ ../../hardware/verilog_2/cnn_layer_accel_ce_macc_1.v
 vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ ../../hardware/verilog_2/awe_dsp_input_mux.v
+vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog_2/ ../../hardware/verilog_2/sig_ext_bit.v
 
 
 # Xilinx IP

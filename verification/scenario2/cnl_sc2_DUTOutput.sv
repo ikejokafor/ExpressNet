@@ -37,7 +37,7 @@
 `include "DUTOutput.sv"
 `include "cnl_sc2_verif_defs.svh"
 `include "cnn_layer_accel_defs.vh"
-`include "cnn_layer_accel_verif_defs.sv"
+`include "cnn_layer_accel_verif_defs.svh"
 
 
 
