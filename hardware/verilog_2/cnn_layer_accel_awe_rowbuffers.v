@@ -99,7 +99,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     input  logic                                        rst                         ;
     input  logic    [ C_CLG2_ROW_BUF_BRAM_DEPTH - 2:0]  input_row                   ;
     input  logic    [ C_CLG2_ROW_BUF_BRAM_DEPTH - 2:0]  input_col                   ;
-    input  logic    [ C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  expd_num_input_cols              ;
+    input  logic    [ C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  expd_num_input_cols         ;
 	input  logic    [                             2:0]  convolution_stride          ;
     input  logic    [                             5:0]  state                       ;
     input  logic    [                             1:0]  gray_code                   ;

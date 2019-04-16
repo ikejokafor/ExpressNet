@@ -65,7 +65,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     last_kernel                 ,
     pipeline_flushed            ,
     wht_sequence_selector       ,
-    rst_addr
+    next_state_tran
 );
 
 
@@ -129,7 +129,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     input  logic                                        last_kernel                 ;
     input  logic                                        pipeline_flushed            ;
 	output logic                                        wht_sequence_selector       ;
-    output logic                                        rst_addr                    ;
+    output logic                                        next_state_tran                    ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ module cnn_layer_accel_quad_bram_ctrl (
 	logic                                            ce_move_one_row_down            ;
 	logic                                            ce_move_one_row_down_d          ;
     logic                                            pix_seq_bram_dout_valid         ;
-    logic                                            rst_addr_r                      ;
+    logic                                            next_state_tran_r                      ;
     genvar                                           i                               ;
 
   	
@@ -387,7 +387,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     // delay bc of 3 cycle sequence bram read latency to start execution of pipeline
 	assign ce_execute_w             = pix_seq_bram_rden_r;
     assign ce_move_one_row_down     = (output_stride != 0);
-    assign rst_addr                 = rst_addr_r;
+    assign next_state_tran          = next_state_tran_r;
    
     always@(posedge clk) begin
         if(rst) begin
@@ -402,7 +402,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             pix_seq_bram_rdAddr     <= 0;
             graycode_r              <= 0;
             pix_seq_data_count      <= 0;
-            rst_addr_r              <= 0;
+            next_state_tran_r       <= 0;
             state                   <= ST_IDLE;
         end else begin
             pfb_rden                <= 0;
@@ -410,7 +410,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             job_fetch_request       <= 0;
             job_complete            <= 0;
             pix_seq_bram_rden_r     <= 0;
-            rst_addr_r              <= 0;
+            next_state_tran_r       <= 0;
             case(state)            
                 ST_IDLE: begin
                     if(job_start) begin
@@ -430,13 +430,13 @@ module cnn_layer_accel_quad_bram_ctrl (
                 end
                 ST_AWE_CE_PRIM_BUFFER: begin
                     if(pfb_count == 0 && input_row < 4) begin
-                        rst_addr_r              <= 1;
+                        next_state_tran_r       <= 1;
                         return_state            <= state;
                         state                   <= ST_WAIT_PFB_LOAD;
                     end if(input_row == 3 && pfb_count == pfb_full_count) begin
                         pix_seq_data_count   <= pix_seq_data_full_count;
 						pix_seq_bram_rdAddr  <= 0;
-                        rst_addr_r           <= 1;
+                        next_state_tran_r    <= 1;
                         state                <= ST_AWE_CE_ACTIVE;
                     end else begin
                         if(pfb_count > 1) begin
@@ -493,8 +493,8 @@ module cnn_layer_accel_quad_bram_ctrl (
                         end else if(last_kernel || ce_move_one_row_down)begin
                             graycode_r <= graycode_r + 1;
                         end
-                        rst_addr_r  <= 1;
-                        state       <= next_state;
+                        next_state_tran_r   <= 1;
+                        state               <= next_state;
                      end
                 end
                 ST_WAIT_JOB_DONE: begin            

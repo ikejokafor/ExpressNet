@@ -169,10 +169,10 @@ module cnn_layer_accel_prefetch_buffer (
 
 
     // BEGIN Logic ---------------------------------------------------------------------------------------------------------------------------------- 
+    assign zero_dout        = (padding && !upsample) && (input_row < crpd_input_row_start || input_col < crpd_input_col_start || input_row > crpd_input_row_end || input_col > crpd_input_col_end);
     assign dout             = (zero_dout) ? {`PIXEL_WIDTH{1'b0}} : bram_dataout;
     assign cncl_fetch_req   = (padding || upsample) && (input_row == crpd_input_row_start || input_row > crpd_input_row_end);
-    assign bram_rden        = bram_rden_r && !zero_dout;
-    assign zero_dout        = (padding && !upsample) && (input_row < crpd_input_row_start || input_col < crpd_input_col_start || input_row > crpd_input_row_end || input_col > crpd_input_col_end);
+    assign bram_rden        = bram_rden_r;
     
     always@(posedge rd_clk) begin
         if(rst) begin
