@@ -73,7 +73,7 @@
 `define NUM_DSP_PER_CE                  2
 `define NUM_WHT_SEQ_TABLE_PER_AWE       4
 `define DATA_WIDTH                      16
-`define MAX_STRIDE                      11
+`define MAX_STRIDE                      1
 `define WINDOW_3x3_NUM_CYCLES_MINUS_1  `WINDOW_3x3_NUM_CYCLES - 1
 `define KERNEL_3x3_COUNT_FULL           10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
 `define KERNEL_3x3_COUNT_FULL_MINUS_1   `KERNEL_3x3_COUNT_FULL - 1

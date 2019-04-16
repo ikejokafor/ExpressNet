@@ -45,8 +45,8 @@ class `scX_DUTOutParams_t extends DUTOutParams_t;
     int num_kernels;
     int num_output_rows;
     int num_output_cols;
-    int num_sim_output_rows;
-    int num_sim_output_cols;  
+    int num_acl_output_rows;
+    int num_acl_output_cols;  
     int depth;
 endclass: `scX_DUTOutParams_t
 
@@ -65,8 +65,8 @@ class `cnl_scX_DUTOutput extends DUTOutput;
     int m_num_kernels;
     int m_num_output_rows;
     int m_num_output_cols;
-    int m_num_sim_output_rows;
-    int m_num_sim_output_cols;
+    int m_num_acl_output_rows;
+    int m_num_acl_output_cols;
     int m_depth;
     `scX_datum_t m_conv_map[];
 endclass: `cnl_scX_DUTOutput
@@ -81,10 +81,10 @@ function `cnl_scX_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
         m_num_kernels           = `scX_DUTOutParams.num_kernels;
         m_num_output_rows       = `scX_DUTOutParams.num_output_rows;      
         m_num_output_cols       = `scX_DUTOutParams.num_output_cols;
-        m_num_sim_output_rows   = `scX_DUTOutParams.num_sim_output_rows;  
-        m_num_sim_output_cols   = `scX_DUTOutParams.num_sim_output_cols;
+        m_num_acl_output_rows   = `scX_DUTOutParams.num_acl_output_rows;  
+        m_num_acl_output_cols   = `scX_DUTOutParams.num_acl_output_cols;
         m_depth                 = `scX_DUTOutParams.depth;
-        m_conv_map              = new[m_num_kernels * m_num_sim_output_rows * m_num_sim_output_cols];
+        m_conv_map              = new[m_num_kernels * m_num_acl_output_rows * m_num_acl_output_cols];
     end
 endfunction: new
 

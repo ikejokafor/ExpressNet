@@ -160,8 +160,6 @@ module cnl_sc2_testbench;
        .pixel_ready                     ( pixel_ready                                           ),
        .pixel_data                      ( pixel_data                                            ),
 
-       .num_input_cols_cfg              ( i0_cnn_layer_accel_quad.num_input_cols_cfg            ),
-       .num_input_rows_cfg              ( i0_cnn_layer_accel_quad.num_input_rows_cfg            ),
        .pfb_full_count_cfg              ( i0_cnn_layer_accel_quad.pfb_full_count_cfg            ),
        .kernel_full_count_cfg           ( i0_cnn_layer_accel_quad.kernel_full_count_cfg         ),
        .kernel_group_cfg                ( i0_cnn_layer_accel_quad.kernel_group_cfg              ),
@@ -173,12 +171,12 @@ module cnl_sc2_testbench;
        .num_output_rows_cfg             ( i0_cnn_layer_accel_quad.num_output_rows_cfg           ),
        .num_output_cols_cfg             ( i0_cnn_layer_accel_quad.num_output_cols_cfg           ),
        .pix_seq_data_full_count_cfg     ( i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg   ),
-       .pded_num_input_cols_cfg       ( i0_cnn_layer_accel_quad.pded_num_input_cols_cfg     ),
-       .pded_num_input_rows_cfg       ( i0_cnn_layer_accel_quad.pded_num_input_rows_cfg     ),
-       .crpd_input_col_start_cfg       ( i0_cnn_layer_accel_quad.crpd_input_col_start_cfg     ),
-       .crpd_input_row_start_cfg       ( i0_cnn_layer_accel_quad.crpd_input_row_start_cfg     ),
-       .crpd_input_col_end_cfg         ( i0_cnn_layer_accel_quad.crpd_input_col_end_cfg       ),
-       .crpd_input_row_end_cfg         ( i0_cnn_layer_accel_quad.crpd_input_row_end_cfg       ),
+       .expd_num_input_cols_cfg         ( i0_cnn_layer_accel_quad.expd_num_input_cols_cfg       ),
+       .expd_num_input_rows_cfg         ( i0_cnn_layer_accel_quad.expd_num_input_rows_cfg       ),
+       .crpd_input_col_start_cfg        ( i0_cnn_layer_accel_quad.crpd_input_col_start_cfg      ),
+       .crpd_input_row_start_cfg        ( i0_cnn_layer_accel_quad.crpd_input_row_start_cfg      ),
+       .crpd_input_col_end_cfg          ( i0_cnn_layer_accel_quad.crpd_input_col_end_cfg        ),
+       .crpd_input_row_end_cfg          ( i0_cnn_layer_accel_quad.crpd_input_row_end_cfg        ),
        
        .output_row                      ( i0_cnn_layer_accel_quad.output_row                    ),
        .output_col                      ( i0_cnn_layer_accel_quad.output_col                    ),
@@ -188,42 +186,42 @@ module cnl_sc2_testbench;
     
     cnn_layer_accel_quad
     i0_cnn_layer_accel_quad (
-        .clk_if               ( clk_if                                            ),  
-        .clk_core             ( clk_core                                          ),  
-        .rst                  ( rst                                               ),  
-
-        .job_start            ( job_start                                         ),  
-        .job_accept           ( job_accept                                        ),  
-        .job_parameters       ( job_parameters                                    ),  
-        .job_fetch_request    ( job_fetch_request                                 ),  
-        .job_fetch_ack        ( job_fetch_ack                                     ), 
-        .job_fetch_complete   ( job_fetch_complete                                ),
-        .job_complete         ( job_complete                                      ),  
-        .job_complete_ack     ( job_complete_ack                                  ),  
-
-        .cascade_in_valid     ( cascade_in_valid                                  ),
-        .cascade_in_ready     ( cascade_in_ready                                  ),
-        .cascade_in_data      ( cascade_in_data                                   ),
-
-        .cascade_out_valid    ( cascade_out_valid                                 ),
-        .cascade_out_ready    ( cascade_out_ready                                 ),
-        .cascade_out_data     ( cascade_out_data                                  ),
-
-        .config_valid         ( config_valid                                      ),
-        .config_accept        ( config_accept                                     ),
-        .config_data          ( config_data                                       ),
-
-        .weight_valid         ( weight_valid                                      ),
-        .weight_ready         ( weight_ready                                      ),
-        .weight_data          ( weight_data                                       ),
-
-        .result_valid         ( result_valid                                      ),
-        .result_accept        ( result_accept                                     ),
-        .result_data          ( result_data                                       ),
-
-        .pixel_valid          ( pixel_valid                                       ),
-        .pixel_ready          ( pixel_ready                                       ),
-        .pixel_data           ( pixel_data                                        )
+        .clk_if               ( clk_if                  ),  
+        .clk_core             ( clk_core                ),  
+        .rst                  ( rst                     ),  
+                                                        
+        .job_start            ( job_start               ),  
+        .job_accept           ( job_accept              ),  
+        .job_parameters       ( job_parameters          ),  
+        .job_fetch_request    ( job_fetch_request       ),  
+        .job_fetch_ack        ( job_fetch_ack           ), 
+        .job_fetch_complete   ( job_fetch_complete      ),
+        .job_complete         ( job_complete            ),  
+        .job_complete_ack     ( job_complete_ack        ),  
+                                                        
+        .cascade_in_valid     ( cascade_in_valid        ),
+        .cascade_in_ready     ( cascade_in_ready        ),
+        .cascade_in_data      ( cascade_in_data         ),
+                                                        
+        .cascade_out_valid    ( cascade_out_valid       ),
+        .cascade_out_ready    ( cascade_out_ready       ),
+        .cascade_out_data     ( cascade_out_data        ),
+                                                        
+        .config_valid         ( config_valid            ),
+        .config_accept        ( config_accept           ),
+        .config_data          ( config_data             ),
+                                                        
+        .weight_valid         ( weight_valid            ),
+        .weight_ready         ( weight_ready            ),
+        .weight_data          ( weight_data             ),
+                                                        
+        .result_valid         ( result_valid            ),
+        .result_accept        ( result_accept           ),
+        .result_data          ( result_data             ),
+                                                        
+        .pixel_valid          ( pixel_valid             ),
+        .pixel_ready          ( pixel_ready             ),
+        .pixel_data           ( pixel_data              )
     );
 
     
@@ -238,10 +236,11 @@ module cnl_sc2_testbench;
         `scX_crtTestParams.num_input_rows = 20;
         `scX_crtTestParams.num_input_cols = 20;
         `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 3;
+        `scX_crtTestParams.num_kernels = 1;
         `scX_crtTestParams.kernel_size = 3;
         `scX_crtTestParams.stride = 1;
-        `scX_crtTestParams.padding = 0;
+        `scX_crtTestParams.padding = 1;
+        `scX_crtTestParams.upsample = FALSE;
         test = new(`scX_genParams);
         test.createTest(`scX_crtTestParams);
         test_queue.push_back(test);

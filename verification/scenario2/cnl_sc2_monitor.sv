@@ -81,8 +81,8 @@ task `cnl_scX_monitor::run();
     int t;
     int signal;
     int num_kernels;
-    int num_sim_output_rows;
-    int num_sim_output_cols;
+    int num_acl_output_rows;
+    int num_acl_output_cols;
     int stride;
     int output_depth;
     
@@ -95,23 +95,23 @@ task `cnl_scX_monitor::run();
             `scX_DUTOutParams.num_kernels            = test.m_num_kernels;
             `scX_DUTOutParams.num_output_rows        = test.m_num_output_rows;
             `scX_DUTOutParams.num_output_cols        = test.m_num_output_cols;
-            `scX_DUTOutParams.num_sim_output_rows    = test.m_num_sim_output_rows;
-            `scX_DUTOutParams.num_sim_output_cols    = test.m_num_sim_output_cols;
+            `scX_DUTOutParams.num_acl_output_rows    = test.m_num_acl_output_rows;
+            `scX_DUTOutParams.num_acl_output_cols    = test.m_num_acl_output_cols;
             output_depth                            = test.m_num_kernels;
             query                                   = new(`scX_DUTOutParams);
             m_mon_rdy.put(signal);
             stride                                  = test.m_stride;
             num_kernels                             = query.m_num_kernels;
-            num_sim_output_rows                     = query.m_num_sim_output_rows;
-            num_sim_output_cols                     = query.m_num_sim_output_cols;
+            num_acl_output_rows                     = query.m_num_acl_output_rows;
+            num_acl_output_cols                     = query.m_num_acl_output_cols;
             
             
             forever begin
                 @(m_quad_intf.clk_core_cb);
-                if(m_quad_intf.clk_core_cb.output_row == (num_sim_output_rows - 1) && m_quad_intf.clk_core_cb.output_col == (num_sim_output_cols - 1) && m_quad_intf.clk_core_cb.output_depth == (output_depth - 1)) begin
+                if(m_quad_intf.clk_core_cb.output_row == (num_acl_output_rows - 1) && m_quad_intf.clk_core_cb.output_col == (num_acl_output_cols - 1) && m_quad_intf.clk_core_cb.output_depth == (output_depth - 1)) begin
                     break;
                 end else if(m_quad_intf.clk_core_cb.result_valid) begin
-                    query.m_conv_map[(m_quad_intf.clk_core_cb.output_depth * num_sim_output_rows + m_quad_intf.clk_core_cb.output_row) * num_sim_output_cols + m_quad_intf.clk_core_cb.output_col].pixel = m_quad_intf.clk_core_cb.result_data;
+                    query.m_conv_map[(m_quad_intf.clk_core_cb.output_depth * num_acl_output_rows + m_quad_intf.clk_core_cb.output_row) * num_acl_output_cols + m_quad_intf.clk_core_cb.output_col].pixel = m_quad_intf.clk_core_cb.result_data;
                 end
             end
             
@@ -129,8 +129,8 @@ task `cnl_scX_monitor::run();
             $display("// UpSample:              %0d", test.m_upsample                   );
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
             $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
-            $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
-            $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
+            $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
+            $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        ); 
             $display("// Finished Test ------------------------------------------------");
             $display("\n");
             $display("//---------------------------------------------------------------");

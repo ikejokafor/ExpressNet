@@ -21,7 +21,7 @@
 //
 //
 //
-// Additional Comments:     Unverified for pded or upsampled max input image size
+// Additional Comments:     Unverified for expd or upsampled max input image size
 //                              Unverified for padding > 1
 //                              Verified ONLY for upsampling followed by padding
 //                          
@@ -40,15 +40,16 @@ module cnn_layer_accel_prefetch_buffer (
     upsample                ,
     input_col               ,
     input_row               ,
-    pded_num_input_cols     ,
-    pded_num_input_rows     ,
+    expd_num_input_cols     ,
+    expd_num_input_rows     ,
     crpd_input_col_start    ,
     crpd_input_row_start    ,
     crpd_input_col_end      ,
     crpd_input_row_end      ,
     job_fetch_ack           ,
     job_complete_ack        ,
-    rst_addr                
+    rst_addr                ,
+    cncl_fetch_req          
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -77,8 +78,8 @@ module cnn_layer_accel_prefetch_buffer (
     input  logic                                    upsample                ;
     input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_col               ;
     input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_row               ;
-    input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  pded_num_input_cols     ;
-    input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  pded_num_input_rows     ;
+    input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  expd_num_input_cols     ;
+    input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  expd_num_input_rows     ;
     input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_start    ;
     input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_start    ;
     input  logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_end      ;
@@ -86,6 +87,7 @@ module cnn_layer_accel_prefetch_buffer (
     input  logic                                    job_fetch_ack           ;
     input  logic                                    job_complete_ack        ;
     input  logic                                    rst_addr                ;
+    output logic                                    cncl_fetch_req          ;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -96,10 +98,11 @@ module cnn_layer_accel_prefetch_buffer (
     logic                                       bram_rden       ;
     logic                                       bram_rden_r     ;    
     logic   [            `PIXEL_WIDTH - 1:0]    bram_dataout    ;
+    logic                                       replicate       ;
+    logic                                       row_count       ;
+    logic                                       repeat_row      ;
     logic                                       zero_dout       ;
-    logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]   input_col_r     ;
-    logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]   input_row_r     ;
-
+    
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -121,6 +124,33 @@ module cnn_layer_accel_prefetch_buffer (
         .rden       ( bram_rden     ),
         .dout       ( bram_dataout  )
     );
+    
+    
+    // BEGIN Logic ---------------------------------------------------------------------------------------------------------------------------------
+    always@(posedge rd_clk) begin
+        if(rst) begin
+            row_count   <= 0;
+        end else begin
+            if(upsample && input_col == expd_num_input_cols) begin
+                row_count <= row_count + 1;
+            end
+        end
+    end
+    // END Logic ------------------------------------------------------------------------------------------------------------------------------------
+    
+
+    // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------
+    always@(posedge rd_clk) begin
+        if(rst) begin
+            repeat_row   <= 0;
+        end else begin
+            repeat_row   <= 0;
+            if(rd_en && upsample && row_count == 1) begin               
+                repeat_row <= 1;
+            end
+        end
+    end
+    // END Logic ------------------------------------------------------------------------------------------------------------------------------------  
    
   
     // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------  
@@ -138,57 +168,38 @@ module cnn_layer_accel_prefetch_buffer (
     // END ------------------------------------------------------------------------------------------------------------------------------------------  
 
 
-    // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------
-    always@(posedge rd_clk) begin
-        if(rst) begin
-            input_row_r   <= 0;
-            input_col_r   <= 0;
-        end else begin
-            if(job_complete_ack) begin
-                input_col_r  <= 0;
-                input_row_r  <= 0;
-            end else if(input_col_r == pded_num_input_cols) begin
-                input_col_r  <= 0;
-                input_row_r  <= input_row_r + 1;
-            end else if(rd_en) begin
-                input_col_r  <= input_col_r + 1;
-            end
-        end
-    end
-    // END Logic ------------------------------------------------------------------------------------------------------------------------------------
-   
- 
     // BEGIN Logic ---------------------------------------------------------------------------------------------------------------------------------- 
-    assign dout         = (zero_dout) ? {`PIXEL_WIDTH{1'b0}} : bram_dataout;
-    assign bram_rden    = bram_rden_r && !zero_dout;
-
+    assign dout             = (zero_dout) ? {`PIXEL_WIDTH{1'b0}} : bram_dataout;
+    assign cncl_fetch_req   = (padding || upsample) && (input_row == crpd_input_row_start || input_row > crpd_input_row_end);
+    assign bram_rden        = bram_rden_r && !zero_dout;
+    assign zero_dout        = (padding && !upsample) && (input_row < crpd_input_row_start || input_col < crpd_input_col_start || input_row > crpd_input_row_end || input_col > crpd_input_col_end);
+    
     always@(posedge rd_clk) begin
         if(rst) begin
-            bram_rden_r  <= 0;
-            zero_dout    <= 0;
-            bram_rdAddr  <= 0;
+            bram_rden_r <= 0;
         end else begin
-            bram_rden_r     <= 0;
-            zero_dout       <= 0;
-            if(rd_en) begin
-                if(padding && !upsample && input_row_r == 0) begin  // input_row_r and input_col_r are outside crpd_start and crpd_end bounds
-                    zero_dout <= 1;
-                end else if(!padding && upsample) begin // repeat address twice, repeat every row twice
-               
-                end else if(padding && upsample) begin
-               
-                end else if(!padding && !upsample) begin
-                    bram_rden_r <= 1;
-                    if(job_fetch_ack || job_complete_ack || rst_addr) begin
-                        bram_rdAddr <= 0;
-                    end else if(bram_rden) begin
-                        bram_rdAddr <= bram_rdAddr + 1;
-                    end
-                end
+            bram_rden_r <= 0;
+            if(rd_en && !zero_dout) begin
+                bram_rden_r <= 1;
             end
         end
     end
     // END Logic ------------------------------------------------------------------------------------------------------------------------------------
-
-
+    
+    
+    // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------   
+    always@(posedge rd_clk) begin
+        if(rst) begin
+            bram_rdAddr <= 0;
+        end else begin
+            if(job_fetch_ack || job_complete_ack || rst_addr) begin
+                bram_rdAddr <= 0;
+            end else if(bram_rden) begin
+                bram_rdAddr <= bram_rdAddr + 1;
+            end
+        end
+    end
+    // END ------------------------------------------------------------------------------------------------------------------------------------------  
+    
+   
 endmodule

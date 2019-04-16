@@ -68,8 +68,6 @@ interface cnn_layer_accel_quad_intf (
     pixel_ready                     ,
     pixel_data                      ,
 
-    num_input_cols_cfg              ,
-    num_input_rows_cfg              ,
     pfb_full_count_cfg              ,
     kernel_full_count_cfg           ,
     kernel_group_cfg                ,
@@ -81,8 +79,8 @@ interface cnn_layer_accel_quad_intf (
     num_output_rows_cfg             ,
     num_output_cols_cfg             ,
     pix_seq_data_full_count_cfg     ,
-    pded_num_input_cols_cfg       ,
-    pded_num_input_rows_cfg       ,
+    expd_num_input_cols_cfg       ,
+    expd_num_input_rows_cfg       ,
     crpd_input_col_start_cfg       ,
     crpd_input_row_start_cfg       ,
     crpd_input_col_end_cfg         ,
@@ -146,9 +144,7 @@ interface cnn_layer_accel_quad_intf (
     output logic            pixel_valid                     ;
     input  logic            pixel_ready                     ;
     output logic [127:0]    pixel_data                      ;
-    
-    output logic [   9:0]    num_input_cols_cfg              ;
-    output logic [   9:0]    num_input_rows_cfg              ;
+
     output logic [   9:0]    pfb_full_count_cfg              ;
     output logic [   7:0]    kernel_full_count_cfg           ;
     output logic [   6:0]    kernel_group_cfg                ;
@@ -161,8 +157,8 @@ interface cnn_layer_accel_quad_intf (
     output logic [   9:0]    num_output_cols_cfg             ;
     output logic [  11:0]    pix_seq_data_full_count_cfg     ;
 
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] pded_num_input_cols_cfg ;
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] pded_num_input_rows_cfg ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] expd_num_input_cols_cfg ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] expd_num_input_rows_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_start_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_start_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_end_cfg   ;
@@ -194,9 +190,7 @@ interface cnn_layer_accel_quad_intf (
         output pixel_valid                    ;
         input  pixel_ready                    ;
         output pixel_data                     ;
-        
-        output num_input_cols_cfg              ;
-        output num_input_rows_cfg              ;
+
         output pfb_full_count_cfg              ;
         output kernel_full_count_cfg           ;
         output kernel_group_cfg                ;
@@ -208,8 +202,8 @@ interface cnn_layer_accel_quad_intf (
         output num_output_rows_cfg             ;
         output num_output_cols_cfg             ;
         output pix_seq_data_full_count_cfg     ;
-        output pded_num_input_cols_cfg         ; 
-        output pded_num_input_rows_cfg         ;
+        output expd_num_input_cols_cfg         ; 
+        output expd_num_input_rows_cfg         ;
         output crpd_input_col_start_cfg        ;
         output crpd_input_row_start_cfg        ;
         output crpd_input_col_end_cfg          ;

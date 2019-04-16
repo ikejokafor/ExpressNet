@@ -31,8 +31,8 @@
 module cnn_layer_accel_quad_bram_ctrl (
     clk                         ,
     rst                         ,
-    num_input_cols              ,
-    num_input_rows              ,
+    expd_num_input_cols         ,
+    expd_num_input_rows         ,
     num_output_rows             ,
     num_output_cols             ,
 	convolution_stride          ,
@@ -95,11 +95,11 @@ module cnn_layer_accel_quad_bram_ctrl (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     input  logic                                        clk                         ;   
     input  logic                                        rst                         ;
-	input  logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    num_input_cols              ;
-	input  logic   [                            2:0]    convolution_stride          ;  
-    input  logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    num_input_rows              ;
+    input  logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    expd_num_input_cols         ;
+    input  logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    expd_num_input_rows         ;   
     input logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    num_output_rows             ;
     input logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    num_output_cols             ;
+	input  logic   [                            2:0]    convolution_stride          ;      
 	input  logic   [                            4:0]    kernel_size				    ;	
     input  logic                                        job_start                   ;
     output logic                                        job_accept                  ;
@@ -249,7 +249,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             if(job_complete_ack) begin
                 input_col  <= 0;
                 input_row  <= 0;
-            end else if(input_col == num_input_cols) begin
+            end else if(input_col == expd_num_input_cols) begin
                 input_col  <= 0;
                 input_row  <= input_row + 1;
             end else if(pfb_rden) begin
@@ -321,7 +321,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                 output_row  <= 0;
             end else if(output_col == num_output_cols && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                 output_col <= 0;
-                if(last_kernel && (output_stride == 0 || input_row == num_input_rows)) begin
+                if(last_kernel && (output_stride == 0 || input_row == expd_num_input_rows)) begin
                     output_row <= output_row + 1;
                 end
             end else if(cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
@@ -455,7 +455,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                             pfb_rden   <= 1;
                         end
                     end
-                    if(row_matric && (last_kernel || ce_move_one_row_down) && row_matric_wrAddr == num_input_cols) begin
+                    if(row_matric && (last_kernel || ce_move_one_row_down) && row_matric_wrAddr == expd_num_input_cols) begin
                         row_matric_wrAddr <= 0;
                     end else if(row_matric && (last_kernel || ce_move_one_row_down)) begin
                         row_matric_wrAddr <= row_matric_wrAddr + 1;
@@ -471,9 +471,9 @@ module cnn_layer_accel_quad_bram_ctrl (
                         pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                     end
                     // next state logic
-                    if(pfb_count == 0 && last_kernel && input_row == (num_input_rows + 1) && output_row == num_output_rows) begin
+                    if(pfb_count == 0 && last_kernel && input_row == (expd_num_input_rows + 1) && output_row == num_output_rows) begin
                         next_state <= ST_WAIT_JOB_DONE;
-                    end else if(pfb_count == 0 && (last_kernel || ce_move_one_row_down) && input_row < (num_input_rows + 1)) begin
+                    end else if(pfb_count == 0 && (last_kernel || ce_move_one_row_down) && input_row < (expd_num_input_rows + 1)) begin
                         pix_seq_bram_rden_r  <= 0;
                         return_state    <= ST_AWE_CE_ACTIVE;
                         next_state      <= ST_WAIT_PFB_LOAD;

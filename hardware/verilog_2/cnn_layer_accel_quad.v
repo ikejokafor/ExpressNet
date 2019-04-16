@@ -147,7 +147,11 @@ module cnn_layer_accel_quad (
         genvar g1; `UNPACK_ARRAY_1D(`PIXEL_WIDTH, 8, config_data, config_data_arr, g1);   
     logic [`WEIGHT_WIDTH - 1:0] weight_data_arr[7:0];
         genvar g2; `UNPACK_ARRAY_1D(`WEIGHT_WIDTH, 8, weight_data, weight_data_arr, g2); 
+    logic                                       job_fetch_request_w                             ;
+    logic                                       job_fetch_ack_r                                 ;
     logic                                       job_fetch_in_progress           	            ;
+    logic                                       job_fetch_complete_w                            ;
+    logic                                       job_fetch_complete_r                            ;
     logic                                       job_accept_w                    	            ;
     logic    [                            4:0]  job_accept_r                    	            ;
 	(* mark_debug = "true" *)                                                                   ;
@@ -159,25 +163,21 @@ module cnn_layer_accel_quad (
     logic    [    C_PIXEL_DATAOUT_WIDTH - 1:0]  ce1_pixel_dataout[`NUM_AWE - 1:0]	            ;
 	(* mark_debug = "true" *)                                                                   ;
     logic    [             `PIXEL_WIDTH - 1:0]  ce0_pixel_datain[`NUM_AWE - 1:0]	            ;
-	(* mark_debug = "true" *)                                                                   ;
     logic    [             `PIXEL_WIDTH - 1:0]  ce1_pixel_datain[`NUM_AWE - 1:0]	            ;
-
+	(* mark_debug = "true" *)                                                                   ;
     logic                                       pfb_wren                        	            ;
     logic                                       pfb_rden                        	            ;
     logic    [             `PIXEL_WIDTH - 1:0]  pfb_dataout[C_NUM_CE - 1:0]     	            ;
-    logic    [                            8:0]  pfb_count                       	            ;
-
+    logic    [             `PIXEL_WIDTH - 1:0]  pfb_datain[C_NUM_CE - 1:0]     	                ;
+    logic                                       cncl_fetch_req[C_NUM_CE - 1:0]                  ;   
+    logic    [             `PIXEL_WIDTH - 1:0]  pixel_data_r[C_NUM_CE - 1:0]                    ;
     logic    [                 C_NUM_CE - 1:0]  ce_execute                       	            ;
     logic    [                            2:0]  ce_cycle_counter[C_NUM_CE - 1:0] 	            ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_row                        	            ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_col                        	            ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_col                        	            ;   
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 2:0]  row_matric_wrAddr                	            ;
     genvar                                      i                                	            ;
     genvar                                      j                                	            ;
-	(* mark_debug = "true" *)                                                                   ;
-    logic    [                            9:0]  num_input_cols_cfg                              ;
-	(* mark_debug = "true" *)                                                                   ;
-    logic    [                            9:0]  num_input_rows_cfg                              ;
 	(* mark_debug = "true" *)                                                                   ;
     logic    [                            9:0]  pfb_full_count_cfg                              ;
 	(* mark_debug = "true" *)                                                                   ;
@@ -193,8 +193,8 @@ module cnn_layer_accel_quad (
     logic    [                            9:0]  num_output_cols_cfg                             ;
     logic    [                           11:0]  pix_seq_data_full_count_cfg                     ;
     logic                                       upsample_cfg                                    ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  pded_num_input_cols_cfg                         ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  pded_num_input_rows_cfg                         ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  expd_num_input_cols_cfg                         ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  expd_num_input_rows_cfg                         ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_start_cfg                        ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_start_cfg                        ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_end_cfg                          ;
@@ -228,9 +228,10 @@ module cnn_layer_accel_quad (
     logic   [         C_WHT_DOUT_WIDTH - 1:0]   ce_wht_table_dout[C_NUM_CE - 1:0]               ;
     logic   [                 C_NUM_CE - 1:0]   ce_wht_table_dout_valid                         ;
     logic                                       wht_config_wren                                 ;
-    logic   [             `PIXEL_WIDTH - 1:0]   relu_out[C_NUM_CE - 1:0]                        ;
-    logic                                       relu_cfg                                        ;
+    logic   [             `PIXEL_WIDTH - 1:0]   actv_out[C_NUM_CE - 1:0]                        ;
+    logic                                       actv_cfg                                        ;
     integer                                     idx                                             ;
+    integer                                     idx0                                            ;
     logic                                       pipeline_flushed                                ;
 	(* mark_debug = "true" *)                                                                   ;
 	logic                                       wht_sequence_selector				            ;
@@ -242,6 +243,7 @@ module cnn_layer_accel_quad (
 	logic                                	    awe_carryout[`NUM_AWE - 1:0]        		    ;
 	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_dataout	[`NUM_AWE - 1:0]	    	        ;
     logic                                       rst_addr                                        ;
+
 
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -284,7 +286,8 @@ module cnn_layer_accel_quad (
     
     generate
         for(i = 0; i < `NUM_AWE; i = i + 1) begin: AWE
-            for(j = 0; j < `NUM_CE_PER_AWE; j = j + 1) begin: AWE_BUF_WHT             
+            for(j = 0; j < `NUM_CE_PER_AWE; j = j + 1) begin: AWE_BUF_WHT
+
                 cnn_layer_accel_prefetch_buffer
                 i0_cnn_layer_accel_prefetch_buffer (
                     .wr_clk                   ( clk_if                                    ),
@@ -298,17 +301,18 @@ module cnn_layer_accel_quad (
                     .upsample                 ( upsample_cfg                              ),
                     .input_col                ( input_col                                 ),
                     .input_row                ( input_row                                 ),
-                    .pded_num_input_cols      ( pded_num_input_cols_cfg                   ),
-                    .pded_num_input_rows      ( pded_num_input_rows_cfg                   ),
+                    .expd_num_input_cols      ( expd_num_input_cols_cfg                   ),
+                    .expd_num_input_rows      ( expd_num_input_rows_cfg                   ),
                     .crpd_input_col_start     ( crpd_input_col_start_cfg                  ),
                     .crpd_input_row_start     ( crpd_input_row_start_cfg                  ),
                     .crpd_input_col_end       ( crpd_input_col_end_cfg                    ),
                     .crpd_input_row_end       ( crpd_input_row_end_cfg                    ),
                     .job_fetch_ack            ( job_fetch_ack                             ),
                     .job_complete_ack         ( job_complete_ack                          ),
-                    .rst_addr                 ( rst_addr                                  )
+                    .rst_addr                 ( rst_addr                                  ),
+                    .cncl_fetch_req           ( cncl_fetch_req[i * `NUM_CE_PER_AWE + j]   )
                 );
-
+                
 
                 cnn_layer_accel_weight_table_top #(
                     .C_CE_WHT_SEQ_ADDR_DELAY   ( ((i * `NUM_CE_PER_AWE + j) + 3) )
@@ -333,8 +337,7 @@ module cnn_layer_accel_quad (
                     .wht_table_dout_valid       ( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + j]  )
                 ); 
                 
-
-                assign relu_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[i * `NUM_CE_PER_AWE + j];                
+                assign actv_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[i * `NUM_CE_PER_AWE + j];                
             end
 
             
@@ -352,7 +355,7 @@ module cnn_layer_accel_quad (
                 .rst                        ( rst                                                   ),
                 .input_row                  ( input_row                                             ),
                 .input_col                  ( input_col                                             ),
-                .num_input_cols             ( num_input_cols_cfg                                    ),
+                .expd_num_input_cols        ( expd_num_input_cols_cfg                               ),
 				.convolution_stride         ( convolution_stride_cfg  								), 
                 .state                      ( state                                                 ),
                 .gray_code                  ( gray_code                                             ),
@@ -442,8 +445,9 @@ module cnn_layer_accel_quad (
 				);
 			end	
             
-            assign ce0_pixel_datain[i] = (relu_cfg) ? relu_out[i * `NUM_CE_PER_AWE + 0] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
-            assign ce1_pixel_datain[i] = (relu_cfg) ? relu_out[i * `NUM_CE_PER_AWE + 1] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
+            assign ce0_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 0] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
+            assign ce1_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 1] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
+            
         end
 		
 		assign cascade_out_data = awe_cascade_dataout[`NUM_AWE-1];
@@ -460,18 +464,18 @@ module cnn_layer_accel_quad (
         .rst                        ( rst                                                   ),
         .job_start                  ( job_start                                             ),
         .job_accept                 ( job_accept_w                                          ),
-        .job_fetch_request          ( job_fetch_request                                     ),
+        .job_fetch_request          ( job_fetch_request_w                                   ),
         .job_fetch_in_progress      ( job_fetch_in_progress                                 ),
-        .job_fetch_ack              ( job_fetch_ack                                         ),
-        .job_fetch_complete         ( job_fetch_complete                                    ),
+        .job_fetch_ack              ( job_fetch_ack_w                                       ),
+        .job_fetch_complete         ( job_fetch_complete_w                                  ),
         .job_complete               ( job_complete                                          ),
         .job_complete_ack           ( job_complete_ack                                      ),
         .state                      ( state                                                 ),
         .input_row                  ( input_row                                             ),
         .input_col                  ( input_col                                             ),
 		.output_stride				( output_stride                                         ),
-        .num_input_cols             ( num_input_cols_cfg                                    ),
-        .num_input_rows             ( num_input_rows_cfg                                    ),
+        .expd_num_input_cols        ( expd_num_input_cols_cfg                               ),
+        .expd_num_input_rows        ( expd_num_input_rows_cfg                               ),
         .num_output_rows            ( num_output_rows_cfg                                   ),
         .num_output_cols            ( num_output_cols_cfg                                   ),        
 		.convolution_stride         ( convolution_stride_cfg                                ),
@@ -495,7 +499,30 @@ module cnn_layer_accel_quad (
         .rst_addr                   ( rst_addr                                              )
     );
     
+   
+    // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------       
+    assign job_fetch_request = job_fetch_request_w && !cncl_fetch_req[0];
+    assign job_fetch_ack_w = job_fetch_ack_r || job_fetch_ack;
+    assign job_fetch_complete_w = job_fetch_complete || job_fetch_complete_r;
+    
+    always@(posedge clk_if) begin
+        if(rst) begin
+            job_fetch_complete_r    <= 0;
+            job_fetch_ack_r         <= 0;
+        end else begin
+            job_fetch_complete_r    <= 0;
+            job_fetch_ack_r         <= 0;
+            if((padding_cfg || upsample_cfg) && job_fetch_request_w && cncl_fetch_req[0]) begin
+                job_fetch_ack_r <= 1;
+            end
+            if(job_fetch_in_progress && cncl_fetch_req[0]) begin
+                job_fetch_complete_r <= 1;
+            end
+        end
+    end
+    // END Logic ------------------------------------------------------------------------------------------------------------------------------------
 
+    
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------     
     assign job_accept = |job_accept_r;
 
@@ -505,7 +532,7 @@ module cnn_layer_accel_quad (
     
     always@(posedge clk_core) begin
         if(rst) begin
-            relu_cfg <= 0;
+            actv_cfg <= 0;
             for(idx = 1; idx < 5; idx = idx + 1) begin
                 job_accept_r[idx] <= 0;
             end              
@@ -538,14 +565,14 @@ module cnn_layer_accel_quad (
 
   
     // BEGIN Network Output Data Logic --------------------------------------------------------------------------------------------------------------
-    assign pixel_ready  = pixel_valid && job_fetch_in_progress;
+    assign pixel_ready  = job_fetch_in_progress;
     assign pfb_wren     = pixel_valid && pixel_ready;
 
     always@(posedge clk_if) begin
         if(rst) begin
 `ifndef VERIFICATION        
-            num_input_cols_cfg              <= 0;
-            num_input_rows_cfg              <= 0;
+            expd_num_input_cols_cfg         <= 0;
+            expd_num_input_rows_cfg         <= 0;
             pfb_full_count_cfg              <= 0;
             kernel_full_count_cfg           <= 0;
             kernel_group_cfg                <= 0;
@@ -557,12 +584,10 @@ module cnn_layer_accel_quad (
             num_output_cols_cfg             <= 0;
             pix_seq_data_full_count_cfg     <= 0;
             upsample_cfg                    <= 0;
-            pded_num_input_cols_cfg       <= 0;
-            pded_num_input_rows_cfg       <= 0;
-            crpd_input_col_start_cfg       <= 0;
-            crpd_input_row_start_cfg       <= 0;
-            crpd_input_col_end_cfg         <= 0;
-            crpd_input_row_end_cfg         <= 0;
+            crpd_input_col_start_cfg        <= 0;
+            crpd_input_row_start_cfg        <= 0;
+            crpd_input_col_end_cfg          <= 0;
+            crpd_input_row_end_cfg          <= 0;
 `endif            
             config_accept[0]                <= 0;
             pix_seq_bram_wrAddr             <= 0;

@@ -92,8 +92,8 @@ task `cnl_scX_scoreboard::run();
             `scX_DUTOutParams.num_kernels            = test.m_num_kernels;
             `scX_DUTOutParams.num_output_rows        = test.m_num_output_rows;
             `scX_DUTOutParams.num_output_cols        = test.m_num_output_cols;
-            `scX_DUTOutParams.num_sim_output_rows    = test.m_num_sim_output_rows;
-            `scX_DUTOutParams.num_sim_output_cols    = test.m_num_sim_output_cols;
+            `scX_DUTOutParams.num_acl_output_rows    = test.m_num_acl_output_rows;
+            `scX_DUTOutParams.num_acl_output_cols    = test.m_num_acl_output_cols;
             sol = new(`scX_DUTOutParams);
             createSolution(test, sol);
             forever begin
@@ -111,8 +111,8 @@ task `cnl_scX_scoreboard::run();
                     $display("// Upsample               %0d", test.m_upsample                   );
                     $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
                     $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
-                    $display("// Num Sim Output Rows:   %0d", test.m_num_sim_output_rows        );
-                    $display("// Num Sim Output Cols:   %0d", test.m_num_sim_output_cols        ); 
+                    $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
+                    $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        ); 
                     $display("// Checking Test ------------------------------------------------");
                     $display("\n");
                     if(checkSolution(query, sol)) begin
@@ -161,8 +161,8 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
     int stride;
     int num_input_rows;
     int num_input_cols;
-    int num_sim_output_rows;
-    int num_sim_output_cols; 
+    int num_acl_output_rows;
+    int num_acl_output_cols; 
     logic[15:0] pix_data_sim[];
     logic[15:0] kernel_data_sim[];
     
@@ -178,8 +178,8 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
     kernel_data_sim                     = `scX_test.m_kernel_data_sim;
     num_output_rows                     = `scX_sol.m_num_output_rows;
     num_output_cols                     = `scX_sol.m_num_output_cols;
-    num_sim_output_rows                 = `scX_sol.m_num_sim_output_rows;
-    num_sim_output_cols                 = `scX_sol.m_num_sim_output_cols;
+    num_acl_output_rows                 = `scX_sol.m_num_acl_output_rows;
+    num_acl_output_cols                 = `scX_sol.m_num_acl_output_cols;
     num_kernels                         = `scX_sol.m_num_kernels;
     depth                               = `scX_sol.m_depth;
     
@@ -189,7 +189,7 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
         for(x = 0; x < num_output_rows; x = x + 1) begin
             b = 0;
             for(y = 0; y < num_output_cols; y = y + 1) begin
-                `scX_sol.m_conv_map[(m * num_sim_output_rows + x) * num_sim_output_cols + y].pixel = 0;
+                `scX_sol.m_conv_map[(m * num_acl_output_rows + x) * num_acl_output_cols + y].pixel = 0;
                 for(k = 0; k < depth; k = k + 1) begin
                     kr = 0;
                     n = 0;
@@ -197,8 +197,8 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
                         kc = 0;
                         for(j = b - padding; kc < kernel_size; j = j + 1) begin
                             if((i >= 0 && j >= 0) && (i < num_input_rows && j < num_input_cols)) begin                      
-                                `scX_sol.m_conv_map[(m * num_sim_output_rows + x) * num_sim_output_cols + y].pixel
-                                    = `scX_sol.m_conv_map[(m * num_sim_output_rows + x) * num_sim_output_cols + y].pixel +
+                                `scX_sol.m_conv_map[(m * num_acl_output_rows + x) * num_acl_output_cols + y].pixel
+                                    = `scX_sol.m_conv_map[(m * num_acl_output_rows + x) * num_acl_output_cols + y].pixel +
                                     (pix_data_sim[(k * num_input_rows + i) * num_input_cols + j]
                                     * kernel_data_sim[(m * depth + k) * `KERNEL_3x3_COUNT_FULL + n]);
                             end
@@ -225,8 +225,8 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     int num_kernels;      
     int num_output_rows;  
     int num_output_cols;
-    int num_sim_output_rows;   
-    int num_sim_output_cols;    
+    int num_acl_output_rows;   
+    int num_acl_output_cols;    
     `scX_datum_t sol_conv_map[];
     `scX_datum_t qry_conv_map[];
     integer fd;
@@ -237,8 +237,8 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     num_kernels            = `scX_sol.m_num_kernels;
     num_output_rows        = `scX_sol.m_num_output_rows;
     num_output_cols        = `scX_sol.m_num_output_cols;
-    num_sim_output_rows    = `scX_query.m_num_sim_output_rows;
-    num_sim_output_cols    = `scX_query.m_num_sim_output_cols;    
+    num_acl_output_rows    = `scX_query.m_num_acl_output_rows;
+    num_acl_output_cols    = `scX_query.m_num_acl_output_cols;    
     sol_conv_map           = `scX_sol.m_conv_map;
     qry_conv_map           = `scX_query.m_conv_map;
 
@@ -247,7 +247,7 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < num_kernels; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                $fwrite(fd, "%d ", sol_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j].pixel);
+                $fwrite(fd, "%d ", sol_conv_map[(k * num_acl_output_rows + i) * num_acl_output_cols + j].pixel);
             end
             $fwrite(fd, "\n");
         end
@@ -261,7 +261,7 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < num_kernels; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                $fwrite(fd, "%d ", qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j].pixel);
+                $fwrite(fd, "%d ", qry_conv_map[(k * num_acl_output_rows + i) * num_acl_output_cols + j].pixel);
             end
             $fwrite(fd, "\n");
         end
@@ -274,8 +274,8 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < num_kernels; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                if(sol_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j].pixel
-                    != qry_conv_map[(k * num_sim_output_rows + i) * num_sim_output_cols + j].pixel) begin
+                if(sol_conv_map[(k * num_acl_output_rows + i) * num_acl_output_cols + j].pixel
+                    != qry_conv_map[(k * num_acl_output_rows + i) * num_acl_output_cols + j].pixel) begin
                    $stop;
                 end
             end
