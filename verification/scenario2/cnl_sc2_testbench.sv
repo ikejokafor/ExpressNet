@@ -111,16 +111,16 @@ module cnl_sc2_testbench;
     i0_clock_gen(
         .clk_out(clk_if)
     );
-    
-    
+
+
     clock_gen #(
         .C_PERIOD(C_PERIOD_500MHz)
     )
     i1_clock_gen(
         .clk_out(clk_core)
     );
-    
-    
+
+
     cnn_layer_accel_quad_intf
 	i0_quad_intf (
        .clk_if                          ( clk_if                                                ),
@@ -229,8 +229,8 @@ module cnl_sc2_testbench;
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         `scX_crtTestParams = new();     
         ti = 0;
-        
-        
+
+
         `scX_genParams = new();
         `scX_genParams.ti = ti;  
         `scX_crtTestParams.num_input_rows = 20;

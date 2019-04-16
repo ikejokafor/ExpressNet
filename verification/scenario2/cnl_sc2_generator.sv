@@ -90,11 +90,13 @@ class `cnl_scX_generator extends generator;
     int m_crpd_input_row_start_cfg                                                      ;
     int m_crpd_input_col_end_cfg                                                        ;
     int m_crpd_input_row_end_cfg                                                        ;
+    int m_pix_seq_data_full_count_cfg                                                   ;
     int m_pix_data[]                                                                    ;
     int m_kernel_data[]                                                                 ;
     logic [15:0] m_pix_seq_data_sim[0:((`MAX_NUM_INPUT_COLS * `NUM_CE_PER_QUAD) - 1)]   ;
     logic [15:0] m_pix_data_sim[]                                                       ;
     logic [15:0] m_kernel_data_sim[]                                                    ;
+
 
     constraint c0 {      
         solve m_num_input_rows before m_num_input_cols;
@@ -200,41 +202,39 @@ function void `cnl_scX_generator::post_randomize();
     int a;
     int b;
     shortreal tmp_num_output_rows_cfg;
-    shortreal tmp_num_output_cols_cfg;    
+    shortreal tmp_num_output_cols_cfg;
+    shortreal tmp_m_num_input_cols;
+    int tmp_pix_seq_data_full_count;
     
     
-    m_num_output_rows               = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
-    m_num_output_cols               = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;     
+    m_num_output_rows = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+    m_num_output_cols = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;     
     if(m_padding) begin
-        m_expd_num_input_rows       = m_num_input_rows + 2;
-        m_expd_num_input_cols       = m_num_input_cols + 2;     
-        m_pfb_full_count            = m_expd_num_input_cols;
-        tmp_num_output_rows_cfg     = m_expd_num_input_rows;
-        tmp_num_output_cols_cfg     = m_expd_num_input_cols;
-        m_num_output_rows_cfg       = (m_stride == 1) ? m_expd_num_input_rows - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
-        m_num_output_cols_cfg       = (m_stride == 1) ? m_expd_num_input_cols - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
-        m_num_acl_output_rows       = (m_stride == 1) ? ((m_expd_num_input_rows - m_kernel_size) / m_stride) + 2 : (m_stride == 2) ? $ceil(tmp_num_output_rows_cfg / 2) - 1 : 0;
-        m_num_acl_output_cols       = (m_stride == 1) ? m_expd_num_input_cols : (m_stride == 2) ? $ceil(tmp_num_output_cols_cfg / 2) : 0;
+        m_expd_num_input_rows = m_num_input_rows + 2;
+        m_expd_num_input_cols = m_num_input_cols + 2;
     end else begin
-        m_expd_num_input_rows       = m_num_input_rows;
-        m_expd_num_input_cols       = m_num_input_cols;   
-        m_pfb_full_count            = m_num_input_cols;
-        tmp_num_output_rows_cfg     = m_num_input_rows;
-        tmp_num_output_cols_cfg     = m_num_input_cols;
-        m_num_output_rows_cfg       = (m_stride == 1) ? m_num_input_rows - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
-        m_num_output_cols_cfg       = (m_stride == 1) ? m_num_input_cols - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
-        m_num_acl_output_rows       = (m_stride == 1) ? ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 2 : (m_stride == 2) ? $ceil(tmp_num_output_rows_cfg / 2) - 1 : 0;
-        m_num_acl_output_cols       = (m_stride == 1) ? m_num_input_cols : (m_stride == 2) ? $ceil(tmp_num_output_cols_cfg / 2) : 0;
+        m_expd_num_input_rows = m_num_input_rows;
+        m_expd_num_input_cols = m_num_input_cols;  
     end
-    m_num_input_rows_cfg            = m_num_input_rows - 1;
-    m_num_input_cols_cfg            = m_num_input_cols - 1;
-    m_expd_num_input_rows_cfg       = m_expd_num_input_rows - 1;
-    m_expd_num_input_cols_cfg       = m_expd_num_input_cols - 1;      
-    m_crpd_input_col_start_cfg      = 1;
-    m_crpd_input_row_start_cfg      = 1;
-    m_crpd_input_row_end_cfg        = m_num_output_rows_cfg - 1;
-    m_crpd_input_col_end_cfg        = m_num_output_cols_cfg - 1;
-    m_pfb_full_count_cfg            = m_pfb_full_count;
+    m_pfb_full_count                    = m_expd_num_input_cols;
+    tmp_num_output_rows_cfg             = m_expd_num_input_rows;
+    tmp_num_output_cols_cfg             = m_expd_num_input_cols;
+    m_num_output_rows_cfg               = (m_stride == 1) ? m_expd_num_input_rows - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
+    m_num_output_cols_cfg               = (m_stride == 1) ? m_expd_num_input_cols - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
+    m_num_acl_output_rows               = (m_stride == 1) ? ((m_expd_num_input_rows - m_kernel_size) / m_stride) + 2 : (m_stride == 2) ? $ceil(tmp_num_output_rows_cfg / 2) - 1 : 0;
+    m_num_acl_output_cols               = (m_stride == 1) ? m_expd_num_input_cols : (m_stride == 2) ? $ceil(tmp_num_output_cols_cfg / 2) : 0;
+    tmp_m_num_input_cols                = m_expd_num_input_cols;
+    tmp_pix_seq_data_full_count         = `WINDOW_3x3_NUM_CYCLES * $ceil(tmp_m_num_input_cols / 2);
+    m_pix_seq_data_full_count_cfg       = (m_stride == 1) ? (`WINDOW_3x3_NUM_CYCLES * m_expd_num_input_cols) : (m_stride == 2) ? tmp_pix_seq_data_full_count : 0;
+    m_num_input_rows_cfg                = m_num_input_rows - 1;
+    m_num_input_cols_cfg                = m_num_input_cols - 1;
+    m_expd_num_input_rows_cfg           = m_expd_num_input_rows - 1;
+    m_expd_num_input_cols_cfg           = m_expd_num_input_cols - 1;      
+    m_crpd_input_col_start_cfg          = 1;
+    m_crpd_input_row_start_cfg          = 1;
+    m_crpd_input_row_end_cfg            = m_num_output_rows_cfg - 1;
+    m_crpd_input_col_end_cfg            = m_num_output_cols_cfg - 1;
+    m_pfb_full_count_cfg                = m_pfb_full_count;
     
 
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
