@@ -118,6 +118,7 @@ task `cnl_scX_monitor::run();
 
             m_monitor2scoreboardMB.put(query);
             $display("// Finished Test ------------------------------------------------");
+            $display("// At Time:                %t", $time                             );            
             $display("// Test Index:            %0d", test.m_ti                         ); 
             $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );

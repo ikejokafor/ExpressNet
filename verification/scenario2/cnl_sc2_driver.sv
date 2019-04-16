@@ -115,7 +115,10 @@ task `cnl_scX_driver::run();
                     i = i + 1;
                 end
             end
-            $display("// Running Test -------------------------------------------------");
+            
+            
+            $display("// Started Running Test -----------------------------------------");
+            $display("// At Time:                %t", $time                             );       
             $display("// Test Index:            %0d", test.m_ti                         ); 
             $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
@@ -129,9 +132,16 @@ task `cnl_scX_driver::run();
             $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
             $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
             $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        ); 
-            $display("// Running Test -------------------------------------------------");
+            $display("// Started Running Test -----------------------------------------");
             $display("\n");
-            // BEGIN logic -------------------------------------------------------------------------------------------------------------------------- 
+            
+            
+            // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Started Sending Quad Config"                                   ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n"); 
             m_quad_intf.pix_seq_data_full_count_cfg     = test.m_pix_seq_data_full_count_cfg;
             m_quad_intf.kernel_full_count_cfg           = `KERNEL_3x3_COUNT_FULL;
             m_quad_intf.num_output_rows_cfg             = test.m_num_output_rows_cfg;
@@ -158,11 +168,21 @@ task `cnl_scX_driver::run();
             m_quad_intf.pixel_data                      <= 0;
             m_quad_intf.config_data                     <= 0;
             m_quad_intf.config_valid                    <= 0;
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Finished Sending Quad Config"                                  ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n");            
             // END logic ----------------------------------------------------------------------------------------------------------------------------
             
 
             // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
             // send pixel sequence configuration data down for input maps
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Started Sending Pixel Sequence Config"                         ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n"); 
             i = 1;
             @(m_quad_intf.clk_if_cb);
             m_quad_intf.clk_if_cb.config_data[127:112]    <= test.m_pix_seq_data_sim[(0 * 8) + 7]; 
@@ -190,11 +210,21 @@ task `cnl_scX_driver::run();
             end
             @(m_quad_intf.clk_if_cb);
             m_quad_intf.clk_if_cb.config_valid[0]                 <= 0;
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Finished Sending Pixel Sequence Config"                        ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n"); 
             // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
             // send configuration data down for kernels
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Sending Kernel Config"                                         ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n");           
             @(m_quad_intf.clk_if_cb);
             m_quad_intf.clk_if_cb.config_valid[1]         <= 1;        
             m_quad_intf.clk_if_cb.config_data[127:112]    <= test.m_num_kernels - 1;
@@ -221,11 +251,21 @@ task `cnl_scX_driver::run();
             m_quad_intf.clk_if_cb.config_data[47:32]      <= 0;
             m_quad_intf.clk_if_cb.config_data[31:16]      <= 0;
             m_quad_intf.clk_if_cb.config_data[15:0]       <= 0;
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Finished Kernel Config"                                        ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n"); 
             // END logic ----------------------------------------------------------------------------------------------------------------------------
 
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
             // send kernel data down
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Started Sending Kernel Data"                                   ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n"); 
             i = 1;
             @(m_quad_intf.clk_core_cb);
             m_quad_intf.clk_core_cb.weight_data[127:112]                <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL) + 0]; 
@@ -269,11 +309,21 @@ task `cnl_scX_driver::run();
             end
             @(m_quad_intf.clk_core_cb);
             m_quad_intf.clk_core_cb.weight_valid <= 0;  
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Finished Sending kernel Data"                                  ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n"); 
             // END logic ----------------------------------------------------------------------------------------------------------------------------
 
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
             // start processing
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Sent Job Accept"                                               ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n");   
             @(m_quad_intf.clk_core_cb);
             m_quad_intf.clk_if_cb.job_start <= 1;
             forever begin
@@ -283,11 +333,21 @@ task `cnl_scX_driver::run();
                 end
             end
             @(m_quad_intf.clk_if_cb);
-            m_quad_intf.clk_if_cb.job_start <= 0; 
+            m_quad_intf.clk_if_cb.job_start <= 0;
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Recieve Job Accept"                                            ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n");   
 
 
             i = 0; 
             j = 0;
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Began Sending Pixel Data"                                      ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n");   
             while(i < (test.m_num_input_rows * test.m_num_input_cols)) begin
                 @(m_quad_intf.clk_if_cb);
                 if(m_quad_intf.clk_if_cb.job_fetch_request) begin
@@ -327,11 +387,21 @@ task `cnl_scX_driver::run();
                     m_quad_intf.clk_if_cb.job_fetch_complete    <= 0;
                     i = i + test.m_num_input_cols;
                 end
-            end 
+            end
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Finished Sending Pixel Data"                                   ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n");   
             // END logic ----------------------------------------------------------------------------------------------------------------------------
 
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Waiting for Job Complete"                                      ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n");           
             forever begin
                 @(m_quad_intf.clk_if_cb);
                 if(m_quad_intf.clk_if_cb.job_complete) begin
@@ -339,6 +409,11 @@ task `cnl_scX_driver::run();
                     break;
                 end
             end
+            $display("// --------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );
+            $display("// Recieved Job Complete"                                         ); 
+            $display("// --------------------------------------------------------------");
+            $display("\n");   
             @(m_quad_intf.clk_if_cb);
             m_quad_intf.clk_if_cb.job_complete_ack <= 0;
             if(!m_runForever) begin

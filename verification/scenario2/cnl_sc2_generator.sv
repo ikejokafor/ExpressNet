@@ -29,7 +29,7 @@
 //                              pre_randomize() and post_randomize() are built in overridable functions  
 //                          Not testing padding > 1
 //                          
-//                          
+//                          floor((W - F + (2 * P)) / S) + 1
 //                          
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -209,10 +209,14 @@ function void `cnl_scX_generator::post_randomize();
     
     m_num_output_rows = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
     m_num_output_cols = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;     
-    if(m_padding) begin
+    if(m_padding && !m_upsample) begin
         m_expd_num_input_rows = m_num_input_rows + 2;
         m_expd_num_input_cols = m_num_input_cols + 2;
-    end else begin
+    end else if(!m_padding && m_upsample) begin
+    
+    end else if(m_padding && m_upsample) begin
+    
+    end else begin // !m_padding && !m_upsample
         m_expd_num_input_rows = m_num_input_rows;
         m_expd_num_input_cols = m_num_input_cols;  
     end
@@ -232,8 +236,8 @@ function void `cnl_scX_generator::post_randomize();
     m_expd_num_input_cols_cfg           = m_expd_num_input_cols - 1;      
     m_crpd_input_col_start_cfg          = 1;
     m_crpd_input_row_start_cfg          = 1;
-    m_crpd_input_row_end_cfg            = m_num_output_rows_cfg - 1;
-    m_crpd_input_col_end_cfg            = m_num_output_cols_cfg - 1;
+    m_crpd_input_row_end_cfg            = m_expd_num_input_rows - 2;
+    m_crpd_input_col_end_cfg            = m_expd_num_input_cols - 2;
     m_pfb_full_count_cfg                = m_pfb_full_count;
     
 

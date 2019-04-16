@@ -129,7 +129,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     input  logic                                        last_kernel                 ;
     input  logic                                        pipeline_flushed            ;
 	output logic                                        wht_sequence_selector       ;
-    output logic                                        next_state_tran                    ;
+    output logic                                        next_state_tran             ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -153,7 +153,8 @@ module cnn_layer_accel_quad_bram_ctrl (
 	logic                                            ce_move_one_row_down            ;
 	logic                                            ce_move_one_row_down_d          ;
     logic                                            pix_seq_bram_dout_valid         ;
-    logic                                            next_state_tran_r                      ;
+    logic                                            next_state_tran_r               ;
+    logic                                            pip_primed                      ;
     genvar                                           i                               ;
 
   	
@@ -249,7 +250,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             if(job_complete_ack) begin
                 input_col  <= 0;
                 input_row  <= 0;
-            end else if(input_col == expd_num_input_cols) begin
+            end else if((input_col == expd_num_input_cols && !pip_primed) || (input_col == expd_num_input_cols && pip_primed && pfb_count == 1 && pfb_rden)) begin
                 input_col  <= 0;
                 input_row  <= input_row + 1;
             end else if(pfb_rden) begin
@@ -403,6 +404,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             graycode_r              <= 0;
             pix_seq_data_count      <= 0;
             next_state_tran_r       <= 0;
+            pip_primed              <= 0;
             state                   <= ST_IDLE;
         end else begin
             pfb_rden                <= 0;
@@ -437,6 +439,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                         pix_seq_data_count   <= pix_seq_data_full_count;
 						pix_seq_bram_rdAddr  <= 0;
                         next_state_tran_r    <= 1;
+                        pip_primed           <= 1;
                         state                <= ST_AWE_CE_ACTIVE;
                     end else begin
                         if(pfb_count > 1) begin
@@ -508,6 +511,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                     pix_seq_bram_rdAddr         <= 0;                    
                     if(job_complete_ack) begin
                         job_complete_acked      <= 0;
+                        pip_primed              <= 0;
                         state                   <= ST_IDLE;
                     end
                 end

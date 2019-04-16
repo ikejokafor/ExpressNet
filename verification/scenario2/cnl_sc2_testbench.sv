@@ -231,57 +231,58 @@ module cnl_sc2_testbench;
         ti = 0;
 
 
-        `scX_genParams = new();
-        `scX_genParams.ti = ti;  
-        `scX_crtTestParams.num_input_rows = 20;
-        `scX_crtTestParams.num_input_cols = 20;
-        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 1;
-        `scX_crtTestParams.kernel_size = 3;
-        `scX_crtTestParams.stride = 1;
-        `scX_crtTestParams.padding = 1;
-        `scX_crtTestParams.upsample = FALSE;
-        test = new(`scX_genParams);
-        test.createTest(`scX_crtTestParams);
-        test_queue.push_back(test);
-        ti = ti + 1;
-        
-         `scX_genParams = new();
-        `scX_genParams.ti = ti;  
-        `scX_crtTestParams.num_input_rows = 20;
-        `scX_crtTestParams.num_input_cols = 20;
-        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 1;
-        `scX_crtTestParams.kernel_size = 3;
-        `scX_crtTestParams.stride = 2;
-        `scX_crtTestParams.padding = 1;
-        `scX_crtTestParams.upsample = FALSE;
-        test = new(`scX_genParams);
-        test.createTest(`scX_crtTestParams);
-        test_queue.push_back(test);
-        ti = ti + 1;
-        
+        // `scX_genParams = new();
+        // `scX_genParams.ti = ti;  
+        // `scX_crtTestParams.num_input_rows = 20;
+        // `scX_crtTestParams.num_input_cols = 20;
+        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // `scX_crtTestParams.num_kernels = 1;
+        // `scX_crtTestParams.kernel_size = 3;
+        // `scX_crtTestParams.stride = 1;
+        // `scX_crtTestParams.padding = 1;
+        // `scX_crtTestParams.upsample = FALSE;
+        // test = new(`scX_genParams);
+        // test.createTest(`scX_crtTestParams);
+        // test_queue.push_back(test);
+        // ti = ti + 1;
+        // 
+        // 
+        // `scX_genParams = new();
+        // `scX_genParams.ti = ti;  
+        // `scX_crtTestParams.num_input_rows = 20;
+        // `scX_crtTestParams.num_input_cols = 20;
+        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // `scX_crtTestParams.num_kernels = 1;
+        // `scX_crtTestParams.kernel_size = 3;
+        // `scX_crtTestParams.stride = 2;
+        // `scX_crtTestParams.padding = 1;
+        // `scX_crtTestParams.upsample = FALSE;
+        // test = new(`scX_genParams);
+        // test.createTest(`scX_crtTestParams);
+        // test_queue.push_back(test);
+        // ti = ti + 1;
+        // 
+        // 
+        // `scX_genParams = new();
+        // `scX_genParams.ti = ti;  
+        // `scX_crtTestParams.num_input_rows = 21;
+        // `scX_crtTestParams.num_input_cols = 21;
+        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // `scX_crtTestParams.num_kernels = 1;
+        // `scX_crtTestParams.kernel_size = 3;
+        // `scX_crtTestParams.stride = 1;
+        // `scX_crtTestParams.padding = 1;
+        // `scX_crtTestParams.upsample = FALSE;
+        // test = new(`scX_genParams);
+        // test.createTest(`scX_crtTestParams);
+        // test_queue.push_back(test);
+        // ti = ti + 1;
+
         
         `scX_genParams = new();
         `scX_genParams.ti = ti;  
         `scX_crtTestParams.num_input_rows = 21;
         `scX_crtTestParams.num_input_cols = 21;
-        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 1;
-        `scX_crtTestParams.kernel_size = 3;
-        `scX_crtTestParams.stride = 1;
-        `scX_crtTestParams.padding = 1;
-        `scX_crtTestParams.upsample = FALSE;
-        test = new(`scX_genParams);
-        test.createTest(`scX_crtTestParams);
-        test_queue.push_back(test);
-        ti = ti + 1;
-        
-        
-         `scX_genParams = new();
-        `scX_genParams.ti = ti;  
-        `scX_crtTestParams.num_input_rows = 22;
-        `scX_crtTestParams.num_input_cols = 22;
         `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
         `scX_crtTestParams.num_kernels = 1;
         `scX_crtTestParams.kernel_size = 3;
