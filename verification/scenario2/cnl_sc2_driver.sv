@@ -118,7 +118,7 @@ task `cnl_scX_driver::run();
             
             
             $display("// Started Running Test -----------------------------------------");
-            $display("// At Time:                %t", $time                             );       
+            $display("// At Time:               %0t", $time                             );       
             $display("// Test Index:            %0d", test.m_ti                         ); 
             $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
             $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
@@ -336,7 +336,7 @@ task `cnl_scX_driver::run();
             m_quad_intf.clk_if_cb.job_start <= 0;
             $display("// --------------------------------------------------------------");
             $display("// At Time: %0t", $time                                           );
-            $display("// Recieve Job Accept"                                            ); 
+            $display("// Recieved Job Accept"                                           ); 
             $display("// --------------------------------------------------------------");
             $display("\n");   
 

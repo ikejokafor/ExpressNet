@@ -242,7 +242,7 @@ module cnn_layer_accel_quad (
 	logic  								        awe_dataout_valid[`NUM_AWE - 1:0]			    ;
 	logic                                	    awe_carryout[`NUM_AWE - 1:0]        		    ;
 	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_dataout	[`NUM_AWE - 1:0]	    	        ;
-    logic                                       next_state_tran                                        ;
+    logic                                       next_state_tran                                 ;
 
 
     

@@ -223,8 +223,13 @@ function void `cnl_scX_generator::post_randomize();
     m_pfb_full_count                    = m_expd_num_input_cols;
     tmp_num_output_rows_cfg             = m_expd_num_input_rows;
     tmp_num_output_cols_cfg             = m_expd_num_input_cols;
-    m_num_output_rows_cfg               = (m_stride == 1) ? m_expd_num_input_rows - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
-    m_num_output_cols_cfg               = (m_stride == 1) ? m_expd_num_input_cols - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
+    if(m_padding && m_stride > 1) begin
+        m_num_output_rows_cfg           = (m_stride == 1) ? m_expd_num_input_cols : (m_stride == 2) ? $ceil(tmp_num_output_cols_cfg / 2) : 0;
+        m_num_output_cols_cfg           = (m_stride == 1) ? ((m_expd_num_input_rows - m_kernel_size) / m_stride) + 2 : (m_stride == 2) ? $ceil(tmp_num_output_rows_cfg / 2) - 1 : 0;
+    end else begin
+        m_num_output_rows_cfg           = (m_stride == 1) ? m_expd_num_input_rows - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_rows_cfg / 2) - 1) : 0;
+        m_num_output_cols_cfg           = (m_stride == 1) ? m_expd_num_input_cols - 1 : (m_stride == 2) ? ($ceil(tmp_num_output_cols_cfg / 2) - 1) : 0;
+    end
     m_num_acl_output_rows               = (m_stride == 1) ? ((m_expd_num_input_rows - m_kernel_size) / m_stride) + 2 : (m_stride == 2) ? $ceil(tmp_num_output_rows_cfg / 2) - 1 : 0;
     m_num_acl_output_cols               = (m_stride == 1) ? m_expd_num_input_cols : (m_stride == 2) ? $ceil(tmp_num_output_cols_cfg / 2) : 0;
     tmp_m_num_input_cols                = m_expd_num_input_cols;

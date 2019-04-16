@@ -65,7 +65,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     last_kernel                 ,
     pipeline_flushed            ,
     wht_sequence_selector       ,
-    next_state_tran
+    next_state_tran             
 );
 
 
