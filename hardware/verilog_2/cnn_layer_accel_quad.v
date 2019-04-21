@@ -243,7 +243,11 @@ module cnn_layer_accel_quad (
 	logic                                	    awe_carryout[`NUM_AWE - 1:0]        		    ;
 	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_dataout	[`NUM_AWE - 1:0]	    	        ;
     logic                                       next_state_tran                                 ;
-
+    logic                                       next_row                                        ;
+    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_row                                      ;
+    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_col                                      ;
+    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_depth                                    ;
+      
 
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -310,7 +314,8 @@ module cnn_layer_accel_quad (
                     .job_fetch_ack            ( job_fetch_ack                             ),
                     .job_complete_ack         ( job_complete_ack                          ),
                     .rst_addr                 ( next_state_tran                           ),
-                    .cncl_fetch_req           ( cncl_fetch_req[i * `NUM_CE_PER_AWE + j]   )
+                    .cncl_fetch_req           ( cncl_fetch_req[i * `NUM_CE_PER_AWE + j]   ),
+                    .next_row                 ( next_row                                  )
                 );
                 
 
@@ -496,11 +501,45 @@ module cnn_layer_accel_quad (
         .last_kernel                ( last_kernel[C_NUM_CE - 1]                             ),
 		.pipeline_flushed           ( pipeline_flushed                                      ),
         .wht_sequence_selector      ( wht_sequence_selector                                 ),
-        .next_state_tran            ( next_state_tran                                       )
+        .next_state_tran            ( next_state_tran                                       ),
+        .next_row                   ( next_row                                              )
     );
     
+    
+    // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------      
+    assign pipeline_flushed = output_row == num_output_rows_cfg || state == ST_IDLE;
+
+    
+    always@(posedge clk_core) begin
+        if(rst) begin
+            output_row      <= 0;
+            output_col      <= 0;
+            output_depth    <= 0;
+        end else begin
+            if(job_accept || job_complete_ack) begin
+                output_row      <= 0;
+                output_col      <= 0;
+                output_depth    <= 0;
+            end
+            if(result_valid) begin
+                if(output_col == (num_output_cols_cfg - 1)) begin
+                    output_col <= 0;
+                    if(output_depth == (num_kernel_cfg - 1)) begin
+                        output_depth <= 0;
+                        output_row   <= output_row + 1;
+                    end else begin
+                        output_depth  <= output_depth + 1;
+                    end
+                end else begin
+                    output_col <= output_col + 1;
+                end
+            end
+        end    
+    end
+    // END Logic ------------------------------------------------------------------------------------------------------------------------------------
    
-    // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------       
+
+    // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------      
     assign job_fetch_request = job_fetch_request_w && !cncl_fetch_req[0];
     assign job_fetch_ack_w = job_fetch_ack_r || job_fetch_ack;
     assign job_fetch_complete_w = job_fetch_complete || job_fetch_complete_r;
@@ -549,7 +588,6 @@ module cnn_layer_accel_quad (
     assign wht_config_wren  = weight_ready && weight_valid;
     assign weight_ready     = weight_valid;
     assign config_mode      = state[0];
-    assign pipeline_flushed = !(|ce0_pixel_dataout_valid) && !(|ce1_pixel_dataout_valid) && !(|ce_wht_table_dout_valid);
     
     always@(posedge clk_core) begin
         if(rst) begin
@@ -616,37 +654,6 @@ module cnn_layer_accel_quad (
             ST_WAIT_JOB_DONE:           state_s = "ST_WAIT_JOB_DONE";
             ST_SEND_COMPLETE:           state_s = "ST_SEND_COMPLETE";
         endcase
-    end
-    
-    
-    int output_row;
-    int output_col;
-    int output_depth;
-    always@(posedge clk_core) begin
-        if(rst) begin
-            output_row      <= 0;
-            output_col      <= 0;
-            output_depth    <= 0;
-        end else begin
-            if(job_accept) begin
-                output_row      <= 0;
-                output_col      <= 0;
-                output_depth    <= 0;
-            end
-            if(result_valid) begin
-                if(output_col == num_output_cols_cfg) begin
-                    output_col <= 0;
-                    if(output_depth == (num_kernel_cfg - 1)) begin
-                        output_depth <= 0;
-                        output_row   <= output_row + 1;
-                    end else begin
-                        output_depth  <= output_depth + 1;
-                    end
-                end else begin
-                    output_col <= output_col + 1;
-                end
-            end
-        end    
     end
 `endif
     

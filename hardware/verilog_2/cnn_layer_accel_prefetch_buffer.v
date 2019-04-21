@@ -49,7 +49,8 @@ module cnn_layer_accel_prefetch_buffer (
     job_fetch_ack           ,
     job_complete_ack        ,
     rst_addr                ,
-    cncl_fetch_req          
+    cncl_fetch_req          ,
+    next_row
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -88,6 +89,7 @@ module cnn_layer_accel_prefetch_buffer (
     input  logic                                    job_complete_ack        ;
     input  logic                                    rst_addr                ;
     output logic                                    cncl_fetch_req          ;
+    input  logic                                    next_row                ;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -122,31 +124,18 @@ module cnn_layer_accel_prefetch_buffer (
         .rd_clk     ( rd_clk        ),
         .rdAddr     ( bram_rdAddr   ),
         .rden       ( bram_rden     ),
+        .rdAddr_cfg ( upsample      ),
         .dout       ( bram_dataout  )
     );
-    
-    
-    // BEGIN Logic ---------------------------------------------------------------------------------------------------------------------------------
-    always@(posedge rd_clk) begin
-        if(rst) begin
-            row_count   <= 0;
-        end else begin
-            if(upsample && input_col == expd_num_input_cols) begin
-                row_count <= row_count + 1;
-            end
-        end
-    end
-    // END Logic ------------------------------------------------------------------------------------------------------------------------------------
-    
+   
 
     // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge rd_clk) begin
         if(rst) begin
-            repeat_row   <= 0;
+            repeat_row <= 0;
         end else begin
-            repeat_row   <= 0;
-            if(rd_en && upsample && row_count == 1) begin               
-                repeat_row <= 1;
+            if(upsample && next_row) begin               
+                repeat_row <= ~repeat_row;
             end
         end
     end
@@ -168,11 +157,32 @@ module cnn_layer_accel_prefetch_buffer (
     // END ------------------------------------------------------------------------------------------------------------------------------------------  
 
 
-    // BEGIN Logic ---------------------------------------------------------------------------------------------------------------------------------- 
-    assign zero_dout        = (padding && !upsample) && (input_row < crpd_input_row_start || input_col < crpd_input_col_start || input_row > crpd_input_row_end || input_col > crpd_input_col_end);
-    assign dout             = (zero_dout) ? {`PIXEL_WIDTH{1'b0}} : bram_dataout;
-    assign cncl_fetch_req   = (padding || upsample) && (input_row == crpd_input_row_start || input_row > crpd_input_row_end);
-    assign bram_rden        = bram_rden_r;
+    // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------
+    always@(*) begin
+        if((padding && !upsample) && (input_row < crpd_input_row_start || input_col < crpd_input_col_start || input_row > crpd_input_row_end || input_col > crpd_input_col_end)) begin
+            zero_dout = 1;
+        end else begin
+            zero_dout = 0;
+        end
+        if((padding && !upsample) && (input_row == crpd_input_row_start || input_row > crpd_input_row_end)) begin
+            cncl_fetch_req = 1;
+        end else if((!padding && upsample)) begin
+            cncl_fetch_req = repeat_row;
+        end else begin
+            cncl_fetch_req = 0;
+        end
+    end
+    always@(posedge rd_clk) begin
+        if(rst) begin
+            replicate <= 1;
+        end else begin
+            if(upsample && rd_en) begin
+                replicate <= ~replicate;
+            end
+        end
+    end
+    assign dout       = (zero_dout) ? {`PIXEL_WIDTH{1'b0}} : bram_dataout;
+    assign bram_rden  = bram_rden_r;
     
     always@(posedge rd_clk) begin
         if(rst) begin
@@ -194,7 +204,7 @@ module cnn_layer_accel_prefetch_buffer (
         end else begin
             if(job_fetch_ack || job_complete_ack || rst_addr) begin
                 bram_rdAddr <= 0;
-            end else if(bram_rden) begin
+            end else if((bram_rden && !upsample) || (bram_rden && upsample && !replicate)) begin
                 bram_rdAddr <= bram_rdAddr + 1;
             end
         end

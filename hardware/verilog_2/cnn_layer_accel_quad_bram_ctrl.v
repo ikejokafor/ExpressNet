@@ -65,7 +65,8 @@ module cnn_layer_accel_quad_bram_ctrl (
     last_kernel                 ,
     pipeline_flushed            ,
     wht_sequence_selector       ,
-    next_state_tran             
+    next_state_tran             ,
+    next_row
 );
 
 
@@ -130,6 +131,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     input  logic                                        pipeline_flushed            ;
 	output logic                                        wht_sequence_selector       ;
     output logic                                        next_state_tran             ;
+    output logic                                        next_row                    ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -216,7 +218,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                 next_kernel[idx] <= 0;
             end
         end else begin
-            next_kernel[0] <= (output_col == num_output_cols && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_move_one_row_down);
+            next_kernel[0] <= (output_col == (num_output_cols - 1) && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_move_one_row_down);
             for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
                 next_kernel[idx] <= next_kernel[idx - 1];
             end
@@ -244,16 +246,19 @@ module cnn_layer_accel_quad_bram_ctrl (
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin
         if(rst) begin
+            next_row    <= 0;
             input_row   <= 0;
             input_col   <= 0;
         end else begin
+            next_row    <= 0;
             if(job_complete_ack) begin
                 input_col  <= 0;
                 input_row  <= 0;
             end else if((input_col == expd_num_input_cols && !pip_primed) || (input_col == expd_num_input_cols && pip_primed && pfb_count == 1 && pfb_rden)) begin
                 input_col  <= 0;
+                next_row   <= 1;
                 input_row  <= input_row + 1;
-            end else if(pfb_rden) begin
+            end else if(pfb_rden && input_row <= expd_num_input_rows) begin
                 input_col  <= input_col + 1;
             end
         end
@@ -320,7 +325,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             if(job_complete_ack) begin
                 output_col  <= 0;
                 output_row  <= 0;
-            end else if(output_col == num_output_cols && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+            end else if(output_col == (num_output_cols - 1) && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                 output_col <= 0;
                 if(last_kernel && (output_stride == 0 || input_row == expd_num_input_rows)) begin
                     output_row <= output_row + 1;
@@ -426,8 +431,8 @@ module cnn_layer_accel_quad_bram_ctrl (
                         job_fetch_acked     <= job_fetch_ack  ? 1'b1 :  job_fetch_acked;
                     end
                     if(job_fetch_complete) begin
-                        job_fetch_acked <= 0;
-                        state           <= return_state;
+                        job_fetch_acked     <= 0;
+                        state               <= return_state;
 					end
                 end
                 ST_AWE_CE_PRIM_BUFFER: begin
@@ -474,7 +479,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                         pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                     end
                     // next state logic
-                    if(pfb_count == 0 && last_kernel && input_row == (expd_num_input_rows + 1) && output_row == num_output_rows) begin
+                    if(pfb_count == 0 && last_kernel && input_row == (expd_num_input_rows + 1) && output_row == (num_output_rows + 1)) begin
                         next_state <= ST_WAIT_JOB_DONE;
                     end else if(pfb_count == 0 && (last_kernel || ce_move_one_row_down) && input_row < (expd_num_input_rows + 1)) begin
                         pix_seq_bram_rden_r  <= 0;

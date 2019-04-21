@@ -64,9 +64,9 @@ function `cnl_scX_driver::new(drvParams_t drvParams = null);
         $cast(`scX_drvParams, drvParams);
         m_quad_intf = `scX_drvParams.quad_intf;
         m_agent2driverMB = `scX_drvParams.agent2driverMB;
-        m_mon_rdy_arr = `scX_drvParams.mon_rdy_arr;
         m_num_mon = `scX_drvParams.num_mon;
         m_numTests = `scX_drvParams.numTests;
+        m_DUT_rdy = `scX_drvParams.DUT_rdy;
         m_runForever = `scX_drvParams.runForever;
     end
 endfunction: new
@@ -105,18 +105,10 @@ task `cnl_scX_driver::run();
     
     
     t = 0;
+    m_DUT_rdy.put(signal);
     while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         if(m_agent2driverMB.try_get(test)) begin
-            @(m_quad_intf.clk_if_cb);
-            while(i < m_num_mon) begin
-                @(m_quad_intf.clk_core_cb);
-                if(m_mon_rdy_arr[i].try_get(signal)) begin
-                    i = i + 1;
-                end
-            end
-            
-            
             $display("// Started Running Test -----------------------------------------");
             $display("// At Time:               %0t", $time                             );       
             $display("// Test Index:            %0d", test.m_ti                         ); 
@@ -227,14 +219,14 @@ task `cnl_scX_driver::run();
             $display("\n");           
             @(m_quad_intf.clk_if_cb);
             m_quad_intf.clk_if_cb.config_valid[1]         <= 1;        
-            m_quad_intf.clk_if_cb.config_data[127:112]    <= test.m_num_kernels - 1;
-            m_quad_intf.clk_if_cb.config_data[111:96]     <= test.m_num_kernels - 1;
-            m_quad_intf.clk_if_cb.config_data[95:80]      <= test.m_num_kernels - 1;
-            m_quad_intf.clk_if_cb.config_data[79:64]      <= test.m_num_kernels - 1;
-            m_quad_intf.clk_if_cb.config_data[63:48]      <= test.m_num_kernels - 1;
-            m_quad_intf.clk_if_cb.config_data[47:32]      <= test.m_num_kernels - 1;
-            m_quad_intf.clk_if_cb.config_data[31:16]      <= test.m_num_kernels - 1;
-            m_quad_intf.clk_if_cb.config_data[15:0]       <= test.m_num_kernels - 1;
+            m_quad_intf.clk_if_cb.config_data[127:112]    <= test.m_num_kernels_cfg;
+            m_quad_intf.clk_if_cb.config_data[111:96]     <= test.m_num_kernels_cfg;
+            m_quad_intf.clk_if_cb.config_data[95:80]      <= test.m_num_kernels_cfg;
+            m_quad_intf.clk_if_cb.config_data[79:64]      <= test.m_num_kernels_cfg;
+            m_quad_intf.clk_if_cb.config_data[63:48]      <= test.m_num_kernels_cfg;
+            m_quad_intf.clk_if_cb.config_data[47:32]      <= test.m_num_kernels_cfg;
+            m_quad_intf.clk_if_cb.config_data[31:16]      <= test.m_num_kernels_cfg;
+            m_quad_intf.clk_if_cb.config_data[15:0]       <= test.m_num_kernels_cfg;
             forever begin
                 @(m_quad_intf.clk_core_cb);
                 if(m_quad_intf.clk_if_cb.config_accept[1]) begin
@@ -351,6 +343,11 @@ task `cnl_scX_driver::run();
             while(i < (test.m_num_input_rows * test.m_num_input_cols)) begin
                 @(m_quad_intf.clk_if_cb);
                 if(m_quad_intf.clk_if_cb.job_fetch_request) begin
+                    $display("// --------------------------------------------------------------");
+                    $display("// At Time: %0t", $time                                           );
+                    $display("// Started Servicing Job Fetch Request"                           ); 
+                    $display("// --------------------------------------------------------------");
+                    $display("\n");
                     m_quad_intf.clk_if_cb.job_fetch_ack <= 1;                
                     @(m_quad_intf.clk_if_cb);
                     m_quad_intf.clk_if_cb.job_fetch_ack         <= 0;
@@ -386,6 +383,11 @@ task `cnl_scX_driver::run();
                     @(m_quad_intf.clk_if_cb);
                     m_quad_intf.clk_if_cb.job_fetch_complete    <= 0;
                     i = i + test.m_num_input_cols;
+                    $display("// --------------------------------------------------------------");
+                    $display("// At Time: %0t", $time                                           );
+                    $display("// Finished Servicing Job Fetch Request"                          ); 
+                    $display("// --------------------------------------------------------------");
+                    $display("\n");
                 end
             end
             $display("// --------------------------------------------------------------");
@@ -416,6 +418,33 @@ task `cnl_scX_driver::run();
             $display("\n");   
             @(m_quad_intf.clk_if_cb);
             m_quad_intf.clk_if_cb.job_complete_ack <= 0;
+            $display("// Finished Test ------------------------------------------------");
+            $display("// At Time:               %0t", $time                             );            
+            $display("// Test Index:            %0d", test.m_ti                         ); 
+            $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
+            $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
+            $display("// Input Depth:           %0d", test.m_depth                      );
+            $display("// Num Kernels:           %0d", test.m_num_kernels                );
+            $display("// Kernel size:           %0d", test.m_kernel_size                );
+            $display("// Stride                 %0d", test.m_stride                     );
+            $display("// Padding:               %0d", test.m_padding                    );
+            $display("// UpSample:              %0d", test.m_upsample                   );
+            $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
+            $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
+            $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
+            $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        ); 
+            $display("// Finished Test ------------------------------------------------");
+            $display("\n");
+            
+
+            m_DUT_rdy.put(signal);
+            $display("//---------------------------------------------------------------");
+            $display("// At Time: %0t", $time                                           );  
+            $display("// DUT ready for next test"                                       );
+            $display("//---------------------------------------------------------------");
+            $display("\n");
+            
+            
             if(!m_runForever) begin
                 t = t + 1;
             end

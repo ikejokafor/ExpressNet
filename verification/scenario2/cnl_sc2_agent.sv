@@ -66,7 +66,8 @@ function `cnl_scX_agent::new(agentParams_t agentParams = null);
         m_agent2monitorMB_arr = `scX_agentParams.agent2monitorMB_arr;
         m_numTests = `scX_agentParams.numTests;
         m_test_queue = `scX_agentParams.test_queue;
-        m_DUT_rdy_arr = `scX_agentParams.DUT_rdy_arr;
+        m_DUT_rdy = `scX_agentParams.DUT_rdy;
+        m_mon_rdy_arr = `scX_agentParams.mon_rdy_arr;
         m_quad_intf = `scX_agentParams.quad_intf;
         m_num_mon = `scX_agentParams.num_mon;
         m_runForever = `scX_agentParams.runForever;
@@ -78,8 +79,8 @@ task `cnl_scX_agent::run();
     int i;
     int j;
     int k;
-    int n;
     int t;
+    int n;
     int ti;
     int ti_offset;
     int signal;
@@ -92,14 +93,15 @@ task `cnl_scX_agent::run();
     ti = 0;
     ti_offset = m_test_queue.size();
     while(t < m_numTests) begin
-        @(m_quad_intf.clk_if_cb);
-        n = 0;
-        while(n < m_num_mon) begin
+        while(!m_DUT_rdy.try_get(signal)) begin
             @(m_quad_intf.clk_if_cb);
-            if(m_DUT_rdy_arr[n].try_get(signal)) begin
+        end
+        while(n < m_num_mon) begin
+            @(m_quad_intf.clk_core_cb);
+            if(m_mon_rdy_arr[n].try_get(signal)) begin
                 n = n + 1;
             end
-        end  
+        end
         if(m_test_queue.size() > 0) begin
             test = m_test_queue.pop_front();
             test.plain2bits();
@@ -141,9 +143,6 @@ task `cnl_scX_agent::run();
             $fwrite(fd, "\n");
         end
         $fclose(fd);
-        
-        
-
         fd = $fopen("kernel_map.txt", "w");
         for(n = 0; n < test.m_num_kernels; n = n + 1) begin
             $fwrite(fd, "Kernel %d\n", n);
@@ -163,9 +162,11 @@ task `cnl_scX_agent::run();
         end
         $fclose(fd);
         
-        if(test.m_stride >= 3) begin
+        
+        if(test.m_stride >= 3 || test.m_padding >= 2) begin
             $stop;
         end
+        
         
         m_agent2driverMB.put(test);
         for(n = 0; n < m_num_mon; n = n + 1) begin

@@ -81,9 +81,14 @@ task `cnl_scX_scoreboard::run();
     `scX_DUTOutParams_t `scX_DUTOutParams;
     int t;
     int signal;
-
+    integer fd0;
+    integer fd1;
+    
 
     t = 0;
+    fd0 = $fopen("verification_results.txt", "w");
+    fd1 = $fopen("test_index.txt", "w");
+    $fwrite(fd0, "Test Idx, PASS/FAIL\n");
     while(t < m_numTests) begin
         @(m_quad_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
@@ -94,12 +99,14 @@ task `cnl_scX_scoreboard::run();
             `scX_DUTOutParams.num_output_cols        = test.m_num_output_cols;
             `scX_DUTOutParams.num_acl_output_rows    = test.m_num_acl_output_rows;
             `scX_DUTOutParams.num_acl_output_cols    = test.m_num_acl_output_cols;
+            `scX_DUTOutParams.inst_cfg               = 0;
             sol = new(`scX_DUTOutParams);
             createSolution(test, sol);
             forever begin
                 @(m_quad_intf.clk_core_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
                     $display("// Checking Test ------------------------------------------------");
+                    $display("// At Time:               %0t", $time                             );
                     $display("// Test Index:            %0d", test.m_ti                         ); 
                     $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
                     $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
@@ -115,25 +122,43 @@ task `cnl_scX_scoreboard::run();
                     $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        ); 
                     $display("// Checking Test ------------------------------------------------");
                     $display("\n");
+
+                    $fwrite(fd1, "Test Index:            %0d\n", test.m_ti                         ); 
+                    $fwrite(fd1, "Num Input Rows:        %0d\n", test.m_num_input_rows             );
+                    $fwrite(fd1, "Num Input Cols:        %0d\n", test.m_num_input_cols             );
+                    $fwrite(fd1, "Input Depth:           %0d\n", test.m_depth                      );
+                    $fwrite(fd1, "Num Kernels:           %0d\n", test.m_num_kernels                );
+                    $fwrite(fd1, "Kernel size:           %0d\n", test.m_kernel_size                );
+                    $fwrite(fd1, "Stride                 %0d\n", test.m_stride                     );
+                    $fwrite(fd1, "Padding:               %0d\n", test.m_padding                    );
+                    $fwrite(fd1, "Upsample               %0d\n", test.m_upsample                   );
+                    $fwrite(fd1, "\n");
+                    
                     if(checkSolution(query, sol)) begin
                         $display("//---------------------------------------------------------------");
-                        $display("// Test Failed");
+                        $display("// Test Failed"                                                   );
                         $display("//---------------------------------------------------------------");
                         $display("\n");
+                        $fwrite(fd0, "%0d, FAIL\n", test.m_ti);
                     end else begin
                         $display("//---------------------------------------------------------------");
-                        $display("// Test Passed");
+                        $display("// Test Passed"                                                   );
                         $display("//---------------------------------------------------------------");
                         $display("\n");
+                        $fwrite(fd0, "%0d, PASS\n", test.m_ti);
                     end
                     break;
                 end
             end
+            $fflush(fd0);
+            $fflush(fd1);
             if(!m_runForever) begin
                 t = t + 1;
             end
         end
     end
+    $fclose(fd0);
+    $fclose(fd1);
     m_scbd_done.put(signal);
 endtask: run
 
@@ -178,8 +203,6 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
     kernel_data_sim                     = `scX_test.m_kernel_data_sim;
     num_output_rows                     = `scX_sol.m_num_output_rows;
     num_output_cols                     = `scX_sol.m_num_output_cols;
-    num_acl_output_rows                 = `scX_sol.m_num_acl_output_rows;
-    num_acl_output_cols                 = `scX_sol.m_num_acl_output_cols;
     num_kernels                         = `scX_sol.m_num_kernels;
     depth                               = `scX_sol.m_depth;
     
@@ -189,7 +212,7 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
         for(x = 0; x < num_output_rows; x = x + 1) begin
             b = 0;
             for(y = 0; y < num_output_cols; y = y + 1) begin
-                `scX_sol.m_conv_map[(m * num_acl_output_rows + x) * num_acl_output_cols + y].pixel = 0;
+                `scX_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y].pixel = 0;
                 for(k = 0; k < depth; k = k + 1) begin
                     kr = 0;
                     n = 0;
@@ -197,8 +220,8 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
                         kc = 0;
                         for(j = b - padding; kc < kernel_size; j = j + 1) begin
                             if((i >= 0 && j >= 0) && (i < num_input_rows && j < num_input_cols)) begin                      
-                                `scX_sol.m_conv_map[(m * num_acl_output_rows + x) * num_acl_output_cols + y].pixel
-                                    = `scX_sol.m_conv_map[(m * num_acl_output_rows + x) * num_acl_output_cols + y].pixel +
+                                `scX_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y].pixel
+                                    = `scX_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y].pixel +
                                     (pix_data_sim[(k * num_input_rows + i) * num_input_cols + j]
                                     * kernel_data_sim[(m * depth + k) * `KERNEL_3x3_COUNT_FULL + n]);
                             end
@@ -247,7 +270,7 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < num_kernels; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                $fwrite(fd, "%d ", sol_conv_map[(k * num_acl_output_rows + i) * num_acl_output_cols + j].pixel);
+                $fwrite(fd, "%d ", sol_conv_map[(k * num_output_rows + i) * num_output_cols + j].pixel);
             end
             $fwrite(fd, "\n");
         end
@@ -274,9 +297,9 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < num_kernels; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                if(sol_conv_map[(k * num_acl_output_rows + i) * num_acl_output_cols + j].pixel
-                    != qry_conv_map[(k * num_acl_output_rows + i) * num_acl_output_cols + j].pixel) begin
-                   $stop;
+                if(sol_conv_map[(k * num_output_rows + i) * num_output_cols + j].pixel
+                    != int'(qry_conv_map[(k * num_acl_output_rows + i) * num_acl_output_cols + j].pixel)) begin
+                    return 1;
                 end
             end
         end

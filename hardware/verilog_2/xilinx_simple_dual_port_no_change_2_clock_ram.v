@@ -35,13 +35,14 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
     parameter C_RD_PORT_HIGH_PERF   = 1     ,
     parameter C_FIFO_FWFT           = 0
 ) (
-    wr_clk      ,
-    wrAddr      ,
-    wren        ,
-    din         ,
-    rd_clk      ,
-    rdAddr      ,
-    rden        ,
+    wr_clk          ,
+    wrAddr          ,
+    wren            ,
+    din             ,
+    rd_clk          ,
+    rdAddr          ,
+    rden            ,
+    rdAddr_cfg      ,
     dout    
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -69,22 +70,28 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
 	//------------------------------------------------------------------------------------------------------------------------------------------------
-    input  logic                                 wr_clk      ;        
-    input  logic [C_CLG2_RAM_WR_DEPTH - 1:0]     wrAddr      ;
-    input  logic                                 wren        ;  
-    input  logic [     C_RAM_WR_WIDTH - 1:0]     din         ;
-    input  logic                                 rd_clk      ;    
-    input  logic [C_CLG2_RAM_RD_DEPTH - 1:0]     rdAddr      ;
-    input  logic                                 rden        ;
-    output logic [     C_RAM_RD_WIDTH - 1:0]     dout        ;
+    input  logic                                 wr_clk         ;        
+    input  logic [C_CLG2_RAM_WR_DEPTH - 1:0]     wrAddr         ;
+    input  logic                                 wren           ;  
+    input  logic [     C_RAM_WR_WIDTH - 1:0]     din            ;
+    input  logic                                 rd_clk         ;    
+    input  logic [C_CLG2_RAM_RD_DEPTH - 1:0]     rdAddr         ;
+    input  logic                                 rden           ;
+    input  logic                                 rdAddr_cfg     ;
+    output logic [     C_RAM_RD_WIDTH - 1:0]     dout           ;
   
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    logic    [C_RAM_WR_WIDTH - 1:0]    BRAM[C_RAM_DEPTH - 1:0];
+    logic   [C_RAM_WR_WIDTH - 1:0]      BRAM[C_RAM_DEPTH - 1:0] ;
+    logic   [C_RAM_RD_WIDTH - 1:0]      dout_reg0               ;
+    logic   [C_RAM_RD_WIDTH - 1:0]      dout_reg1               ;
+    logic   [C_RAM_RD_WIDTH - 1:0]      dout_reg2               ;   
+    logic   [C_CLG2_RAM_RD_DEPTH - 1:0] rdAddr_plus_one         ;
+    logic   [C_CLG2_RAM_RD_DEPTH - 1:0] address                 ;
 
-	
+
 	// BEGIN BRAM Port A Write logic ----------------------------------------------------------------------------------------------------------------
     always@(posedge wr_clk) begin
         if(wren) begin
@@ -97,9 +104,6 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
     // BEGIN BRAM Port B Read logic -----------------------------------------------------------------------------------------------------------------   
     generate
         if(C_RD_PORT_HIGH_PERF == 1) begin
-            logic [C_RAM_RD_WIDTH - 1:0] dout_reg0;
-            logic [C_RAM_RD_WIDTH - 1:0] dout_reg1;
-            logic [C_RAM_RD_WIDTH - 1:0] dout_reg2;   
             assign dout = dout_reg2;
             always@(posedge rd_clk) begin
                 if(rden) begin
@@ -109,14 +113,18 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
                 end
             end
         end else begin
-            logic   [C_CLG2_RAM_RD_DEPTH - 1:0] rdAddr_plus_one  ;
-            logic   [C_CLG2_RAM_RD_DEPTH - 1:0] address          ;
-            
-            assign address = (rden) ? rdAddr_plus_one : rdAddr;
+            always@(*) begin
+                if(rdAddr_cfg) begin
+                    address = rdAddr;
+                end else begin
+                    address = (rden) ? rdAddr_plus_one : rdAddr;
+                end
+            end
             always@(posedge rd_clk) begin
-                rdAddr_plus_one     <= rdAddr + 1;
                 if(rden) begin
                     rdAddr_plus_one <= rdAddr_plus_one + 1;
+                end else begin
+                    rdAddr_plus_one <= rdAddr + 1;
                 end
             end
             

@@ -201,10 +201,10 @@ module cnn_layer_accel_weight_table_top #(
     // Has not been test for 1x1 kernels
     always@(posedge clk) begin
         if(rst) begin
-            num_kernels_r   <= 0;
-            kernel_count            <= 0;
-            kernel_group            <= 0;
-            wht_table_rden          <= 0;
+            num_kernels_r     <= 0;
+            kernel_count      <= 0;
+            kernel_group      <= 0;
+            wht_table_rden    <= 0;
 		end else begin
             wht_table_rden          <= 0;
             if(kernel_config_valid) begin
