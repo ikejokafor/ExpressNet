@@ -1,1 +1,0 @@
---relax --debug typical --mt auto -L xil_defaultlib -L xpm -L blk_mem_gen_v8_3_2 -L unisims_ver -L unimacro_ver -L secureip --snapshot xilinx_simple_dual_port_1_clock_bram xil_defaultlib.xilinx_simple_dual_port_1_clock_bram xil_defaultlib.glbl -log elaborate.log

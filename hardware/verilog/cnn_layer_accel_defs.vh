@@ -73,7 +73,7 @@
 `define NUM_DSP_PER_CE                  2
 `define NUM_WHT_SEQ_TABLE_PER_AWE       4
 `define DATA_WIDTH                      16
-`define MAX_STRIDE                      11
+`define MAX_STRIDE                      2
 `define WINDOW_3x3_NUM_CYCLES_MINUS_1  `WINDOW_3x3_NUM_CYCLES - 1
 `define KERNEL_3x3_COUNT_FULL           10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
 `define KERNEL_3x3_COUNT_FULL_MINUS_1   `KERNEL_3x3_COUNT_FULL - 1
@@ -85,8 +85,10 @@
 `define MAX_NUM_INPUT_COLS              512
 `define MAX_KERNEL_DEPTH                `NUM_CE_PER_QUAD
 `define MAX_BRAM_3x3_KERNELS            64  // floor(`ROW_BUF_BRAM_DEPTH / `KERNEL_BLOCK_SIZE)
+`define MIN_BRAM_3x3_KERNELS            1
 `define MAX_PADDING                     1
-`define MAX_UPSAMPLE                    2
+`define MAX_UPSAMPLE_FACTOR             2
+`define MAX_KERNEL_SIZE                 3
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------

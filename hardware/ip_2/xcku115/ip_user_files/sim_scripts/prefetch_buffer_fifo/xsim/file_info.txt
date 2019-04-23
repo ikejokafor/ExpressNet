@@ -1,2 +1,0 @@
-prefetch_buffer_fifo.v,verilog,xil_defaultlib,../../../../prefetch_buffer_fifo/sim/prefetch_buffer_fifo.v,
-glbl.v,Verilog,xil_defaultlib,glbl.v

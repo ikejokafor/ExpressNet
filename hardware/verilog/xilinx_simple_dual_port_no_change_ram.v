@@ -83,33 +83,29 @@ module xilinx_simple_dual_port_no_change_ram #(
 
 
     // BEGIN BRAM Read logic ------------------------------------------------------------------------------------------------------------------------
-generate
-if(C_RAM_PERF == "HIGH_PERFORMANCE") begin
-
-    reg [C_RAM_WIDTH - 1:0] dout_reg0;
-    reg [C_RAM_WIDTH - 1:0] dout_reg1;
-    reg [C_RAM_WIDTH - 1:0] dout_reg2;    
-    assign dataout = dout_reg2;
-    always@(posedge clk) begin
-        if(rden) begin
-            dout_reg0 <= BRAM[rdAddr];
-            dout_reg1 <= dout_reg0;
-            dout_reg2 <= dout_reg1;
+    generate
+        if(C_RAM_PERF == "HIGH_PERFORMANCE") begin
+            reg [C_RAM_WIDTH - 1:0] dout_reg0;
+            reg [C_RAM_WIDTH - 1:0] dout_reg1;
+            reg [C_RAM_WIDTH - 1:0] dout_reg2;    
+            assign dataout = dout_reg2;
+            always@(posedge clk) begin
+                if(rden) begin
+                    dout_reg0 <= BRAM[rdAddr];
+                    dout_reg1 <= dout_reg0;
+                    dout_reg2 <= dout_reg1;
+                end
+            end
+        end else if(C_RAM_PERF == "LOW_LATENCY") begin
+            reg [C_RAM_WIDTH - 1:0] dout_reg;
+            assign dataout = dout_reg;        
+            always@(posedge clk) begin
+                if(rden) begin
+                    dout_reg <= BRAM[rdAddr];
+                end
+            end
         end
-    end
-    
-end else if(C_RAM_PERF == "LOW_LATENCY") begin
-
-    reg [C_RAM_WIDTH - 1:0] dout_reg;
-    assign dataout = dout_reg;        
-    always@(posedge clk) begin
-        if(rden) begin
-            dout_reg <= BRAM[rdAddr];
-        end
-    end
-    
-end
-endgenerate
+    endgenerate
     // END BRAM logic -------------------------------------------------------------------------------------------------------------------------------
 
 endmodule

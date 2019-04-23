@@ -55,8 +55,8 @@ module cnn_layer_accel_weight_table_top #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	localparam C_CLG2_BRAM_A_DEPTH          = clog2(`WHT_TBL_BRAM_DEPTH);
-    localparam C_CLG2_BRAM_B_DEPTH          = clog2(`WHT_TBL_BRAM_DEPTH);
+	localparam C_CLG2_BRAM_A_DEPTH          = clog2(`ROW_BUF_BRAM_DEPTH);
+    localparam C_CLG2_BRAM_B_DEPTH          = clog2(`ROW_BUF_BRAM_DEPTH);
     localparam C_WHT_DOUT_WIDTH             = `WEIGHT_WIDTH * `NUM_DSP_PER_CE; 
 
 
@@ -123,7 +123,7 @@ module cnn_layer_accel_weight_table_top #(
         .clk        ( clk                                                   ),
         .rst        ( rst                                                   ),
         .ce         ( 1'b1                                                  ),
-        .data_in    ( kernel_group == num_kernels_r && !config_mode ),
+        .data_in    ( kernel_group == num_kernels_r && !config_mode         ),
         .data_out   ( last_kernel                                           )
     );
     
@@ -169,7 +169,7 @@ module cnn_layer_accel_weight_table_top #(
 
     xilinx_true_dual_port_no_change_ram #(
         .C_RAM_A_WIDTH      ( `WEIGHT_WIDTH                 ),                   
-        .C_RAM_A_DEPTH      ( `WHT_TBL_BRAM_DEPTH                   ),
+        .C_RAM_A_DEPTH      ( `WHT_TBL_BRAM_DEPTH           ),
         .C_RAM_B_WIDTH      ( `WEIGHT_WIDTH                 ),
         .C_PORT_A_RAM_PERF  ( "PORT_A_HIGH_PERFORMANCE"     ),
         .C_PORT_B_RAM_PERF  ( "PORT_B_HIGH_PERFORMANCE"     )
@@ -194,17 +194,17 @@ module cnn_layer_accel_weight_table_top #(
     assign wht_table_addrA_cfg      = {kernel_group      ,   kernel_count       };
     assign wht_table_addr0_w        = {kernel_group      ,   wht_seq_addr0      };
     assign wht_table_addr1_w        = {kernel_group      ,   wht_seq_addr1      };
-    assign wht_table_addrA          = (config_mode) ? wht_table_addrA_cfg : wht_table_addr0;
 	assign wht_table_dout           = {wht_table_dout1   ,   wht_table_dout0    };  
+    assign wht_table_addrA          = (config_mode) ? wht_table_addrA_cfg : wht_table_addr0;
    
    
     // Has not been test for 1x1 kernels
     always@(posedge clk) begin
         if(rst) begin
-            num_kernels_r   <= 0;
-            kernel_count            <= 0;
-            kernel_group            <= 0;
-            wht_table_rden          <= 0;
+            num_kernels_r     <= 0;
+            kernel_count      <= 0;
+            kernel_group      <= 0;
+            wht_table_rden    <= 0;
 		end else begin
             wht_table_rden          <= 0;
             if(kernel_config_valid) begin

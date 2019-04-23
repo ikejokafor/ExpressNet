@@ -1,4 +1,0 @@
-vhdl xpm "/home/software/vivado-2016.1/Vivado/2016.1/data/ip/xpm/xpm_VCOMP.vhd" 
-vhdl fifo_generator_v13_1_0 "../../../ipstatic/fifo_generator_v13_1_0/hdl/fifo_generator_v13_1_rfs.vhd" 
-
-nosort
