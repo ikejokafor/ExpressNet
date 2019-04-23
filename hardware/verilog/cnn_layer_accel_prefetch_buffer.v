@@ -124,7 +124,7 @@ module cnn_layer_accel_prefetch_buffer (
         .rd_clk     ( rd_clk        ),
         .rdAddr     ( bram_rdAddr   ),
         .rden       ( bram_rden     ),
-        .rdAddr_cfg ( upsample      ),
+        .rd_mode    ( upsample      ),
         .dout       ( bram_dataout  )
     );
    

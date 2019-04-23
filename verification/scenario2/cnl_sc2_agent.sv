@@ -143,6 +143,20 @@ task `cnl_scX_agent::run();
             $fwrite(fd, "\n");
         end
         $fclose(fd);
+        if(test.m_upsample) begin
+            fd = $fopen("map_upsampled.txt", "w");
+            for(k = 0; k < test.m_depth; k = k + 1) begin
+                for(i = 0; i < test.m_expd_num_input_rows; i = i + 1) begin
+                    for(j = 0; j < test.m_expd_num_input_cols; j = j + 1) begin
+                        $fwrite(fd, "%d ", test.m_pix_data_upsle[(k * test.m_expd_num_input_rows + i) * test.m_expd_num_input_cols + j]);
+                    end
+                    $fwrite(fd, "\n");
+                end
+                $fwrite(fd, "\n");
+                $fwrite(fd, "\n");
+            end
+            $fclose(fd);
+        end
         fd = $fopen("kernel_map.txt", "w");
         for(n = 0; n < test.m_num_kernels; n = n + 1) begin
             $fwrite(fd, "Kernel %d\n", n);

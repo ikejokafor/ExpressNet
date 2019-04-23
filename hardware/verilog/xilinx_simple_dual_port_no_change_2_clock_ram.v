@@ -35,14 +35,14 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
     parameter C_RD_PORT_HIGH_PERF   = 1     ,
     parameter C_FIFO_FWFT           = 0
 ) (
-    wr_clk          ,
-    wrAddr          ,
-    wren            ,
-    din             ,
-    rd_clk          ,
-    rdAddr          ,
-    rden            ,
-    rdAddr_cfg      ,
+    wr_clk      ,
+    wrAddr      ,
+    wren        ,
+    din         ,
+    rd_clk      ,
+    rdAddr      ,
+    rden        ,
+    rd_mode     ,
     dout    
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -70,15 +70,15 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
 	//------------------------------------------------------------------------------------------------------------------------------------------------
-    input  logic                                 wr_clk         ;        
-    input  logic [C_CLG2_RAM_WR_DEPTH - 1:0]     wrAddr         ;
-    input  logic                                 wren           ;  
-    input  logic [     C_RAM_WR_WIDTH - 1:0]     din            ;
-    input  logic                                 rd_clk         ;    
-    input  logic [C_CLG2_RAM_RD_DEPTH - 1:0]     rdAddr         ;
-    input  logic                                 rden           ;
-    input  logic                                 rdAddr_cfg     ;
-    output logic [     C_RAM_RD_WIDTH - 1:0]     dout           ;
+    input  logic                                 wr_clk     ;        
+    input  logic [C_CLG2_RAM_WR_DEPTH - 1:0]     wrAddr     ;
+    input  logic                                 wren       ;  
+    input  logic [     C_RAM_WR_WIDTH - 1:0]     din        ;
+    input  logic                                 rd_clk     ;    
+    input  logic [C_CLG2_RAM_RD_DEPTH - 1:0]     rdAddr     ;
+    input  logic                                 rden       ;
+    input  logic                                 rd_mode    ;
+    output logic [     C_RAM_RD_WIDTH - 1:0]     dout       ;
   
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
             end
         end else begin
             always@(*) begin
-                if(rdAddr_cfg) begin
+                if(rd_mode) begin
                     address = rdAddr;
                 end else begin
                     address = (rden) ? rdAddr_plus_one : rdAddr;

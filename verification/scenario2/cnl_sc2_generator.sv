@@ -82,6 +82,7 @@ class `cnl_scX_generator extends generator;
     rand int m_kernel_size                                                              ;
     rand int m_stride                                                                   ;
     rand int m_padding                                                                  ;
+    int m_uple_fctr                                                                     ;
     rand bool m_upsample                                                                ;
     int m_expd_num_input_cols_cfg                                                       ;
     int m_expd_num_input_rows_cfg                                                       ;
@@ -92,6 +93,7 @@ class `cnl_scX_generator extends generator;
     int m_pix_seq_data_full_count_cfg                                                   ;
     int m_num_kernels_cfg                                                               ;
     int m_pix_data[]                                                                    ;
+    int m_pix_data_upsle[]                                                              ;
     int m_kernel_data[]                                                                 ;
     logic [15:0] m_pix_seq_data_sim[0:((`MAX_NUM_INPUT_COLS * `NUM_CE_PER_QUAD) - 1)]   ;
     logic [15:0] m_pix_data_sim[]                                                       ;
@@ -199,6 +201,7 @@ endfunction: plain2bits
 function void `cnl_scX_generator::post_randomize();
     int i;
     int j;
+    int k;
     int a;
     int b;
     shortreal fl_num_output_rows;
@@ -206,6 +209,8 @@ function void `cnl_scX_generator::post_randomize();
     shortreal fl_num_input_cols;
     shortreal fl_expd_num_input_cols;
     int fl_pix_seq_data_full_count;
+    int in_index;
+    int out_index;
     
     
     m_num_kernels_cfg = m_num_kernels - 1;
@@ -275,6 +280,20 @@ function void `cnl_scX_generator::post_randomize();
     m_pix_data = new[m_depth * m_num_input_rows * m_num_input_cols];
     foreach(m_pix_data[i]) begin
         m_pix_data[i] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
+    end
+    
+    if(m_upsample) begin
+        m_uple_fctr = 2;
+        m_pix_data_upsle = new[m_depth * m_expd_num_input_rows * m_expd_num_input_cols]; 
+        for(k = 0; k < m_depth; k = k + 1) begin
+            for(j = 0; j < m_num_input_rows * m_uple_fctr; j = j + 1) begin
+                for(i = 0; i < m_num_input_cols * m_uple_fctr; ++i) begin
+                    in_index = k * m_num_input_cols * m_num_input_rows + (j / m_uple_fctr) * m_num_input_cols + i / m_uple_fctr;
+                    out_index = k * m_num_input_cols * m_num_input_rows * m_uple_fctr * m_uple_fctr + j * m_num_input_cols * m_uple_fctr + i;
+                    m_pix_data_upsle[out_index] = m_pix_data[in_index];
+                end
+            end
+        end
     end
  
 
