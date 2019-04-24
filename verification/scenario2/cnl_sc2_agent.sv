@@ -146,9 +146,9 @@ task `cnl_scX_agent::run();
         if(test.m_upsample) begin
             fd = $fopen("map_upsampled.txt", "w");
             for(k = 0; k < test.m_depth; k = k + 1) begin
-                for(i = 0; i < test.m_expd_num_input_rows; i = i + 1) begin
-                    for(j = 0; j < test.m_expd_num_input_cols; j = j + 1) begin
-                        $fwrite(fd, "%d ", test.m_pix_data_upsle[(k * test.m_expd_num_input_rows + i) * test.m_expd_num_input_cols + j]);
+                for(i = 0; i < test.m_num_expd_input_rows; i = i + 1) begin
+                    for(j = 0; j < test.m_num_expd_input_cols; j = j + 1) begin
+                        $fwrite(fd, "%d ", test.m_pix_data_upsle_sim[(k * test.m_num_expd_input_rows + i) * test.m_num_expd_input_cols + j]);
                     end
                     $fwrite(fd, "\n");
                 end

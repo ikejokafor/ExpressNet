@@ -190,22 +190,30 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
     int num_acl_output_cols; 
     logic[15:0] pix_data_sim[];
     logic[15:0] kernel_data_sim[];
+    integer fd;
     
 
     $cast(`scX_test, test);
     $cast(`scX_sol, sol);    
-    num_input_rows                      = `scX_test.m_num_input_rows;
-    num_input_cols                      = `scX_test.m_num_input_cols;    
+ 
     kernel_size                         = `scX_test.m_kernel_size;
     padding                             = `scX_test.m_padding;
     stride                              = `scX_test.m_stride;
-    pix_data_sim                        = `scX_test.m_pix_data_sim;
     kernel_data_sim                     = `scX_test.m_kernel_data_sim;
     num_output_rows                     = `scX_sol.m_num_output_rows;
     num_output_cols                     = `scX_sol.m_num_output_cols;
     num_kernels                         = `scX_sol.m_num_kernels;
     depth                               = `scX_sol.m_depth;
-    
+    if(`scX_test.m_upsample) begin
+        pix_data_sim                    = `scX_test.m_pix_data_upsle_sim;
+        num_input_rows                  = `scX_test.m_num_expd_input_rows;
+        num_input_cols                  = `scX_test.m_num_expd_input_cols;          
+    end else begin
+        pix_data_sim                    = `scX_test.m_pix_data_sim;
+        num_input_rows                  = `scX_test.m_num_input_rows;
+        num_input_cols                  = `scX_test.m_num_input_cols;   
+    end
+
     
     for(m = 0; m < num_kernels; m = m + 1) begin
         a = 0;
@@ -236,6 +244,20 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
             a = a + stride;
         end
     end
+    
+    
+    fd = $fopen("sol_conv_map.txt", "w");
+    for(k = 0; k < num_kernels; k = k + 1) begin
+        for(i = 0; i < num_output_rows; i = i + 1) begin
+            for(j = 0; j < num_output_cols; j = j + 1) begin
+                $fwrite(fd, "%d ", `scX_sol.m_conv_map[(k * num_output_rows + i) * num_output_cols + j].pixel);
+            end
+            $fwrite(fd, "\n");
+        end
+        $fwrite(fd, "\n");
+        $fwrite(fd, "\n");
+    end
+    $fclose(fd);
 endfunction: createSolution
 
 
@@ -264,21 +286,7 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     num_acl_output_cols    = `scX_query.m_num_acl_output_cols;    
     sol_conv_map           = `scX_sol.m_conv_map;
     qry_conv_map           = `scX_query.m_conv_map;
-
-    
-    fd = $fopen("sol_conv_map.txt", "w");
-    for(k = 0; k < num_kernels; k = k + 1) begin
-        for(i = 0; i < num_output_rows; i = i + 1) begin
-            for(j = 0; j < num_output_cols; j = j + 1) begin
-                $fwrite(fd, "%d ", sol_conv_map[(k * num_output_rows + i) * num_output_cols + j].pixel);
-            end
-            $fwrite(fd, "\n");
-        end
-        $fwrite(fd, "\n");
-        $fwrite(fd, "\n");
-    end
-    $fclose(fd);
-        
+       
         
     fd = $fopen("qry_conv_map.txt", "w");
     for(k = 0; k < num_kernels; k = k + 1) begin

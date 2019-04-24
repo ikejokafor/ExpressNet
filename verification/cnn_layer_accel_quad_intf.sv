@@ -79,8 +79,8 @@ interface cnn_layer_accel_quad_intf (
     num_output_rows_cfg             ,
     num_output_cols_cfg             ,
     pix_seq_data_full_count_cfg     ,
-    expd_num_input_cols_cfg       ,
-    expd_num_input_rows_cfg       ,
+    num_expd_input_cols_cfg       ,
+    num_expd_input_rows_cfg       ,
     crpd_input_col_start_cfg       ,
     crpd_input_row_start_cfg       ,
     crpd_input_col_end_cfg         ,
@@ -157,8 +157,8 @@ interface cnn_layer_accel_quad_intf (
     output logic [   9:0]    num_output_cols_cfg             ;
     output logic [  11:0]    pix_seq_data_full_count_cfg     ;
 
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] expd_num_input_cols_cfg ;
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] expd_num_input_rows_cfg ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] num_expd_input_cols_cfg ;
+    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] num_expd_input_rows_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_start_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_start_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_end_cfg   ;
@@ -202,8 +202,8 @@ interface cnn_layer_accel_quad_intf (
         output num_output_rows_cfg             ;
         output num_output_cols_cfg             ;
         output pix_seq_data_full_count_cfg     ;
-        output expd_num_input_cols_cfg         ; 
-        output expd_num_input_rows_cfg         ;
+        output num_expd_input_cols_cfg         ; 
+        output num_expd_input_rows_cfg         ;
         output crpd_input_col_start_cfg        ;
         output crpd_input_row_start_cfg        ;
         output crpd_input_col_end_cfg          ;

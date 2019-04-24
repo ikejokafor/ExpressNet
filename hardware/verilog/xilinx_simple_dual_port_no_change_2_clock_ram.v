@@ -120,6 +120,7 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
                     address = (rden) ? rdAddr_plus_one : rdAddr;
                 end
             end
+
             always@(posedge rd_clk) begin
                 if(rden) begin
                     rdAddr_plus_one <= rdAddr_plus_one + 1;

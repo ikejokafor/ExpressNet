@@ -193,8 +193,8 @@ module cnn_layer_accel_quad (
     logic    [                            9:0]  num_output_cols_cfg                             ;
     logic    [                           11:0]  pix_seq_data_full_count_cfg                     ;
     logic                                       upsample_cfg                                    ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  expd_num_input_cols_cfg                         ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  expd_num_input_rows_cfg                         ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  num_expd_input_cols_cfg                         ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  num_expd_input_rows_cfg                         ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_start_cfg                        ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_start_cfg                        ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_end_cfg                          ;
@@ -305,8 +305,6 @@ module cnn_layer_accel_quad (
                     .upsample                 ( upsample_cfg                              ),
                     .input_col                ( input_col                                 ),
                     .input_row                ( input_row                                 ),
-                    .expd_num_input_cols      ( expd_num_input_cols_cfg                   ),
-                    .expd_num_input_rows      ( expd_num_input_rows_cfg                   ),
                     .crpd_input_col_start     ( crpd_input_col_start_cfg                  ),
                     .crpd_input_row_start     ( crpd_input_row_start_cfg                  ),
                     .crpd_input_col_end       ( crpd_input_col_end_cfg                    ),
@@ -360,7 +358,7 @@ module cnn_layer_accel_quad (
                 .rst                        ( rst                                                   ),
                 .input_row                  ( input_row                                             ),
                 .input_col                  ( input_col                                             ),
-                .expd_num_input_cols        ( expd_num_input_cols_cfg                               ),
+                .num_expd_input_cols        ( num_expd_input_cols_cfg                               ),
 				.convolution_stride         ( convolution_stride_cfg  								), 
                 .state                      ( state                                                 ),
                 .gray_code                  ( gray_code                                             ),
@@ -479,8 +477,8 @@ module cnn_layer_accel_quad (
         .input_row                  ( input_row                                             ),
         .input_col                  ( input_col                                             ),
 		.output_stride				( output_stride                                         ),
-        .expd_num_input_cols        ( expd_num_input_cols_cfg                               ),
-        .expd_num_input_rows        ( expd_num_input_rows_cfg                               ),
+        .num_expd_input_cols        ( num_expd_input_cols_cfg                               ),
+        .num_expd_input_rows        ( num_expd_input_rows_cfg                               ),
         .num_output_rows            ( num_output_rows_cfg                                   ),
         .num_output_cols            ( num_output_cols_cfg                                   ),        
 		.convolution_stride         ( convolution_stride_cfg                                ),
@@ -609,8 +607,8 @@ module cnn_layer_accel_quad (
     always@(posedge clk_if) begin
         if(rst) begin
 `ifndef VERIFICATION        
-            expd_num_input_cols_cfg         <= 0;
-            expd_num_input_rows_cfg         <= 0;
+            num_expd_input_cols_cfg         <= 0;
+            num_expd_input_rows_cfg         <= 0;
             pfb_full_count_cfg              <= 0;
             kernel_full_count_cfg           <= 0;
             kernel_group_cfg                <= 0;
