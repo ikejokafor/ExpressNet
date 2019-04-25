@@ -109,7 +109,7 @@ module cnl_sc2_testbench;
     int strides_arr[1:0];
     int padding_arr[1:0];
     int numKernels_arr[4:0];
-    // bool upsampling[1:0];
+    // bool upsampling_arr[1:0];
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -246,47 +246,65 @@ module cnl_sc2_testbench;
         padding_arr[1]      = `MAX_PADDING;
         numKernels_arr[0]   = `MIN_BRAM_3x3_KERNELS;
         // numKernels_arr[1]   = `MAX_BRAM_3x3_KERNELS;
-        numKernels_arr[1]   = 11;
-        numKernels_arr[2]   = 2;
-        numKernels_arr[3]   = 3;
-        numKernels_arr[4]   = 4;        
+        numKernels_arr[1] = 11;
+        numKernels_arr[2] = 2;
+        numKernels_arr[3] = 3;
+        numKernels_arr[4] = 4;
+        // upsampling_arr[0] = TRUE;
+        // upsampling_arr[1] = FALSE;
         `scX_crtTestParams = new();     
         ti = 0;
 
 
-        for(i0 = 0; i0 < 2; i0 = i0 + 1) begin // imageSizes_arr
-            for(i1 = 0; i1 < 2; i1 = i1 + 1) begin // strides_arr
-                for(i2 = 0; i2 < 2; i2 = i2 + 1) begin // padding_arr
-                    for(i3 = 0; i3 < 5; i3 = i3 + 1) begin // numKernels_arr
-                        if(padding_arr[i2] == 1 && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
-                            imageSize = imageSizes_arr[i0] - 2;
-                        end else begin
-                            imageSize = imageSizes_arr[i0];
-                        end
-                        `scX_genParams = new();
-                        `scX_genParams.ti = ti;  
-                        `scX_crtTestParams.num_input_rows = imageSize;
-                        `scX_crtTestParams.num_input_cols = imageSize;
-                        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-                        `scX_crtTestParams.num_kernels = numKernels_arr[i3];
-                        `scX_crtTestParams.kernel_size = `MAX_KERNEL_SIZE;
-                        `scX_crtTestParams.stride = strides_arr[i1];
-                        `scX_crtTestParams.padding = padding_arr[i2];
-                        `scX_crtTestParams.upsample = FALSE;
-                        test = new(`scX_genParams);
-                        test.createTest(`scX_crtTestParams);
-                        test_queue.push_back(test);
-                        ti = ti + 1;
-                    end
-                end
-            end
-        end
+        // for(i0 = 0; i0 < 2; i0 = i0 + 1) begin // imageSizes_arr
+        //     for(i1 = 0; i1 < 2; i1 = i1 + 1) begin // strides_arr
+        //         for(i2 = 0; i2 < 2; i2 = i2 + 1) begin // padding_arr
+        //             for(i3 = 0; i3 < 5; i3 = i3 + 1) begin // numKernels_arr
+        //                 if(padding_arr[i2] == 1 && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
+        //                     imageSize = imageSizes_arr[i0] - 2;
+        //                 end else begin
+        //                     imageSize = imageSizes_arr[i0];
+        //                 end
+        //                 `scX_genParams = new();
+        //                 `scX_genParams.ti = ti;  
+        //                 `scX_crtTestParams.num_input_rows = imageSize;
+        //                 `scX_crtTestParams.num_input_cols = imageSize;
+        //                 `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        //                 `scX_crtTestParams.num_kernels = numKernels_arr[i3];
+        //                 `scX_crtTestParams.kernel_size = `MAX_KERNEL_SIZE;
+        //                 `scX_crtTestParams.stride = strides_arr[i1];
+        //                 `scX_crtTestParams.padding = padding_arr[i2];
+        //                 `scX_crtTestParams.upsample = FALSE;
+        //                 test = new(`scX_genParams);
+        //                 test.createTest(`scX_crtTestParams);
+        //                 test_queue.push_back(test);
+        //                 ti = ti + 1;
+        //             end
+        //         end
+        //     end
+        // end
         
          
+        `scX_genParams = new();
+        `scX_genParams.ti = ti;  
+        `scX_crtTestParams.num_input_rows = 19;
+        `scX_crtTestParams.num_input_cols = 19;
+        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        `scX_crtTestParams.num_kernels = 1;
+        `scX_crtTestParams.kernel_size = `MAX_KERNEL_SIZE;
+        `scX_crtTestParams.stride = 1;
+        `scX_crtTestParams.padding = 1;
+        `scX_crtTestParams.upsample = TRUE;
+        test = new(`scX_genParams);
+        test.createTest(`scX_crtTestParams);
+        test_queue.push_back(test);
+        ti = ti + 1;
+        
+        
         // `scX_genParams = new();
         // `scX_genParams.ti = ti;  
-        // `scX_crtTestParams.num_input_rows = 19;
-        // `scX_crtTestParams.num_input_cols = 19;
+        // `scX_crtTestParams.num_input_rows = 20;
+        // `scX_crtTestParams.num_input_cols = 20;
         // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
         // `scX_crtTestParams.num_kernels = 1;
         // `scX_crtTestParams.kernel_size = `MAX_KERNEL_SIZE;
@@ -296,9 +314,9 @@ module cnl_sc2_testbench;
         // test = new(`scX_genParams);
         // test.createTest(`scX_crtTestParams);
         // test_queue.push_back(test);
-        // ti = ti + 1;   
-
-
+        // ti = ti + 1;
+        
+        
         env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, 1, FALSE);
         env.build();
         fork

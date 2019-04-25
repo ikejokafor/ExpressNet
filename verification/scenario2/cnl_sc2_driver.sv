@@ -343,11 +343,11 @@ task `cnl_scX_driver::run();
             while(i < (test.m_num_input_rows * test.m_num_input_cols)) begin
                 @(m_quad_intf.clk_if_cb);
                 if(m_quad_intf.clk_if_cb.job_fetch_request) begin
-                    $display("// --------------------------------------------------------------");
-                    $display("// At Time: %0t", $time                                           );
-                    $display("// Started Servicing Job Fetch Request"                           ); 
-                    $display("// --------------------------------------------------------------");
-                    $display("\n");
+                    // $display("// --------------------------------------------------------------");
+                    // $display("// At Time: %0t", $time                                           );
+                    // $display("// Started Servicing Job Fetch Request"                           ); 
+                    // $display("// --------------------------------------------------------------");
+                    // $display("\n");
                     m_quad_intf.clk_if_cb.job_fetch_ack <= 1;                
                     @(m_quad_intf.clk_if_cb);
                     m_quad_intf.clk_if_cb.job_fetch_ack         <= 0;
@@ -383,11 +383,11 @@ task `cnl_scX_driver::run();
                     @(m_quad_intf.clk_if_cb);
                     m_quad_intf.clk_if_cb.job_fetch_complete    <= 0;
                     i = i + test.m_num_input_cols;
-                    $display("// --------------------------------------------------------------");
-                    $display("// At Time: %0t", $time                                           );
-                    $display("// Finished Servicing Job Fetch Request"                          ); 
-                    $display("// --------------------------------------------------------------");
-                    $display("\n");
+                    // $display("// --------------------------------------------------------------");
+                    // $display("// At Time: %0t", $time                                           );
+                    // $display("// Finished Servicing Job Fetch Request"                          ); 
+                    // $display("// --------------------------------------------------------------");
+                    // $display("\n");
                 end
             end
             $display("// --------------------------------------------------------------");

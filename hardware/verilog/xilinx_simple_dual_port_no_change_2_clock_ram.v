@@ -32,8 +32,7 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
     parameter C_RAM_WR_WIDTH        = 16    ,                   
     parameter C_RAM_WR_DEPTH        = 1024  ,
     parameter C_RAM_RD_WIDTH        = 32    ,
-    parameter C_RD_PORT_HIGH_PERF   = 1     ,
-    parameter C_FIFO_FWFT           = 0
+    parameter C_RD_PORT_HIGH_PERF   = 1     
 ) (
     wr_clk      ,
     wrAddr      ,
@@ -43,6 +42,7 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
     rdAddr      ,
     rden        ,
     rd_mode     ,
+    fifo_fwft   ,
     dout    
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -78,6 +78,7 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
     input  logic [C_CLG2_RAM_RD_DEPTH - 1:0]     rdAddr     ;
     input  logic                                 rden       ;
     input  logic                                 rd_mode    ;
+    input  logic                                 fifo_fwft  ;
     output logic [     C_RAM_RD_WIDTH - 1:0]     dout       ;
   
     
@@ -129,14 +130,16 @@ module xilinx_simple_dual_port_no_change_2_clock_ram #(
                 end
             end
             
-            if(C_FIFO_FWFT == 1) begin
-                always@(*) begin
-                    dout = BRAM[address];
+            always@(*) begin
+                if(fifo_fwft) begin
+                   dout = dout_reg0;
+                end else begin
+                   dout = BRAM[address];
                 end
-            end else begin
-                always@(posedge rd_clk) begin
-                    dout <= BRAM[address];
-                end
+            end
+   
+            always@(posedge rd_clk) begin
+                dout_reg0 <= BRAM[address];
             end
         end
     endgenerate

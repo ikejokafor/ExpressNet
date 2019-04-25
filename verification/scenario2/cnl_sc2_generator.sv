@@ -67,7 +67,7 @@ class `cnl_scX_generator extends generator;
     rand int m_num_input_rows                                                           ;
     rand int m_num_input_cols                                                           ;
     int      m_num_expd_input_cols                                                      ;
-    int      m_num_expd_input_rows                                                      ;   
+    int      m_num_expd_input_rows                                                      ;
     int      m_num_input_rows_cfg                                                       ;
     int      m_num_input_cols_cfg                                                       ;
     int      m_num_output_rows_cfg                                                      ;
@@ -213,13 +213,14 @@ function void `cnl_scX_generator::post_randomize();
     int k;
     int a;
     int b;
-    shortreal fl_num_output_rows;
-    shortreal fl_num_output_cols;
-    shortreal fl_num_input_cols;
+    shortreal fl_num_expd_input_rows;
     shortreal fl_num_expd_input_cols;
+    shortreal fl_num_input_cols;
     int fl_pix_seq_data_full_count;
     int in_index;
     int out_index;
+    int num_conv_input_rows;
+    int num_conv_input_cols;
     
     
     m_num_kernels_cfg = m_num_kernels - 1;
@@ -227,7 +228,7 @@ function void `cnl_scX_generator::post_randomize();
     m_num_output_cols = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;     
     if(m_padding && !m_upsample) begin
         m_num_expd_input_rows = m_num_input_rows + 2;
-        m_num_expd_input_cols = m_num_input_cols + 2;
+        m_num_expd_input_cols = m_num_input_cols + 2;       
     end else if(!m_padding && m_upsample) begin
         m_num_expd_input_rows = m_num_input_rows * 2;
         m_num_expd_input_cols = m_num_input_cols * 2; 
@@ -236,11 +237,11 @@ function void `cnl_scX_generator::post_randomize();
     end else if(m_padding && m_upsample) begin
         m_num_expd_input_rows = (m_num_input_rows * 2) + 2;
         m_num_expd_input_cols = (m_num_input_cols * 2) + 2;
-        m_num_output_rows = ((m_num_expd_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
-        m_num_output_cols = ((m_num_expd_input_cols - m_kernel_size + (2 * m_padding)) / m_stride) + 1;        
+        m_num_output_rows = (((m_num_expd_input_rows - 2) - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+        m_num_output_cols = (((m_num_expd_input_cols - 2) - m_kernel_size + (2 * m_padding)) / m_stride) + 1;        
     end else begin // !m_padding && !m_upsample
         m_num_expd_input_rows = m_num_input_rows;
-        m_num_expd_input_cols = m_num_input_cols;  
+        m_num_expd_input_cols = m_num_input_cols;      
     end
     m_num_input_rows_cfg                = m_num_input_rows - 1;
     m_num_input_cols_cfg                = m_num_input_cols - 1;   
@@ -254,27 +255,25 @@ function void `cnl_scX_generator::post_randomize();
     
 
     if(m_padding && m_stride == 2) begin    
-        fl_num_output_rows              = m_num_expd_input_rows;
-        fl_num_output_cols              = m_num_expd_input_cols;
+        fl_num_expd_input_rows          = m_num_expd_input_rows;
         fl_num_expd_input_cols          = m_num_expd_input_cols;
-        m_num_acl_output_rows           = $ceil(fl_num_output_rows / 2) - 1;
-        m_num_acl_output_cols           = $ceil(fl_num_output_cols / 2);
-        m_num_output_rows_cfg           = $ceil(fl_num_output_rows / 2) - 1;
-        m_num_output_cols_cfg           = $ceil(fl_num_output_cols / 2);
-        m_pix_seq_data_full_count_cfg   = `WINDOW_3x3_NUM_CYCLES * $ceil(fl_num_expd_input_cols / 2);
+        m_num_acl_output_rows           = $ceil(fl_num_expd_input_rows / shortreal'(2)) - 1;
+        m_num_acl_output_cols           = $ceil(fl_num_expd_input_cols / shortreal'(2));
+        m_num_output_rows_cfg           = $ceil(fl_num_expd_input_rows / shortreal'(2)) - 1;
+        m_num_output_cols_cfg           = $ceil(fl_num_expd_input_cols / shortreal'(2));
+        m_pix_seq_data_full_count_cfg   = `WINDOW_3x3_NUM_CYCLES * $ceil(fl_num_expd_input_cols / shortreal'(2));
     end else if(!m_padding && m_stride == 2) begin
-        fl_num_output_rows              = m_num_expd_input_rows;
-        fl_num_output_cols              = m_num_expd_input_cols;
-        fl_num_input_cols               = m_num_expd_input_cols;
-        m_num_acl_output_rows           = $ceil(fl_num_output_rows / 2) - 1;
-        m_num_acl_output_cols           = $ceil(fl_num_output_cols / 2);
-        m_num_output_rows_cfg           = $ceil(fl_num_output_rows / 2) - 1;
-        m_num_output_cols_cfg           = $ceil(fl_num_output_cols / 2);
-        m_pix_seq_data_full_count_cfg   = `WINDOW_3x3_NUM_CYCLES * $ceil(fl_num_input_cols / 2); 
+        fl_num_expd_input_rows          = m_num_expd_input_rows;
+        fl_num_expd_input_cols          = m_num_expd_input_cols;
+        m_num_acl_output_rows           = $ceil(fl_num_expd_input_rows / shortreal'(2)) - 1;
+        m_num_acl_output_cols           = $ceil(fl_num_expd_input_cols / shortreal'(2));
+        m_num_output_rows_cfg           = $ceil(fl_num_expd_input_rows / shortreal'(2)) - 1;
+        m_num_output_cols_cfg           = $ceil(fl_num_expd_input_cols / shortreal'(2));
+        m_pix_seq_data_full_count_cfg   = `WINDOW_3x3_NUM_CYCLES * $ceil(fl_num_expd_input_cols / shortreal'(2)); 
     end else if(m_padding && m_stride == 1) begin
-        m_num_acl_output_rows           = ((m_num_expd_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+        m_num_acl_output_rows           = (((m_num_expd_input_rows - 2) - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
         m_num_acl_output_cols           = m_num_expd_input_cols;
-        m_num_output_rows_cfg           = ((m_num_expd_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+        m_num_output_rows_cfg           = (((m_num_expd_input_rows - 2) - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
         m_num_output_cols_cfg           = m_num_expd_input_cols;
         m_pix_seq_data_full_count_cfg   = `WINDOW_3x3_NUM_CYCLES * m_num_expd_input_cols;
     end else begin // (!m_padding && m_stride == 1)
@@ -291,12 +290,20 @@ function void `cnl_scX_generator::post_randomize();
         m_pix_data[i] = $urandom_range(`MIN_RND_VALUE, `MAX_RND_VALUE);
     end
     
+
     if(m_upsample) begin
         m_uple_fctr = 2;
-        m_pix_data_upsle = new[m_depth * m_num_expd_input_rows * m_num_expd_input_cols]; 
+        if(m_padding) begin
+            num_conv_input_rows = m_num_expd_input_rows - 2;
+            num_conv_input_cols = m_num_expd_input_cols - 2;
+        end else begin
+            num_conv_input_rows = m_num_expd_input_rows;
+            num_conv_input_cols = m_num_expd_input_cols;
+        end
+        m_pix_data_upsle = new[m_depth * num_conv_input_rows * num_conv_input_cols]; 
         for(k = 0; k < m_depth; k = k + 1) begin
             for(j = 0; j < m_num_input_rows * m_uple_fctr; j = j + 1) begin
-                for(i = 0; i < m_num_input_cols * m_uple_fctr; ++i) begin
+                for(i = 0; i < m_num_input_cols * m_uple_fctr; i = i + 1) begin
                     in_index = k * m_num_input_cols * m_num_input_rows + (j / m_uple_fctr) * m_num_input_cols + i / m_uple_fctr;
                     out_index = k * m_num_input_cols * m_num_input_rows * m_uple_fctr * m_uple_fctr + j * m_num_input_cols * m_uple_fctr + i;
                     m_pix_data_upsle[out_index] = m_pix_data[in_index];

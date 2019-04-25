@@ -123,15 +123,21 @@ task `cnl_scX_scoreboard::run();
                     $display("// Checking Test ------------------------------------------------");
                     $display("\n");
 
-                    $fwrite(fd1, "Test Index:            %0d\n", test.m_ti                         ); 
-                    $fwrite(fd1, "Num Input Rows:        %0d\n", test.m_num_input_rows             );
-                    $fwrite(fd1, "Num Input Cols:        %0d\n", test.m_num_input_cols             );
-                    $fwrite(fd1, "Input Depth:           %0d\n", test.m_depth                      );
-                    $fwrite(fd1, "Num Kernels:           %0d\n", test.m_num_kernels                );
-                    $fwrite(fd1, "Kernel size:           %0d\n", test.m_kernel_size                );
-                    $fwrite(fd1, "Stride                 %0d\n", test.m_stride                     );
-                    $fwrite(fd1, "Padding:               %0d\n", test.m_padding                    );
-                    $fwrite(fd1, "Upsample               %0d\n", test.m_upsample                   );
+                    $fwrite(fd1, "Test Index:                   %0d\n", test.m_ti                         ); 
+                    $fwrite(fd1, "Num Input Rows:               %0d\n", test.m_num_input_rows             );
+                    $fwrite(fd1, "Num Input Cols:               %0d\n", test.m_num_input_cols             );
+                    $fwrite(fd1, "Num Expd Input Rows:          %0d\n", test.m_num_expd_input_rows        );
+                    $fwrite(fd1, "Num Expd Input Cols;          %0d\n", test.m_num_expd_input_cols        );
+                    $fwrite(fd1, "Input Depth:                  %0d\n", test.m_depth                      );
+                    $fwrite(fd1, "Num Kernels:                  %0d\n", test.m_num_kernels                );
+                    $fwrite(fd1, "Kernel size:                  %0d\n", test.m_kernel_size                );
+                    $fwrite(fd1, "Stride                        %0d\n", test.m_stride                     );
+                    $fwrite(fd1, "Padding:                      %0d\n", test.m_padding                    );
+                    $fwrite(fd1, "Upsample                      %0d\n", test.m_upsample                   );
+                    $fwrite(fd1, "Num Output Rows:              %0d\n", test.m_num_output_rows            );
+                    $fwrite(fd1, "Num Output Cols;              %0d\n", test.m_num_output_cols            ); 
+                    $fwrite(fd1, "Num Acl Output Rows:          %0d\n", test.m_num_acl_output_rows        );
+                    $fwrite(fd1, "Num Acl Output Cols;          %0d\n", test.m_num_acl_output_cols        ); 
                     $fwrite(fd1, "\n");
                     
                     if(checkSolution(query, sol)) begin
@@ -206,8 +212,13 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
     depth                               = `scX_sol.m_depth;
     if(`scX_test.m_upsample) begin
         pix_data_sim                    = `scX_test.m_pix_data_upsle_sim;
-        num_input_rows                  = `scX_test.m_num_expd_input_rows;
-        num_input_cols                  = `scX_test.m_num_expd_input_cols;          
+        if(padding) begin
+            num_input_rows                  = `scX_test.m_num_expd_input_rows - 2;
+            num_input_cols                  = `scX_test.m_num_expd_input_cols - 2;
+        end else begin
+            num_input_rows                  = `scX_test.m_num_expd_input_rows;
+            num_input_cols                  = `scX_test.m_num_expd_input_cols;
+        end
     end else begin
         pix_data_sim                    = `scX_test.m_pix_data_sim;
         num_input_rows                  = `scX_test.m_num_input_rows;

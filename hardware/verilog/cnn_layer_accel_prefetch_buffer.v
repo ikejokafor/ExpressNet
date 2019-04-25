@@ -97,8 +97,10 @@ module cnn_layer_accel_prefetch_buffer (
     logic                                       bram_rden           ;
     logic                                       bram_rden_r         ;    
     logic   [            `PIXEL_WIDTH - 1:0]    bram_dataout        ;
+    logic                                       bram_fifo_fwft      ;
     logic                                       repeat_row          ;
     logic                                       zero_dout           ;
+    logic                                       valid_region        ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -108,34 +110,41 @@ module cnn_layer_accel_prefetch_buffer (
         .C_RAM_WR_WIDTH         ( `PIXEL_WIDTH                  ),         
         .C_RAM_WR_DEPTH         ( `MAX_NUM_INPUT_COLS           ),
         .C_RAM_RD_WIDTH         ( `PIXEL_WIDTH                  ),
-        .C_RD_PORT_HIGH_PERF    ( 0                             ),
-        .C_FIFO_FWFT            ( 1                             )
+        .C_RD_PORT_HIGH_PERF    ( 0                             )
     ) 
     i0_xilinx_simple_dual_port_no_change_2_clock_ram (
-        .wr_clk     ( wr_clk        ),
-        .wrAddr     ( bram_wrAddr   ),
-        .wren       ( wr_en         ),
-        .din        ( din           ),
-        .rd_clk     ( rd_clk        ),
-        .rdAddr     ( bram_rdAddr_w ),
-        .rden       ( bram_rden     ),
-        .rd_mode    ( upsample      ),
-        .dout       ( bram_dataout  )
+        .wr_clk     ( wr_clk         ),
+        .wrAddr     ( bram_wrAddr    ),
+        .wren       ( wr_en          ),
+        .din        ( din            ),
+        .rd_clk     ( rd_clk         ),
+        .rdAddr     ( bram_rdAddr_w  ),
+        .rden       ( bram_rden      ),
+        .rd_mode    ( upsample       ),
+        .fifo_fwft  ( bram_fifo_fwft ),
+        .dout       ( bram_dataout   )
     );
     
 
     // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------
+    assign valid_region = (input_row >= crpd_input_row_start && input_row <= crpd_input_row_end);
+    
     always@(*) begin
-        if((padding && !upsample) && (input_row < crpd_input_row_start || input_col < crpd_input_col_start || input_row > crpd_input_row_end || input_col > crpd_input_col_end)) begin
+        if(padding && (input_row < crpd_input_row_start || input_col < crpd_input_col_start || input_row > crpd_input_row_end || input_col > crpd_input_col_end)) begin
             zero_dout = 1;
         end else begin
             zero_dout = 0;
         end
-        if((padding && !upsample) && (input_row == crpd_input_row_start || input_row > crpd_input_row_end)) begin
+    end
+    
+    always@(*) begin
+        if(padding && !upsample && (input_row == crpd_input_row_start || input_row > crpd_input_row_end)) begin
             cncl_fetch_req = 1;
-        end else if((!padding && upsample)) begin
+        end else if(upsample && !padding) begin
             cncl_fetch_req = repeat_row;
-        end else begin
+        end else if(upsample && padding) begin
+            cncl_fetch_req = ((input_row == crpd_input_row_start || input_row > crpd_input_row_end)) || repeat_row;
+        end else begin // !padding && !upsample
             cncl_fetch_req = 0;
         end
     end
@@ -144,9 +153,11 @@ module cnn_layer_accel_prefetch_buffer (
         if(rst) begin
             repeat_row <= 0;
         end else begin
-            if(upsample && next_row) begin               
+            if(upsample && padding && valid_region && input_row >= 2 && next_row) begin
                 repeat_row <= ~repeat_row;
-            end
+            end else if(upsample && !padding && next_row) begin               
+                repeat_row <= ~repeat_row;
+            end 
         end
     end
     // END Logic ------------------------------------------------------------------------------------------------------------------------------------
@@ -156,6 +167,7 @@ module cnn_layer_accel_prefetch_buffer (
     assign bram_rdAddr_w = (upsample) ? bram_rdAddr[C_CLG2_ROW_BUF_BRAM_DEPTH:1] : bram_rdAddr[(C_CLG2_ROW_BUF_BRAM_DEPTH - 1):0];
     assign dout = (zero_dout) ? {`PIXEL_WIDTH{1'b0}} : bram_dataout;
     assign bram_rden = (upsample) ? rd_en : bram_rden_r;
+    assign bram_fifo_fwft = upsample && padding;
     
     always@(posedge wr_clk) begin
         if(rst) begin

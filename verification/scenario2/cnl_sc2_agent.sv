@@ -78,6 +78,8 @@ endfunction : new
 task `cnl_scX_agent::run();
     int i;
     int j;
+    int _i;
+    int _j;
     int k;
     int t;
     int n;
@@ -87,6 +89,13 @@ task `cnl_scX_agent::run();
     `cnl_scX_generator test;
     `scX_genParams_t `scX_genParams;
     integer fd;
+    int crpd_input_col_start;
+    int crpd_input_row_start;
+    int crpd_input_col_end;
+    int crpd_input_row_end;
+    int num_conv_input_rows;
+    int num_conv_input_cols;
+    logic [15:0] pix_data_sim[];
 
     
     t = 0;
@@ -143,12 +152,34 @@ task `cnl_scX_agent::run();
             $fwrite(fd, "\n");
         end
         $fclose(fd);
-        if(test.m_upsample) begin
-            fd = $fopen("map_upsampled.txt", "w");
+        if(test.m_upsample || test.m_padding) begin
+            crpd_input_col_start = test.m_padding;
+            crpd_input_row_start = test.m_padding;
+            crpd_input_col_end = (test.m_num_expd_input_rows - 1) - test.m_padding;
+            crpd_input_row_end = (test.m_num_expd_input_cols - 1) - test.m_padding;
+            if(test.m_padding) begin
+                num_conv_input_rows = test.m_num_expd_input_rows - 2;
+                num_conv_input_cols = test.m_num_expd_input_cols - 2;
+            end else begin
+                num_conv_input_rows = test.m_num_expd_input_rows;
+                num_conv_input_cols = test.m_num_expd_input_cols;
+            end
+            if(test.m_upsample) begin
+                pix_data_sim = test.m_pix_data_upsle_sim;
+            end else begin
+                pix_data_sim = test.m_pix_data_sim;
+            end
+            fd = $fopen("map_expd.txt", "w");
             for(k = 0; k < test.m_depth; k = k + 1) begin
                 for(i = 0; i < test.m_num_expd_input_rows; i = i + 1) begin
                     for(j = 0; j < test.m_num_expd_input_cols; j = j + 1) begin
-                        $fwrite(fd, "%d ", test.m_pix_data_upsle_sim[(k * test.m_num_expd_input_rows + i) * test.m_num_expd_input_cols + j]);
+                        if(i < crpd_input_row_start || i > crpd_input_row_end || j < crpd_input_col_start || j > crpd_input_col_end) begin
+                            $fwrite(fd, "%5d ", 0);
+                        end else begin
+                            _i = i - 1;
+                            _j = j - 1;
+                            $fwrite(fd, "%d ", pix_data_sim[(k * num_conv_input_rows + _i) * num_conv_input_cols + _j]);
+                        end
                     end
                     $fwrite(fd, "\n");
                 end
