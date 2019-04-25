@@ -313,7 +313,8 @@ module cnn_layer_accel_quad (
                     .job_complete_ack         ( job_complete_ack                          ),
                     .rst_addr                 ( next_state_tran                           ),
                     .cncl_fetch_req           ( cncl_fetch_req[i * `NUM_CE_PER_AWE + j]   ),
-                    .next_row                 ( next_row                                  )
+                    .next_row                 ( next_row                                  ),
+                    .state                    ( state                                     )
                 );
                 
 

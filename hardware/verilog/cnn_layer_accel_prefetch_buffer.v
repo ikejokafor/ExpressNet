@@ -48,6 +48,7 @@ module cnn_layer_accel_prefetch_buffer (
     job_complete_ack        ,
     rst_addr                ,
     cncl_fetch_req          ,
+    state                   ,
     next_row
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -61,6 +62,12 @@ module cnn_layer_accel_prefetch_buffer (
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_CLG2_ROW_BUF_BRAM_DEPTH = clog2(`MAX_NUM_INPUT_COLS);
+    localparam ST_IDLE                      = 6'b000001;  
+    localparam ST_AWE_CE_PRIM_BUFFER        = 6'b000010;
+    localparam ST_WAIT_PFB_LOAD             = 6'b000100;
+    localparam ST_AWE_CE_ACTIVE             = 6'b001000;
+    localparam ST_WAIT_JOB_DONE             = 6'b010000;
+    localparam ST_SEND_COMPLETE             = 6'b100000;
    
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -86,6 +93,7 @@ module cnn_layer_accel_prefetch_buffer (
     input  logic                                    rst_addr                ;
     output logic                                    cncl_fetch_req          ;
     input  logic                                    next_row                ;
+    input  logic [                            5:0]  state                   ;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -153,7 +161,9 @@ module cnn_layer_accel_prefetch_buffer (
         if(rst) begin
             repeat_row <= 0;
         end else begin
-            if(upsample && padding && valid_region && input_row >= 2 && next_row) begin
+            if(job_complete_ack) begin
+                repeat_row <= 0;
+            end if(upsample && padding && valid_region && input_row >= 2 && next_row) begin
                 repeat_row <= ~repeat_row;
             end else if(upsample && !padding && next_row) begin               
                 repeat_row <= ~repeat_row;
@@ -187,7 +197,7 @@ module cnn_layer_accel_prefetch_buffer (
         end else begin
             if(job_fetch_ack || job_complete_ack || rst_addr) begin
                 bram_rdAddr <= 0;
-            end else if(bram_rden) begin
+            end else if((bram_rden && !zero_dout) || (bram_rden && state == ST_AWE_CE_PRIM_BUFFER)) begin  // maybe this can be done better without worrying about the state?
                 bram_rdAddr <= bram_rdAddr + 1;
             end
         end
@@ -204,6 +214,20 @@ module cnn_layer_accel_prefetch_buffer (
         end
     end
     // END ------------------------------------------------------------------------------------------------------------------------------------------  
-    
+ 
+
+`ifdef SIMULATION
+    string state_s;
+    always@(state) begin 
+        case(state) 
+            ST_IDLE:                    state_s = "ST_IDLE";              
+            ST_AWE_CE_PRIM_BUFFER:      state_s = "ST_AWE_CE_PRIM_BUFFER";
+            ST_WAIT_PFB_LOAD:           state_s = "ST_WAIT_PFB_LOAD";           
+            ST_AWE_CE_ACTIVE:           state_s = "ST_AWE_CE_ACTIVE";
+            ST_WAIT_JOB_DONE:           state_s = "ST_WAIT_JOB_DONE";
+            ST_SEND_COMPLETE:           state_s = "ST_SEND_COMPLETE";
+        endcase
+    end
+`endif 
    
 endmodule
