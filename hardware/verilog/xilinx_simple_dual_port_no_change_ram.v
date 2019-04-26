@@ -63,15 +63,18 @@ module xilinx_simple_dual_port_no_change_ram #(
     input       [     C_RAM_WIDTH - 1:0]   datain;        
     input                                  clk;
     input                                  wren;       
-    input                                  rden;       
+    input                                  rden;     
     output      [     C_RAM_WIDTH - 1:0]   dataout;
   
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    reg     [       C_RAM_WIDTH - 1:0]    BRAM[C_RAM_DEPTH - 1:0];
-
+    reg     [C_RAM_WIDTH - 1:0]    BRAM[C_RAM_DEPTH - 1:0];
+    reg     [C_RAM_WIDTH - 1:0]    dout_reg;
+    reg     [C_RAM_WIDTH - 1:0]    dout_reg0;
+    reg     [C_RAM_WIDTH - 1:0]    dout_reg1;
+    reg     [C_RAM_WIDTH - 1:0]    dout_reg2;  
 
 	// BEGIN BRAM Write logic -----------------------------------------------------------------------------------------------------------------------   
     always@(posedge clk) begin
@@ -84,10 +87,7 @@ module xilinx_simple_dual_port_no_change_ram #(
 
     // BEGIN BRAM Read logic ------------------------------------------------------------------------------------------------------------------------
     generate
-        if(C_RAM_PERF == "HIGH_PERFORMANCE") begin
-            reg [C_RAM_WIDTH - 1:0] dout_reg0;
-            reg [C_RAM_WIDTH - 1:0] dout_reg1;
-            reg [C_RAM_WIDTH - 1:0] dout_reg2;    
+        if(C_RAM_PERF == "HIGH_PERFORMANCE") begin 
             assign dataout = dout_reg2;
             always@(posedge clk) begin
                 if(rden) begin
@@ -97,7 +97,6 @@ module xilinx_simple_dual_port_no_change_ram #(
                 end
             end
         end else if(C_RAM_PERF == "LOW_LATENCY") begin
-            reg [C_RAM_WIDTH - 1:0] dout_reg;
             assign dataout = dout_reg;        
             always@(posedge clk) begin
                 if(rden) begin

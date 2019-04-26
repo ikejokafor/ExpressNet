@@ -173,13 +173,17 @@ task `cnl_scX_agent::run();
             for(k = 0; k < test.m_depth; k = k + 1) begin
                 for(i = 0; i < test.m_num_expd_input_rows; i = i + 1) begin
                     for(j = 0; j < test.m_num_expd_input_cols; j = j + 1) begin
-                        if(i < crpd_input_row_start || i > crpd_input_row_end || j < crpd_input_col_start || j > crpd_input_col_end) begin
-                            $fwrite(fd, "%5d ", 0);
-                        end else begin
-                            _i = i - 1;
-                            _j = j - 1;
-                            $fwrite(fd, "%d ", pix_data_sim[(k * num_conv_input_rows + _i) * num_conv_input_cols + _j]);
-                        end
+                        if(test.m_padding) begin
+                            if(i < crpd_input_row_start || i > crpd_input_row_end || j < crpd_input_col_start || j > crpd_input_col_end) begin
+                                $fwrite(fd, "%5d ", 0);
+                            end else begin
+                                _i = i - 1;
+                                _j = j - 1;
+                                $fwrite(fd, "%d ", pix_data_sim[(k * num_conv_input_rows + _i) * num_conv_input_cols + _j]);
+                            end
+                         end else begin
+                            $fwrite(fd, "%d ", pix_data_sim[(k * num_conv_input_rows + i) * num_conv_input_cols + j]);
+                         end
                     end
                     $fwrite(fd, "\n");
                 end

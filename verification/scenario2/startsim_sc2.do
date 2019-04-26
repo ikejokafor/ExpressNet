@@ -44,10 +44,10 @@ vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(S
 vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ ../../hardware/ip/xcku115/pixel_sequence_data_bram/sim/pixel_sequence_data_bram.v
 
 
-vsim +notimingchecks -novopt -t 1ns -L work -L $env(SOC_IT_SIMULATION_PATH)/verif_lib -L $env(SOC_IT_SIMULATION_PATH)/soc_it_common -L $env(SOC_IT_SIMULATION_PATH)/soc_it_capi -L $env(SOC_IT_SIMULATION_PATH)/secureip -L $env(SOC_IT_SIMULATION_PATH)/unisims_ver -L $env(SOC_IT_SIMULATION_PATH)/simprims_ver -L $env(SOC_IT_SIMULATION_PATH)/unimacro_ver -L $env(SOC_IT_SIMULATION_PATH)/unifast_ver -L $env(SOC_IT_SIMULATION_PATH)/blk_mem_gen_v8_3_5 -fsmdebug -c +nowarnTSCALE work.glbl work.cnl_sc2_testbench
-do wave.do
+# vsim +notimingchecks -novopt -t 1ns -L work -L $env(SOC_IT_SIMULATION_PATH)/verif_lib -L $env(SOC_IT_SIMULATION_PATH)/soc_it_common -L $env(SOC_IT_SIMULATION_PATH)/soc_it_capi -L $env(SOC_IT_SIMULATION_PATH)/secureip -L $env(SOC_IT_SIMULATION_PATH)/unisims_ver -L $env(SOC_IT_SIMULATION_PATH)/simprims_ver -L $env(SOC_IT_SIMULATION_PATH)/unimacro_ver -L $env(SOC_IT_SIMULATION_PATH)/unifast_ver -L $env(SOC_IT_SIMULATION_PATH)/blk_mem_gen_v8_3_5 -fsmdebug -c +nowarnTSCALE work.glbl work.cnl_sc2_testbench
+# do wave.do
 
 
-# set seed [clock seconds]
-# vsim -sv_seed $seed +notimingchecks -wlfslim 1 -vopt -t 1ns -L work -L $env(SOC_IT_SIMULATION_PATH)/verif_lib -L $env(SOC_IT_SIMULATION_PATH)/soc_it_common -L $env(SOC_IT_SIMULATION_PATH)/soc_it_capi -L $env(SOC_IT_SIMULATION_PATH)/secureip -L $env(SOC_IT_SIMULATION_PATH)/unisims_ver -L $env(SOC_IT_SIMULATION_PATH)/simprims_ver -L $env(SOC_IT_SIMULATION_PATH)/unimacro_ver -L $env(SOC_IT_SIMULATION_PATH)/unifast_ver -L $env(SOC_IT_SIMULATION_PATH)/blk_mem_gen_v8_3_5 -fsmdebug -c +nowarnTSCALE work.glbl work.cnl_sc2_testbench
-# run -all
+set seed [clock seconds]
+vsim -sv_seed $seed +notimingchecks -wlfslim 1 -vopt -t 1ns -L work -L $env(SOC_IT_SIMULATION_PATH)/verif_lib -L $env(SOC_IT_SIMULATION_PATH)/soc_it_common -L $env(SOC_IT_SIMULATION_PATH)/soc_it_capi -L $env(SOC_IT_SIMULATION_PATH)/secureip -L $env(SOC_IT_SIMULATION_PATH)/unisims_ver -L $env(SOC_IT_SIMULATION_PATH)/simprims_ver -L $env(SOC_IT_SIMULATION_PATH)/unimacro_ver -L $env(SOC_IT_SIMULATION_PATH)/unifast_ver -L $env(SOC_IT_SIMULATION_PATH)/blk_mem_gen_v8_3_5 -fsmdebug -c +nowarnTSCALE work.glbl work.cnl_sc2_testbench
+run -all

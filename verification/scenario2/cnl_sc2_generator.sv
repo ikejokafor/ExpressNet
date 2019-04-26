@@ -165,6 +165,7 @@ function void `cnl_scX_generator::createTest(crtTestParams_t params);
     $display("// Num Acl Output Cols:   %0d", m_num_acl_output_cols             ); 
     $display("// Created Specific Test ----------------------------------------");
     $display("\n");
+        
 endfunction: createTest
 
 

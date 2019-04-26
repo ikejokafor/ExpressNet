@@ -99,16 +99,19 @@ module cnn_layer_accel_prefetch_buffer (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------      
-    logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]   bram_wrAddr         ;
-    logic   [   C_CLG2_ROW_BUF_BRAM_DEPTH :0]   bram_rdAddr         ;
-    logic   [ C_CLG2_ROW_BUF_BRAM_DEPTH -1:0]   bram_rdAddr_w       ;
-    logic                                       bram_rden           ;
-    logic                                       bram_rden_r         ;    
-    logic   [            `PIXEL_WIDTH - 1:0]    bram_dataout        ;
-    logic                                       bram_fifo_fwft      ;
-    logic                                       repeat_row          ;
-    logic                                       zero_dout           ;
-    logic                                       valid_region        ;
+    logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]   bram_wrAddr             ;
+    logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]   bram_rdAddr             ;
+    logic   [ C_CLG2_ROW_BUF_BRAM_DEPTH -1:0]   bram_rdAddr_w           ;
+    logic   [ C_CLG2_ROW_BUF_BRAM_DEPTH -1:0]   bram_addr_w0            ;
+    logic                                       bram_rden               ;
+    logic                                       bram_rden_r             ;    
+    logic   [            `PIXEL_WIDTH - 1:0]    bram_dataout            ;
+    logic                                       bram_fifo_fwft          ;
+    logic                                       repeat_row              ;
+    logic                                       zero_dout               ;
+    logic                                       valid_region            ;
+    logic  [            `PIXEL_WIDTH - 1:0]     bram_rdAddr_arr[3:0]    ;
+    logic  [                           1:0]     idx                     ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -129,7 +132,7 @@ module cnn_layer_accel_prefetch_buffer (
         .rdAddr     ( bram_rdAddr_w  ),
         .rden       ( bram_rden      ),
         .rd_mode    ( upsample       ),
-        .fifo_fwft  ( bram_fifo_fwft ),
+        .fifo_fwft  ( 0              ),
         .dout       ( bram_dataout   )
     );
     
@@ -174,10 +177,12 @@ module cnn_layer_accel_prefetch_buffer (
     
     
     // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------   
-    assign bram_rdAddr_w = (upsample) ? bram_rdAddr[C_CLG2_ROW_BUF_BRAM_DEPTH:1] : bram_rdAddr[(C_CLG2_ROW_BUF_BRAM_DEPTH - 1):0];
+    // assign bram_rdAddr_w = (upsample) ? bram_rdAddr[C_CLG2_ROW_BUF_BRAM_DEPTH:1] : bram_rdAddr[(C_CLG2_ROW_BUF_BRAM_DEPTH - 1):0];
+    assign bram_rdAddr_w = (upsample) ? bram_rdAddr_arr[idx] : bram_rdAddr;
     assign dout = (zero_dout) ? {`PIXEL_WIDTH{1'b0}} : bram_dataout;
     assign bram_rden = (upsample) ? rd_en : bram_rden_r;
     assign bram_fifo_fwft = upsample && padding;
+    assign bram_addr_w0 = bram_rdAddr_arr[idx];
     
     always@(posedge wr_clk) begin
         if(rst) begin
@@ -199,6 +204,27 @@ module cnn_layer_accel_prefetch_buffer (
                 bram_rdAddr <= 0;
             end else if((bram_rden && !zero_dout) || (bram_rden && state == ST_AWE_CE_PRIM_BUFFER)) begin  // maybe this can be done better without worrying about the state?
                 bram_rdAddr <= bram_rdAddr + 1;
+            end
+        end
+    end
+    
+    always@(posedge rd_clk) begin
+        if(rst) begin
+            bram_rdAddr_arr[0] <= 0;
+            bram_rdAddr_arr[1] <= 0;
+            bram_rdAddr_arr[2] <= 1;
+            bram_rdAddr_arr[3] <= 1;
+            idx                <= 0;
+        end else begin
+            if(job_fetch_ack || job_complete_ack || rst_addr) begin
+                bram_rdAddr_arr[0] <= 0;
+                bram_rdAddr_arr[1] <= 0;
+                bram_rdAddr_arr[2] <= 1;
+                bram_rdAddr_arr[3] <= 1;
+                idx                <= 0;
+            end else if(bram_rden && !zero_dout) begin
+                bram_rdAddr_arr[idx] <= bram_rdAddr_arr[idx] + 2;
+                idx                  <= idx + 1;
             end
         end
     end
