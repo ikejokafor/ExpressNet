@@ -35,7 +35,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     num_expd_input_rows         ,
     num_output_rows             ,
     num_output_cols             ,
-	convolution_stride          ,
+	stride                      ,
 	kernel_size                 ,
     job_start                   ,
     job_accept                  ,
@@ -48,7 +48,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     state                       ,
     input_row                   ,
     input_col                   ,
-	output_stride				,
     row_matric                  ,
     gray_code                   ,
     pfb_rden                    ,
@@ -100,8 +99,8 @@ module cnn_layer_accel_quad_bram_ctrl (
     input  logic   [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    num_expd_input_rows         ;   
     input logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    num_output_rows             ;
     input logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    num_output_cols             ;
-	input  logic   [                            2:0]    convolution_stride          ;      
-	input  logic   [                            4:0]    kernel_size				    ;	
+	input  logic   [                            2:0]    stride                      ;      
+	input  logic                                        kernel_size	                ;	
     input  logic                                        job_start                   ;
     output logic                                        job_accept                  ;
     output logic                                        job_fetch_request           ;
@@ -113,7 +112,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     output logic [                            5:0]      state                       ;
     output logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]      input_row                   ;
     output logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]      input_col                   ;
-	output logic [					          2:0]      output_stride               ;
     output logic                                        pfb_rden                    ;
     input  logic [                            9:0]      pfb_full_count              ;
     input  logic                                        row_matric                  ;
@@ -157,6 +155,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     logic                                            pix_seq_bram_dout_valid         ;
     logic                                            next_state_tran_r               ;
     logic                                            pip_primed                      ;
+	logic     [					            2:0]     output_stride                  ;    
     genvar                                           i                               ;
 
   	
@@ -286,8 +285,8 @@ module cnn_layer_accel_quad_bram_ctrl (
         if(rst) begin
             output_stride <= 0;
         end else begin
-            if(convolution_stride > 1) begin
-                if((last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && output_stride == (convolution_stride - 1)) || (job_complete_ack)) begin
+            if(stride > 1) begin
+                if((last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && output_stride == (stride - 1)) || (job_complete_ack)) begin
                     output_stride <= 0;
                 end else if(last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && last_kernel) begin
                     output_stride <= output_stride + 1;
@@ -306,9 +305,9 @@ module cnn_layer_accel_quad_bram_ctrl (
         end else begin 
             if(!ce_execute && last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                 wht_sequence_selector <= 1'b1;
-            end else if(wht_sequence_selector && (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) && (convolution_stride == 1)) begin 
+            end else if(wht_sequence_selector && (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) && (stride == 1)) begin 
                 wht_sequence_selector <= 1'b0 ;
-            end else if (!wht_sequence_selector && (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) && (convolution_stride == 1)) begin 
+            end else if (!wht_sequence_selector && (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) && (stride == 1)) begin 
                 wht_sequence_selector <= 1'b1 ;
             end
         end

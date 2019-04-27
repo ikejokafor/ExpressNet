@@ -95,7 +95,7 @@ module cnn_layer_accel_quad (
     localparam ST_AWE_CE_ACTIVE             = 6'b001000;
     localparam ST_WAIT_JOB_DONE             = 6'b010000;
     localparam ST_SEND_COMPLETE             = 6'b100000;
-   
+ 
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
@@ -186,8 +186,9 @@ module cnn_layer_accel_quad (
 	(* mark_debug = "true" *)                                                                   ;
     logic    [                            6:0]  kernel_group_cfg                                ;
 	(* mark_debug = "true" *)                                                                   ;
-    logic    [                            6:0]  convolution_stride_cfg    		                ;
-	logic    [                            4:0]  kernel_size_cfg    		 		                ;
+    logic    [                            6:0]  stride_cfg    		                            ;
+    logic                                       kernel_size_cfg                                 ;
+	logic    [                            4:0]  dsp_kernel_size_cfg    		 		            ;
     logic    [                            4:0]  padding_cfg                                     ;
     logic    [                            6:0]  num_kernel_cfg                                  ;
     logic    [                            9:0]  num_output_rows_cfg                             ;
@@ -211,7 +212,6 @@ module cnn_layer_accel_quad (
     logic                                       config_mode                     	 	        ;
 
     logic   [                            2:0]   cycle_counter                   	            ;
-	logic   [                            2:0]   output_stride                   	            ;
 	(* mark_debug = "true" *)                                                                   ;
     logic   [                 `NUM_AWE - 1:0]   ce0_pixel_dataout_valid         	            ;
 	(* mark_debug = "true" *)                                                                   ;
@@ -249,7 +249,6 @@ module cnn_layer_accel_quad (
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_row                                      ;
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_col                                      ;
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_depth                                    ;
-      
 
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -338,7 +337,6 @@ module cnn_layer_accel_quad (
                     .wht_seq_addr1              ( wht_seq_addr1                                     ),
                     .ce_execute                 ( ce_execute[i * `NUM_CE_PER_AWE + j]               ),
                     .ce_cycle_counter           ( ce_cycle_counter[i * `NUM_CE_PER_AWE + j]         ),
-					.output_stride              ( output_stride                                     ),  
                     .wht_table_dout             ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + j]        ),
                     .wht_table_dout_valid       ( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + j]  )
                 ); 
@@ -362,7 +360,7 @@ module cnn_layer_accel_quad (
                 .input_row                  ( input_row                                             ),
                 .input_col                  ( input_col                                             ),
                 .num_expd_input_cols        ( num_expd_input_cols_cfg                               ),
-				.convolution_stride         ( convolution_stride_cfg  								), 
+				.stride                     ( stride_cfg  								            ), 
                 .state                      ( state                                                 ),
                 .gray_code                  ( gray_code                                             ),
                 .pix_seq_datain             ( pix_seq_bram_dout                                     ),     
@@ -400,7 +398,7 @@ module cnn_layer_accel_quad (
 					.clk						( clk_if														), 
 					.clk_5x					    ( clk_core														),
 					.new_map				    ( job_accept_w													),
-					.kernal_window_size			( kernel_size_cfg    								    		),
+					.kernal_window_size			( dsp_kernel_size_cfg    								        ),
 					.mode						( 2'b00													        ),	
 					.cascade_datain			    ( 0  															),    
 					.cascade_carryin			( 1'b0 															),
@@ -429,7 +427,7 @@ module cnn_layer_accel_quad (
 					.clk						( clk_if														), 
 					.clk_5x					    ( clk_core														),
 					.new_map				    ( job_accept_w													),
-					.kernal_window_size			( kernel_size_cfg									    		),
+					.kernal_window_size			( dsp_kernel_size_cfg									        ),
 					.mode						( 2'b00													        ),	
 					.cascade_datain			    ( awe_cascade_dataout[i-1]          				            ),    
 					.cascade_carryin			( awe_cascade_carryout[i-1]       								),
@@ -479,13 +477,12 @@ module cnn_layer_accel_quad (
         .state                      ( state                                                 ),
         .input_row                  ( input_row                                             ),
         .input_col                  ( input_col                                             ),
-		.output_stride				( output_stride                                         ),
         .num_expd_input_cols        ( num_expd_input_cols_cfg                               ),
         .num_expd_input_rows        ( num_expd_input_rows_cfg                               ),
         .num_output_rows            ( num_output_rows_cfg                                   ),
         .num_output_cols            ( num_output_cols_cfg                                   ),        
-		.convolution_stride         ( convolution_stride_cfg                                ),
-		.kernel_size                ( kernel_size_cfg										),
+		.stride                     ( stride_cfg                                            ),
+		.kernel_size                ( kernel_size_cfg							            ),
         .row_matric                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_MATRIC_FIELD]     ),
         .gray_code                  ( gray_code                                             ),
         .pfb_rden                   ( pfb_rden                                              ),
@@ -618,7 +615,7 @@ module cnn_layer_accel_quad (
             pfb_full_count_cfg              <= 0;
             kernel_full_count_cfg           <= 0;
             kernel_group_cfg                <= 0;
-            convolution_stride_cfg          <= 0;
+            stride_cfg                      <= 0;
             kernel_size_cfg    		        <= 0;
             padding_cfg                     <= 0;
             num_kernel_cfg                  <= 0;
@@ -631,14 +628,9 @@ module cnn_layer_accel_quad (
             crpd_input_col_end_cfg          <= 0;
             crpd_input_row_end_cfg          <= 0;
 `endif            
-            // config_accept[0]                <= 0;
+            dsp_kernel_size_cfg             <= 3;
             pix_seq_bram_wrAddr             <= 0;
         end else begin
-            // config_accept[0]                <= 0;           
-            // // Pixel Sequence Data
-            // if(config_valid[0]) begin
-            //     config_accept[0]   <= 1;
-            // end
             if(pix_seq_bram_wren) begin
                 pix_seq_bram_wrAddr <= pix_seq_bram_wrAddr + 1;
             end            

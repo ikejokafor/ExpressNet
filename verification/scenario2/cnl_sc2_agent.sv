@@ -72,7 +72,7 @@ function `cnl_scX_agent::new(agentParams_t agentParams = null);
         m_num_mon = `scX_agentParams.num_mon;
         m_runForever = `scX_agentParams.runForever;
     end
-endfunction : new
+endfunction: new
 
 
 task `cnl_scX_agent::run();

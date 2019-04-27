@@ -41,7 +41,6 @@ module cnn_layer_accel_weight_table_top #(
     wht_seq_addr1               ,
     ce_execute                  ,
     ce_cycle_counter            , 
-    output_stride               ,	
     wht_table_dout              ,   
     wht_table_dout_valid       
 );
@@ -77,7 +76,6 @@ module cnn_layer_accel_weight_table_top #(
     input   logic [                    3:0]   wht_seq_addr1               ;
     input   logic                             ce_execute                  ;
     input   logic [                    2:0]   ce_cycle_counter            ;
-	input   logic [                    2:0]   output_stride		          ;
     output  logic [ C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout              ;
     output  logic                             wht_table_dout_valid        ;
  

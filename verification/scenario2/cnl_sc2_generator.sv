@@ -54,6 +54,7 @@ class `scX_crtTestParams_t extends crtTestParams_t;
     int stride;
     int padding;
     bool upsample;
+    int conv_cfg;
 endclass: `scX_crtTestParams_t
 
 
@@ -83,7 +84,8 @@ class `cnl_scX_generator extends generator;
     rand int m_stride                                                                   ;
     rand int m_padding                                                                  ;
     int m_uple_fctr                                                                     ;
-    rand bool m_upsample                                                                ;
+    bool m_upsample                                                                     ; 
+    int m_conv_cfg                                                                      ;
     int m_num_expd_input_cols_cfg                                                       ;
     int m_num_expd_input_rows_cfg                                                       ;
     int m_crpd_input_col_start_cfg                                                      ;

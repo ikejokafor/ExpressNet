@@ -105,23 +105,9 @@ task `cnl_scX_scoreboard::run();
                 if(m_monitor2scoreboardMB.try_get(query)) begin
                     $display("// Checking Test ------------------------------------------------");
                     $display("// At Time:               %0t", $time                             );
-                    $display("// Test Index:            %0d", test.m_ti                         ); 
-                    $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
-                    $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
-                    $display("// Input Depth:           %0d", test.m_depth                      );
-                    $display("// Num Kernels:           %0d", test.m_num_kernels                );
-                    $display("// Kernel size:           %0d", test.m_kernel_size                );
-                    $display("// Stride:                %0d", test.m_stride                     );
-                    $display("// Padding:               %0d", test.m_padding                    );
-                    $display("// Upsample               %0d", test.m_upsample                   );
-                    $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
-                    $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
-                    $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
-                    $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        ); 
+                    $display("// Test Index:            %0d", test.m_ti                         );
                     $display("// Checking Test ------------------------------------------------");
                     $display("\n");
-
-                    
                     if(checkSolution(query, sol)) begin
                         $display("//---------------------------------------------------------------");
                         $display("// Test Failed"                                                   );

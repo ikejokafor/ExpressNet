@@ -79,12 +79,13 @@ interface cnn_layer_accel_quad_intf (
     num_output_rows_cfg             ,
     num_output_cols_cfg             ,
     pix_seq_data_full_count_cfg     ,
-    num_expd_input_cols_cfg       ,
-    num_expd_input_rows_cfg       ,
-    crpd_input_col_start_cfg       ,
-    crpd_input_row_start_cfg       ,
-    crpd_input_col_end_cfg         ,
-    crpd_input_row_end_cfg         ,
+    num_expd_input_cols_cfg         ,
+    num_expd_input_rows_cfg         ,
+    crpd_input_col_start_cfg        ,
+    crpd_input_row_start_cfg        ,
+    crpd_input_col_end_cfg          ,
+    crpd_input_row_end_cfg          ,
+    conv_cfg                        ,
     
     output_row                      ,
     output_col                      ,
@@ -163,6 +164,7 @@ interface cnn_layer_accel_quad_intf (
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_start_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_end_cfg   ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_end_cfg   ;
+    output logic                                    conv_cfg                ;
 
     
     input int               output_row                      ;
@@ -208,6 +210,7 @@ interface cnn_layer_accel_quad_intf (
         output crpd_input_row_start_cfg        ;
         output crpd_input_col_end_cfg          ;
         output crpd_input_row_end_cfg          ;
+        output conv_cfg                        ;
 	endclocking
 
 
