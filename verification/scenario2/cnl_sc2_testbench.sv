@@ -97,7 +97,7 @@ module cnl_sc2_testbench;
     `cnl_scX_generator test;
     `scX_genParams_t `scX_genParams;
     `scX_crtTestParams_t `scX_crtTestParams;
-    `cnl_scX_generator test_queue[$];
+    `cnl_scX_generator crt_test_queue[$];
     int i0;
     int i1;
     int i2;
@@ -239,7 +239,7 @@ module cnl_sc2_testbench;
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         imageSizes_arr[0]   = `MIN_NUM_INPUT_COLS;
         imageSizes_arr[1]   = 20;
-        // imageSizes_arr[2]   = `MAX_NUM_INPUT_COLS;
+        imageSizes_arr[2]   = `MAX_NUM_INPUT_COLS;
         strides_arr[0]      = 1;
         strides_arr[1]      = `MAX_STRIDE;
         padding_arr[0]      = 0;
@@ -257,11 +257,16 @@ module cnl_sc2_testbench;
 
 
         for(i0 = 0; i0 < 2; i0 = i0 + 1) begin // imageSizes_arr
+        // for(i0 = 0; i0 < 3; i0 = i0 + 1) begin // imageSizes_arr
             for(i1 = 0; i1 < 2; i1 = i1 + 1) begin // strides_arr
                 for(i2 = 0; i2 < 2; i2 = i2 + 1) begin // padding_arr
                     for(i3 = 0; i3 < 5; i3 = i3 + 1) begin // numKernels_arr
                         for(i4 = 0; i4 < 2; i4 = i4 + 1) begin // upsampling_arr           
-                            if(padding_arr[i2] == 1 && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
+                            if(padding_arr[i2] == 1 && upsampling_arr[i4] == TRUE && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
+                                imageSize = (imageSizes_arr[i0] / 2) - 2;
+                            end else if(upsampling_arr[i4] == TRUE && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
+                                imageSize = imageSizes_arr[i0] / 2;
+                            end else if(padding_arr[i2] == 1 && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
                                 imageSize = imageSizes_arr[i0] - 2;
                             end else begin
                                 imageSize = imageSizes_arr[i0];
@@ -278,7 +283,7 @@ module cnl_sc2_testbench;
                             `scX_crtTestParams.upsample = upsampling_arr[i4];
                             test = new(`scX_genParams);
                             test.createTest(`scX_crtTestParams);
-                            test_queue.push_back(test);
+                            crt_test_queue.push_back(test);
                             ti = ti + 1;
                          end
                     end
@@ -296,15 +301,14 @@ module cnl_sc2_testbench;
         // `scX_crtTestParams.kernel_size = `MAX_KERNEL_SIZE;
         // `scX_crtTestParams.stride = 1;
         // `scX_crtTestParams.padding = 0;
-        // `scX_crtTestParams.upsample = TRUE;
+        // `scX_crtTestParams.upsample = FALSE;
         // test = new(`scX_genParams);
         // test.createTest(`scX_crtTestParams);
-        // test_queue.push_back(test);
+        // crt_test_queue.push_back(test);
         // ti = ti + 1;
 
        
-        
-        env = new(i0_quad_intf, test_queue.size() + C_NUM_RAND_TESTS, test_queue, 1, FALSE);
+        env = new(i0_quad_intf, crt_test_queue.size() + C_NUM_RAND_TESTS, crt_test_queue, 1, FALSE);
         env.build();
         fork
             env.run();

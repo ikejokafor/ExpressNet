@@ -6,7 +6,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              36
@@ -22,7 +22,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              17
@@ -38,7 +38,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              36
@@ -54,7 +54,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              17
@@ -70,7 +70,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              36
@@ -86,7 +86,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              17
@@ -102,7 +102,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              36
@@ -118,7 +118,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              17
@@ -134,7 +134,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              36
@@ -150,7 +150,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              17
@@ -166,7 +166,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              38
@@ -182,7 +182,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              19
@@ -198,7 +198,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              38
@@ -214,7 +214,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              19
@@ -230,7 +230,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              38
@@ -246,7 +246,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              19
@@ -262,7 +262,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              38
@@ -278,7 +278,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              19
@@ -294,7 +294,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              38
@@ -310,7 +310,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              19
@@ -326,7 +326,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              18
@@ -342,7 +342,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -358,7 +358,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              18
@@ -374,7 +374,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -390,7 +390,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              18
@@ -406,7 +406,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -422,7 +422,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              18
@@ -438,7 +438,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -454,7 +454,7 @@ Num Expd Input Cols;          38
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              18
@@ -470,7 +470,7 @@ Num Expd Input Cols;          19
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -486,7 +486,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              19
@@ -502,7 +502,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -518,7 +518,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              19
@@ -534,7 +534,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -550,7 +550,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              19
@@ -566,7 +566,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -582,7 +582,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              19
@@ -598,7 +598,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -614,7 +614,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              19
@@ -630,7 +630,7 @@ Num Expd Input Cols;          21
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -646,7 +646,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              38
@@ -662,7 +662,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              18
@@ -678,7 +678,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              38
@@ -694,7 +694,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              18
@@ -710,7 +710,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              38
@@ -726,7 +726,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              18
@@ -742,7 +742,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              38
@@ -758,7 +758,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              18
@@ -774,7 +774,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      1
 Num Output Rows:              38
@@ -790,7 +790,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      0
 Upsample                      0
 Num Output Rows:              18
@@ -806,7 +806,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              40
@@ -822,7 +822,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              20
@@ -838,7 +838,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              40
@@ -854,7 +854,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              20
@@ -870,7 +870,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              40
@@ -886,7 +886,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              20
@@ -902,7 +902,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              40
@@ -918,7 +918,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              20
@@ -934,7 +934,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      1
 Num Output Rows:              40
@@ -950,7 +950,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        1
+Stride:                       1
 Padding:                      1
 Upsample                      0
 Num Output Rows:              20
@@ -966,7 +966,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              19
@@ -982,7 +982,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -998,7 +998,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              19
@@ -1014,7 +1014,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -1030,7 +1030,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              19
@@ -1046,7 +1046,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -1062,7 +1062,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              19
@@ -1078,7 +1078,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -1094,7 +1094,7 @@ Num Expd Input Cols;          40
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      1
 Num Output Rows:              19
@@ -1110,7 +1110,7 @@ Num Expd Input Cols;          20
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      0
 Upsample                      0
 Num Output Rows:              9
@@ -1126,7 +1126,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              20
@@ -1142,7 +1142,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  1
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -1158,7 +1158,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              20
@@ -1174,7 +1174,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  11
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -1190,7 +1190,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              20
@@ -1206,7 +1206,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  2
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -1222,7 +1222,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              20
@@ -1238,7 +1238,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  3
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10
@@ -1254,7 +1254,7 @@ Num Expd Input Cols;          42
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      1
 Num Output Rows:              20
@@ -1270,7 +1270,7 @@ Num Expd Input Cols;          22
 Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
-Stride                        2
+Stride:                       2
 Padding:                      1
 Upsample                      0
 Num Output Rows:              10

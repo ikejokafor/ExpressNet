@@ -81,14 +81,12 @@ task `cnl_scX_scoreboard::run();
     `scX_DUTOutParams_t `scX_DUTOutParams;
     int t;
     int signal;
-    integer fd0;
-    integer fd1;
+    integer fd;
     
 
     t = 0;
-    fd0 = $fopen("verification_results.txt", "w");
-    fd1 = $fopen("test_index.txt", "w");
-    $fwrite(fd0, "Test Idx, PASS/FAIL\n");
+    fd = $fopen("verification_results.csv", "w");
+    $fwrite(fd, "Test Idx, PASS/FAIL\n");
     while(t < m_numTests) begin
         @(m_quad_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
@@ -113,7 +111,7 @@ task `cnl_scX_scoreboard::run();
                     $display("// Input Depth:           %0d", test.m_depth                      );
                     $display("// Num Kernels:           %0d", test.m_num_kernels                );
                     $display("// Kernel size:           %0d", test.m_kernel_size                );
-                    $display("// Stride                 %0d", test.m_stride                     );
+                    $display("// Stride:                %0d", test.m_stride                     );
                     $display("// Padding:               %0d", test.m_padding                    );
                     $display("// Upsample               %0d", test.m_upsample                   );
                     $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
@@ -123,48 +121,30 @@ task `cnl_scX_scoreboard::run();
                     $display("// Checking Test ------------------------------------------------");
                     $display("\n");
 
-                    $fwrite(fd1, "Test Index:                   %0d\n", test.m_ti                         ); 
-                    $fwrite(fd1, "Num Input Rows:               %0d\n", test.m_num_input_rows             );
-                    $fwrite(fd1, "Num Input Cols:               %0d\n", test.m_num_input_cols             );
-                    $fwrite(fd1, "Num Expd Input Rows:          %0d\n", test.m_num_expd_input_rows        );
-                    $fwrite(fd1, "Num Expd Input Cols;          %0d\n", test.m_num_expd_input_cols        );
-                    $fwrite(fd1, "Input Depth:                  %0d\n", test.m_depth                      );
-                    $fwrite(fd1, "Num Kernels:                  %0d\n", test.m_num_kernels                );
-                    $fwrite(fd1, "Kernel size:                  %0d\n", test.m_kernel_size                );
-                    $fwrite(fd1, "Stride                        %0d\n", test.m_stride                     );
-                    $fwrite(fd1, "Padding:                      %0d\n", test.m_padding                    );
-                    $fwrite(fd1, "Upsample                      %0d\n", test.m_upsample                   );
-                    $fwrite(fd1, "Num Output Rows:              %0d\n", test.m_num_output_rows            );
-                    $fwrite(fd1, "Num Output Cols;              %0d\n", test.m_num_output_cols            ); 
-                    $fwrite(fd1, "Num Acl Output Rows:          %0d\n", test.m_num_acl_output_rows        );
-                    $fwrite(fd1, "Num Acl Output Cols;          %0d\n", test.m_num_acl_output_cols        ); 
-                    $fwrite(fd1, "\n");
                     
                     if(checkSolution(query, sol)) begin
                         $display("//---------------------------------------------------------------");
                         $display("// Test Failed"                                                   );
                         $display("//---------------------------------------------------------------");
                         $display("\n");
-                        $fwrite(fd0, "%0d, FAIL\n", test.m_ti);
+                        $fwrite(fd, "%0d, FAIL\n", test.m_ti);
                     end else begin
                         $display("//---------------------------------------------------------------");
                         $display("// Test Passed"                                                   );
                         $display("//---------------------------------------------------------------");
                         $display("\n");
-                        $fwrite(fd0, "%0d, PASS\n", test.m_ti);
+                        $fwrite(fd, "%0d, PASS\n", test.m_ti);
                     end
                     break;
                 end
             end
-            $fflush(fd0);
-            $fflush(fd1);
+            $fflush(fd);
             if(!m_runForever) begin
                 t = t + 1;
             end
         end
     end
-    $fclose(fd0);
-    $fclose(fd1);
+    $fclose(fd);
     m_scbd_done.put(signal);
 endtask: run
 

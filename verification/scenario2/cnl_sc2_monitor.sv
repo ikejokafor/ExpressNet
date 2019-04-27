@@ -110,7 +110,8 @@ task `cnl_scX_monitor::run();
                 @(m_quad_intf.clk_core_cb);
                 if(m_quad_intf.clk_core_cb.output_row == num_acl_output_rows) begin
                     $display("//---------------------------------------------------------------");
-                    $display("// At Time: %0t", $time                                           );  
+                    $display("// At Time: %0t", $time                                           ); 
+                    $display("// Test Index: %0d", test.m_ti                                    );                    
                     $display("// Monitor Recieved last output"                                  );
                     $display("//---------------------------------------------------------------");
                     $display("\n");

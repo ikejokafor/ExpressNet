@@ -47,14 +47,14 @@
 
 
 class `cnl_scX_environment #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz);
-    extern function new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, `cnl_scX_generator test_queue[$], int num_mon, bool runForever);
+    extern function new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, `cnl_scX_generator crt_test_queue[$], int num_mon, bool runForever);
     extern function void build();
     extern task run();
  
 
     virtual cnn_layer_accel_quad_intf   m_quad_intf;    
     int                                 m_numTests;
-    `cnl_scX_generator                   m_test_queue[$];
+    `cnl_scX_generator                  m_crt_test_queue[$];
     mailbox                             m_agent2driverMB;
     mailbox                             m_agent2scoreboardMB_arr[];
     mailbox                             m_monitor2scoreboardMB_arr[];
@@ -78,10 +78,10 @@ class `cnl_scX_environment #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MH
 endclass: `cnl_scX_environment
 
 
-function `cnl_scX_environment::new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, `cnl_scX_generator test_queue[$], int num_mon, bool runForever);
+function `cnl_scX_environment::new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, `cnl_scX_generator crt_test_queue[$], int num_mon, bool runForever);
     m_quad_intf                 = quad_intf;    
     m_numTests                  = numTests;
-    m_test_queue                = test_queue;
+    m_crt_test_queue            = crt_test_queue;
     m_num_mon                   = num_mon;
     m_num_scbd                  = num_mon;
     m_agent2scoreboardMB_arr    = new[num_mon];
@@ -120,7 +120,7 @@ function void `cnl_scX_environment::build();
     m_agentParams.agent2driverMB = m_agent2driverMB;
     m_agentParams.agent2scoreboardMB_arr = m_agent2scoreboardMB_arr;
     m_agentParams.agent2monitorMB_arr = m_agent2monitorMB_arr;
-    m_agentParams.test_queue = m_test_queue;
+    m_agentParams.crt_test_queue = m_crt_test_queue;
     m_agentParams.numTests = m_numTests;
     m_agentParams.DUT_rdy = m_DUT_rdy;
     m_agentParams.mon_rdy_arr = m_mon_rdy_arr;

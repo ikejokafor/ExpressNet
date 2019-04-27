@@ -211,15 +211,15 @@ module cnn_layer_accel_weight_table_top #(
                 num_kernels_r <= num_kernels;
             end
             // kernel count
-            if(job_accept || kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1)begin
+            if(job_accept || kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && wht_config_wren)begin
                 kernel_count <= 0;
             end else if(wht_config_wren) begin
                 kernel_count <= kernel_count + 1;
             end
             // kernel group logic
-            if(job_accept || (kernel_group == num_kernels_r && (next_kernel_d) )) begin
+            if(job_accept || (kernel_group == num_kernels_r && (next_kernel_d))) begin
                 kernel_group <= 0;
-            end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode) || next_kernel_d ) begin
+            end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d) begin
                 kernel_group <= kernel_group + 1;
             end
             if(ce_execute) begin

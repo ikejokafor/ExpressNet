@@ -149,6 +149,7 @@ module cnn_layer_accel_quad (
         genvar g2; `UNPACK_ARRAY_1D(`WEIGHT_WIDTH, 8, weight_data, weight_data_arr, g2); 
     logic                                       job_fetch_request_w                             ;
     logic                                       job_fetch_ack_r                                 ;
+    logic                                       job_fetch_ack_w                                 ;
     logic                                       job_fetch_in_progress           	            ;
     logic                                       job_fetch_complete_w                            ;
     logic                                       job_fetch_complete_r                            ;
@@ -204,6 +205,7 @@ module cnn_layer_accel_quad (
     logic    [                            8:0]  pix_seq_bram_wrAddr             	            ;
     logic    [                           11:0]  pix_seq_bram_rdAddr             	            ;
     logic    [                           15:0]  pix_seq_bram_dout               	            ;
+    logic                                       pix_seq_bram_wren                               ;
 
     logic                                       kernel_config_valid             	            ;
     logic                                       config_mode                     	 	        ;
@@ -255,14 +257,14 @@ module cnn_layer_accel_quad (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     pixel_sequence_data_bram
     i0_pixel_sequence_data_bram (
-        .clka     ( clk_if                              ),
-        .wea      ( config_accept[0] && config_valid[0] ),
-        .addra    ( pix_seq_bram_wrAddr                 ),    
-        .dina     ( config_data                         ),
-        .clkb     ( clk_core                            ),
-        .enb      ( pix_seq_bram_rden                   ),
-        .addrb    ( pix_seq_bram_rdAddr                 ),
-        .doutb    ( pix_seq_bram_dout                   )
+        .clka     ( clk_if                  ),
+        .wea      ( pix_seq_bram_wren       ),
+        .addra    ( pix_seq_bram_wrAddr     ),    
+        .dina     ( config_data             ),
+        .clkb     ( clk_core                ),
+        .enb      ( pix_seq_bram_rden       ),
+        .addrb    ( pix_seq_bram_rdAddr     ),
+        .doutb    ( pix_seq_bram_dout       )
     );
     
 
@@ -507,7 +509,6 @@ module cnn_layer_accel_quad (
     
     // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------      
     assign pipeline_flushed = output_row == num_output_rows_cfg || state == ST_IDLE;
-
     
     always@(posedge clk_core) begin
         if(rst) begin
@@ -587,6 +588,8 @@ module cnn_layer_accel_quad (
     assign wht_config_wren  = weight_ready && weight_valid;
     assign weight_ready     = weight_valid;
     assign config_mode      = state[0];
+    assign config_accept[2] = 0;
+    assign config_accept[3] = 0;
     
     always@(posedge clk_core) begin
         if(rst) begin
@@ -602,8 +605,10 @@ module cnn_layer_accel_quad (
 
   
     // BEGIN Network Output Data Logic --------------------------------------------------------------------------------------------------------------
-    assign pixel_ready  = job_fetch_in_progress;
-    assign pfb_wren     = pixel_valid && pixel_ready;
+    assign pixel_ready          = job_fetch_in_progress;
+    assign pfb_wren             = pixel_valid && pixel_ready;
+    assign config_accept[0]     = config_valid[0];
+    assign pix_seq_bram_wren    = config_accept[0] && config_valid[0];
 
     always@(posedge clk_if) begin
         if(rst) begin
@@ -626,15 +631,15 @@ module cnn_layer_accel_quad (
             crpd_input_col_end_cfg          <= 0;
             crpd_input_row_end_cfg          <= 0;
 `endif            
-            config_accept[0]                <= 0;
+            // config_accept[0]                <= 0;
             pix_seq_bram_wrAddr             <= 0;
         end else begin
-            config_accept[0]                <= 0;           
-            // Pixel Sequence Data
-            if(config_valid[0]) begin
-                config_accept[0]   <= 1;
-            end
-            if(config_accept[0] && config_valid[0]) begin
+            // config_accept[0]                <= 0;           
+            // // Pixel Sequence Data
+            // if(config_valid[0]) begin
+            //     config_accept[0]   <= 1;
+            // end
+            if(pix_seq_bram_wren) begin
                 pix_seq_bram_wrAddr <= pix_seq_bram_wrAddr + 1;
             end            
         end
