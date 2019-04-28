@@ -104,6 +104,7 @@ module cnl_sc2_testbench;
     int i3;
     int i4;
     int i5;
+    int i6;
     int ti;
     int imageSizes_arr[2:0];
     int imageSize;
@@ -112,6 +113,7 @@ module cnl_sc2_testbench;
     int numKernels_arr[4:0];
     int conv_cfg_arr[1:0];
     bool upsampling_arr[1:0];
+    int kernel_size_arr[1:0];
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -175,7 +177,7 @@ module cnl_sc2_testbench;
        .pfb_full_count_cfg              ( i0_cnn_layer_accel_quad.pfb_full_count_cfg            ),
        .kernel_full_count_cfg           ( i0_cnn_layer_accel_quad.kernel_full_count_cfg         ),
        .kernel_group_cfg                ( i0_cnn_layer_accel_quad.kernel_group_cfg              ),
-       .convolution_stride_cfg          ( i0_cnn_layer_accel_quad.convolution_stride_cfg        ),
+       .stride_cfg                      ( i0_cnn_layer_accel_quad.stride_cfg                    ),
        .kernel_size_cfg    		        ( i0_cnn_layer_accel_quad.kernel_size_cfg    	        ),
        .padding_cfg                     ( i0_cnn_layer_accel_quad.padding_cfg                   ),
        .upsample_cfg                    ( i0_cnn_layer_accel_quad.upsample_cfg                  ),
@@ -189,7 +191,6 @@ module cnl_sc2_testbench;
        .crpd_input_row_start_cfg        ( i0_cnn_layer_accel_quad.crpd_input_row_start_cfg      ),
        .crpd_input_col_end_cfg          ( i0_cnn_layer_accel_quad.crpd_input_col_end_cfg        ),
        .crpd_input_row_end_cfg          ( i0_cnn_layer_accel_quad.crpd_input_row_end_cfg        ),
-       .conv_cfg                        ( i0_cnn_layer_accel_quad.conv_cfg                      ),
        
        .output_row                      ( i0_cnn_layer_accel_quad.output_row                    ),
        .output_col                      ( i0_cnn_layer_accel_quad.output_col                    ),
@@ -257,66 +258,70 @@ module cnl_sc2_testbench;
         upsampling_arr[1] = FALSE;
         conv_cfg_arr[0] = 0;
         conv_cfg_arr[1] = 1;
+        kernel_size_arr[0] = 3;
+        kernel_size_arr[1] = 1;
         `scX_crtTestParams = new();     
         ti = 0;
 
 
-        for(i0 = 0; i0 < 2; i0 = i0 + 1) begin // imageSizes_arr
-        // for(i0 = 0; i0 < 3; i0 = i0 + 1) begin // imageSizes_arr
-            for(i1 = 0; i1 < 2; i1 = i1 + 1) begin // strides_arr
-                for(i2 = 0; i2 < 2; i2 = i2 + 1) begin // padding_arr
-                    for(i3 = 0; i3 < 5; i3 = i3 + 1) begin // numKernels_arr
-                        for(i4 = 0; i4 < 2; i4 = i4 + 1) begin // upsampling_arr
-                            for(i5 = 0; i5 < 2; i5 = i5 + 1) begin
-                                if(padding_arr[i2] == 1 && upsampling_arr[i4] == TRUE && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
-                                    imageSize = (imageSizes_arr[i0] / 2) - 2;
-                                end else if(upsampling_arr[i4] == TRUE && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
-                                    imageSize = imageSizes_arr[i0] / 2;
-                                end else if(padding_arr[i2] == 1 && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
-                                    imageSize = imageSizes_arr[i0] - 2;
-                                end else begin
-                                    imageSize = imageSizes_arr[i0];
-                                end
-                                `scX_genParams = new();
-                                `scX_genParams.ti = ti;  
-                                `scX_crtTestParams.num_input_rows = imageSize;
-                                `scX_crtTestParams.num_input_cols = imageSize;
-                                `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-                                `scX_crtTestParams.num_kernels = numKernels_arr[i3];
-                                `scX_crtTestParams.kernel_size = `MAX_KERNEL_SIZE;
-                                `scX_crtTestParams.stride = strides_arr[i1];
-                                `scX_crtTestParams.padding = padding_arr[i2];
-                                `scX_crtTestParams.upsample = upsampling_arr[i4];
-                                `scX_crtTestParams.conv_cfg = conv_cfg_arr[i5];
-                                test = new(`scX_genParams);
-                                test.createTest(`scX_crtTestParams);
-                                crt_test_queue.push_back(test);
-                                ti = ti + 1;
-                             end
-                         end
-                    end
-                end
-            end
-        end
+        // for(i0 = 0; i0 < 2; i0 = i0 + 1) begin // imageSizes_arr
+        // // for(i0 = 0; i0 < 3; i0 = i0 + 1) begin // imageSizes_arr
+        //     for(i1 = 0; i1 < 2; i1 = i1 + 1) begin // strides_arr
+        //         for(i2 = 0; i2 < 2; i2 = i2 + 1) begin // padding_arr
+        //             for(i3 = 0; i3 < 5; i3 = i3 + 1) begin // numKernels_arr
+        //                 for(i4 = 0; i4 < 2; i4 = i4 + 1) begin // upsampling_arr
+        //                     for(i5 = 0; i5 < 2; i5 = i5 + 1) begin // kernel_size_arr
+        //                         for(i6 = 0; i6 < 2; i6 = i6 + 1) begin
+        //                             if(padding_arr[i2] == 1 && upsampling_arr[i4] == TRUE && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
+        //                                 imageSize = (imageSizes_arr[i0] / 2) - 2;
+        //                             end else if(upsampling_arr[i4] == TRUE && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
+        //                                 imageSize = imageSizes_arr[i0] / 2;
+        //                             end else if(padding_arr[i2] == 1 && imageSizes_arr[i0] == `MAX_NUM_INPUT_COLS) begin
+        //                                 imageSize = imageSizes_arr[i0] - 2;
+        //                             end else begin
+        //                                 imageSize = imageSizes_arr[i0];
+        //                             end
+        //                             `scX_genParams = new();
+        //                             `scX_genParams.ti = ti;  
+        //                             `scX_crtTestParams.num_input_rows = imageSize;
+        //                             `scX_crtTestParams.num_input_cols = imageSize;
+        //                             `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        //                             `scX_crtTestParams.num_kernels = numKernels_arr[i3];
+        //                             `scX_crtTestParams.kernel_size = kernel_size[i6];
+        //                             `scX_crtTestParams.stride = strides_arr[i1];
+        //                             `scX_crtTestParams.padding = padding_arr[i2];
+        //                             `scX_crtTestParams.upsample = upsampling_arr[i4];
+        //                             `scX_crtTestParams.conv_cfg = conv_cfg_arr[i5];
+        //                             test = new(`scX_genParams);
+        //                             test.createTest(`scX_crtTestParams);
+        //                             crt_test_queue.push_back(test);
+        //                             ti = ti + 1;
+        //                          end
+        //                      end
+        //                  end
+        //             end
+        //         end
+        //     end
+        // end
         
         
-        // `scX_genParams = new();
-        // `scX_genParams.ti = ti;  
-        // `scX_crtTestParams.num_input_rows = 19;
-        // `scX_crtTestParams.num_input_cols = 19;
-        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        // `scX_crtTestParams.num_kernels = 1;
-        // `scX_crtTestParams.kernel_size = `MAX_KERNEL_SIZE;
-        // `scX_crtTestParams.stride = 1;
-        // `scX_crtTestParams.padding = 0;
-        // `scX_crtTestParams.upsample = FALSE;
-        // test = new(`scX_genParams);
-        // test.createTest(`scX_crtTestParams);
-        // crt_test_queue.push_back(test);
-        // ti = ti + 1;
+        `scX_genParams = new();
+        `scX_genParams.ti = ti;  
+        `scX_crtTestParams.num_input_rows = 19;
+        `scX_crtTestParams.num_input_cols = 19;
+        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        `scX_crtTestParams.num_kernels = 1;
+        `scX_crtTestParams.kernel_size = 1;
+        `scX_crtTestParams.stride = 1;
+        `scX_crtTestParams.padding = 0;
+        `scX_crtTestParams.upsample = FALSE;
+        test = new(`scX_genParams);
+        test.createTest(`scX_crtTestParams);
+        crt_test_queue.push_back(test);
+        ti = ti + 1;
 
        
-        env = new(i0_quad_intf, crt_test_queue.size() + C_NUM_RAND_TESTS, crt_test_queue, 1, FALSE);
+        env = new(i0_quad_intf, crt_test_queue.size() + C_NUM_RAND_TESTS, crt_test_queue, 1, FALSE, FALSE);
         env.build();
         fork
             env.run();

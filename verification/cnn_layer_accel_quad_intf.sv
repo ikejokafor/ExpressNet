@@ -71,7 +71,7 @@ interface cnn_layer_accel_quad_intf (
     pfb_full_count_cfg              ,
     kernel_full_count_cfg           ,
     kernel_group_cfg                ,
-    convolution_stride_cfg          , 
+    stride_cfg                      , 
     kernel_size_cfg    		        ,
     padding_cfg                     ,
     upsample_cfg                    ,
@@ -85,7 +85,6 @@ interface cnn_layer_accel_quad_intf (
     crpd_input_row_start_cfg        ,
     crpd_input_col_end_cfg          ,
     crpd_input_row_end_cfg          ,
-    conv_cfg                        ,
     
     output_row                      ,
     output_col                      ,
@@ -149,7 +148,7 @@ interface cnn_layer_accel_quad_intf (
     output logic [   9:0]    pfb_full_count_cfg              ;
     output logic [   7:0]    kernel_full_count_cfg           ;
     output logic [   6:0]    kernel_group_cfg                ;
-    output logic [   6:0]    convolution_stride_cfg          ;
+    output logic [   6:0]    stride_cfg                      ;
 	output logic [   4:0]    kernel_size_cfg    		     ;
     output logic [   4:0]    padding_cfg                     ;
     output logic             upsample_cfg                    ;
@@ -164,7 +163,6 @@ interface cnn_layer_accel_quad_intf (
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_start_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_end_cfg   ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_end_cfg   ;
-    output logic                                    conv_cfg                ;
 
     
     input int               output_row                      ;
@@ -196,7 +194,7 @@ interface cnn_layer_accel_quad_intf (
         output pfb_full_count_cfg              ;
         output kernel_full_count_cfg           ;
         output kernel_group_cfg                ;
-        output convolution_stride_cfg          ; 
+        output stride_cfg                      ; 
         output kernel_size_cfg    		       ; 
         output padding_cfg                     ;
         output upsample_cfg                    ;
@@ -210,7 +208,6 @@ interface cnn_layer_accel_quad_intf (
         output crpd_input_row_start_cfg        ;
         output crpd_input_col_end_cfg          ;
         output crpd_input_row_end_cfg          ;
-        output conv_cfg                        ;
 	endclocking
 
 

@@ -42,7 +42,6 @@ module cnn_layer_accel_awe_rowbuffers #(
     input_row                   ,
     input_col                   ,
     num_expd_input_cols         , 
-	convolution_stride		    ,
     state                       ,
     gray_code                   ,
     pix_seq_datain              ,
@@ -100,7 +99,6 @@ module cnn_layer_accel_awe_rowbuffers #(
     input  logic    [ C_CLG2_ROW_BUF_BRAM_DEPTH - 2:0]  input_row                   ;
     input  logic    [ C_CLG2_ROW_BUF_BRAM_DEPTH - 2:0]  input_col                   ;
     input  logic    [ C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  num_expd_input_cols         ;
-	input  logic    [                             2:0]  convolution_stride          ;
     input  logic    [                             5:0]  state                       ;
     input  logic    [                             1:0]  gray_code                   ;
     input  logic    [ `PIX_SEQ_BRAM_DATA_WIDTH - 1:0]   pix_seq_datain              ;
@@ -267,7 +265,7 @@ module cnn_layer_accel_awe_rowbuffers #(
         .clk        ( clk               		        	),
         .rst        ( rst                       			),
         .ce         ( 1'b1                      			),
-        .data_in    ( bram0_rden  & ~ce0_move_one_row_down  ),
+        .data_in    ( bram0_rden && !ce0_move_one_row_down  ),
         .data_out   ( ce0_pixel_dataout_valid   			)
     );
   
@@ -276,11 +274,11 @@ module cnn_layer_accel_awe_rowbuffers #(
         .C_CLOCK_CYCLES( 3 )
     ) 
     i1_SRL_bit (
-        .clk        ( clk                       		 ),
-        .rst        ( rst                       		 ),
-        .ce         ( 1'b1                      		 ),
-        .data_in    ( bram2_rden & ~ce1_move_one_row_down),
-        .data_out   ( ce1_pixel_dataout_valid            )
+        .clk        ( clk                       		    ),
+        .rst        ( rst                       		    ),
+        .ce         ( 1'b1                      		    ),
+        .data_in    ( bram2_rden && !ce1_move_one_row_down  ),
+        .data_out   ( ce1_pixel_dataout_valid               )
     );
  
  
@@ -291,7 +289,7 @@ module cnn_layer_accel_awe_rowbuffers #(
         .clk        ( clk               		        	),
         .rst        ( rst                       			),
         .ce         ( 1'b1                      			),
-        .data_in    ( bram0_rden  & ce0_move_one_row_down 	),
+        .data_in    ( bram0_rden && ce0_move_one_row_down 	),
         .data_out   ( ce0_cycle_counter_incr   			    )
     );
   
@@ -300,11 +298,11 @@ module cnn_layer_accel_awe_rowbuffers #(
         .C_CLOCK_CYCLES( 3 )
     ) 
     i5_SRL_bit (
-        .clk        ( clk                       		 ),
-        .rst        ( rst                       		 ),
-        .ce         ( 1'b1                      		 ),
-        .data_in    ( bram2_rden & ce1_move_one_row_down ),
-        .data_out   ( ce1_cycle_counter_incr             )
+        .clk        ( clk                       		    ),
+        .rst        ( rst                       		    ),
+        .ce         ( 1'b1                      		    ),
+        .data_in    ( bram2_rden && ce1_move_one_row_down   ),
+        .data_out   ( ce1_cycle_counter_incr                )
     );
 
 
@@ -536,10 +534,10 @@ module cnn_layer_accel_awe_rowbuffers #(
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
     always@(posedge clk) begin
-        if(rst | ce0_reset_counters) begin
+        if(rst || ce0_reset_counters) begin
             ce0_cycle_counter <= 0;
         end else begin
-            if(ce0_pixel_dataout_valid | ce0_cycle_counter_incr ) begin
+            if(ce0_pixel_dataout_valid || ce0_cycle_counter_incr) begin
                 ce0_cycle_counter <= ce0_cycle_counter + 1;
                 if(ce0_cycle_counter == 4) begin
                     ce0_cycle_counter <= 0;
@@ -552,10 +550,10 @@ module cnn_layer_accel_awe_rowbuffers #(
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
     always@(posedge clk) begin
-        if(rst | ce1_reset_counters ) begin
+        if(rst || ce1_reset_counters) begin
             ce1_cycle_counter <= 0;
         end else begin
-            if(ce1_pixel_dataout_valid | ce1_cycle_counter_incr) begin
+            if(ce1_pixel_dataout_valid || ce1_cycle_counter_incr) begin
                 ce1_cycle_counter <= ce1_cycle_counter + 1;
                 if(ce1_cycle_counter == 4) begin
                     ce1_cycle_counter <= 0;

@@ -69,6 +69,7 @@ function `cnl_scX_monitor::new(monParams_t monParams = null);
         m_mon_rdy = `scX_monParams.mon_rdy;
         m_tid = `scX_monParams.tid;
         m_runForever = `scX_monParams.runForever;
+        m_model_delay = `scX_monParams.model_delay;
     end
 endfunction: new
 

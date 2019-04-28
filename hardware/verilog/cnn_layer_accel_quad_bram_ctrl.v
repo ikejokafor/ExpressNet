@@ -217,9 +217,16 @@ module cnn_layer_accel_quad_bram_ctrl (
                 next_kernel[idx] <= 0;
             end
         end else begin
-            next_kernel[0] <= (output_col == (num_output_cols - 1) && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_move_one_row_down);
-            for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
-                next_kernel[idx] <= next_kernel[idx - 1];
+            if(kernel_size == `CONV_CONFIG_3x3) begin
+                next_kernel[0] <= (output_col == (num_output_cols - 1) && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_move_one_row_down);
+                for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
+                    next_kernel[idx] <= next_kernel[idx - 1];
+                end
+            end else if(kernel_size == `CONV_CONFIG_1x1) begin
+                next_kernel[0] <= (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1);
+                for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
+                    next_kernel[idx] <= next_kernel[idx - 1];
+                end
             end
         end
     end    
@@ -272,8 +279,14 @@ module cnn_layer_accel_quad_bram_ctrl (
         end else begin
             if(cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                 cycle_counter <= 0;
-            end else if(pix_seq_bram_rden_r) begin
-                cycle_counter <= cycle_counter + 1;
+            end else if(kernel_size == `CONV_CONFIG_3x3) begin
+                if(pix_seq_bram_rden_r) begin
+                    cycle_counter <= cycle_counter + 1;
+                end
+            end else if(kernel_size == `CONV_CONFIG_1x1) begin
+                if(pix_seq_bram_rden) begin
+                    cycle_counter <= cycle_counter + 1;
+                end
             end
         end
     end
@@ -324,13 +337,24 @@ module cnn_layer_accel_quad_bram_ctrl (
             if(job_complete_ack) begin
                 output_col  <= 0;
                 output_row  <= 0;
-            end else if(output_col == (num_output_cols - 1) && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
-                output_col <= 0;
-                if(last_kernel && (output_stride == 0 || input_row == num_expd_input_rows)) begin
-                    output_row <= output_row + 1;
+            end else if(kernel_size == `CONV_CONFIG_3x3) begin
+                if(output_col == (num_output_cols - 1) && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+                    output_col <= 0;
+                    if(last_kernel && (output_stride == 0 || input_row == num_expd_input_rows)) begin
+                        output_row <= output_row + 1;
+                    end
+                end else if(cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+                    output_col <= output_col + 1;
                 end
-            end else if(cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
-                output_col <= output_col + 1;
+            end else if(kernel_size == `CONV_CONFIG_1x1) begin
+                if(output_col == (num_output_cols - 1)) begin
+                    output_col <= 0;
+                    if(output_stride == 0 || input_row == num_expd_input_rows) begin
+                        output_row <= output_row + 1;
+                    end
+                end else if(cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && last_kernel) begin
+                    output_col <= output_col + 1;
+                end
             end
         end
     end 
@@ -345,7 +369,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                 ce_execute[idx] <= 0;
             end
         end else begin
-            ce_execute[0] <= pix_seq_bram_rden_d;
+            ce_execute[0] <= (kernel_size == `CONV_CONFIG_3x3) ? pix_seq_bram_rden_d : (kernel_size == `CONV_CONFIG_1x1) ? pix_seq_bram_rden : 0;
             for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
                 ce_execute[idx] <= ce_execute[idx - 1];
             end
@@ -454,6 +478,20 @@ module cnn_layer_accel_quad_bram_ctrl (
                     end
                 end
                 ST_AWE_CE_ACTIVE: begin
+                    // sequence data reading logic
+                    if(kernel_size == `CONV_CONFIG_3x3 && pix_seq_data_count > 1) begin
+                        pix_seq_bram_rden_r <= 1;
+                    end else if(kernel_size == `CONV_CONFIG_1x1 && pix_seq_data_count > 1 && cycle_counter == 0) begin
+                        pix_seq_bram_rden_r <= 1;
+                    end else begin
+                        pix_seq_bram_rden_r <= 0;
+                    end
+                    if(pix_seq_bram_rden_r) begin
+                        pix_seq_data_count <= pix_seq_data_count - 1;
+                    end
+                    if(pix_seq_bram_rden_r || (pix_seq_bram_rdAddr == (pix_seq_data_full_count - 1))) begin
+                        pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
+                    end
                     // overlap row matric with execution
                     if(row_matric && (last_kernel || ce_move_one_row_down)) begin
                         if(pfb_count == 1 && pfb_rden) begin
@@ -466,16 +504,6 @@ module cnn_layer_accel_quad_bram_ctrl (
                         row_matric_wrAddr <= 0;
                     end else if(row_matric && (last_kernel || ce_move_one_row_down)) begin
                         row_matric_wrAddr <= row_matric_wrAddr + 1;
-                    end
-                    // sequence data reading logic
-                    if(pix_seq_data_count > 1) begin
-                        pix_seq_bram_rden_r <= 1;
-                    end
-                    if(pix_seq_bram_rden_r) begin
-                        pix_seq_data_count <= pix_seq_data_count - 1;
-                    end
-                    if(pix_seq_bram_rden_r || (pix_seq_bram_rdAddr == (pix_seq_data_full_count - 1))) begin
-                        pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                     end
                     // next state logic
                     if(pfb_count == 0 && last_kernel && input_row == (num_expd_input_rows + 1) && output_row == (num_output_rows + 1)) begin

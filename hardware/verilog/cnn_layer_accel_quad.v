@@ -360,7 +360,6 @@ module cnn_layer_accel_quad (
                 .input_row                  ( input_row                                             ),
                 .input_col                  ( input_col                                             ),
                 .num_expd_input_cols        ( num_expd_input_cols_cfg                               ),
-				.stride                     ( stride_cfg  								            ), 
                 .state                      ( state                                                 ),
                 .gray_code                  ( gray_code                                             ),
                 .pix_seq_datain             ( pix_seq_bram_dout                                     ),     

@@ -47,7 +47,7 @@
 
 
 class `cnl_scX_environment #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz);
-    extern function new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, `cnl_scX_generator crt_test_queue[$], int num_mon, bool runForever);
+    extern function new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, `cnl_scX_generator crt_test_queue[$], int num_mon, bool runForever, bool model_delay);
     extern function void build();
     extern task run();
  
@@ -75,10 +75,11 @@ class `cnl_scX_environment #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MH
     int m_num_mon; 
     int m_num_scbd; 
     bool m_runForever;
+    bool m_model_delay;
 endclass: `cnl_scX_environment
 
 
-function `cnl_scX_environment::new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, `cnl_scX_generator crt_test_queue[$], int num_mon, bool runForever);
+function `cnl_scX_environment::new(virtual cnn_layer_accel_quad_intf quad_intf, int numTests, `cnl_scX_generator crt_test_queue[$], int num_mon, bool runForever, bool model_delay);
     m_quad_intf                 = quad_intf;    
     m_numTests                  = numTests;
     m_crt_test_queue            = crt_test_queue;
@@ -94,6 +95,7 @@ function `cnl_scX_environment::new(virtual cnn_layer_accel_quad_intf quad_intf, 
     m_scoreboard_arr            = new[num_mon];
     m_monitor_arr               = new[num_mon];
     m_runForever                = runForever;
+    m_model_delay               = model_delay;
 endfunction: new
 
 
@@ -133,6 +135,7 @@ function void `cnl_scX_environment::build();
     m_drvParams.numTests = m_numTests;
     m_drvParams.runForever = m_runForever;
     m_drvParams.DUT_rdy = m_DUT_rdy;
+    m_drvParams.model_delay = m_model_delay;
     m_agent = new(m_agentParams);
     m_driver = new(m_drvParams);
     m_assetion = new(m_asrtParams);    
@@ -144,6 +147,7 @@ function void `cnl_scX_environment::build();
         m_monParams_arr[i].mon_rdy = m_mon_rdy_arr[i];
         m_monParams_arr[i].tid = i;
         m_monParams_arr[i].runForever = m_runForever;
+        m_monParams_arr[i].model_delay = m_model_delay;
         m_scoreParams_arr[i].agent2scoreboardMB = m_agent2scoreboardMB_arr[i];
         m_scoreParams_arr[i].monitor2scoreboardMB = m_monitor2scoreboardMB_arr[i];
         m_scoreParams_arr[i].scbd_done = m_scbd_done_arr[i];

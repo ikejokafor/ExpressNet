@@ -43,7 +43,6 @@
 
 class `scX_drvParams_t extends drvParams_t;
     virtual cnn_layer_accel_quad_intf quad_intf;
-    int numTests;
 endclass: `scX_drvParams_t
 
 
@@ -55,7 +54,6 @@ class `cnl_scX_driver extends driver;
     
 
     virtual cnn_layer_accel_quad_intf m_quad_intf;
-    int m_numTests;
 endclass: `cnl_scX_driver
 
 
@@ -71,6 +69,7 @@ function `cnl_scX_driver::new(drvParams_t drvParams = null);
         m_numTests = `scX_drvParams.numTests;
         m_DUT_rdy = `scX_drvParams.DUT_rdy;
         m_runForever = `scX_drvParams.runForever;
+        m_model_delay = `scX_drvParams.model_delay;
     end
 endfunction: new
 
@@ -131,7 +130,7 @@ task `cnl_scX_driver::run();
             m_quad_intf.num_output_rows_cfg             = test.m_num_output_rows_cfg;
             m_quad_intf.num_output_cols_cfg             = test.m_num_output_cols_cfg;             
             m_quad_intf.pfb_full_count_cfg              = test.m_pfb_full_count_cfg;         
-            m_quad_intf.convolution_stride_cfg          = test.m_stride;
+            m_quad_intf.stride_cfg                      = test.m_stride;
             m_quad_intf.kernel_size_cfg    		        = test.m_kernel_size;
             m_quad_intf.padding_cfg                     = test.m_padding;
             m_quad_intf.upsample_cfg                    = test.m_upsample;
@@ -142,7 +141,6 @@ task `cnl_scX_driver::run();
             m_quad_intf.crpd_input_col_end_cfg          = test.m_crpd_input_col_end_cfg;
             m_quad_intf.crpd_input_row_end_cfg          = test.m_crpd_input_row_end_cfg;
             m_quad_intf.num_kernel_cfg                  = test.m_num_kernels;
-            m_quad_intf.conv_cfg                        = test.m_conv_cfg;
             m_quad_intf.job_start                       <= 0;
             m_quad_intf.job_fetch_ack                   <= 0;
             m_quad_intf.job_complete_ack                <= 0;
@@ -183,7 +181,7 @@ task `cnl_scX_driver::run();
             m_quad_intf.clk_if_cb.config_valid[0]         <= 1;
             while(i < `MAX_NUM_INPUT_COLS) begin
                 @(m_quad_intf.clk_if_cb);
-                if($urandom_range(0, 1)) begin
+                if($urandom_range(0, 1) && m_model_delay) begin
                     m_quad_intf.clk_if_cb.config_valid[0]         <= 0;
                     delay_clk_if();
                     m_quad_intf.clk_if_cb.config_data[127:112]    <= test.m_pix_seq_data_sim[(i * 8) + 7]; 
@@ -285,7 +283,7 @@ task `cnl_scX_driver::run();
             while(kernel_group_cfg < test.m_num_kernels) begin
                 while(i < `KERNEL_3x3_COUNT_FULL) begin
                     @(m_quad_intf.clk_core_cb);
-                    if($urandom_range(0, 1)) begin
+                    if($urandom_range(0, 1) && m_model_delay) begin
                         m_quad_intf.clk_core_cb.weight_valid            <= 0;
                         delay_clk_core();
                         m_quad_intf.clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (7 * `KERNEL_3x3_COUNT_FULL) + i]; 
@@ -393,7 +391,7 @@ task `cnl_scX_driver::run();
                     n = 1;
                     while(n < test.m_num_input_cols) begin
                         @(m_quad_intf.clk_if_cb);
-                        if($urandom_range(0, 1)) begin
+                        if($urandom_range(0, 1) && m_model_delay) begin
                             m_quad_intf.clk_if_cb.pixel_valid          <= 0;
                             delay_clk_if();
                             m_quad_intf.clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[(7 * (test.m_num_input_rows * test.m_num_input_cols)) + j];
