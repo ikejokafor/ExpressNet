@@ -50,9 +50,10 @@ class `scX_crtTestParams_t extends crtTestParams_t;
     int num_input_cols;
     int depth;
     int num_kernels;
-    int kernel_size;
     int stride;
     int padding;
+    int kernel_size;
+    int conv_out_fmt;
     bool upsample;
 endclass: `scX_crtTestParams_t
 
@@ -83,7 +84,8 @@ class `cnl_scX_generator extends generator;
     rand int m_stride                                                                   ;
     rand int m_padding                                                                  ;
     int m_uple_fctr                                                                     ;
-    bool m_upsample                                                                     ; 
+    bool m_upsample                                                                     ;
+    int m_conv_out_fmt                                                                  ;
     int m_num_expd_input_cols_cfg                                                       ;
     int m_num_expd_input_rows_cfg                                                       ;
     int m_crpd_input_col_start_cfg                                                      ;
@@ -128,13 +130,6 @@ endfunction: new
 
 function void `cnl_scX_generator::createTest(crtTestParams_t params);
     `scX_crtTestParams_t `scX_crtTestParams;
-    int i;
-    int j;
-    int k;
-    int a;
-    int b;
-    shortreal fl_num_output_rows_cfg;
-    shortreal fl_num_output_cols_cfg;
     
     
     $cast(`scX_crtTestParams, params);
@@ -143,6 +138,7 @@ function void `cnl_scX_generator::createTest(crtTestParams_t params);
     m_depth = `scX_crtTestParams.depth;
     m_num_kernels = `scX_crtTestParams.num_kernels;
     m_kernel_size = `scX_crtTestParams.kernel_size;
+    m_conv_out_fmt = `scX_crtTestParams.conv_out_fmt;
     m_stride = `scX_crtTestParams.stride;
     m_padding = `scX_crtTestParams.padding;
     m_upsample = `scX_crtTestParams.upsample;
@@ -162,7 +158,8 @@ function void `cnl_scX_generator::createTest(crtTestParams_t params);
     $display("// Num Output Rows:       %0d", m_num_output_rows                 );
     $display("// Num Output Cols:       %0d", m_num_output_cols                 );
     $display("// Num Acl Output Rows:   %0d", m_num_acl_output_rows             );
-    $display("// Num Acl Output Cols:   %0d", m_num_acl_output_cols             ); 
+    $display("// Num Acl Output Cols:   %0d", m_num_acl_output_cols             );
+    $display("// Conv Output Format:    %0d", m_conv_out_fmt                    );
     $display("// Created Specific Test ----------------------------------------");
     $display("\n");
         

@@ -89,8 +89,8 @@
 `define MAX_PADDING                     1
 `define MAX_UPSAMPLE_FACTOR             2
 `define MAX_KERNEL_SIZE                 3
-`define CONV_CONFIG_3x3                 1'b0
-`define CONV_CONFIG_1x1                 1'b1
+`define CONV_OUT_FMT0                   1'b0
+`define CONV_OUT_FMT1                   1'b1
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------

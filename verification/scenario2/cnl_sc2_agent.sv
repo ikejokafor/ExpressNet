@@ -125,7 +125,8 @@ task `cnl_scX_agent::run();
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
             $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
             $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
-            $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        ); 
+            $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        );
+            $display("// Conv Output Format:    %0d", test.m_conv_out_fmt               );        
             $display("// Created Random Test ------------------------------------------");
             $display("\n");
         end
@@ -145,6 +146,7 @@ task `cnl_scX_agent::run();
         $fwrite(fd, "Num Output Cols;              %0d\n", test.m_num_output_cols            ); 
         $fwrite(fd, "Num Acl Output Rows:          %0d\n", test.m_num_acl_output_rows        );
         $fwrite(fd, "Num Acl Output Cols;          %0d\n", test.m_num_acl_output_cols        ); 
+        $fwrite(fd, "Conv Output Format:           %0d\n", test.m_conv_out_fmt               );  
         $fwrite(fd, "\n");
     end
     $fclose(fd);
@@ -183,7 +185,8 @@ task `cnl_scX_agent::run();
             $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
             $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
             $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
-            $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        ); 
+            $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        );
+            $display("// Conv Output Format:    %0d", test.m_conv_out_fmt               );             
             $display("// Created Random Test ------------------------------------------");
             $display("\n");
             test_queue.push_back(test);
@@ -202,6 +205,7 @@ task `cnl_scX_agent::run();
             $fwrite(fd, "Num Output Cols;              %0d\n", test.m_num_output_cols            ); 
             $fwrite(fd, "Num Acl Output Rows:          %0d\n", test.m_num_acl_output_rows        );
             $fwrite(fd, "Num Acl Output Cols;          %0d\n", test.m_num_acl_output_cols        ); 
+            $fwrite(fd, "Conv Output Format:           %0d\n", test.m_conv_out_fmt               );             
             $fwrite(fd, "\n");
             $fflush(fd);
         end

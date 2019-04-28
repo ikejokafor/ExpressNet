@@ -182,12 +182,10 @@ module cnn_layer_accel_quad (
 	(* mark_debug = "true" *)                                                                   ;
     logic    [                            9:0]  pfb_full_count_cfg                              ;
 	(* mark_debug = "true" *)                                                                   ;
-    logic    [                            7:0]  kernel_full_count_cfg                           ;
 	(* mark_debug = "true" *)                                                                   ;
-    logic    [                            6:0]  kernel_group_cfg                                ;
 	(* mark_debug = "true" *)                                                                   ;
     logic    [                            6:0]  stride_cfg    		                            ;
-    logic                                       kernel_size_cfg                                 ;
+    logic                                       conv_out_fmt_cfg                                ;
 	logic    [                            4:0]  dsp_kernel_size_cfg    		 		            ;
     logic    [                            4:0]  padding_cfg                                     ;
     logic    [                            6:0]  num_kernel_cfg                                  ;
@@ -336,9 +334,9 @@ module cnn_layer_accel_quad (
                     .wht_seq_addr0              ( wht_seq_addr0                                     ),
                     .wht_seq_addr1              ( wht_seq_addr1                                     ),
                     .ce_execute                 ( ce_execute[i * `NUM_CE_PER_AWE + j]               ),
-                    .ce_cycle_counter           ( ce_cycle_counter[i * `NUM_CE_PER_AWE + j]         ),
                     .wht_table_dout             ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + j]        ),
-                    .wht_table_dout_valid       ( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + j]  )
+                    .wht_table_dout_valid       ( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + j]  ),
+                    .conv_out_fmt               ( conv_out_fmt_cfg                                  )
                 ); 
                 
                 assign actv_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[i * `NUM_CE_PER_AWE + j];                
@@ -481,7 +479,7 @@ module cnn_layer_accel_quad (
         .num_output_rows            ( num_output_rows_cfg                                   ),
         .num_output_cols            ( num_output_cols_cfg                                   ),        
 		.stride                     ( stride_cfg                                            ),
-		.kernel_size                ( kernel_size_cfg							            ),
+		.conv_out_fmt               ( conv_out_fmt_cfg							            ),
         .row_matric                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_MATRIC_FIELD]     ),
         .gray_code                  ( gray_code                                             ),
         .pfb_rden                   ( pfb_rden                                              ),
@@ -612,10 +610,7 @@ module cnn_layer_accel_quad (
             num_expd_input_cols_cfg         <= 0;
             num_expd_input_rows_cfg         <= 0;
             pfb_full_count_cfg              <= 0;
-            kernel_full_count_cfg           <= 0;
-            kernel_group_cfg                <= 0;
             stride_cfg                      <= 0;
-            kernel_size_cfg    		        <= 0;
             padding_cfg                     <= 0;
             num_kernel_cfg                  <= 0;
             num_output_rows_cfg             <= 0;
@@ -626,6 +621,7 @@ module cnn_layer_accel_quad (
             crpd_input_row_start_cfg        <= 0;
             crpd_input_col_end_cfg          <= 0;
             crpd_input_row_end_cfg          <= 0;
+            conv_out_fmt_cfg                <= 0;
 `endif            
             dsp_kernel_size_cfg             <= 3;
             pix_seq_bram_wrAddr             <= 0;

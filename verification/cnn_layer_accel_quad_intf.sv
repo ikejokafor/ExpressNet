@@ -69,10 +69,8 @@ interface cnn_layer_accel_quad_intf (
     pixel_data                      ,
 
     pfb_full_count_cfg              ,
-    kernel_full_count_cfg           ,
-    kernel_group_cfg                ,
     stride_cfg                      , 
-    kernel_size_cfg    		        ,
+    conv_out_fmt_cfg    		    ,
     padding_cfg                     ,
     upsample_cfg                    ,
     num_kernel_cfg                  ,
@@ -146,10 +144,8 @@ interface cnn_layer_accel_quad_intf (
     output logic [127:0]    pixel_data                      ;
 
     output logic [   9:0]    pfb_full_count_cfg              ;
-    output logic [   7:0]    kernel_full_count_cfg           ;
-    output logic [   6:0]    kernel_group_cfg                ;
     output logic [   6:0]    stride_cfg                      ;
-	output logic [   4:0]    kernel_size_cfg    		     ;
+	output logic [   4:0]    conv_out_fmt_cfg    		     ;
     output logic [   4:0]    padding_cfg                     ;
     output logic             upsample_cfg                    ;
     output logic [   6:0]    num_kernel_cfg                  ;
@@ -192,10 +188,8 @@ interface cnn_layer_accel_quad_intf (
         output pixel_data                     ;
 
         output pfb_full_count_cfg              ;
-        output kernel_full_count_cfg           ;
-        output kernel_group_cfg                ;
         output stride_cfg                      ; 
-        output kernel_size_cfg    		       ; 
+        output conv_out_fmt_cfg    		       ; 
         output padding_cfg                     ;
         output upsample_cfg                    ;
         output num_kernel_cfg                  ;

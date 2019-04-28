@@ -99,6 +99,7 @@ task `cnl_scX_monitor::run();
             `scX_DUTOutParams.num_acl_output_rows    = test.m_num_acl_output_rows;
             `scX_DUTOutParams.num_acl_output_cols    = test.m_num_acl_output_cols;
             `scX_DUTOutParams.inst_cfg               = 1;
+            `scX_DUTOutParams.conv_out_fmt           = test.m_conv_out_fmt;
             output_depth                             = test.m_num_kernels;
             query                                    = new(`scX_DUTOutParams);
             stride                                   = test.m_stride;

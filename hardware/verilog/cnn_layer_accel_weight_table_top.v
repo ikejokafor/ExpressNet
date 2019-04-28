@@ -40,9 +40,9 @@ module cnn_layer_accel_weight_table_top #(
     wht_seq_addr0               ,
     wht_seq_addr1               ,
     ce_execute                  ,
-    ce_cycle_counter            , 
-    wht_table_dout              ,   
-    wht_table_dout_valid       
+    wht_table_dout              ,
+    wht_table_dout_valid        ,
+    conv_out_fmt                
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -75,9 +75,9 @@ module cnn_layer_accel_weight_table_top #(
     input   logic [                    3:0]   wht_seq_addr0               ;
     input   logic [                    3:0]   wht_seq_addr1               ;
     input   logic                             ce_execute                  ;
-    input   logic [                    2:0]   ce_cycle_counter            ;
     output  logic [ C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout              ;
     output  logic                             wht_table_dout_valid        ;
+    input   logic                             conv_out_fmt                ;
  
  
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -136,7 +136,6 @@ module cnn_layer_accel_weight_table_top #(
         .data_in    ( next_kernel       ),
         .data_out   ( next_kernel_d     )
     );    
-    
 
     
     SRL_bus #(  
@@ -215,10 +214,18 @@ module cnn_layer_accel_weight_table_top #(
                 kernel_count <= kernel_count + 1;
             end
             // kernel group logic
-            if(job_accept || (kernel_group == num_kernels_r && (next_kernel_d))) begin
-                kernel_group <= 0;
-            end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d) begin
-                kernel_group <= kernel_group + 1;
+            if(conv_out_fmt == `CONV_OUT_FMT0) begin
+                if(job_accept || (kernel_group == num_kernels_r && (next_kernel_d))) begin
+                    kernel_group <= 0;
+                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d) begin
+                    kernel_group <= kernel_group + 1;
+                end
+            end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
+                if(job_accept || (kernel_group == num_kernels_r && (next_kernel))) begin
+                    kernel_group <= 0;
+                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel) begin
+                    kernel_group <= kernel_group + 1;
+                end
             end
             if(ce_execute) begin
                 wht_table_rden <= 1;

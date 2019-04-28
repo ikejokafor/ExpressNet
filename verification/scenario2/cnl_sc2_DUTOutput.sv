@@ -40,7 +40,6 @@
 `include "cnn_layer_accel_verif_defs.svh"
 
 
-
 class `scX_DUTOutParams_t extends DUTOutParams_t;
     int num_kernels;
     int num_output_rows;
@@ -49,6 +48,7 @@ class `scX_DUTOutParams_t extends DUTOutParams_t;
     int num_acl_output_cols;  
     int depth;
     int inst_cfg;
+    int conv_out_fmt;
 endclass: `scX_DUTOutParams_t
 
 
@@ -70,6 +70,7 @@ class `cnl_scX_DUTOutput extends DUTOutput;
     int m_num_acl_output_cols;
     int m_depth;
     int m_inst_cfg;
+    int m_conv_out_fmt;
     `scX_datum_t m_conv_map[];
 endclass: `cnl_scX_DUTOutput
 
@@ -87,6 +88,7 @@ function `cnl_scX_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
         m_num_acl_output_cols   = `scX_DUTOutParams.num_acl_output_cols;
         m_depth                 = `scX_DUTOutParams.depth;
         m_inst_cfg              = `scX_DUTOutParams.inst_cfg;
+        m_conv_out_fmt          = `scX_DUTOutParams.conv_out_fmt;
         if(m_inst_cfg == 0) begin
             m_conv_map          = new[m_num_kernels * m_num_output_rows * m_num_output_cols]; 
         end else begin
