@@ -34,7 +34,7 @@ module cnn_layer_accel_weight_table_top #(
 	next_kernel                 ,
 	last_kernel                 ,
     kernel_config_valid         ,
-    num_kernels                 ,    
+    config_data                 ,    
     wht_config_wren             ,
     wht_config_data             ,
     wht_seq_addr0               ,
@@ -42,7 +42,8 @@ module cnn_layer_accel_weight_table_top #(
     ce_execute                  ,
     wht_table_dout              ,
     wht_table_dout_valid        ,
-    conv_out_fmt                
+    conv_out_fmt                ,
+    num_kernels             
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -57,6 +58,7 @@ module cnn_layer_accel_weight_table_top #(
 	localparam C_CLG2_BRAM_A_DEPTH          = clog2(`ROW_BUF_BRAM_DEPTH);
     localparam C_CLG2_BRAM_B_DEPTH          = clog2(`ROW_BUF_BRAM_DEPTH);
     localparam C_WHT_DOUT_WIDTH             = `WEIGHT_WIDTH * `NUM_DSP_PER_CE; 
+    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = clog2(`MAX_BRAM_3x3_KERNELS);
 
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -69,7 +71,7 @@ module cnn_layer_accel_weight_table_top #(
 	input   logic                             next_kernel                 ;
 	output  logic                             last_kernel                 ;
     input   logic                             kernel_config_valid         ;
-    input   logic [                   15:0]   num_kernels                 ;
+    input   logic [                   15:0]   config_data                 ;
     input   logic                             wht_config_wren             ;
     input   logic [                   15:0]   wht_config_data             ;
     input   logic [                    3:0]   wht_seq_addr0               ;
@@ -78,6 +80,7 @@ module cnn_layer_accel_weight_table_top #(
     output  logic [ C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout              ;
     output  logic                             wht_table_dout_valid        ;
     input   logic                             conv_out_fmt                ;
+    output  logic [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]   num_kernels                 ;
  
  
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -89,11 +92,10 @@ module cnn_layer_accel_weight_table_top #(
     logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addr0             ;
     logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addr1_w           ;   
     logic    [    C_CLG2_BRAM_B_DEPTH - 1:0]     wht_table_addr1             ;
-    logic    [                          5:0]     num_kernels_r               ;
     logic    [                          5:0]     kernel_group                ;
     logic    [                          3:0]     kernel_count                ;
     logic                                        wht_table_rden              ;
-    logic                                        next_kernel_d               ;
+    logic                                        next_kernel_d0              ;
 	logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout0             ;
     logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout1             ;
 	
@@ -121,21 +123,33 @@ module cnn_layer_accel_weight_table_top #(
         .clk        ( clk                                                   ),
         .rst        ( rst                                                   ),
         .ce         ( 1'b1                                                  ),
-        .data_in    ( kernel_group == num_kernels_r && !config_mode         ),
+        .data_in    ( kernel_group == num_kernels && !config_mode         ),
         .data_out   ( last_kernel                                           )
     );
     
 
     SRL_bit #(
-        .C_CLOCK_CYCLES ( 6 )   // seq data 3 cycle latency and bram 3 cycle read latency
+        .C_CLOCK_CYCLES ( 6 )   // seq data 3 cycle latency and awe bram 3 cycle read latency
     ) 
     i2_SRL_bit (
         .clk        ( clk               ),
         .rst        ( rst               ),
         .ce         ( 1'b1              ),
         .data_in    ( next_kernel       ),
-        .data_out   ( next_kernel_d     )
-    );    
+        .data_out   ( next_kernel_d0    )
+    );
+    
+    
+    SRL_bit #(
+        .C_CLOCK_CYCLES ( 2 ) 
+    ) 
+    i3_SRL_bit (
+        .clk        ( clk               ),
+        .rst        ( rst               ),
+        .ce         ( 1'b1              ),
+        .data_in    ( next_kernel       ),
+        .data_out   ( next_kernel_d1    )
+    ); 
 
     
     SRL_bus #(  
@@ -198,14 +212,14 @@ module cnn_layer_accel_weight_table_top #(
     // Has not been test for 1x1 kernels
     always@(posedge clk) begin
         if(rst) begin
-            num_kernels_r     <= 0;
-            kernel_count      <= 0;
-            kernel_group      <= 0;
-            wht_table_rden    <= 0;
+            num_kernels         <= 0;
+            kernel_count        <= 0;
+            kernel_group        <= 0;
+            wht_table_rden      <= 0;
 		end else begin
             wht_table_rden          <= 0;
             if(kernel_config_valid) begin
-                num_kernels_r <= num_kernels;
+                num_kernels <= config_data;
             end
             // kernel count
             if(job_accept || kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && wht_config_wren)begin
@@ -215,15 +229,15 @@ module cnn_layer_accel_weight_table_top #(
             end
             // kernel group logic
             if(conv_out_fmt == `CONV_OUT_FMT0) begin
-                if(job_accept || (kernel_group == num_kernels_r && (next_kernel_d))) begin
+                if(job_accept || (kernel_group == num_kernels && (next_kernel_d0))) begin
                     kernel_group <= 0;
-                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d) begin
+                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d0) begin
                     kernel_group <= kernel_group + 1;
                 end
             end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
-                if(job_accept || (kernel_group == num_kernels_r && (next_kernel))) begin
+                if(job_accept || (kernel_group == num_kernels && (next_kernel_d1))) begin
                     kernel_group <= 0;
-                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel) begin
+                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d1) begin
                     kernel_group <= kernel_group + 1;
                 end
             end

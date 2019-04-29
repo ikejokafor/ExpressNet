@@ -4,7 +4,7 @@ Num Input Cols:               19
 Num Expd Input Rows:          19
 Num Expd Input Cols;          19
 Input Depth:                  8
-Num Kernels:                  1
+Num Kernels:                  2
 Kernel size:                  3
 Stride:                       1
 Padding:                      0
@@ -13,5 +13,5 @@ Num Output Rows:              17
 Num Output Cols;              17
 Num Acl Output Rows:          17
 Num Acl Output Cols;          19
-Conv Output Format:           0
+Conv Output Format:           1
 
