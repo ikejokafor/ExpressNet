@@ -141,7 +141,7 @@ module cnn_layer_accel_weight_table_top #(
     
     
     SRL_bit #(
-        .C_CLOCK_CYCLES ( 2 ) 
+        .C_CLOCK_CYCLES ( 3 ) 
     ) 
     i3_SRL_bit (
         .clk        ( clk               ),
