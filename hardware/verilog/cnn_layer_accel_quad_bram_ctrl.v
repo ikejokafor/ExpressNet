@@ -340,7 +340,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             if(stride > 1) begin
                 if((last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && output_stride == (stride - 1)) || (job_complete_ack)) begin
                     output_stride <= 0;
-                end else if(last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && last_awe_last_kernel) begin
+                end else if(last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && last_kernel_w) begin
                     output_stride <= output_stride + 1;
                 end
             end
@@ -556,10 +556,18 @@ module cnn_layer_accel_quad_bram_ctrl (
                             pfb_rden <= 1;
                         end
                     end
-                    if(row_matric && (last_kernel_w || ce_move_one_row_down) && row_matric_wrAddr == num_expd_input_cols) begin
-                        row_matric_wrAddr <= 0;
-                    end else if(row_matric && (last_kernel_w || ce_move_one_row_down)) begin
-                        row_matric_wrAddr <= row_matric_wrAddr + 1;
+                    if(conv_out_fmt == `CONV_OUT_FMT0) begin
+                        if(row_matric && (last_kernel_w || ce_move_one_row_down) && row_matric_wrAddr == num_expd_input_cols) begin
+                            row_matric_wrAddr <= 0;
+                        end else if(row_matric && (last_kernel_w || ce_move_one_row_down)) begin
+                            row_matric_wrAddr <= row_matric_wrAddr + 1;
+                        end
+                    end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
+                        if(row_matric && (last_kernel_d|| ce_move_one_row_down) && row_matric_wrAddr == num_expd_input_cols) begin
+                            row_matric_wrAddr <= 0;
+                        end else if(row_matric && (last_kernel_d || ce_move_one_row_down)) begin
+                            row_matric_wrAddr <= row_matric_wrAddr + 1;
+                        end
                     end
                     // next state logic
                     if(conv_out_fmt == `CONV_OUT_FMT0) begin

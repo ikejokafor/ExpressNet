@@ -367,7 +367,7 @@ module cnn_layer_accel_quad (
                 .gray_code                  ( gray_code                                             ),
                 .pix_seq_datain             ( pix_seq_bram_dout                                     ),     
                 .pfb_rden                   ( pfb_rden                                              ),
-                .last_kernel                ( awe_last_kernel                                       ),
+                .last_kernel                ( last_kernel[C_NUM_CE - 1]                             ),
                 .row_matric                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_MATRIC_FIELD]     ),
 				.row_rename                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_RENAME_FIELD]     ),
                 .ce0_pixel_datain           ( ce0_pixel_datain[i]                                   ),
@@ -383,12 +383,10 @@ module cnn_layer_accel_quad (
 				.ce1_move_one_row_down      ( move_one_row_down[i * `NUM_CE_PER_AWE + 1]            ),
                 .ce0_pixel_dataout_valid    ( ce0_pixel_dataout_valid[i]                            ),
                 .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i]                            ),
-                .rst_addr                   ( next_state_tran                                       )
-`ifdef SIMULATION                
-                ,
+                .rst_addr                   ( next_state_tran                                       ),
                 .ce0_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 0]                  ),
-                .ce1_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 1]                  )
-`endif
+                .ce1_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 1]                  ),
+                .conv_out_fmt               ( conv_out_fmt_cfg                                      )
             );
 			
             
