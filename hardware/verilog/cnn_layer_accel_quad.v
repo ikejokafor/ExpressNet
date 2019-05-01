@@ -190,7 +190,6 @@ module cnn_layer_accel_quad (
     logic                                       conv_out_fmt_cfg                                ;
 	logic    [                            4:0]  dsp_kernel_size_cfg    		 		            ;
     logic    [                            4:0]  padding_cfg                                     ;
-    logic    [                            6:0]  num_kernel_cfg                                  ;
     logic    [                            9:0]  num_output_rows_cfg                             ;
     logic    [                            9:0]  num_output_cols_cfg                             ;
     logic    [                           11:0]  pix_seq_data_full_count_cfg                     ;
@@ -201,7 +200,7 @@ module cnn_layer_accel_quad (
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_start_cfg                        ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_end_cfg                          ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_end_cfg                          ;
-    logic    [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]  num_kernels_cfg[C_NUM_CE - 1:0]                 ;
+    logic    [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]  num_kernels_cfg                               ;
 
     logic                                       pix_seq_bram_rden               	            ;
     logic    [                            8:0]  pix_seq_bram_wrAddr             	            ;
@@ -222,6 +221,8 @@ module cnn_layer_accel_quad (
 	logic   [                 C_NUM_CE - 1:0]   move_one_row_down              	                ;
 	(* mark_debug = "true" *)                                                                   ;
     logic   [                 C_NUM_CE - 1:0]   last_kernel                     	            ;
+    logic                                       awe_last_kernel                                 ;
+    logic                                       ctrl_last_kernel                                ;
 
     logic   [                            3:0]   quad_wht_ctrl_state             	            ;
     logic   [                            5:0]   state                           	            ;
@@ -340,7 +341,7 @@ module cnn_layer_accel_quad (
                     .wht_table_dout             ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + j]        ),
                     .wht_table_dout_valid       ( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + j]  ),
                     .conv_out_fmt               ( conv_out_fmt_cfg                                  ),
-                    .num_kernels                ( num_kernels_cfg[i * `NUM_CE_PER_AWE + j]          )
+                    .num_kernels                ( num_kernels_cfg                                   )
                 ); 
                 
                 assign actv_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[i * `NUM_CE_PER_AWE + j];                
@@ -366,7 +367,7 @@ module cnn_layer_accel_quad (
                 .gray_code                  ( gray_code                                             ),
                 .pix_seq_datain             ( pix_seq_bram_dout                                     ),     
                 .pfb_rden                   ( pfb_rden                                              ),
-                .last_awe_last_kernel       ( last_kernel[C_NUM_CE - 1]                    ),
+                .last_kernel                ( awe_last_kernel                                       ),
                 .row_matric                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_MATRIC_FIELD]     ),
 				.row_rename                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_RENAME_FIELD]     ),
                 .ce0_pixel_datain           ( ce0_pixel_datain[i]                                   ),
@@ -378,13 +379,19 @@ module cnn_layer_accel_quad (
                 .ce0_cycle_counter          ( ce_cycle_counter[i * `NUM_CE_PER_AWE + 0]             ),
                 .ce1_cycle_counter          ( ce_cycle_counter[i * `NUM_CE_PER_AWE + 1]             ),                      
                 .row_matric_wrAddr          ( row_matric_wrAddr                                     ),
-				.ce0_move_one_row_down      ( move_one_row_down[ i * `NUM_CE_PER_AWE + 0]           ),
-				.ce1_move_one_row_down      ( move_one_row_down[ i * `NUM_CE_PER_AWE + 1]           ),
+				.ce0_move_one_row_down      ( move_one_row_down[i * `NUM_CE_PER_AWE + 0]            ),
+				.ce1_move_one_row_down      ( move_one_row_down[i * `NUM_CE_PER_AWE + 1]            ),
                 .ce0_pixel_dataout_valid    ( ce0_pixel_dataout_valid[i]                            ),
                 .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i]                            ),
                 .rst_addr                   ( next_state_tran                                       )
+`ifdef SIMULATION                
+                ,
+                .ce0_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 0]                  ),
+                .ce1_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 1]                  )
+`endif
             );
 			
+            
 			if (i == 0 ) begin
 				cnn_layer_accel_awe_dsps #(
 					.C_DATAIN_DELAY				(	(i * 2)							)
@@ -493,16 +500,18 @@ module cnn_layer_accel_quad (
         .next_kernel                ( next_kernel                                           ),
 		.move_one_row_down          ( move_one_row_down                                     ),
         .last_awe_last_kernel       ( last_kernel[C_NUM_CE - 1]                             ),
+        .ctrl_last_kernel           ( ctrl_last_kernel                                      ),
 		.pipeline_flushed           ( pipeline_flushed                                      ),
         .wht_sequence_selector      ( wht_sequence_selector                                 ),
         .next_state_tran            ( next_state_tran                                       ),
         .next_row                   ( next_row                                              ),
-        .num_kernels                ( num_kernels_cfg[0]                                    )
+        .num_kernels                ( num_kernels_cfg                                       )
     );
     
     
     // BEGIN Logic ----------------------------------------------------------------------------------------------------------------------------------      
     assign pipeline_flushed = output_row == num_output_rows_cfg || state == ST_IDLE;
+    assign awe_last_kernel = (conv_out_fmt_cfg == `CONV_OUT_FMT0) ? last_kernel[C_NUM_CE - 1] : (conv_out_fmt_cfg == `CONV_OUT_FMT1) ? ctrl_last_kernel : 0;
     
     always@(posedge clk_core) begin
         if(rst) begin
@@ -515,18 +524,34 @@ module cnn_layer_accel_quad (
                 output_col      <= 0;
                 output_depth    <= 0;
             end
-            if(result_valid) begin
-                if(output_col == (num_output_cols_cfg - 1)) begin
-                    output_col <= 0;
-                    if(output_depth == (num_kernel_cfg - 1)) begin
-                        output_depth <= 0;
-                        output_row   <= output_row + 1;
+            if(conv_out_fmt_cfg == `CONV_OUT_FMT0) begin
+                if(result_valid) begin
+                    if(output_col == (num_output_cols_cfg - 1)) begin
+                        output_col <= 0;
+                        if(output_depth == num_kernels_cfg) begin
+                            output_depth <= 0;
+                            output_row   <= output_row + 1;
+                        end else begin
+                            output_depth  <= output_depth + 1;
+                        end
                     end else begin
-                        output_depth  <= output_depth + 1;
+                        output_col <= output_col + 1;
                     end
-                end else begin
-                    output_col <= output_col + 1;
                 end
+            end else if(conv_out_fmt_cfg == `CONV_OUT_FMT1) begin
+                if(result_valid) begin
+                    if(output_depth == num_kernels_cfg) begin
+                        output_depth <= 0;
+                        if(output_col == (num_output_cols_cfg - 1)) begin
+                            output_col  <= 0;
+                            output_row  <= output_row + 1;
+                        end else begin
+                            output_col  <= output_col + 1;
+                        end
+                    end else begin
+                        output_depth <= output_depth + 1;
+                    end
+                end        
             end
         end    
     end
@@ -612,7 +637,7 @@ module cnn_layer_accel_quad (
             pfb_full_count_cfg              <= 0;
             stride_cfg                      <= 0;
             padding_cfg                     <= 0;
-            num_kernel_cfg                  <= 0;
+            num_kernels_cfg                 <= 0;
             num_output_rows_cfg             <= 0;
             num_output_cols_cfg             <= 0;
             pix_seq_data_full_count_cfg     <= 0;

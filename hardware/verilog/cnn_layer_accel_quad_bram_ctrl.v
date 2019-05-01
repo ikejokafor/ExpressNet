@@ -62,6 +62,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     next_kernel                 ,
 	move_one_row_down			,
     last_awe_last_kernel        ,
+    ctrl_last_kernel            ,
     pipeline_flushed            ,
     wht_sequence_selector       ,
     next_state_tran             ,
@@ -129,6 +130,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     output logic [                 C_NUM_CE - 1:0]      next_kernel                 ;
 	output logic [                 C_NUM_CE - 1:0]      move_one_row_down           ;
     input  logic                                        last_awe_last_kernel        ;
+    output logic                                        ctrl_last_kernel            ;
     input  logic                                        pipeline_flushed            ;
 	output logic                                        wht_sequence_selector       ;
     output logic                                        next_state_tran             ;
@@ -234,6 +236,7 @@ module cnn_layer_accel_quad_bram_ctrl (
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign last_kernel = (kernel_group == num_kernels);
+    assign ctrl_last_kernel = (kernel_group == num_kernels);
     
     always@(posedge clk) begin
         if(rst) begin

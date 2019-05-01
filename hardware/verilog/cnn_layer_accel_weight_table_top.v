@@ -80,7 +80,7 @@ module cnn_layer_accel_weight_table_top #(
     output  logic [ C_WHT_DOUT_WIDTH - 1:0]   wht_table_dout              ;
     output  logic                             wht_table_dout_valid        ;
     input   logic                             conv_out_fmt                ;
-    output  logic [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]   num_kernels                 ;
+    input  logic [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]   num_kernels       ;
  
  
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ module cnn_layer_accel_weight_table_top #(
         .clk        ( clk                                                   ),
         .rst        ( rst                                                   ),
         .ce         ( 1'b1                                                  ),
-        .data_in    ( kernel_group == num_kernels && !config_mode         ),
+        .data_in    ( kernel_group == num_kernels && !config_mode           ),
         .data_out   ( last_kernel                                           )
     );
     
@@ -212,15 +212,11 @@ module cnn_layer_accel_weight_table_top #(
     // Has not been test for 1x1 kernels
     always@(posedge clk) begin
         if(rst) begin
-            num_kernels         <= 0;
             kernel_count        <= 0;
             kernel_group        <= 0;
             wht_table_rden      <= 0;
 		end else begin
-            wht_table_rden          <= 0;
-            if(kernel_config_valid) begin
-                num_kernels <= config_data;
-            end
+            wht_table_rden       <= 0;
             // kernel count
             if(job_accept || kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && wht_config_wren)begin
                 kernel_count <= 0;

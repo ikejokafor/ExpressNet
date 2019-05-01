@@ -73,7 +73,7 @@ interface cnn_layer_accel_quad_intf (
     conv_out_fmt_cfg    		    ,
     padding_cfg                     ,
     upsample_cfg                    ,
-    num_kernel_cfg                  ,
+    num_kernels_cfg                 ,
     num_output_rows_cfg             ,
     num_output_cols_cfg             ,
     pix_seq_data_full_count_cfg     ,
@@ -148,7 +148,7 @@ interface cnn_layer_accel_quad_intf (
 	output logic [   4:0]    conv_out_fmt_cfg    		     ;
     output logic [   4:0]    padding_cfg                     ;
     output logic             upsample_cfg                    ;
-    output logic [   6:0]    num_kernel_cfg                  ;
+    output logic [   6:0]    num_kernels_cfg                 ;
     output logic [   9:0]    num_output_rows_cfg             ;
     output logic [   9:0]    num_output_cols_cfg             ;
     output logic [  11:0]    pix_seq_data_full_count_cfg     ;
@@ -192,7 +192,7 @@ interface cnn_layer_accel_quad_intf (
         output conv_out_fmt_cfg    		       ; 
         output padding_cfg                     ;
         output upsample_cfg                    ;
-        output num_kernel_cfg                  ;
+        output num_kernels_cfg                  ;
         output num_output_rows_cfg             ;
         output num_output_cols_cfg             ;
         output pix_seq_data_full_count_cfg     ;

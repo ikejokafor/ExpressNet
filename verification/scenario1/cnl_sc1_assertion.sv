@@ -34,23 +34,25 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+`include "assertion.sv"
+`include "cnl_sc1_verif_defs.svh"
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.svh"
-`include "assertion.sv"
 
 
-class sc1_asrtParams_t extends asrtParams_t;
+
+class `scX_asrtParams_t extends asrtParams_t;
     virtual cnn_layer_accel_quad_intf quad_intf;
-endclass: sc1_asrtParams_t
+endclass: `scX_asrtParams_t
 
 
-class cnl_sc1_assertion extends assertion;
+class `cnl_scX_assertion extends assertion;
     extern function new(asrtParams_t asrtParams = null);
     extern task run();
-endclass: cnl_sc1_assertion
+endclass: `cnl_scX_assertion
 
 
-function cnl_sc1_assertion::new(asrtParams_t asrtParams = null);
+function `cnl_scX_assertion::new(asrtParams_t asrtParams = null);
 
 
     if(asrtParams != null) begin
@@ -59,7 +61,7 @@ function cnl_sc1_assertion::new(asrtParams_t asrtParams = null);
 endfunction: new
 
 
-task cnl_sc1_assertion::run();
+task `cnl_scX_assertion::run();
 endtask: run
 
 

@@ -59,6 +59,7 @@
 //	MSC
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 `define WINDOW_3x3_NUM_CYCLES           5    // num cycles to output a 3x3 window in our arch
+`define NUM_CONV_WINDOW_VALUES          10
 `define PIXEL_WIDTH                     16
 `define WEIGHT_WIDTH                    16
 `define ROW_BUF_BRAM_DEPTH              1024
