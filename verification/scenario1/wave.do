@@ -219,41 +219,120 @@ add wave -noupdate -group CTRL -radix binary /cnl_sc1_testbench/i0_cnn_layer_acc
 add wave -noupdate -group CTRL -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/state_s
 add wave -noupdate -group CTRL -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/stride
 add wave -noupdate -group CTRL -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl/wht_sequence_selector
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_CE_WHT_SEQ_ADDR_DELAY}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_CLG2_BRAM_A_DEPTH}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_CLG2_BRAM_B_DEPTH}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_CLG2_MAX_BRAM_3x3_KERNELS}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_WHT_DOUT_WIDTH}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/ce_execute}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/clk}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/config_data}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/config_mode}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/conv_out_fmt}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/job_accept}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/kernel_config_valid}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/kernel_count}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/kernel_group}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/last_kernel}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/next_kernel}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/next_kernel_d0}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/next_kernel_d1}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/num_kernels}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/rst}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_config_data}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_config_wren}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_seq_addr0}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_seq_addr1}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addr0}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addr0_w}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addr1}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addr1_w}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addrA}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addrA_cfg}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_dout}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_dout0}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_dout1}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_dout_valid}
-add wave -noupdate -group WHT_TBL_TOP -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_rden}
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/C_CLG2_ROW_BUF_BRAM_DEPTH
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/clk
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/gray_code
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/rst
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/seq_data_addr
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/sequence_data0
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/sequence_data1
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/sequence_data2
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/sequence_data3
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/sequence_selector
+add wave -noupdate -group {WHT_SEQ0
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table0/wht_data_addr
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/C_CLG2_ROW_BUF_BRAM_DEPTH
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/clk
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/gray_code
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/rst
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/seq_data_addr
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/sequence_data0
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/sequence_data1
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/sequence_data2
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/sequence_data3
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/sequence_selector
+add wave -noupdate -group {WHT_SEQ1
+} -radix unsigned /cnl_sc1_testbench/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_weight_sequence_table1/wht_data_addr
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_CE_WHT_SEQ_ADDR_DELAY}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_CLG2_BRAM_A_DEPTH}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_CLG2_BRAM_B_DEPTH}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_CLG2_MAX_BRAM_3x3_KERNELS}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/C_WHT_DOUT_WIDTH}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/ce_execute}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/clk}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/config_data}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/config_mode}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/conv_out_fmt}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/job_accept}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/kernel_config_valid}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/kernel_count}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/kernel_group}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/last_kernel}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/next_kernel}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/next_kernel_d0}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/next_kernel_d1}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/num_kernels}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/rst}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_config_data}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_config_wren}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_seq_addr0}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_seq_addr1}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addr0}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addr0_w}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addr1}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addr1_w}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addrA}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_addrA_cfg}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_dout}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_dout0}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_dout1}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_dout_valid}
+add wave -noupdate -group WHT_TBL_TOP0 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top/wht_table_rden}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/C_CE_WHT_SEQ_ADDR_DELAY}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/C_CLG2_BRAM_A_DEPTH}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/C_CLG2_BRAM_B_DEPTH}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/C_CLG2_MAX_BRAM_3x3_KERNELS}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/C_WHT_DOUT_WIDTH}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/ce_execute}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/clk}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/config_data}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/config_mode}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/conv_out_fmt}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/job_accept}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/kernel_config_valid}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/kernel_count}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/kernel_group}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/last_kernel}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/next_kernel}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/next_kernel_d0}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/next_kernel_d1}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/num_kernels}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/rst}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_config_data}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_config_wren}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_seq_addr0}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_seq_addr1}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_addr0}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_addr0_w}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_addr1}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_addr1_w}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_addrA}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_addrA_cfg}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_dout}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_dout0}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_dout1}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_dout_valid}
+add wave -noupdate -group WHT_TBL_TOP1 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top/wht_table_rden}
 add wave -noupdate -group AWE_ROW_BUF0 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/i0_cnn_layer_accel_awe_rowbuffers/C_CE0_ROW_MATRIC_DELAY}
 add wave -noupdate -group AWE_ROW_BUF0 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/i0_cnn_layer_accel_awe_rowbuffers/C_CE0_ROW_MAT_PX_DIN_DELAY}
 add wave -noupdate -group AWE_ROW_BUF0 {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/i0_cnn_layer_accel_awe_rowbuffers/C_CE0_ROW_MAT_WR_ADDR_DELAY}
@@ -388,7 +467,7 @@ add wave -noupdate -group BRAM1 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer
 add wave -noupdate -group BRAM1 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/i0_cnn_layer_accel_awe_rowbuffers/bram1/wrAddr}
 add wave -noupdate -group BRAM1 -radix unsigned {/cnl_sc1_testbench/i0_cnn_layer_accel_quad/AWE[0]/i0_cnn_layer_accel_awe_rowbuffers/bram1/wren}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {13056 ns} 0}
+WaveRestoreCursors {{Cursor 1} {12960 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 198
 configure wave -valuecolwidth 100
@@ -404,4 +483,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {8938 ns} {43315 ns}
+WaveRestoreZoom {32662 ns} {32745 ns}

@@ -390,7 +390,7 @@ module cnn_layer_accel_quad (
             );
 			
             
-			if (i == 0 ) begin
+			if (i == 0 ) begin: AWE_DSP
 				cnn_layer_accel_awe_dsps #(
 					.C_DATAIN_DELAY				(	(i * 2)							)
 				)
@@ -419,7 +419,7 @@ module cnn_layer_accel_quad (
 					.cascade_carryout			( awe_cascade_carryout[i]										),
 					.cascade_dataout_valid		( awe_cascade_dataout_valid[i]									)
 				);
-			end else begin 
+			end else begin: AWE_DSP 
 				cnn_layer_accel_awe_dsps #(
 					.C_DATAIN_DELAY				(	(i * 2)							)
 				)

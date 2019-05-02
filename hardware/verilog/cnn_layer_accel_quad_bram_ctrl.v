@@ -232,7 +232,7 @@ module cnn_layer_accel_quad_bram_ctrl (
         .data_in    ( last_kernel       ),
         .data_out   ( last_kernel_d     )
     );
-
+    
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign last_kernel = (kernel_group == num_kernels);
@@ -270,7 +270,7 @@ module cnn_layer_accel_quad_bram_ctrl (
             end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
                 next_kernel[0] <= next_kernel_w;
                 for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
-                    next_kernel[idx] <= next_kernel[idx - 1];
+                    next_kernel[idx] <= next_kernel_w;
                 end
             end
         end
@@ -349,22 +349,32 @@ module cnn_layer_accel_quad_bram_ctrl (
     // END logic ------------------------------------------------------------------------------------------------------------------------------------	
 
 
-    // Added by geetha for sequencing weight correctly 	
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin 
         if(rst) begin 
             wht_sequence_selector <= 1'b1;
-        end else begin 
-            if(!ce_execute && last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
-                wht_sequence_selector <= 1'b1;
-            end else if(wht_sequence_selector && (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) && (stride == 1)) begin 
-                wht_sequence_selector <= 1'b0 ;
-            end else if (!wht_sequence_selector && (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) && (stride == 1)) begin 
-                wht_sequence_selector <= 1'b1 ;
+        end else begin
+            if(conv_out_fmt == `CONV_OUT_FMT0) begin
+                if(!ce_execute && last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+                    wht_sequence_selector <= 1'b1;
+                end else if(wht_sequence_selector && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && stride == 1) begin 
+                    wht_sequence_selector <= 1'b0;
+                end else if (!wht_sequence_selector && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && stride == 1) begin 
+                    wht_sequence_selector <= 1'b1;
+                end
+            end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
+                if(!ce_execute && last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+                    wht_sequence_selector <= 1'b1;
+                end else if(wht_sequence_selector && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && stride == 1 && last_kernel) begin 
+                    wht_sequence_selector <= 1'b0;
+                end else if (!wht_sequence_selector && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && stride == 1 && last_kernel) begin 
+                    wht_sequence_selector <= 1'b1;
+                end          
             end
         end
     end				
     // END logic ------------------------------------------------------------------------------------------------------------------------------------	
+    
     
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    

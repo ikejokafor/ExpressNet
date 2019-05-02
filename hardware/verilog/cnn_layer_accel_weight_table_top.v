@@ -231,9 +231,9 @@ module cnn_layer_accel_weight_table_top #(
                     kernel_group <= kernel_group + 1;
                 end
             end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
-                if(job_accept || (kernel_group == num_kernels && (next_kernel_d1))) begin
+                if(job_accept || (kernel_group == num_kernels && (next_kernel))) begin
                     kernel_group <= 0;
-                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d1) begin
+                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel) begin
                     kernel_group <= kernel_group + 1;
                 end
             end
