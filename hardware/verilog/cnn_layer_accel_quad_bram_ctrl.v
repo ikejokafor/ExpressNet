@@ -268,8 +268,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                     next_kernel[idx] <= next_kernel[idx - 1];
                 end
             end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
-                next_kernel[0] <= next_kernel_w;
-                for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
+                for(idx = 0; idx < C_NUM_CE; idx = idx + 1) begin
                     next_kernel[idx] <= next_kernel_w;
                 end
             end

@@ -384,9 +384,13 @@ module cnn_layer_accel_quad (
                 .ce0_pixel_dataout_valid    ( ce0_pixel_dataout_valid[i]                            ),
                 .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i]                            ),
                 .rst_addr                   ( next_state_tran                                       ),
+                .conv_out_fmt               ( conv_out_fmt_cfg                                      ),
+                .num_kernels                ( num_kernels_cfg                                       )
+`ifdef SIMULATION
+                ,
                 .ce0_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 0]                  ),
-                .ce1_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 1]                  ),
-                .conv_out_fmt               ( conv_out_fmt_cfg                                      )
+                .ce1_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 1]                  )
+`endif
             );
 			
             
