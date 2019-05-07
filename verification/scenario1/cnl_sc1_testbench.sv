@@ -112,6 +112,9 @@ module cnl_sc1_testbench;
     int numKernels_arr[4:0];
     bool upsampling_arr[1:0];
     int conv_out_fmt_arr[1:0];
+    int test_bi;
+    int test_ei;
+    string outputDir;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -252,7 +255,7 @@ module cnl_sc1_testbench;
         numKernels_arr[4] = 4;
         upsampling_arr[0] = TRUE;
         upsampling_arr[1] = FALSE;
-        conv_out_fmt_arr[0] = 3;
+        conv_out_fmt_arr[0] = 0;
         conv_out_fmt_arr[1] = 1;
         `scX_crtTestParams = new();     
         ti = 0;
@@ -296,15 +299,15 @@ module cnl_sc1_testbench;
         //         end
         //     end
         // end
-        
+
         
         `scX_genParams = new();
         `scX_genParams.ti = ti;  
         `scX_crtTestParams.num_input_rows = 19;
         `scX_crtTestParams.num_input_cols = 19;
         `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 2;
-        `scX_crtTestParams.stride = 1;
+        `scX_crtTestParams.num_kernels = 3;
+        `scX_crtTestParams.stride = 2;
         `scX_crtTestParams.padding = 0;
         `scX_crtTestParams.upsample = FALSE;
         `scX_crtTestParams.kernel_size = 3;
@@ -313,9 +316,26 @@ module cnl_sc1_testbench;
         test.createTest(`scX_crtTestParams);
         crt_test_queue.push_back(test);
         ti = ti + 1;
+        
+        
+        if($test$plusargs("test_bi")) begin
+            $value$plusargs("test_bi=%d", test_bi);
+        end else begin
+            test_bi = 0;     
+        end
+        if($test$plusargs("test_ei")) begin
+            $value$plusargs("test_ei=%d", test_ei);
+        end else begin
+            test_ei = -1;     
+        end
+        if($test$plusargs("outputDir")) begin
+            $value$plusargs("outputDir=%s", outputDir);
+        end else begin
+            outputDir = "./";
+        end
 
        
-        env = new(i0_quad_intf, crt_test_queue.size() + C_NUM_RAND_TESTS, crt_test_queue, 1, FALSE, FALSE);
+        env = new(i0_quad_intf, crt_test_queue.size() + C_NUM_RAND_TESTS, crt_test_queue, 1, FALSE, FALSE, test_bi, test_ei, outputDir);
         env.build();
         fork
             env.run();

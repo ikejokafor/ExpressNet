@@ -71,6 +71,9 @@ function `cnl_scX_agent::new(agentParams_t agentParams = null);
         m_quad_intf = `scX_agentParams.quad_intf;
         m_num_mon = `scX_agentParams.num_mon;
         m_runForever = `scX_agentParams.runForever;
+        m_test_bi = `scX_agentParams.test_bi;
+        m_test_ei = `scX_agentParams.test_ei;      
+        m_outputDir = `scX_agentParams.outputDir;
     end
 endfunction: new
 
@@ -84,6 +87,7 @@ task `cnl_scX_agent::run();
     int t;
     int n;
     int ti;
+    int ri;
     int ti_offset;
     int signal;
     `cnl_scX_generator test;
@@ -101,8 +105,7 @@ task `cnl_scX_agent::run();
 
     ti = 0;
     ti_offset = m_crt_test_queue.size();
-    fd = $fopen("test_index.txt", "w");
-
+    fd = $fopen({m_outputDir, "/", "test_index.txt"}, "w");
     for(t = 0; t < m_numTests; t = t + 1) begin
         if(m_crt_test_queue.size() > 0) begin
             test = `cnl_scX_generator'(m_crt_test_queue[t]);
@@ -129,6 +132,7 @@ task `cnl_scX_agent::run();
             $display("// Conv Output Format:    %0d", test.m_conv_out_fmt               );        
             $display("// Created Random Test ------------------------------------------");
             $display("\n");
+            m_numTests = m_numTests + 1;
         end
         test_queue.push_back(test);
         $fwrite(fd, "Test Index:                   %0d\n", test.m_ti                         ); 
@@ -150,11 +154,16 @@ task `cnl_scX_agent::run();
         $fwrite(fd, "\n");
     end
     $fclose(fd);
-
+    
     
     t = 0;
     ti_offset = m_crt_test_queue.size();
-    fd = $fopen("test_index.txt", "a");
+    fd = $fopen({m_outputDir, "/", "test_index.txt"}, "a");
+    if(m_test_ei != -1) begin
+        m_numTests = (m_test_ei - m_test_bi) + 1;
+    end else begin
+        m_test_ei = m_numTests - 1;
+    end
     while(t < m_numTests) begin
         while(!m_DUT_rdy.try_get(signal)) begin
             @(m_quad_intf.clk_if_cb);
@@ -167,52 +176,56 @@ task `cnl_scX_agent::run();
         end
         
         if(m_runForever) begin
-            `scX_genParams = new();
-            `scX_genParams.ti = ti + ti_offset;
-            test = new(`scX_genParams);
-            ti = ti + 1;
-            void'(test.randomize());
-            $display("// Created Random Test ------------------------------------------");
-            $display("// Test Index:            %0d", test.m_ti                         );            
-            $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
-            $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
-            $display("// Input Depth:           %0d", test.m_depth                      );
-            $display("// Num Kernels:           %0d", test.m_num_kernels                );
-            $display("// Kernel size:           %0d", test.m_kernel_size                );
-            $display("// Stride:                %0d", test.m_stride                     );
-            $display("// Padding:               %0d", test.m_padding                    );
-            $display("// Upsample               %0d", test.m_upsample                   );
-            $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
-            $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
-            $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
-            $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        );
-            $display("// Conv Output Format:    %0d", test.m_conv_out_fmt               );             
-            $display("// Created Random Test ------------------------------------------");
-            $display("\n");
-            test_queue.push_back(test);
-            $fwrite(fd, "Test Index:                   %0d\n", test.m_ti                         ); 
-            $fwrite(fd, "Num Input Rows:               %0d\n", test.m_num_input_rows             );
-            $fwrite(fd, "Num Input Cols:               %0d\n", test.m_num_input_cols             );
-            $fwrite(fd, "Num Expd Input Rows:          %0d\n", test.m_num_expd_input_rows        );
-            $fwrite(fd, "Num Expd Input Cols;          %0d\n", test.m_num_expd_input_cols        );
-            $fwrite(fd, "Input Depth:                  %0d\n", test.m_depth                      );
-            $fwrite(fd, "Num Kernels:                  %0d\n", test.m_num_kernels                );
-            $fwrite(fd, "Kernel size:                  %0d\n", test.m_kernel_size                );
-            $fwrite(fd, "Stride:                       %0d\n", test.m_stride                     );
-            $fwrite(fd, "Padding:                      %0d\n", test.m_padding                    );
-            $fwrite(fd, "Upsample                      %0d\n", test.m_upsample                   );
-            $fwrite(fd, "Num Output Rows:              %0d\n", test.m_num_output_rows            );
-            $fwrite(fd, "Num Output Cols;              %0d\n", test.m_num_output_cols            ); 
-            $fwrite(fd, "Num Acl Output Rows:          %0d\n", test.m_num_acl_output_rows        );
-            $fwrite(fd, "Num Acl Output Cols;          %0d\n", test.m_num_acl_output_cols        ); 
-            $fwrite(fd, "Conv Output Format:           %0d\n", test.m_conv_out_fmt               );             
-            $fwrite(fd, "\n");
-            $fflush(fd);
+            //  `scX_genParams = new();
+            //  `scX_genParams.ti = ti + ti_offset;
+            //  test = new(`scX_genParams);
+            //  ti = ti + 1;
+            //  void'(test.randomize());
+            //  $display("// Created Random Test ------------------------------------------");
+            //  $display("// Test Index:            %0d", test.m_ti                         );            
+            //  $display("// Num Input Rows:        %0d", test.m_num_input_rows             );
+            //  $display("// Num Input Cols:        %0d", test.m_num_input_cols             );
+            //  $display("// Input Depth:           %0d", test.m_depth                      );
+            //  $display("// Num Kernels:           %0d", test.m_num_kernels                );
+            //  $display("// Kernel size:           %0d", test.m_kernel_size                );
+            //  $display("// Stride:                %0d", test.m_stride                     );
+            //  $display("// Padding:               %0d", test.m_padding                    );
+            //  $display("// Upsample               %0d", test.m_upsample                   );
+            //  $display("// Num Output Rows:       %0d", test.m_num_output_rows            );
+            //  $display("// Num Output Cols:       %0d", test.m_num_output_cols            );
+            //  $display("// Num Acl Output Rows:   %0d", test.m_num_acl_output_rows        );
+            //  $display("// Num Acl Output Cols:   %0d", test.m_num_acl_output_cols        );
+            //  $display("// Conv Output Format:    %0d", test.m_conv_out_fmt               );             
+            //  $display("// Created Random Test ------------------------------------------");
+            //  $display("\n");
+            //  test_queue.push_back(test);
+            //  $fwrite(fd, "Test Index:                   %0d\n", test.m_ti                         ); 
+            //  $fwrite(fd, "Num Input Rows:               %0d\n", test.m_num_input_rows             );
+            //  $fwrite(fd, "Num Input Cols:               %0d\n", test.m_num_input_cols             );
+            //  $fwrite(fd, "Num Expd Input Rows:          %0d\n", test.m_num_expd_input_rows        );
+            //  $fwrite(fd, "Num Expd Input Cols;          %0d\n", test.m_num_expd_input_cols        );
+            //  $fwrite(fd, "Input Depth:                  %0d\n", test.m_depth                      );
+            //  $fwrite(fd, "Num Kernels:                  %0d\n", test.m_num_kernels                );
+            //  $fwrite(fd, "Kernel size:                  %0d\n", test.m_kernel_size                );
+            //  $fwrite(fd, "Stride:                       %0d\n", test.m_stride                     );
+            //  $fwrite(fd, "Padding:                      %0d\n", test.m_padding                    );
+            //  $fwrite(fd, "Upsample                      %0d\n", test.m_upsample                   );
+            //  $fwrite(fd, "Num Output Rows:              %0d\n", test.m_num_output_rows            );
+            //  $fwrite(fd, "Num Output Cols;              %0d\n", test.m_num_output_cols            ); 
+            //  $fwrite(fd, "Num Acl Output Rows:          %0d\n", test.m_num_acl_output_rows        );
+            //  $fwrite(fd, "Num Acl Output Cols;          %0d\n", test.m_num_acl_output_cols        ); 
+            //  $fwrite(fd, "Conv Output Format:           %0d\n", test.m_conv_out_fmt               );             
+            //  $fwrite(fd, "\n");
+            //  $fflush(fd);
+            $display("Run Forever Not Implemented");
+            $stop;
         end
         
-        test = test_queue.pop_front();
+
+        ri = min(max(t + m_test_bi, t), m_test_ei);
+        test = test_queue[ri];
         test.plain2bits();
-        fd = $fopen("map.txt", "w");
+        fd = $fopen({m_outputDir, "/", "map.txt"}, "w");
         for(k = 0; k < test.m_depth; k = k + 1) begin
             for(i = 0; i < test.m_num_input_rows; i = i + 1) begin
                 for(j = 0; j < test.m_num_input_cols; j = j + 1) begin
@@ -241,7 +254,7 @@ task `cnl_scX_agent::run();
             end else begin
                 pix_data_sim = test.m_pix_data_sim;
             end
-            fd = $fopen("map_expd.txt", "w");
+            fd = $fopen({m_outputDir, "/", "map_expd.txt"}, "w");
             for(k = 0; k < test.m_depth; k = k + 1) begin
                 for(i = 0; i < test.m_num_expd_input_rows; i = i + 1) begin
                     for(j = 0; j < test.m_num_expd_input_cols; j = j + 1) begin
@@ -264,7 +277,7 @@ task `cnl_scX_agent::run();
             end
             $fclose(fd);
         end
-        fd = $fopen("kernel_map.txt", "w");
+        fd = $fopen({m_outputDir, "/", "kernel_map.txt"}, "w");
         for(n = 0; n < test.m_num_kernels; n = n + 1) begin
             $fwrite(fd, "Kernel %d\n", n);
             $fwrite(fd, "\n");
@@ -280,6 +293,9 @@ task `cnl_scX_agent::run();
                     $fwrite(fd, "\n");
                 end
             end
+            $fwrite(fd, "\n");
+            $fwrite(fd, "\n");
+            $fwrite(fd, "\n");
         end
         $fclose(fd);
         
@@ -299,7 +315,8 @@ task `cnl_scX_agent::run();
         end
     end
     $fclose(fd);
-    
+ 
+ 
 endtask: run
 
     

@@ -69,8 +69,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     next_row                    ,
     num_kernels                 
 );
-
-
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -337,10 +335,18 @@ module cnn_layer_accel_quad_bram_ctrl (
             output_stride <= 0;
         end else begin
             if(stride > 1) begin
-                if((last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && output_stride == (stride - 1)) || (job_complete_ack)) begin
-                    output_stride <= 0;
-                end else if(last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && last_kernel_w) begin
-                    output_stride <= output_stride + 1;
+                if(conv_out_fmt == `CONV_OUT_FMT0) begin
+                    if((last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && output_stride == (stride - 1)) || (job_complete_ack)) begin
+                        output_stride <= 0;
+                    end else if(last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && last_kernel_w) begin
+                        output_stride <= output_stride + 1;
+                    end
+                end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
+                    if((last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute && output_stride == (stride - 1)) || (job_complete_ack)) begin
+                        output_stride <= 0;
+                    end else if(last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_execute) begin
+                        output_stride <= output_stride + 1;
+                    end
                 end
             end
         end
@@ -541,8 +547,8 @@ module cnn_layer_accel_quad_bram_ctrl (
                     // sequence data rdAddr logic
                     if(conv_out_fmt == `CONV_OUT_FMT0 && (pix_seq_bram_rden_r || (pix_seq_bram_rdAddr == (pix_seq_data_full_count - 1)))) begin
                         pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
-                    end else if(conv_out_fmt == `CONV_OUT_FMT1) begin
-                        if(last_kernel_w && pix_seq_bram_rdAddr == (pix_seq_bram_rdAddr_ofst - 12'b1) && pix_seq_bram_rden) begin
+                    end else if(conv_out_fmt == `CONV_OUT_FMT1 && output_stride == 0) begin
+                        if(last_kernel_w && pix_seq_bram_rdAddr == (pix_seq_bram_rdAddr_ofst - 1) && pix_seq_bram_rden) begin
                             pix_seq_bram_rdAddr_ofst    <= pix_seq_bram_rdAddr_ofst + `WINDOW_3x3_NUM_CYCLES;
                             pix_seq_bram_rdAddr         <= pix_seq_bram_rdAddr_ofst;
                         end else if(pix_seq_bram_rdAddr == (pix_seq_bram_rdAddr_ofst - 1) && pix_seq_bram_rden && pix_seq_bram_rdAddr < pix_seq_data_full_count) begin
@@ -550,6 +556,8 @@ module cnn_layer_accel_quad_bram_ctrl (
                         end else if(pix_seq_bram_rden && pix_seq_bram_rdAddr < pix_seq_data_full_count) begin
                             pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                         end
+                    end else if(conv_out_fmt == `CONV_OUT_FMT1 && pix_seq_bram_rden_r && output_stride != 0) begin
+                        pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                     end
                     // overlap row matric with execution
                     if(conv_out_fmt == `CONV_OUT_FMT0) begin

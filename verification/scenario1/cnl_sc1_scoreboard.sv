@@ -70,6 +70,9 @@ function `cnl_scX_scoreboard::new(scoreParams_t scoreParams = null);
         m_numTests = `scX_scoreParams.numTests;
         m_tid = `scX_scoreParams.tid;
         m_runForever = `scX_scoreParams.runForever;
+        m_test_bi = `scX_scoreParams.test_bi;
+        m_test_ei = `scX_scoreParams.test_ei;
+        m_outputDir = `scX_scoreParams.outputDir;
     end
 endfunction: new
 
@@ -85,8 +88,13 @@ task `cnl_scX_scoreboard::run();
     
 
     t = 0;
-    fd = $fopen("verification_results.csv", "w");
+    fd = $fopen({m_outputDir, "/", "verification_results.csv"}, "w");
     $fwrite(fd, "Test Idx, PASS/FAIL\n");
+    if(m_test_ei != -1) begin
+        m_numTests = (m_test_ei - m_test_bi) + 1;
+    end else begin
+        m_test_ei = m_numTests - 1;
+    end
     while(t < m_numTests) begin
         @(m_quad_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
@@ -224,7 +232,7 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
         end
     end
     
-    fd = $fopen("sol_conv_map.txt", "w");
+    fd = $fopen({m_outputDir, "/", "sol_conv_map.txt"}, "w");
     if(`scX_sol.m_conv_out_fmt == 0) begin
         for(k = 0; k < num_kernels; k = k + 1) begin
             for(i = 0; i < num_output_rows; i = i + 1) begin
@@ -276,7 +284,7 @@ function int `cnl_scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     sol_conv_map           = `scX_sol.m_conv_map;
     qry_conv_map           = `scX_query.m_conv_map;
        
-    fd = $fopen("qry_conv_map.txt", "w");
+    fd = $fopen({m_outputDir, "/", "qry_conv_map.txt"}, "w");
     if(`scX_query.m_conv_out_fmt == 0) begin    
         for(k = 0; k < num_kernels; k = k + 1) begin
             for(i = 0; i < num_output_rows; i = i + 1) begin

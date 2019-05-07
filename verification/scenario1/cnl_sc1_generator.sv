@@ -124,6 +124,7 @@ function `cnl_scX_generator::new(genParams_t genParams = null);
     if(genParams != null) begin
         $cast(`scX_genParams, genParams);
         m_ti = `scX_genParams.ti;
+        m_outputDir = `scX_genParams.outputDir;
     end
 endfunction: new
 

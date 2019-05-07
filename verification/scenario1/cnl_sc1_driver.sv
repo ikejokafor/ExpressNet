@@ -71,6 +71,9 @@ function `cnl_scX_driver::new(drvParams_t drvParams = null);
         m_DUT_rdy = `scX_drvParams.DUT_rdy;
         m_runForever = `scX_drvParams.runForever;
         m_model_delay = `scX_drvParams.model_delay;
+        m_test_bi = `scX_drvParams.test_bi;
+        m_test_ei = `scX_drvParams.test_ei;       
+        m_outputDir = `scX_drvParams.outputDir;
     end
 endfunction: new
 
@@ -113,6 +116,11 @@ task `cnl_scX_driver::run();
     
     t = 0;
     m_DUT_rdy.put(signal);
+    if(m_test_ei != -1) begin
+        m_numTests = (m_test_ei - m_test_bi) + 1;
+    end else begin
+        m_test_ei = m_numTests - 1;
+    end
     while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         if(m_agent2driverMB.try_get(test)) begin

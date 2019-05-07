@@ -4,14 +4,14 @@ Num Input Cols:               19
 Num Expd Input Rows:          19
 Num Expd Input Cols;          19
 Input Depth:                  8
-Num Kernels:                  2
+Num Kernels:                  3
 Kernel size:                  3
-Stride:                       1
+Stride:                       2
 Padding:                      0
 Upsample                      0
-Num Output Rows:              17
-Num Output Cols;              17
-Num Acl Output Rows:          17
-Num Acl Output Cols;          19
+Num Output Rows:              9
+Num Output Cols;              9
+Num Acl Output Rows:          9
+Num Acl Output Cols;          10
 Conv Output Format:           1
 
