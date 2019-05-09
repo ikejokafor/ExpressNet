@@ -143,7 +143,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     logic     [                    11:0]             pix_seq_data_count              ;
     logic                                            pix_seq_bram_rden_r             ;
 	(* mark_debug = "true" *) 
-    logic                                            pix_seq_bram_rden_d             ;
+    logic                                            pix_seq_bram_rden_d0            ;
 	logic                                            pix_seq_bram_rden_d1            ;
     logic    [                           11:0]       pix_seq_bram_rdAddr_ofst        ;
     logic                                            job_fetch_acked                 ;
@@ -168,7 +168,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     logic                                            next_kernel_w                   ;
     genvar                                           i                               ;
 
-  	
+
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------             
@@ -180,7 +180,7 @@ module cnn_layer_accel_quad_bram_ctrl (
         .rst        ( rst                   ),
         .ce         ( 1'b1                  ),
         .data_in    ( pix_seq_bram_rden_r   ),
-        .data_out   ( pix_seq_bram_rden_d   )
+        .data_out   ( pix_seq_bram_rden_d0  )
     ); 
 
 	
@@ -194,8 +194,8 @@ module cnn_layer_accel_quad_bram_ctrl (
         .data_in    ( ce_move_one_row_down    ),
         .data_out   ( ce_move_one_row_down_d  )
     ); 
-    
-    
+
+
     SRL_bit #(
         .C_CLOCK_CYCLES( 1 )
     ) 
@@ -203,11 +203,11 @@ module cnn_layer_accel_quad_bram_ctrl (
         .clk        ( clk                   ),
         .rst        ( rst                   ),
         .ce         ( 1'b1                  ),
-        .data_in    ( pix_seq_bram_rden_d   ),
-        .data_out   ( pix_seq_bram_rden_d1   )
+        .data_in    ( pix_seq_bram_rden_d0  ),
+        .data_out   ( pix_seq_bram_rden_d1  )
     ); 
-    
-    
+
+
     SRL_bit #(
         .C_CLOCK_CYCLES( 3 )
     ) 
@@ -218,8 +218,8 @@ module cnn_layer_accel_quad_bram_ctrl (
         .data_in    ( pix_seq_bram_rden       ),
         .data_out   ( pix_seq_bram_dout_valid )
     );
-    
-    
+
+
     SRL_bit #(
         .C_CLOCK_CYCLES( 3 )
     ) 
@@ -230,7 +230,7 @@ module cnn_layer_accel_quad_bram_ctrl (
         .data_in    ( last_kernel       ),
         .data_out   ( last_kernel_d     )
     );
-    
+
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign last_kernel = (kernel_group == num_kernels);
@@ -249,10 +249,9 @@ module cnn_layer_accel_quad_bram_ctrl (
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
-    
-    
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    assign next_kernel_w = (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1);
+    assign next_kernel_w = (cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce_move_one_row_down);
     
     always@(posedge clk) begin
         if(rst) begin
@@ -423,7 +422,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                 ce_execute[idx] <= 0;
             end
         end else begin
-            ce_execute[0] <= pix_seq_bram_rden_d;
+            ce_execute[0] <= pix_seq_bram_rden_d0;
             for(idx = 1; idx < C_NUM_CE; idx = idx + 1) begin
                 ce_execute[idx] <= ce_execute[idx - 1];
             end
@@ -466,7 +465,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign gray_code                = {graycode_r[1], ^graycode_r[1:0]};
-    assign pix_seq_bram_rden        = pix_seq_bram_rden_d || pix_seq_bram_rden_r || pix_seq_bram_rden_d1;
+    assign pix_seq_bram_rden        = pix_seq_bram_rden_d0 || pix_seq_bram_rden_r || pix_seq_bram_rden_d1;
     // delay bc of 3 cycle sequence bram read latency to start execution of pipeline
 	assign ce_execute_w             = pix_seq_bram_rden_r;
     assign ce_move_one_row_down     = (output_stride != 0);
@@ -541,19 +540,21 @@ module cnn_layer_accel_quad_bram_ctrl (
                     // sequence data count logic
                     if(conv_out_fmt == `CONV_OUT_FMT0 && pix_seq_bram_rden_r) begin
                         pix_seq_data_count <= pix_seq_data_count - 1;
-                    end else if(conv_out_fmt == `CONV_OUT_FMT1 && pix_seq_bram_rden && last_kernel_w) begin
+                    end else if(conv_out_fmt == `CONV_OUT_FMT1 && pix_seq_bram_rden_r && last_kernel_w) begin
+                        pix_seq_data_count <= pix_seq_data_count - 1;
+                    end else if(conv_out_fmt == `CONV_OUT_FMT1 && pix_seq_bram_rden_r && ce_move_one_row_down) begin
                         pix_seq_data_count <= pix_seq_data_count - 1;
                     end
                     // sequence data rdAddr logic
                     if(conv_out_fmt == `CONV_OUT_FMT0 && (pix_seq_bram_rden_r || (pix_seq_bram_rdAddr == (pix_seq_data_full_count - 1)))) begin
                         pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                     end else if(conv_out_fmt == `CONV_OUT_FMT1 && output_stride == 0) begin
-                        if(last_kernel_w && pix_seq_bram_rdAddr == (pix_seq_bram_rdAddr_ofst - 1) && pix_seq_bram_rden) begin
+                        if(last_kernel_w && pix_seq_bram_rdAddr == (pix_seq_bram_rdAddr_ofst - 1) && pix_seq_bram_rden_r) begin
                             pix_seq_bram_rdAddr_ofst    <= pix_seq_bram_rdAddr_ofst + `WINDOW_3x3_NUM_CYCLES;
                             pix_seq_bram_rdAddr         <= pix_seq_bram_rdAddr_ofst;
-                        end else if(pix_seq_bram_rdAddr == (pix_seq_bram_rdAddr_ofst - 1) && pix_seq_bram_rden && pix_seq_bram_rdAddr < pix_seq_data_full_count) begin
+                        end else if(pix_seq_bram_rdAddr == (pix_seq_bram_rdAddr_ofst - 1) && pix_seq_bram_rden_r && pix_seq_bram_rdAddr < pix_seq_data_full_count) begin
                             pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr_ofst - `WINDOW_3x3_NUM_CYCLES;
-                        end else if(pix_seq_bram_rden && pix_seq_bram_rdAddr < pix_seq_data_full_count) begin
+                        end else if(pix_seq_bram_rden_r && pix_seq_bram_rdAddr < pix_seq_data_full_count) begin
                             pix_seq_bram_rdAddr <= pix_seq_bram_rdAddr + 1;
                         end
                     end else if(conv_out_fmt == `CONV_OUT_FMT1 && pix_seq_bram_rden_r && output_stride != 0) begin
@@ -611,7 +612,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                     if((!ce_execute && conv_out_fmt == `CONV_OUT_FMT0 && last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) 
                         || (!ce_execute && conv_out_fmt == `CONV_OUT_FMT1 && last_awe_ce1_cyc_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1)
                     ) begin
-                        row_matric_wrAddr        <= 0;
+                        row_matric_wrAddr      <= 0;
                         if(next_state[4]) begin
                             pix_seq_data_count <= 0;
                         end else begin

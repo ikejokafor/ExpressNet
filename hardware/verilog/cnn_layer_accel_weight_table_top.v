@@ -95,7 +95,7 @@ module cnn_layer_accel_weight_table_top #(
     logic    [                          5:0]     kernel_group                ;
     logic    [                          3:0]     kernel_count                ;
     logic                                        wht_table_rden              ;
-    logic                                        next_kernel_d0              ;
+    logic                                        next_kernel_d               ;
 	logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout0             ;
     logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout1             ;
 	
@@ -120,11 +120,11 @@ module cnn_layer_accel_weight_table_top #(
         .C_CLOCK_CYCLES ( 3 )
     ) 
     i1_SRL_bit (
-        .clk        ( clk                                                   ),
-        .rst        ( rst                                                   ),
-        .ce         ( 1'b1                                                  ),
-        .data_in    ( kernel_group == num_kernels && !config_mode           ),
-        .data_out   ( last_kernel                                           )
+        .clk        ( clk                                           ),
+        .rst        ( rst                                           ),
+        .ce         ( 1'b1                                          ),
+        .data_in    ( kernel_group == num_kernels && !config_mode   ),
+        .data_out   ( last_kernel                                   )
     );
     
 
@@ -136,20 +136,8 @@ module cnn_layer_accel_weight_table_top #(
         .rst        ( rst               ),
         .ce         ( 1'b1              ),
         .data_in    ( next_kernel       ),
-        .data_out   ( next_kernel_d0    )
+        .data_out   ( next_kernel_d     )
     );
-    
-    
-    SRL_bit #(
-        .C_CLOCK_CYCLES ( 3 ) 
-    ) 
-    i3_SRL_bit (
-        .clk        ( clk               ),
-        .rst        ( rst               ),
-        .ce         ( 1'b1              ),
-        .data_in    ( next_kernel       ),
-        .data_out   ( next_kernel_d1    )
-    ); 
 
     
     SRL_bus #(  
@@ -225,9 +213,9 @@ module cnn_layer_accel_weight_table_top #(
             end
             // kernel group logic
             if(conv_out_fmt == `CONV_OUT_FMT0) begin
-                if(job_accept || (kernel_group == num_kernels && (next_kernel_d0))) begin
+                if(job_accept || (kernel_group == num_kernels && (next_kernel_d))) begin
                     kernel_group <= 0;
-                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d0) begin
+                end else if ((kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && config_mode && wht_config_wren) || next_kernel_d) begin
                     kernel_group <= kernel_group + 1;
                 end
             end else if(conv_out_fmt == `CONV_OUT_FMT1) begin

@@ -617,16 +617,22 @@ module cnn_layer_accel_awe_rowbuffers #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    assign ce0_row_matric_en = (conv_out_fmt == `CONV_OUT_FMT0) ? last_kernel : (conv_out_fmt == `CONV_OUT_FMT1) ? (ce0_rm_kernel_count == num_kernels) : 0;
-    assign ce0_row_rename_en = (conv_out_fmt == `CONV_OUT_FMT0) ? last_kernel : (conv_out_fmt == `CONV_OUT_FMT1) ? (ce0_rr_kernel_count == num_kernels) : 0;
+    assign ce0_row_matric_en = (conv_out_fmt == `CONV_OUT_FMT0) ? last_kernel 
+                                : (conv_out_fmt == `CONV_OUT_FMT1 && !ce0_move_one_row_down) ? (ce0_rm_kernel_count == num_kernels) 
+                                : (conv_out_fmt == `CONV_OUT_FMT1 && ce0_move_one_row_down) ? 1 
+                                : 0;
+    assign ce0_row_rename_en = (conv_out_fmt == `CONV_OUT_FMT0) ? last_kernel 
+                                : (conv_out_fmt == `CONV_OUT_FMT1 && !ce0_move_one_row_down) ? (ce0_rr_kernel_count == num_kernels) 
+                                : (conv_out_fmt == `CONV_OUT_FMT1 && ce0_move_one_row_down) ? 1 
+                                : 0;
     
     always@(posedge clk) begin
         if(rst) begin
             ce0_rm_kernel_count <= 0;
         end else begin
-            if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && ce0_rm_kernel_count == num_kernels) begin
+            if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && ce0_rm_kernel_count == num_kernels && !ce0_move_one_row_down) begin
                 ce0_rm_kernel_count <= 0;
-            end else if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+            end else if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce0_move_one_row_down) begin
                 ce0_rm_kernel_count <= ce0_rm_kernel_count + 1;
             end
         end
@@ -636,9 +642,9 @@ module cnn_layer_accel_awe_rowbuffers #(
         if(rst) begin
             ce0_rr_kernel_count <= 0;
         end else begin
-            if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && ce0_rr_kernel_count == num_kernels) begin
+            if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && ce0_rr_kernel_count == num_kernels && !ce0_move_one_row_down) begin
                 ce0_rr_kernel_count <= 0;
-            end else if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+            end else if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce0_move_one_row_down) begin
                 ce0_rr_kernel_count <= ce0_rr_kernel_count + 1;
             end
         end
@@ -648,8 +654,8 @@ module cnn_layer_accel_awe_rowbuffers #(
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------        
     assign ce1_row_matric_en = (conv_out_fmt == `CONV_OUT_FMT0) ? last_kernel 
-                                : (conv_out_fmt == `CONV_OUT_FMT1 && !ce0_move_one_row_down) ? (ce1_rm_kernel_count == num_kernels) 
-                                : (conv_out_fmt == `CONV_OUT_FMT1 && ce0_move_one_row_down) ? 1 
+                                : (conv_out_fmt == `CONV_OUT_FMT1 && !ce1_move_one_row_down) ? (ce1_rm_kernel_count == num_kernels) 
+                                : (conv_out_fmt == `CONV_OUT_FMT1 && ce1_move_one_row_down) ? 1 
                                 : 0;
     assign ce1_row_rename_en = (conv_out_fmt == `CONV_OUT_FMT0) ? last_kernel 
                                 : (conv_out_fmt == `CONV_OUT_FMT1 && !ce1_move_one_row_down) ? (ce1_rr_kernel_count == num_kernels) 
@@ -660,9 +666,9 @@ module cnn_layer_accel_awe_rowbuffers #(
         if(rst) begin
             ce1_rm_kernel_count <= 0;
         end else begin
-            if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && ce1_rm_kernel_count == num_kernels) begin
+            if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && ce1_rm_kernel_count == num_kernels && !ce1_move_one_row_down) begin
                 ce1_rm_kernel_count <= 0;
-            end else if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+            end else if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce1_move_one_row_down) begin
                 ce1_rm_kernel_count <= ce1_rm_kernel_count + 1;
             end
         end
@@ -672,9 +678,9 @@ module cnn_layer_accel_awe_rowbuffers #(
         if(rst) begin
             ce1_rr_kernel_count <= 0;
         end else begin
-            if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && ce1_rr_kernel_count == num_kernels) begin
+            if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && ce1_rr_kernel_count == num_kernels && !ce1_move_one_row_down) begin
                 ce1_rr_kernel_count <= 0;
-            end else if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+            end else if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1 && !ce1_move_one_row_down) begin
                 ce1_rr_kernel_count <= ce1_rr_kernel_count + 1;
             end
         end
