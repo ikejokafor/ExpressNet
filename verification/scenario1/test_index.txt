@@ -13,5 +13,5 @@ Num Output Rows:              17
 Num Output Cols;              17
 Num Acl Output Rows:          17
 Num Acl Output Cols;          19
-Conv Output Format:           1
+Conv Output Format:           0
 
