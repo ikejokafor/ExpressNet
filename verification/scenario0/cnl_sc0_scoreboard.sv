@@ -42,13 +42,13 @@
 `include "cnl_sc0_DUTOutput.sv"
 
 
-class sc0_scoreParams_t extends scoreParams_t;
+class `scX_scoreParams_t extends scoreParams_t;
     virtual cnn_layer_accel_quad_intf quad_intf;
     int depth_offset;
-endclass: sc0_scoreParams_t
+endclass: `scX_scoreParams_t
 
 
-class cnl_sc0_scoreboard extends scoreboard;
+class cnl_`scX_scoreboard extends scoreboard;
     extern function new(scoreParams_t scoreParams = null);
     extern task run();
     extern function void createSolution(generator test, DUTOutput sol);
@@ -57,31 +57,31 @@ class cnl_sc0_scoreboard extends scoreboard;
 
     virtual cnn_layer_accel_quad_intf m_quad_intf; 
     int m_depth_offset;
-endclass: cnl_sc0_scoreboard
+endclass: cnl_`scX_scoreboard
 
 
-function cnl_sc0_scoreboard::new(scoreParams_t scoreParams = null);
-    sc0_scoreParams_t sc0_scoreParams;
+function cnl_`scX_scoreboard::new(scoreParams_t scoreParams = null);
+    `scX_scoreParams_t `scX_scoreParams;
 
     if(scoreParams != null) begin
-        $cast(sc0_scoreParams, scoreParams);
-        m_agent2scoreboardMB = sc0_scoreParams.agent2scoreboardMB;
-        m_monitor2scoreboardMB = sc0_scoreParams.monitor2scoreboardMB;
-        m_quad_intf = sc0_scoreParams.quad_intf;
-        m_scbd_done = sc0_scoreParams.scbd_done;
-        m_numTests = sc0_scoreParams.numTests;
-        m_depth_offset = sc0_scoreParams.depth_offset;
-        m_tid = sc0_scoreParams.tid;
-        m_runForever = sc0_scoreParams.runForever;
+        $cast(`scX_scoreParams, scoreParams);
+        m_agent2scoreboardMB = `scX_scoreParams.agent2scoreboardMB;
+        m_monitor2scoreboardMB = `scX_scoreParams.monitor2scoreboardMB;
+        m_quad_intf = `scX_scoreParams.quad_intf;
+        m_scbd_done = `scX_scoreParams.scbd_done;
+        m_numTests = `scX_scoreParams.numTests;
+        m_depth_offset = `scX_scoreParams.depth_offset;
+        m_tid = `scX_scoreParams.tid;
+        m_runForever = `scX_scoreParams.runForever;
     end
 endfunction: new
 
 
-task cnl_sc0_scoreboard::run();
-    cnl_sc0_generator test;
-    cnl_sc0_DUTOutput query;
-    cnl_sc0_DUTOutput sol;
-    sc0_DUTOutParams_t sc0_DUTOutParams;
+task cnl_`scX_scoreboard::run();
+    cnl_`scX_generator test;
+    cnl_`scX_DUTOutput query;
+    cnl_`scX_DUTOutput sol;
+    `scX_DUTOutParams_t `scX_DUTOutParams;
     int t;
     int signal;
 
@@ -90,14 +90,14 @@ task cnl_sc0_scoreboard::run();
     while(t < m_numTests) begin
         @(m_quad_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
-            sc0_DUTOutParams                        = new();
-            sc0_DUTOutParams.num_output_rows        = test.m_num_output_rows;
-            sc0_DUTOutParams.num_output_cols        = test.m_num_output_cols;
-            sc0_DUTOutParams.num_sim_output_rows    = test.m_num_sim_output_rows;
-            sc0_DUTOutParams.num_sim_output_cols    = test.m_num_sim_output_cols;
-            sc0_DUTOutParams.kernel_size            = test.m_kernel_size;
-            sc0_DUTOutParams.depth_offset           = m_depth_offset;
-            sol = new(sc0_DUTOutParams);            
+            `scX_DUTOutParams                        = new();
+            `scX_DUTOutParams.num_output_rows        = test.m_num_output_rows;
+            `scX_DUTOutParams.num_output_cols        = test.m_num_output_cols;
+            `scX_DUTOutParams.num_sim_output_rows    = test.m_num_sim_output_rows;
+            `scX_DUTOutParams.num_sim_output_cols    = test.m_num_sim_output_cols;
+            `scX_DUTOutParams.kernel_size            = test.m_kernel_size;
+            `scX_DUTOutParams.depth_offset           = m_depth_offset;
+            sol = new(`scX_DUTOutParams);            
             createSolution(test, sol);
             forever begin
                 @(m_quad_intf.clk_core_cb);
@@ -140,9 +140,9 @@ task cnl_sc0_scoreboard::run();
 endtask: run
 
 
-function void cnl_sc0_scoreboard::createSolution(generator test, DUTOutput sol);
-    cnl_sc0_generator sc0_test;
-    cnl_sc0_DUTOutput sc0_sol;
+function void cnl_`scX_scoreboard::createSolution(generator test, DUTOutput sol);
+    cnl_`scX_generator `scX_test;
+    cnl_`scX_DUTOutput `scX_sol;
     int i;
     int j;
     int k;
@@ -166,21 +166,20 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUTOutput sol);
     int num_sim_output_rows;
     int num_sim_output_cols;    
     logic[15:0] pix_data_sim[];
-    logic[15:0] kernel_data_sim[];
     
 
-    $cast(sc0_test, test);
-    $cast(sc0_sol, sol);
-    num_input_rows                      = sc0_test.m_num_input_rows;
-    num_input_cols                      = sc0_test.m_num_input_cols;    
-    kernel_size                         = sc0_test.m_kernel_size;
-    padding                             = sc0_test.m_padding;
-    stride                              = sc0_test.m_stride;
-    pix_data_sim                        = sc0_test.m_pix_data_sim;
-    num_output_rows                     = sc0_sol.m_num_output_rows;
-    num_output_cols                     = sc0_sol.m_num_output_cols;
-    num_sim_output_rows                 = sc0_sol.m_num_sim_output_rows;
-    num_sim_output_cols                 = sc0_sol.m_num_sim_output_cols;
+    $cast(`scX_test, test);
+    $cast(`scX_sol, sol);
+    num_input_rows                      = `scX_test.m_num_input_rows;
+    num_input_cols                      = `scX_test.m_num_input_cols;    
+    kernel_size                         = `scX_test.m_kernel_size;
+    padding                             = `scX_test.m_padding;
+    stride                              = `scX_test.m_stride;
+    pix_data_sim                        = `scX_test.m_pix_data_sim;
+    num_output_rows                     = `scX_sol.m_num_output_rows;
+    num_output_cols                     = `scX_sol.m_num_output_cols;
+    num_sim_output_rows                 = `scX_sol.m_num_sim_output_rows;
+    num_sim_output_cols                 = `scX_sol.m_num_sim_output_cols;
     
     
     t = 0;
@@ -195,7 +194,7 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUTOutput sol);
                     kc = 0;
                     for(j = b - padding; kc < kernel_size; j = j + 1) begin
                         if((i >= 0 && j >= 0) && (i < num_input_rows && j < num_input_cols)) begin                      
-                            sc0_sol.m_pix_data[((t * num_sim_output_rows + x) * num_sim_output_cols + y) * `KERNEL_3x3_COUNT_FULL + n].pixel 
+                            `scX_sol.m_pix_data[((t * num_sim_output_rows + x) * num_sim_output_cols + y) * `NUM_CONV_WINDOW_VALUES + n].pixel 
                                 = pix_data_sim[(m * num_input_rows + i) * num_input_cols + j];
                         end
                         kc = kc + 1;
@@ -212,9 +211,9 @@ function void cnl_sc0_scoreboard::createSolution(generator test, DUTOutput sol);
 endfunction: createSolution
 
 
-function int cnl_sc0_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
-    cnl_sc0_DUTOutput sc0_query;
-    cnl_sc0_DUTOutput sc0_sol;
+function int cnl_`scX_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
+    cnl_`scX_DUTOutput `scX_query;
+    cnl_`scX_DUTOutput `scX_sol;
     int i;
     int j;
     int k;
@@ -223,19 +222,19 @@ function int cnl_sc0_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     int num_output_cols;
     int num_sim_output_rows;   
     int num_sim_output_cols;    
-    sc0_datum_t sol_conv_map[];
-    sc0_datum_t qry_conv_map[];    
+    `scX_datum_t sol_conv_map[];
+    `scX_datum_t qry_conv_map[];    
     integer fd;
     string str;
 
-    $cast(sc0_query, query);
-    $cast(sc0_sol, sol);
-    num_output_rows        = sc0_sol.m_num_output_rows;
-    num_output_cols        = sc0_sol.m_num_output_cols;
-    num_sim_output_rows    = sc0_query.m_num_sim_output_rows;
-    num_sim_output_cols    = sc0_query.m_num_sim_output_cols;    
-    sol_conv_map           = sc0_sol.m_pix_data;
-    qry_conv_map           = sc0_query.m_pix_data;
+    $cast(`scX_query, query);
+    $cast(`scX_sol, sol);
+    num_output_rows        = `scX_sol.m_num_output_rows;
+    num_output_cols        = `scX_sol.m_num_output_cols;
+    num_sim_output_rows    = `scX_query.m_num_sim_output_rows;
+    num_sim_output_cols    = `scX_query.m_num_sim_output_cols;    
+    sol_conv_map           = `scX_sol.m_pix_data;
+    qry_conv_map           = `scX_query.m_pix_data;
     
     
     str.itoa(m_tid);
@@ -243,8 +242,8 @@ function int cnl_sc0_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < `NUM_CE_PER_AWE; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                for(n = 0; n < (`KERNEL_3x3_COUNT_FULL - 1); n = n + 1) begin
-                    $fwrite(fd, "%0d,", sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + n].pixel); 
+                for(n = 0; n < (`NUM_CONV_WINDOW_VALUES - 1); n = n + 1) begin
+                    $fwrite(fd, "%0d,", sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + n].pixel); 
                 end
                 $fwrite(fd, ";\t\t");
             end
@@ -261,8 +260,8 @@ function int cnl_sc0_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < `NUM_CE_PER_AWE; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                for(n = 0; n < `KERNEL_3x3_COUNT_FULL; n = n + 1) begin
-                    $fwrite(fd, "%0d,", qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + n].pixel);
+                for(n = 0; n < `NUM_CONV_WINDOW_VALUES; n = n + 1) begin
+                    $fwrite(fd, "%0d,", qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + n].pixel);
                 end
                 $fwrite(fd, ";\t\t");
             end
@@ -277,48 +276,48 @@ function int cnl_sc0_scoreboard::checkSolution(DUTOutput query, DUTOutput sol);
     for(k = 0; k < `NUM_CE_PER_AWE; k = k + 1) begin
         for(i = 0; i < num_output_rows; i = i + 1) begin
             for(j = 0; j < num_output_cols; j = j + 1) begin
-                for(n = 0; n < `KERNEL_3x3_COUNT_FULL - 1; n = n + 1) begin
-                    if(sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + n].pixel 
-                        == qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + n].pixel) begin
+                for(n = 0; n < `NUM_CONV_WINDOW_VALUES - 1; n = n + 1) begin
+                    if(sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + n].pixel 
+                        == qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + n].pixel) begin
                         break;
                     end
                 end
-                if(n == `KERNEL_3x3_COUNT_FULL - 1) begin
+                if(n == `NUM_CONV_WINDOW_VALUES - 1) begin
                     str.itoa(m_tid);
                     fd = $fopen({"errorLog_", str, ".txt"}, "w");
                     $fwrite(fd, "Expected window row0 %0d %0d %0d; row1 %0d %0d %0d; row2 %0d %0d %0d\n", 
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 0].pixel,
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 1].pixel,
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 2].pixel, 
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 3].pixel,
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 4].pixel,
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 5].pixel,
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 6].pixel,
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 7].pixel, 
-                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 8].pixel
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 0].pixel,
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 1].pixel,
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 2].pixel, 
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 3].pixel,
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 4].pixel,
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 5].pixel,
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 6].pixel,
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 7].pixel, 
+                        sol_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 8].pixel
                     );
                     $fwrite(fd, "For AWE %0d, depth %0d, at output row %0d, output col %0d\n", m_tid, m_tid * 2 + k, i, j);
                     $fwrite(fd, "Recieved window row0 %0d %0d %0d; row1 %0d %0d %0d; row2 %0d, %0d, %0d\n",
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 0].pixel,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 1].pixel,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 2].pixel,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 3].pixel,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 4].pixel,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 5].pixel,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 6].pixel,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 7].pixel,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 8].pixel
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 0].pixel,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 1].pixel,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 2].pixel,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 3].pixel,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 4].pixel,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 5].pixel,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 6].pixel,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 7].pixel,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 8].pixel
                     );
                     $fwrite(fd, "At times row0 %0d %0d %0d; row1 %0d %0d %0d; row2 %0d, %0d, %0d\n",
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 0].sim_time,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 1].sim_time,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 2].sim_time,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 3].sim_time,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 4].sim_time,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 5].sim_time,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 6].sim_time,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 7].sim_time,
-                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `KERNEL_3x3_COUNT_FULL + 8].sim_time
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 0].sim_time,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 1].sim_time,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 2].sim_time,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 3].sim_time,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 4].sim_time,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 5].sim_time,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 6].sim_time,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 7].sim_time,
+                        qry_conv_map[((k * num_sim_output_rows + i) * num_sim_output_cols + j) * `NUM_CONV_WINDOW_VALUES + 8].sim_time
                     );
                     $fclose(fd);
                     $stop;

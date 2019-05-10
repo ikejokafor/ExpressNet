@@ -91,8 +91,16 @@ module xilinx_true_dual_port_no_change_ram #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Local Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    reg     [C_RAM_A_WIDTH - 1:0]    BRAM[C_RAM_DEPTH - 1:0];
-
+    logic [C_RAM_A_WIDTH - 1:0]   BRAM[C_RAM_DEPTH - 1:0];
+    logic [C_RAM_A_WIDTH - 1:0]   dout_regA0;
+    logic [C_RAM_A_WIDTH - 1:0]   dout_regA1;
+    logic [C_RAM_A_WIDTH - 1:0]   dout_regA2;   
+    logic [C_RAM_A_WIDTH - 1:0]   dout_regA;
+    logic [C_RAM_B_WIDTH - 1:0]   dout_regB0;
+    logic [C_RAM_B_WIDTH - 1:0]   dout_regB1;
+    logic [C_RAM_B_WIDTH - 1:0]   dout_regB2;
+    logic [C_RAM_B_WIDTH - 1:0]   dout_regB;
+    
 	
 	// BEGIN BRAM Port A Write logic ----------------------------------------------------------------------------------------------------------------
     always@(posedge clkA) begin
@@ -105,12 +113,7 @@ module xilinx_true_dual_port_no_change_ram #(
 
     // BEGIN BRAM Port A Read logic -----------------------------------------------------------------------------------------------------------------   
     generate
-
         if(C_PORT_A_RAM_PERF == "PORT_A_HIGH_PERFORMANCE") begin
-
-            reg [C_RAM_A_WIDTH - 1:0] dout_regA0;
-            reg [C_RAM_A_WIDTH - 1:0] dout_regA1;
-            reg [C_RAM_A_WIDTH - 1:0] dout_regA2;   
             assign doutA = dout_regA2;
             always@(posedge clkA) begin
                 if(rdenA) begin
@@ -119,19 +122,14 @@ module xilinx_true_dual_port_no_change_ram #(
                     dout_regA2 <= dout_regA1;
                 end
             end
-            
         end else if(C_PORT_A_RAM_PERF == "PORT_A_LOW_LATENCY") begin
-
-            reg [C_RAM_A_WIDTH - 1:0] dout_regA;
             assign doutA = dout_regA;        
             always@(posedge clkA) begin
                 if(rdenA) begin
                     dout_regA <= BRAM[addrA];
                 end
             end
-            
         end
-
     endgenerate
     // END BRAM Port A logic ------------------------------------------------------------------------------------------------------------------------
     
@@ -147,12 +145,7 @@ module xilinx_true_dual_port_no_change_ram #(
 
     // BEGIN BRAM Port B Read logic -----------------------------------------------------------------------------------------------------------------   
     generate
-
         if(C_PORT_B_RAM_PERF == "PORT_B_HIGH_PERFORMANCE") begin
-
-            reg [C_RAM_B_WIDTH - 1:0] dout_regB0;
-            reg [C_RAM_B_WIDTH - 1:0] dout_regB1;
-            reg [C_RAM_B_WIDTH - 1:0] dout_regB2;   
             assign doutB = dout_regB2;
             always@(posedge clkB) begin
                 if(rdenB) begin
@@ -160,21 +153,17 @@ module xilinx_true_dual_port_no_change_ram #(
                     dout_regB1 <= dout_regB0;
                     dout_regB2 <= dout_regB1;
                 end
-            end
-            
+            end 
         end else if(C_PORT_B_RAM_PERF == "PORT_B_LOW_LATENCY") begin
-
-            reg [C_RAM_B_WIDTH - 1:0] dout_regB;
             assign doutB = dout_regB;        
             always@(posedge clkB) begin
                 if(rdenB) begin
                     dout_regB <= BRAM[addrB];
                 end
             end
-            
         end
-
     endgenerate
     // END BRAM Port B logic ------------------------------------------------------------------------------------------------------------------------
 
+    
 endmodule

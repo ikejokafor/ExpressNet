@@ -34,28 +34,31 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+`include "DUTOutput.sv"
+`include "cnl_sc1_verif_defs.svh"
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.svh"
-`include "DUTOutput.sv"
 
 
-class sc1_DUTOutParams_t extends DUTOutParams_t;
+class `scX_DUTOutParams_t extends DUTOutParams_t;
     int num_kernels;
     int num_output_rows;
     int num_output_cols;
-    int num_sim_output_rows;
-    int num_sim_output_cols;  
+    int num_acl_output_rows;
+    int num_acl_output_cols;  
     int depth;
-endclass: sc1_DUTOutParams_t
+    int inst_cfg;
+    int conv_out_fmt;
+endclass: `scX_DUTOutParams_t
 
 
 typedef struct {
     int sim_time;
     logic [15:0] pixel;
-} sc1_datum_t;
+} `scX_datum_t;
 
 
-class cnl_sc1_DUTOutput extends DUTOutput;
+class `cnl_scX_DUTOutput extends DUTOutput;
     extern function new(DUTOutParams_t DUTOutParams = null);
     extern function void bits2plain();
     
@@ -63,31 +66,39 @@ class cnl_sc1_DUTOutput extends DUTOutput;
     int m_num_kernels;
     int m_num_output_rows;
     int m_num_output_cols;
-    int m_num_sim_output_rows;
-    int m_num_sim_output_cols;
+    int m_num_acl_output_rows;
+    int m_num_acl_output_cols;
     int m_depth;
-    sc1_datum_t m_conv_map[];
-endclass: cnl_sc1_DUTOutput
+    int m_inst_cfg;
+    int m_conv_out_fmt;
+    `scX_datum_t m_conv_map[];
+endclass: `cnl_scX_DUTOutput
 
 
-function cnl_sc1_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
-    sc1_DUTOutParams_t sc1_DUTOutParams;
+function `cnl_scX_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
+    `scX_DUTOutParams_t `scX_DUTOutParams;
 
 
     if(DUTOutParams != null) begin
-        $cast(sc1_DUTOutParams, DUTOutParams);
-        m_num_kernels           = sc1_DUTOutParams.num_kernels;
-        m_num_output_rows       = sc1_DUTOutParams.num_output_rows;      
-        m_num_output_cols       = sc1_DUTOutParams.num_output_cols;
-        m_num_sim_output_rows   = sc1_DUTOutParams.num_sim_output_rows;  
-        m_num_sim_output_cols   = sc1_DUTOutParams.num_sim_output_cols;
-        m_depth                 = sc1_DUTOutParams.depth;
-        m_conv_map              = new[m_num_kernels * m_num_sim_output_rows * m_num_sim_output_cols];
+        $cast(`scX_DUTOutParams, DUTOutParams);
+        m_num_kernels           = `scX_DUTOutParams.num_kernels;
+        m_num_output_rows       = `scX_DUTOutParams.num_output_rows;      
+        m_num_output_cols       = `scX_DUTOutParams.num_output_cols;
+        m_num_acl_output_rows   = `scX_DUTOutParams.num_acl_output_rows;  
+        m_num_acl_output_cols   = `scX_DUTOutParams.num_acl_output_cols;
+        m_depth                 = `scX_DUTOutParams.depth;
+        m_inst_cfg              = `scX_DUTOutParams.inst_cfg;
+        m_conv_out_fmt          = `scX_DUTOutParams.conv_out_fmt;
+        if(m_inst_cfg == 0) begin
+            m_conv_map          = new[m_num_kernels * m_num_output_rows * m_num_output_cols]; 
+        end else begin
+            m_conv_map          = new[m_num_kernels * m_num_acl_output_rows * m_num_acl_output_cols];
+        end
     end
 endfunction: new
 
 
-function void cnl_sc1_DUTOutput::bits2plain();
+function void `cnl_scX_DUTOutput::bits2plain();
 endfunction: bits2plain
 
 

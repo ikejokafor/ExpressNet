@@ -144,7 +144,7 @@ module cnn_layer_accel_awe_dsps #(
 	// BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
 	
 	
-	     // Delay for ce0 lower        		   
+	     // Delay for ce0 upper      		   
     SRL_bus #(  
         .C_CLOCK_CYCLES  ( 0 + C_DATAIN_DELAY       ),
         .C_DATA_WIDTH    ( `PIXEL_WIDTH 		    )

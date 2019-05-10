@@ -9,8 +9,8 @@
 `define cnl_scX_agent           cnl_sc0_agent
 `define cnl_scX_assertion       cnl_sc0_assertion
 `define cnl_scX_driver          cnl_sc0_driver
- 
- 
+`define cnl_scX_environment     cnl_sc0_environment
+
 `define scX_DUTOutParams_t      sc0_DUTOutParams_t
 `define scX_datum_t             sc0_datum_t
 `define scX_genParams_t         sc0_genParams_tarams_t
@@ -31,6 +31,9 @@
 `define scX_agentParams         sc0_agentParams
 `define scX_asrtParams          sc0_asrtParams
 `define scX_drvParams           sc0_drvParams
+`define scX_query               sc0_query
+`define scX_test                sc0_test
+`define scX_sol                 sc0_sol
 
 
 `endif
