@@ -311,7 +311,7 @@ module cnl_sc1_testbench;
         `scX_crtTestParams.padding = 0;
         `scX_crtTestParams.upsample = FALSE;
         `scX_crtTestParams.kernel_size = 3;
-        `scX_crtTestParams.conv_out_fmt = 1;
+        `scX_crtTestParams.conv_out_fmt = 0;
         test = new(`scX_genParams);
         test.createTest(`scX_crtTestParams);
         crt_test_queue.push_back(test);
