@@ -318,39 +318,6 @@ module cnl_sc1_testbench;
         ti = ti + 1;
         
         
-        `scX_genParams = new();
-        `scX_genParams.ti = ti;  
-        `scX_crtTestParams.num_input_rows = 19;
-        `scX_crtTestParams.num_input_cols = 19;
-        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 1;
-        `scX_crtTestParams.stride = 1;
-        `scX_crtTestParams.padding = 0;
-        `scX_crtTestParams.upsample = FALSE;
-        `scX_crtTestParams.kernel_size = 3;
-        `scX_crtTestParams.conv_out_fmt = 1;
-        test = new(`scX_genParams);
-        test.createTest(`scX_crtTestParams);
-        crt_test_queue.push_back(test);
-        ti = ti + 1;
-        
-        
-        `scX_genParams = new();
-        `scX_genParams.ti = ti;  
-        `scX_crtTestParams.num_input_rows = 19;
-        `scX_crtTestParams.num_input_cols = 19;
-        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 1;
-        `scX_crtTestParams.stride = 1;
-        `scX_crtTestParams.padding = 0;
-        `scX_crtTestParams.upsample = FALSE;
-        `scX_crtTestParams.kernel_size = 3;
-        `scX_crtTestParams.conv_out_fmt = 1;
-        test = new(`scX_genParams);
-        test.createTest(`scX_crtTestParams);
-        crt_test_queue.push_back(test);
-        ti = ti + 1;
-        
         if($test$plusargs("test_bi")) begin
             $value$plusargs("test_bi=%d", test_bi);
         end else begin

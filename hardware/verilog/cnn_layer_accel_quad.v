@@ -434,9 +434,9 @@ module cnn_layer_accel_quad (
 					.new_map				    ( job_accept_w													),
 					.kernal_window_size			( dsp_kernel_size_cfg									        ),
 					.mode						( 2'b00													        ),	
-					.cascade_datain			    ( awe_cascade_dataout[i-1]          				            ),    
-					.cascade_carryin			( awe_cascade_carryout[i-1]       								),
-					.cascade_datain_valid	    ( awe_cascade_dataout_valid[i-1]  	                			),
+					.cascade_datain			    ( awe_cascade_dataout[i - 1]          				            ),    
+					.cascade_carryin			( awe_cascade_carryout[i - 1]       							),
+					.cascade_datain_valid	    ( awe_cascade_dataout_valid[i - 1]  	                		),
 					.ce0_pixel_valid		    ( ce0_pixel_dataout_valid[i]                                    ),
 					.ce0_pixel_datain		    ( ce0_pixel_dataout[i]											),
 					.ce1_pixel_valid	    	( ce1_pixel_dataout_valid[i]									),
@@ -459,11 +459,11 @@ module cnn_layer_accel_quad (
             
         end
 		
-		assign cascade_out_data = awe_cascade_dataout[`NUM_AWE-1];
-		assign cascade_out_valid = awe_cascade_dataout_valid[`NUM_AWE-1];
+		assign cascade_out_data = awe_cascade_dataout[`NUM_AWE - 1];
+		assign cascade_out_valid = awe_cascade_dataout_valid[`NUM_AWE - 1];
 		
-		assign result_valid = awe_dataout_valid[`NUM_AWE-1] ;
-		assign result_data  = awe_dataout      [`NUM_AWE-1][15:0] ;
+		assign result_valid = awe_dataout_valid[`NUM_AWE - 1] ;
+		assign result_data  = awe_dataout      [`NUM_AWE - 1][15:0] ;
     endgenerate
     
     
