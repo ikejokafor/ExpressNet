@@ -67,7 +67,11 @@ module cnn_layer_accel_quad_bram_ctrl (
     wht_sequence_selector       ,
     next_state_tran             ,
     next_row                    ,
-    num_kernels                 
+    num_kernels                 ,
+    pip_primed                  ,
+    master_quad                 ,
+    cascade_in_valid            ,
+    cascade_in_ready
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -134,7 +138,11 @@ module cnn_layer_accel_quad_bram_ctrl (
     output logic                                        next_state_tran             ;
     output logic                                        next_row                    ;
     input  logic [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]    num_kernels                 ;
-    
+    output logic                                        pip_primed                  ;
+    input logic                                         master_quad                 ;
+    input logic                                         cascade_in_valid            ;
+    output logic                                        cascade_in_ready            ;
+
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
@@ -159,7 +167,6 @@ module cnn_layer_accel_quad_bram_ctrl (
 	logic                                            ce_move_one_row_down_d          ;
     logic                                            pix_seq_bram_dout_valid         ;
     logic                                            next_state_tran_r               ;
-    logic                                            pip_primed                      ;
 	logic     [					            2:0]     output_stride                   ;
     logic                                            last_kernel                     ;
     logic                                            last_kernel_d                   ;
@@ -523,8 +530,12 @@ module cnn_layer_accel_quad_bram_ctrl (
 						pix_seq_bram_rdAddr  <= 0;
                         next_state_tran_r    <= 1;
                         pip_primed           <= 1;
-                        state                <= ST_AWE_CE_ACTIVE;
-                    end else begin
+                        if(master_quad) begin
+                            state            <= ST_AWE_CE_ACTIVE;
+                        end else if(!master_quad && cascade_in_valid) begin
+                            state            <= ST_AWE_CE_ACTIVE;
+                        end
+                    end else if(input_row != 3) begin
                         if(pfb_count > 1) begin
                             pfb_rden <= 1;
                         end else begin
@@ -533,6 +544,9 @@ module cnn_layer_accel_quad_bram_ctrl (
                     end
                 end
                 ST_AWE_CE_ACTIVE: begin
+                    if(!master_quad) begin
+                        // cascade_in_ready
+                    end
                     // sequence data rden logic
                     if(pix_seq_data_count > 1) begin
                         pix_seq_bram_rden_r <= 1;

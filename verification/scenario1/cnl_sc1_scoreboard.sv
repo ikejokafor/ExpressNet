@@ -43,7 +43,7 @@
 
 
 class `scX_scoreParams_t extends scoreParams_t;
-    virtual cnn_layer_accel_quad_intf quad_intf; 
+    virtual cnn_layer_accel_synch_intf m_synch_intf; 
 endclass: `scX_scoreParams_t
 
 
@@ -54,7 +54,7 @@ class `cnl_scX_scoreboard extends scoreboard;
     extern function int checkSolution(DUTOutput query, DUTOutput sol);
     
 
-    virtual cnn_layer_accel_quad_intf m_quad_intf;    
+    virtual cnn_layer_accel_synch_intf m_synch_intf;    
 endclass: `cnl_scX_scoreboard
 
 
@@ -65,7 +65,7 @@ function `cnl_scX_scoreboard::new(scoreParams_t scoreParams = null);
         $cast(`scX_scoreParams, scoreParams);
         m_agent2scoreboardMB = `scX_scoreParams.agent2scoreboardMB;
         m_monitor2scoreboardMB = `scX_scoreParams.monitor2scoreboardMB;
-        m_quad_intf = `scX_scoreParams.quad_intf;
+        m_synch_intf = `scX_scoreParams.synch_intf;
         m_scbd_done = `scX_scoreParams.scbd_done;
         m_numTests = `scX_scoreParams.numTests;
         m_tid = `scX_scoreParams.tid;
@@ -96,7 +96,7 @@ task `cnl_scX_scoreboard::run();
         m_test_ei = m_numTests - 1;
     end
     while(t < m_numTests) begin
-        @(m_quad_intf.clk_core_cb);
+        @(m_synch_intf.clk_core_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
             `scX_DUTOutParams                        = new();
             `scX_DUTOutParams.depth                  = test.m_depth;
@@ -110,11 +110,11 @@ task `cnl_scX_scoreboard::run();
             sol = new(`scX_DUTOutParams);
             createSolution(test, sol);
             forever begin
-                @(m_quad_intf.clk_core_cb);
+                @(m_synch_intf.clk_core_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
                     $display("// Checking Test ------------------------------------------------");
-                    $display("// At Time:               %0t", $time                             );
-                    $display("// Test Index:            %0d", test.m_ti                         );
+                    $display("// At Time: %0t", $time                                           );
+                    $display("// Test Index: %0d", test.m_ti                                    );
                     $display("// Checking Test ------------------------------------------------");
                     $display("\n");
                     if(checkSolution(query, sol)) begin
@@ -170,8 +170,8 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
     int num_acl_output_rows;
     int num_acl_output_cols;
     int conv_out_fmt;
-    logic[15:0] pix_data_sim[];
-    logic[15:0] kernel_data_sim[];
+    int pix_data[];
+    int kernel_data[];
     integer fd;
     
 
@@ -181,13 +181,13 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
     kernel_size                         = `scX_test.m_kernel_size;
     padding                             = `scX_test.m_padding;
     stride                              = `scX_test.m_stride;
-    kernel_data_sim                     = `scX_test.m_kernel_data_sim;
+    kernel_data                         = `scX_test.m_kernel_data;
     num_output_rows                     = `scX_sol.m_num_output_rows;
     num_output_cols                     = `scX_sol.m_num_output_cols;
     num_kernels                         = `scX_sol.m_num_kernels;
     depth                               = `scX_sol.m_depth;
     if(`scX_test.m_upsample) begin
-        pix_data_sim                    = `scX_test.m_pix_data_upsle_sim;
+        pix_data                        = `scX_test.m_pix_data_upsle;
         if(padding) begin
             num_input_rows                  = `scX_test.m_num_expd_input_rows - 2;
             num_input_cols                  = `scX_test.m_num_expd_input_cols - 2;
@@ -196,7 +196,7 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
             num_input_cols                  = `scX_test.m_num_expd_input_cols;
         end
     end else begin
-        pix_data_sim                    = `scX_test.m_pix_data_sim;
+        pix_data                        = `scX_test.m_pix_data;
         num_input_rows                  = `scX_test.m_num_input_rows;
         num_input_cols                  = `scX_test.m_num_input_cols;   
     end
@@ -217,8 +217,8 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
                             if((i >= 0 && j >= 0) && (i < num_input_rows && j < num_input_cols)) begin                      
                                 `scX_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y].pixel
                                     = `scX_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y].pixel +
-                                    (pix_data_sim[(k * num_input_rows + i) * num_input_cols + j]
-                                    * kernel_data_sim[(m * depth + k) * `KERNEL_3x3_COUNT_FULL + n]);
+                                    (pix_data[(k * num_input_rows + i) * num_input_cols + j]
+                                    * kernel_data[((m * m_depth + k) * m_kernel_size + kr) * m_kernel_size + kc];
                             end
                             kc = kc + 1;
                             n = n + 1;

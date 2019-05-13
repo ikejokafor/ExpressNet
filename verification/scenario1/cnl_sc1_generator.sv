@@ -58,7 +58,9 @@ class `scX_crtTestParams_t extends crtTestParams_t;
 endclass: `scX_crtTestParams_t
 
 
-class `cnl_scX_generator extends generator;
+class `cnl_scX_generator #(
+    parameter C_NUM_QUADS
+) extends generator;
     extern function new(genParams_t genParams = null);
     extern function void createTest(crtTestParams_t params);
     extern function void plain2bits();
@@ -222,6 +224,7 @@ function void `cnl_scX_generator::post_randomize();
     int num_conv_input_cols;
     
     
+    m_depth = m_depth * C_NUM_QUADS;
     m_num_kernels_cfg = m_num_kernels - 1;
     m_num_output_rows = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
     m_num_output_cols = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;     

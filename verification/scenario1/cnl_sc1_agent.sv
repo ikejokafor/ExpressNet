@@ -42,7 +42,7 @@
 
 
 class `scX_agentParams_t extends agentParams_t;
-    virtual cnn_layer_accel_quad_intf quad_intf;
+    virtual cnn_layer_accel_synch_intf synch_intf;
 endclass: `scX_agentParams_t
 
 
@@ -68,7 +68,7 @@ function `cnl_scX_agent::new(agentParams_t agentParams = null);
         m_crt_test_queue = `scX_agentParams.crt_test_queue;
         m_DUT_rdy = `scX_agentParams.DUT_rdy;
         m_mon_rdy_arr = `scX_agentParams.mon_rdy_arr;
-        m_quad_intf = `scX_agentParams.quad_intf;
+        m_synch_intf = `scX_agentParams.synch_intf;
         m_num_mon = `scX_agentParams.num_mon;
         m_runForever = `scX_agentParams.runForever;
         m_test_bi = `scX_agentParams.test_bi;
@@ -90,8 +90,12 @@ task `cnl_scX_agent::run();
     int ri;
     int ti_offset;
     int signal;
-    `cnl_scX_generator test;
-    `cnl_scX_generator test_queue[$];
+    `cnl_scX_generator #(
+        .C_NUM_QUADS ( C_NUM_QUADS )
+    ) test;
+    `cnl_scX_generator #(
+        .C_NUM_QUADS ( C_NUM_QUADS )
+    ) test_queue[$];
     `scX_genParams_t `scX_genParams;
     integer fd0;
     integer fd1;
@@ -167,10 +171,10 @@ task `cnl_scX_agent::run();
     end
     while(t < m_numTests) begin
         while(!m_DUT_rdy.try_get(signal)) begin
-            @(m_quad_intf.clk_if_cb);
+            @(m_synch_intf.clk_if_cb);
         end
         while(n < m_num_mon) begin
-            @(m_quad_intf.clk_core_cb);
+            @(m_synch_intf.clk_core_cb);
             if(m_mon_rdy_arr[n].try_get(signal)) begin
                 n = n + 1;
             end
