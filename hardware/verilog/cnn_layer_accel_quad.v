@@ -264,9 +264,10 @@ module cnn_layer_accel_quad  (
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_depth                                    ;
     logic                                       result_valid_w                                  ;
     logic [             `PIXEL_WIDTH - 1:0]     result_data_w                                   ;
+    logic                                       cascade_out_valid_w                             ;
+    logic [             `PIXEL_WIDTH - 1:0]     cascade_out_data_w                              ;
     
 
-    
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -329,6 +330,33 @@ module cnn_layer_accel_quad  (
         .rst        ( rst               ),
         .data_in    ( result_data_w     ),
         .data_out   ( result_data       )
+    );
+    
+    
+    // synch with clk_if
+    SRL_bit #(
+        .C_CLOCK_CYCLES( 1 )
+    ) 
+    i1_SRL_bit (
+        .clk        ( clk_core              ),
+        .rst        ( rst                   ),
+        .ce         ( 1'b1                  ),
+        .data_in    ( cascade_out_valid_w   ),
+        .data_out   ( cascade_out_valid     )
+    );
+    
+    
+    // synch with clk_if
+    SRL_bus #(  
+        .C_CLOCK_CYCLES  ( 1            ),
+        .C_DATA_WIDTH    ( `PIXEL_WIDTH )
+    ) 
+    i1_SRL_bus (
+        .clk        ( clk_core              ),
+        .ce         ( 1'b1                  ),
+        .rst        ( rst                   ),
+        .data_in    ( cascade_out_data_w    ),
+        .data_out   ( cascade_out_data      )
     );
 
     
@@ -503,8 +531,8 @@ module cnn_layer_accel_quad  (
             
         end
 		
-		assign cascade_out_data = awe_cascade_dataout[`NUM_AWE - 1];
-		assign cascade_out_valid = awe_cascade_dataout_valid[`NUM_AWE - 1];
+		assign cascade_out_data_w = awe_cascade_dataout[`NUM_AWE - 1];
+		assign cascade_out_valid_w = awe_cascade_dataout_valid[`NUM_AWE - 1];
 		
 		assign result_valid_w = awe_dataout_valid[`NUM_AWE - 1] ;
 		assign result_data_w  = awe_dataout      [`NUM_AWE - 1][15:0] ;

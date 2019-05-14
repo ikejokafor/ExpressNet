@@ -536,9 +536,9 @@ module cnn_layer_accel_quad_bram_ctrl (
 						pix_seq_bram_rdAddr  <= 0;
                         next_state_tran_r    <= 1;
                         pip_primed           <= 1;
-                        if((master_quad && all_pip_primed && cascade) || (master_quad)) begin
+                        if((cascade && master_quad && all_pip_primed) || (master_quad && !cascade)) begin
                             state            <= ST_AWE_CE_ACTIVE;
-                        end else if(!master_quad && cascade_in_valid) begin
+                        end else if(cascade && !master_quad && cascade_in_valid) begin
                             state            <= ST_AWE_CE_ACTIVE;
                         end
                     end else if(input_row != 3) begin
