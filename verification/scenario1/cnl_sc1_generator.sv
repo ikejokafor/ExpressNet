@@ -55,12 +55,11 @@ class `scX_crtTestParams_t extends crtTestParams_t;
     int kernel_size;
     int conv_out_fmt;
     bool upsample;
+    int cascade;
 endclass: `scX_crtTestParams_t
 
 
-class `cnl_scX_generator #(
-    parameter C_NUM_QUADS
-) extends generator;
+class `cnl_scX_generator extends generator;
     extern function new(genParams_t genParams = null);
     extern function void createTest(crtTestParams_t params);
     extern function void plain2bits();
@@ -95,6 +94,7 @@ class `cnl_scX_generator #(
     int m_crpd_input_col_end_cfg                                                        ;
     int m_crpd_input_row_end_cfg                                                        ;
     int m_pix_seq_data_full_count_cfg                                                   ;
+    int m_cascade_cfg                                                                   ;
     int m_num_kernels_cfg                                                               ;
     int m_pix_data[]                                                                    ;
     int m_pix_data_upsle[]                                                              ;
@@ -103,7 +103,7 @@ class `cnl_scX_generator #(
     logic [15:0] m_pix_data_sim[]                                                       ;
     logic [15:0] m_pix_data_upsle_sim[]                                                 ;
     logic [15:0] m_kernel_data_sim[]                                                    ;
-
+    
 
     constraint c0 {      
         solve m_num_input_rows before m_num_input_cols;
@@ -145,6 +145,7 @@ function void `cnl_scX_generator::createTest(crtTestParams_t params);
     m_stride = `scX_crtTestParams.stride;
     m_padding = `scX_crtTestParams.padding;
     m_upsample = `scX_crtTestParams.upsample;
+    m_cascade_cfg = `scX_crtTestParams.cascade;
     post_randomize();
 
     
@@ -222,9 +223,9 @@ function void `cnl_scX_generator::post_randomize();
     int out_index;
     int num_conv_input_rows;
     int num_conv_input_cols;
-    
-    
-    m_depth = m_depth * C_NUM_QUADS;
+
+
+    m_depth = m_depth * `NUM_QUADS;
     m_num_kernels_cfg = m_num_kernels - 1;
     m_num_output_rows = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
     m_num_output_cols = ((m_num_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;     

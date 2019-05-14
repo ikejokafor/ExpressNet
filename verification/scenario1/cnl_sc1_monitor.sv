@@ -38,6 +38,8 @@
 `include "cnl_sc1_verif_defs.svh"
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.svh"
+`include "cnn_layer_accel_quad_intf.sv"
+`include "cnn_layer_accel_synch_intf.sv"
 `include "cnl_sc1_DUTOutput.sv"
 `include "cnl_sc1_generator.sv"
 
@@ -98,7 +100,7 @@ task `cnl_scX_monitor::run();
         m_test_ei = m_numTests - 1;
     end
     while(t < m_numTests) begin
-        @(m_synch_intf.clk_if_cb);
+        @(m_quad_intf.clk_if_cb);
         if(m_agent2monitorMB.try_get(test)) begin
             `scX_DUTOutParams                        = new();
             `scX_DUTOutParams.num_kernels            = test.m_num_kernels;

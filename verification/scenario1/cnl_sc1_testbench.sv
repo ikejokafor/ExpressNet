@@ -44,7 +44,6 @@ module cnl_sc1_testbench;
     parameter C_PERIOD_100MHz = 10;    
     parameter C_PERIOD_500MHz = 2; 
     parameter C_NUM_RAND_TESTS = 0;
-    parameter C_NUM_QUADS = 2;
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -54,42 +53,42 @@ module cnl_sc1_testbench;
     logic            clk_core                                ;
     logic            rst                                     ;
 
-    logic            job_start[C_NUM_QUADS - 1:0]            ;
-    logic            job_accept[C_NUM_QUADS - 1:0]           ;
-    logic [127:0]    job_parameters[C_NUM_QUADS - 1:0]       ;
-    logic            job_fetch_request[C_NUM_QUADS - 1:0]    ;
-    logic            job_fetch_ack[C_NUM_QUADS - 1:0]        ;
-    logic            job_fetch_complete[C_NUM_QUADS - 1:0]   ;      
-    logic            job_complete[C_NUM_QUADS - 1:0]         ;
-    logic            job_complete_ack[C_NUM_QUADS - 1:0]     ;
-    logic            pip_primed[C_NUM_QUADS - 1:0]           ;
-    logic            pips_primed                             ;
+    logic            job_start[`NUM_QUADS - 1:0]            ;
+    logic            job_accept[`NUM_QUADS - 1:0]           ;
+    logic [127:0]    job_parameters[`NUM_QUADS - 1:0]       ;
+    logic            job_fetch_request[`NUM_QUADS - 1:0]    ;
+    logic            job_fetch_ack[`NUM_QUADS - 1:0]        ;
+    logic            job_fetch_complete[`NUM_QUADS - 1:0]   ;      
+    logic            job_complete[`NUM_QUADS - 1:0]         ;
+    logic            job_complete_ack[`NUM_QUADS - 1:0]     ;
+    logic            pip_primed[`NUM_QUADS - 1:0]           ;
+    logic            all_pip_primed                          ;
 
-    logic            cascade_in_valid[C_NUM_QUADS - 1:0]     ;
-    logic            cascade_in_ready[C_NUM_QUADS - 1:0]     ;
-    logic [127:0]    cascade_in_data[C_NUM_QUADS - 1:0]      ;
+    logic            cascade_in_valid[`NUM_QUADS - 1:0]     ;
+    logic            cascade_in_ready[`NUM_QUADS - 1:0]     ;
+    logic [15:0]     cascade_in_data[`NUM_QUADS - 1:0]      ;
 
-    logic            cascade_out_valid[C_NUM_QUADS - 1:0]    ;
-    logic            cascade_out_ready[C_NUM_QUADS - 1:0]    ;
-    logic [127:0]    cascade_out_data[C_NUM_QUADS - 1:0]     ;
+    logic            cascade_out_valid[`NUM_QUADS - 1:0]    ;
+    logic            cascade_out_ready[`NUM_QUADS - 1:0]    ;
+    logic [15:0]      cascade_out_data[`NUM_QUADS - 1:0]     ;
 
-    logic [  3:0]    config_valid[C_NUM_QUADS - 1:0]         ;
-    logic [  3:0]    config_accept[C_NUM_QUADS - 1:0]        ;
-    logic [127:0]    config_data[C_NUM_QUADS - 1:0]          ;
+    logic [  3:0]    config_valid[`NUM_QUADS - 1:0]         ;
+    logic [  3:0]    config_accept[`NUM_QUADS - 1:0]        ;
+    logic [127:0]    config_data[`NUM_QUADS - 1:0]          ;
 
-    logic            weight_valid[C_NUM_QUADS - 1:0]         ;
-    logic            weight_ready[C_NUM_QUADS - 1:0]         ;
-    logic [127:0]    weight_data[C_NUM_QUADS - 1:0]          ;
+    logic            weight_valid[`NUM_QUADS - 1:0]         ;
+    logic            weight_ready[`NUM_QUADS - 1:0]         ;
+    logic [127:0]    weight_data[`NUM_QUADS - 1:0]          ;
 
-    logic            result_valid[C_NUM_QUADS - 1:0]         ;
-    logic            result_accept[C_NUM_QUADS - 1:0]        ;
-    logic [15:0]     result_data[C_NUM_QUADS - 1:0]          ;
+    logic            result_valid[`NUM_QUADS - 1:0]         ;
+    logic            result_accept[`NUM_QUADS - 1:0]        ;
+    logic [15:0]     result_data[`NUM_QUADS - 1:0]          ;
 
-    logic            pixel_valid[C_NUM_QUADS - 1:0]          ;
-    logic            pixel_ready[C_NUM_QUADS - 1:0]          ;
-    logic [127:0]    pixel_data[C_NUM_QUADS - 1:0]           ;
+    logic            pixel_valid[`NUM_QUADS - 1:0]          ;
+    logic            pixel_ready[`NUM_QUADS - 1:0]          ;
+    logic [127:0]    pixel_data[`NUM_QUADS - 1:0]           ;
     
-    logic            fifo_empty[C_NUM_QUADS - 1:0]           ;
+    logic            fifo_empty[`NUM_QUADS - 1:0]           ;
 
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -97,8 +96,7 @@ module cnl_sc1_testbench;
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     `cnl_scX_environment #(
         .C_PERIOD_100MHz ( C_PERIOD_100MHz ), 
-        .C_PERIOD_500MHz ( C_PERIOD_500MHz ),
-        .C_NUM_QUADS     ( C_NUM_QUADS     )
+        .C_PERIOD_500MHz ( C_PERIOD_500MHz )
     ) env;
     `cnl_scX_generator test;
     `scX_genParams_t `scX_genParams;
@@ -121,9 +119,9 @@ module cnl_sc1_testbench;
     int test_bi;
     int test_ei;
     string outputDir;
-    genvar g;
-    integer i;
-    virtual cnn_layer_accel_quad_intf quad_intf_arr[C_NUM_QUADS];
+    genvar i;
+    integer i6;
+    virtual cnn_layer_accel_quad_intf quad_intf_arr[0:`NUM_QUADS - 1];
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -166,7 +164,9 @@ module cnl_sc1_testbench;
         .job_fetch_ack        ( job_fetch_ack[0]        ), 
         .job_fetch_complete   ( job_fetch_complete[0]   ),
         .job_complete         ( job_complete[0]         ),  
-        .job_complete_ack     ( job_complete_ack[0]     ),  
+        .job_complete_ack     ( job_complete_ack[0]     ),
+        .pip_primed           ( pip_primed[0]           ),
+        .all_pip_primed       ( all_pip_primed          ),
 
         .cascade_in_valid     ( cascade_in_valid[0]     ),
         .cascade_in_ready     ( cascade_in_ready[0]     ),
@@ -198,7 +198,6 @@ module cnl_sc1_testbench;
 	i0_quad_intf (
        .clk_if                          ( clk_if                                                ),
        .clk_core                        ( clk_core                                              ),
-       .rst                             ( rst                                                   ),
 
        .job_start                       ( job_start[0]                                          ),
        .job_accept                      ( job_accept[0]                                         ),
@@ -208,16 +207,6 @@ module cnl_sc1_testbench;
        .job_fetch_complete              ( job_fetch_complete[0]                                 ),
        .job_complete                    ( job_complete[0]                                       ),
        .job_complete_ack                ( job_complete_ack[0]                                   ),
-       .pip_primed                      ( pip_primed                                            ),
-       .pips_primed                     ( pips_primed                                           ),
-
-       .cascade_in_valid                ( cascade_in_valid[0]                                   ),
-       .cascade_in_ready                ( cascade_in_ready[0]                                   ),
-       .cascade_in_data                 ( cascade_in_data[0]                                    ),
-
-       .cascade_out_valid               ( cascade_out_valid[0]                                  ),
-       .cascade_out_ready               ( cascade_out_ready[0]                                  ),
-       .cascade_out_data                ( cascade_out_data[0]                                   ),
 
        .config_valid                    ( config_valid[0]                                       ),
        .config_accept                   ( config_accept[0]                                      ),
@@ -251,32 +240,34 @@ module cnl_sc1_testbench;
        .crpd_input_col_end_cfg          ( i0_cnn_layer_accel_quad.crpd_input_col_end_cfg        ),
        .crpd_input_row_end_cfg          ( i0_cnn_layer_accel_quad.crpd_input_row_end_cfg        ),
        .master_quad_cfg                 ( i0_cnn_layer_accel_quad.master_quad_cfg               ),
+       .cascade_cfg                     ( i0_cnn_layer_accel_quad.cascade_cfg                   ),
        
        .output_row                      ( i0_cnn_layer_accel_quad.output_row                    ),
        .output_col                      ( i0_cnn_layer_accel_quad.output_col                    ),
        .output_depth                    ( i0_cnn_layer_accel_quad.output_depth                  )
 	);
     
-    assign cnn_layer_accel_quad_intf_arr[0] = cnl_sc0_testbench.i0_quad_intf;
+    
+    assign quad_intf_arr[0] = cnl_sc1_testbench.i0_quad_intf;
     
     
-    for(g = 1; g < C_NUM_QUADS; g = g + 1) begin: QUAD
+    for(i = 1; i < `NUM_QUADS; i = i + 1) begin: QUAD
         fifo_fwft #(
             .C_DATA_WIDTH( `PIXEL_WIDTH ),
             .C_FIFO_DEPTH( 5            )
         ) i0_fifo_fwft (
             .clk            ( clk_core                  ),
             .rst            ( rst                       ),
-            .wren           ( cascade_out_valid[g - 1]  ),
-            .rden           ( cascade_in_ready[g]       ),
-            .datain         ( cascade_out_data[g - 1]   ),
-            .dataout        ( cascade_in_data[g]        ),
-            .empty          ( fifo_empty[g]             ),
+            .wren           ( cascade_out_valid[i - 1]  ),
+            .rden           ( cascade_in_ready[i]       ),
+            .datain         ( cascade_out_data[i - 1]   ),
+            .dataout        ( cascade_in_data[i]        ),
+            .empty          ( fifo_empty[i]             ),
             .full           (                           ),
             .almost_full    (                           )
         );
                
-        assign cascade_in_valid[g] = !fifo_empty[g];
+        assign cascade_in_valid[i] = !fifo_empty[i];
 
         cnn_layer_accel_quad
         i0_cnn_layer_accel_quad (
@@ -284,39 +275,40 @@ module cnl_sc1_testbench;
             .clk_core             ( clk_core                ),  
             .rst                  ( rst                     ),  
 
-            .job_start            ( job_start[g]            ),  
-            .job_accept           ( job_accept[g]           ),  
-            .job_parameters       ( job_parameters[g]       ),  
-            .job_fetch_request    ( job_fetch_request[g]    ),  
-            .job_fetch_ack        ( job_fetch_ack[g]        ), 
-            .job_fetch_complete   ( job_fetch_complete[g]   ),
-            .job_complete         ( job_complete[g]         ),  
-            .job_complete_ack     ( job_complete_ack[g]     ), 
-            .pip_primed           ( pip_primed[g]           ),
+            .job_start            ( job_start[i]            ),  
+            .job_accept           ( job_accept[i]           ),  
+            .job_parameters       ( job_parameters[i]       ),  
+            .job_fetch_request    ( job_fetch_request[i]    ),  
+            .job_fetch_ack        ( job_fetch_ack[i]        ), 
+            .job_fetch_complete   ( job_fetch_complete[i]   ),
+            .job_complete         ( job_complete[i]         ),  
+            .job_complete_ack     ( job_complete_ack[i]     ), 
+            .pip_primed           ( pip_primed[i]           ),
+            .all_pip_primed       (                         ),
 
-            .cascade_in_valid     ( cascade_in_valid[g]     ),
-            .cascade_in_ready     ( cascade_in_ready[g]     ),
-            .cascade_in_data      ( cascade_in_data[g]      ),
+            .cascade_in_valid     ( cascade_in_valid[i]     ),
+            .cascade_in_ready     ( cascade_in_ready[i]     ),
+            .cascade_in_data      ( cascade_in_data[i]      ),
 
-            .cascade_out_valid    ( cascade_out_valid[g]    ),
-            .cascade_out_ready    ( cascade_out_ready[g]    ),
-            .cascade_out_data     ( cascade_out_data[g]     ),
+            .cascade_out_valid    ( cascade_out_valid[i]    ),
+            .cascade_out_ready    ( cascade_out_ready[i]    ),
+            .cascade_out_data     ( cascade_out_data[i]     ),
 
-            .config_valid         ( config_valid[g]         ),
-            .config_accept        ( config_accept[g]        ),
-            .config_data          ( config_data[g]          ),
+            .config_valid         ( config_valid[i]         ),
+            .config_accept        ( config_accept[i]        ),
+            .config_data          ( config_data[i]          ),
 
-            .weight_valid         ( weight_valid[g]         ),
-            .weight_ready         ( weight_ready[g]         ),
-            .weight_data          ( weight_data[g]          ),
+            .weight_valid         ( weight_valid[i]         ),
+            .weight_ready         ( weight_ready[i]         ),
+            .weight_data          ( weight_data[i]          ),
 
-            .result_valid         ( result_valid[g]         ),
-            .result_accept        ( result_accept[g]        ),
-            .result_data          ( result_data[g]          ),
+            .result_valid         ( result_valid[i]         ),
+            .result_accept        ( result_accept[i]        ),
+            .result_data          ( result_data[i]          ),
      
-            .pixel_valid          ( pixel_valid[g]          ),
-            .pixel_ready          ( pixel_ready[g]          ),
-            .pixel_data           ( pixel_data[g]           )
+            .pixel_valid          ( pixel_valid[i]          ),
+            .pixel_ready          ( pixel_ready[i]          ),
+            .pixel_data           ( pixel_data[i]           )
         );
 
 
@@ -324,73 +316,63 @@ module cnl_sc1_testbench;
         i0_quad_intf (
            .clk_if                          ( clk_if                                                ),
            .clk_core                        ( clk_core                                              ),
-           .rst                             ( rst                                                   ),
 
-           .job_start                       ( job_start[g]                                          ),
-           .job_accept                      ( job_accept[g]                                         ),
-           .job_parameters                  ( job_parameters[g]                                     ),
-           .job_fetch_request               ( job_fetch_request[g]                                  ),
-           .job_fetch_ack                   ( job_fetch_ack[g]                                      ),
-           .job_fetch_complete              ( job_fetch_complete[g]                                 ),
-           .job_complete                    ( job_complete[g]                                       ),
-           .job_complete_ack                ( job_complete_ack[g]                                   ),
-           .pip_primed                      ( pip_primed                                            ),
-           .pips_primed                     ( pips_primed                                           ),
+           .job_start                       ( job_start[i]                                          ),
+           .job_accept                      ( job_accept[i]                                         ),
+           .job_parameters                  ( job_parameters[i]                                     ),
+           .job_fetch_request               ( job_fetch_request[i]                                  ),
+           .job_fetch_ack                   ( job_fetch_ack[i]                                      ),
+           .job_fetch_complete              ( job_fetch_complete[i]                                 ),
+           .job_complete                    ( job_complete[i]                                       ),
+           .job_complete_ack                ( job_complete_ack[i]                                   ),
 
-           .cascade_in_valid                ( cascade_in_valid[g]                                   ),
-           .cascade_in_ready                ( cascade_in_ready[g]                                   ),
-           .cascade_in_data                 ( cascade_in_data[g]                                    ),
+           .config_valid                    ( config_valid[i]                                       ),
+           .config_accept                   ( config_accept[i]                                      ),
+           .config_data                     ( config_data[i]                                        ),
 
-           .cascade_out_valid               ( cascade_out_valid[g]                                  ),
-           .cascade_out_ready               ( cascade_out_ready[g]                                  ),
-           .cascade_out_data                ( cascade_out_data[g]                                   ),
+           .weight_valid                    ( weight_valid[i]                                       ),
+           .weight_ready                    ( weight_ready[i]                                       ),
+           .weight_data                     ( weight_data[i]                                        ),
 
-           .config_valid                    ( config_valid[g]                                       ),
-           .config_accept                   ( config_accept[g]                                      ),
-           .config_data                     ( config_data[g]                                        ),
+           .result_valid                    ( result_valid[i]                                       ),
+           .result_accept                   ( result_accept[i]                                      ),
+           .result_data                     ( result_data[i]                                        ),
 
-           .weight_valid                    ( weight_valid[g]                                       ),
-           .weight_ready                    ( weight_ready[g]                                       ),
-           .weight_data                     ( weight_data[g]                                        ),
+           .pixel_valid                     ( pixel_valid[i]                                        ),
+           .pixel_ready                     ( pixel_ready[i]                                        ),
+           .pixel_data                      ( pixel_data[i]                                         ),
 
-           .result_valid                    ( result_valid[g]                                       ),
-           .result_accept                   ( result_accept[g]                                      ),
-           .result_data                     ( result_data[g]                                        ),
+           .pfb_full_count_cfg              ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.pfb_full_count_cfg            ),
+           .stride_cfg                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.stride_cfg                    ),
+           .conv_out_fmt_cfg    		    ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.conv_out_fmt_cfg    	      ),
+           .padding_cfg                     ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.padding_cfg                   ),
+           .upsample_cfg                    ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.upsample_cfg                  ),
+           .num_kernels_cfg                 ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_kernels_cfg               ),
+           .num_output_rows_cfg             ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_output_rows_cfg           ),
+           .num_output_cols_cfg             ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_output_cols_cfg           ),
+           .pix_seq_data_full_count_cfg     ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg   ),
+           .num_expd_input_cols_cfg         ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_expd_input_cols_cfg       ),
+           .num_expd_input_rows_cfg         ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_expd_input_rows_cfg       ),
+           .crpd_input_col_start_cfg        ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.crpd_input_col_start_cfg      ),
+           .crpd_input_row_start_cfg        ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.crpd_input_row_start_cfg      ),
+           .crpd_input_col_end_cfg          ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.crpd_input_col_end_cfg        ),
+           .crpd_input_row_end_cfg          ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.crpd_input_row_end_cfg        ),
+           .master_quad_cfg                 ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.master_quad_cfg               ),
+           .cascade_cfg                     ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.cascade_cfg                   ),
 
-           .pixel_valid                     ( pixel_valid[g]                                        ),
-           .pixel_ready                     ( pixel_ready[g]                                        ),
-           .pixel_data                      ( pixel_data[g]                                         ),
-
-           .pfb_full_count_cfg              ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.pfb_full_count_cfg            ),
-           .stride_cfg                      ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.stride_cfg                    ),
-           .conv_out_fmt_cfg    		    ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.conv_out_fmt_cfg    	      ),
-           .padding_cfg                     ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.padding_cfg                   ),
-           .upsample_cfg                    ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.upsample_cfg                  ),
-           .num_kernels_cfg                 ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.num_kernels_cfg               ),
-           .num_output_rows_cfg             ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.num_output_rows_cfg           ),
-           .num_output_cols_cfg             ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.num_output_cols_cfg           ),
-           .pix_seq_data_full_count_cfg     ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg   ),
-           .num_expd_input_cols_cfg         ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.num_expd_input_cols_cfg       ),
-           .num_expd_input_rows_cfg         ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.num_expd_input_rows_cfg       ),
-           .crpd_input_col_start_cfg        ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.crpd_input_col_start_cfg      ),
-           .crpd_input_row_start_cfg        ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.crpd_input_row_start_cfg      ),
-           .crpd_input_col_end_cfg          ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.crpd_input_col_end_cfg        ),
-           .crpd_input_row_end_cfg          ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.crpd_input_row_end_cfg        ),
-           .master_quad_cfg                 ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.master_quad_cfg               ),
-
-           .output_row                      ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.output_row                    ),
-           .output_col                      ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.output_col                    ),
-           .output_depth                    ( cnl_sc0_testbench.QUAD[g].i0_cnn_layer_accel_quad.output_depth                  )
+           .output_row                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_row                    ),
+           .output_col                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_col                    ),
+           .output_depth                    ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_depth                  )
         );
 
-        assign quad_intf_arr[g] = cnl_sc0_testbench.QUAD[g].i0_quad_intf;
+        assign quad_intf_arr[i] = cnl_sc1_testbench.QUAD[i].i0_quad_intf;
     end
     
     
     // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
     always@(*) begin
-       for(i = 0; i < C_NUM_QUADS; i = i + 1) begin
-            pips_primed = pip_primed[i] && 1;
+       for(i6 = 0; i6 < `NUM_QUADS; i6 = i6 + 1) begin
+            all_pip_primed = pip_primed[i6] && 1;
        end
     end    
     // END Logic --------------------------------------------------------------------------------------------------------------------------------
@@ -470,6 +452,7 @@ module cnl_sc1_testbench;
         `scX_crtTestParams.upsample = FALSE;
         `scX_crtTestParams.kernel_size = 3;
         `scX_crtTestParams.conv_out_fmt = 0;
+        `scX_crtTestParams.cascade = 1;
         test = new(`scX_genParams);
         test.createTest(`scX_crtTestParams);
         crt_test_queue.push_back(test);

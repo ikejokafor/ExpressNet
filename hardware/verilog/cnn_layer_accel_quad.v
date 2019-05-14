@@ -42,7 +42,7 @@ module cnn_layer_accel_quad  (
     job_complete            ,    // Asserted by quad to signify completion of the operation
     job_complete_ack        ,    // Asserted by main SM to acknowledge completion
     pip_primed              ,
-    pips_primed             ,
+    all_pip_primed          ,
 
     cascade_in_data         ,
     cascade_in_valid        ,
@@ -91,8 +91,14 @@ module cnn_layer_accel_quad  (
     localparam C_WHT_TBL_ADDR_WIDTH         = C_NUM_CE * 4;
     localparam C_RELU_WIDTH                 = C_NUM_CE * `PIXEL_WIDTH;
     localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = clog2(`MAX_BRAM_3x3_KERNELS);
-
+    localparam C_ACTV_WIDTH                 = `PIXEL_WIDTH * 2;
+    `define    ACTV_NUM_FRAC_BITS             14
+    `define    ACTV_WIDTH                     16
+    `define    ACTV_WIDTH_LOW                 `ACTV_NUM_FRAC_BITS
+    `define    ACTV_WIDTH_HIGH                (`ACTV_WIDTH + `ACTV_WIDTH - 1)
+    `define    ACTV_WIDTH_FIELD               (`ACTV_WIDTH_HIGH):(`ACTV_WIDTH_LOW)
     
+
     localparam ST_IDLE                      = 6'b000001;  
     localparam ST_AWE_CE_PRIM_BUFFER        = 6'b000010;
     localparam ST_WAIT_PFB_LOAD             = 6'b000100;
@@ -117,15 +123,15 @@ module cnn_layer_accel_quad  (
     output logic            job_complete        ;
     input  logic            job_complete_ack    ;
     output logic            pip_primed          ;
-    input  logic            pips_primed         ;
+    input  logic            all_pip_primed      ;
     
     input  logic            cascade_in_valid    ;
     output logic            cascade_in_ready    ;
-    input  logic [127:0]    cascade_in_data     ;
+    input  logic [15:0]     cascade_in_data    ;
     
     output logic            cascade_out_valid   ;
     input  logic            cascade_out_ready   ;
-    output logic [127:0]    cascade_out_data    ;
+    output logic [15:0]     cascade_out_data    ;
     
     input  logic [  3:0]    config_valid        ;
     output logic [  3:0]    config_accept       ;
@@ -205,7 +211,8 @@ module cnn_layer_accel_quad  (
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_end_cfg                          ;
     logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_end_cfg                          ;
     logic    [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]  num_kernels_cfg                               ;
-    logic                                       master_quad_cfg                                 ;    
+    logic                                       master_quad_cfg                                 ;
+    logic                                       cascade_cfg                                     ;
 
     logic                                       pix_seq_bram_rden               	            ;
     logic    [                            8:0]  pix_seq_bram_wrAddr             	            ;
@@ -229,7 +236,6 @@ module cnn_layer_accel_quad  (
     logic                                       awe_last_kernel                                 ;
     logic                                       ctrl_last_kernel                                ;
 
-    logic   [                            3:0]   quad_wht_ctrl_state             	            ;
     logic   [                            5:0]   state                           	            ;
 
     logic   [                            3:0]   wht_seq_addr0                                   ;
@@ -237,7 +243,7 @@ module cnn_layer_accel_quad  (
     logic   [         C_WHT_DOUT_WIDTH - 1:0]   ce_wht_table_dout[C_NUM_CE - 1:0]               ;
     logic   [                 C_NUM_CE - 1:0]   ce_wht_table_dout_valid                         ;
     logic                                       wht_config_wren                                 ;
-    logic   [             `PIXEL_WIDTH - 1:0]   actv_out[C_NUM_CE - 1:0]                        ;
+    logic   [             C_ACTV_WIDTH - 1:0]   actv_out[C_NUM_CE - 1:0]                        ;
     logic                                       actv_cfg                                        ;
     integer                                     idx                                             ;
     integer                                     idx0                                            ;
@@ -379,7 +385,8 @@ module cnn_layer_accel_quad  (
                     .num_kernels                ( num_kernels_cfg                                   )
                 ); 
                 
-                assign actv_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? {`PIXEL_WIDTH{1'b0}} : pfb_dataout[i * `NUM_CE_PER_AWE + j];                
+                // assign actv_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? pfb_dataout[i * `NUM_CE_PER_AWE + j] * 16'h0666 : pfb_dataout[i * `NUM_CE_PER_AWE + j];
+                assign actv_out[i * `NUM_CE_PER_AWE + j] = 0;
             end
 
             
@@ -489,8 +496,10 @@ module cnn_layer_accel_quad  (
 				);
 			end	
             
+            // assign ce0_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 0][(`ACTV_FIELD - 1): C_ACTV_WIDTH] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
+            // assign ce1_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 1][(`ACTV_FIELD - 1): C_ACTV_WIDTH] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
             assign ce0_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 0] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
-            assign ce1_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 1] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
+            assign ce1_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 0] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
             
         end
 		
@@ -545,7 +554,10 @@ module cnn_layer_accel_quad  (
         .num_kernels                ( num_kernels_cfg                                       ),
         .master_quad                ( master_quad_cfg                                       ),
         .cascade_in_valid           ( cascade_in_valid                                      ),
-        .cascade_in_ready           ( cascade_in_ready                                      )
+        .cascade_in_ready           ( cascade_in_ready                                      ),
+        .pip_primed                 ( pip_primed                                            ),
+        .all_pip_primed             ( all_pip_primed                                        ),
+        .cascade                    ( cascade_cfg                                           )
     );
     
     
@@ -688,6 +700,7 @@ module cnn_layer_accel_quad  (
             crpd_input_row_end_cfg          <= 0;
             conv_out_fmt_cfg                <= 0;
             master_quad_cfg                 <= 0;
+            cascade_cfg                     <= 0;
 `endif            
             dsp_kernel_size_cfg             <= 3;
             pix_seq_bram_wrAddr             <= 0;

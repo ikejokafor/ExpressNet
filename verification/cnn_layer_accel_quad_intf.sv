@@ -33,7 +33,6 @@
 interface cnn_layer_accel_quad_intf (
     clk_if                          ,
     clk_core                        ,
-    rst                             ,
 
     job_start                       ,
     job_accept                      ,
@@ -43,14 +42,6 @@ interface cnn_layer_accel_quad_intf (
     job_fetch_complete              ,
     job_complete                    ,
     job_complete_ack                ,
-
-    cascade_in_valid                ,
-    cascade_in_ready                ,
-    cascade_in_data                 ,
-
-    cascade_out_valid               ,
-    cascade_out_ready               ,
-    cascade_out_data                ,
 
     config_valid                    ,
     config_accept                   ,
@@ -84,6 +75,7 @@ interface cnn_layer_accel_quad_intf (
     crpd_input_col_end_cfg          ,
     crpd_input_row_end_cfg          ,
     master_quad_cfg                 ,
+    cascade_cfg                     ,
     
     output_row                      ,
     output_col                      ,
@@ -109,7 +101,6 @@ interface cnn_layer_accel_quad_intf (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     input  logic            clk_if                          ;
     input  logic            clk_core                        ;
-    output  logic           rst                             ;
 
     output logic            job_start                       ;
     input  logic            job_accept                      ;
@@ -119,14 +110,6 @@ interface cnn_layer_accel_quad_intf (
     output logic            job_fetch_complete              ;
     input  logic            job_complete                    ;
     output logic            job_complete_ack                ;
-
-    output logic            cascade_in_valid                ;
-    input  logic            cascade_in_ready                ;
-    output logic [127:0]    cascade_in_data                 ;
-
-    input  logic            cascade_out_valid               ;
-    output logic            cascade_out_ready               ;
-    input  logic [127:0]    cascade_out_data                ;
 
     output logic [  3:0]    config_valid                    ;
     input  logic [  3:0]    config_accept                   ;
@@ -154,6 +137,7 @@ interface cnn_layer_accel_quad_intf (
     output logic [   9:0]    num_output_cols_cfg             ;
     output logic [  11:0]    pix_seq_data_full_count_cfg     ;
     output logic             master_quad_cfg                 ;
+    output logic             cascade_cfg                     ;
 
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] num_expd_input_cols_cfg ;
     output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] num_expd_input_rows_cfg ;
@@ -180,7 +164,7 @@ interface cnn_layer_accel_quad_intf (
         output job_fetch_complete             ;
         input  job_complete                   ;
         output job_complete_ack               ;
-       
+        
         output config_valid                   ;
         input  config_accept                  ;
         output config_data                    ;
@@ -205,18 +189,11 @@ interface cnn_layer_accel_quad_intf (
         output crpd_input_col_end_cfg          ;
         output crpd_input_row_end_cfg          ;
         output master_quad_cfg                 ;
+        output cascade_cfg                     ;
 	endclocking
 
 
-    clocking clk_core_cb @(posedge clk_core);
-        output cascade_in_valid    ;
-        input  cascade_in_ready    ;
-        output cascade_in_data     ;
-
-        input  cascade_out_valid   ;
-        output cascade_out_ready   ;
-        input  cascade_out_data    ;
-        
+    clocking clk_core_cb @(posedge clk_core);        
         output weight_valid        ;
         input  weight_ready        ;
         output weight_data         ;

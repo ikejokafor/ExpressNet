@@ -66,7 +66,7 @@
 `define WHT_TBL_BRAM_DEPTH              1024
 `define CONFIG_3x3                      1'b0
 `define CONFIG_5x5                      1'b1
-`define NUM_QUADS                       1     
+`define NUM_QUADS                       2     
 `define NUM_AWE                         4
 `define NUM_CE_PER_AWE                  2
 `define NUM_WHT_SEQ_VALUES              5
@@ -75,11 +75,11 @@
 `define NUM_WHT_SEQ_TABLE_PER_AWE       4
 `define DATA_WIDTH                      16
 `define MAX_STRIDE                      2
-`define WINDOW_3x3_NUM_CYCLES_MINUS_1  `WINDOW_3x3_NUM_CYCLES - 1
+`define WINDOW_3x3_NUM_CYCLES_MINUS_1   (`WINDOW_3x3_NUM_CYCLES - 1)
 `define KERNEL_3x3_COUNT_FULL           10  // would be 3x3 = 9  pixels, but we load one more dummy 0 valued pixel
-`define KERNEL_3x3_COUNT_FULL_MINUS_1   `KERNEL_3x3_COUNT_FULL - 1
+`define KERNEL_3x3_COUNT_FULL_MINUS_1   (`KERNEL_3x3_COUNT_FULL - 1)
 `define KERNEL_BLOCK_SIZE               16  // every 3x3 kernel window takes up 16 slots
-`define NUM_CE_PER_QUAD                `NUM_AWE * `NUM_CE_PER_AWE
+`define NUM_CE_PER_QUAD                 (`NUM_AWE * `NUM_CE_PER_AWE)
 `define MIN_NUM_INPUT_ROWS              19
 `define MIN_NUM_INPUT_COLS              19
 `define MAX_NUM_INPUT_ROWS              512

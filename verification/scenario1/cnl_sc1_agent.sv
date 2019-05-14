@@ -38,6 +38,8 @@
 `include "cnl_sc1_verif_defs.svh"
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.svh"
+`include "cnn_layer_accel_quad_intf.sv"
+`include "cnn_layer_accel_synch_intf.sv"
 `include "cnl_sc1_generator.sv"
 
 
@@ -52,6 +54,7 @@ class `cnl_scX_agent extends agent;
     
     
     virtual cnn_layer_accel_quad_intf m_quad_intf;
+    virtual cnn_layer_accel_synch_intf m_synch_intf;
 endclass: `cnl_scX_agent
 
 
@@ -90,12 +93,8 @@ task `cnl_scX_agent::run();
     int ri;
     int ti_offset;
     int signal;
-    `cnl_scX_generator #(
-        .C_NUM_QUADS ( C_NUM_QUADS )
-    ) test;
-    `cnl_scX_generator #(
-        .C_NUM_QUADS ( C_NUM_QUADS )
-    ) test_queue[$];
+    `cnl_scX_generator test;
+    `cnl_scX_generator test_queue[$];
     `scX_genParams_t `scX_genParams;
     integer fd0;
     integer fd1;

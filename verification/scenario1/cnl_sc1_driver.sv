@@ -39,28 +39,27 @@
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.svh"
 `include "cnn_layer_accel_quad_intf.sv"
+`include "cnn_layer_accel_synch_intf.sv"
 `include "cnl_sc1_generator.sv"
 
 
-class `scX_drvParams_t #(
-    parameter C_NUM_QUADS = 1;
-) extends drvParams_t;
-    virtual cnn_layer_accel_quad_intf quad_intf_arr[C_NUM_QUADS - 1:0];
+class `scX_drvParams_t extends drvParams_t;
+    virtual cnn_layer_accel_quad_intf quad_intf_arr[0:`NUM_QUADS - 1];
+    virtual cnn_layer_accel_synch_intf synch_intf;
 endclass: `scX_drvParams_t
 
 
 class `cnl_scX_driver #( 
     parameter C_PERIOD_100MHz   , 
-    parameter C_PERIOD_500MHz   ,
-    parameter C_NUM_QUADS
-) extends driver;
+    parameter C_PERIOD_500MHz   
+)   extends driver;
     extern function new(drvParams_t drvParams = null);
     extern task run();
     extern task rnd_delay_clk_if(int delay_amt);
     extern task rnd_delay_clk_core(int delay_amt);
     
 
-    virtual cnn_layer_accel_quad_intf m_quad_intf_arr[C_NUM_QUADS - 1:0];
+    virtual cnn_layer_accel_quad_intf m_quad_intf_arr[];
     virtual cnn_layer_accel_synch_intf m_synch_intf;
 endclass: `cnl_scX_driver
 
@@ -94,29 +93,30 @@ task `cnl_scX_driver::run();
     int t;
     int kernel_group_cfg;
     int signal;
-    int qi;
+    int qi0;
+    int qi1;
 
-    for(qi = 0; qi < C_NUM_QUADS; qi = qi + 1) begin
-        m_quad_intf_arr[qi].clk_if_cb.job_start             <= 0;
-        m_quad_intf_arr[qi].clk_if_cb.job_fetch_ack         <= 0;
-        m_quad_intf_arr[qi].clk_if_cb.job_complete_ack      <= 0;
-        m_quad_intf_arr[qi].clk_if_cb.job_fetch_complete    <= 0;
-        m_quad_intf_arr[qi].clk_core_cb.weight_valid        <= 0;
-        m_quad_intf_arr[qi].clk_core_cb.weight_data         <= 0;
-        m_quad_intf_arr[qi].clk_if_cb.pixel_valid           <= 0;
-        m_quad_intf_arr[qi].clk_if_cb.pixel_data            <= 0;
-        m_quad_intf_arr[qi].clk_if_cb.config_data           <= 0;
-        m_quad_intf_arr[qi].clk_if_cb.config_valid          <= 0;
-        m_quad_intf_arr[qi].job_start                       <= 0;
-        m_quad_intf_arr[qi].job_fetch_ack                   <= 0;
-        m_quad_intf_arr[qi].job_complete_ack                <= 0;
-        m_quad_intf_arr[qi].job_fetch_complete              <= 0;
-        m_quad_intf_arr[qi].weight_valid                    <= 0;
-        m_quad_intf_arr[qi].weight_data                     <= 0;
-        m_quad_intf_arr[qi].pixel_valid                     <= 0;
-        m_quad_intf_arr[qi].pixel_data                      <= 0;
-        m_quad_intf_arr[qi].config_data                     <= 0;
-        m_quad_intf_arr[qi].config_valid                    <= 0;
+    for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
+        m_quad_intf_arr[qi0].clk_if_cb.job_start             <= 0;
+        m_quad_intf_arr[qi0].clk_if_cb.job_fetch_ack         <= 0;
+        m_quad_intf_arr[qi0].clk_if_cb.job_complete_ack      <= 0;
+        m_quad_intf_arr[qi0].clk_if_cb.job_fetch_complete    <= 0;
+        m_quad_intf_arr[qi0].clk_core_cb.weight_valid        <= 0;
+        m_quad_intf_arr[qi0].clk_core_cb.weight_data         <= 0;
+        m_quad_intf_arr[qi0].clk_if_cb.pixel_valid           <= 0;
+        m_quad_intf_arr[qi0].clk_if_cb.pixel_data            <= 0;
+        m_quad_intf_arr[qi0].clk_if_cb.config_data           <= 0;
+        m_quad_intf_arr[qi0].clk_if_cb.config_valid          <= 0;
+        m_quad_intf_arr[qi0].job_start                       <= 0;
+        m_quad_intf_arr[qi0].job_fetch_ack                   <= 0;
+        m_quad_intf_arr[qi0].job_complete_ack                <= 0;
+        m_quad_intf_arr[qi0].job_fetch_complete              <= 0;
+        m_quad_intf_arr[qi0].weight_valid                    <= 0;
+        m_quad_intf_arr[qi0].weight_data                     <= 0;
+        m_quad_intf_arr[qi0].pixel_valid                     <= 0;
+        m_quad_intf_arr[qi0].pixel_data                      <= 0;
+        m_quad_intf_arr[qi0].config_data                     <= 0;
+        m_quad_intf_arr[qi0].config_valid                    <= 0;
     end
     
     
@@ -148,32 +148,44 @@ task `cnl_scX_driver::run();
             $display("// Started Sending Quad Config"                                   ); 
             $display("// --------------------------------------------------------------");
             $display("\n");
-            for(qi = 0; qi < C_NUM_QUADS; qi = qi + 1) begin
-                m_quad_intf_arr[qi].pix_seq_data_full_count_cfg     = test.m_pix_seq_data_full_count_cfg;
-                m_quad_intf_arr[qi].num_output_rows_cfg             = test.m_num_output_rows_cfg;
-                m_quad_intf_arr[qi].num_output_cols_cfg             = test.m_num_output_cols_cfg;             
-                m_quad_intf_arr[qi].pfb_full_count_cfg              = test.m_pfb_full_count_cfg;         
-                m_quad_intf_arr[qi].stride_cfg                      = test.m_stride;
-                m_quad_intf_arr[qi].padding_cfg                     = test.m_padding;
-                m_quad_intf_arr[qi].upsample_cfg                    = test.m_upsample;
-                m_quad_intf_arr[qi].num_expd_input_cols_cfg         = test.m_num_expd_input_cols_cfg;
-                m_quad_intf_arr[qi].num_expd_input_rows_cfg         = test.m_num_expd_input_rows_cfg;
-                m_quad_intf_arr[qi].crpd_input_col_start_cfg        = test.m_crpd_input_col_start_cfg;
-                m_quad_intf_arr[qi].crpd_input_row_start_cfg        = test.m_crpd_input_row_start_cfg;
-                m_quad_intf_arr[qi].crpd_input_col_end_cfg          = test.m_crpd_input_col_end_cfg;
-                m_quad_intf_arr[qi].crpd_input_row_end_cfg          = test.m_crpd_input_row_end_cfg;
-                m_quad_intf_arr[qi].num_kernels_cfg                 = test.m_num_kernels_cfg;
-                m_quad_intf_arr[qi].conv_out_fmt_cfg                = test.m_conv_out_fmt;
-                m_quad_intf_arr[qi].job_start                       <= 0;
-                m_quad_intf_arr[qi].job_fetch_ack                   <= 0;
-                m_quad_intf_arr[qi].job_complete_ack                <= 0;
-                m_quad_intf_arr[qi].job_fetch_complete              <= 0;
-                m_quad_intf_arr[qi].weight_valid                    <= 0;
-                m_quad_intf_arr[qi].weight_data                     <= 0;
-                m_quad_intf_arr[qi].pixel_valid                     <= 0;
-                m_quad_intf_arr[qi].pixel_data                      <= 0;
-                m_quad_intf_arr[qi].config_data                     <= 0;
-                m_quad_intf_arr[qi].config_valid                    <= 0;
+            for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
+                m_quad_intf_arr[qi0].pix_seq_data_full_count_cfg     = test.m_pix_seq_data_full_count_cfg;
+                m_quad_intf_arr[qi0].num_output_rows_cfg             = test.m_num_output_rows_cfg;
+                m_quad_intf_arr[qi0].num_output_cols_cfg             = test.m_num_output_cols_cfg;             
+                m_quad_intf_arr[qi0].pfb_full_count_cfg              = test.m_pfb_full_count_cfg;         
+                m_quad_intf_arr[qi0].stride_cfg                      = test.m_stride;
+                m_quad_intf_arr[qi0].padding_cfg                     = test.m_padding;
+                m_quad_intf_arr[qi0].upsample_cfg                    = test.m_upsample;
+                m_quad_intf_arr[qi0].num_expd_input_cols_cfg         = test.m_num_expd_input_cols_cfg;
+                m_quad_intf_arr[qi0].num_expd_input_rows_cfg         = test.m_num_expd_input_rows_cfg;
+                m_quad_intf_arr[qi0].crpd_input_col_start_cfg        = test.m_crpd_input_col_start_cfg;
+                m_quad_intf_arr[qi0].crpd_input_row_start_cfg        = test.m_crpd_input_row_start_cfg;
+                m_quad_intf_arr[qi0].crpd_input_col_end_cfg          = test.m_crpd_input_col_end_cfg;
+                m_quad_intf_arr[qi0].crpd_input_row_end_cfg          = test.m_crpd_input_row_end_cfg;
+                m_quad_intf_arr[qi0].num_kernels_cfg                 = test.m_num_kernels_cfg;
+                m_quad_intf_arr[qi0].conv_out_fmt_cfg                = test.m_conv_out_fmt;
+                if(test.m_cascade_cfg) begin
+                    if(qi0 == 0) begin
+                        m_quad_intf_arr[qi0].master_quad_cfg = 1;
+                        m_quad_intf_arr[qi0].cascade_cfg = 1;
+                    end else begin
+                        m_quad_intf_arr[qi0].master_quad_cfg = 0;
+                        m_quad_intf_arr[qi0].cascade_cfg = 1;
+                    end
+                end else begin
+                    m_quad_intf_arr[qi0].master_quad_cfg = 1;
+                    m_quad_intf_arr[qi0].cascade_cfg = 0;
+                end
+                m_quad_intf_arr[qi0].job_start                       <= 0;
+                m_quad_intf_arr[qi0].job_fetch_ack                   <= 0;
+                m_quad_intf_arr[qi0].job_complete_ack                <= 0;
+                m_quad_intf_arr[qi0].job_fetch_complete              <= 0;
+                m_quad_intf_arr[qi0].weight_valid                    <= 0;
+                m_quad_intf_arr[qi0].weight_data                     <= 0;
+                m_quad_intf_arr[qi0].pixel_valid                     <= 0;
+                m_quad_intf_arr[qi0].pixel_data                      <= 0;
+                m_quad_intf_arr[qi0].config_data                     <= 0;
+                m_quad_intf_arr[qi0].config_valid                    <= 0;
             end
             $display("// --------------------------------------------------------------");
             $display("// At Time: %0t", $time                                           );
@@ -185,58 +197,58 @@ task `cnl_scX_driver::run();
             
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
-            for(qi = 0; qi < C_NUM_QUADS; qi = qi + 1) begin
+            for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
                 // send pixel sequence configuration data down for input maps
                 $display("// --------------------------------------------------------------");
                 $display("// At Time: %0t", $time                                           );
                 $display("// Test Index: %0d", test.m_ti                                    );
-                $display("// Quad Index: %0d", qi                                           );                  
+                $display("// Quad Index: %0d", qi0                                           );                  
                 $display("// Started Sending Pixel Sequence Config"                         ); 
                 $display("// --------------------------------------------------------------");
                 $display("\n"); 
                 i = 1;
-                @(m_quad_intf_arr[qi].clk_if_cb);
-                m_quad_intf_arr[qi].clk_if_cb.config_data[127:112]    <= test.m_pix_seq_data_sim[(0 * 8) + 7]; 
-                m_quad_intf_arr[qi].clk_if_cb.config_data[111:96]     <= test.m_pix_seq_data_sim[(0 * 8) + 6];     
-                m_quad_intf_arr[qi].clk_if_cb.config_data[95:80]      <= test.m_pix_seq_data_sim[(0 * 8) + 5];     
-                m_quad_intf_arr[qi].clk_if_cb.config_data[79:64]      <= test.m_pix_seq_data_sim[(0 * 8) + 4];     
-                m_quad_intf_arr[qi].clk_if_cb.config_data[63:48]      <= test.m_pix_seq_data_sim[(0 * 8) + 3];
-                m_quad_intf_arr[qi].clk_if_cb.config_data[47:32]      <= test.m_pix_seq_data_sim[(0 * 8) + 2];     
-                m_quad_intf_arr[qi].clk_if_cb.config_data[31:16]      <= test.m_pix_seq_data_sim[(0 * 8) + 1];     
-                m_quad_intf_arr[qi].clk_if_cb.config_data[15:0]       <= test.m_pix_seq_data_sim[(0 * 8) + 0];
-                m_quad_intf_arr[qi].clk_if_cb.config_valid[0]         <= 1;
+                @(m_quad_intf_arr[qi0].clk_if_cb);
+                m_quad_intf_arr[qi0].clk_if_cb.config_data[127:112]    <= test.m_pix_seq_data_sim[(0 * 8) + 7]; 
+                m_quad_intf_arr[qi0].clk_if_cb.config_data[111:96]     <= test.m_pix_seq_data_sim[(0 * 8) + 6];     
+                m_quad_intf_arr[qi0].clk_if_cb.config_data[95:80]      <= test.m_pix_seq_data_sim[(0 * 8) + 5];     
+                m_quad_intf_arr[qi0].clk_if_cb.config_data[79:64]      <= test.m_pix_seq_data_sim[(0 * 8) + 4];     
+                m_quad_intf_arr[qi0].clk_if_cb.config_data[63:48]      <= test.m_pix_seq_data_sim[(0 * 8) + 3];
+                m_quad_intf_arr[qi0].clk_if_cb.config_data[47:32]      <= test.m_pix_seq_data_sim[(0 * 8) + 2];     
+                m_quad_intf_arr[qi0].clk_if_cb.config_data[31:16]      <= test.m_pix_seq_data_sim[(0 * 8) + 1];     
+                m_quad_intf_arr[qi0].clk_if_cb.config_data[15:0]       <= test.m_pix_seq_data_sim[(0 * 8) + 0];
+                m_quad_intf_arr[qi0].clk_if_cb.config_valid[0]         <= 1;
                 while(i < `MAX_NUM_INPUT_COLS) begin
-                    @(m_quad_intf_arr[qi].clk_if_cb);
+                    @(m_quad_intf_arr[qi0].clk_if_cb);
                     if($urandom_range(0, 1) && m_model_delay) begin
-                        m_quad_intf_arr[qi].clk_if_cb.config_valid[0]         <= 0;
+                        m_quad_intf_arr[qi0].clk_if_cb.config_valid[0]         <= 0;
                         rnd_delay_clk_if(5);
-                        m_quad_intf_arr[qi].clk_if_cb.config_data[127:112]    <= test.m_pix_seq_data_sim[(i * 8) + 7]; 
-                        m_quad_intf_arr[qi].clk_if_cb.config_data[111:96]     <= test.m_pix_seq_data_sim[(i * 8) + 6];     
-                        m_quad_intf_arr[qi].clk_if_cb.config_data[95:80]      <= test.m_pix_seq_data_sim[(i * 8) + 5];     
-                        m_quad_intf_arr[qi].clk_if_cb.config_data[79:64]      <= test.m_pix_seq_data_sim[(i * 8) + 4];     
-                        m_quad_intf_arr[qi].clk_if_cb.config_data[63:48]      <= test.m_pix_seq_data_sim[(i * 8) + 3];     
-                        m_quad_intf_arr[qi].clk_if_cb.config_data[47:32]      <= test.m_pix_seq_data_sim[(i * 8) + 2];     
-                        m_quad_intf_arr[qi].clk_if_cb.config_data[31:16]      <= test.m_pix_seq_data_sim[(i * 8) + 1];     
-                        m_quad_intf_arr[qi].clk_if_cb.config_data[15:0]       <= test.m_pix_seq_data_sim[(i * 8) + 0];
-                        m_quad_intf_arr[qi].clk_if_cb.config_valid[0]         <= 1;
+                        m_quad_intf_arr[qi0].clk_if_cb.config_data[127:112]    <= test.m_pix_seq_data_sim[(i * 8) + 7]; 
+                        m_quad_intf_arr[qi0].clk_if_cb.config_data[111:96]     <= test.m_pix_seq_data_sim[(i * 8) + 6];     
+                        m_quad_intf_arr[qi0].clk_if_cb.config_data[95:80]      <= test.m_pix_seq_data_sim[(i * 8) + 5];     
+                        m_quad_intf_arr[qi0].clk_if_cb.config_data[79:64]      <= test.m_pix_seq_data_sim[(i * 8) + 4];     
+                        m_quad_intf_arr[qi0].clk_if_cb.config_data[63:48]      <= test.m_pix_seq_data_sim[(i * 8) + 3];     
+                        m_quad_intf_arr[qi0].clk_if_cb.config_data[47:32]      <= test.m_pix_seq_data_sim[(i * 8) + 2];     
+                        m_quad_intf_arr[qi0].clk_if_cb.config_data[31:16]      <= test.m_pix_seq_data_sim[(i * 8) + 1];     
+                        m_quad_intf_arr[qi0].clk_if_cb.config_data[15:0]       <= test.m_pix_seq_data_sim[(i * 8) + 0];
+                        m_quad_intf_arr[qi0].clk_if_cb.config_valid[0]         <= 1;
                     end
-                    wait(m_quad_intf_arr[qi].clk_if_cb.config_accept[0])
-                    m_quad_intf_arr[qi].clk_if_cb.config_data[127:112]    <= test.m_pix_seq_data_sim[(i * 8) + 7]; 
-                    m_quad_intf_arr[qi].clk_if_cb.config_data[111:96]     <= test.m_pix_seq_data_sim[(i * 8) + 6];     
-                    m_quad_intf_arr[qi].clk_if_cb.config_data[95:80]      <= test.m_pix_seq_data_sim[(i * 8) + 5];     
-                    m_quad_intf_arr[qi].clk_if_cb.config_data[79:64]      <= test.m_pix_seq_data_sim[(i * 8) + 4];     
-                    m_quad_intf_arr[qi].clk_if_cb.config_data[63:48]      <= test.m_pix_seq_data_sim[(i * 8) + 3];     
-                    m_quad_intf_arr[qi].clk_if_cb.config_data[47:32]      <= test.m_pix_seq_data_sim[(i * 8) + 2];     
-                    m_quad_intf_arr[qi].clk_if_cb.config_data[31:16]      <= test.m_pix_seq_data_sim[(i * 8) + 1];     
-                    m_quad_intf_arr[qi].clk_if_cb.config_data[15:0]       <= test.m_pix_seq_data_sim[(i * 8) + 0];
+                    wait(m_quad_intf_arr[qi0].clk_if_cb.config_accept[0])
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data[127:112]    <= test.m_pix_seq_data_sim[(i * 8) + 7]; 
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data[111:96]     <= test.m_pix_seq_data_sim[(i * 8) + 6];     
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data[95:80]      <= test.m_pix_seq_data_sim[(i * 8) + 5];     
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data[79:64]      <= test.m_pix_seq_data_sim[(i * 8) + 4];     
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data[63:48]      <= test.m_pix_seq_data_sim[(i * 8) + 3];     
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data[47:32]      <= test.m_pix_seq_data_sim[(i * 8) + 2];     
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data[31:16]      <= test.m_pix_seq_data_sim[(i * 8) + 1];     
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data[15:0]       <= test.m_pix_seq_data_sim[(i * 8) + 0];
                     i = i + 1;
                 end
-                @(m_quad_intf_arr[qi].clk_if_cb);
-                m_quad_intf_arr[qi].clk_if_cb.config_valid[0]             <= 0;
+                @(m_quad_intf_arr[qi0].clk_if_cb);
+                m_quad_intf_arr[qi0].clk_if_cb.config_valid[0]             <= 0;
                 $display("// --------------------------------------------------------------");
                 $display("// At Time: %0t", $time                                           );
                 $display("// Test Index: %0d", test.m_ti                                    );
-                $display("// Quad Index: %0d", qi                                           );                 
+                $display("// Quad Index: %0d", qi0                                           );                 
                 $display("// Finished Sending Pixel Sequence Config"                        ); 
                 $display("// --------------------------------------------------------------");
                 $display("\n");
@@ -245,58 +257,59 @@ task `cnl_scX_driver::run();
 
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
-            @(m_quad_intf.clk_core_cb);
-            for(qi = 0; qi < C_NUM_QUADS; qi = qi + `NUM_CE_PER_QUAD) begin
+            qi1 = 0;
+            for(qi0 = 0; qi0 < `NUM_QUADS ; qi0 = qi0 + 1) begin
                 // send kernel data down
                 $display("// --------------------------------------------------------------");
                 $display("// At Time: %0t", $time                                           );
                 $display("// Test Index: %0d", test.m_ti                                    ); 
-                $display("// Quad Index: %0d", qi / `NUM_CE_PER_QUAD                        );
+                $display("// Quad Index: %0d", qi0                                          );
                 $display("// Started Sending Kernel Data"                                   ); 
                 $display("// --------------------------------------------------------------");
                 $display("\n"); 
                 i = 1;
-                m_quad_intf_arr[qi].clk_core_cb.weight_data[127:112]                <= test.m_kernel_data_sim[(qi * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 7) * `KERNEL_3x3_COUNT_FULL) + 0]; 
-                m_quad_intf_arr[qi].clk_core_cb.weight_data[111:96]                 <= test.m_kernel_data_sim[(qi * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 6) * `KERNEL_3x3_COUNT_FULL) + 0];     
-                m_quad_intf_arr[qi].clk_core_cb.weight_data[95:80]                  <= test.m_kernel_data_sim[(qi * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 5) * `KERNEL_3x3_COUNT_FULL) + 0];     
-                m_quad_intf_arr[qi].clk_core_cb.weight_data[79:64]                  <= test.m_kernel_data_sim[(qi * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 4) * `KERNEL_3x3_COUNT_FULL) + 0];     
-                m_quad_intf_arr[qi].clk_core_cb.weight_data[63:48]                  <= test.m_kernel_data_sim[(qi * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 3) * `KERNEL_3x3_COUNT_FULL) + 0];     
-                m_quad_intf_arr[qi].clk_core_cb.weight_data[47:32]                  <= test.m_kernel_data_sim[(qi * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 2) * `KERNEL_3x3_COUNT_FULL) + 0];     
-                m_quad_intf_arr[qi].clk_core_cb.weight_data[31:16]                  <= test.m_kernel_data_sim[(qi * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 1) * `KERNEL_3x3_COUNT_FULL) + 0];     
-                m_quad_intf_arr[qi].clk_core_cb.weight_data[15:0]                   <= test.m_kernel_data_sim[(qi * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 0) * `KERNEL_3x3_COUNT_FULL) + 0];
-                m_quad_intf_arr[qi].clk_core_cb.weight_valid                        <= 1;      
-                kernel_group_cfg                                                    = 0;
-                m_quad_intf_arr[qi].clk_if_cb.config_data                           <= 0;
+                @(m_quad_intf_arr[qi0].clk_core_cb);
+                m_quad_intf_arr[qi0].clk_core_cb.weight_data[127:112]                <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 7) * `KERNEL_3x3_COUNT_FULL) + 0]; 
+                m_quad_intf_arr[qi0].clk_core_cb.weight_data[111:96]                 <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 6) * `KERNEL_3x3_COUNT_FULL) + 0];     
+                m_quad_intf_arr[qi0].clk_core_cb.weight_data[95:80]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 5) * `KERNEL_3x3_COUNT_FULL) + 0];     
+                m_quad_intf_arr[qi0].clk_core_cb.weight_data[79:64]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 4) * `KERNEL_3x3_COUNT_FULL) + 0];     
+                m_quad_intf_arr[qi0].clk_core_cb.weight_data[63:48]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 3) * `KERNEL_3x3_COUNT_FULL) + 0];     
+                m_quad_intf_arr[qi0].clk_core_cb.weight_data[47:32]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 2) * `KERNEL_3x3_COUNT_FULL) + 0];     
+                m_quad_intf_arr[qi0].clk_core_cb.weight_data[31:16]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 1) * `KERNEL_3x3_COUNT_FULL) + 0];     
+                m_quad_intf_arr[qi0].clk_core_cb.weight_data[15:0]                   <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 0) * `KERNEL_3x3_COUNT_FULL) + 0];
+                m_quad_intf_arr[qi0].clk_core_cb.weight_valid                        <= 1;      
+                kernel_group_cfg                                                     = 0;
+                m_quad_intf_arr[qi0].clk_if_cb.config_data                           <= 0;
                 while(kernel_group_cfg < test.m_num_kernels) begin
                     while(i < `KERNEL_3x3_COUNT_FULL) begin
-                        @(m_quad_intf_arr[qi].clk_core_cb);
+                        @(m_quad_intf_arr[qi0].clk_core_cb);
                         if($urandom_range(0, 1) && m_model_delay) begin
-                            m_quad_intf_arr[qi].clk_core_cb.weight_valid            <= 0;
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_valid            <= 0;
                             rnd_delay_clk_core(5);
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 7) * `KERNEL_3x3_COUNT_FULL) + i]; 
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[111:96]     <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 6) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[95:80]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 5) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[79:64]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 4) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[63:48]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 3) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[47:32]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 2) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[31:16]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 1) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[15:0]       <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 0) * `KERNEL_3x3_COUNT_FULL) + i];
-                            m_quad_intf_arr[qi].clk_core_cb.weight_valid            <= 1;
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 7) * `KERNEL_3x3_COUNT_FULL) + i]; 
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[111:96]     <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 6) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[95:80]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 5) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[79:64]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 4) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[63:48]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 3) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[47:32]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 2) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[31:16]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 1) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[15:0]       <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 0) * `KERNEL_3x3_COUNT_FULL) + i];
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_valid            <= 1;
                         end
-                        wait(m_quad_intf_arr[qi].clk_core_cb.weight_ready) begin
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 7) * `KERNEL_3x3_COUNT_FULL) + i]; 
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[111:96]     <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 6) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[95:80]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 5) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[79:64]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 4) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[63:48]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 3) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[47:32]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 2) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[31:16]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 1) * `KERNEL_3x3_COUNT_FULL) + i];     
-                            m_quad_intf_arr[qi].clk_core_cb.weight_data[15:0]       <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi + 0) * `KERNEL_3x3_COUNT_FULL) + i];
+                        wait(m_quad_intf_arr[qi0].clk_core_cb.weight_ready) begin
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[127:112]    <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 7) * `KERNEL_3x3_COUNT_FULL) + i]; 
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[111:96]     <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 6) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[95:80]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 5) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[79:64]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 4) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[63:48]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 3) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[47:32]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 2) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[31:16]      <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 1) * `KERNEL_3x3_COUNT_FULL) + i];     
+                            m_quad_intf_arr[qi0].clk_core_cb.weight_data[15:0]       <= test.m_kernel_data_sim[(kernel_group_cfg * `KERNEL_3x3_COUNT_FULL * test.m_depth) + ((qi1 + 0) * `KERNEL_3x3_COUNT_FULL) + i];
                             i = i + 1;
                         end
                     end
                     kernel_group_cfg = kernel_group_cfg + 1;
-                    m_quad_intf_arr[qi].clk_if_cb.config_data <=   {   
+                    m_quad_intf_arr[qi0].clk_if_cb.config_data <=   {   
                                                                 kernel_group_cfg,
                                                                 kernel_group_cfg,
                                                                 kernel_group_cfg,
@@ -308,43 +321,44 @@ task `cnl_scX_driver::run();
                                                             };
                     i = 0;
                 end
-                @(m_quad_intf_arr[qi].clk_core_cb);
-                m_quad_intf_arr[qi].clk_core_cb.weight_valid <= 0;  
+                @(m_quad_intf_arr[qi0].clk_core_cb);
+                m_quad_intf_arr[qi0].clk_core_cb.weight_valid <= 0;
+                qi1 = qi1 + `NUM_CE_PER_QUAD;
                 $display("// --------------------------------------------------------------");
                 $display("// At Time: %0t", $time                                           );
                 $display("// Test Index: %0d", test.m_ti                                    );
-                $display("// Quad Index: %0d", qi / `NUM_CE_PER_QUAD                        );                
+                $display("// Quad Index: %0d", qi0                                          );                
                 $display("// Finished Sending kernel Data"                                  ); 
                 $display("// --------------------------------------------------------------");
-                $display("\n"); 
-                // END logic ----------------------------------------------------------------------------------------------------------------------------
+                $display("\n");
             end
+            // END logic ----------------------------------------------------------------------------------------------------------------------------
 
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
-            for(qi = 0; qi < C_NUM_QUADS; qi = qi + 1) begin
+            for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
                 // start processing
                 $display("// --------------------------------------------------------------");
                 $display("// At Time: %0t", $time                                           );
                 $display("// Test Index: %0d", test.m_ti                                    );
-                $display("// Quad Index: %0d", qi                                           );                
+                $display("// Quad Index: %0d", qi0                                           );                
                 $display("// Sent Job Accept"                                               ); 
                 $display("// --------------------------------------------------------------");
                 $display("\n");   
-                @(m_quad_intf_arr[qi].clk_core_cb);
-                m_quad_intf_arr[qi].clk_if_cb.job_start <= 1;
+                @(m_quad_intf_arr[qi0].clk_core_cb);
+                m_quad_intf_arr[qi0].clk_if_cb.job_start <= 1;
                 forever begin
-                    @(m_quad_intf_arr[qi].clk_if_cb);
-                    if(m_quad_intf_arr[qi].clk_if_cb.job_accept) begin
+                    @(m_quad_intf_arr[qi0].clk_if_cb);
+                    if(m_quad_intf_arr[qi0].clk_if_cb.job_accept) begin
                         break;
                     end
                 end
-                @(m_quad_intf_arr[qi].clk_if_cb);
-                m_quad_intf_arr[qi].clk_if_cb.job_start <= 0;
+                @(m_quad_intf_arr[qi0].clk_if_cb);
+                m_quad_intf_arr[qi0].clk_if_cb.job_start <= 0;
                 $display("// --------------------------------------------------------------");
                 $display("// At Time: %0t", $time                                           );
                 $display("// Test Index: %0d", test.m_ti                                    );
-                $display("// Quad Index: %0d", qi                                           );                
+                $display("// Quad Index: %0d", qi0                                           );                
                 $display("// Recieved Job Accept"                                           );
                 $display("// --------------------------------------------------------------");
                 $display("\n");   
@@ -358,76 +372,78 @@ task `cnl_scX_driver::run();
             $display("// Test Index: %0d", test.m_ti                                    );
             $display("// Began Sending Pixel Data"                                      ); 
             $display("// --------------------------------------------------------------");
-            $display("\n");   
-            for(qi = 0; qi < C_NUM_QUADS; qi = qi + `NUM_CE_PER_QUAD) begin
-                i = 0; 
-                j = 0;
-                while(i < (test.m_num_input_rows * test.m_num_input_cols)) begin
-                    @(m_quad_intf_arr[qi].clk_if_cb);
-                    if(m_quad_intf_arr[qi].clk_if_cb.job_fetch_request) begin
+            $display("\n");
+            i = 0; 
+            j = 0;
+            while(i < (test.m_num_input_rows * test.m_num_input_cols)) begin
+                qi1 = 0;
+                for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
+                    @(m_quad_intf_arr[qi0].clk_if_cb);
+                    if(m_quad_intf_arr[qi0].clk_if_cb.job_fetch_request) begin
                         $display("// --------------------------------------------------------------");
                         $display("// At Time: %0t", $time                                           );
                         $display("// Test Index: %0d", test.m_ti                                    );
-                        $display("// Quad Index: %0d", qi / `NUM_CE_PER_QUAD                        );  
+                        $display("// Quad Index: %0d", qi0                                          );  
                         $display("// Started Servicing Job Fetch Request"                           ); 
                         $display("// --------------------------------------------------------------");
                         $display("\n");
-                        m_quad_intf_arr[qi].clk_if_cb.job_fetch_ack <= 1;                
-                        @(m_quad_intf_arr[qi].clk_if_cb);
-                        m_quad_intf_arr[qi].clk_if_cb.job_fetch_ack         <= 0;
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_valid           <= 1;
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_data[127:112]   <= test.m_pix_data_sim[((qi + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + i];
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_data[111:96]    <= test.m_pix_data_sim[((qi + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + i];          
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_data[95:80]     <= test.m_pix_data_sim[((qi + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_data[79:64]     <= test.m_pix_data_sim[((qi + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_data[63:48]     <= test.m_pix_data_sim[((qi + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_data[47:32]     <= test.m_pix_data_sim[((qi + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + i];            
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_data[31:16]     <= test.m_pix_data_sim[((qi + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_data[15:0]      <= test.m_pix_data_sim[((qi + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + i];
+                        m_quad_intf_arr[qi0].clk_if_cb.job_fetch_ack <= 1;                
+                        @(m_quad_intf_arr[qi0].clk_if_cb);
+                        m_quad_intf_arr[qi0].clk_if_cb.job_fetch_ack         <= 0;
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_valid           <= 1;
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]   <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + i];
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]    <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + i];          
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]     <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]     <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]     <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]     <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + i];            
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]     <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]      <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + i];
                         j = i + 1;
                         n = 1;
                         while(n < test.m_num_input_cols) begin
-                            @(m_quad_intf_arr[qi].clk_if_cb);
+                            @(m_quad_intf_arr[qi0].clk_if_cb);
                             if($urandom_range(0, 1) && m_model_delay) begin
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_valid          <= 0;
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_valid          <= 0;
                                 rnd_delay_clk_if(5);
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[((qi + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[111:96]   <= test.m_pix_data_sim[((qi + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + j];          
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[95:80]    <= test.m_pix_data_sim[((qi + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[79:64]    <= test.m_pix_data_sim[((qi + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[63:48]    <= test.m_pix_data_sim[((qi + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[47:32]    <= test.m_pix_data_sim[((qi + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + j];            
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[31:16]    <= test.m_pix_data_sim[((qi + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[15:0]     <= test.m_pix_data_sim[((qi + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_valid          <= 1;
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]   <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + j];          
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]    <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]    <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]    <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]    <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + j];            
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]    <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]     <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_valid          <= 1;
                             end
-                            wait(m_quad_intf_arr[qi].clk_if_cb.pixel_ready) begin
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[((qi + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[111:96]   <= test.m_pix_data_sim[((qi + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + j];          
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[95:80]    <= test.m_pix_data_sim[((qi + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[79:64]    <= test.m_pix_data_sim[((qi + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[63:48]    <= test.m_pix_data_sim[((qi + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[47:32]    <= test.m_pix_data_sim[((qi + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + j];            
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[31:16]    <= test.m_pix_data_sim[((qi + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi].clk_if_cb.pixel_data[15:0]     <= test.m_pix_data_sim[((qi + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
+                            wait(m_quad_intf_arr[qi0].clk_if_cb.pixel_ready) begin
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]   <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + j];          
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]    <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]    <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]    <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]    <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + j];            
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]    <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]     <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
                                 j = j + 1;
                                 n = n + 1;
                             end
                         end
-                        @(m_quad_intf_arr[qi].clk_if_cb);
-                        m_quad_intf_arr[qi].clk_if_cb.job_fetch_complete    <= 1;
-                        m_quad_intf_arr[qi].clk_if_cb.pixel_valid           <= 0;
-                        @(m_quad_intf_arr[qi].clk_if_cb);
-                        m_quad_intf_arr[qi].clk_if_cb.job_fetch_complete    <= 0;
+                        @(m_quad_intf_arr[qi0].clk_if_cb);
+                        m_quad_intf_arr[qi0].clk_if_cb.job_fetch_complete    <= 1;
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_valid           <= 0;
+                        @(m_quad_intf_arr[qi0].clk_if_cb);
+                        m_quad_intf_arr[qi0].clk_if_cb.job_fetch_complete    <= 0;
                         i = i + test.m_num_input_cols;
                         $display("// --------------------------------------------------------------");
                         $display("// At Time: %0t", $time                                           );
                         $display("// Test Index: %0d", test.m_ti                                    ); 
-                        $display("// Quad Index: %0d", qi / `NUM_CE_PER_QUAD                        );                          
+                        $display("// Quad Index: %0d", qi0                                          );                          
                         $display("// Finished Servicing Job Fetch Request"                          ); 
                         $display("// --------------------------------------------------------------");
                         $display("\n");
                     end
+                    qi1 = qi1 + `NUM_CE_PER_QUAD;
                 end
             end
             $display("// --------------------------------------------------------------");
@@ -446,27 +462,27 @@ task `cnl_scX_driver::run();
             $display("// Waiting for Job Complete"                                      ); 
             $display("// --------------------------------------------------------------");
             $display("\n");  
-            for(qi = 0; qi < C_NUM_QUADS; qi = qi + 1) begin         
+            for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin         
                 forever begin
-                    @(m_quad_intf_arr[qi].clk_if_cb);
-                    if(m_quad_intf_arr[qi].clk_if_cb.job_complete) begin
-                        m_quad_intf_arr[qi].clk_if_cb.job_complete_ack <= 1;
+                    @(m_quad_intf_arr[qi0].clk_if_cb);
+                    if(m_quad_intf_arr[qi0].clk_if_cb.job_complete) begin
+                        m_quad_intf_arr[qi0].clk_if_cb.job_complete_ack <= 1;
                         break;
                     end
                 end
                 $display("// --------------------------------------------------------------");
                 $display("// At Time: %0t", $time                                           );
                 $display("// Test Index: %0d", test.m_ti                                    );
-                $display("// Quad Index: %0d", qi                                           );                    
+                $display("// Quad Index: %0d", qi0                                          );                    
                 $display("// Recieved Job Complete"                                         ); 
                 $display("// --------------------------------------------------------------");
                 $display("\n");   
-                @(m_quad_intf_arr[qi].clk_if_cb);
-                m_quad_intf_arr[qi].clk_if_cb.job_complete_ack <= 0;
+                @(m_quad_intf_arr[qi0].clk_if_cb);
+                m_quad_intf_arr[qi0].clk_if_cb.job_complete_ack <= 0;
                 $display("// Finished Test ------------------------------------------------");
                 $display("// At Time: %0t", $time                                           );            
                 $display("// Test Index: %0d", test.m_ti                                    );
-                $display("// Quad Index: %0d", qi                                           );                    
+                $display("// Quad Index: %0d", qi0                                          );                    
                 $display("// Finished Test ------------------------------------------------");
                 $display("\n");
             end
@@ -488,14 +504,14 @@ endtask: run
 
 task `cnl_scX_driver::rnd_delay_clk_if(int delay_amt);
     repeat($urandom_range(1, delay_amt)) begin
-        @(m_quad_intf.clk_if_cb);
+        @(m_synch_intf.clk_if_cb);
     end
 endtask: rnd_delay_clk_if
 
 
 task `cnl_scX_driver::rnd_delay_clk_core(int delay_amt);
     repeat($urandom_range(1, delay_amt)) begin
-        @(m_quad_intf.clk_core_cb);
+        @(m_synch_intf.clk_core_cb);
     end
 endtask: rnd_delay_clk_core
 

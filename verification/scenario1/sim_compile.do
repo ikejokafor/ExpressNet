@@ -1,3 +1,6 @@
+file delete -force -- ./work
+
+
 vlib work
 
 
@@ -8,6 +11,7 @@ vlog -lint -sv -work work $env(GLBL_PATH)/glbl.v
 # Verification Files
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ $env(SOC_IT_ROOT)/cnn_layer_accel/verification/clock_gen.v
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ $env(SOC_IT_ROOT)/cnn_layer_accel/verification/cnn_layer_accel_quad_intf.sv
+vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ $env(SOC_IT_ROOT)/cnn_layer_accel/verification/cnn_layer_accel_synch_intf.sv
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ $env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ $env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/cnl_sc1_environment.sv
 vlog -lint -sv +define+SIMULATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/ +incdir+$env(SOC_IT_ROOT)/cnn_layer_accel/hardware/verilog/ +incdir+$env(SOC_IT_ROOT)/verif_lib/ $env(SOC_IT_ROOT)/cnn_layer_accel/verification/scenario1/cnl_sc1_generator.sv

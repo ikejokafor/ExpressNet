@@ -38,12 +38,14 @@
 `include "cnl_sc1_verif_defs.svh"
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.svh"
+`include "cnn_layer_accel_quad_intf.sv"
+`include "cnn_layer_accel_synch_intf.sv"
 `include "cnl_sc1_generator.sv"
 `include "cnl_sc1_DUTOutput.sv"
 
 
 class `scX_scoreParams_t extends scoreParams_t;
-    virtual cnn_layer_accel_synch_intf m_synch_intf; 
+    virtual cnn_layer_accel_synch_intf synch_intf; 
 endclass: `scX_scoreParams_t
 
 
@@ -217,8 +219,8 @@ function void `cnl_scX_scoreboard::createSolution(generator test, DUTOutput sol)
                             if((i >= 0 && j >= 0) && (i < num_input_rows && j < num_input_cols)) begin                      
                                 `scX_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y].pixel
                                     = `scX_sol.m_conv_map[(m * num_output_rows + x) * num_output_cols + y].pixel +
-                                    (pix_data[(k * num_input_rows + i) * num_input_cols + j]
-                                    * kernel_data[((m * m_depth + k) * m_kernel_size + kr) * m_kernel_size + kc];
+                                    pix_data[(k * num_input_rows + i) * num_input_cols + j]
+                                    * kernel_data[((m * depth + k) * kernel_size + kr) * kernel_size + kc];
                             end
                             kc = kc + 1;
                             n = n + 1;
