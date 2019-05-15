@@ -62,7 +62,9 @@ module cnl_sc1_testbench;
     logic            job_complete[`NUM_QUADS - 1:0]         ;
     logic            job_complete_ack[`NUM_QUADS - 1:0]     ;
     logic            pip_primed[`NUM_QUADS - 1:0]           ;
-    logic            all_pip_primed                          ;
+    logic            all_pip_primed_arr[`NUM_QUADS - 1:0]   ;
+    logic            all_pip_primed                         ;
+
 
     logic            cascade_in_valid[`NUM_QUADS - 1:0]     ;
     logic            cascade_in_ready[`NUM_QUADS - 1:0]     ;
@@ -149,126 +151,9 @@ module cnl_sc1_testbench;
         .clk_core   ( clk_core  ),
         .rst        ( rst       )
     );
-
-
-    cnn_layer_accel_quad
-    i0_cnn_layer_accel_quad (
-        .clk_if               ( clk_if                  ),  
-        .clk_core             ( clk_core                ),  
-        .rst                  ( rst                     ),  
-
-        .job_start            ( job_start[0]            ),  
-        .job_accept           ( job_accept[0]           ),  
-        .job_parameters       ( job_parameters[0]       ),  
-        .job_fetch_request    ( job_fetch_request[0]    ),  
-        .job_fetch_ack        ( job_fetch_ack[0]        ), 
-        .job_fetch_complete   ( job_fetch_complete[0]   ),
-        .job_complete         ( job_complete[0]         ),  
-        .job_complete_ack     ( job_complete_ack[0]     ),
-        .pip_primed           ( pip_primed[0]           ),
-        .all_pip_primed       ( all_pip_primed          ),
-
-        .cascade_in_valid     ( cascade_in_valid[0]     ),
-        .cascade_in_ready     ( cascade_in_ready[0]     ),
-        .cascade_in_data      ( cascade_in_data[0]      ),
-
-        .cascade_out_valid    ( cascade_out_valid[0]    ),
-        .cascade_out_ready    ( cascade_out_ready[0]    ),
-        .cascade_out_data     ( cascade_out_data[0]     ),
-
-        .config_valid         ( config_valid[0]         ),
-        .config_accept        ( config_accept[0]        ),
-        .config_data          ( config_data[0]          ),
-
-        .weight_valid         ( weight_valid[0]         ),
-        .weight_ready         ( weight_ready[0]         ),
-        .weight_data          ( weight_data[0]          ),
-
-        .result_valid         ( result_valid[0]         ),
-        .result_accept        ( result_accept[0]        ),
-        .result_data          ( result_data[0]          ),
- 
-        .pixel_valid          ( pixel_valid[0]          ),
-        .pixel_ready          ( pixel_ready[0]          ),
-        .pixel_data           ( pixel_data[0]           )
-    );
     
     
-    cnn_layer_accel_quad_intf
-	i0_quad_intf (
-       .clk_if                          ( clk_if                                                ),
-       .clk_core                        ( clk_core                                              ),
-
-       .job_start                       ( job_start[0]                                          ),
-       .job_accept                      ( job_accept[0]                                         ),
-       .job_parameters                  ( job_parameters[0]                                     ),
-       .job_fetch_request               ( job_fetch_request[0]                                  ),
-       .job_fetch_ack                   ( job_fetch_ack[0]                                      ),
-       .job_fetch_complete              ( job_fetch_complete[0]                                 ),
-       .job_complete                    ( job_complete[0]                                       ),
-       .job_complete_ack                ( job_complete_ack[0]                                   ),
-
-       .config_valid                    ( config_valid[0]                                       ),
-       .config_accept                   ( config_accept[0]                                      ),
-       .config_data                     ( config_data[0]                                        ),
-
-       .weight_valid                    ( weight_valid[0]                                       ),
-       .weight_ready                    ( weight_ready[0]                                       ),
-       .weight_data                     ( weight_data[0]                                        ),
-
-       .result_valid                    ( result_valid[0]                                       ),
-       .result_accept                   ( result_accept[0]                                      ),
-       .result_data                     ( result_data[0]                                        ),
-
-       .pixel_valid                     ( pixel_valid[0]                                        ),
-       .pixel_ready                     ( pixel_ready[0]                                        ),
-       .pixel_data                      ( pixel_data[0]                                         ),
-
-       .pfb_full_count_cfg              ( i0_cnn_layer_accel_quad.pfb_full_count_cfg            ),
-       .stride_cfg                      ( i0_cnn_layer_accel_quad.stride_cfg                    ),
-       .conv_out_fmt_cfg    		    ( i0_cnn_layer_accel_quad.conv_out_fmt_cfg    	        ),
-       .padding_cfg                     ( i0_cnn_layer_accel_quad.padding_cfg                   ),
-       .upsample_cfg                    ( i0_cnn_layer_accel_quad.upsample_cfg                  ),
-       .num_kernels_cfg                 ( i0_cnn_layer_accel_quad.num_kernels_cfg               ),
-       .num_output_rows_cfg             ( i0_cnn_layer_accel_quad.num_output_rows_cfg           ),
-       .num_output_cols_cfg             ( i0_cnn_layer_accel_quad.num_output_cols_cfg           ),
-       .pix_seq_data_full_count_cfg     ( i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg   ),
-       .num_expd_input_cols_cfg         ( i0_cnn_layer_accel_quad.num_expd_input_cols_cfg       ),
-       .num_expd_input_rows_cfg         ( i0_cnn_layer_accel_quad.num_expd_input_rows_cfg       ),
-       .crpd_input_col_start_cfg        ( i0_cnn_layer_accel_quad.crpd_input_col_start_cfg      ),
-       .crpd_input_row_start_cfg        ( i0_cnn_layer_accel_quad.crpd_input_row_start_cfg      ),
-       .crpd_input_col_end_cfg          ( i0_cnn_layer_accel_quad.crpd_input_col_end_cfg        ),
-       .crpd_input_row_end_cfg          ( i0_cnn_layer_accel_quad.crpd_input_row_end_cfg        ),
-       .master_quad_cfg                 ( i0_cnn_layer_accel_quad.master_quad_cfg               ),
-       .cascade_cfg                     ( i0_cnn_layer_accel_quad.cascade_cfg                   ),
-       
-       .output_row                      ( i0_cnn_layer_accel_quad.output_row                    ),
-       .output_col                      ( i0_cnn_layer_accel_quad.output_col                    ),
-       .output_depth                    ( i0_cnn_layer_accel_quad.output_depth                  )
-	);
-    
-    
-    assign quad_intf_arr[0] = cnl_sc1_testbench.i0_quad_intf;
-    
-    
-    for(i = 1; i < `NUM_QUADS; i = i + 1) begin: QUAD
-        fifo_fwft #(
-            .C_DATA_WIDTH( `PIXEL_WIDTH ),
-            .C_FIFO_DEPTH( 5            )
-        ) i0_fifo_fwft (
-            .clk            ( clk_core                  ),
-            .rst            ( rst                       ),
-            .wren           ( cascade_out_valid[i - 1]  ),
-            .rden           ( cascade_in_ready[i]       ),
-            .datain         ( cascade_out_data[i - 1]   ),
-            .dataout        ( cascade_in_data[i]        ),
-            .empty          ( fifo_empty[i]             ),
-            .full           (                           ),
-            .almost_full    (                           )
-        );
-               
-        assign cascade_in_valid[i] = !fifo_empty[i];
-
+    for(i = 0; i < `NUM_QUADS; i = i + 1) begin: QUAD
         cnn_layer_accel_quad
         i0_cnn_layer_accel_quad (
             .clk_if               ( clk_if                  ),  
@@ -284,7 +169,7 @@ module cnl_sc1_testbench;
             .job_complete         ( job_complete[i]         ),  
             .job_complete_ack     ( job_complete_ack[i]     ), 
             .pip_primed           ( pip_primed[i]           ),
-            .all_pip_primed       (                         ),
+            .all_pip_primed       ( all_pip_primed_arr[i]   ),
 
             .cascade_in_valid     ( cascade_in_valid[i]     ),
             .cascade_in_ready     ( cascade_in_ready[i]     ),
@@ -364,8 +249,34 @@ module cnl_sc1_testbench;
            .output_col                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_col                    ),
            .output_depth                    ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_depth                  )
         );
-
+        
         assign quad_intf_arr[i] = cnl_sc1_testbench.QUAD[i].i0_quad_intf;
+        if(i == 0) begin
+            assign all_pip_primed_arr[i] = all_pip_primed;
+            assign cascade_in_valid[i]   = 1;
+            assign cascade_in_data[i]    = 0;
+        end else begin
+            assign all_pip_primed_arr[i] = 0;
+        end
+
+        if(i != (`NUM_QUADS - 1)) begin
+            fifo_fwft #(
+                .C_DATA_WIDTH( `PIXEL_WIDTH ),
+                .C_FIFO_DEPTH( 5            )
+            ) i0_fifo_fwft (
+                .clk            ( clk_core                  ),
+                .rst            ( rst                       ),
+                .wren           ( cascade_out_valid[i]      ),
+                .rden           ( cascade_in_ready[i + 1]   ),
+                .datain         ( cascade_out_data[i]       ),
+                .dataout        ( cascade_in_data[i + 1]    ),
+                .empty          ( fifo_empty[i]             ),
+                .full           (                           ),
+                .almost_full    (                           )
+            );
+            
+            assign cascade_in_valid[i + 1] = !fifo_empty[i];
+        end
     end
     
     

@@ -95,6 +95,10 @@ task `cnl_scX_driver::run();
     int signal;
     int qi0;
     int qi1;
+    int i_arr[0:`NUM_QUADS - 1];
+    int j_arr[0:`NUM_QUADS - 1];
+    bool pixel_data_done;
+    
 
     for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
         m_quad_intf_arr[qi0].clk_if_cb.job_start             <= 0;
@@ -373,9 +377,12 @@ task `cnl_scX_driver::run();
             $display("// Began Sending Pixel Data"                                      ); 
             $display("// --------------------------------------------------------------");
             $display("\n");
-            i = 0; 
-            j = 0;
-            while(i < (test.m_num_input_rows * test.m_num_input_cols)) begin
+            for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
+                i_arr[qi0] = 0; 
+                j_arr[qi0] = 0;
+            end
+            pixel_data_done = FALSE;
+            while(!pixel_data_done) begin
                 qi1 = 0;
                 for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
                     @(m_quad_intf_arr[qi0].clk_if_cb);
@@ -391,41 +398,41 @@ task `cnl_scX_driver::run();
                         @(m_quad_intf_arr[qi0].clk_if_cb);
                         m_quad_intf_arr[qi0].clk_if_cb.job_fetch_ack         <= 0;
                         m_quad_intf_arr[qi0].clk_if_cb.pixel_valid           <= 1;
-                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]   <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + i];
-                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]    <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + i];          
-                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]     <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
-                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]     <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
-                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]     <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
-                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]     <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + i];            
-                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]     <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + i];           
-                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]      <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + i];
-                        j = i + 1;
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]   <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + i_arr[qi0]];
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]    <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + i_arr[qi0]];          
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]     <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + i_arr[qi0]];           
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]     <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + i_arr[qi0]];           
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]     <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + i_arr[qi0]];           
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]     <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + i_arr[qi0]];            
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]     <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + i_arr[qi0]];           
+                        m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]      <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + i_arr[qi0]];
+                        j_arr[qi0] = i_arr[qi0] + 1;
                         n = 1;
                         while(n < test.m_num_input_cols) begin
                             @(m_quad_intf_arr[qi0].clk_if_cb);
                             if($urandom_range(0, 1) && m_model_delay) begin
                                 m_quad_intf_arr[qi0].clk_if_cb.pixel_valid          <= 0;
                                 rnd_delay_clk_if(5);
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]   <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + j];          
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]    <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]    <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]    <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]    <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + j];            
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]    <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]     <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]   <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];          
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]    <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]    <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]    <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]    <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];            
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]    <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]     <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];
                                 m_quad_intf_arr[qi0].clk_if_cb.pixel_valid          <= 1;
                             end
                             wait(m_quad_intf_arr[qi0].clk_if_cb.pixel_ready) begin
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]   <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + j];          
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]    <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]    <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]    <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]    <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + j];            
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]    <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + j];           
-                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]     <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + j];
-                                j = j + 1;
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[127:112]  <= test.m_pix_data_sim[((qi1 + 7) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[111:96]   <= test.m_pix_data_sim[((qi1 + 6) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];          
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[95:80]    <= test.m_pix_data_sim[((qi1 + 5) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[79:64]    <= test.m_pix_data_sim[((qi1 + 4) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[63:48]    <= test.m_pix_data_sim[((qi1 + 3) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[47:32]    <= test.m_pix_data_sim[((qi1 + 2) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];            
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[31:16]    <= test.m_pix_data_sim[((qi1 + 1) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];           
+                                m_quad_intf_arr[qi0].clk_if_cb.pixel_data[15:0]     <= test.m_pix_data_sim[((qi1 + 0) * (test.m_num_input_rows * test.m_num_input_cols)) + j_arr[qi0]];
+                                j_arr[qi0] = j_arr[qi0] + 1;
                                 n = n + 1;
                             end
                         end
@@ -434,7 +441,7 @@ task `cnl_scX_driver::run();
                         m_quad_intf_arr[qi0].clk_if_cb.pixel_valid           <= 0;
                         @(m_quad_intf_arr[qi0].clk_if_cb);
                         m_quad_intf_arr[qi0].clk_if_cb.job_fetch_complete    <= 0;
-                        i = i + test.m_num_input_cols;
+                        i_arr[qi0] = i_arr[qi0] + test.m_num_input_cols;
                         $display("// --------------------------------------------------------------");
                         $display("// At Time: %0t", $time                                           );
                         $display("// Test Index: %0d", test.m_ti                                    ); 
@@ -444,6 +451,13 @@ task `cnl_scX_driver::run();
                         $display("\n");
                     end
                     qi1 = qi1 + `NUM_CE_PER_QUAD;
+                end
+                pixel_data_done = TRUE;
+                for(qi0 = 0; qi0 < `NUM_QUADS; qi0 = qi0 + 1) begin
+                    if(i_arr[qi0] < (test.m_num_input_cols * test.m_num_input_rows)) begin
+                        pixel_data_done = FALSE;
+                        break;
+                    end
                 end
             end
             $display("// --------------------------------------------------------------");

@@ -550,7 +550,7 @@ module cnn_layer_accel_quad_bram_ctrl (
                     end
                 end
                 ST_AWE_CE_ACTIVE: begin
-                    if(!master_quad && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+                    if(cascade && !master_quad && cascade_in_valid && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                         cascade_in_ready <= 1;
                     end
                     // sequence data rden logic
