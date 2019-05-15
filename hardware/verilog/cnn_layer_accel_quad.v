@@ -127,7 +127,7 @@ module cnn_layer_accel_quad  (
     
     input  logic            cascade_in_valid    ;
     output logic            cascade_in_ready    ;
-    input  logic [15:0]     cascade_in_data    ;
+    input  logic [15:0]     cascade_in_data     ;
     
     output logic            cascade_out_valid   ;
     input  logic            cascade_out_ready   ;
@@ -262,6 +262,7 @@ module cnn_layer_accel_quad  (
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_row                                      ;
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_col                                      ;
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_depth                                    ;
+    logic                                       cascade_in_ready_arr[`NUM_AWE - 1:0]            ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -361,6 +362,7 @@ module cnn_layer_accel_quad  (
 
             
             cnn_layer_accel_awe_rowbuffers #(
+                .C_FIRST_AWE_ROW_BUF            ( i                                ),
                 .C_SEQ_DATAIN_DELAY             ( (i * 2)                          ),
                 .C_CE0_ROW_MATRIC_DELAY         ( (i * `NUM_CE_PER_AWE + 3/*3*/)   ),      
                 .C_CE1_ROW_MATRIC_DELAY         ( (i * `NUM_CE_PER_AWE + 4/*4*/)   ),
@@ -397,7 +399,11 @@ module cnn_layer_accel_quad  (
                 .ce1_pixel_dataout_valid    ( ce1_pixel_dataout_valid[i]                            ),
                 .rst_addr                   ( next_state_tran                                       ),
                 .conv_out_fmt               ( conv_out_fmt_cfg                                      ),
-                .num_kernels                ( num_kernels_cfg                                       )
+                .num_kernels                ( num_kernels_cfg                                       ),
+                .cascade_in_valid           ( cascade_in_valid                                      ),
+                .cascade_in_ready           ( cascade_in_ready_arr[i]                               ),
+                .cascade                    ( cascade_cfg                                           ),
+                .master_quad                ( master_quad_cfg                                       )
 `ifdef SIMULATION
                 ,
                 .ce0_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 0]                  ),
@@ -473,11 +479,11 @@ module cnn_layer_accel_quad  (
             
         end
 		
-		assign cascade_out_data = awe_cascade_dataout[`NUM_AWE - 1];
-		assign cascade_out_valid = awe_cascade_dataout_valid[`NUM_AWE - 1];
-		
-		assign result_valid = awe_dataout_valid[`NUM_AWE - 1] ;
-		assign result_data  = awe_dataout      [`NUM_AWE - 1][15:0] ;
+		assign cascade_out_data     = awe_cascade_dataout[`NUM_AWE - 1];
+		assign cascade_out_valid    = awe_cascade_dataout_valid[`NUM_AWE - 1];
+        assign cascade_in_ready     = cascade_in_ready_arr[0];
+		assign result_valid         = awe_dataout_valid[`NUM_AWE - 1] ;
+		assign result_data          = awe_dataout      [`NUM_AWE - 1][15:0] ;
     endgenerate
     
     
@@ -524,7 +530,6 @@ module cnn_layer_accel_quad  (
         .num_kernels                ( num_kernels_cfg                                       ),
         .master_quad                ( master_quad_cfg                                       ),
         .cascade_in_valid           ( cascade_in_valid                                      ),
-        .cascade_in_ready           ( cascade_in_ready                                      ),
         .pip_primed                 ( pip_primed                                            ),
         .all_pip_primed             ( all_pip_primed                                        ),
         .cascade                    ( cascade_cfg                                           )

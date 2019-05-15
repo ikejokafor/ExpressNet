@@ -29,6 +29,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_awe_rowbuffers #(
+    parameter C_FIRST_AWE_ROW_BUF           = 0,
     parameter C_SEQ_DATAIN_DELAY            = 0,
     parameter C_CE0_ROW_MATRIC_DELAY        = 3,
     parameter C_CE1_ROW_MATRIC_DELAY        = 4,
@@ -64,7 +65,11 @@ module cnn_layer_accel_awe_rowbuffers #(
     ce1_pixel_dataout_valid     , 
     rst_addr                    ,
     conv_out_fmt                ,
-    num_kernels                 
+    num_kernels                 ,
+    cascade_in_valid            ,
+    cascade_in_ready            ,
+    cascade                     ,
+    master_quad
 `ifdef SIMULATION
     ,
     ce0_last_kernel             ,
@@ -125,6 +130,10 @@ module cnn_layer_accel_awe_rowbuffers #(
     input  logic                                        rst_addr                    ;
     input logic                                         conv_out_fmt                ;
     input  logic    [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0] num_kernels                 ;
+    input logic                                         cascade_in_valid            ;
+    output logic                                        cascade_in_ready            ;
+    input logic                                         cascade                     ;
+    input logic                                         master_quad                 ;
 `ifdef SIMULATION
     input logic                                         ce0_last_kernel             ;
     input logic                                         ce1_last_kernel             ;
@@ -546,6 +555,24 @@ module cnn_layer_accel_awe_rowbuffers #(
         .data_in    ( row_matric_wrAddr         ),
         .data_out   ( row_rename_ce1_wrAddr     )
     );
+    
+    
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
+    generate
+        if(C_FIRST_AWE_ROW_BUF == 0) begin
+            always@(posedge clk) begin
+                if(rst) begin
+                    cascade_in_ready <= 0;
+                end else begin
+                    cascade_in_ready <= 0;
+                    if(cascade && !master_quad && cascade_in_valid && ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+                        cascade_in_ready  <= 1;
+                    end
+                end
+            end
+        end
+    endgenerate
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            

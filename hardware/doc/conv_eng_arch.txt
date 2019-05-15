@@ -28,7 +28,7 @@ Subsequent Values
     01 000 01 01  => P = P + (U + V)    Cycles 2 - 4
 
     W   Z  Y  X
-    01 001 01 01  => P = P + (U + V) + PCIN    5th cycle
+    01 001 01 01  => P = P + (U + V) + PCIN    5th cycle, accum reg is also reset
 
 WRT 5x clock, if it takes 5 cycles to output the whole window, then it will take 5 cycles for the reult to output
     The final value which the prev quad produces which needs to be added to the next quad is only needed on the

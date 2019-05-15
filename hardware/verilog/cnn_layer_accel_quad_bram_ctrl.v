@@ -72,7 +72,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     all_pip_primed              ,
     master_quad                 ,
     cascade_in_valid            ,
-    cascade_in_ready            ,
     cascade
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -144,7 +143,6 @@ module cnn_layer_accel_quad_bram_ctrl (
     input logic                                         all_pip_primed              ;
     input logic                                         master_quad                 ;
     input logic                                         cascade_in_valid            ;
-    output logic                                        cascade_in_ready            ;
     input                                               cascade                     ;
 
 
@@ -219,6 +217,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     ); 
 
 
+    // 3 cycle pix seq bram read latency
     SRL_bit #(
         .C_CLOCK_CYCLES( 3 )
     ) 
@@ -241,7 +240,7 @@ module cnn_layer_accel_quad_bram_ctrl (
         .data_in    ( last_kernel       ),
         .data_out   ( last_kernel_d     )
     );
-
+    
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign last_kernel = (kernel_group == num_kernels);
@@ -499,7 +498,6 @@ module cnn_layer_accel_quad_bram_ctrl (
             pix_seq_data_count          <= 0;
             next_state_tran_r           <= 0;
             pip_primed                  <= 0;
-            cascade_in_ready            <= 0;
             state                       <= ST_IDLE;
         end else begin
             pfb_rden                    <= 0;
@@ -508,7 +506,6 @@ module cnn_layer_accel_quad_bram_ctrl (
             job_complete                <= 0;
             pix_seq_bram_rden_r         <= 0;
             next_state_tran_r           <= 0;
-            cascade_in_ready            <= 0;
             case(state)            
                 ST_IDLE: begin
                     if(job_start) begin
@@ -550,9 +547,6 @@ module cnn_layer_accel_quad_bram_ctrl (
                     end
                 end
                 ST_AWE_CE_ACTIVE: begin
-                    if(cascade && !master_quad && cascade_in_valid && cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
-                        cascade_in_ready <= 1;
-                    end
                     // sequence data rden logic
                     if(pix_seq_data_count > 1) begin
                         pix_seq_bram_rden_r <= 1;
