@@ -213,6 +213,7 @@ module cnn_layer_accel_awe_rowbuffers #(
     logic  [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]  ce0_rr_kernel_count         ;    
     logic  [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]  ce1_rm_kernel_count         ;
     logic  [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]  ce1_rr_kernel_count         ; 
+    logic  [                              2:0]  ce0_cycle_counter_d         ;
     
  
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -557,6 +558,19 @@ module cnn_layer_accel_awe_rowbuffers #(
     );
     
     
+    SRL_bus #(  
+        .C_CLOCK_CYCLES  ( 2 ),
+        .C_DATA_WIDTH    ( 3  )
+    ) 
+    i9_SRL_bus (
+        .clk        ( clk                       ),
+        .ce         ( 1'b1                      ),
+        .rst        ( rst                       ),
+        .data_in    ( ce0_cycle_counter         ),
+        .data_out   ( ce0_cycle_counter_d       )
+    );
+    
+    
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------            
     generate
         if(C_FIRST_AWE_ROW_BUF == 0) begin
@@ -565,7 +579,7 @@ module cnn_layer_accel_awe_rowbuffers #(
                     cascade_in_ready <= 0;
                 end else begin
                     cascade_in_ready <= 0;
-                    if(cascade && !master_quad && cascade_in_valid && ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
+                    if(cascade && !master_quad && cascade_in_valid && ce0_cycle_counter_d == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                         cascade_in_ready  <= 1;
                     end
                 end
@@ -582,7 +596,7 @@ module cnn_layer_accel_awe_rowbuffers #(
         end else begin
             if(ce0_pixel_dataout_valid || ce0_cycle_counter_incr) begin
                 ce0_cycle_counter <= ce0_cycle_counter + 1;
-                if(ce0_cycle_counter == 4) begin
+                if(ce0_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                     ce0_cycle_counter <= 0;
                 end
             end
@@ -598,7 +612,7 @@ module cnn_layer_accel_awe_rowbuffers #(
         end else begin
             if(ce1_pixel_dataout_valid || ce1_cycle_counter_incr) begin
                 ce1_cycle_counter <= ce1_cycle_counter + 1;
-                if(ce1_cycle_counter == 4) begin
+                if(ce1_cycle_counter == `WINDOW_3x3_NUM_CYCLES_MINUS_1) begin
                     ce1_cycle_counter <= 0;
                 end
             end
