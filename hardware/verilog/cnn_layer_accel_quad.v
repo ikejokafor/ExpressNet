@@ -43,7 +43,9 @@ module cnn_layer_accel_quad  (
     job_complete_ack        ,    // Asserted by main SM to acknowledge completion
     pip_primed              ,
     all_pip_primed          ,
-
+    pfb_loaded              ,
+    all_pfb_loaded          ,
+    
     cascade_in_data         ,
     cascade_in_valid        ,
     cascade_in_ready        ,
@@ -124,6 +126,8 @@ module cnn_layer_accel_quad  (
     input  logic            job_complete_ack    ;
     output logic            pip_primed          ;
     input  logic            all_pip_primed      ;
+    output logic            pfb_loaded          ;
+    input  logic            all_pfb_loaded      ;
     
     input  logic            cascade_in_valid    ;
     output logic            cascade_in_ready    ;
@@ -532,6 +536,8 @@ module cnn_layer_accel_quad  (
         .cascade_in_valid           ( cascade_in_valid                                      ),
         .pip_primed                 ( pip_primed                                            ),
         .all_pip_primed             ( all_pip_primed                                        ),
+        .pfb_loaded                 ( pfb_loaded                                            ),
+        .all_pfb_loaded             ( all_pfb_loaded                                        ),
         .cascade                    ( cascade_cfg                                           )
     );
     

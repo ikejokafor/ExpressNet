@@ -64,7 +64,9 @@ module cnl_sc1_testbench;
     logic            pip_primed[`NUM_QUADS - 1:0]           ;
     logic            all_pip_primed_arr[`NUM_QUADS - 1:0]   ;
     logic            all_pip_primed                         ;
-
+    logic            pfb_loaded[`NUM_QUADS - 1:0]           ;
+    logic            all_pfb_loaded_arr[`NUM_QUADS - 1:0]   ;
+    logic            all_pfb_loaded                         ; 
 
     logic            cascade_in_valid[`NUM_QUADS - 1:0]     ;
     logic            cascade_in_ready[`NUM_QUADS - 1:0]     ;
@@ -123,6 +125,7 @@ module cnl_sc1_testbench;
     string outputDir;
     genvar i;
     integer i6;
+    integer i7;
     virtual cnn_layer_accel_quad_intf quad_intf_arr[0:`NUM_QUADS - 1];
     
     
@@ -170,6 +173,8 @@ module cnl_sc1_testbench;
             .job_complete_ack     ( job_complete_ack[i]     ), 
             .pip_primed           ( pip_primed[i]           ),
             .all_pip_primed       ( all_pip_primed_arr[i]   ),
+            .pfb_loaded           ( pfb_loaded[i]           ),
+            .all_pfb_loaded       ( all_pfb_loaded_arr[i]   ),
 
             .cascade_in_valid     ( cascade_in_valid[i]     ),
             .cascade_in_ready     ( cascade_in_ready[i]     ),
@@ -253,10 +258,12 @@ module cnl_sc1_testbench;
         assign quad_intf_arr[i] = cnl_sc1_testbench.QUAD[i].i0_quad_intf;
         if(i == 0) begin
             assign all_pip_primed_arr[i] = all_pip_primed;
+            assign all_pfb_loaded_arr[i] = all_pfb_loaded;
             assign cascade_in_valid[i]   = 1;
             assign cascade_in_data[i]    = 0;
         end else begin
             assign all_pip_primed_arr[i] = 0;
+            assign all_pfb_loaded_arr[i] = 0;
         end
 
         if(i != (`NUM_QUADS - 1)) begin
@@ -284,6 +291,9 @@ module cnl_sc1_testbench;
     always@(*) begin
        for(i6 = 0; i6 < `NUM_QUADS; i6 = i6 + 1) begin
             all_pip_primed = pip_primed[i6] && 1;
+       end
+       for(i7 = 0; i7 < `NUM_QUADS; i7 = i7 + 1) begin
+            all_pfb_loaded = pfb_loaded[i7] && 1;
        end
     end    
     // END Logic --------------------------------------------------------------------------------------------------------------------------------
