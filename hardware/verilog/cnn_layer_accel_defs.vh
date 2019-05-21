@@ -66,7 +66,7 @@
 `define WHT_TBL_BRAM_DEPTH              1024
 `define CONFIG_3x3                      1'b0
 `define CONFIG_5x5                      1'b1
-`define NUM_QUADS                       2     
+`define NUM_QUADS                       3     
 `define NUM_AWE                         4
 `define NUM_CE_PER_AWE                  2
 `define NUM_WHT_SEQ_VALUES              5
