@@ -55,7 +55,6 @@ class `cnl_scX_monitor extends monitor;
     
     
     virtual cnn_layer_accel_quad_intf m_quad_intf;
-    virtual cnn_layer_accel_awe_rowbuffers_intf m_awe_buf_intf;
 endclass: `cnl_scX_monitor
 
 
@@ -71,7 +70,6 @@ function `cnl_scX_monitor::new(monParams_t monParams = null);
         m_DUT_rdy = `scX_monParams.DUT_rdy;
         m_quad_intf = `scX_monParams.quad_intf;
         m_mon_rdy = `scX_monParams.mon_rdy;
-        m_awe_buf_intf = `scX_monParams.awe_buf_intf;
         m_tid = `scX_monParams.tid;
         m_runForever = `scX_monParams.runForever;        
     end
@@ -83,15 +81,11 @@ task `cnl_scX_monitor::run();
     `cnl_scX_DUTOutput query;
     `cnl_scX_generator test;
     int t;
-    int n;
     int signal;
-    int num_kernels;
-    int num_acl_output_rows;
-    int num_acl_output_cols;
-    int stride;
-
-
+    int slv_addr;
+    int slv_reg_idx;
     t = 0;
+    slv_reg_idx = 0;
     while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         if(m_agent2monitorMB.try_get(test)) begin
@@ -101,8 +95,9 @@ task `cnl_scX_monitor::run();
             query                                   = new(`scX_DUTOutParams);
             m_mon_rdy.put(signal);
             forever begin
-                @(m_awe_buf_intf.clk_cb);
-                if(m_awe_buf_intf.clk_cb.output_row_ce0 == num_acl_output_rows && m_awe_buf_intf.clk_cb.output_row_ce1 == num_acl_output_rows) begin
+                @(m_quad_intf.clk_if_cb);
+                if(m_quad_intf.clk_if_cb.slv_dbg_rdAck && m_quad_intf.clk_if_cb.slv_dbg_rdAddr == `SLV_SPCE_CFG_REG) begin
+                    query.m_acl_slv_reg[(slv_reg_idx * 16) +: 16] = m_quad_intf.clk_if_cb.slv_dbg_data[15:0];
                     $display("//---------------------------------------------------------------");
                     $display("// At Time: %0t", $time                                           ); 
                     $display("// Test Index: %0d", test.m_ti                                    );                    
@@ -110,11 +105,19 @@ task `cnl_scX_monitor::run();
                     $display("//---------------------------------------------------------------");
                     $display("\n");
                     break;
-                end else begin
-
+                end else if(m_quad_intf.clk_if_cb.slv_dbg_rdAck) begin
+                    slv_addr = m_quad_intf.clk_if_cb.slv_dbg_rdAddr >> 2;
+                    if(m_quad_intf.clk_if_cb.slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH) begin
+                        query.m_pix_seq_data_sim[slv_addr] <= m_quad_intf.clk_if_cb.slv_dbg_data[15:0];
+                    end else if(m_quad_intf.clk_if_cb.slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW  && m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH) begin
+                        query.m_kernel_data_sim[slv_addr] <= m_quad_intf.clk_if_cb.slv_dbg_data[15:0];
+                    end else if(m_quad_intf.clk_if_cb.slv_dbg_rdAddr >= `SLV_SPCE_CFG_REG_LOW && m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= `SLV_SPCE_CFG_REG_HIGH) begin
+                        query.m_acl_slv_reg[(slv_reg_idx * 16) +: 16] = m_quad_intf.clk_if_cb.slv_dbg_data[15:0];
+                        slv_reg_idx = slv_reg_idx + 1;
+                    end
+                end
             end
             m_monitor2scoreboardMB.put(query);
-            
             m_mon_rdy.put(signal);
             if(!m_runForever) begin
                 t = t + 1;

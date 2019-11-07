@@ -37,6 +37,7 @@ interface cnn_layer_accel_quad_intf (
     job_start                       ,
     job_accept                      ,
     job_parameters                  ,
+    job_parameters_valid            ,
     job_fetch_request               ,
     job_fetch_ack                   ,
     job_fetch_complete              ,
@@ -58,27 +59,14 @@ interface cnn_layer_accel_quad_intf (
     pixel_valid                     ,
     pixel_ready                     ,
     pixel_data                      ,
-
-    pfb_full_count_cfg              ,
-    stride_cfg                      , 
-    conv_out_fmt_cfg    		    ,
-    padding_cfg                     ,
-    upsample_cfg                    ,
-    num_kernels_cfg                 ,
-    num_output_rows_cfg             ,
-    num_output_cols_cfg             ,
-    pix_seq_data_full_count_cfg     ,
-    num_expd_input_cols_cfg         ,
-    num_expd_input_rows_cfg         ,
-    crpd_input_col_start_cfg        ,
-    crpd_input_row_start_cfg        ,
-    crpd_input_col_end_cfg          ,
-    crpd_input_row_end_cfg          ,
-    master_quad_cfg                 ,
-    cascade_cfg                     ,
     
-    output_row                      ,
-    output_col                      ,
+    slv_dbg_rdAddr                  , 
+    slv_dbg_rdAddr_valid            ,
+    slv_dbg_rdAck                   ,
+    slv_dbg_data                    ,
+
+    output_row                      , 
+    output_col                      , 
     output_depth    
     
 );
@@ -105,6 +93,7 @@ interface cnn_layer_accel_quad_intf (
     output logic            job_start                       ;
     input  logic            job_accept                      ;
     output logic [127:0]    job_parameters                  ;
+    output                  job_parameters_valid            ;
     input  logic            job_fetch_request               ;
     output logic            job_fetch_ack                   ;
     output logic            job_fetch_complete              ;
@@ -126,26 +115,11 @@ interface cnn_layer_accel_quad_intf (
     output logic            pixel_valid                     ;
     input  logic            pixel_ready                     ;
     output logic [127:0]    pixel_data                      ;
-
-    output logic [   9:0]    pfb_full_count_cfg              ;
-    output logic [   6:0]    stride_cfg                      ;
-	output logic [   4:0]    conv_out_fmt_cfg    		     ;
-    output logic [   4:0]    padding_cfg                     ;
-    output logic             upsample_cfg                    ;
-    output logic [   6:0]    num_kernels_cfg                 ;
-    output logic [   9:0]    num_output_rows_cfg             ;
-    output logic [   9:0]    num_output_cols_cfg             ;
-    output logic [  11:0]    pix_seq_data_full_count_cfg     ;
-    output logic             master_quad_cfg                 ;
-    output logic             cascade_cfg                     ;
-
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] num_expd_input_cols_cfg ;
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] num_expd_input_rows_cfg ;
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_start_cfg ;
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_start_cfg ;
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_col_end_cfg   ;
-    output logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0] crpd_input_row_end_cfg   ;
-
+    
+    input logic [`SLV_DBG_RDADDR_WIDTH - 1:0]   slv_dbg_rdAddr        ;
+    input logic                                 slv_dbg_rdAddr_valid  ;
+    output logic                                slv_dbg_rdAck         ;
+    output logic [31:0]                         slv_dbg_data          ;
     
     input int               output_row                      ;
     input int               output_col                      ;
@@ -159,6 +133,7 @@ interface cnn_layer_accel_quad_intf (
         output job_start                      ;
         input  job_accept                     ;
         output job_parameters                 ;
+        output job_parameters_valid           ;
         input  job_fetch_request              ;
         output job_fetch_ack                  ;
         output job_fetch_complete             ;
@@ -172,26 +147,13 @@ interface cnn_layer_accel_quad_intf (
         output pixel_valid                    ;
         input  pixel_ready                    ;
         output pixel_data                     ;
-
-        output pfb_full_count_cfg              ;
-        output stride_cfg                      ; 
-        output conv_out_fmt_cfg    		       ; 
-        output padding_cfg                     ;
-        output upsample_cfg                    ;
-        output num_kernels_cfg                 ;
-        output num_output_rows_cfg             ;
-        output num_output_cols_cfg             ;
-        output pix_seq_data_full_count_cfg     ;
-        output num_expd_input_cols_cfg         ; 
-        output num_expd_input_rows_cfg         ;
-        output crpd_input_col_start_cfg        ;
-        output crpd_input_row_start_cfg        ;
-        output crpd_input_col_end_cfg          ;
-        output crpd_input_row_end_cfg          ;
-        output master_quad_cfg                 ;
-        output cascade_cfg                     ;
+        
+        output slv_dbg_rdAddr                 ;
+        output slv_dbg_rdAddr_valid           ;
+        input  slv_dbg_rdAck                  ;
+        input  slv_dbg_data                   ;
 	endclocking
-
+   
 
     clocking clk_core_cb @(posedge clk_core);        
         output weight_valid        ;

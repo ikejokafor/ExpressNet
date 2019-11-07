@@ -53,20 +53,7 @@ class `cnl_scX_DUTOutput extends DUTOutput;
     
     logic [15:0] m_pix_seq_data_sim[0:`MAX_NUM_INPUT_COLS - 1]   ;
     logic [15:0] m_kernel_data_sim[]                             ;
-    int m_num_input_rows_cfg                                     ;
-    int m_num_input_cols_cfg                                     ;
-    int m_num_output_rows_cfg                                    ;
-    int m_num_output_cols_cfg                                    ;
-    int m_num_output_rows                                        ;
-    int m_pfb_full_count_cfg                                     ;
-    int m_num_expd_input_cols_cfg                                ;
-    int m_num_expd_input_rows_cfg                                ;
-    int m_crpd_input_col_start_cfg                               ;
-    int m_crpd_input_row_start_cfg                               ;
-    int m_crpd_input_col_end_cfg                                 ;
-    int m_crpd_input_row_end_cfg                                 ;
-    int m_pix_seq_data_full_count_cfg                            ;
-    int m_num_kernels_cfg                                        ;
+    logic [127:0] m_acl_slv_reg                                  ;
     int m_num_kernels                                            ;
     int m_depth                                                  ;
 endclass: `cnl_scX_DUTOutput

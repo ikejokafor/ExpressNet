@@ -316,11 +316,14 @@ module cnn_layer_accel_quad_bram_ctrl (
             if(job_complete_ack) begin
                 input_col  <= 0;
                 input_row  <= 0;
-            end else if((input_col == num_expd_input_cols && !pip_primed) || (input_col == num_expd_input_cols && pip_primed && pfb_count == 1 && pfb_rden)) begin
+            end else if(state != ST_IDLE &&
+                    ((input_col == num_expd_input_cols && !pip_primed) 
+                     || (input_col == num_expd_input_cols && pip_primed && pfb_count == 1 && pfb_rden))
+            ) begin
                 input_col  <= 0;
                 next_row   <= 1;
                 input_row  <= input_row + 1;
-            end else if(pfb_rden && input_row <= num_expd_input_rows) begin
+            end else if(state != ST_IDLE && pfb_rden && input_row <= num_expd_input_rows) begin
                 input_col  <= input_col + 1;
             end
         end

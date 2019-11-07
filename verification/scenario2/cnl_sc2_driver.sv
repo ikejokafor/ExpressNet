@@ -121,7 +121,7 @@ task `cnl_scX_driver::run();
             cfg_accel_slv_reg(test);
             cfg_accel_pix_seq(test);
             cfg_accel_krn(test);
-            slv_intf_stim();
+            slv_intf_stim(test);
             if(!m_runForever) begin
                 t = t + 1;
             end
@@ -171,13 +171,13 @@ endtask: cfg_accel_slv_reg
 
 
 task `cnl_scX_driver::cfg_accel_pix_seq(`cnl_scX_generator test);
-    int i;
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );            
     $display("// Started Sending Pixel Sequence Config"                         ); 
     $display("// --------------------------------------------------------------");
-    $display("\n"); 
+    $display("\n");    
+    int i;
     i = 1;
     @(m_quad_intf.clk_if_cb);
     m_quad_intf.clk_if_cb.config_data[127:112]              <= test.m_pix_seq_data_sim[(0 * 8) + 7]; 
@@ -227,14 +227,14 @@ endtask: cfg_accel_pix_seq
 
 
 task `cnl_scX_driver::cfg_accel_krn(`cnl_scX_generator test);
-    int i;
-    int kernel_idx;
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );
     $display("// Started Sending Kernel Data"                                   );
     $display("// --------------------------------------------------------------");
-    $display("\n"); 
+    $display("\n");    
+    int i;
+    int kernel_idx;
     i               = 1;
     kernel_idx      = 0;    
     @(m_quad_intf.clk_core_cb);
@@ -246,8 +246,7 @@ task `cnl_scX_driver::cfg_accel_krn(`cnl_scX_generator test);
     m_quad_intf.clk_core_cb.weight_data[47:32]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (2 * `KERNEL_3x3_COUNT_FULL) + 0];     
     m_quad_intf.clk_core_cb.weight_data[31:16]                  <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (1 * `KERNEL_3x3_COUNT_FULL) + 0];     
     m_quad_intf.clk_core_cb.weight_data[15:0]                   <= test.m_kernel_data_sim[(0 * `KERNEL_3x3_COUNT_FULL * test.m_depth) + (0 * `KERNEL_3x3_COUNT_FULL) + 0];
-    m_quad_intf.clk_core_cb.weight_valid                        <= 1;      
-    m_quad_intf.clk_if_cb.config_data                           <= 0;
+    m_quad_intf.clk_core_cb.weight_valid                        <= 1;
     while(kernel_idx < test.m_num_kernels) begin
         while(i < `KERNEL_3x3_COUNT_FULL) begin
             @(m_quad_intf.clk_core_cb);
@@ -291,20 +290,35 @@ endtask: cfg_accel_krn
 
 
 task `cnl_scX_driver::slv_intf_stim(`cnl_scX_generator test);
-    int i;
-    int kernel_idx;
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );
     $display("// Started Slave Intferface Stimulation"                          );
     $display("// --------------------------------------------------------------");
-    $display("\n");
- 
-    m_quad_intf   
-    while(kernel_idx < test.m_num_kernels) begin
-    
+    $display("\n");   
+    int i;
+    int numAddresses;
+    logic [15:0] slv_addr_sim[];
+    i = 0;
+    numAddresses = test.slv_addr.size();
+    slv_addr_sim = test.slv_addr;
+    m_quad_intf.slv_dbg_rdAddr <= slv_addr_sim[0];
+    m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid <= 1;    
+    while(i < numAddresses) begin
+        @(m_quad_intf.clk_if_cb);
+        if($urandom_range(0, 1) && m_model_delay) begin
+            m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid <= 0;
+            rnd_delay_clk_if(5, TRUE);
+            m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= slv_addr_sim[i];
+            m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid <= 1;
+        end
+        wait(m_quad_intf.clk_if_cb.slv_dbg_rdAck) begin
+            m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= slv_addr_sim[i];
+        end
+        i = i + 1
     end
-    
+    @(m_quad_intf.clk_if_cb);
+    m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid <= 0;
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );
