@@ -58,6 +58,8 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 //	[3] MSC
 //-----------------------------------------------------------------------------------------------------------------------------------------------
+`define NUM_AWE                         4
+`define NUM_CE_PER_AWE                  2
 `define NUM_QUADS                       1
 `define NUM_CE                          (`NUM_AWE * `NUM_CE_PER_AWE)
 `define WINDOW_3x3_NUM_CYCLES           5    // num cycles to output a 3x3 window in our arch
@@ -68,8 +70,6 @@
 `define WHT_TBL_BRAM_DEPTH              1024
 `define CONFIG_3x3                      1'b0
 `define CONFIG_5x5                      1'b1
-`define NUM_AWE                         4
-`define NUM_CE_PER_AWE                  2
 `define NUM_WHT_SEQ_VALUES              5
 `define WHT_SEQ_WIDTH                   4
 `define NUM_DSP_PER_CE                  2
@@ -93,6 +93,8 @@
 `define MAX_KERNEL_SIZE                 3
 `define CONV_OUT_FMT0                   1'b0
 `define CONV_OUT_FMT1                   1'b1
+`define PIX_SEQ_BRAM_DEPTH              (`MAX_NUM_INPUT_COLS * 8) // (`MAX_NUM_INPUT_COLS * ceil2(`WINDOW_3x3_NUM_CYCLES))
+`define NUM_WHY_TABLES                  `NUM_CE_PER_QUAD
 `define SLV_DBG_RDADDR_WIDTH            20
 `define SLV_SPCE_PIX_SEQ_LOW            21'h00000
 `define SLV_SPCE_PIX_SEQ_HIGH           21'h07FFF
@@ -100,6 +102,12 @@
 `define SLV_SPCE_KRN_DATA_HIGH          21'h0FFFF
 `define SLV_SPCE_CFG_REG_LOW            21'h10000
 `define SLV_SPCE_CFG_REG_HIGH           21'h1000C
+// Act Field
+// `define ACTV_NUM_FRAC_BITS              14
+// `define ACTV_WIDTH                      16
+// `define ACTV_WIDTH_LOW                  `ACTV_NUM_FRAC_BITS
+// `define ACTV_WIDTH_HIGH                 (`ACTV_WIDTH + `ACTV_WIDTH - 1)
+// `define ACTV_WIDTH_FIELD                (`ACTV_WIDTH_HIGH):(`ACTV_WIDTH_LOW)
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------

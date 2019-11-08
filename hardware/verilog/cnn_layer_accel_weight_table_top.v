@@ -41,11 +41,9 @@ module cnn_layer_accel_weight_table_top #(
     wht_table_dout              ,
     wht_table_dout_valid        ,
     conv_out_fmt                ,
-    num_kernels                 ,
-    slv_wht_tble_addr           ,
+    num_kernels                 ,   
     slv_wht_table_rden          ,
-    slv_wht_tble_rdAddr
-    
+    slv_dbg_rdAddr
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -81,9 +79,8 @@ module cnn_layer_accel_weight_table_top #(
     output  logic                             wht_table_dout_valid        ;
     input   logic                             conv_out_fmt                ;
     input  logic [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]   num_kernels        ;
-    input logic  [    C_CLG2_BRAM_B_DEPTH - 1:0]    slv_wht_tble_addr     ;
     input logic                                        slv_wht_table_rden ;
-    input logic  [ C_CLG2_BRAM_B_DEPTH - 1:0]  slv_wht_tble_rdAddr;
+    input logic  [ C_CLG2_BRAM_B_DEPTH - 1:0]  slv_dbg_rdAddr;
  
  
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -101,6 +98,7 @@ module cnn_layer_accel_weight_table_top #(
     logic                                        next_kernel_d               ;
 	logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout0             ;
     logic    [          `WEIGHT_WIDTH - 1:0]     wht_table_dout1             ;
+    logic                                        wht_table_rden              ;
 	
    
 
@@ -114,7 +112,7 @@ module cnn_layer_accel_weight_table_top #(
         .clk        ( clk                       ),
         .rst        ( rst                       ),
         .ce         ( 1'b1                      ),
-        .data_in    ( wht_table_rden            ),
+        .data_in    ( ce_wht_table_rden         ),
         .data_out   ( wht_table_dout_valid      )
     );
 
@@ -198,7 +196,7 @@ module cnn_layer_accel_weight_table_top #(
     assign wht_table_addr1_w        = {kernel_idx        ,   wht_seq_addr1      };
 	assign wht_table_dout           = {wht_table_dout1   ,   wht_table_dout0    };  
     assign wht_table_addrA          = (config_mode) ? wht_table_addrA_cfg : 
-                                      (slv_wht_table_rden) ?  slv_wht_tble_rdAddr : wht_table_addr0;
+                                      (slv_wht_table_rden) ?  slv_dbg_rdAddr : wht_table_addr0;
     assign wht_table_rden           = ce_wht_table_rden || slv_wht_table_rden;
    
    
@@ -207,9 +205,9 @@ module cnn_layer_accel_weight_table_top #(
         if(rst) begin
             kernel_count        <= 0;
             kernel_idx        <= 0;
-            wht_table_rden      <= 0;
+            ce_wht_table_rden      <= 0;
 		end else begin
-            wht_table_rden       <= 0;
+            ce_wht_table_rden       <= 0;
             // kernel count
             if(job_accept || kernel_count == `KERNEL_3x3_COUNT_FULL_MINUS_1 && wht_config_wren)begin
                 kernel_count <= 0;

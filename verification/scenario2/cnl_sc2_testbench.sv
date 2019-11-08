@@ -61,6 +61,7 @@ module cnl_sc2_testbench;
     logic            job_fetch_complete     ;       
     logic            job_complete           ;
     logic            job_complete_ack       ;
+    logic            job_parameters_valid   ;
 
     logic            cascade_in_valid       ;
     logic            cascade_in_ready       ;
@@ -101,8 +102,8 @@ module cnl_sc2_testbench;
     ) env;
     `cnl_scX_generator test;
     `scX_genParams_t `scX_genParams;
-    `scX_crtTestParams_t `scX_crtTestParams;
-    `cnl_scX_generator crt_test_queue[$];
+    `scX_testParams_t `scX_testParams;
+    `cnl_scX_generator m_test_queue[$];
     int i0;
     int i1;
     int i2;
@@ -117,6 +118,9 @@ module cnl_sc2_testbench;
     int numKernels_arr[4:0];
     bool upsampling_arr[1:0];
     int conv_out_fmt_arr[1:0];
+    int test_bi;
+    int test_ei;
+    string outputDir;    
     virtual cnn_layer_accel_awe_rowbuffers_intf awe_buf_intf_arr[`NUM_AWE];
     genvar g;
   
@@ -187,93 +191,47 @@ module cnl_sc2_testbench;
         .pixel_ready          ( pixel_ready             ),
         .pixel_data           ( pixel_data              )
     );
-    
-
-    cnn_layer_accel_quad_intf
-	i0_quad_intf (
-        .clk_if                          ( clk_if                                                ),
-        .clk_core                        ( clk_core                                              ),
-        .rst                             ( rst                                                   ),
-
-        .job_start                       ( job_start                                             ),
-        .job_accept                      ( job_accept                                            ),
-        .job_parameters                  ( job_parameters                                        ),
-        .job_fetch_request               ( job_fetch_request                                     ),
-        .job_fetch_ack                   ( job_fetch_ack                                         ),
-        .job_fetch_complete              ( job_fetch_complete                                    ),
-        .job_complete                    ( job_complete                                          ),
-        .job_complete_ack                ( job_complete_ack                                      ),
-
-        .cascade_in_valid                ( cascade_in_valid                                      ),
-        .cascade_in_ready                ( cascade_in_ready                                      ),
-        .cascade_in_data                 ( cascade_in_data                                       ),
-
-        .cascade_out_valid               ( cascade_out_valid                                     ),
-        .cascade_out_ready               ( cascade_out_ready                                     ),
-        .cascade_out_data                ( cascade_out_data                                      ),
-
-        .config_valid                    ( config_valid                                          ),
-        .config_accept                   ( config_accept                                         ),
-        .config_data                     ( config_data                                           ),
-
-        .weight_valid                    ( weight_valid                                          ),
-        .weight_ready                    ( weight_ready                                          ),
-        .weight_data                     ( weight_data                                           ),
-
-        .result_valid                    ( result_valid                                          ),
-        .result_accept                   ( result_accept                                         ),
-        .result_data                     ( result_data                                           ),
-
-        .pixel_valid                     ( pixel_valid                                           ),
-        .pixel_ready                     ( pixel_ready                                           ),
-        .pixel_data                      ( pixel_data                                            ),
-        
-        .slv_dbg_rdAddr                  ( slv_dbg_rdAddr                                        ),  
-        .slv_dbg_rdAddr_valid            ( slv_dbg_rdAddr_valid                                  ),
-        .slv_dbg_rdAck                   ( slv_dbg_rdAck                                         ),
-        .slv_dbg_data                    ( slv_dbg_data                                          ),
-	);
-    
+ 
     
     cnn_layer_accel_quad_intf
     i0_quad_intf (
-        .clk_if                          ( clk_if                                                ),
-        .clk_core                        ( clk_core                                              ),
+        .clk_if                          ( clk_if                                             ),
+        .clk_core                        ( clk_core                                           ),
 
-        .job_start                       ( job_start[i]                                          ),
-        .job_accept                      ( job_accept[i]                                         ),
-        .job_parameters                  ( job_parameters[i]                                     ),
-        .job_parameters_valid            ( job_parameters_valid[i]                               ),
-        .job_fetch_request               ( job_fetch_request[i]                                  ),
-        .job_fetch_ack                   ( job_fetch_ack[i]                                      ),
-        .job_fetch_complete              ( job_fetch_complete[i]                                 ),
-        .job_complete                    ( job_complete[i]                                       ),
-        .job_complete_ack                ( job_complete_ack[i]                                   ),
+        .job_start                       ( job_start                                          ),
+        .job_accept                      ( job_accept                                         ),
+        .job_parameters                  ( job_parameters                                     ),
+        .job_parameters_valid            ( job_parameters_valid                               ),
+        .job_fetch_request               ( job_fetch_request                                  ),
+        .job_fetch_ack                   ( job_fetch_ack                                      ),
+        .job_fetch_complete              ( job_fetch_complete                                 ),
+        .job_complete                    ( job_complete                                       ),
+        .job_complete_ack                ( job_complete_ack                                   ),
 
-        .config_valid                    ( config_valid[i]                                       ),
-        .config_accept                   ( config_accept[i]                                      ),
-        .config_data                     ( config_data[i]                                        ),
+        .config_valid                    ( config_valid                                       ),
+        .config_accept                   ( config_accept                                      ),
+        .config_data                     ( config_data                                        ),
 
-        .weight_valid                    ( weight_valid[i]                                       ),
-        .weight_ready                    ( weight_ready[i]                                       ),
-        .weight_data                     ( weight_data[i]                                        ),
+        .weight_valid                    ( weight_valid                                       ),
+        .weight_ready                    ( weight_ready                                       ),
+        .weight_data                     ( weight_data                                        ),
 
-        .result_valid                    ( result_valid[i]                                       ),
-        .result_accept                   ( result_accept[i]                                      ),
-        .result_data                     ( result_data[i]                                        ),
+        .result_valid                    ( result_valid                                       ),
+        .result_accept                   ( result_accept                                      ),
+        .result_data                     ( result_data                                        ),
 
-        .pixel_valid                     ( pixel_valid[i]                                        ),
-        .pixel_ready                     ( pixel_ready[i]                                        ),
-        .pixel_data                      ( pixel_data[i]                                         ),
+        .pixel_valid                     ( pixel_valid                                        ),
+        .pixel_ready                     ( pixel_ready                                        ),
+        .pixel_data                      ( pixel_data                                         ),
 
-        .slv_dbg_rdAddr                  ( slv_dbg_rdAddr                                        ),  
-        .slv_dbg_rdAddr_valid            ( slv_dbg_rdAddr_valid                                  ),
-        .slv_dbg_rdAck                   ( slv_dbg_rdAck                                         ),
-        .slv_dbg_data                    ( slv_dbg_data                                          ),
+        .slv_dbg_rdAddr                  ( slv_dbg_rdAddr                                     ),  
+        .slv_dbg_rdAddr_valid            ( slv_dbg_rdAddr_valid                               ),
+        .slv_dbg_rdAck                   ( slv_dbg_rdAck                                      ),
+        .slv_dbg_data                    ( slv_dbg_data                                       ),
         
-        .output_row                      (                                                       ),
-        .output_col                      (                                                       ),
-        .output_depth                    (                                                       )
+        .output_row                      (                                                    ),
+        .output_col                      (                                                    ),
+        .output_depth                    (                                                    )
     );
 
 
@@ -282,19 +240,19 @@ module cnl_sc2_testbench;
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         `scX_genParams = new();
         `scX_genParams.ti = ti;  
-        `scX_crtTestParams.num_input_rows = 19;
-        `scX_crtTestParams.num_input_cols = 19;
-        `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 4;
-        `scX_crtTestParams.stride = 1;
-        `scX_crtTestParams.padding = 0;
-        `scX_crtTestParams.upsample = FALSE;
-        `scX_crtTestParams.kernel_size = 3;
-        `scX_crtTestParams.conv_out_fmt = 0;
-        `scX_crtTestParams.cascade = 0;
+        `scX_testParams.num_input_rows = 19;
+        `scX_testParams.num_input_cols = 19;
+        `scX_testParams.depth = `NUM_CE_PER_QUAD;
+        `scX_testParams.num_kernels = 4;
+        `scX_testParams.stride = 1;
+        `scX_testParams.padding = 0;
+        `scX_testParams.upsample = FALSE;
+        `scX_testParams.kernel_size = 3;
+        `scX_testParams.conv_out_fmt = 0;
+        `scX_testParams.cascade = 0;
         test = new(`scX_genParams);
-        test.createTest(`scX_crtTestParams);
-        crt_test_queue.push_back(test);
+        test.createTest(`scX_testParams);
+        m_test_queue.push_back(test);
         ti = ti + 1;
         
         
@@ -315,7 +273,18 @@ module cnl_sc2_testbench;
         end
 
        
-        env = new(i0_synch_intf, i0_quad_intf, crt_test_queue.size() + C_NUM_RAND_TESTS, crt_test_queue, awe_buf_intf_arr, `NUM_AWE, FALSE, FALSE, test_bi, test_ei, outputDir);
+        env = new(
+            i0_synch_intf, 
+            i0_quad_intf, 
+            m_test_queue.size() + C_NUM_RAND_TESTS, 
+            m_test_queue,
+            1,
+            FALSE, 
+            FALSE, 
+            test_bi, 
+            test_ei, 
+            outputDir
+        );
         env.build();
         fork
             env.run();

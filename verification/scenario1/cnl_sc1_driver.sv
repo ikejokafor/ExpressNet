@@ -50,7 +50,7 @@ endclass: `scX_drvParams_t
 
 
 class `cnl_scX_driver #( 
-    parameter C_PERIOD_100MHz   , 
+    parameter C_PERIOD_100MHz, 
     parameter C_PERIOD_500MHz   
 )   extends driver;
     extern function new(drvParams_t drvParams = null);

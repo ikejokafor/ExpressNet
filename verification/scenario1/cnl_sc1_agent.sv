@@ -51,8 +51,6 @@ endclass: `scX_agentParams_t
 class `cnl_scX_agent extends agent;
     extern function new(agentParams_t agentParams = null);
     extern task run();
-    
-    
     virtual cnn_layer_accel_quad_intf m_quad_intf;
     virtual cnn_layer_accel_synch_intf m_synch_intf;
 endclass: `cnl_scX_agent

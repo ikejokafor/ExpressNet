@@ -64,8 +64,6 @@ class `cnl_scX_environment #(
     );
     extern function void build();
     extern task run();
- 
-
     virtual cnn_layer_accel_quad_intf   m_quad_intf;    
     int                                 m_numTests;
     `cnl_scX_generator                  m_test_queue[$];
@@ -86,7 +84,7 @@ class `cnl_scX_environment #(
     `cnl_scX_scoreboard                 m_scoreboard_arr[];
     `cnl_scX_monitor                    m_monitor_arr[];
     `cnl_scX_assertion                  m_assetion;
-    mailbox                             m_DUT_rdy_arr[];
+    mailbox                             m_DUT_rdy;
     mailbox                             m_mon_rdy_arr[];
     mailbox                             m_scbd_done_arr[];
     int m_num_mon; 
@@ -95,7 +93,6 @@ class `cnl_scX_environment #(
     bool m_model_delay;
     int m_test_bi;
     int m_test_ei;    
-    string m_outputDir;    
     string m_outputDir;
     virtual cnn_layer_accel_synch_intf m_synch_intf;    
 endclass: `cnl_scX_environment
@@ -106,7 +103,6 @@ function `cnl_scX_environment::new(
     virtual cnn_layer_accel_quad_intf quad_intf, 
     int numTests, 
     `cnl_scX_generator test_queue[$], 
-    virtual cnn_layer_accel_awe_rowbuffers_intf awe_buf_intf_arr[`NUM_AWE], 
     int num_mon, 
     bool runForever, 
     bool model_delay,
@@ -117,7 +113,6 @@ function `cnl_scX_environment::new(
     m_quad_intf                 = quad_intf;    
     m_numTests                  = numTests;
     m_test_queue                = test_queue;
-    m_awe_buf_intf_arr          = awe_buf_intf_arr;
     m_num_mon                   = num_mon;
     m_num_scbd                  = num_mon;
     m_agent2scoreboardMB_arr    = new[num_mon];
@@ -125,7 +120,7 @@ function `cnl_scX_environment::new(
     m_agent2monitorMB_arr       = new[num_mon];
     m_scoreParams_arr           = new[num_mon];
     m_monParams_arr             = new[num_mon];
-    m_DUT_rdy_arr               = new[num_mon];
+    m_DUT_rdy                   = new[num_mon];
     m_mon_rdy_arr               = new[num_mon];
     m_scbd_done_arr             = new[num_mon];
     m_scoreboard_arr            = new[num_mon];
@@ -138,24 +133,20 @@ endfunction: new
 
 function void `cnl_scX_environment::build();
     int i;
-    
-
     m_agent2driverMB = new();
     m_agentParams = new();
     m_drvParams = new();
     m_asrtParams = new();
+    m_DUT_rdy = new();
     for(i = 0; i < m_num_mon; i = i + 1) begin
         m_agent2monitorMB_arr[i] = new();
         m_agent2scoreboardMB_arr[i] = new();
         m_monitor2scoreboardMB_arr[i] = new();
         m_monParams_arr[i] = new();
         m_scoreParams_arr[i] = new();
-        m_DUT_rdy_arr[i] = new();
         m_mon_rdy_arr[i] = new();
         m_scbd_done_arr[i] = new();   
     end
-    
-    
     m_agentParams.agent2driverMB = m_agent2driverMB;
     m_agentParams.agent2scoreboardMB_arr = m_agent2scoreboardMB_arr;
     m_agentParams.agent2monitorMB_arr = m_agent2monitorMB_arr;
@@ -170,7 +161,7 @@ function void `cnl_scX_environment::build();
     m_agentParams.test_ei = m_test_ei;
     m_agentParams.outputDir = m_outputDir;
     m_drvParams.agent2driverMB = m_agent2driverMB;
-    m_drvParams.quad_intf_arr = m_quad_intf_arr;
+    m_drvParams.quad_intf = m_quad_intf;
     m_drvParams.num_mon = m_num_mon;
     m_drvParams.numTests = m_numTests;
     m_drvParams.runForever = m_runForever;
@@ -186,7 +177,6 @@ function void `cnl_scX_environment::build();
     for(i = 0; i < m_num_mon; i = i + 1) begin
         m_monParams_arr[i].monitor2scoreboardMB = m_monitor2scoreboardMB_arr[i];
         m_monParams_arr[i].numTests = m_numTests;
-        m_monParams_arr[i].DUT_rdy = m_DUT_rdy_arr[i];
         m_monParams_arr[i].quad_intf = m_quad_intf;
         m_monParams_arr[i].agent2monitorMB = m_agent2monitorMB_arr[i];
         m_monParams_arr[i].mon_rdy = m_mon_rdy_arr[i];
@@ -198,7 +188,6 @@ function void `cnl_scX_environment::build();
         m_scoreParams_arr[i].scbd_done = m_scbd_done_arr[i];
         m_scoreParams_arr[i].numTests = m_numTests;
         m_scoreParams_arr[i].quad_intf = m_quad_intf;
-        m_scoreParams_arr[i].depth_offset = i * `NUM_CE_PER_AWE;
         m_scoreParams_arr[i].tid = i;
         m_scoreParams_arr[i].runForever = m_runForever;
         m_scoreParams_arr[i].test_bi = m_test_bi;
@@ -213,8 +202,6 @@ endfunction: build
 task `cnl_scX_environment::run();
     int i;
     int signal;
-    
-    
     fork
         m_agent.run();
         m_driver.run();
@@ -234,8 +221,6 @@ task `cnl_scX_environment::run();
     for(i = 0; i < m_num_mon; i = i + 1) begin
         m_DUT_rdy_arr[i].put(signal);
     end
-
-    
     i = 0;
     while(i < m_num_scbd) begin
         @(m_quad_intf.clk_if_cb);

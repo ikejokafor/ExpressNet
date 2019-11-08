@@ -47,22 +47,36 @@ endclass: `scX_DUTOutParams_t
 
 
 class `cnl_scX_DUTOutput extends DUTOutput;
-    extern function new(DUTOutParams_t DUTOutParams = null);
-    extern function void bits2plain();
-    
-    
-    logic [15:0] m_pix_seq_data_sim[0:`MAX_NUM_INPUT_COLS - 1]   ;
-    logic [15:0] m_kernel_data_sim[]                             ;
-    logic [127:0] m_acl_slv_reg                                  ;
-    int m_num_kernels                                            ;
-    int m_depth                                                  ;
+    extern function new(DUTOutParams_t DUTOutParams = null)         ;
+    extern function void bits2plain()                               ;
+    int m_num_kernels                                               ;   
+    int m_depth                                                     ;
+    logic [15:0] m_pix_seq_data_sim[0:(`PIX_SEQ_BRAM_DEPTH - 1)]    ;
+    logic [15:0] m_kernel_data_sim[]                                ;
+    logic [127:0] m_acl_slv_reg                                     ;    
+    int m_pfb_full_count_cfg                                        ;
+    int m_stride_cfg    		                                    ;
+    int m_conv_out_fmt_cfg                                          ;
+    int m_padding_cfg                                               ;
+    int m_num_output_cols_cfg                                       ;
+    int m_num_output_rows_cfg                                       ;
+    int m_pix_seq_data_full_count_cfg                               ;
+    int m_upsample_cfg                                              ;
+    int m_num_expd_input_cols_cfg                                   ;
+    int m_num_expd_input_rows_cfg                                   ;
+    int m_crpd_input_col_start_cfg                                  ;
+    int m_crpd_input_row_start_cfg                                  ;
+    int m_crpd_input_col_end_cfg                                    ;
+    int m_crpd_input_row_end_cfg                                    ;
+    int m_num_kernels_cfg                                           ;
+    int m_master_quad_cfg                                           ;
+    int m_cascade_cfg                                               ;
+    int m_actv_cfg                                                  ;
 endclass: `cnl_scX_DUTOutput
 
 
 function `cnl_scX_DUTOutput::new(DUTOutParams_t DUTOutParams = null);
     `scX_DUTOutParams_t `scX_DUTOutParams;
-
-
     if(DUTOutParams != null) begin
         $cast(`scX_DUTOutParams, DUTOutParams);
         m_num_kernels       = `scX_DUTOutParams.m_num_kernels;      

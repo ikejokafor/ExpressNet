@@ -47,7 +47,7 @@
 
 
 class `cnl_scX_environment #(
-    parameter C_PERIOD_100MHz   , 
+    parameter C_PERIOD_100MHz, 
     parameter C_PERIOD_500MHz   
 );
     extern function new(virtual cnn_layer_accel_synch_intf synch_intf, virtual cnn_layer_accel_quad_intf quad_intf_arr[0:`NUM_QUADS - 1], int numTests, `cnl_scX_generator crt_test_queue[$], int num_mon, bool runForever, bool model_delay, int test_bi, int test_ei, string outputDir);
@@ -89,7 +89,18 @@ class `cnl_scX_environment #(
 endclass: `cnl_scX_environment
 
 
-function `cnl_scX_environment::new(virtual cnn_layer_accel_synch_intf synch_intf, virtual cnn_layer_accel_quad_intf quad_intf_arr[0:`NUM_QUADS - 1], int numTests, `cnl_scX_generator crt_test_queue[$], int num_mon, bool runForever, bool model_delay, int test_bi, int test_ei, string outputDir);
+function `cnl_scX_environment::new(
+    virtual cnn_layer_accel_synch_intf synch_intf, 
+    virtual cnn_layer_accel_quad_intf quad_intf_arr[0:`NUM_QUADS - 1], 
+    int numTests, 
+    `cnl_scX_generator crt_test_queue[$], 
+    int num_mon, 
+    bool runForever, 
+    bool model_delay, 
+    int test_bi, 
+    int test_ei, 
+    string outputDir
+);
     m_quad_intf_arr                     = quad_intf_arr;    
     m_numTests                          = numTests;
     m_crt_test_queue                    = crt_test_queue;
