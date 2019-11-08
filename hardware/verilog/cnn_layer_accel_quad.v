@@ -99,8 +99,6 @@ module cnn_layer_accel_quad  (
     localparam C_RELU_WIDTH                 = `NUM_CE * `PIXEL_WIDTH;
     localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = clog2(`MAX_BRAM_3x3_KERNELS);
     localparam C_ACTV_WIDTH                 = `PIXEL_WIDTH * 2;
-    
-
     localparam ST_IDLE                      = 6'b000001;  
     localparam ST_AWE_CE_PRIM_BUFFER        = 6'b000010;
     localparam ST_WAIT_PFB_LOAD             = 6'b000100;
@@ -154,10 +152,10 @@ module cnn_layer_accel_quad  (
     output logic            pixel_ready             ;
     input  logic [127:0]    pixel_data              ;
 
-    input logic [`SLV_DBG_RDADDR_WIDTH - 1:0]   slv_dbg_rdAddr                     ;
-    input logic                                 slv_dbg_rdAddr_valid               ;
-    output logic                                slv_dbg_rdAck                      ;
-    output logic [31:0]                         slv_dbg_data                       ;
+    input logic [21:0]   slv_dbg_rdAddr                     ;
+    input logic           slv_dbg_rdAddr_valid               ;
+    output logic          slv_dbg_rdAck                      ;
+    output logic [31:0]   slv_dbg_data                       ;
 
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -249,6 +247,9 @@ module cnn_layer_accel_quad  (
     integer                                     idx                                             ;
     integer                                     idx0                                            ;
     integer                                     idx1                                            ;
+    integer                                     idx2                                            ;
+    integer                                     idx3                                            ;
+    integer                                     idx4                                            ;
     logic                                       pipeline_flushed                                ;
 	logic                                       wht_sequence_selector				            ;
 
@@ -264,9 +265,11 @@ module cnn_layer_accel_quad  (
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_col                                      ;
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_depth                                    ;
     logic                                       cascade_in_ready_arr[`NUM_AWE - 1:0]            ;
-    logic                                       slv_wht_table_rden[`NUM_CE - 1:0]               ;
-    logic  [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]    slv_wht_tble_rdAddr                             ;
+    logic   [`NUM_CE - 1:0]                     slv_wht_table_rden               ;
+    logic  [18:0]                               slv_dbg_rdAddr_w    ;
+    logic  [21:0]    slv_wht_tble_rdAddr                             ;
     logic [2:0]                                 slv_dwc_idx;
+    logic [2:0]                                 slv_wht_table_sel               ;
 
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -357,7 +360,7 @@ module cnn_layer_accel_quad  (
                     .conv_out_fmt               ( conv_out_fmt_cfg                                  ),
                     .num_kernels                ( num_kernels_cfg                                   ),
                     .slv_wht_table_rden         ( slv_wht_table_rden[i * `NUM_CE_PER_AWE + j]       ),
-                    .slv_dbg_rdAddr             ( slv_dbg_rdAddr                                    )
+                    .slv_dbg_rdAddr             ( slv_dbg_rdAddr_w                                  )
                 ); 
                 
                 // assign actv_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? pfb_dataout[i * `NUM_CE_PER_AWE + j] * 16'h0666 : pfb_dataout[i * `NUM_CE_PER_AWE + j];
@@ -521,7 +524,7 @@ module cnn_layer_accel_quad  (
         .last_awe_ce1_cyc_counter   ( ce_cycle_counter[`NUM_CE - 1]                         ),
         .cycle_counter              ( cycle_counter                                         ),
         .pix_seq_bram_rden          ( ctrl_pix_seq_bram_rden                                ),
-        .pix_seq_bram_rdAddr        ( pix_seq_bram_rdAddr                                   ),
+        .pix_seq_bram_rdAddr        ( ctrl_pix_seq_bram_rdAddr                              ),
         .pix_seq_data_full_count    ( pix_seq_data_full_count_cfg                           ),
         .next_kernel                ( next_kernel                                           ),
 		.move_one_row_down          ( move_one_row_down                                     ),
@@ -657,7 +660,7 @@ module cnn_layer_accel_quad  (
 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     assign pix_seq_bram_rden = (slv_dbg_rdAddr_valid && state != ST_AWE_CE_ACTIVE) ? slv_pix_seq_bram_rden : ctrl_pix_seq_bram_rden;
-    assign pix_seq_bram_rdAddr = (slv_dbg_rdAddr_valid && state != ST_AWE_CE_ACTIVE) ? slv_dbg_rdAddr : ctrl_pix_seq_bram_rdAddr;
+    assign pix_seq_bram_rdAddr = (slv_dbg_rdAddr_valid && state != ST_AWE_CE_ACTIVE) ? slv_dbg_rdAddr_w : ctrl_pix_seq_bram_rdAddr;
     assign pix_seq_bram_wren = config_accept[0] && config_valid[0];
 
     always@(posedge clk_if) begin
@@ -743,11 +746,15 @@ module cnn_layer_accel_quad  (
         if(rst) begin
             slv_dbg_rdAck           <= 0;
             slv_pix_seq_bram_rden   <= 0;
-            slv_wht_table_rden      <= 0;
+            for(idx3 = 0; idx3 < `NUM_WHT_TABLES; idx3 = idx3 + 1) begin
+                slv_wht_table_rden[idx3]  <= 0;
+            end
         end else begin
             slv_dbg_rdAck           <= 0;
             slv_pix_seq_bram_rden   <= 0;
-            slv_wht_table_rden      <= 0;
+            for(idx4 = 0; idx4 < `NUM_WHT_TABLES; idx4 = idx4 + 1) begin
+                slv_wht_table_rden[idx3]  <= 0;
+            end
             if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH) begin
                 slv_pix_seq_bram_rden <= 1;
             end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH) begin
@@ -755,7 +762,7 @@ module cnn_layer_accel_quad  (
             end            
             if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH && slv_pix_seq_bram_rden) begin
                 slv_dbg_rdAck <= 1;
-            end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH && slv_wht_table_rden) begin
+            end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH && |slv_wht_table_rden) begin
                 slv_dbg_rdAck <= 1;
             end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_CFG_REG_LOW && slv_dbg_rdAddr <= `SLV_SPCE_CFG_REG_HIGH) begin
                 slv_dbg_rdAck <= 1;
@@ -773,17 +780,27 @@ module cnn_layer_accel_quad  (
         end
     end
 `else
-    integer idx2;
-    always@(*) begin
-        slv_dwc_idx = 0;
-        slv_dbg_rdAck = 0;
-        slv_dbg_data = 0; 
-        slv_pix_seq_bram_rden = 0;
-        slv_wht_tble_rdAddr = 0;
-        for(idx2 = 0; idx2 < `NUM_WHY_TABLES; idx2 = idx2 + 1) begin
-            slv_wht_table_rden[idx2] = 0;
-        end
-    end
+    assign slv_dwc_idx = 0;
+    assign slv_dbg_rdAck = 0;
+    assign slv_dbg_data = 0; 
+    assign slv_pix_seq_bram_rden = 0;
+    assign slv_wht_table_rden[0] = 0;
+    assign slv_wht_table_rden[1] = 0;
+    assign slv_wht_table_rden[2] = 0;
+    assign slv_wht_table_rden[3] = 0;
+    assign slv_wht_table_rden[4] = 0;
+    assign slv_wht_table_rden[5] = 0;
+    assign slv_wht_table_rden[6] = 0;
+    assign slv_wht_table_rden[7] = 0;
+    // always@(*) begin
+    //     slv_dwc_idx = 0;
+    //     slv_dbg_rdAck = 0;
+    //     slv_dbg_data = 0; 
+    //     slv_pix_seq_bram_rden = 0;
+    //     for(idx2 = 0; idx2 < `NUM_WHT_TABLES; idx2 = idx2 + 1) begin
+    //         slv_wht_table_rden[idx2] = 0;
+    //     end
+    // end
 `endif
     // END ---------------------------------------------------------------------------------------------------------------------------------------
 

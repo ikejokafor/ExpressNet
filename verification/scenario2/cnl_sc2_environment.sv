@@ -120,7 +120,6 @@ function `cnl_scX_environment::new(
     m_agent2monitorMB_arr       = new[num_mon];
     m_scoreParams_arr           = new[num_mon];
     m_monParams_arr             = new[num_mon];
-    m_DUT_rdy                   = new[num_mon];
     m_mon_rdy_arr               = new[num_mon];
     m_scbd_done_arr             = new[num_mon];
     m_scoreboard_arr            = new[num_mon];
@@ -182,7 +181,6 @@ function void `cnl_scX_environment::build();
         m_monParams_arr[i].mon_rdy = m_mon_rdy_arr[i];
         m_monParams_arr[i].tid = i;
         m_monParams_arr[i].runForever = m_runForever;
-        m_monParams_arr[i].model_delay = m_model_delay;        
         m_scoreParams_arr[i].agent2scoreboardMB = m_agent2scoreboardMB_arr[i];
         m_scoreParams_arr[i].monitor2scoreboardMB = m_monitor2scoreboardMB_arr[i];
         m_scoreParams_arr[i].scbd_done = m_scbd_done_arr[i];
@@ -217,9 +215,6 @@ task `cnl_scX_environment::run();
                 m_monitor_arr[j].run();
             end
         join_none
-    end
-    for(i = 0; i < m_num_mon; i = i + 1) begin
-        m_DUT_rdy_arr[i].put(signal);
     end
     i = 0;
     while(i < m_num_scbd) begin

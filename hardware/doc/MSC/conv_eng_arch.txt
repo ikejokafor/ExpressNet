@@ -1,0 +1,37 @@
+M outputs U and V which are partial products of
+A * B and inputs to X and Y
+
+P is internal accum reg for MACC operations
+
+ALMODE => 0000 is
+Z + W + X + Y + CIN
+    CIN is 0 so
+        Z + W + X + Y
+
+        
+Combinational so opcode must be ready before clock edge 
+
+On new map
+
+    W   Z  Y  X
+    01 000 01 01  => P = P + (U + V)        Cycles 1 - 4
+
+    W   Z  Y  X
+    01 001 01 01  => P = P + (U + V) + PCIN    5th cycle
+        
+        
+Subsequent Values       
+    W   Z  Y  X
+    00 000 01 01  => P = (U + V)    1st cycle, accum reg reset to 0
+            
+    W   Z  Y  X
+    01 000 01 01  => P = P + (U + V)    Cycles 2 - 4
+
+    W   Z  Y  X
+    01 001 01 01  => P = P + (U + V) + PCIN    5th cycle, 
+
+WRT 5x clock, if it takes 5 cycles to output the whole window, then it will take 5 cycles for the reult to output
+    The final value which the prev quad produces which needs to be added to the next quad is only needed on the
+    next quads 5th cycle. So you just need to time it so that the value is ready in time
+    Best to put a shallow fifo between the quads and the subsequent quad will not start until the fifo has atleast
+    one element in it

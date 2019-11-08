@@ -136,7 +136,7 @@ task `cnl_scX_agent::run();
     end
     $fclose(fd);
     t = 0;
-    ti_offset = m_crt_test_queue.size();
+    ti_offset = m_test_queue.size();
     fd = $fopen({m_outputDir, "/", "test_index.txt"}, "a");
     if(m_test_ei != -1) begin
         m_numTests = (m_test_ei - m_test_bi) + 1;

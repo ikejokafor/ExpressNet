@@ -58,7 +58,6 @@ class `cnl_scX_driver #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz) ex
     extern task slv_intf_stim(`cnl_scX_generator test);
     extern task rnd_delay_clk_if(int delay_amt);
     extern task rnd_delay_clk_core(int delay_amt);
-
     virtual cnn_layer_accel_quad_intf m_quad_intf;
     virtual cnn_layer_accel_synch_intf m_synch_intf;
 endclass: `cnl_scX_driver
@@ -66,8 +65,6 @@ endclass: `cnl_scX_driver
 
 function `cnl_scX_driver::new(drvParams_t drvParams = null);
     `scX_drvParams_t `scX_drvParams;
-
-    
     if(drvParams != null) begin
         $cast(`scX_drvParams, drvParams);
         m_quad_intf = `scX_drvParams.quad_intf;
@@ -89,26 +86,24 @@ task `cnl_scX_driver::run();
     `cnl_scX_generator test;
     int t;
     int signal;
-
-    
-    m_quad_intf_arr.clk_if_cb.job_start                <= 0;
-    m_quad_intf_arr.clk_if_cb.job_fetch_ack            <= 0;
-    m_quad_intf_arr.clk_if_cb.job_complete_ack         <= 0;
-    m_quad_intf_arr.clk_if_cb.job_fetch_complete       <= 0;
-    m_quad_intf_arr.clk_if_cb.pixel_valid              <= 0;
-    m_quad_intf_arr.clk_if_cb.pixel_data               <= 0;
-    m_quad_intf_arr.clk_if_cb.config_data              <= 0;
-    m_quad_intf_arr.clk_if_cb.config_valid             <= 0;
-    m_quad_intf_arr.clk_if_cb.job_parameters           <= 128'b0;
-    m_quad_intf_arr.clk_if_cb.job_parameters_valid     <= 0;
-    m_quad_intf_arr.clk_core_cb.weight_valid           <= 0;
-    m_quad_intf_arr.clk_core_cb.weight_data            <= 0; 
-    
-    
-    m_quad_intf.rst <= 1;
-    #(C_PERIOD_100MHz * 10) m_quad_intf.rst <= 0;    // 10 cycle rst asserted is arbitrairy
+    m_quad_intf.clk_if_cb.job_start                <= 0;
+    m_quad_intf.clk_if_cb.job_fetch_ack            <= 0;
+    m_quad_intf.clk_if_cb.job_complete_ack         <= 0;
+    m_quad_intf.clk_if_cb.job_fetch_complete       <= 0;
+    m_quad_intf.clk_if_cb.pixel_valid              <= 0;
+    m_quad_intf.clk_if_cb.pixel_data               <= 0;
+    m_quad_intf.clk_if_cb.config_data              <= 0;
+    m_quad_intf.clk_if_cb.config_valid             <= 0;
+    m_quad_intf.clk_if_cb.job_parameters           <= 128'b0;
+    m_quad_intf.clk_if_cb.job_parameters_valid     <= 0;
+    m_quad_intf.clk_core_cb.weight_valid           <= 0;
+    m_quad_intf.clk_core_cb.weight_data            <= 0;
+    m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid     <= 0;
+    m_quad_intf.clk_if_cb.slv_dbg_rdAddr           <= 0;
     
     
+    m_synch_intf.rst                                <= 1;
+    #(C_PERIOD_100MHz * 10) m_synch_intf.rst        <= 0;    // 10 cycle rst asserted is arbitrairy
     t = 0;
     m_DUT_rdy.put(signal);
     while(t < m_numTests) begin
@@ -136,32 +131,32 @@ task `cnl_scX_driver::cfg_accel_slv_reg(`cnl_scX_generator test);
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );          
-    $display("// Sent Job Parameters"                                           ); 
+    $display("// Sending Quad Config"                                           ); 
     $display("// --------------------------------------------------------------");
     $display("\n");               
-    m_quad_intf_arr.clk_if_cb.job_parameters[`PFB_FULL_COUNT_FIELD]              <= test.m_pfb_full_count_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`STRIDE_FIELD]                      <= test.m_stride_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`CONV_OUT_FMT_FIELD]                <= test.m_conv_out_fmt_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`PADDING_FIELD]                     <= test.m_padding_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`NUM_OUTPUT_COLS_FIELD]             <= test.m_num_output_cols_cfg; 
-    m_quad_intf_arr.clk_if_cb.job_parameters[`NUM_OUTPUT_ROWS_FIELD]             <= test.m_num_output_rows_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`PIX_SEQ_DATA_FULL_COUNT_FIELD]     <= test.m_pix_seq_data_full_count_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`UPSAMPLE_FIELD]                    <= test.m_upsample_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`NUM_EXPD_INPUT_COLS_FIELD]         <= test.m_num_expd_input_cols_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`NUM_EXPD_INPUT_ROWS_FIELD]         <= test.m_num_expd_input_rows_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`CRPD_INPUT_COL_START_FIELD]        <= test.m_crpd_input_col_start_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`CRPD_INPUT_ROW_START_FIELD]        <= test.m_crpd_input_row_start_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`CRPD_INPUT_COL_END_FIELD]          <= test.m_crpd_input_col_end_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`CRPD_INPUT_ROW_END_FIELD]          <= test.m_crpd_input_row_end_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`NUM_KERNELS_FIELD]                 <= test.m_num_kernels_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`MASTER_QUAD_FIELD]                 <= test.m_master_quad_cfg;
-    m_quad_intf_arr.clk_if_cb.job_parameters[`CASCADE_FIELD]                     <= test.m_cascade_cfg;                                                                     
-    m_quad_intf_arr.clk_if_cb.job_parameters[`ACTV_FIELD]                        <= test.m_actv_cfg;    
-    @(m_quad_intf_arr.clk_if_cb);                                                
-    m_quad_intf_arr.clk_if_cb.job_parameters_valid                               <= 1;    
-    @(m_quad_intf_arr.clk_if_cb);                                                
-    m_quad_intf_arr.clk_if_cb.job_parameters_valid                               <= 0;
-    m_quad_intf_arr.clk_if_cb.job_parameters                                     <= 128'b0;
+    m_quad_intf.clk_if_cb.job_parameters[`PFB_FULL_COUNT_FIELD]              <= test.m_pfb_full_count_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`STRIDE_FIELD]                      <= test.m_stride_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`CONV_OUT_FMT_FIELD]                <= test.m_conv_out_fmt_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`PADDING_FIELD]                     <= test.m_padding_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`NUM_OUTPUT_COLS_FIELD]             <= test.m_num_output_cols_cfg; 
+    m_quad_intf.clk_if_cb.job_parameters[`NUM_OUTPUT_ROWS_FIELD]             <= test.m_num_output_rows_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`PIX_SEQ_DATA_FULL_COUNT_FIELD]     <= test.m_pix_seq_data_full_count_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`UPSAMPLE_FIELD]                    <= test.m_upsample_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`NUM_EXPD_INPUT_COLS_FIELD]         <= test.m_num_expd_input_cols_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`NUM_EXPD_INPUT_ROWS_FIELD]         <= test.m_num_expd_input_rows_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`CRPD_INPUT_COL_START_FIELD]        <= test.m_crpd_input_col_start_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`CRPD_INPUT_ROW_START_FIELD]        <= test.m_crpd_input_row_start_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`CRPD_INPUT_COL_END_FIELD]          <= test.m_crpd_input_col_end_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`CRPD_INPUT_ROW_END_FIELD]          <= test.m_crpd_input_row_end_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`NUM_KERNELS_FIELD]                 <= test.m_num_kernels_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`MASTER_QUAD_FIELD]                 <= test.m_master_quad_cfg;
+    m_quad_intf.clk_if_cb.job_parameters[`CASCADE_FIELD]                     <= test.m_cascade_cfg;                                                                     
+    m_quad_intf.clk_if_cb.job_parameters[`ACTV_FIELD]                        <= test.m_actv_cfg;    
+    @(m_quad_intf.clk_if_cb);                                                
+    m_quad_intf.clk_if_cb.job_parameters_valid                               <= 1;    
+    @(m_quad_intf.clk_if_cb);                                                
+    m_quad_intf.clk_if_cb.job_parameters_valid                               <= 0;
+    m_quad_intf.clk_if_cb.job_parameters                                     <= 128'b0;
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );
@@ -292,9 +287,10 @@ endtask: cfg_accel_krn
 
 task `cnl_scX_driver::slv_intf_stim(`cnl_scX_generator test);
     int i;
+    int signal;
     int numAddresses;
     logic [15:0] slv_addr_sim[];
-     $display("// --------------------------------------------------------------");
+    $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );
     $display("// Started Slave Intferface Stimulation"                          );
@@ -319,7 +315,10 @@ task `cnl_scX_driver::slv_intf_stim(`cnl_scX_generator test);
         i = i + 1;
     end
     @(m_quad_intf.clk_if_cb);
-    m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid <= 0;
+    m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid      <= 0;
+    m_synch_intf.rst                                <= 1;
+    #(C_PERIOD_100MHz * 10) m_synch_intf.rst        <= 0;    // 10 cycle rst asserted is arbitrairy
+    m_DUT_rdy.put(signal);
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );

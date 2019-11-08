@@ -87,7 +87,7 @@ module cnl_sc2_testbench;
     logic            pixel_ready            ;
     logic [127:0]    pixel_data             ;
     
-    logic [`SLV_DBG_RDADDR_WIDTH - 1:0]   slv_dbg_rdAddr                     ;
+    logic [20:0]   slv_dbg_rdAddr                     ;
     logic                                 slv_dbg_rdAddr_valid               ;
     logic                                 slv_dbg_rdAck                      ;
     logic [31:0]                          slv_dbg_data                       ;
@@ -160,7 +160,8 @@ module cnl_sc2_testbench;
 
         .job_start            ( job_start               ),  
         .job_accept           ( job_accept              ),  
-        .job_parameters       ( job_parameters          ),  
+        .job_parameters       ( job_parameters          ),
+        .job_parameters_valid ( job_parameters_valid    ),
         .job_fetch_request    ( job_fetch_request       ),  
         .job_fetch_ack        ( job_fetch_ack           ), 
         .job_fetch_complete   ( job_fetch_complete      ),
@@ -189,7 +190,12 @@ module cnl_sc2_testbench;
 
         .pixel_valid          ( pixel_valid             ),
         .pixel_ready          ( pixel_ready             ),
-        .pixel_data           ( pixel_data              )
+        .pixel_data           ( pixel_data              ),
+        
+        .slv_dbg_rdAddr       ( slv_dbg_rdAddr          ),  
+        .slv_dbg_rdAddr_valid ( slv_dbg_rdAddr_valid    ),
+        .slv_dbg_rdAck        ( slv_dbg_rdAck           ),
+        .slv_dbg_data         ( slv_dbg_data            )
     );
  
     
@@ -224,7 +230,7 @@ module cnl_sc2_testbench;
         .pixel_ready                     ( pixel_ready                                        ),
         .pixel_data                      ( pixel_data                                         ),
 
-        .slv_dbg_rdAddr                  ( slv_dbg_rdAddr                                     ),  
+        .slv_dbg_rdAddr                  ( slv_dbg_rdAddr                                     ),
         .slv_dbg_rdAddr_valid            ( slv_dbg_rdAddr_valid                               ),
         .slv_dbg_rdAck                   ( slv_dbg_rdAck                                      ),
         .slv_dbg_data                    ( slv_dbg_data                                       ),
@@ -239,7 +245,8 @@ module cnl_sc2_testbench;
     initial begin
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
         `scX_genParams = new();
-        `scX_genParams.ti = ti;  
+        `scX_genParams.ti = ti;
+        `scX_testParams = new();
         `scX_testParams.num_input_rows = 19;
         `scX_testParams.num_input_cols = 19;
         `scX_testParams.depth = `NUM_CE_PER_QUAD;
@@ -250,12 +257,13 @@ module cnl_sc2_testbench;
         `scX_testParams.kernel_size = 3;
         `scX_testParams.conv_out_fmt = 0;
         `scX_testParams.cascade = 0;
+        `scX_testParams.master_quad = 1;
+        `scX_testParams.cascade = 0;
+        `scX_testParams.actv = 0;
         test = new(`scX_genParams);
         test.createTest(`scX_testParams);
         m_test_queue.push_back(test);
         ti = ti + 1;
-        
-        
         if($test$plusargs("test_bi")) begin
             $value$plusargs("test_bi=%d", test_bi);
         end else begin
@@ -271,8 +279,6 @@ module cnl_sc2_testbench;
         end else begin
             outputDir = "./";
         end
-
-       
         env = new(
             i0_synch_intf, 
             i0_quad_intf, 

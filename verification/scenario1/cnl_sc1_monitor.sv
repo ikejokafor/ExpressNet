@@ -71,7 +71,6 @@ function `cnl_scX_monitor::new(monParams_t monParams = null);
         m_mon_rdy = `scX_monParams.mon_rdy;
         m_tid = `scX_monParams.tid;
         m_runForever = `scX_monParams.runForever;
-        m_model_delay = `scX_monParams.model_delay;
         m_test_bi = `scX_monParams.test_bi;
         m_test_ei = `scX_monParams.test_ei;
         m_outputDir = `scX_monParams.outputDir;

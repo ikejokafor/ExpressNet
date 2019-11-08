@@ -94,7 +94,7 @@
 `define CONV_OUT_FMT0                   1'b0
 `define CONV_OUT_FMT1                   1'b1
 `define PIX_SEQ_BRAM_DEPTH              (`MAX_NUM_INPUT_COLS * 8) // (`MAX_NUM_INPUT_COLS * ceil2(`WINDOW_3x3_NUM_CYCLES))
-`define NUM_WHY_TABLES                  `NUM_CE_PER_QUAD
+`define NUM_WHT_TABLES                  `NUM_CE_PER_QUAD
 `define SLV_DBG_RDADDR_WIDTH            20
 `define SLV_SPCE_PIX_SEQ_LOW            21'h00000
 `define SLV_SPCE_PIX_SEQ_HIGH           21'h07FFF

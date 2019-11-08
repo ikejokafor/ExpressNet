@@ -56,6 +56,8 @@ class `scX_testParams_t extends testParams_t;
     int conv_out_fmt;
     int cascade;
     bool upsample;
+    int master_quad;
+    int actv;
 endclass: `scX_testParams_t
 
 
@@ -152,9 +154,9 @@ function void `cnl_scX_generator::createTest(testParams_t params);
     m_stride = `scX_testParams.stride;
     m_padding = `scX_testParams.padding;
     m_upsample = `scX_testParams.upsample;
-    m_master_quad = 1;
-    m_cascade = 0;
-    m_actv = 0;
+    m_master_quad = `scX_testParams.master_quad;
+    m_cascade = `scX_testParams.cascade;
+    m_actv = `scX_testParams.actv;
     post_randomize();
     $display("// Created Specific Test ----------------------------------------");
     $display("// Test Index:            %0d", m_ti                              );
@@ -309,11 +311,14 @@ endfunction: setKrnData
 
 function void `cnl_scX_generator::setSlvAddr();
     int i;
+    int addr;
     int numAddress;
     numAddress = `SLV_SPCE_CFG_REG_HIGH >> 2;
     slv_addr = new[numAddress];
-    for(i = 0; i <= `SLV_SPCE_CFG_REG_HIGH; i = i + 4) begin
-        slv_addr[i] = i;
+    addr = 0;
+    for(i = 0; i <= numAddress; i = i + 4) begin
+        slv_addr[i] = addr;
+        addr = addr + 4;
     end
 endfunction: setSlvAddr
 
