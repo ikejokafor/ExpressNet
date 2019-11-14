@@ -65,6 +65,7 @@ function `cnl_scX_scoreboard::new(scoreParams_t scoreParams = null);
         m_agent2scoreboardMB = `scX_scoreParams.agent2scoreboardMB;
         m_monitor2scoreboardMB = `scX_scoreParams.monitor2scoreboardMB;
         m_quad_intf = `scX_scoreParams.quad_intf;
+        m_scbd_rdy = `scX_scoreParams.scbd_rdy;
         m_scbd_done = `scX_scoreParams.scbd_done;
         m_numTests = `scX_scoreParams.numTests;
         m_tid = `scX_scoreParams.tid;
@@ -90,15 +91,16 @@ task `cnl_scX_scoreboard::run();
         m_test_ei = m_numTests - 1;
     end
     while(t < m_numTests) begin
-        @(m_quad_intf.clk_core_cb);
+        @(m_quad_intf.clk_if_cb);
         if(m_agent2scoreboardMB.try_get(test)) begin
             `scX_DUTOutParams                  = new();
             `scX_DUTOutParams.m_num_kernels    = test.m_num_kernels;
             `scX_DUTOutParams.m_depth          = test.m_depth;
             sol = new(`scX_DUTOutParams);            
             createSolution(test, sol);
+            m_scbd_rdy.put(signal);
             forever begin
-                @(m_quad_intf.clk_core_cb);
+                @(m_quad_intf.clk_if_cb);
                 if(m_monitor2scoreboardMB.try_get(query)) begin
                     $display("// Checking Test ------------------------------------------------");
                     $display("// At Time: %0t", $time                                           );

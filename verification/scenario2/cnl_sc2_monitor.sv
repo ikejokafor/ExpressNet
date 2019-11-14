@@ -142,7 +142,6 @@ task `cnl_scX_monitor::run();
                 end
             end
             m_monitor2scoreboardMB.put(query);
-            m_mon_rdy.put(signal);
             if(!m_runForever) begin
                 t = t + 1;
             end

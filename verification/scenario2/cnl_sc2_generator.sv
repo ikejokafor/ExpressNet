@@ -118,7 +118,7 @@ class `cnl_scX_generator extends generator;
     logic [15:0] m_pix_seq_data_sim[0:(`PIX_SEQ_BRAM_DEPTH - 1)]                        ;
     int m_kernel_data[]                                                                 ;
     logic [15:0] m_kernel_data_sim[]                                                    ;
-    logic [15:0] slv_addr_sim[]                                                         ;
+    logic [20:0] slv_addr_sim[]                                                         ;
     constraint c0 {      
         solve m_num_input_rows before m_num_input_cols;
         m_num_input_rows inside {[`MIN_NUM_INPUT_ROWS:`MAX_NUM_INPUT_ROWS]};
@@ -199,7 +199,7 @@ function void `cnl_scX_generator::plain2bits();
         end
     end
     slv_addr_sim = new[slv_addr.size()];
-    for(i = 0; i < slv_addr.size(); i = i + 4) begin
+    for(i = 0; i < slv_addr.size(); i = i + 1) begin
         slv_addr_sim[i] = slv_addr[i];
     end
 endfunction: plain2bits
@@ -316,7 +316,7 @@ function void `cnl_scX_generator::setSlvAddr();
     numAddress = `SLV_SPCE_CFG_REG_HIGH >> 2;
     slv_addr = new[numAddress];
     addr = 0;
-    for(i = 0; i <= numAddress; i = i + 4) begin
+    for(i = 0; i <= numAddress; i = i + 1) begin
         slv_addr[i] = addr;
         addr = addr + 4;
     end

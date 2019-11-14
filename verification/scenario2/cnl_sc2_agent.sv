@@ -88,6 +88,10 @@ task `cnl_scX_agent::run();
     ti = 0;
     ti_offset = m_test_queue.size();
     fd = $fopen({m_outputDir, "/", "test_index.txt"}, "a");
+    if(m_runForever) begin
+        $display("Run Forever Not Implemented");
+        $stop;
+    end
     for(t = 0; t < m_numTests; t = t + 1) begin
         if(m_test_queue.size() > 0) begin
             test = `cnl_scX_generator'(m_test_queue[t]);
@@ -144,29 +148,33 @@ task `cnl_scX_agent::run();
         m_test_ei = m_numTests - 1;
     end
     while(t < m_numTests) begin
-        while(!m_DUT_rdy.try_get(signal)) begin
-            @(m_synch_intf.clk_if_cb);
+        test = test_queue.pop_front();
+        test.plain2bits(); 
+        if(test.m_stride >= 3 || test.m_padding >= 2) begin
+            $stop;
+        end    
+        for(n = 0; n < m_num_mon; n = n + 1) begin
+            m_agent2monitorMB_arr[n].put(test);
+        end
+        for(n = 0; n < m_num_mon; n = n + 1) begin
+            m_agent2scoreboardMB_arr[n].put(test);
         end
         while(n < m_num_mon) begin
-            @(m_synch_intf.clk_core_cb);
+            @(m_synch_intf.clk_if_cb);
             if(m_mon_rdy_arr[n].try_get(signal)) begin
                 n = n + 1;
             end
         end
-        if(m_runForever) begin
-            $display("Run Forever Not Implemented");
-            $stop;
+        while(n < m_num_mon) begin
+            @(m_synch_intf.clk_if_cb);
+            if(m_scbd_rdy_arr[n].try_get(signal)) begin
+                n = n + 1;
+            end
         end
-        test = test_queue.pop_front();
-        test.plain2bits();    
-        if(test.m_stride >= 3 || test.m_padding >= 2) begin
-            $stop;
+        while(!m_DUT_rdy.try_get(signal)) begin
+            @(m_synch_intf.clk_if_cb);
         end
         m_agent2driverMB.put(test);
-        for(n = 0; n < m_num_mon; n = n + 1) begin
-            m_agent2scoreboardMB_arr[n].put(test);
-            m_agent2monitorMB_arr[n].put(test);
-        end
         if(!m_runForever) begin
             t = t + 1;
         end

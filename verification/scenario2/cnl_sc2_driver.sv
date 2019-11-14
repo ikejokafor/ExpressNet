@@ -118,6 +118,9 @@ task `cnl_scX_driver::run();
             cfg_accel_pix_seq(test);
             cfg_accel_krn(test);
             slv_intf_stim(test);
+            m_synch_intf.rst                                <= 1;
+            #(C_PERIOD_100MHz * 10) m_synch_intf.rst        <= 0;    // 10 cycle rst asserted is arbitrairy
+            m_DUT_rdy.put(signal);
             if(!m_runForever) begin
                 t = t + 1;
             end
@@ -287,38 +290,32 @@ endtask: cfg_accel_krn
 
 task `cnl_scX_driver::slv_intf_stim(`cnl_scX_generator test);
     int i;
-    int signal;
     int numAddresses;
-    logic [15:0] slv_addr_sim[];
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );
     $display("// Started Slave Intferface Stimulation"                          );
     $display("// --------------------------------------------------------------");
     $display("\n");   
-    i = 0;
+    i = 1;
     numAddresses = test.slv_addr.size();
-    slv_addr_sim = test.slv_addr_sim;
-    m_quad_intf.slv_dbg_rdAddr <= slv_addr_sim[0];
-    m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid <= 1;    
+    @(m_quad_intf.clk_if_cb);
+    m_quad_intf.clk_if_cb.slv_dbg_rdAddr        <= test.slv_addr_sim[0];
+    m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid  <= 1;    
     while(i < numAddresses) begin
         @(m_quad_intf.clk_if_cb);
         if($urandom_range(0, 1) && m_model_delay) begin
             m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid <= 0;
             rnd_delay_clk_if(5);
-            m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= slv_addr_sim[i];
+            m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= test.slv_addr_sim[i];
             m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid <= 1;
         end
-        wait(m_quad_intf.clk_if_cb.slv_dbg_rdAck) begin
-            m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= slv_addr_sim[i];
-        end
+        wait(m_quad_intf.clk_if_cb.slv_dbg_rdAck)
+        m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= test.slv_addr_sim[i];
         i = i + 1;
     end
     @(m_quad_intf.clk_if_cb);
     m_quad_intf.clk_if_cb.slv_dbg_rdAddr_valid      <= 0;
-    m_synch_intf.rst                                <= 1;
-    #(C_PERIOD_100MHz * 10) m_synch_intf.rst        <= 0;    // 10 cycle rst asserted is arbitrairy
-    m_DUT_rdy.put(signal);
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );

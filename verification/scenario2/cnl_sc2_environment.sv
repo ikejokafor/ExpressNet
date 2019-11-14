@@ -86,9 +86,9 @@ class `cnl_scX_environment #(
     `cnl_scX_assertion                  m_assetion;
     mailbox                             m_DUT_rdy;
     mailbox                             m_mon_rdy_arr[];
+    mailbox                             m_scbd_rdy_arr[];
     mailbox                             m_scbd_done_arr[];
     int m_num_mon; 
-    int m_num_scbd;
     bool m_runForever;
     bool m_model_delay;
     int m_test_bi;
@@ -106,7 +106,7 @@ function `cnl_scX_environment::new(
     int num_mon, 
     bool runForever, 
     bool model_delay,
-    int test_bi, 
+    int test_bi,
     int test_ei, 
     string outputDir
 );
@@ -114,15 +114,15 @@ function `cnl_scX_environment::new(
     m_numTests                  = numTests;
     m_test_queue                = test_queue;
     m_num_mon                   = num_mon;
-    m_num_scbd                  = num_mon;
     m_agent2scoreboardMB_arr    = new[num_mon];
+    m_scbd_done_arr             = new[num_mon];
+    m_scoreboard_arr            = new[num_mon]; 
+    m_scoreParams_arr           = new[num_mon];    
     m_monitor2scoreboardMB_arr  = new[num_mon];
     m_agent2monitorMB_arr       = new[num_mon];
-    m_scoreParams_arr           = new[num_mon];
     m_monParams_arr             = new[num_mon];
     m_mon_rdy_arr               = new[num_mon];
-    m_scbd_done_arr             = new[num_mon];
-    m_scoreboard_arr            = new[num_mon];
+    m_scbd_rdy_arr              = new[num_mon];
     m_monitor_arr               = new[num_mon];
     m_runForever                = runForever;
     m_model_delay               = model_delay;
@@ -144,6 +144,7 @@ function void `cnl_scX_environment::build();
         m_monParams_arr[i] = new();
         m_scoreParams_arr[i] = new();
         m_mon_rdy_arr[i] = new();
+        m_scbd_rdy_arr[i] = new();
         m_scbd_done_arr[i] = new();   
     end
     m_agentParams.agent2driverMB = m_agent2driverMB;
@@ -153,6 +154,7 @@ function void `cnl_scX_environment::build();
     m_agentParams.numTests = m_numTests;
     m_agentParams.DUT_rdy = m_DUT_rdy;
     m_agentParams.mon_rdy_arr = m_mon_rdy_arr;
+    m_agentParams.scbd_rdy_arr = m_scbd_rdy_arr;
     m_agentParams.synch_intf = m_synch_intf;
     m_agentParams.num_mon = m_num_mon;
     m_agentParams.runForever = m_runForever;
@@ -190,7 +192,8 @@ function void `cnl_scX_environment::build();
         m_scoreParams_arr[i].runForever = m_runForever;
         m_scoreParams_arr[i].test_bi = m_test_bi;
         m_scoreParams_arr[i].test_ei = m_test_ei;
-        m_scoreParams_arr[i].outputDir = m_outputDir;        
+        m_scoreParams_arr[i].outputDir = m_outputDir;
+        m_scoreParams_arr[i].scbd_rdy = m_scbd_rdy_arr[i];        
         m_scoreboard_arr[i] = new(m_scoreParams_arr[i]);
         m_monitor_arr[i] = new(m_monParams_arr[i]);        
     end
@@ -217,7 +220,7 @@ task `cnl_scX_environment::run();
         join_none
     end
     i = 0;
-    while(i < m_num_scbd) begin
+    while(i < m_num_mon) begin
         @(m_quad_intf.clk_if_cb);
         if(m_scbd_done_arr[i].try_get(signal)) begin
             i = i + 1;

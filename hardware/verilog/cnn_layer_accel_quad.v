@@ -152,7 +152,7 @@ module cnn_layer_accel_quad  (
     output logic            pixel_ready             ;
     input  logic [127:0]    pixel_data              ;
 
-    input logic [21:0]   slv_dbg_rdAddr                     ;
+    input logic [20:0]   slv_dbg_rdAddr                     ;
     input logic           slv_dbg_rdAddr_valid               ;
     output logic          slv_dbg_rdAck                      ;
     output logic [31:0]   slv_dbg_data                       ;
@@ -219,7 +219,6 @@ module cnn_layer_accel_quad  (
     logic    [                            8:0]  pix_seq_bram_wrAddr             	            ;
     logic    [                           11:0]  pix_seq_bram_rdAddr             	            ;    
     logic    [                           11:0]  ctrl_pix_seq_bram_rdAddr             	        ;
-    logic    [                           11:0]  slv_pix_seq_bram_rdAddr             	        ;
     logic    [                           15:0]  pix_seq_bram_dout               	            ;
     logic                                       pix_seq_bram_wren                               ;
 
@@ -265,9 +264,9 @@ module cnn_layer_accel_quad  (
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_col                                      ;
     logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_depth                                    ;
     logic                                       cascade_in_ready_arr[`NUM_AWE - 1:0]            ;
-    logic   [`NUM_CE - 1:0]                     slv_wht_table_rden               ;
+    logic   [`NUM_WHT_TABLES - 1:0]             slv_wht_table_rden               ;
     logic  [18:0]                               slv_dbg_rdAddr_w    ;
-    logic  [21:0]    slv_wht_tble_rdAddr                             ;
+    logic  [20:0]    slv_wht_tble_rdAddr                             ;
     logic [2:0]                                 slv_dwc_idx;
     logic [2:0]                                 slv_wht_table_sel               ;
 
@@ -659,8 +658,8 @@ module cnn_layer_accel_quad  (
 
 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    assign pix_seq_bram_rden = (slv_dbg_rdAddr_valid && state != ST_AWE_CE_ACTIVE) ? slv_pix_seq_bram_rden : ctrl_pix_seq_bram_rden;
-    assign pix_seq_bram_rdAddr = (slv_dbg_rdAddr_valid && state != ST_AWE_CE_ACTIVE) ? slv_dbg_rdAddr_w : ctrl_pix_seq_bram_rdAddr;
+    assign pix_seq_bram_rden = (slv_dbg_rdAddr_valid && state == ST_IDLE) ? slv_pix_seq_bram_rden : ctrl_pix_seq_bram_rden;
+    assign pix_seq_bram_rdAddr = (slv_dbg_rdAddr_valid && state == ST_IDLE) ? slv_dbg_rdAddr_w : ctrl_pix_seq_bram_rdAddr;
     assign pix_seq_bram_wren = config_accept[0] && config_valid[0];
 
     always@(posedge clk_if) begin
@@ -729,7 +728,7 @@ module cnn_layer_accel_quad  (
     
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 `ifdef SLV_DEBUG
-    assign slv_dbg_rdAddr_w = slv_dbg_rdAddr >> 4;
+    assign slv_dbg_rdAddr_w = slv_dbg_rdAddr >> 2;
     assign slv_wht_table_sel = slv_dbg_rdAddr[14:12];
     
     always@(posedge clk_if) begin
@@ -753,13 +752,13 @@ module cnn_layer_accel_quad  (
             slv_dbg_rdAck           <= 0;
             slv_pix_seq_bram_rden   <= 0;
             for(idx4 = 0; idx4 < `NUM_WHT_TABLES; idx4 = idx4 + 1) begin
-                slv_wht_table_rden[idx3]  <= 0;
+                slv_wht_table_rden[idx4]  <= 0;
             end
             if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH) begin
                 slv_pix_seq_bram_rden <= 1;
             end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH) begin
                 slv_wht_table_rden[slv_wht_table_sel] <= 1;
-            end            
+            end
             if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH && slv_pix_seq_bram_rden) begin
                 slv_dbg_rdAck <= 1;
             end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH && |slv_wht_table_rden) begin
@@ -771,12 +770,16 @@ module cnn_layer_accel_quad  (
     end
     
     always@(posedge clk_if) begin
-        if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH) begin
-            slv_dbg_data[15:0] <= pix_seq_bram_dout;
-        end if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH) begin
-            slv_dbg_data[15:0] <= ce_wht_table_dout[idx1][`WEIGHT_WIDTH - 1:0];
-        end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_CFG_REG_LOW && slv_dbg_rdAddr <= `SLV_SPCE_CFG_REG_HIGH) begin
-            slv_dbg_data[15:0] <= job_parameters[(slv_dwc_idx * 16) +: 16];
+        if(rst) begin
+            slv_dbg_data <= 0;
+        end else begin
+            if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH) begin
+                slv_dbg_data[15:0] <= pix_seq_bram_dout;
+            end if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH) begin
+                slv_dbg_data[15:0] <= ce_wht_table_dout[idx1][`WEIGHT_WIDTH - 1:0];
+            end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_CFG_REG_LOW && slv_dbg_rdAddr <= `SLV_SPCE_CFG_REG_HIGH) begin
+                slv_dbg_data[15:0] <= job_parameters[(slv_dwc_idx * 16) +: 16];
+            end
         end
     end
 `else
