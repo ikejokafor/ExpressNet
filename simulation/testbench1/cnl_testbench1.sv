@@ -24,17 +24,15 @@
 // Additional Comments:     Scenario 1 Checks the convolution output
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-module cnl_sc2_testbench;
+module cnl_testbench1;
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    `include "cnl_sc2_verif_defs.svh"
+    `include "cnl_tb1_defs.svh"
     `include "cnn_layer_accel_defs.vh"
     `include "cnn_layer_accel_verif_defs.svh"
-    `include "cnl_sc2_generator.sv"
-    `include "cnl_sc2_environment.sv"
+    `include "cnl_tb1_generator.sv"
+    `include "cnl_tb1_driver.sv"
     `include "cnn_layer_accel_quad_intf.sv"
 
 
@@ -87,43 +85,24 @@ module cnl_sc2_testbench;
     logic            pixel_ready            ;
     logic [127:0]    pixel_data             ;
     
-    wire [20:0]   slv_dbg_rdAddr                     ;
-    logic                                 slv_dbg_rdAddr_valid               ;
-    logic                                 slv_dbg_rdAck                      ;
-    logic [31:0]                          slv_dbg_data                       ;
-
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Verification Variables
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    `cnl_scX_environment #(
-        .C_PERIOD_100MHz ( C_PERIOD_100MHz ), 
-        .C_PERIOD_500MHz ( C_PERIOD_500MHz ) 
-    ) env;
-    `cnl_scX_generator test;
-    `scX_genParams_t `scX_genParams;
-    `scX_testParams_t `scX_testParams;
-    `cnl_scX_generator m_test_queue[$];
-    int i0;
-    int i1;
-    int i2;
-    int i3;
-    int i4;
-    int i5;
-    int ti;
-    int imageSizes_arr[2:0];
-    int imageSize;
-    int strides_arr[1:0];
-    int padding_arr[1:0];
-    int numKernels_arr[4:0];
-    bool upsampling_arr[1:0];
-    int conv_out_fmt_arr[1:0];
+    `cnl_tbX_generator test;
+    `tbX_genParams_t `scX_genParams;
+    `tbX_testParams_t `scX_testParams;
     int test_bi;
     int test_ei;
-    string outputDir;    
-    virtual cnn_layer_accel_awe_rowbuffers_intf awe_buf_intf_arr[`NUM_AWE];
-    genvar g;
-  
+    string outputDir;
+    `tbX_drvParams_t drvParams;
+    `cnl_scX_driver #(
+        .C_PERIOD_100MHz ( C_PERIOD_100MHz ), 
+        .C_PERIOD_500MHz ( C_PERIOD_500MHz ) 
+    ) m_driver;    
+    mailbox agent2driverMB; 
+    mailbox DUT_rdy;
+    
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Module Instantiations
@@ -190,80 +169,46 @@ module cnl_sc2_testbench;
 
         .pixel_valid          ( pixel_valid             ),
         .pixel_ready          ( pixel_ready             ),
-        .pixel_data           ( pixel_data              ),
-        
-        .slv_dbg_rdAddr       ( slv_dbg_rdAddr          ),  
-        .slv_dbg_rdAddr_valid ( slv_dbg_rdAddr_valid    ),
-        .slv_dbg_rdAck        ( slv_dbg_rdAck           ),
-        .slv_dbg_data         ( slv_dbg_data            )
+        .pixel_data           ( pixel_data              )
     );
  
     
     cnn_layer_accel_quad_intf
     i0_quad_intf (
-        .clk_if                          ( clk_if                                             ),
-        .clk_core                        ( clk_core                                           ),
+        .clk_if                          ( clk_if                  ),
+        .clk_core                        ( clk_core                ),
 
-        .job_start                       ( job_start                                          ),
-        .job_accept                      ( job_accept                                         ),
-        .job_parameters                  ( job_parameters                                     ),
-        .job_parameters_valid            ( job_parameters_valid                               ),
-        .job_fetch_request               ( job_fetch_request                                  ),
-        .job_fetch_ack                   ( job_fetch_ack                                      ),
-        .job_fetch_complete              ( job_fetch_complete                                 ),
-        .job_complete                    ( job_complete                                       ),
-        .job_complete_ack                ( job_complete_ack                                   ),
+        .job_start                       ( job_start               ),
+        .job_accept                      ( job_accept              ),
+        .job_parameters                  ( job_parameters          ),
+        .job_parameters_valid            ( job_parameters_valid    ),
+        .job_fetch_request               ( job_fetch_request       ),
+        .job_fetch_ack                   ( job_fetch_ack           ),
+        .job_fetch_complete              ( job_fetch_complete      ),
+        .job_complete                    ( job_complete            ),
+        .job_complete_ack                ( job_complete_ack        ),
 
-        .config_valid                    ( config_valid                                       ),
-        .config_accept                   ( config_accept                                      ),
-        .config_data                     ( config_data                                        ),
+        .config_valid                    ( config_valid            ),
+        .config_accept                   ( config_accept           ),
+        .config_data                     ( config_data             ),
 
-        .weight_valid                    ( weight_valid                                       ),
-        .weight_ready                    ( weight_ready                                       ),
-        .weight_data                     ( weight_data                                        ),
+        .weight_valid                    ( weight_valid            ),
+        .weight_ready                    ( weight_ready            ),
+        .weight_data                     ( weight_data             ),
 
-        .result_valid                    ( result_valid                                       ),
-        .result_accept                   ( result_accept                                      ),
-        .result_data                     ( result_data                                        ),
+        .result_valid                    ( result_valid            ),
+        .result_accept                   ( result_accept           ),
+        .result_data                     ( result_data             ),
 
-        .pixel_valid                     ( pixel_valid                                        ),
-        .pixel_ready                     ( pixel_ready                                        ),
-        .pixel_data                      ( pixel_data                                         ),
-
-        .slv_dbg_rdAddr                  ( slv_dbg_rdAddr                                     ),
-        .slv_dbg_rdAddr_valid            ( slv_dbg_rdAddr_valid                               ),
-        .slv_dbg_rdAck                   ( slv_dbg_rdAck                                      ),
-        .slv_dbg_data                    ( slv_dbg_data                                       ),
-        
-        .output_row                      (                                                    ),
-        .output_col                      (                                                    ),
-        .output_depth                    (                                                    )
+        .pixel_valid                     ( pixel_valid             ),
+        .pixel_ready                     ( pixel_ready             ),
+        .pixel_data                      ( pixel_data              )
     );
 
 
     
     initial begin
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
-        `scX_genParams = new();
-        `scX_genParams.ti = ti;
-        `scX_testParams = new();
-        `scX_testParams.num_input_rows = 19;
-        `scX_testParams.num_input_cols = 19;
-        `scX_testParams.depth = `NUM_CE_PER_QUAD;
-        `scX_testParams.num_kernels = 4;
-        `scX_testParams.stride = 1;
-        `scX_testParams.padding = 0;
-        `scX_testParams.upsample = FALSE;
-        `scX_testParams.kernel_size = 3;
-        `scX_testParams.conv_out_fmt = 0;
-        `scX_testParams.cascade = 0;
-        `scX_testParams.master_quad = 1;
-        `scX_testParams.cascade = 0;
-        `scX_testParams.actv = 0;
-        test = new(`scX_genParams);
-        test.createTest(`scX_testParams);
-        m_test_queue.push_back(test);
-        ti = ti + 1;
         if($test$plusargs("test_bi")) begin
             $value$plusargs("test_bi=%d", test_bi);
         end else begin
@@ -279,22 +224,43 @@ module cnl_sc2_testbench;
         end else begin
             outputDir = "./";
         end
-        env = new(
-            i0_synch_intf, 
-            i0_quad_intf, 
-            m_test_queue.size() + C_NUM_RAND_TESTS, 
-            m_test_queue,
-            1,
-            FALSE, 
-            FALSE, 
-            test_bi, 
-            test_ei, 
-            outputDir
-        );
-        env.build();
+        
+        `tb_genParams = new();
+        `tb_genParams.ti = 0;
+        `tb_testParams = new();
+        `tb_testParams.num_input_rows = 19;
+        `tb_testParams.num_input_cols = 19;
+        `tb_testParams.depth = `NUM_CE_PER_QUAD;
+        `tb_testParams.num_kernels = 4;
+        `tb_testParams.stride = 1;
+        `tb_testParams.padding = 0;
+        `tb_testParams.upsample = FALSE;
+        `tb_testParams.kernel_size = 3;
+        `tb_testParams.conv_out_fmt = 0;
+        `tb_testParams.cascade = 0;
+        `tb_testParams.master_quad = 1;
+        `tb_testParams.cascade = 0;
+        `tb_testParams.actv = 0;
+        test = new(`scX_genParams);
+        test.createTest(`scX_testParams);
+  
+        agent2driverMB = new();
+        DUT_rdy = new();
+        drvParams.agent2driverMB = agent2driverMB;
+        drvParams.quad_intf = i0_quad_intf;
+        drvParams.num_mon = 1;
+        drvParams.numTests = 1;
+        drvParams.runForever = FALSE;
+        drvParams.DUT_rdy = DUT_rdy;
+        drvParams.model_delay = FALSE;
+        drvParams.test_bi = test_bi;
+        drvParams.test_ei = test_ei;
+        drvParams.synch_intf = m_synch_intf;
+        drvParams.outputDir = m_outputDir;
         fork
-            env.run();
+            driver = new(drvParams);
         join_none
+        agent2driverMB.put(test);
         // END Logic --------------------------------------------------------------------------------------------------------------------------------
     end
     

@@ -35,7 +35,7 @@
 
 
 `include "driver.sv"
-`include "cnl_sc2_verif_defs.svh"
+`include "cnl_tb1_defs.svh"
 `include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.svh"
 `include "cnn_layer_accel_quad_intf.sv"
@@ -43,47 +43,47 @@
 `include "cnl_sc2_generator.sv"
 
 
-class `scX_drvParams_t extends drvParams_t;
+class `tbX_drvParams_t extends drvParams_t;
     virtual cnn_layer_accel_quad_intf quad_intf;
     virtual cnn_layer_accel_synch_intf synch_intf;
-endclass: `scX_drvParams_t
+endclass: `tbX_drvParams_t
 
 
-class `cnl_scX_driver #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz) extends driver;
+class `cnl_tbX_driver #(parameter C_PERIOD_100MHz, parameter C_PERIOD_500MHz) extends driver;
     extern function new(drvParams_t drvParams = null);
     extern task run();
-    extern task cfg_accel_slv_reg(`cnl_scX_generator test);
-    extern task cfg_accel_pix_seq(`cnl_scX_generator test);
-    extern task cfg_accel_krn(`cnl_scX_generator test);
-    extern task slv_intf_stim(`cnl_scX_generator test);
+    extern task cfg_accel_slv_reg(`cnl_tbX_generator test);
+    extern task cfg_accel_pix_seq(`cnl_tbX_generator test);
+    extern task cfg_accel_krn(`cnl_tbX_generator test);
+    extern task slv_intf_stim(`cnl_tbX_generator test);
     extern task rnd_delay_clk_if(int delay_amt);
     extern task rnd_delay_clk_core(int delay_amt);
     virtual cnn_layer_accel_quad_intf m_quad_intf;
     virtual cnn_layer_accel_synch_intf m_synch_intf;
-endclass: `cnl_scX_driver
+endclass: `cnl_tbX_driver
 
 
-function `cnl_scX_driver::new(drvParams_t drvParams = null);
-    `scX_drvParams_t `scX_drvParams;
+function `cnl_tbX_driver::new(drvParams_t drvParams = null);
+    `tbX_drvParams_t `tbX_drvParams;
     if(drvParams != null) begin
-        $cast(`scX_drvParams, drvParams);
-        m_quad_intf = `scX_drvParams.quad_intf;
-        m_agent2driverMB = `scX_drvParams.agent2driverMB;
-        m_num_mon = `scX_drvParams.num_mon;
-        m_numTests = `scX_drvParams.numTests;
-        m_DUT_rdy = `scX_drvParams.DUT_rdy;
-        m_runForever = `scX_drvParams.runForever;
-        m_model_delay = `scX_drvParams.model_delay;
-        m_test_bi = `scX_drvParams.test_bi;
-        m_test_ei = `scX_drvParams.test_ei;       
-        m_outputDir = `scX_drvParams.outputDir;
-        m_synch_intf = `scX_drvParams.synch_intf;
+        $cast(`tbX_drvParams, drvParams);
+        m_quad_intf = `tbX_drvParams.quad_intf;
+        m_agent2driverMB = `tbX_drvParams.agent2driverMB;
+        m_num_mon = `tbX_drvParams.num_mon;
+        m_numTests = `tbX_drvParams.numTests;
+        m_DUT_rdy = `tbX_drvParams.DUT_rdy;
+        m_runForever = `tbX_drvParams.runForever;
+        m_model_delay = `tbX_drvParams.model_delay;
+        m_test_bi = `tbX_drvParams.test_bi;
+        m_test_ei = `tbX_drvParams.test_ei;       
+        m_outputDir = `tbX_drvParams.outputDir;
+        m_synch_intf = `tbX_drvParams.synch_intf;
     end
 endfunction: new
 
 
-task `cnl_scX_driver::run();
-    `cnl_scX_generator test;
+task `cnl_tbX_driver::run();
+    `cnl_tbX_generator test;
     int t;
     int signal;
     m_quad_intf.clk_if_cb.job_start                <= 0;
@@ -130,7 +130,7 @@ task `cnl_scX_driver::run();
 endtask: run
 
 
-task `cnl_scX_driver::cfg_accel_slv_reg(`cnl_scX_generator test);
+task `cnl_tbX_driver::cfg_accel_slv_reg(`cnl_tbX_generator test);
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
     $display("// Test Index: %0d", test.m_ti                                    );          
@@ -169,7 +169,7 @@ task `cnl_scX_driver::cfg_accel_slv_reg(`cnl_scX_generator test);
 endtask: cfg_accel_slv_reg
 
 
-task `cnl_scX_driver::cfg_accel_pix_seq(`cnl_scX_generator test);
+task `cnl_tbX_driver::cfg_accel_pix_seq(`cnl_tbX_generator test);
     int i;
     $display("// --------------------------------------------------------------");
     $display("// At Time: %0t", $time                                           );
@@ -226,7 +226,7 @@ task `cnl_scX_driver::cfg_accel_pix_seq(`cnl_scX_generator test);
 endtask: cfg_accel_pix_seq
 
 
-task `cnl_scX_driver::cfg_accel_krn(`cnl_scX_generator test);
+task `cnl_tbX_driver::cfg_accel_krn(`cnl_tbX_generator test);
     int i;
     int kernel_idx;
     $display("// --------------------------------------------------------------");
@@ -289,7 +289,7 @@ task `cnl_scX_driver::cfg_accel_krn(`cnl_scX_generator test);
 endtask: cfg_accel_krn
 
 
-task `cnl_scX_driver::slv_intf_stim(`cnl_scX_generator test);
+task `cnl_tbX_driver::slv_intf_stim(`cnl_tbX_generator test);
     int i;
     int numAddresses;
     $display("// --------------------------------------------------------------");
@@ -327,14 +327,14 @@ task `cnl_scX_driver::slv_intf_stim(`cnl_scX_generator test);
 endtask: slv_intf_stim
 
 
-task `cnl_scX_driver::rnd_delay_clk_if(int delay_amt);
+task `cnl_tbX_driver::rnd_delay_clk_if(int delay_amt);
     repeat($urandom_range(1, delay_amt)) begin
         @(m_synch_intf.clk_if_cb);
     end
 endtask: rnd_delay_clk_if
 
 
-task `cnl_scX_driver::rnd_delay_clk_core(int delay_amt);
+task `cnl_tbX_driver::rnd_delay_clk_core(int delay_amt);
     repeat($urandom_range(1, delay_amt)) begin
         @(m_synch_intf.clk_core_cb);
     end

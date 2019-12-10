@@ -3,7 +3,7 @@ Num Input Rows:               19
 Num Input Cols:               19
 Num Expd Input Rows:          19
 Num Expd Input Cols;          19
-Input Depth:                  24
+Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
 Stride:                       1
@@ -20,7 +20,7 @@ Num Input Rows:               19
 Num Input Cols:               19
 Num Expd Input Rows:          19
 Num Expd Input Cols;          19
-Input Depth:                  24
+Input Depth:                  8
 Num Kernels:                  4
 Kernel size:                  3
 Stride:                       1
@@ -30,5 +30,5 @@ Num Output Rows:              17
 Num Output Cols;              17
 Num Acl Output Rows:          17
 Num Acl Output Cols;          19
-Conv Output Format:           1
+Conv Output Format:           0
 

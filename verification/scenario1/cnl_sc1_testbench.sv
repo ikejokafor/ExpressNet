@@ -56,6 +56,7 @@ module cnl_sc1_testbench;
     logic            job_start[`NUM_QUADS - 1:0]            ;
     logic            job_accept[`NUM_QUADS - 1:0]           ;
     logic [127:0]    job_parameters[`NUM_QUADS - 1:0]       ;
+    logic            job_parameters_valid[`NUM_QUADS - 1:0] ;
     logic            job_fetch_request[`NUM_QUADS - 1:0]    ;
     logic            job_fetch_ack[`NUM_QUADS - 1:0]        ;
     logic            job_fetch_complete[`NUM_QUADS - 1:0]   ;      
@@ -165,7 +166,8 @@ module cnl_sc1_testbench;
 
             .job_start            ( job_start[i]            ),  
             .job_accept           ( job_accept[i]           ),  
-            .job_parameters       ( job_parameters[i]       ),  
+            .job_parameters       ( job_parameters[i]       ),
+            .job_parameters_valid ( job_parameters_valid[i] ),
             .job_fetch_request    ( job_fetch_request[i]    ),  
             .job_fetch_ack        ( job_fetch_ack[i]        ), 
             .job_fetch_complete   ( job_fetch_complete[i]   ),
@@ -210,6 +212,7 @@ module cnl_sc1_testbench;
            .job_start                       ( job_start[i]                                          ),
            .job_accept                      ( job_accept[i]                                         ),
            .job_parameters                  ( job_parameters[i]                                     ),
+           .job_parameters_valid            ( job_parameters_valid[i]                               ),
            .job_fetch_request               ( job_fetch_request[i]                                  ),
            .job_fetch_ack                   ( job_fetch_ack[i]                                      ),
            .job_fetch_complete              ( job_fetch_complete[i]                                 ),
@@ -231,24 +234,6 @@ module cnl_sc1_testbench;
            .pixel_valid                     ( pixel_valid[i]                                        ),
            .pixel_ready                     ( pixel_ready[i]                                        ),
            .pixel_data                      ( pixel_data[i]                                         ),
-
-           .pfb_full_count_cfg              ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.pfb_full_count_cfg            ),
-           .stride_cfg                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.stride_cfg                    ),
-           .conv_out_fmt_cfg    		    ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.conv_out_fmt_cfg    	      ),
-           .padding_cfg                     ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.padding_cfg                   ),
-           .upsample_cfg                    ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.upsample_cfg                  ),
-           .num_kernels_cfg                 ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_kernels_cfg               ),
-           .num_output_rows_cfg             ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_output_rows_cfg           ),
-           .num_output_cols_cfg             ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_output_cols_cfg           ),
-           .pix_seq_data_full_count_cfg     ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.pix_seq_data_full_count_cfg   ),
-           .num_expd_input_cols_cfg         ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_expd_input_cols_cfg       ),
-           .num_expd_input_rows_cfg         ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.num_expd_input_rows_cfg       ),
-           .crpd_input_col_start_cfg        ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.crpd_input_col_start_cfg      ),
-           .crpd_input_row_start_cfg        ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.crpd_input_row_start_cfg      ),
-           .crpd_input_col_end_cfg          ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.crpd_input_col_end_cfg        ),
-           .crpd_input_row_end_cfg          ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.crpd_input_row_end_cfg        ),
-           .master_quad_cfg                 ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.master_quad_cfg               ),
-           .cascade_cfg                     ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.cascade_cfg                   ),
 
            .output_row                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_row                    ),
            .output_col                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_col                    ),
@@ -373,12 +358,11 @@ module cnl_sc1_testbench;
         `scX_crtTestParams.upsample = FALSE;
         `scX_crtTestParams.kernel_size = 3;
         `scX_crtTestParams.conv_out_fmt = 0;
-        `scX_crtTestParams.cascade = 1;
+        `scX_crtTestParams.cascade = 0;
         test = new(`scX_genParams);
         test.createTest(`scX_crtTestParams);
         crt_test_queue.push_back(test);
         ti = ti + 1;
-        
         
         `scX_genParams = new();
         `scX_genParams.ti = ti;  
@@ -390,12 +374,30 @@ module cnl_sc1_testbench;
         `scX_crtTestParams.padding = 0;
         `scX_crtTestParams.upsample = FALSE;
         `scX_crtTestParams.kernel_size = 3;
-        `scX_crtTestParams.conv_out_fmt = 1;
-        `scX_crtTestParams.cascade = 1;
+        `scX_crtTestParams.conv_out_fmt = 0;
+        `scX_crtTestParams.cascade = 0;
         test = new(`scX_genParams);
         test.createTest(`scX_crtTestParams);
         crt_test_queue.push_back(test);
         ti = ti + 1;
+        
+        
+        // `scX_genParams = new();
+        // `scX_genParams.ti = ti;  
+        // `scX_crtTestParams.num_input_rows = 19;
+        // `scX_crtTestParams.num_input_cols = 19;
+        // `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
+        // `scX_crtTestParams.num_kernels = 4;
+        // `scX_crtTestParams.stride = 1;
+        // `scX_crtTestParams.padding = 0;
+        // `scX_crtTestParams.upsample = FALSE;
+        // `scX_crtTestParams.kernel_size = 3;
+        // `scX_crtTestParams.conv_out_fmt = 1;
+        // `scX_crtTestParams.cascade = 1;
+        // test = new(`scX_genParams);
+        // test.createTest(`scX_crtTestParams);
+        // crt_test_queue.push_back(test);
+        // ti = ti + 1;
         
         
         if($test$plusargs("test_bi")) begin

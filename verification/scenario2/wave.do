@@ -143,7 +143,7 @@ add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_qua
 add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_quad/result_valid
 add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_quad/row_matric_wrAddr
 add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_quad/rst
-add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_quad/slv_dbg_data
+add wave -noupdate -expand -group QUAD -radix hexadecimal /cnl_sc2_testbench/i0_cnn_layer_accel_quad/slv_dbg_data
 add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_quad/slv_dbg_rdAck
 add wave -noupdate -expand -group QUAD -radix hexadecimal /cnl_sc2_testbench/i0_cnn_layer_accel_quad/slv_dbg_rdAddr
 add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_quad/slv_dbg_rdAddr_valid
@@ -166,7 +166,7 @@ add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_qua
 add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_quad/wht_seq_addr1
 add wave -noupdate -expand -group QUAD /cnl_sc2_testbench/i0_cnn_layer_accel_quad/wht_sequence_selector
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {10645 ns} 0}
+WaveRestoreCursors {{Cursor 1} {22335 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 218
 configure wave -valuecolwidth 145
@@ -182,4 +182,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {10501 ns} {10992 ns}
+WaveRestoreZoom {10509 ns} {10724 ns}

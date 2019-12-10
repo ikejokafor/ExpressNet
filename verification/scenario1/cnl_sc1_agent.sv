@@ -51,6 +51,8 @@ endclass: `scX_agentParams_t
 class `cnl_scX_agent extends agent;
     extern function new(agentParams_t agentParams = null);
     extern task run();
+    
+    
     virtual cnn_layer_accel_quad_intf m_quad_intf;
     virtual cnn_layer_accel_synch_intf m_synch_intf;
 endclass: `cnl_scX_agent
@@ -66,7 +68,7 @@ function `cnl_scX_agent::new(agentParams_t agentParams = null);
         m_agent2scoreboardMB_arr  = `scX_agentParams.agent2scoreboardMB_arr;
         m_agent2monitorMB_arr = `scX_agentParams.agent2monitorMB_arr;
         m_numTests = `scX_agentParams.numTests;
-        m_crt_test_queue = `scX_agentParams.crt_test_queue;
+        m_test_queue = `scX_agentParams.crt_test_queue;
         m_DUT_rdy = `scX_agentParams.DUT_rdy;
         m_mon_rdy_arr = `scX_agentParams.mon_rdy_arr;
         m_synch_intf = `scX_agentParams.synch_intf;
@@ -106,11 +108,11 @@ task `cnl_scX_agent::run();
     
 
     ti = 0;
-    ti_offset = m_crt_test_queue.size();
+    ti_offset = m_test_queue.size();
     fd0 = $fopen({m_outputDir, "/", "test_index.txt"}, "w");
     for(t = 0; t < m_numTests; t = t + 1) begin
-        if(m_crt_test_queue.size() > 0) begin
-            test = `cnl_scX_generator'(m_crt_test_queue[t]);
+        if(m_test_queue.size() > 0) begin
+            test = `cnl_scX_generator'(m_test_queue[t]);
         end else if(!m_runForever) begin
             `scX_genParams = new();
             `scX_genParams.ti = ti + ti_offset;
@@ -159,7 +161,7 @@ task `cnl_scX_agent::run();
     
     
     t = 0;
-    ti_offset = m_crt_test_queue.size();
+    ti_offset = m_test_queue.size();
     fd0 = $fopen({m_outputDir, "/", "test_index.txt"}, "a");
     if(m_test_ei != -1) begin
         m_numTests = (m_test_ei - m_test_bi) + 1;

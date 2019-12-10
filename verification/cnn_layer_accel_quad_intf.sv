@@ -59,11 +59,6 @@ interface cnn_layer_accel_quad_intf (
     pixel_valid                     ,
     pixel_ready                     ,
     pixel_data                      ,
-    
-    slv_dbg_rdAddr                  , 
-    slv_dbg_rdAddr_valid            ,
-    slv_dbg_rdAck                   ,
-    slv_dbg_data                    ,
 
     output_row                      , 
     output_col                      , 
@@ -116,11 +111,6 @@ interface cnn_layer_accel_quad_intf (
     input  logic            pixel_ready                     ;
     output logic [127:0]    pixel_data                      ;
     
-    output logic [20:0]   slv_dbg_rdAddr        ;
-    output logic                                 slv_dbg_rdAddr_valid  ;
-    input logic                                slv_dbg_rdAck         ;
-    input logic [31:0]                         slv_dbg_data          ;
-    
     input int               output_row                      ;
     input int               output_col                      ;
     input int               output_depth                    ;
@@ -147,11 +137,6 @@ interface cnn_layer_accel_quad_intf (
         output pixel_valid                    ;
         input  pixel_ready                    ;
         output pixel_data                     ;
-        
-        output slv_dbg_rdAddr                 ;
-        output slv_dbg_rdAddr_valid           ;
-        input  slv_dbg_rdAck                  ;
-        input  slv_dbg_data                   ;
 	endclocking
    
 
