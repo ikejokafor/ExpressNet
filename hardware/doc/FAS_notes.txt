@@ -1,0 +1,31 @@
+Map Depth and Kernel depth fit in Quad
+
+Map depth is spread across quads, kernel depth fits in quads
+
+Map depth is spread across quads, kernel depth must be iterated
+
+
+FAS can handle up to N AWPs
+the partial map in buffer will be a fifo with a minimum of one row for now to keep up with system read and write latencies
+the feature map in will be a small fifo 2 or 3x the amount of pixels that can come in from system memory
+Each quad is going to send its data along with an ID identifying each quad it is
+    Each AWP is going to be numbered 0 to N
+        Each quad of each AWP is going to be numbered 0 to N
+        THe ID is the concat of both
+The FAS's will have config data to say which quads it may need to accumulate against
+each QUAD slot is potentially connected to every other quad slot because it may have to accum with
+    any other quad or quad subset
+    
+break QUADs into groups of four. Call them AWPs
+Within an AWP there is only one case where quads have to accum across each other
+
+0 Q
+1 Q_C
+2 Q_C
+3 Q
+
+    Quads 0 and 3 must accum
+    
+For pooling
+    first cycle does subtraction, second cycle gets local max, then third cycle compares to global
+    max for that window. For smaller window sizes, just make irrelvant values -infin

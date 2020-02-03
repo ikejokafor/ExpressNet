@@ -1,3 +1,5 @@
+Laptop Computer (Windows Subsystem Linux) has latest commit
+
 +   As of 5 / 10 / 19 These Corner cases are functional
     +   Test Index:                   0
         Num Input Rows:               19
