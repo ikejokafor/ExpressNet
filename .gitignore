@@ -24,3 +24,5 @@ verification/scenario2/vsim.wlf
 verification/scenario2/tcl_stacktrace.txt
 verification/scenario2/wlf*
 verification/scenario2/transcript
+
+model/build
