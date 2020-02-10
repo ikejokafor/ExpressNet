@@ -2,6 +2,7 @@
 
 
 #include "systemc"
+#include "util.hpp"
 
 
 #define CLK_IF_PRD				10
@@ -11,8 +12,9 @@
 #define KRNL_SLOT_SIZE			10
 #define RES_FIFO_RD_WIDTH		8
 #define RES_PKT_SIZE			RES_FIFO_RD_WIDTH
-#define NUM_AWE					4
-#define NUM_QUADS_PER_AWE		4
+#define NUM_FAS					1
+#define MAX_AWP_PER_FAS			2
+#define NUM_QUADS_PER_AWP		4
 
 
 typedef enum
@@ -37,6 +39,9 @@ typedef struct
 	bool cascade_cfg                ;
 	bool result_quad_cfg			;
 	int num_expd_input_cols_cfg     ;
-	int quad_id                     ;
+	int QUAD_id                     ;
+	int num_QUADS_cfgd				;
+	int AWP_id						;
+	int FAS_id						;
 	int res_pkt_size				;
 }accel_trans_t;

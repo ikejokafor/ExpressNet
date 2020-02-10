@@ -159,10 +159,14 @@ SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
 
 # BEGIN Compiler Flags ------------------------------------------------------------------------------------------------------------------------------
 TARGET_COMPILE_OPTIONS(${TARGET_NAME} PUBLIC 
-    "-std=c++11" 
+    "-std=c++11"
+    "-std=c++14"
+    "-std=gnu++11" 
     "-Wall"
     "-fexceptions"
 )
+SET(CMAKE_CXX_FLAGS "-std=c++11")
+SET(CMAKE_CXX_FLAGS "-std=c++14")
 # END Compiler Flags --------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -171,6 +175,7 @@ IF(WIN32)
     TARGET_INCLUDE_DIRECTORIES(${TARGET_NAME} PUBLIC
         ${PROJECT_SOURCE_DIR}/inc/
         C:/IkennaWorkSpace/systemC/systemc-2.3.3/src/
+        ${PROJECT_SOURCE_DIR}/../../util/inc
         #<include_path0>
         #<include_path1>
         #<include_pathN>
@@ -180,6 +185,8 @@ ELSE()
         /usr/local/include/
         /usr/include/
         ${PROJECT_SOURCE_DIR}/inc/
+        ${PROJECT_SOURCE_DIR}/../../util/inc
+        /mnt/c/IkennaWorkSpace/systemC_WSL/systemc-2.3.3/src/
         #<include_path0>
         #<include_path1>
         #<include_pathN>
@@ -204,6 +211,8 @@ ELSE()
     TARGET_LINK_LIBRARIES(${TARGET_NAME} PUBLIC
         -L/usr/local/lib/
         -L/usr/lib/
+        -L/mnt/c/IkennaWorkSpace/build_WSL/systemC_WSL/systemc-2.3.3/src/
+        -lsystemc
         #-L<path_to_lib0>
         #-L<path_to_lib1>
         #-L<path_to_libN>

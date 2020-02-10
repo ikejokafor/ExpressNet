@@ -5,34 +5,28 @@
 #include <string>
 #include "systemc"
 #include "common.hpp"
-#include "AWE_if.hpp"
-
-
-typedef enum
-{
-    ST_IDLE             = 0,
-    ST_PRIM_BUFFER		= 1,
-    ST_WAIT_PFB_LOAD    = 2,
-    ST_ACTIVE			= 3,
-    ST_SEND_COMPLETE	= 4
-} state_t;
+#include "AWP_if.hpp"
 
 
 SC_MODULE(Quad)
 {
+	typedef enum
+	{
+		ST_IDLE				= 0,
+		ST_PRIM_BUFFER		= 1,
+		ST_WAIT_PFB_LOAD	= 2,
+		ST_ACTIVE			= 3,
+		ST_SEND_COMPLETE	= 4
+	} QUAD_state_t;
+
     public:
         // Ports
         sc_core::sc_in<bool>		clk;
-		sc_core::sc_port<AWE_if>	bus;
+		sc_core::sc_port<AWP_if>	bus;
 
         // Constructor
-        SC_HAS_PROCESS(Quad);
-        Quad(
-            sc_core::sc_module_name	_name,
-			int						quad_id
-        )
-            :	sc_module(_name),
-				clk("clk"),
+        SC_CTOR(Quad)
+            :	clk("clk"),
 				bus("bus")
         {
             SC_THREAD(ctrl_process_0);
@@ -51,9 +45,8 @@ SC_MODULE(Quad)
 			m_input_row = 0;
 			m_output_col = 0;
 			m_output_row = 0;
-			m_quad_id = quad_id;
+	        m_quad_id = atoi(&std::string(name())[std::string(name()).length() - 1]); 
         }
-        
         
         // Destructor
         ~Quad();
@@ -76,8 +69,8 @@ SC_MODULE(Quad)
         void b_job_compelete();
         
         // Module Variables
-        state_t					m_state						;
-		state_t					m_return_state				;
+        QUAD_state_t			m_state						;
+		QUAD_state_t			m_return_state				;
 		uint64_t				m_ex_start_time				;
 		int						m_pfb_count					;
 		uint64_t				m_num_ex_cycles				;
@@ -96,6 +89,8 @@ SC_MODULE(Quad)
 		bool					m_result_quad_cfg			;
 		int						m_num_expd_input_cols_cfg	;
 		int						m_quad_id					;
+		int						m_FAS_id					;
 		std::queue<int>			m_res_fifo					;
 		sc_core::sc_event		m_last_res_wrtn				;
+		int						m_start						;
 };

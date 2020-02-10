@@ -6,18 +6,9 @@ using namespace tlm;
 using namespace tlm_utils;
 
 
-void Interconnect::end_of_elaboration()
-{
-	if (tar_soc.size() != init_soc.size())
-	{
-		SC_REPORT_ERROR("TLM-2", "#initiators != #targets in Interconnect");
-	}
-}
-
-
 void Interconnect::b_transport(int id, tlm::tlm_generic_payload & trans, sc_core::sc_time & delay)
 {
-	init_soc[id]->b_transport(trans, delay);
+	init_soc[trans.get_address()]->b_transport(trans, delay);
 }
 
 

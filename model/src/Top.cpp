@@ -1,4 +1,18 @@
+/*
 #include "Top.hpp"
+
+
+Top::~Top()
+{
+	for (int i = 0; i < NUM_AWE; i++)
+	{
+		delete awe[i];
+	}
+	for (int i = 0; i < NUM_FAS; i++)
+	{
+		delete fas[i];
+	}
+}
 
 
 void Top::top_process()
@@ -99,3 +113,5 @@ void Top::b_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
 	trans.release();
 	return;
 }
+
+*/

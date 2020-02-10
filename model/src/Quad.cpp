@@ -19,10 +19,6 @@ void Quad::ctrl_process_0()
             case ST_WAIT_PFB_LOAD:
 			{
                 b_job_fetch();
-				// if (m_return_state == ST_ACTIVE)
-				// {
-				// 	m_ex_start_time = uint64_t(sc_time_stamp().to_double());
-				// }
                 m_state = m_return_state;
                 break;
             }              
@@ -35,8 +31,7 @@ void Quad::ctrl_process_0()
                 }
                 else if(m_input_row == 3)
                 {
-					// m_num_ex_cycles = uint64_t(m_num_expd_input_cols_cfg) * uint64_t(m_num_kernels_cfg);
-					// m_ex_start_time = uint64_t(sc_time_stamp().to_double());
+	                cout << name() << " finished Priming its buffer" << endl;
 					m_state = ST_ACTIVE;
                 }
                 else if(m_input_row != 3)
@@ -47,8 +42,6 @@ void Quad::ctrl_process_0()
             }          
             case ST_ACTIVE:
             {
-				// uint64_t cur_time = uint64_t(sc_time_stamp().to_double());
-				// int cycle_count = (cur_time - m_ex_start_time) / CLK_IF_PRD;
 				if(m_output_row != m_num_output_rows_cfg && m_pfb_count == 0)
 				{
 					m_return_state = ST_ACTIVE;
@@ -72,7 +65,7 @@ void Quad::ctrl_process_0()
 				m_input_row = 0;
 				m_output_col = 0;
 				m_output_row = 0;
-				cout << name() << " Finished Workload" << endl;
+	            cout << name() << " Finished Workload " << int(sc_time_stamp().to_double()) - m_start << " ns" << endl;
 				m_state = ST_IDLE;
                 break;
             }
@@ -140,9 +133,10 @@ void Quad::result_process()
 				wait();
 			}
 			m_mutex.lock();
-			// int start = int(sc_time_stamp().to_double()) / CLK_IF_PRD;
-			bus->b_transaction(m_quad_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
-			// cout << (int(sc_time_stamp().to_double()) / CLK_IF_PRD) - start << endl;
+			int start = sc_time_stamp().to_double();
+			cout << name() << " sent a Pixel Write Request" << endl;
+			bus->b_transaction(m_FAS_id, m_quad_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
+			cout << name() << " finished Pixel Write Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
 			m_mutex.unlock();
 			if(m_state == ST_SEND_COMPLETE && m_res_fifo.size() == 0)
 			{
@@ -157,6 +151,7 @@ void Quad::b_cfg_write(unsigned char* data)
 {
 	wait(CLK_IF_PRD, SC_NS);
 	accel_trans_t* accel_trans  = (accel_trans_t*)data;
+	m_FAS_id					= accel_trans->FAS_id;
 	m_num_output_col_cfg		= accel_trans->num_output_col_cfg;
 	m_num_output_rows_cfg		= accel_trans->num_output_rows_cfg;
 	m_num_kernels_cfg			= accel_trans->num_kernels_cfg;
@@ -187,6 +182,8 @@ bool Quad::b_job_start()
 	{
 		cout << name() << " Started Workload" << endl;
 		m_state = ST_PRIM_BUFFER;
+		m_start = int(sc_time_stamp().to_double());
+		cout << name() << " Begain Priming its buffer" << endl;
 		return true;
 	}
 	else
@@ -199,7 +196,10 @@ bool Quad::b_job_start()
 void Quad::b_job_fetch()
 {
 	m_mutex.lock();
-	bus->b_transaction(m_quad_id, ACCL_CMD_JOB_FETCH, int());
+	int start = sc_time_stamp().to_double();
+	cout << name() << " sent a Pixel Fetch Request" << endl;
+	bus->b_transaction(m_FAS_id, m_quad_id, ACCL_CMD_JOB_FETCH, int());
+	cout << name() << " finished Pixel Fetch Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
 	m_mutex.unlock();
 }
 
@@ -224,5 +224,5 @@ void Quad::b_job_compelete()
 {
 	wait(m_last_res_wrtn);
 	wait();
-	bus->b_transaction(m_quad_id, ACCL_CMD_JOB_COMPLETE, int());
+	bus->b_transaction(m_FAS_id, m_quad_id, ACCL_CMD_JOB_COMPLETE, int());
 }

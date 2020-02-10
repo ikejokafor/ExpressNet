@@ -31,14 +31,11 @@ SC_MODULE(Interconnect)
 	}
 
 
-	void end_of_elaboration();
-
 	// Forward interface
 	virtual void b_transport(int id, tlm::tlm_generic_payload & trans, sc_core::sc_time & delay);
 	virtual tlm::tlm_sync_enum nb_transport_fw(int id, tlm::tlm_generic_payload & trans, tlm::tlm_phase & phase, sc_core::sc_time & delay);
 	virtual bool get_direct_mem_ptr(int id, tlm::tlm_generic_payload & trans, tlm::tlm_dmi & dmi_data);
 	virtual unsigned int transport_dbg(int id, tlm::tlm_generic_payload & trans);
-
 
 	// Backward interface
 	virtual tlm::tlm_sync_enum nb_transport_bw(int id, tlm::tlm_generic_payload & trans, tlm::tlm_phase & phase, sc_core::sc_time & delay);
