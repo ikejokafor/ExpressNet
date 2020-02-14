@@ -18,7 +18,10 @@ void Quad::ctrl_process_0()
         {
             case ST_WAIT_PFB_LOAD:
 			{
-                b_job_fetch();
+				if(!(m_padding_cfg && (m_input_row == m_crpd_input_row_start_cfg || m_input_row == m_crpd_input_row_end_cfg)))
+				{
+					b_job_fetch();
+				}
                 m_state = m_return_state;
                 break;
             }              
@@ -79,7 +82,7 @@ void Quad::ctrl_process_1()
 	while(true)
 	{
 		wait();
-		if(m_state == ST_ACTIVE && m_res_fifo.size() < RES_PKT_SIZE)
+		if(m_state == ST_ACTIVE && m_res_fifo.num_available() < RES_PKT_SIZE)
 		{
 			if (m_output_col == (m_num_output_col_cfg - 1))
 			{
@@ -109,9 +112,9 @@ void Quad::conv_process()
 	while(true)
 	{
 		wait();
-		if(m_state == ST_ACTIVE && m_res_fifo.size() < RES_PKT_SIZE)
+		if(m_state == ST_ACTIVE && m_res_fifo.num_available() < RES_PKT_SIZE)
 		{
-			m_res_fifo.push(int());
+			m_res_fifo.nb_write(int());
 		}
 	}
 }
@@ -122,13 +125,14 @@ void Quad::result_process()
 	while(true)
 	{
 		wait();
-		if(m_res_fifo.size() >= RES_PKT_SIZE || m_state == ST_SEND_COMPLETE && m_res_fifo.size() > 0)
+		if(m_res_fifo.num_available() >= RES_PKT_SIZE || m_state == ST_SEND_COMPLETE && m_res_fifo.num_available() > 0)
 		{
 			for (int i = 0; i < RES_PKT_SIZE; i += RES_FIFO_RD_WIDTH)
 			{
-				for (int j = 0; (j < RES_FIFO_RD_WIDTH) && (m_res_fifo.size() > 0); j++)
+				for (int j = 0; (j < RES_FIFO_RD_WIDTH) && (m_res_fifo.num_available() > 0); j++)
 				{
-					m_res_fifo.pop();
+					int dummVal;
+					m_res_fifo.nb_read(dummVal);
 				}
 				wait();
 			}
@@ -138,7 +142,7 @@ void Quad::result_process()
 			bus->b_transaction(m_FAS_id, m_quad_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
 			cout << name() << " finished Pixel Write Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
 			m_mutex.unlock();
-			if(m_state == ST_SEND_COMPLETE && m_res_fifo.size() == 0)
+			if(m_state == ST_SEND_COMPLETE && m_res_fifo.num_available() == 0)
 			{
 				m_last_res_wrtn.notify();
 			}
@@ -159,6 +163,11 @@ void Quad::b_cfg_write(unsigned char* data)
 	m_cascade_cfg				= accel_trans->cascade_cfg;
 	m_result_quad_cfg			= accel_trans->result_quad_cfg;
 	m_num_expd_input_cols_cfg	= accel_trans->num_expd_input_cols_cfg;
+	m_conv_out_fmt0_cfg			= accel_trans->conv_out_fmt0_cfg;
+	m_padding_cfg				= accel_trans->padding_cfg;
+	m_upsmaple_cfg				= accel_trans->upsmaple_cfg;
+	m_crpd_input_row_start_cfg  = accel_trans->crpd_input_row_start_cfg;
+	m_crpd_input_row_end_cfg    = accel_trans->crpd_input_row_end_cfg;
 }
 
 
@@ -213,8 +222,19 @@ void Quad::b_pfb_write()
 
 void Quad::b_pfb_read()
 {
-	string sc_name = string(name());
-	wait(m_num_expd_input_cols_cfg, SC_NS);
+	string sc_name = string(name());	
+	if(m_padding_cfg)
+	{
+		wait(m_num_expd_input_cols_cfg + 2, SC_NS);
+	}
+	else if(m_upsmaple_cfg)
+	{
+		wait(m_num_expd_input_cols_cfg * 2, SC_NS);
+	}
+	else
+	{
+		wait(m_num_expd_input_cols_cfg, SC_NS);
+	}
 	m_input_row = m_input_row + 1;
 	m_pfb_count = 0;
 }

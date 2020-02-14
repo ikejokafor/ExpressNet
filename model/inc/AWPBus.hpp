@@ -1,9 +1,6 @@
 #pragma once
 
 
-#define	MAX_TRANS_IN_PROG 1
-
-
 #include "systemc"
 #include "common.hpp"
 #include "AWP_if.hpp"
@@ -61,6 +58,6 @@ class AWPBus : public sc_core::sc_module, public AWP_if
 		int					m_quad_id;
 		int					m_FAS_id;
 		int					m_next_quad_id;
-		std::vector<bool>	m_QUAD_complt_list;
+		std::vector<bool>	m_QUAD_complt_arr;
 		int					m_num_QUADs_cfgd;
 };

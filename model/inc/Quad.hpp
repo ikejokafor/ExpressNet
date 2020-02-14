@@ -27,7 +27,8 @@ SC_MODULE(Quad)
         // Constructor
         SC_CTOR(Quad)
             :	clk("clk"),
-				bus("bus")
+				bus("bus"),
+				m_res_fifo(QUAD_RES_FIFO_SIZE)
         {
             SC_THREAD(ctrl_process_0);
                 sensitive << clk.pos();
@@ -88,9 +89,14 @@ SC_MODULE(Quad)
         bool					m_cascade_cfg				;
 		bool					m_result_quad_cfg			;
 		int						m_num_expd_input_cols_cfg	;
+		bool					m_conv_out_fmt0_cfg			;
+		bool					m_padding_cfg				;
+		bool					m_upsmaple_cfg				;
+		int						m_crpd_input_row_start_cfg	;
+		int						m_crpd_input_row_end_cfg	;
 		int						m_quad_id					;
 		int						m_FAS_id					;
-		std::queue<int>			m_res_fifo					;
+		sc_core::sc_fifo<int>	m_res_fifo					;
 		sc_core::sc_event		m_last_res_wrtn				;
 		int						m_start						;
 };
