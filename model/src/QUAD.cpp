@@ -1,15 +1,15 @@
-#include "Quad.hpp"
+#include "QUAD.hpp"
 using namespace sc_core;
 using namespace std;
 
 
-Quad::~Quad()
+QUAD::~QUAD()
 {
     
 }
 
 
-void Quad::ctrl_process_0()
+void QUAD::ctrl_process_0()
 {
     while(true)
     {
@@ -77,7 +77,7 @@ void Quad::ctrl_process_0()
 }
 
 
-void Quad::ctrl_process_1()
+void QUAD::ctrl_process_1()
 {
 	while(true)
 	{
@@ -107,7 +107,7 @@ void Quad::ctrl_process_1()
 }
 
 
-void Quad::conv_process()
+void QUAD::conv_process()
 {
 	while(true)
 	{
@@ -120,12 +120,12 @@ void Quad::conv_process()
 }
 
 
-void Quad::result_process()
+void QUAD::result_process()
 {
 	while(true)
 	{
 		wait();
-		if(m_res_fifo.num_available() >= RES_PKT_SIZE || m_state == ST_SEND_COMPLETE && m_res_fifo.num_available() > 0)
+		if(m_res_fifo.num_available() >= RES_PKT_SIZE || (m_state == ST_SEND_COMPLETE && m_res_fifo.num_available() > 0))
 		{
 			for (int i = 0; i < RES_PKT_SIZE; i += RES_FIFO_RD_WIDTH)
 			{
@@ -139,7 +139,7 @@ void Quad::result_process()
 			m_mutex.lock();
 			int start = sc_time_stamp().to_double();
 			cout << name() << " sent a Pixel Write Request" << endl;
-			bus->b_transaction(m_FAS_id, m_quad_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
+			bus->b_transaction(m_FAS_id, m_QUAD_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
 			cout << name() << " finished Pixel Write Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
 			m_mutex.unlock();
 			if(m_state == ST_SEND_COMPLETE && m_res_fifo.num_available() == 0)
@@ -151,7 +151,7 @@ void Quad::result_process()
 }
 
 
-void Quad::b_cfg_write(unsigned char* data)
+void QUAD::b_cfg_write(unsigned char* data)
 {
 	wait(CLK_IF_PRD, SC_NS);
 	accel_trans_t* accel_trans  = (accel_trans_t*)data;
@@ -159,9 +159,8 @@ void Quad::b_cfg_write(unsigned char* data)
 	m_num_output_col_cfg		= accel_trans->num_output_col_cfg;
 	m_num_output_rows_cfg		= accel_trans->num_output_rows_cfg;
 	m_num_kernels_cfg			= accel_trans->num_kernels_cfg;
-	m_master_quad_cfg			= accel_trans->master_quad_cfg;
+	m_master_QUAD_cfg			= accel_trans->master_QUAD_cfg;
 	m_cascade_cfg				= accel_trans->cascade_cfg;
-	m_result_quad_cfg			= accel_trans->result_quad_cfg;
 	m_num_expd_input_cols_cfg	= accel_trans->num_expd_input_cols_cfg;
 	m_conv_out_fmt0_cfg			= accel_trans->conv_out_fmt0_cfg;
 	m_padding_cfg				= accel_trans->padding_cfg;
@@ -172,20 +171,20 @@ void Quad::b_cfg_write(unsigned char* data)
 
 
 
-void Quad::b_pxSeqCfg_write()
+void QUAD::b_pxSeqCfg_write()
 {
 	wait(PIX_SEQ_CFG_WRT_CYCS, SC_NS);
 }	
 
 
-void Quad::b_krnlCfg_write()
+void QUAD::b_krnlCfg_write()
 {
 	int numcycles = m_num_kernels_cfg * KRNL_SLOT_SIZE;
 	wait(numcycles, SC_NS);
 }
 
 
-bool Quad::b_job_start()
+bool QUAD::b_job_start()
 {
 	if (m_state == ST_IDLE)
 	{
@@ -202,27 +201,26 @@ bool Quad::b_job_start()
 }
 
 
-void Quad::b_job_fetch()
+void QUAD::b_job_fetch()
 {
 	m_mutex.lock();
 	int start = sc_time_stamp().to_double();
 	cout << name() << " sent a Pixel Fetch Request" << endl;
-	bus->b_transaction(m_FAS_id, m_quad_id, ACCL_CMD_JOB_FETCH, int());
+	bus->b_transaction(m_FAS_id, m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
 	cout << name() << " finished Pixel Fetch Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
 	m_mutex.unlock();
 }
 
 
-void Quad::b_pfb_write()
+void QUAD::b_pfb_write()
 {
 	wait(m_num_expd_input_cols_cfg, SC_NS);
 	m_pfb_count = m_num_expd_input_cols_cfg;
 }
 
 
-void Quad::b_pfb_read()
+void QUAD::b_pfb_read()
 {
-	string sc_name = string(name());	
 	if(m_padding_cfg)
 	{
 		wait(m_num_expd_input_cols_cfg + 2, SC_NS);
@@ -240,9 +238,9 @@ void Quad::b_pfb_read()
 }
 
 
-void Quad::b_job_compelete()
+void QUAD::b_job_compelete()
 {
 	wait(m_last_res_wrtn);
 	wait();
-	bus->b_transaction(m_FAS_id, m_quad_id, ACCL_CMD_JOB_COMPLETE, int());
+	bus->b_transaction(m_FAS_id, m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
 }

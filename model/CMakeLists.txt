@@ -37,6 +37,7 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 3.8.2)
 # END CMAKE Version ---------------------------------------------------------------------------------------------------------------------------------
 
+set (CMAKE_CXX_STANDARD 11)
 
 # BEGIN Target Name ---------------------------------------------------------------------------------------------------------------------------------
 SET(TARGET_NAME cnn_layer_accel_model)
@@ -159,14 +160,10 @@ SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
 
 # BEGIN Compiler Flags ------------------------------------------------------------------------------------------------------------------------------
 TARGET_COMPILE_OPTIONS(${TARGET_NAME} PUBLIC 
-    "-std=c++11"
-    "-std=c++14"
-    "-std=gnu++11" 
+    "-std=c++14" 
     "-Wall"
     "-fexceptions"
 )
-SET(CMAKE_CXX_FLAGS "-std=c++11")
-SET(CMAKE_CXX_FLAGS "-std=c++14")
 # END Compiler Flags --------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -186,7 +183,7 @@ ELSE()
         /usr/include/
         ${PROJECT_SOURCE_DIR}/inc/
         ${PROJECT_SOURCE_DIR}/../../util/inc
-        /mnt/c/IkennaWorkSpace/systemC_WSL/systemc-2.3.3/src/
+        /home/ikenna/IkennaWorkSpaceUbuntuVM/systemc-2.3.3/src
         #<include_path0>
         #<include_path1>
         #<include_pathN>
@@ -211,7 +208,7 @@ ELSE()
     TARGET_LINK_LIBRARIES(${TARGET_NAME} PUBLIC
         -L/usr/local/lib/
         -L/usr/lib/
-        -L/mnt/c/IkennaWorkSpace/build_WSL/systemC_WSL/systemc-2.3.3/src/
+        -L/home/ikenna/IkennaWorkSpaceUbuntuVM/build_static/systemc-2.3.3/src/
         -lsystemc
         #-L<path_to_lib0>
         #-L<path_to_lib1>

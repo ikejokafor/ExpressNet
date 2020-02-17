@@ -54,9 +54,8 @@ typedef struct
 	int num_output_rows_cfg         ;
 	int num_kernels_cfg             ;
 	int num_1x1_kernels_cfg			;
-	bool master_quad_cfg            ;
+	bool master_QUAD_cfg            ;
 	bool cascade_cfg                ;
-	bool result_quad_cfg			;
 	int num_expd_input_cols_cfg     ;
 	int QUAD_id                     ;
 	int num_QUADS_cfgd				;

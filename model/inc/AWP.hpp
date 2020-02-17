@@ -12,7 +12,7 @@
 #include "tlm_utils/simple_target_socket.h"
 #include "mm.hpp"
 #include "common.hpp"
-#include "Quad.hpp"
+#include "QUAD.hpp"
 #include "AWP_if.hpp"
 #include "AWPBus.hpp"
 
@@ -28,7 +28,7 @@ SC_MODULE(AWP)
 		AWPBus										bus;
 
 		// Modules
-		Quad* quad[NUM_QUADS_PER_AWP];
+		QUAD* quad[NUM_QUADS_PER_AWP];
 
 		// Constructor
 		SC_CTOR(AWP)
@@ -44,8 +44,8 @@ SC_MODULE(AWP)
 			// Create Modules
 			for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
 			{
-				quad[i] = new Quad(
-					("Quad_" + std::to_string(i)).c_str()
+				quad[i] = new QUAD(
+					("QUAD_" + std::to_string(i)).c_str()
 				);
 				quad[i]->clk(clk_if);
 				quad[i]->bus(bus);

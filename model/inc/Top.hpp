@@ -119,9 +119,8 @@ SC_MODULE(Top)
 						fas[i]->m_accel_trans_arr[idx].num_output_col_cfg = 19;
 						fas[i]->m_accel_trans_arr[idx].num_output_rows_cfg = 19;
 						fas[i]->m_accel_trans_arr[idx].num_kernels_cfg = 5;
-						fas[i]->m_accel_trans_arr[idx].master_quad_cfg = true;
+						fas[i]->m_accel_trans_arr[idx].master_QUAD_cfg = true;
 						fas[i]->m_accel_trans_arr[idx].cascade_cfg = false;
-						fas[i]->m_accel_trans_arr[idx].result_quad_cfg = false;
 						fas[i]->m_accel_trans_arr[idx].num_expd_input_cols_cfg = 19;
 						fas[i]->m_accel_trans_arr[idx].accel_cmd = ACCL_CMD_CFG_WRITE;
 						fas[i]->m_accel_trans_arr[idx].conv_out_fmt0_cfg = false;

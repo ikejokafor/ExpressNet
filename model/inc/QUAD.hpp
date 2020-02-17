@@ -8,7 +8,7 @@
 #include "AWP_if.hpp"
 
 
-SC_MODULE(Quad)
+SC_MODULE(QUAD)
 {
 	typedef enum
 	{
@@ -25,7 +25,7 @@ SC_MODULE(Quad)
 		sc_core::sc_port<AWP_if>	bus;
 
         // Constructor
-        SC_CTOR(Quad)
+        SC_CTOR(QUAD)
             :	clk("clk"),
 				bus("bus"),
 				m_res_fifo(QUAD_RES_FIFO_SIZE)
@@ -46,11 +46,11 @@ SC_MODULE(Quad)
 			m_input_row = 0;
 			m_output_col = 0;
 			m_output_row = 0;
-	        m_quad_id = atoi(&std::string(name())[std::string(name()).length() - 1]); 
+	        m_QUAD_id = atoi(&std::string(name())[std::string(name()).length() - 1]); 
         }
         
         // Destructor
-        ~Quad();
+        ~QUAD();
 
         // Processes
         void ctrl_process_0();
@@ -81,20 +81,20 @@ SC_MODULE(Quad)
 		int						m_input_col					;
 		int						m_output_col				;
 		int						m_output_row				;
-		int						m_num_intput_col_cfg		;
+		int						m_num_input_col_cfg			;
 		int						m_num_output_col_cfg		;
 		int						m_num_output_rows_cfg		;
         int						m_num_kernels_cfg			;
-        bool					m_master_quad_cfg			;
+        bool					m_master_QUAD_cfg			;
         bool					m_cascade_cfg				;
-		bool					m_result_quad_cfg			;
+		bool					m_result_QUAD_cfg			;
 		int						m_num_expd_input_cols_cfg	;
 		bool					m_conv_out_fmt0_cfg			;
 		bool					m_padding_cfg				;
 		bool					m_upsmaple_cfg				;
 		int						m_crpd_input_row_start_cfg	;
 		int						m_crpd_input_row_end_cfg	;
-		int						m_quad_id					;
+		int						m_QUAD_id					;
 		int						m_FAS_id					;
 		sc_core::sc_fifo<int>	m_res_fifo					;
 		sc_core::sc_event		m_last_res_wrtn				;
