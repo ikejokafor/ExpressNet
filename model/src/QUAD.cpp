@@ -136,12 +136,12 @@ void QUAD::result_process()
 				}
 				wait();
 			}
-			m_mutex.lock();
+			m_bus_lock.lock();
 			int start = sc_time_stamp().to_double();
 			cout << name() << " sent a Pixel Write Request" << endl;
 			bus->b_transaction(m_FAS_id, m_QUAD_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
 			cout << name() << " finished Pixel Write Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
-			m_mutex.unlock();
+			m_bus_lock.unlock();
 			if(m_state == ST_SEND_COMPLETE && m_res_fifo.num_available() == 0)
 			{
 				m_last_res_wrtn.notify();
@@ -203,12 +203,12 @@ bool QUAD::b_job_start()
 
 void QUAD::b_job_fetch()
 {
-	m_mutex.lock();
+	m_bus_lock.lock();
 	int start = sc_time_stamp().to_double();
 	cout << name() << " sent a Pixel Fetch Request" << endl;
 	bus->b_transaction(m_FAS_id, m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
 	cout << name() << " finished Pixel Fetch Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
-	m_mutex.unlock();
+	m_bus_lock.unlock();
 }
 
 

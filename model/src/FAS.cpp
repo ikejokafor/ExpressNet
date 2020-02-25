@@ -69,109 +69,120 @@ void FAS::F_process()
 	while (true)
 	{
 		wait();
-		/*
-		if (m_state == ST_ACTIVE && !m_first_iter_cfg)
+		if (m_state == ST_ACTIVE && !m_first_iter_cfg && m_inMap_fifo.num_available() <= IM_LOW_WATERMARK)
 		{
 			trans = m_mm.allocate();
 			trans->acquire();
-			trans->set_address(0);
-			trans->set_command(TLM_IGNORE_COMMAND);
-			trans->set_data_ptr(nullptr);
-			trans->set_data_length(IM_NUM_FETCH_PIX * PIXEL_SIZE);
-			trans->set_streaming_width(0);
-			trans->set_byte_enable_ptr(0);
-			trans->set_dmi_allowed(false);
-			trans->set_response_status(TLM_INCOMPLETE_RESPONSE);
+			nb_createTrans(
+				&trans,
+				0,
+				TLM_READ_COMMAND,
+				nullptr,
+				(IM_NUM_PIX_READ * PIXEL_SIZE),
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);
 			sys_mem_init_soc->b_transport(*trans, delay);
 			trans->release();
-			for (int i = 0; i < (IM_NUM_FETCH_PIX); i += PM_FIFO_WR_WIDTH)
-			{
-				for (int j = 0; j < PM_FIFO_RD_WIDTH; j++)
-				{
-					m_inMap_fifo.nb_write(int());
-				}
-				wait();
-			}
+			nb_fifo_trans(INMAP_FIFO, FIFO_WRITE, IM_NUM_PIX_READ, IM_FIFO_WR_WIDTH);
 		}
-		*/
 	}
 }
 
 
 void FAS::A_process()
 {
-	tlm::tlm_generic_payload* trans;
-	sc_time delay;
 	int dummyVal;
 	while(true)
 	{
 		wait();
-		/*
-		if(m_state == ST_ACTIVE && !m_first_iter_cfg && m_conv_out_fmt0_cfg)
-		{
+		if (m_state == ST_ACTIVE 
+			&& m_first_iter_cfg 
+			&& m_conv_out_fmt0_cfg 
+			&& m_inMap_fifo.num_available() > 0
+			&& m_partMap_fifo.num_available() > 0 
+		) {
 			// pop input map, pop partial map
-			for (int i = 0; i < m_partMap_fifo.size(); i += PM_FIFO_RD_WIDTH)
-			{
-				for (int j = 0; j < PM_FIFO_RD_WIDTH; j++)
-				{
-					m_partMap_fifo.nb_read(dummyVal);
-					m_inMap_fifo.nb_read(dummyVal);
-				}
-				wait();
-			}
+			nb_fifo_trans(INMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, IM_FIFO_RD_WIDTH);
+			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+			wait();
 			// accum
 			wait();
 			// store to buffer
 			m_wr_outBuf.notify();
 		}
-		else if (m_state == ST_ACTIVE && m_first_iter_cfg && !m_conv_out_fmt0_cfg)
-		{
+		else if(m_state == ST_ACTIVE 
+			&& m_last_iter_cfg 
+			&& m_res_layer_cfg 
+			&& m_conv_out_fmt0_cfg
+			&& m_inMap_fifo.num_available() > 0
+			&& m_partMap_fifo.num_available() > 0 
+			&& m_resMap_fifo.num_available() > 0
+		) {
+			// pop input map, pop partial map, pop res map
+			nb_fifo_trans(INMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, IM_FIFO_RD_WIDTH);
+			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+			nb_fifo_trans(RESMAP_FIFO, FIFO_READ, RSM_NUM_PIX_READ, RSM_FIFO_RD_WIDTH);
+			wait();
+			// add input map, partial map, and residual map pixel
+			wait();
+			// store to buffer
+			m_wr_outBuf.notify();
+		}
+		else if (m_state == ST_ACTIVE 
+			&& m_first_iter_cfg 
+			&& !m_conv_out_fmt0_cfg
+			&& m_inMap_fifo.num_available() > 0
+			&& m_partMap_fifo.num_available() > 0
+		) {
 			// pop input map, pop partial map
-			for(int i = 0 ; i < m_partMap_fifo.size() ; i += PM_FIFO_RD_WIDTH)
-			{
-				for (int j = 0; j < PM_FIFO_RD_WIDTH; j++)
-				{
-					m_partMap_fifo.nb_read(dummyVal);
-					m_inMap_fifo.nb_read(dummyVal);
-				}
-				wait();
-			}
+			nb_fifo_trans(INMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, IM_FIFO_RD_WIDTH);
+			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+			wait();
 			// add input and partial map, pop 1x1 kernel
-			m_krnl_1x1_fifo.nb_read(dummyVal);
+			nb_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_NUM_PIX_READ, KRNL_FIFO_RD_WIDTH);
 			wait();	
 			// multiply sum with 1x1
 			wait();
 			// store to buffer
-			m_wr_outBuf.notify();
+			if(m_process_count == OB_FIFO_WR_WIDTH)
+			{
+				m_process_count = 0;
+				m_wr_outBuf.notify();
+			}
+			else
+			{
+				m_process_count++;
+			}			
 		}
-		else if (m_state == ST_ACTIVE && !m_first_iter_cfg && !m_conv_out_fmt0_cfg)
-		{
-			// pop input map
-			for(int i = 0 ; i < m_partMap_fifo.size() ; i += PM_FIFO_RD_WIDTH)
-			{
-				for (int j = 0; j < PM_FIFO_RD_WIDTH; j++)
-				{
-					m_inMap_fifo.nb_read(dummyVal);
-				}
-				wait();
-			}
-			// pop partial map, multiply input map with 1x1
-			for (int i = 0; i < m_partMap_fifo.size(); i += PM_FIFO_RD_WIDTH)
-			{
-				for (int j = 0; j < PM_FIFO_RD_WIDTH; j++)
-				{
-					m_partMap_fifo.nb_read(dummyVal);
-				}
-				wait();
-			}
-			m_krnl_1x1_fifo.nb_read(dummyVal);
+		else if (m_state == ST_ACTIVE 
+			&& !m_first_iter_cfg 
+			&& !m_conv_out_fmt0_cfg
+			&& m_inMap_fifo.num_available() > 0
+			&& m_partMap_fifo.num_available() > 0
+		) {
+			// pop partial map, pop 1x1 fifo
+			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+			nb_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_NUM_PIX_READ, KRNL_FIFO_RD_WIDTH);
 			wait();
-			// add input and partial map
+			// pop input map, multiply partial map with 1x1
+			nb_fifo_trans(INMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, IM_FIFO_RD_WIDTH);	
+			wait();
+			// add input and partial map 1x1 product
 			wait();
 			// store to buffer
-			m_wr_outBuf.notify();
+			if(m_process_count == OB_FIFO_WR_WIDTH)
+			{
+				m_process_count = 0;
+				m_wr_outBuf.notify();
+			}
+			else
+			{
+				m_process_count++;
+			}	
 		}
-		*/
 	}
 }
 
@@ -182,7 +193,7 @@ void FAS::outBuf_wr_process()
 	{
 		wait(m_wr_outBuf);
 		wait();
-		for (int i = 0; i < IM_FIFO_RD_WIDTH; i += OB_FIFO_WR_WIDTH)
+		for (int i = 0; i < OB_NUM_PIX_WRITE; i += OB_FIFO_WR_WIDTH)
 		{
 			for (int j = 0; j < OB_FIFO_WR_WIDTH; j++)
 			{
@@ -201,10 +212,9 @@ void FAS::S_process()
 	while (true)
 	{
 		wait();
-		/*
-		if(m_state == ST_ACTIVE && m_first_iter_cfg && m_outBuf_fifo.size() == SYS_MEM_NUM_PIX_WRITE)
+		if (m_state == ST_ACTIVE && m_outBuf_fifo.num_available() == OB_HIGH_WATERMARK)
 		{
-			for (int i = 0; i < m_outBuf_fifo.size(); i += OB_FIFO_RD_WIDTH)
+			for (int i = 0; i < m_outBuf_fifo.num_available(); i += OB_FIFO_RD_WIDTH)
 			{
 				for (int j = 0; j < OB_FIFO_RD_WIDTH; j++)
 				{
@@ -215,18 +225,20 @@ void FAS::S_process()
 			}
 			trans = m_mm.allocate();
 			trans->acquire();
-			trans->set_address(0);
-			trans->set_command(TLM_IGNORE_COMMAND);
-			trans->set_data_ptr(nullptr);
-			trans->set_data_length(SYS_MEM_NUM_PIX_WRITE * PIXEL_SIZE);
-			trans->set_streaming_width(0);
-			trans->set_byte_enable_ptr(0);
-			trans->set_dmi_allowed(false);
-			trans->set_response_status(TLM_INCOMPLETE_RESPONSE);
+			nb_createTrans(
+				&trans,
+				0,
+				TLM_WRITE_COMMAND,
+				nullptr,
+				(OB_NUM_PIX_WRITE * PIXEL_SIZE),
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);
 			sys_mem_init_soc->b_transport(*trans, delay);
 			trans->release();
 		}
-		*/
 	}
 }
 
@@ -237,7 +249,6 @@ void FAS::result_process()
 	{
 		wait(m_result_in);
 		wait();
-		/*
 		if(m_first_iter_cfg)
 		{
 			for (int i = 0; i < RES_PKT_SIZE; i += OB_FIFO_WR_WIDTH)
@@ -260,7 +271,37 @@ void FAS::result_process()
 				wait();
 			}	
 		}
-		*/
+	}
+}
+
+
+void FAS::res_map_fetch_process()
+{
+	tlm::tlm_generic_payload* trans;
+	sc_time delay;
+	while(true)
+	{
+		wait();
+		if(m_state == ST_ACTIVE && m_first_iter_cfg && m_outBuf_fifo.num_available() == RSM_LOW_WATERMARK)
+		{
+			trans = m_mm.allocate();
+			trans->acquire();
+			nb_createTrans(
+				&trans,
+				0,
+				TLM_READ_COMMAND,
+				nullptr,
+				(RSM_NUM_PIX_READ * PIXEL_SIZE),
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);		
+			sys_mem_init_soc->b_transport(*trans, delay);
+			trans->release();
+			nb_fifo_trans(RESMAP_FIFO, FIFO_WRITE, RSM_NUM_PIX_WRITE, RSM_FIFO_WR_WIDTH);
+			wait();
+		}
 	}
 }
 
@@ -275,14 +316,17 @@ void FAS::job_fetch_process()
 		wait();
 		trans = m_mm.allocate();
 		trans->acquire();
-		trans->set_address(m_job_fetch_trans.AWP_id);
-		trans->set_command(TLM_IGNORE_COMMAND);
-		trans->set_data_ptr(reinterpret_cast<unsigned char*>(&m_job_fetch_trans));
-		trans->set_data_length(SYS_MEM_NUM_PIX_READ * PIXEL_SIZE);
-		trans->set_streaming_width(0);
-		trans->set_byte_enable_ptr(0);
-		trans->set_dmi_allowed(false);
-		trans->set_response_status(TLM_INCOMPLETE_RESPONSE);
+		nb_createTrans(
+			&trans,
+			0,
+			TLM_READ_COMMAND,
+			reinterpret_cast<unsigned char*>(&m_job_fetch_trans),
+			(JF_NUM_PIX_READ * PIXEL_SIZE),
+			0,
+			nullptr,
+			false,
+			TLM_INCOMPLETE_RESPONSE
+		);	
 		sys_mem_init_soc->b_transport(*trans, delay);
 		rout_init_soc->b_transport(*trans, delay);
 		trans->release();
@@ -290,15 +334,18 @@ void FAS::job_fetch_process()
 }
 
 
-void FAS::b_cfg_FAS(vector<bool> AWP_arr, vector<vector<bool>> AWP_cfg_QUAD_arr, vector<int> num_AWP_QUAD_cfgd, bool first_iter_cfg, int num_1x1_kernels)
+void FAS::b_cfg_FAS(vector<bool> AWP_arr, vector<vector<bool>> AWP_cfg_QUAD_arr, vector<int> num_AWP_QUAD_cfgd, bool first_iter_cfg, bool last_iter_cfg, bool res_layer_cfg, int num_1x1_kernels)
 {
 	wait(clk_if.posedge_event());
 	m_AWP_arr = AWP_arr;
 	m_AWP_cfg_QUAD_arr = AWP_cfg_QUAD_arr;
 	m_AWP_num_QUAD_cfgd = num_AWP_QUAD_cfgd;
 	m_first_iter_cfg = first_iter_cfg;
-	wait(MAX_3x3_KERNELS * MAX_1x1_KERNELS, SC_NS);
-	for (int i = 0; i < MAX_3x3_KERNELS * MAX_1x1_KERNELS; i++)
+	m_last_iter_cfg = last_iter_cfg;
+	m_res_layer_cfg = res_layer_cfg;
+	int krnl_1x1_depth = MAX_3x3_KERNELS;
+	wait(MAX_1x1_KERNELS * krnl_1x1_depth, SC_NS);
+	for (int i = 0; i <(MAX_3x3_KERNELS * krnl_1x1_depth); i++)
 	{
 		m_krnl_1x1_fifo.nb_write(int());
 	}
@@ -326,14 +373,17 @@ void FAS::b_cfg_start_AWPs()
 			m_accel_trans_arr[idx].num_QUADS_cfgd = m_AWP_num_QUAD_cfgd[i];
 			trans = m_mm.allocate();
 			trans->acquire();
-			trans->set_address(i);
-			trans->set_command(TLM_IGNORE_COMMAND);
-			trans->set_data_ptr(reinterpret_cast<unsigned char*>(&m_accel_trans_arr[idx]));
-			trans->set_data_length(0);
-			trans->set_streaming_width(0);
-			trans->set_byte_enable_ptr(0);
-			trans->set_dmi_allowed(false);
-			trans->set_response_status(TLM_INCOMPLETE_RESPONSE);
+			nb_createTrans(
+				&trans,
+				i,
+				TLM_IGNORE_COMMAND,
+				reinterpret_cast<unsigned char*>(&m_accel_trans_arr[idx]),
+				0,
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);
 			rout_init_soc->b_transport(*trans, delay);
 			trans->release();
 			// Pixel Sequence Configuration
@@ -342,14 +392,17 @@ void FAS::b_cfg_start_AWPs()
 			m_accel_trans_arr[idx].FAS_id = m_FAS_id;
 			trans = m_mm.allocate();
 			trans->acquire();
-			trans->set_address(i);
-			trans->set_command(TLM_IGNORE_COMMAND);
-			trans->set_data_ptr(reinterpret_cast<unsigned char*>(&m_accel_trans_arr[idx]));
-			trans->set_data_length(0);
-			trans->set_streaming_width(0);
-			trans->set_byte_enable_ptr(0);
-			trans->set_dmi_allowed(false);
-			trans->set_response_status(TLM_INCOMPLETE_RESPONSE);
+			nb_createTrans(
+				&trans,
+				i,
+				TLM_IGNORE_COMMAND,
+				reinterpret_cast<unsigned char*>(&m_accel_trans_arr[idx]),
+				0,
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);
 			rout_init_soc->b_transport(*trans, delay);
 			trans->release();
 			// Kernel Sequence Configuration
@@ -358,14 +411,17 @@ void FAS::b_cfg_start_AWPs()
 			m_accel_trans_arr[idx].FAS_id = m_FAS_id;
 			trans = m_mm.allocate();
 			trans->acquire();
-			trans->set_address(i);
-			trans->set_command(TLM_IGNORE_COMMAND);
-			trans->set_data_ptr(reinterpret_cast<unsigned char*>(&m_accel_trans_arr[idx]));
-			trans->set_data_length(0);
-			trans->set_streaming_width(0);
-			trans->set_byte_enable_ptr(0);
-			trans->set_dmi_allowed(false);
-			trans->set_response_status(TLM_INCOMPLETE_RESPONSE);
+			nb_createTrans(
+				&trans,
+				i,
+				TLM_IGNORE_COMMAND,
+				reinterpret_cast<unsigned char*>(&m_accel_trans_arr[idx]),
+				0,
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);
 			rout_init_soc->b_transport(*trans, delay);
 			trans->release();
 			// Job Start
@@ -374,18 +430,80 @@ void FAS::b_cfg_start_AWPs()
 			m_accel_trans_arr[idx].FAS_id = m_FAS_id;
 			trans = m_mm.allocate();
 			trans->acquire();
-			trans->set_address(i);
-			trans->set_command(TLM_IGNORE_COMMAND);
-			trans->set_data_ptr(reinterpret_cast<unsigned char*>(&m_accel_trans_arr[idx]));
-			trans->set_data_length(0);
-			trans->set_streaming_width(0);
-			trans->set_byte_enable_ptr(0);
-			trans->set_dmi_allowed(false);
-			trans->set_response_status(TLM_INCOMPLETE_RESPONSE);
+			nb_createTrans(
+				&trans,
+				i,
+				TLM_IGNORE_COMMAND,
+				reinterpret_cast<unsigned char*>(&m_accel_trans_arr[idx]),
+				0,
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);
 			rout_init_soc->b_transport(*trans, delay);
 			trans->release();
 		}
 	}
+}
+
+
+void FAS::nb_fifo_trans(sc_core::sc_fifo<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width)
+{
+	for (int i = 0; i < fifo_trans_size; i += fifo_trans_width)
+	{
+		for (int j = 0; j < fifo_trans_width; j++)
+		{
+			switch (fifo_cmd)
+			{
+			case FAS::FIFO_READ:
+				{
+					int dummy;
+					fifo.nb_read(dummy);
+					break;
+				}
+			case FAS::FIFO_WRITE:
+				{
+					fifo.nb_write(int());
+					break;
+				}
+			}
+		}
+	}
+}
+
+
+void FAS::nb_fifo_trans(fifo_sel_t fifo_sel, FAS::fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width)
+{
+	switch(fifo_sel)
+	{
+		case PARTMAP_FIFO:
+		{
+			nb_fifo_trans(m_partMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+			break;
+		}
+		case INMAP_FIFO:
+		{
+			nb_fifo_trans(m_inMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+			break;
+		}
+		case KRNL_1X1_FIFO:
+		{
+			nb_fifo_trans(m_krnl_1x1_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+			break;
+		}
+		case RESMAP_FIFO:
+		{
+			nb_fifo_trans(m_resMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+			break;
+		}
+		case OUTBUF_FIFO:
+		{
+			nb_fifo_trans(m_outBuf_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);			
+			break;
+		}
+	}
+	
 }
 
 

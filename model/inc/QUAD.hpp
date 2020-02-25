@@ -75,7 +75,7 @@ SC_MODULE(QUAD)
 		uint64_t				m_ex_start_time				;
 		int						m_pfb_count					;
 		uint64_t				m_num_ex_cycles				;
-		sc_core::sc_mutex		m_mutex						;
+		sc_core::sc_mutex		m_bus_lock					;
 		int						m_krnl_count				;
         int						m_input_row					;
 		int						m_input_col					;

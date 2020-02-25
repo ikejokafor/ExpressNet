@@ -109,8 +109,10 @@ SC_MODULE(Top)
 			{
 				fas[i]->m_accel_trans_arr = new accel_trans_t[MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP];
 				bool first_iter_cfg = true;
-				int num_1x1_kernels = 10;
-				fas[i]->b_cfg_FAS(m_AWP_arr[i], m_AWP_cfg_QUAD_arr[i], m_AWP_num_QUADS_cfgd[i], first_iter_cfg, num_1x1_kernels);
+				bool last_iter_cfg = true;
+				bool res_layer_cfg = true;				
+				int num_1x1_kernels = 0;
+				fas[i]->b_cfg_FAS(m_AWP_arr[i], m_AWP_cfg_QUAD_arr[i], m_AWP_num_QUADS_cfgd[i], first_iter_cfg, last_iter_cfg, res_layer_cfg, num_1x1_kernels);
 				for(int j = 0; j < MAX_AWP_PER_FAS; j++)
 				{
 					for(int k = 0; k < NUM_QUADS_PER_AWP; k++)
