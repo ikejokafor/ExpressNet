@@ -1,0 +1,50 @@
+#-----------------------------------------------------------
+# Vivado v2018.3 (64-bit)
+# SW Build 2405991 on Thu Dec  6 23:36:41 MST 2018
+# IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
+# Start of session at: Wed Feb 19 14:58:14 2020
+# Process ID: 16993
+# Current directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e
+# Command line: vivado
+# Log file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/vivado.log
+# Journal file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/vivado.jou
+#-----------------------------------------------------------
+start_gui
+create_project managed_ip_project /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project -part xcvu37p-fsvh2892-2-e -ip
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/home/software/vivado-2018.3/Vivado/2018.3/data/ip'.
+create_project: Time (s): cpu = 00:00:16 ; elapsed = 00:00:15 . Memory (MB): peak = 6706.445 ; gain = 91.863 ; free physical = 58137 ; free virtual = 90616
+set_property target_simulator Questa [current_project]
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [Device 21-403] Loading part xcvu37p-fsvh2892-2-e
+create_ip -name ddr4 -vendor xilinx.com -library ip -version 2.2 -module_name ddr4_0 -dir /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e
+set_property -dict [list CONFIG.C0.DDR4_AxiSelection {true} CONFIG.C0.DDR4_AxiAddressWidth {29}] [get_ips ddr4_0]
+WARNING: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'.
+generate_target {instantiation_template} [get_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0.xci]
+INFO: [IP_Flow 19-1686] Generating 'Instantiation Template' target for IP 'ddr4_0'...
+generate_target all [get_files  /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0.xci]
+INFO: [IP_Flow 19-1686] Generating 'Synthesis' target for IP 'ddr4_0'...
+INFO: [IP_Flow 19-1686] Generating 'Simulation' target for IP 'ddr4_0'...
+INFO: [IP_Flow 19-1686] Generating 'Implementation' target for IP 'ddr4_0'...
+INFO: [IP_Flow 19-1686] Generating 'Change Log' target for IP 'ddr4_0'...
+Exporting to file /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/bd_0/hw_handoff/ddr4_0_microblaze_mcs.hwh
+Generated Block Design Tcl file /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/bd_0/hw_handoff/ddr4_0_microblaze_mcs_bd.tcl
+Generated Hardware Definition File /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/bd_0/synth/ddr4_0_microblaze_mcs.hwdef
+generate_target: Time (s): cpu = 00:00:26 ; elapsed = 00:00:28 . Memory (MB): peak = 7995.926 ; gain = 25.773 ; free physical = 56759 ; free virtual = 89313
+catch { config_ip_cache -export [get_ips -all ddr4_0] }
+export_ip_user_files -of_objects [get_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0.xci] -no_script -sync -force -quiet
+create_ip_run [get_files -of_objects [get_fileset sources_1] /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0.xci]
+launch_runs -jobs 12 ddr4_0_synth_1
+[Wed Feb 19 15:02:57 2020] Launched ddr4_0_synth_1...
+Run output will be captured here: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/ddr4_0_synth_1/runme.log
+export_simulation -of_objects [get_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0.xci] -directory /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ip_user_files/sim_scripts -ip_user_files_dir /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ip_user_files -ipstatic_source_dir /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ip_user_files/ipstatic -lib_map_path [list {modelsim=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.cache/compile_simlib/modelsim} {questa=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.cache/compile_simlib/questa} {ies=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.cache/compile_simlib/ies} {xcelium=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.cache/compile_simlib/xcelium} {vcs=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.cache/compile_simlib/vcs} {riviera=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.cache/compile_simlib/riviera}] -use_ip_compiled_libs -force -quiet
+set_property compxlib.questa_compiled_library_dir /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs [current_project]
+WARNING: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'.
+WARNING: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'.
+WARNING: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'.
+open_example_project -force -dir /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e [get_ips  ddr4_0]
+INFO: [IP_Flow 19-1686] Generating 'Examples' target for IP 'ddr4_0'...
+open_example_project: Time (s): cpu = 00:00:06 ; elapsed = 00:01:15 . Memory (MB): peak = 8042.414 ; gain = 0.000 ; free physical = 56582 ; free virtual = 89284
+exit
+INFO: [Common 17-206] Exiting Vivado at Wed Feb 19 15:47:02 2020...
