@@ -12,11 +12,12 @@ SC_MODULE(QUAD)
 {
 	typedef enum
 	{
-		ST_IDLE				= 0,
-		ST_PRIM_BUFFER		= 1,
-		ST_WAIT_PFB_LOAD	= 2,
-		ST_ACTIVE			= 3,
-		ST_SEND_COMPLETE	= 4
+		ST_IDLE					= 0,
+		ST_PRIM_BUFFER			= 1,
+		ST_WAIT_PFB_LOAD		= 2,
+		ST_ACTIVE				= 3,
+		ST_WAIT_LAST_RES_WRITE	= 4,
+		ST_SEND_COMPLETE		= 5
 	} QUAD_state_t;
 
     public:
@@ -46,7 +47,8 @@ SC_MODULE(QUAD)
 			m_input_row = 0;
 			m_output_col = 0;
 			m_output_row = 0;
-	        m_QUAD_id = atoi(&std::string(name())[std::string(name()).length() - 1]); 
+	        m_QUAD_id = atoi(&std::string(name())[std::string(name()).length() - 1]);
+	        m_last_res_wrtn = false;
         }
         
         // Destructor
@@ -66,8 +68,6 @@ SC_MODULE(QUAD)
         void b_job_fetch();
 		void b_pfb_write();
 		void b_pfb_read();
-		void b_execute();
-        void b_job_compelete();
         
         // Module Variables
         QUAD_state_t			m_state						;
@@ -75,7 +75,6 @@ SC_MODULE(QUAD)
 		uint64_t				m_ex_start_time				;
 		int						m_pfb_count					;
 		uint64_t				m_num_ex_cycles				;
-		sc_core::sc_mutex		m_bus_lock					;
 		int						m_krnl_count				;
         int						m_input_row					;
 		int						m_input_col					;
@@ -95,8 +94,8 @@ SC_MODULE(QUAD)
 		int						m_crpd_input_row_start_cfg	;
 		int						m_crpd_input_row_end_cfg	;
 		int						m_QUAD_id					;
-		int						m_FAS_id					;
 		sc_core::sc_fifo<int>	m_res_fifo					;
-		sc_core::sc_event		m_last_res_wrtn				;
+		bool					m_last_res_wrtn				;
+		sc_core::sc_event 		m_pfb_wrtn					;
 		int						m_start						;
 };

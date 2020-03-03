@@ -26,3 +26,6 @@ verification/scenario2/wlf*
 verification/scenario2/transcript
 
 model/build
+
+simulation/testbench1/work/*
+hardware\ip\xcvu37p-fsvh2892-2-e\ddr4_0_ex\ddr4_0_ex.sim\sim_1\behav\questa\questa_lib

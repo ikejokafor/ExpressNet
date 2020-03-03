@@ -6,31 +6,59 @@ using namespace tlm;
 using namespace tlm_utils;
 
 
-void Interconnect::b_transport(int id, tlm::tlm_generic_payload & trans, sc_core::sc_time & delay)
+void Interconnect::run()
 {
-	init_soc[trans.get_address()]->b_transport(trans, delay);
+	sc_time delay;
+	tlm_generic_payload* trans;
+	while(true)
+	{
+		wait();
+		if(m_trans_fifo.num_available() > 0)
+		{
+			m_trans_fifo.nb_read(trans);
+			Accel_Trans* accel_trans = (Accel_Trans*)trans->get_data_ptr();
+			accel_cmd_t cmd = accel_trans->accel_cmd;
+			init_soc[trans->get_address()]->b_transport(*trans, delay);
+			trans->release();
+		}
+	}
 }
 
 
-tlm::tlm_sync_enum Interconnect::nb_transport_fw(int id, tlm::tlm_generic_payload & trans, tlm::tlm_phase & phase, sc_core::sc_time & delay)
+void Interconnect::b_transport(int id, tlm_generic_payload & trans, sc_core::sc_time & delay)
+{
+	while(true)
+	{
+		wait(clk.posedge_event());
+		if(m_trans_fifo.num_free() > 0)
+		{
+			trans.acquire();
+			m_trans_fifo.nb_write(&trans);
+			break;
+		}
+	}
+}
+
+
+tlm_sync_enum Interconnect::nb_transport_fw(int id, tlm_generic_payload & trans, tlm_phase & phase, sc_core::sc_time & delay)
 {
 	return init_soc[id]->nb_transport_fw(trans, phase, delay);
 }
 
 
-bool Interconnect::get_direct_mem_ptr(int id, tlm::tlm_generic_payload & trans, tlm::tlm_dmi & dmi_data)
+bool Interconnect::get_direct_mem_ptr(int id, tlm_generic_payload & trans, tlm_dmi & dmi_data)
 {
 	return init_soc[id]->get_direct_mem_ptr(trans, dmi_data);
 }
 
 
-unsigned int Interconnect::transport_dbg(int id, tlm::tlm_generic_payload & trans)
+unsigned int Interconnect::transport_dbg(int id, tlm_generic_payload & trans)
 {
 	return init_soc[id]->transport_dbg(trans);
 }
 
 
-tlm::tlm_sync_enum Interconnect::nb_transport_bw(int id, tlm::tlm_generic_payload & trans, tlm::tlm_phase & phase, sc_core::sc_time & delay)
+tlm_sync_enum Interconnect::nb_transport_bw(int id, tlm_generic_payload & trans, tlm_phase & phase, sc_core::sc_time & delay)
 {
 	return tar_soc[id]->nb_transport_bw(trans, phase, delay);
 }

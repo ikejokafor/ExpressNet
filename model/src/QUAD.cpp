@@ -11,6 +11,7 @@ QUAD::~QUAD()
 
 void QUAD::ctrl_process_0()
 {
+	string str;
     while(true)
     {
         wait();
@@ -34,7 +35,8 @@ void QUAD::ctrl_process_0()
                 }
                 else if(m_input_row == 3)
                 {
-	                cout << name() << " finished Priming its buffer" << endl;
+	                str = string(name()) + " finished Priming its buffer at " + sc_time_stamp().to_string() + "\n";
+	                cout << str;
 					m_state = ST_ACTIVE;
                 }
                 else if(m_input_row != 3)
@@ -52,23 +54,33 @@ void QUAD::ctrl_process_0()
 				}
 				else if (m_output_row == m_num_output_rows_cfg && m_pfb_count == 0)
 				{
-					m_state = ST_SEND_COMPLETE;
+					m_state = ST_WAIT_LAST_RES_WRITE;
 				}
 				else
 				{
 					m_state = ST_ACTIVE;
 				}
                 break;
-            }          
+            }
+			case ST_WAIT_LAST_RES_WRITE:
+	        {
+		        if (m_last_res_wrtn)
+		        {
+			        m_state = ST_SEND_COMPLETE;
+			        m_last_res_wrtn = false;			        
+		        }
+		        break;
+	        }
             case ST_SEND_COMPLETE:
             {
-                b_job_compelete();
+	            str = string(name()) + " finished Workload in " + to_string(int(sc_time_stamp().to_double()) - m_start) + " ns and Sent Complete at " + sc_time_stamp().to_string() + "\n";
+	            cout << str;
+	            bus->b_transaction(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
 				m_num_ex_cycles = 0;
 				m_krnl_count = 0;
 				m_input_row = 0;
 				m_output_col = 0;
 				m_output_row = 0;
-	            cout << name() << " Finished Workload " << int(sc_time_stamp().to_double()) - m_start << " ns" << endl;
 				m_state = ST_IDLE;
                 break;
             }
@@ -82,7 +94,7 @@ void QUAD::ctrl_process_1()
 	while(true)
 	{
 		wait();
-		if(m_state == ST_ACTIVE && m_res_fifo.num_available() < RES_PKT_SIZE)
+		if(m_state == ST_ACTIVE && m_res_fifo.num_free() > 0)
 		{
 			if (m_output_col == (m_num_output_col_cfg - 1))
 			{
@@ -112,7 +124,7 @@ void QUAD::conv_process()
 	while(true)
 	{
 		wait();
-		if(m_state == ST_ACTIVE && m_res_fifo.num_available() < RES_PKT_SIZE)
+		if(m_state == ST_ACTIVE && m_res_fifo.num_free() > 0)
 		{
 			m_res_fifo.nb_write(int());
 		}
@@ -122,10 +134,11 @@ void QUAD::conv_process()
 
 void QUAD::result_process()
 {
+	std::string str;
 	while(true)
 	{
 		wait();
-		if(m_res_fifo.num_available() >= RES_PKT_SIZE || (m_state == ST_SEND_COMPLETE && m_res_fifo.num_available() > 0))
+		if(m_res_fifo.num_available() >= RES_PKT_SIZE || (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo.num_available() > 0))
 		{
 			for (int i = 0; i < RES_PKT_SIZE; i += RES_FIFO_RD_WIDTH)
 			{
@@ -136,15 +149,17 @@ void QUAD::result_process()
 				}
 				wait();
 			}
-			m_bus_lock.lock();
 			int start = sc_time_stamp().to_double();
-			cout << name() << " sent a Pixel Write Request" << endl;
-			bus->b_transaction(m_FAS_id, m_QUAD_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
-			cout << name() << " finished Pixel Write Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
-			m_bus_lock.unlock();
-			if(m_state == ST_SEND_COMPLETE && m_res_fifo.num_available() == 0)
+			str = string(name()) + " sent a Pixel Write Request at " + sc_time_stamp().to_string() + "\n";
+			cout << str;
+			bus->b_transaction(m_QUAD_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
+			str = string(name()) + " finished Pixel Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+			cout << str;
+			if (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo.num_available() == 0)
 			{
-				m_last_res_wrtn.notify();
+				str = string(name()) + " finished sending last Pixel Write Request at " + sc_time_stamp().to_string() + "\n";
+				cout << str;
+				m_last_res_wrtn = true;
 			}
 		}
 	}
@@ -153,9 +168,8 @@ void QUAD::result_process()
 
 void QUAD::b_cfg_write(unsigned char* data)
 {
-	wait(CLK_IF_PRD, SC_NS);
-	accel_trans_t* accel_trans  = (accel_trans_t*)data;
-	m_FAS_id					= accel_trans->FAS_id;
+	wait(CLK_PRD, SC_NS);
+	Accel_Trans* accel_trans    = (Accel_Trans*)data;
 	m_num_output_col_cfg		= accel_trans->num_output_col_cfg;
 	m_num_output_rows_cfg		= accel_trans->num_output_rows_cfg;
 	m_num_kernels_cfg			= accel_trans->num_kernels_cfg;
@@ -188,10 +202,10 @@ bool QUAD::b_job_start()
 {
 	if (m_state == ST_IDLE)
 	{
-		cout << name() << " Started Workload" << endl;
+		string str = string(name()) + " Started Workload at " + sc_time_stamp().to_string() + "\n";
+		cout << str;
 		m_state = ST_PRIM_BUFFER;
 		m_start = int(sc_time_stamp().to_double());
-		cout << name() << " Begain Priming its buffer" << endl;
 		return true;
 	}
 	else
@@ -203,12 +217,14 @@ bool QUAD::b_job_start()
 
 void QUAD::b_job_fetch()
 {
-	m_bus_lock.lock();
 	int start = sc_time_stamp().to_double();
-	cout << name() << " sent a Pixel Fetch Request" << endl;
-	bus->b_transaction(m_FAS_id, m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
-	cout << name() << " finished Pixel Fetch Request in " << int(sc_time_stamp().to_double()) - start << " ns" << endl;
-	m_bus_lock.unlock();
+	string str = string(name()) + " sent a Pixel Fetch Request at " + sc_time_stamp().to_string() + "\n";
+	cout << str;
+	bus->b_transaction(m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
+	str = string(name()) + " finished Pixel Fetch Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+	cout << str;
+	wait(m_pfb_wrtn);
+	wait();
 }
 
 
@@ -216,6 +232,7 @@ void QUAD::b_pfb_write()
 {
 	wait(m_num_expd_input_cols_cfg, SC_NS);
 	m_pfb_count = m_num_expd_input_cols_cfg;
+	m_pfb_wrtn.notify();
 }
 
 
@@ -235,12 +252,4 @@ void QUAD::b_pfb_read()
 	}
 	m_input_row = m_input_row + 1;
 	m_pfb_count = 0;
-}
-
-
-void QUAD::b_job_compelete()
-{
-	wait(m_last_res_wrtn);
-	wait();
-	bus->b_transaction(m_FAS_id, m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
 }

@@ -10,67 +10,23 @@ AWPBus::~AWPBus()
 }
 
 
-void AWPBus::AWPBus_process()
+void AWPBus::b_transaction(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size)
 {
-	while(true)
-	{
-		wait();
-		int num_req = 0;
-		for (int i = 0; i < NUM_QUADS_PER_AWP; i++)
-		{
-			if (m_req_arr[i].m_req)
-			{
-				num_req++;
-			}
-		}
-		wait();
-		if(num_req > 0 && m_num_trans_in_prog < MAX_AWP_TRANS)
-		{
-			for(int i = m_next_quad_id; i < NUM_QUADS_PER_AWP; i++)
-			{
-				wait();
-				if(m_req_arr[i].m_req)
-				{
-					m_next_quad_id = (i + 1) % NUM_QUADS_PER_AWP;
-					m_num_trans_in_prog++;
-					m_req_arr[i].m_proceed.notify();
-					break;
-				} 
-				else
-				{
-					m_next_quad_id = (i + 1) % NUM_QUADS_PER_AWP;
-				}
-			}
-		}
-	}
-}
-
-
-void AWPBus::b_transaction(int FAS_id, int quad_id, accel_cmd_t accel_cmd, int res_pkt_size)
-{
-	m_req_arr[quad_id].m_req = true;
-	wait(m_req_arr[quad_id].m_proceed);
-	wait();
-	m_accel_cmd = accel_cmd;
-	m_res_pkt_size = res_pkt_size;
-	m_quad_id = quad_id;
-	m_FAS_id = FAS_id;
+	int req_id = (accel_cmd == ACCL_CMD_JOB_FETCH) ? 0 : 1;
+	int reqArrIdx = index2D(NUM_QUADS_PER_AWP, req_id, QUAD_id);
+	m_req_arr[reqArrIdx].QUAD_id = QUAD_id;
+	m_req_arr[reqArrIdx].accel_cmd = accel_cmd;
+	m_req_arr[reqArrIdx].res_pkt_size = res_pkt_size;
+	m_req_arr[reqArrIdx].req_pending = true;
 	if(accel_cmd == ACCL_CMD_JOB_COMPLETE)
 	{
-		m_QUAD_complt_arr.push_back(true);
-		wait();
-		if(m_QUAD_complt_arr.size() == m_num_QUADs_cfgd)
-		{
-			m_QUAD_complt_arr.clear();
-			m_start_trans.notify();
-		}
+		m_QUAD_complt_arr[QUAD_id] = true;
 	}
 	else
 	{
-		m_start_trans.notify();
-		wait(m_trans_complete);
+		wait(m_req_arr[reqArrIdx].ack);
+		m_req_arr[QUAD_id].req_pending = false;
+		wait(m_req_arr[reqArrIdx].finished);
 		wait();
 	}
-	m_num_trans_in_prog--;
-	m_req_arr[quad_id].m_req = false;
 }

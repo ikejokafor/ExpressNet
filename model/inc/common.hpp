@@ -2,6 +2,7 @@
 
 
 #include "systemc"
+#include "mem_mng.hpp"
 #include "tlm.h"
 #include "tlm_utils/peq_with_cb_and_phase.h"
 #include "tlm_utils/simple_initiator_socket.h"
@@ -9,8 +10,17 @@
 #include "util.hpp"
 
 
-#define CLK_IF_PRD				10
-#define CLK_CORE_PRD			2
+#define CLK_PRD					10
+#define MAX_NETWORK_TRANS		5
+#define NUM_FAS					1
+#define MAX_AWP_PER_FAS			2
+#define NUM_QUADS_PER_AWP		4
+#define MAX_AWP_TRANS			(NUM_QUADS_PER_AWP * 2)	// each quad can send 2 requests at a time
+#define MAX_FAS_SYS_MEM_TRNS	1
+#define MAX_FAS_ROUT_TRANS		1
+#define MAX_3x3_KERNELS			64
+#define MAX_1x1_KERNELS			64
+#define PIXEL_SIZE				2	// 2 bytes
 #define WINDOW_3x3_NUM_CYCLES	uint64_t(5)
 #define PIX_SEQ_CFG_WRT_CYCS	(uint64_t(1024) * WINDOW_3x3_NUM_CYCLES)
 #define KRNL_SLOT_SIZE			10
@@ -42,13 +52,6 @@
 #define RES_FIFO_RD_WIDTH		8
 #define RES_PKT_SIZE			RES_FIFO_RD_WIDTH
 #define JF_NUM_PIX_READ			8
-#define PIXEL_SIZE				2	// 2 bytes
-#define NUM_FAS					1
-#define MAX_AWP_PER_FAS			2
-#define NUM_QUADS_PER_AWP		4
-#define	MAX_AWP_TRANS			1
-#define MAX_3x3_KERNELS			64
-#define MAX_1x1_KERNELS			64
 
 
 typedef enum
@@ -60,40 +63,47 @@ typedef enum
 	ACCL_CMD_JOB_FETCH			= 4,
 	ACCL_CMD_RESULT_WRITE		= 5,
 	ACCL_CMD_JOB_COMPLETE		= 6
-}accel_cmd_t;
+} accel_cmd_t;
 
 
-typedef struct
+class Accel_Trans
 {
-	accel_cmd_t accel_cmd           ;
-	int num_output_col_cfg          ;
-	int num_output_rows_cfg         ;
-	int num_kernels_cfg             ;
-	int num_1x1_kernels_cfg			;
-	bool master_QUAD_cfg            ;
-	bool cascade_cfg                ;
-	int num_expd_input_cols_cfg     ;
-	int QUAD_id                     ;
-	int num_QUADS_cfgd				;
-	int AWP_id						;
-	int FAS_id						;
-	int res_pkt_size				;
-	bool conv_out_fmt0_cfg			;
-	bool padding_cfg				;
-	bool upsmaple_cfg				;
-	int crpd_input_row_start_cfg	;
-	int crpd_input_row_end_cfg		;
-}accel_trans_t;
+	public:
+		Accel_Trans() : req_pending(false) {}
+		accel_cmd_t accel_cmd           ;
+		int num_output_col_cfg          ;
+		int num_output_rows_cfg         ;
+		int num_kernels_cfg             ;
+		int num_1x1_kernels_cfg			;
+		bool master_QUAD_cfg            ;
+		bool cascade_cfg                ;
+		int num_expd_input_cols_cfg     ;
+		int QUAD_id                     ;
+		int num_QUADS_cfgd				;
+		int AWP_id						;
+		int FAS_id						;
+		int res_pkt_size				;
+		bool conv_out_fmt0_cfg			;
+		bool padding_cfg				;
+		bool upsmaple_cfg				;
+		int crpd_input_row_start_cfg	;
+		int crpd_input_row_end_cfg		;
+		bool req_pending				;
+		sc_core::sc_event ack			;
+		sc_core::sc_event request		;
+		sc_core::sc_event proceed		;
+		sc_core::sc_event finished		;
+};
 
 
-void nb_createTrans(
-	tlm::tlm_generic_payload** trans,
+tlm::tlm_generic_payload* nb_createTLMTrans(
+	mem_mng& mem_mng,
 	uint64_t address, 
 	tlm::tlm_command cmd, 
 	unsigned char* data_ptr, 
 	unsigned int dataLength, 
 	unsigned int streamWidth,
-	unsigned char* byteEN,
+	unsigned char* byteENptr,
 	bool DMI_EN,
 	tlm::tlm_response_status status
 );
