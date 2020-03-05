@@ -17,7 +17,9 @@ void Interconnect::run()
 		{
 			m_trans_fifo.nb_read(trans);
 			Accel_Trans* accel_trans = (Accel_Trans*)trans->get_data_ptr();
-			accel_cmd_t cmd = accel_trans->accel_cmd;
+			// string str = "Sending " + to_string(trans->get_data_length()) + " " + to_string(accel_trans->accel_cmd) + " " + to_string(accel_trans->QUAD_id) + " " + sc_time_stamp().to_string() + '\n';
+			// cout << str;
+			wait();
 			init_soc[trans->get_address()]->b_transport(*trans, delay);
 			trans->release();
 		}
@@ -34,6 +36,9 @@ void Interconnect::b_transport(int id, tlm_generic_payload & trans, sc_core::sc_
 		{
 			trans.acquire();
 			m_trans_fifo.nb_write(&trans);
+			Accel_Trans* accel_trans = (Accel_Trans*)trans.get_data_ptr();
+			// string str = "Recieved " + to_string(trans.get_data_length()) + " " + to_string(accel_trans->accel_cmd) + " " + to_string(accel_trans->QUAD_id) + " " + sc_time_stamp().to_string() + '\n';
+			// cout << str;
 			break;
 		}
 	}

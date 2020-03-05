@@ -303,11 +303,15 @@ void FAS::job_fetch_process()
 	{
 		wait(m_job_fetch);
 		wait();
+		Accel_Trans* job_fetch_trans = new Accel_Trans();
+		job_fetch_trans->accel_cmd = m_job_fetch_trans.accel_cmd;
+		job_fetch_trans->AWP_id = m_job_fetch_trans.AWP_id;
+		job_fetch_trans->QUAD_id = m_job_fetch_trans.QUAD_id;			
 		trans = nb_createTLMTrans(
 			m_mem_mng,
 			m_job_fetch_trans.AWP_id,
 			TLM_READ_COMMAND,
-			reinterpret_cast<unsigned char*>(&m_job_fetch_trans),
+			(unsigned char*)job_fetch_trans,
 			(JF_NUM_PIX_READ * PIXEL_SIZE),
 			0,
 			nullptr,
@@ -377,14 +381,12 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
 
 void FAS::b_cfg_start_AWPs()
 {
-
 	for (int i = 0; i < MAX_AWP_PER_FAS; i++)
 	{
 		if (!m_AWP_arr[i])
 			continue;
 		for (int j = 0; j < NUM_QUADS_PER_AWP; j++)
 		{
-			
 			if (!m_AWP_cfg_QUAD_arr[i][j])
 				continue;
 			int idx = index2D(NUM_QUADS_PER_AWP, i, j);
@@ -457,24 +459,40 @@ void FAS::nb_fifo_trans(fifo_sel_t fifo_sel, FAS::fifo_cmd_t fifo_cmd, int fifo_
 
 void FAS::b_QUAD_config(int trans_idx, int AWP_addr, int QUAD_addr)
 {
-	wait(clk.posedge_event());
+	wait(clk->posedge_event());
 	sc_time delay;
 	tlm::tlm_generic_payload* trans;
-	m_accel_trans_arr[trans_idx].accel_cmd = ACCL_CMD_CFG_WRITE;
-	m_accel_trans_arr[trans_idx].QUAD_id = QUAD_addr;
-	m_accel_trans_arr[trans_idx].FAS_id = m_FAS_id;
-	m_accel_trans_arr[trans_idx].num_QUADS_cfgd = m_AWP_num_QUAD_cfgd[AWP_addr];
+	// payload needs its own unique data Structure
+	Accel_Trans* accel_trans				= new Accel_Trans();
+	accel_trans->accel_cmd					= ACCL_CMD_CFG_WRITE;
+	accel_trans->QUAD_id					= QUAD_addr;
+	accel_trans->FAS_id						= m_FAS_id;
+	accel_trans->num_QUADS_cfgd				= m_AWP_num_QUAD_cfgd[AWP_addr];
+	accel_trans->num_output_col_cfg			= m_accel_trans_arr[trans_idx].num_output_col_cfg;	
+	accel_trans->num_output_rows_cfg		= m_accel_trans_arr[trans_idx].num_output_rows_cfg;
+	accel_trans->num_kernels_cfg			= m_accel_trans_arr[trans_idx].num_kernels_cfg;
+	accel_trans->master_QUAD_cfg			= m_accel_trans_arr[trans_idx].master_QUAD_cfg;
+	accel_trans->cascade_cfg				= m_accel_trans_arr[trans_idx].cascade_cfg;
+	accel_trans->num_expd_input_cols_cfg	= m_accel_trans_arr[trans_idx].num_expd_input_cols_cfg;
+	accel_trans->accel_cmd					= m_accel_trans_arr[trans_idx].accel_cmd;
+	accel_trans->conv_out_fmt0_cfg			= m_accel_trans_arr[trans_idx].conv_out_fmt0_cfg;
+	accel_trans->padding_cfg				= m_accel_trans_arr[trans_idx].padding_cfg;
+	accel_trans->upsmaple_cfg				= m_accel_trans_arr[trans_idx].upsmaple_cfg;
+	accel_trans->crpd_input_row_start_cfg	= m_accel_trans_arr[trans_idx].crpd_input_row_start_cfg;
+	accel_trans->crpd_input_row_end_cfg		= m_accel_trans_arr[trans_idx].crpd_input_row_end_cfg;
+	accel_trans->num_1x1_kernels_cfg		= m_accel_trans_arr[trans_idx].num_1x1_kernels_cfg;
 	trans = nb_createTLMTrans(
 		m_mem_mng,
 		AWP_addr,
 		TLM_IGNORE_COMMAND,
-		(unsigned char*)&m_accel_trans_arr[trans_idx],
-		0,
+		(unsigned char*)accel_trans,
+		6,
 		0,
 		nullptr,
 		false,
 		TLM_INCOMPLETE_RESPONSE
 	);
+	wait(clk->posedge_event());
 	rout_init_soc->b_transport(*trans, delay);
 	trans->release();
 }
@@ -482,23 +500,25 @@ void FAS::b_QUAD_config(int trans_idx, int AWP_addr, int QUAD_addr)
 
 void FAS::b_QUAD_pix_seq_config(int trans_idx, int AWP_addr, int QUAD_addr)
 {
-	wait(clk.posedge_event());
+	wait(clk->posedge_event());
 	sc_time delay;
 	tlm::tlm_generic_payload* trans;
-	m_accel_trans_arr[trans_idx].accel_cmd = ACCL_CMD_PIX_SEQ_CFG_WRITE;
-	m_accel_trans_arr[trans_idx].QUAD_id = QUAD_addr;
-	m_accel_trans_arr[trans_idx].FAS_id = m_FAS_id;
+	Accel_Trans* accel_trans = new Accel_Trans();
+	accel_trans->accel_cmd = ACCL_CMD_PIX_SEQ_CFG_WRITE;
+	accel_trans->QUAD_id = QUAD_addr;
+	accel_trans->FAS_id = m_FAS_id;	
 	trans = nb_createTLMTrans(
 		m_mem_mng,
 		AWP_addr,
 		TLM_IGNORE_COMMAND,
-		(unsigned char*)&m_accel_trans_arr[trans_idx],
-		0,
+		(unsigned char*)accel_trans,
+		7,
 		0,
 		nullptr,
 		false,
 		TLM_INCOMPLETE_RESPONSE
 	);
+	wait(clk->posedge_event());
 	rout_init_soc->b_transport(*trans, delay);
 	trans->release();
 }
@@ -506,23 +526,24 @@ void FAS::b_QUAD_pix_seq_config(int trans_idx, int AWP_addr, int QUAD_addr)
 
 void FAS::b_QUAD_krnl_config(int trans_idx, int AWP_addr, int QUAD_addr)
 {
-	wait(clk.posedge_event());
+	wait(clk->posedge_event());
 	sc_time delay;
 	tlm::tlm_generic_payload* trans;
-	m_accel_trans_arr[trans_idx].accel_cmd = ACCL_CMD_KRL_CFG_WRITE;
-	m_accel_trans_arr[trans_idx].QUAD_id = QUAD_addr;
-	m_accel_trans_arr[trans_idx].FAS_id = m_FAS_id;
+	Accel_Trans* accel_trans = new Accel_Trans();
+	accel_trans->accel_cmd = ACCL_CMD_KRL_CFG_WRITE;
+	accel_trans->QUAD_id = QUAD_addr;
+	accel_trans->FAS_id = m_FAS_id;	
 	trans = nb_createTLMTrans(
 		m_mem_mng,
 		AWP_addr,
 		TLM_IGNORE_COMMAND,
-		(unsigned char*)&m_accel_trans_arr[trans_idx],
-		0,
+		(unsigned char*)accel_trans,
+		7,
 		0,
 		nullptr,
 		false,
-		TLM_INCOMPLETE_RESPONSE
-	);
+		TLM_INCOMPLETE_RESPONSE);
+	wait(clk->posedge_event());
 	rout_init_soc->b_transport(*trans, delay);
 	trans->release();
 }
@@ -530,23 +551,24 @@ void FAS::b_QUAD_krnl_config(int trans_idx, int AWP_addr, int QUAD_addr)
 
 void FAS::b_QUAD_job_start(int trans_idx, int AWP_addr, int QUAD_addr)
 {
-	wait(clk.posedge_event());
+	wait(clk->posedge_event());
 	sc_time delay;
 	tlm::tlm_generic_payload* trans;
-	m_accel_trans_arr[trans_idx].accel_cmd = ACCL_CMD_JOB_START;
-	m_accel_trans_arr[trans_idx].QUAD_id = QUAD_addr;
-	m_accel_trans_arr[trans_idx].FAS_id = m_FAS_id;
+	Accel_Trans* accel_trans = new Accel_Trans();
+	accel_trans->accel_cmd = ACCL_CMD_JOB_START;
+	accel_trans->QUAD_id = QUAD_addr;
+	accel_trans->FAS_id = m_FAS_id;	
 	trans = nb_createTLMTrans(
 		m_mem_mng,
 		AWP_addr,
 		TLM_IGNORE_COMMAND,
-		(unsigned char*)&m_accel_trans_arr[trans_idx],
-		0,
+		(unsigned char*)accel_trans,
+		7,
 		0,
 		nullptr,
 		false,
-		TLM_INCOMPLETE_RESPONSE
-	);
+		TLM_INCOMPLETE_RESPONSE);
+	wait(clk->posedge_event());
 	rout_init_soc->b_transport(*trans, delay);
 	trans->release();
 }

@@ -55,11 +55,17 @@ int AWP::request_process(int idx)
 		tlm_command tlm_cmd = (bus.m_req_arr[idx].accel_cmd == ACCL_CMD_JOB_FETCH) ? TLM_READ_COMMAND
 							: (bus.m_req_arr[idx].accel_cmd == ACCL_CMD_RESULT_WRITE) ? TLM_WRITE_COMMAND
 							: TLM_IGNORE_COMMAND;
+		Accel_Trans* accel_trans = new Accel_Trans();
+		accel_trans->AWP_id = m_AWP_id;
+		accel_trans->FAS_id = m_FAS_id;
+		accel_trans->QUAD_id = bus.m_req_arr[idx].QUAD_id;
+		accel_trans->accel_cmd = bus.m_req_arr[idx].accel_cmd;
+		accel_trans->res_pkt_size = bus.m_req_arr[idx].res_pkt_size;
 		tlm_generic_payload* trans = nb_createTLMTrans(
 			m_mem_mng,
 			m_FAS_id,
 			tlm_cmd,
-			reinterpret_cast<unsigned char*>(&bus.m_req_arr[idx]),
+			(unsigned char*)accel_trans,
 			bus.m_req_arr[idx].res_pkt_size,
 			0,
 			nullptr,
@@ -95,14 +101,15 @@ void AWP::send_complete()
 			{
 				bus.m_QUAD_complt_arr[i] = false;
 			}
-			Accel_Trans accel_trans;
-			accel_trans.FAS_id = m_FAS_id;
-			accel_trans.accel_cmd = ACCL_CMD_JOB_COMPLETE;
+			Accel_Trans* accel_trans = new Accel_Trans();
+			accel_trans->AWP_id = m_AWP_id;
+			accel_trans->FAS_id = m_FAS_id;
+			accel_trans->accel_cmd = ACCL_CMD_JOB_COMPLETE;
 			tlm_generic_payload* trans = nb_createTLMTrans(
 				m_mem_mng,
 				m_FAS_id,
 				TLM_IGNORE_COMMAND,
-				reinterpret_cast<unsigned char*>(&accel_trans),
+				(unsigned char*)accel_trans,
 				0,
 				0,
 				nullptr,

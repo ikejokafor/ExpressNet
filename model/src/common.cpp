@@ -22,9 +22,6 @@ tlm_generic_payload* nb_createTLMTrans(
 	trans->set_address(address);
 	trans->set_command(cmd);
 	trans->set_data_ptr(data_ptr);
-	
-	Accel_Trans* accel_trans;
-	accel_trans = (Accel_Trans*)data_ptr;
 	trans->set_data_length(dataLength);
 	trans->set_streaming_width(streamWidth);
 	trans->set_byte_enable_ptr(byteENptr);

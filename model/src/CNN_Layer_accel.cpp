@@ -26,11 +26,11 @@ void CNN_Layer_Accel::main_process()
 	m_AWP_arr[0][0] = false;
 	m_AWP_arr[0][1] = true;
 	m_AWP_num_QUADS_cfgd[0][0] = 0;
-	m_AWP_num_QUADS_cfgd[0][1] = 1;
-	// m_AWP_cfg_QUAD_arr[0][1][0] = true;
-	// m_AWP_cfg_QUAD_arr[0][1][1] = true;
-	m_AWP_cfg_QUAD_arr[0][1][2] = true;
-	// m_AWP_cfg_QUAD_arr[0][1][3] = true;
+	m_AWP_num_QUADS_cfgd[0][1] = 2;
+	m_AWP_cfg_QUAD_arr[0][1][0] = true;
+	m_AWP_cfg_QUAD_arr[0][1][1] = true;
+	m_AWP_cfg_QUAD_arr[0][1][2] = false;
+	m_AWP_cfg_QUAD_arr[0][1][3] = false;
 	for(int i = 0 ; i < NUM_FAS ; i++)
 	{
 		m_FAS_complt_arr.push_back(false);

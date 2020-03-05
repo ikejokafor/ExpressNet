@@ -168,6 +168,8 @@ void QUAD::result_process()
 
 void QUAD::b_cfg_write(unsigned char* data)
 {
+	string str = string(name()) + " is doing a Configuration Write\n";
+	cout << str;
 	wait(CLK_PRD, SC_NS);
 	Accel_Trans* accel_trans    = (Accel_Trans*)data;
 	m_num_output_col_cfg		= accel_trans->num_output_col_cfg;
@@ -230,6 +232,8 @@ void QUAD::b_job_fetch()
 
 void QUAD::b_pfb_write()
 {
+	string str = string(name()) + " is doing a Prefetch Buffer Write\n";
+	cout << str;
 	wait(m_num_expd_input_cols_cfg, SC_NS);
 	m_pfb_count = m_num_expd_input_cols_cfg;
 	m_pfb_wrtn.notify();

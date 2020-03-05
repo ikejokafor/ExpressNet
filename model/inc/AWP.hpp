@@ -47,10 +47,7 @@ SC_MODULE(AWP)
 			// Bindings
 			tar_soc.register_b_transport(this, &AWP::b_transport);
 			bus.clk(clk);
-			for(int i = 0; i < MAX_AWP_TRANS; i++)
-			{
-				bus.m_req_arr[i].AWP_id = m_AWP_id;
-			}
+
 			
 			// Create Modules
 			for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
