@@ -12,7 +12,10 @@
 #include "tlm_utils/simple_initiator_socket.h"
 #include "tlm_utils/simple_target_socket.h"
 #include "mem_mng.hpp"
-#include "common.hpp"
+#include "cnn_layer_accel_common.hpp"
+#include "fixedPoint.hpp"
+#include "FPGA_shim.hpp"
+#include "AccelConfig.hpp"
 
 
 SC_MODULE(FAS)
@@ -60,7 +63,8 @@ SC_MODULE(FAS)
 				m_resMap_fifo(RSM_FIFO_SIZE),
 				m_krnl_1x1_fifo(KRNL_1X1_FIFO_SIZE),
 				m_outBuf_fifo(OB_FIFO_SIZE),
-				m_sys_mem_bus_sema(MAX_FAS_SYS_MEM_TRNS)
+				m_sys_mem_bus_sema(MAX_FAS_SYS_MEM_TRNS),
+				m_trans_fifo(MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP)
 		{
 			m_FAS_id = atoi(&std::string(name())[std::string(name()).length() - 1]); 
 
@@ -75,8 +79,6 @@ SC_MODULE(FAS)
 				sensitive << clk.pos();
 			SC_THREAD(S_process)
 				sensitive << clk.pos();
-			SC_THREAD(result_process)
-				sensitive << clk.pos();
 			SC_THREAD(job_fetch_process)
 				sensitive << clk.pos();
 			
@@ -89,6 +91,8 @@ SC_MODULE(FAS)
 			m_krnlFetchTotal		= 0;
 			m_resMapFetchCount		= 0;
 			m_resMapFetchTotal		= 0;
+
+			m_accelCfg = new AccelConfig();
 		}
 
 		// Destructor
@@ -100,7 +104,6 @@ SC_MODULE(FAS)
 		void A_process();
 		void outBuf_wr_process();
 		void S_process();
-		void result_process();
 		void resMap_fetch_process();
 		void job_fetch_process();
 
@@ -108,16 +111,18 @@ SC_MODULE(FAS)
 		void b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
 		
 		// Methods
-		void b_cfg_FAS(std::vector<bool> AWP_list, std::vector<std::vector<bool>> AWP_cfg_QUAD_list, std::vector<int> num_AWP_QUAD_cfgd, bool first_iter_cfg, bool last_iter_cfg, bool res_layer_cfg, int num_1x1_kernels);
+		void nb_result_write();
 		void b_cfg_start_AWPs();
 		void nb_fifo_trans(sc_core::sc_fifo<int>& fifo, fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width);
 		void nb_fifo_trans(fifo_sel_t fifo_sel, fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width);
-		void b_QUAD_config(int trans_idx, int AWP_addr, int QUAD_addr);
-		void b_QUAD_pix_seq_config(int trans_idx, int AWP_addr, int QUAD_addr);
-		void b_QUAD_krnl_config(int trans_idx, int AWP_addr, int QUAD_addr);
-		void b_QUAD_job_start(int trans_idx, int AWP_addr, int QUAD_addr);
+		void b_QUAD_config(int AWP_addr, int QUAD_addr);
+		void b_QUAD_pix_seq_config(int AWP_addr, int QUAD_addr);
+		void b_QUAD_krnl_config(int AWP_addr, int QUAD_addr);
+		void b_QUAD_job_start(int AWP_addr, int QUAD_addr);
 	
 		// Members
+		std::vector<uint64_t>			m_memory				;
+		AccelConfig* 					m_accelCfg				;
 		mem_mng							m_mem_mng               ;
 		sc_core::sc_event				m_start                 ;
 		sc_core::sc_event				m_start_ack             ;
@@ -125,10 +130,9 @@ SC_MODULE(FAS)
 		sc_core::sc_event				m_complete_ack          ;
 		FAS_state_t						m_state                 ;
 		std::vector<bool>				m_AWP_complt_arr        ;
-		Accel_Trans*					m_accel_trans_arr       ;
-		std::vector<bool>				m_AWP_arr               ;
-		std::vector<std::vector<bool>>	m_AWP_cfg_QUAD_arr      ;
-		std::vector<int>				m_AWP_num_QUAD_cfgd     ;
+		std::vector<bool>				m_AWP_en_arr            ;
+		std::vector<std::vector<bool>>	m_QUAD_en_arr       	;
+		std::vector<int>				m_num_QUAD_cfgd     	;
 		int								m_FAS_id                ;
 		sc_core::sc_fifo<int>			m_partMap_fifo          ;
 		int								m_partMapFetchCount		;
@@ -148,10 +152,11 @@ SC_MODULE(FAS)
 	    int								m_res_pkt_size          ;
 		bool							m_last_iter_cfg         ;
 		bool							m_res_layer_cfg         ;
+		bool							m_kernel_1x1_cfg		;
 		int								m_process_count         ;
-		sc_core::sc_event				m_result_in             ;
 		sc_core::sc_event				m_job_fetch             ;
 		Accel_Trans 					m_job_fetch_trans       ;
 		sc_core::sc_event				m_wr_outBuf	            ;
 		sc_core::sc_semaphore			m_sys_mem_bus_sema      ;
+		sc_core::sc_fifo<tlm::tlm_generic_payload*> m_trans_fifo;
 };

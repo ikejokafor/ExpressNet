@@ -28,53 +28,18 @@ void AWP::bus_arbitrate()
 				numReq++;
 			}
 		}
-		if (numReq > 0)
+		if (numReq > 0 && m_num_trans_in_prog < MAX_NETWORK_TRANS)
 		{
 			for (int i = m_next_req_id; true; i = (i + 1) % MAX_AWP_TRANS)
 			{
 				if (bus.m_req_arr[i].req_pending)
 				{
 					bus.m_req_arr[i].ack.notify();
-					bus.m_req_arr[i].proceed.notify();
 					m_next_req_id = (i + 1) % MAX_AWP_TRANS;
 					break;
 				}
 			}
 		}
-	}
-}
-
-
-int AWP::request_process(int idx)
-{
-	sc_time delay;
-	while(true)
-	{
-		wait(bus.m_req_arr[idx].proceed);
-		wait();
-		tlm_command tlm_cmd = (bus.m_req_arr[idx].accel_cmd == ACCL_CMD_JOB_FETCH) ? TLM_READ_COMMAND
-							: (bus.m_req_arr[idx].accel_cmd == ACCL_CMD_RESULT_WRITE) ? TLM_WRITE_COMMAND
-							: TLM_IGNORE_COMMAND;
-		Accel_Trans* accel_trans = new Accel_Trans();
-		accel_trans->AWP_id = m_AWP_id;
-		accel_trans->FAS_id = m_FAS_id;
-		accel_trans->QUAD_id = bus.m_req_arr[idx].QUAD_id;
-		accel_trans->accel_cmd = bus.m_req_arr[idx].accel_cmd;
-		accel_trans->res_pkt_size = bus.m_req_arr[idx].res_pkt_size;
-		tlm_generic_payload* trans = nb_createTLMTrans(
-			m_mem_mng,
-			m_FAS_id,
-			tlm_cmd,
-			(unsigned char*)accel_trans,
-			bus.m_req_arr[idx].res_pkt_size,
-			0,
-			nullptr,
-			false,
-			TLM_INCOMPLETE_RESPONSE
-		);
-		init_soc->b_transport(*trans, delay);
-		trans->release();
-		bus.m_req_arr[idx].finished.notify();
 	}
 }
 
@@ -116,6 +81,7 @@ void AWP::send_complete()
 				false,
 				TLM_INCOMPLETE_RESPONSE
 			);
+			wait();
 			init_soc->b_transport(*trans, delay);
 			trans->release();
 		}
@@ -139,6 +105,7 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
 		}
 		case ACCL_CMD_CFG_WRITE:
 		{
+			bus.m_FAS_id = accel_trans->FAS_id;
 			m_FAS_id = accel_trans->FAS_id;
 			m_num_QUADs_cfgd = accel_trans->num_QUADS_cfgd;
 			m_QUADs_cfgd_arr[QUAD_id] = true;
@@ -164,4 +131,10 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
 	};
 	trans.set_response_status(status);
 	trans.release();
+}
+
+
+void AWP::bus_tar_b_transport(tlm_generic_payload& trans, sc_time& delay)
+{
+	init_soc->b_transport(trans, delay);
 }

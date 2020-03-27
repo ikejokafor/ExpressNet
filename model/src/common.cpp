@@ -1,4 +1,4 @@
-#include "common.hpp"
+#include "cnn_layer_accel_common.hpp"
 using namespace std;
 using namespace sc_core;
 using namespace sc_dt;

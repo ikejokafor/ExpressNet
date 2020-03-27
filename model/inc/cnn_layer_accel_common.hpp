@@ -85,7 +85,7 @@ class Accel_Trans
 		int res_pkt_size				;
 		bool conv_out_fmt0_cfg			;
 		bool padding_cfg				;
-		bool upsmaple_cfg				;
+		bool upsample_cfg				;
 		int crpd_input_row_start_cfg	;
 		int crpd_input_row_end_cfg		;
 		bool req_pending				;

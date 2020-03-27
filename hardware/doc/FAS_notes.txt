@@ -29,3 +29,22 @@ Within an AWP there is only one case where quads have to accum across each other
 For pooling
     first cycle does subtraction, second cycle gets local max, then third cycle compares to global
     max for that window. For smaller window sizes, just make irrelvant values -infin
+
+
+create communication pathway between software and hardware / model
+inject model with real data to verify correct data flow
+Finish hardware
+    write FAS unit
+    get into DSP's to load Bias
+    throw down AXI interconnect
+
+
+FAS is going to have 3 slave spaces
+    1 for interconnect
+    1 for FAS cfg
+    1 for QUAD cfg
+    
+    
+do not use vivado 2018.3.1
+
+    

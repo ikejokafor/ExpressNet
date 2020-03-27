@@ -49,6 +49,8 @@ void QUAD::ctrl_process_0()
             {
 				if(m_output_row != m_num_output_rows_cfg && m_pfb_count == 0)
 				{
+					str = string(name()) + " finished output Row " + to_string(m_output_row) + " at time " + sc_time_stamp().to_string() + "\n";
+					cout << str;
 					m_return_state = ST_ACTIVE;
 					m_state = ST_WAIT_PFB_LOAD;
 				}
@@ -75,7 +77,7 @@ void QUAD::ctrl_process_0()
             {
 	            str = string(name()) + " finished Workload in " + to_string(int(sc_time_stamp().to_double()) - m_start) + " ns and Sent Complete at " + sc_time_stamp().to_string() + "\n";
 	            cout << str;
-	            bus->b_transaction(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
+	            bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
 				m_num_ex_cycles = 0;
 				m_krnl_count = 0;
 				m_input_row = 0;
@@ -152,7 +154,7 @@ void QUAD::result_process()
 			int start = sc_time_stamp().to_double();
 			str = string(name()) + " sent a Pixel Write Request at " + sc_time_stamp().to_string() + "\n";
 			cout << str;
-			bus->b_transaction(m_QUAD_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
+			bus->b_request(m_QUAD_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
 			str = string(name()) + " finished Pixel Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
 			cout << str;
 			if (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo.num_available() == 0)
@@ -180,9 +182,27 @@ void QUAD::b_cfg_write(unsigned char* data)
 	m_num_expd_input_cols_cfg	= accel_trans->num_expd_input_cols_cfg;
 	m_conv_out_fmt0_cfg			= accel_trans->conv_out_fmt0_cfg;
 	m_padding_cfg				= accel_trans->padding_cfg;
-	m_upsmaple_cfg				= accel_trans->upsmaple_cfg;
+	m_upsmaple_cfg				= accel_trans->upsample_cfg;
 	m_crpd_input_row_start_cfg  = accel_trans->crpd_input_row_start_cfg;
 	m_crpd_input_row_end_cfg    = accel_trans->crpd_input_row_end_cfg;
+	print_cfg();
+}
+
+void QUAD::print_cfg()
+{
+	string str = 
+		"Number of Output Columns: " + to_string(m_num_output_col_cfg) + ""
+		"Number of Output Rows: " + to_string(m_num_output_rows_cfg);
+
+	// m_num_kernels_cfg			= accel_trans->num_kernels_cfg;
+	// m_master_QUAD_cfg			= accel_trans->master_QUAD_cfg;
+	// m_cascade_cfg				= accel_trans->cascade_cfg;
+	// m_num_expd_input_cols_cfg	= accel_trans->num_expd_input_cols_cfg;
+	// m_conv_out_fmt0_cfg			= accel_trans->conv_out_fmt0_cfg;
+	// m_padding_cfg				= accel_trans->padding_cfg;
+	// m_upsmaple_cfg				= accel_trans->upsmaple_cfg;
+	// m_crpd_input_row_start_cfg  = accel_trans->crpd_input_row_start_cfg;
+	// m_crpd_input_row_end_cfg    = accel_trans->crpd_input_row_end_cfg;
 }
 
 
@@ -222,7 +242,7 @@ void QUAD::b_job_fetch()
 	int start = sc_time_stamp().to_double();
 	string str = string(name()) + " sent a Pixel Fetch Request at " + sc_time_stamp().to_string() + "\n";
 	cout << str;
-	bus->b_transaction(m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
+	bus->b_request(m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
 	str = string(name()) + " finished Pixel Fetch Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
 	cout << str;
 	wait(m_pfb_wrtn);

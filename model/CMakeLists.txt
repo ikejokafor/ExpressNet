@@ -37,7 +37,7 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 3.8.2)
 # END CMAKE Version ---------------------------------------------------------------------------------------------------------------------------------
 
-set (CMAKE_CXX_STANDARD 11)
+#set (CMAKE_CXX_STANDARD 11)
 
 # BEGIN Target Name ---------------------------------------------------------------------------------------------------------------------------------
 SET(TARGET_NAME cnn_layer_accel_model)
@@ -123,7 +123,7 @@ LINK_DIRECTORIES(
 IF(NOT TARGET_SRCS)
     MESSAGE(FATAL_ERROR "No Source Files Specified")
 ENDIF()
-ADD_EXECUTABLE(${TARGET_NAME} ${TARGET_SRCS} ${TARGET_HEADERS})
+ADD_LIBRARY(${TARGET_NAME} STATIC ${TARGET_SRCS} ${TARGET_HEADERS})
 # END Target Settings -------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -183,7 +183,10 @@ ELSE()
         /usr/include/
         ${PROJECT_SOURCE_DIR}/inc/
         ${PROJECT_SOURCE_DIR}/../../util/inc
-        /home/ikenna/IkennaWorkSpaceUbuntuVM/systemc-2.3.3/src
+        /home/ikenna/downloaded_repos/systemc-2.3.3/src
+        ${PROJECT_SOURCE_DIR}/../../espresso/inc/FPGA/
+        ${PROJECT_SOURCE_DIR}/../../FPGA_shim/inc/
+        ${PROJECT_SOURCE_DIR}/../../fixedPoint/inc/
         #<include_path0>
         #<include_path1>
         #<include_pathN>
@@ -208,8 +211,7 @@ ELSE()
     TARGET_LINK_LIBRARIES(${TARGET_NAME} PUBLIC
         -L/usr/local/lib/
         -L/usr/lib/
-        -L/home/ikenna/IkennaWorkSpaceUbuntuVM/build_static/systemc-2.3.3/src/
-        -lsystemc
+        -L/home/ikenna/downloaded_repos/build/systemc-2.3.3/src/
         #-L<path_to_lib0>
         #-L<path_to_lib1>
         #-L<path_to_libN>

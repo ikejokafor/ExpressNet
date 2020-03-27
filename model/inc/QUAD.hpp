@@ -4,7 +4,7 @@
 #include <queue>
 #include <string>
 #include "systemc"
-#include "common.hpp"
+#include "cnn_layer_accel_common.hpp"
 #include "AWP_if.hpp"
 
 
@@ -62,6 +62,7 @@ SC_MODULE(QUAD)
         
         // Methods
 		void b_cfg_write(unsigned char* data);
+		void print_cfg();
 		void b_pxSeqCfg_write();
 		void b_krnlCfg_write();
 		bool b_job_start();

@@ -7,17 +7,11 @@
 #include "systemc"
 #include "string.h"
 #include "tlm.h"
-#ifdef MODELSIM
-#include "peq_with_cb_and_phase.h"
-#include "simple_initiator_socket.h"
-#include "simple_target_socket.h"
-#else
 #include "tlm_utils/peq_with_cb_and_phase.h"
 #include "tlm_utils/simple_initiator_socket.h"
 #include "tlm_utils/simple_target_socket.h"
-#endif
 #include "mem_mng.hpp"
-#include "common.hpp"
+#include "cnn_layer_accel_common.hpp"
 #include "QUAD.hpp"
 #include "AWP_if.hpp"
 #include "AWPBus.hpp"
@@ -30,6 +24,7 @@ SC_MODULE(AWP)
 		sc_core::sc_in<bool>						clk;
 		tlm_utils::simple_initiator_socket<AWP>		init_soc;
 		tlm_utils::simple_target_socket<AWP>		tar_soc;
+		tlm_utils::simple_target_socket<AWP>		bus_tar_soc;
 		AWPBus										bus;
 
 		// Modules
@@ -43,10 +38,12 @@ SC_MODULE(AWP)
 				m_next_req_id(0)
 		{
 			m_AWP_id = atoi(&std::string(name())[std::string(name()).length() - 1]);
-			
+			bus.m_AWP_id = m_AWP_id;
 			// Bindings
 			tar_soc.register_b_transport(this, &AWP::b_transport);
+			bus_tar_soc.register_b_transport(this, &AWP::bus_tar_b_transport);
 			bus.clk(clk);
+			bus.init_soc(bus_tar_soc);
 
 			
 			// Create Modules
@@ -58,23 +55,7 @@ SC_MODULE(AWP)
 				quad[i]->clk(clk);
 				quad[i]->bus(bus);
 			}
-			
-			// Spawn Processes
-			for (int i = 0; i < MAX_AWP_TRANS; i++)
-			{
-				sc_core::sc_spawn_options args;
-				args.set_sensitivity(&clk);
-				sc_core::sc_spawn(
-					nullptr, 
-					sc_core::sc_bind(
-						&AWP::request_process,
-						this,
-						i
-					),
-					("request_process" + std::to_string(i)).c_str(),
-					&args
-				);
-			}	
+
 
 			// SC processes
 			SC_THREAD(bus_arbitrate)
@@ -100,6 +81,7 @@ SC_MODULE(AWP)
 
 		// Methods
 		void b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
+		void bus_tar_b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
 
 		// Members
 		mem_mng m_mem_mng;
@@ -110,4 +92,5 @@ SC_MODULE(AWP)
 		int	m_next_req_id;
 		std::vector<bool> m_QUADs_cfgd_arr;
 		int m_num_QUADs_cfgd;
+		sc_core::sc_mutex mutex;
 };

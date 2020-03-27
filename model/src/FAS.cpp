@@ -31,11 +31,12 @@ void FAS::ctrl_process()
 			}
 			case ST_ACTIVE:
 			{
-				if (m_partMapFetchCount == m_partMapFetchTotal
+				if (
+					m_partMapFetchCount == m_partMapFetchTotal
 					&& m_inMapFetchCount == m_inMapFetchTotal
 					&& m_krnlFetchCount == m_krnlFetchTotal
 					&& m_resMapFetchCount == m_resMapFetchTotal
-					& m_outBuf_fifo.num_available() == 0
+					&& m_outBuf_fifo.num_available() == 0
 				) {
 					m_state = ST_SEND_COMPLETE;
 				}
@@ -46,7 +47,7 @@ void FAS::ctrl_process()
 				bool all_complete = true;
 				for(int i = 0; i < m_AWP_complt_arr.size(); i++)
 				{
-					if(m_AWP_arr[i] && !m_AWP_complt_arr[i])
+					if(m_AWP_en_arr[i] && !m_AWP_complt_arr[i])
 					{
 						all_complete = false;
 						break;
@@ -103,13 +104,11 @@ void FAS::F_process()
 
 void FAS::A_process()
 {
-	/*
 	while(true)
 	{
 		wait();
 		if (m_state == ST_ACTIVE 
-			&& m_first_iter_cfg 
-			&& m_conv_out_fmt0_cfg 
+			&& !m_first_iter_cfg 
 			&& m_inMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0 
 		) {
@@ -125,7 +124,6 @@ void FAS::A_process()
 		else if(m_state == ST_ACTIVE 
 			&& m_last_iter_cfg 
 			&& m_res_layer_cfg 
-			&& m_conv_out_fmt0_cfg
 			&& m_inMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0 
 			&& m_resMap_fifo.num_available() > 0
@@ -141,8 +139,8 @@ void FAS::A_process()
 			m_wr_outBuf.notify();
 		}
 		else if (m_state == ST_ACTIVE 
-			&& m_first_iter_cfg 
-			&& !m_conv_out_fmt0_cfg
+			&& m_first_iter_cfg
+			&& m_kernel_1x1_cfg
 			&& m_inMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0
 		) {
@@ -167,8 +165,8 @@ void FAS::A_process()
 			}			
 		}
 		else if (m_state == ST_ACTIVE 
-			&& !m_first_iter_cfg 
-			&& !m_conv_out_fmt0_cfg
+			&& !m_first_iter_cfg
+			&& m_kernel_1x1_cfg
 			&& m_inMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0
 		) {
@@ -193,7 +191,6 @@ void FAS::A_process()
 			}	
 		}
 	}
-	*/
 }
 
 
@@ -241,26 +238,6 @@ void FAS::S_process()
 }
 
 
-void FAS::result_process()
-{
-	while(true)
-	{
-		wait(m_result_in);
-		wait();
-		if(m_first_iter_cfg)
-		{
-			nb_fifo_trans(OUTBUF_FIFO, FIFO_WRITE, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
-			wait();	
-		}
-		else
-		{
-			nb_fifo_trans(PARTMAP_FIFO, FIFO_WRITE, RES_PKT_SIZE, PM_FIFO_WR_WIDTH);
-			wait();
-		}
-	}
-}
-
-
 void FAS::resMap_fetch_process()
 {
 	/*
@@ -301,47 +278,51 @@ void FAS::job_fetch_process()
 	sc_time delay;
 	while (true)
 	{
-		wait(m_job_fetch);
 		wait();
-		Accel_Trans* job_fetch_trans = new Accel_Trans();
-		job_fetch_trans->accel_cmd = m_job_fetch_trans.accel_cmd;
-		job_fetch_trans->AWP_id = m_job_fetch_trans.AWP_id;
-		job_fetch_trans->QUAD_id = m_job_fetch_trans.QUAD_id;			
-		trans = nb_createTLMTrans(
-			m_mem_mng,
-			m_job_fetch_trans.AWP_id,
-			TLM_READ_COMMAND,
-			(unsigned char*)job_fetch_trans,
-			(JF_NUM_PIX_READ * PIXEL_SIZE),
-			0,
-			nullptr,
-			false,
-			TLM_INCOMPLETE_RESPONSE
-		);
-		m_sys_mem_bus_sema.wait();
-		sys_mem_init_soc->b_transport(*trans, delay);
-		m_sys_mem_bus_sema.post();
-		rout_init_soc->b_transport(*trans, delay);
-		trans->release();
+		if(m_trans_fifo.num_available() > 0)
+		{
+			m_trans_fifo.nb_read(trans);
+			Accel_Trans* accel_trans = (Accel_Trans*)trans->get_data_ptr();
+			int AWP_id = accel_trans->AWP_id;
+			int QUAD_id = accel_trans->QUAD_id;
+			trans->release();
+			
+			trans = nb_createTLMTrans(
+				m_mem_mng,
+				AWP_id,
+				TLM_READ_COMMAND,
+				nullptr,
+				(JF_NUM_PIX_READ * PIXEL_SIZE),
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);		
+			m_sys_mem_bus_sema.wait();
+			sys_mem_init_soc->b_transport(*trans, delay);
+			m_sys_mem_bus_sema.post();
+			trans->release();
+			
+			accel_trans = new Accel_Trans();
+			accel_trans->accel_cmd = ACCL_CMD_JOB_FETCH;
+			accel_trans->FAS_id = m_FAS_id;
+			accel_trans->AWP_id = AWP_id;
+			accel_trans->QUAD_id = QUAD_id;
+			trans = nb_createTLMTrans(
+				m_mem_mng,
+				AWP_id,
+				TLM_WRITE_COMMAND,
+				(unsigned char*)accel_trans,
+				(JF_NUM_PIX_READ * PIXEL_SIZE),
+				0,
+				nullptr,
+				false,
+				TLM_INCOMPLETE_RESPONSE
+			);
+			rout_init_soc->b_transport(*trans, delay);
+			trans->release();
+		}
 	}	
-}
-
-
-void FAS::b_cfg_FAS(vector<bool> AWP_arr, vector<vector<bool>> AWP_cfg_QUAD_arr, vector<int> num_AWP_QUAD_cfgd, bool first_iter_cfg, bool last_iter_cfg, bool res_layer_cfg, int num_1x1_kernels)
-{
-	wait(clk.posedge_event());
-	m_AWP_arr = AWP_arr;
-	m_AWP_cfg_QUAD_arr = AWP_cfg_QUAD_arr;
-	m_AWP_num_QUAD_cfgd = num_AWP_QUAD_cfgd;
-	m_first_iter_cfg = first_iter_cfg;
-	m_last_iter_cfg = last_iter_cfg;
-	m_res_layer_cfg = res_layer_cfg;
-	int krnl_1x1_depth = MAX_3x3_KERNELS;
-	wait(MAX_1x1_KERNELS * krnl_1x1_depth, SC_NS);
-	for (int i = 0; i <(MAX_3x3_KERNELS * krnl_1x1_depth); i++)
-	{
-		m_krnl_1x1_fifo.nb_write(int());
-	}
 }
 
 
@@ -351,49 +332,93 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
 	Accel_Trans* accel_trans;
 	accel_trans = (Accel_Trans*)trans.get_data_ptr();
 	int awp_id = accel_trans->AWP_id;
-	int res_pkt_size = accel_trans->res_pkt_size;
 	tlm_response_status status = TLM_OK_RESPONSE;
 	switch (accel_trans->accel_cmd)
 	{
 		case ACCL_CMD_JOB_FETCH:
 		{
-			m_job_fetch_trans.accel_cmd = ACCL_CMD_JOB_FETCH;
-			m_job_fetch_trans.AWP_id = accel_trans->AWP_id;
-			m_job_fetch_trans.QUAD_id = accel_trans->QUAD_id;
-			m_job_fetch.notify();
+			m_trans_fifo.nb_write(&trans);
 			break;
 		}
 		case ACCL_CMD_RESULT_WRITE:
-		{
-			m_result_in.notify();
-			m_res_pkt_size = res_pkt_size;
+		{			
+			nb_result_write();
+			trans.release();
 			break;
 		}
 		case ACCL_CMD_JOB_COMPLETE:
 		{
 			m_AWP_complt_arr[awp_id] = true;
+			trans.release();
 			break;
 		}
 	}
-	trans.release();
 }
+
+
+void FAS::nb_result_write()
+{
+	if(m_first_iter_cfg)
+	{
+		nb_fifo_trans(OUTBUF_FIFO, FIFO_WRITE, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
+	}
+	else
+	{
+		nb_fifo_trans(PARTMAP_FIFO, FIFO_WRITE, RES_PKT_SIZE, PM_FIFO_WR_WIDTH);
+	}
+}
+	
 
 
 void FAS::b_cfg_start_AWPs()
 {
+	m_accelCfg->m_address = m_memory[0];
+	m_accelCfg->deserialize();
+
+	wait(clk.posedge_event());
+	AccelConfig::cfg_t* cfg = (AccelConfig::cfg_t*)m_accelCfg->m_address;
+	m_first_iter_cfg 		= cfg[0].first_iter;
+	m_last_iter_cfg 		= cfg[0].last_iter;
+	m_res_layer_cfg 		= cfg[0].res_layer;
+	m_partMapFetchTotal		= cfg[0].partMapFetchTotal;
+	m_inMapFetchTotal    	= cfg[0].inMapFetchTotal;
+	m_krnlFetchTotal     	= cfg[0].krnlFetchTotal;
+	m_resMapFetchTotal   	= cfg[0].resMapFetchTotal;
+
+	m_AWP_en_arr = m_accelCfg->m_FAS_cfg_arr[0]->m_AWP_en_arr;
+	auto AWP_cfg_arr = m_accelCfg->m_FAS_cfg_arr[0]->m_AWP_cfg_arr;
+	for(int i = 0; i < MAX_AWP_PER_FAS; i++)
+	{
+		int num_QUAD_Cfg = 0;
+		for(int j = 0; j < NUM_QUADS_PER_AWP; j++)
+		{
+			m_QUAD_en_arr[i][j] = AWP_cfg_arr[i]->m_QUAD_en_arr[j];
+			num_QUAD_Cfg = (m_QUAD_en_arr[i][j]) ? num_QUAD_Cfg++ : num_QUAD_Cfg;
+		}
+		m_num_QUAD_cfgd[i] = num_QUAD_Cfg;
+	}
+
+	int krnl_1x1_depth = MAX_3x3_KERNELS;
+	wait(MAX_1x1_KERNELS * krnl_1x1_depth, SC_NS);
+	for (int i = 0; i <(MAX_3x3_KERNELS * krnl_1x1_depth); i++)
+	{
+		m_krnl_1x1_fifo.nb_write(int());
+	}
+
+
 	for (int i = 0; i < MAX_AWP_PER_FAS; i++)
 	{
-		if (!m_AWP_arr[i])
+		if (!m_AWP_en_arr[i])
 			continue;
 		for (int j = 0; j < NUM_QUADS_PER_AWP; j++)
 		{
-			if (!m_AWP_cfg_QUAD_arr[i][j])
+			if (!m_QUAD_en_arr[i][j])
 				continue;
 			int idx = index2D(NUM_QUADS_PER_AWP, i, j);
-			b_QUAD_config(idx, i, j);
-			b_QUAD_pix_seq_config(idx, i, j);
-			b_QUAD_krnl_config(idx, i, j);
-			b_QUAD_job_start(idx, i, j);
+			b_QUAD_config(i, j);
+			b_QUAD_pix_seq_config(i, j);
+			b_QUAD_krnl_config(i, j);
+			b_QUAD_job_start(i, j);
 		}
 	}
 }
@@ -457,36 +482,34 @@ void FAS::nb_fifo_trans(fifo_sel_t fifo_sel, FAS::fifo_cmd_t fifo_cmd, int fifo_
 }
 
 
-void FAS::b_QUAD_config(int trans_idx, int AWP_addr, int QUAD_addr)
+void FAS::b_QUAD_config(int AWP_addr, int QUAD_addr)
 {
 	wait(clk->posedge_event());
 	sc_time delay;
 	tlm::tlm_generic_payload* trans;
-	// payload needs its own unique data Structure
+	auto QUAD_cfg 							= m_accelCfg->m_FAS_cfg_arr[m_FAS_id]->m_AWP_cfg_arr[AWP_addr]->m_QUAD_cfg_arr[QUAD_addr];
 	Accel_Trans* accel_trans				= new Accel_Trans();
 	accel_trans->accel_cmd					= ACCL_CMD_CFG_WRITE;
 	accel_trans->QUAD_id					= QUAD_addr;
 	accel_trans->FAS_id						= m_FAS_id;
-	accel_trans->num_QUADS_cfgd				= m_AWP_num_QUAD_cfgd[AWP_addr];
-	accel_trans->num_output_col_cfg			= m_accel_trans_arr[trans_idx].num_output_col_cfg;	
-	accel_trans->num_output_rows_cfg		= m_accel_trans_arr[trans_idx].num_output_rows_cfg;
-	accel_trans->num_kernels_cfg			= m_accel_trans_arr[trans_idx].num_kernels_cfg;
-	accel_trans->master_QUAD_cfg			= m_accel_trans_arr[trans_idx].master_QUAD_cfg;
-	accel_trans->cascade_cfg				= m_accel_trans_arr[trans_idx].cascade_cfg;
-	accel_trans->num_expd_input_cols_cfg	= m_accel_trans_arr[trans_idx].num_expd_input_cols_cfg;
-	accel_trans->accel_cmd					= m_accel_trans_arr[trans_idx].accel_cmd;
-	accel_trans->conv_out_fmt0_cfg			= m_accel_trans_arr[trans_idx].conv_out_fmt0_cfg;
-	accel_trans->padding_cfg				= m_accel_trans_arr[trans_idx].padding_cfg;
-	accel_trans->upsmaple_cfg				= m_accel_trans_arr[trans_idx].upsmaple_cfg;
-	accel_trans->crpd_input_row_start_cfg	= m_accel_trans_arr[trans_idx].crpd_input_row_start_cfg;
-	accel_trans->crpd_input_row_end_cfg		= m_accel_trans_arr[trans_idx].crpd_input_row_end_cfg;
-	accel_trans->num_1x1_kernels_cfg		= m_accel_trans_arr[trans_idx].num_1x1_kernels_cfg;
+	accel_trans->num_QUADS_cfgd				= m_num_QUAD_cfgd[AWP_addr];
+	accel_trans->num_output_col_cfg			= QUAD_cfg->m_num_output_col;	
+	accel_trans->num_output_rows_cfg		= QUAD_cfg->m_num_output_rows;
+	accel_trans->num_kernels_cfg			= QUAD_cfg->m_num_kernels;
+	accel_trans->master_QUAD_cfg			= QUAD_cfg->m_master_QUAD;
+	accel_trans->cascade_cfg				= QUAD_cfg->m_cascade;
+	accel_trans->num_expd_input_cols_cfg	= QUAD_cfg->m_num_expd_input_cols;
+	accel_trans->conv_out_fmt0_cfg			= true;
+	accel_trans->padding_cfg				= QUAD_cfg->m_padding;
+	accel_trans->upsample_cfg				= QUAD_cfg->m_upsample;
+	accel_trans->crpd_input_row_start_cfg	= QUAD_cfg->m_crpd_input_row_start;
+	accel_trans->crpd_input_row_end_cfg		= QUAD_cfg->m_crpd_input_row_end;
 	trans = nb_createTLMTrans(
 		m_mem_mng,
 		AWP_addr,
 		TLM_IGNORE_COMMAND,
 		(unsigned char*)accel_trans,
-		6,
+		0,
 		0,
 		nullptr,
 		false,
@@ -498,7 +521,7 @@ void FAS::b_QUAD_config(int trans_idx, int AWP_addr, int QUAD_addr)
 }
 
 
-void FAS::b_QUAD_pix_seq_config(int trans_idx, int AWP_addr, int QUAD_addr)
+void FAS::b_QUAD_pix_seq_config(int AWP_addr, int QUAD_addr)
 {
 	wait(clk->posedge_event());
 	sc_time delay;
@@ -512,7 +535,7 @@ void FAS::b_QUAD_pix_seq_config(int trans_idx, int AWP_addr, int QUAD_addr)
 		AWP_addr,
 		TLM_IGNORE_COMMAND,
 		(unsigned char*)accel_trans,
-		7,
+		0,
 		0,
 		nullptr,
 		false,
@@ -524,7 +547,7 @@ void FAS::b_QUAD_pix_seq_config(int trans_idx, int AWP_addr, int QUAD_addr)
 }
 
 
-void FAS::b_QUAD_krnl_config(int trans_idx, int AWP_addr, int QUAD_addr)
+void FAS::b_QUAD_krnl_config(int AWP_addr, int QUAD_addr)
 {
 	wait(clk->posedge_event());
 	sc_time delay;
@@ -538,18 +561,19 @@ void FAS::b_QUAD_krnl_config(int trans_idx, int AWP_addr, int QUAD_addr)
 		AWP_addr,
 		TLM_IGNORE_COMMAND,
 		(unsigned char*)accel_trans,
-		7,
+		0,
 		0,
 		nullptr,
 		false,
-		TLM_INCOMPLETE_RESPONSE);
+		TLM_INCOMPLETE_RESPONSE
+	);
 	wait(clk->posedge_event());
 	rout_init_soc->b_transport(*trans, delay);
 	trans->release();
 }
 
 
-void FAS::b_QUAD_job_start(int trans_idx, int AWP_addr, int QUAD_addr)
+void FAS::b_QUAD_job_start(int AWP_addr, int QUAD_addr)
 {
 	wait(clk->posedge_event());
 	sc_time delay;
@@ -563,11 +587,12 @@ void FAS::b_QUAD_job_start(int trans_idx, int AWP_addr, int QUAD_addr)
 		AWP_addr,
 		TLM_IGNORE_COMMAND,
 		(unsigned char*)accel_trans,
-		7,
+		0,
 		0,
 		nullptr,
 		false,
-		TLM_INCOMPLETE_RESPONSE);
+		TLM_INCOMPLETE_RESPONSE
+	);
 	wait(clk->posedge_event());
 	rout_init_soc->b_transport(*trans, delay);
 	trans->release();
