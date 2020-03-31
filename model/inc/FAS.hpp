@@ -16,6 +16,12 @@
 #include "fixedPoint.hpp"
 #include "FPGA_shim.hpp"
 #include "AccelConfig.hpp"
+#include "InputMaps.hpp"
+#include "PartialMaps.hpp"
+#include "ResidualMaps.hpp"
+#include "Bias.hpp"
+#include "OutputMaps.hpp"
+#include "Kernels.hpp"
 
 
 SC_MODULE(FAS)
@@ -87,8 +93,7 @@ SC_MODULE(FAS)
 			m_partMapFetchTotal		= 0;
 			m_inMapFetchCount		= 0;
 			m_inMapFetchTotal		= 0;
-			m_krnlFetchCount		= 0;
-			m_krnlFetchTotal		= 0;
+			m_krnl1x1FetchCount		= 0;
 			m_resMapFetchCount		= 0;
 			m_resMapFetchTotal		= 0;
 
@@ -112,9 +117,12 @@ SC_MODULE(FAS)
 		
 		// Methods
 		void nb_result_write();
-		void b_cfg_start_AWPs();
 		void nb_fifo_trans(sc_core::sc_fifo<int>& fifo, fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width);
 		void nb_fifo_trans(fifo_sel_t fifo_sel, fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width);
+		void b_cfg_Accel();
+		void b_getCfgData();
+		void b_cfg1x1Kernels();
+		void b_sendCfgs();
 		void b_QUAD_config(int AWP_addr, int QUAD_addr);
 		void b_QUAD_pix_seq_config(int AWP_addr, int QUAD_addr);
 		void b_QUAD_krnl_config(int AWP_addr, int QUAD_addr);
@@ -141,18 +149,18 @@ SC_MODULE(FAS)
 		int								m_inMapFetchCount		;
 		int								m_inMapFetchTotal       ;
 		sc_core::sc_fifo<int>			m_krnl_1x1_fifo         ;
-		int								m_krnlFetchCount		;
-		int								m_krnlFetchTotal        ;
+		int								m_krnl1x1FetchCount		;
+		int								m_krnl1x1FetchTotal     ;
 		sc_core::sc_fifo<int>			m_resMap_fifo           ;
 		int								m_resMapFetchCount		;
 		int								m_resMapFetchTotal      ;
 		sc_core::sc_fifo<int>			m_outBuf_fifo           ;
-		bool							m_first_iter_cfg        ;
+		bool							m_first_depth_iter_cfg  ;
+		bool							m_last_depth_iter_cfg   ;
 		bool							m_conv_out_fmt0_cfg     ;
 	    int								m_res_pkt_size          ;
-		bool							m_last_iter_cfg         ;
-		bool							m_res_layer_cfg         ;
-		bool							m_kernel_1x1_cfg		;
+		bool							m_do_res_layer_cfg      ;
+		bool							m_do_kernel1x1_cfg		;
 		int								m_process_count         ;
 		sc_core::sc_event				m_job_fetch             ;
 		Accel_Trans 					m_job_fetch_trans       ;

@@ -25,7 +25,7 @@ void FAS::ctrl_process()
 			}
 			case ST_CFG_START_AWP:
 			{
-				b_cfg_start_AWPs();
+				b_cfg_Accel();
 				m_state = ST_ACTIVE;
 				break;
 			}
@@ -34,7 +34,7 @@ void FAS::ctrl_process()
 				if (
 					m_partMapFetchCount == m_partMapFetchTotal
 					&& m_inMapFetchCount == m_inMapFetchTotal
-					&& m_krnlFetchCount == m_krnlFetchTotal
+					&& m_krnl1x1FetchCount == m_krnl1x1FetchTotal
 					&& m_resMapFetchCount == m_resMapFetchTotal
 					&& m_outBuf_fifo.num_available() == 0
 				) {
@@ -108,7 +108,7 @@ void FAS::A_process()
 	{
 		wait();
 		if (m_state == ST_ACTIVE 
-			&& !m_first_iter_cfg 
+			&& !m_first_depth_iter_cfg 
 			&& m_inMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0 
 		) {
@@ -122,8 +122,8 @@ void FAS::A_process()
 			m_wr_outBuf.notify();
 		}
 		else if(m_state == ST_ACTIVE 
-			&& m_last_iter_cfg 
-			&& m_res_layer_cfg 
+			&& m_last_depth_iter_cfg 
+			&& m_do_res_layer_cfg 
 			&& m_inMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0 
 			&& m_resMap_fifo.num_available() > 0
@@ -139,8 +139,8 @@ void FAS::A_process()
 			m_wr_outBuf.notify();
 		}
 		else if (m_state == ST_ACTIVE 
-			&& m_first_iter_cfg
-			&& m_kernel_1x1_cfg
+			&& m_first_depth_iter_cfg
+			&& m_do_kernel1x1_cfg
 			&& m_inMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0
 		) {
@@ -165,8 +165,8 @@ void FAS::A_process()
 			}			
 		}
 		else if (m_state == ST_ACTIVE 
-			&& !m_first_iter_cfg
-			&& m_kernel_1x1_cfg
+			&& !m_first_depth_iter_cfg
+			&& m_do_kernel1x1_cfg
 			&& m_inMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0
 		) {
@@ -358,93 +358,13 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
 
 void FAS::nb_result_write()
 {
-	if(m_first_iter_cfg)
+	if(m_first_depth_iter_cfg)
 	{
 		nb_fifo_trans(OUTBUF_FIFO, FIFO_WRITE, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
 	}
 	else
 	{
 		nb_fifo_trans(PARTMAP_FIFO, FIFO_WRITE, RES_PKT_SIZE, PM_FIFO_WR_WIDTH);
-	}
-}
-	
-
-
-void FAS::b_cfg_start_AWPs()
-{
-	m_accelCfg->m_address = m_memory[0];
-	m_accelCfg->deserialize();
-
-	wait(clk.posedge_event());
-	AccelConfig::cfg_t* cfg = (AccelConfig::cfg_t*)m_accelCfg->m_address;
-	m_first_iter_cfg 		= cfg[0].first_iter;
-	m_last_iter_cfg 		= cfg[0].last_iter;
-	m_res_layer_cfg 		= cfg[0].res_layer;
-	m_partMapFetchTotal		= cfg[0].partMapFetchTotal;
-	m_inMapFetchTotal    	= cfg[0].inMapFetchTotal;
-	m_krnlFetchTotal     	= cfg[0].krnlFetchTotal;
-	m_resMapFetchTotal   	= cfg[0].resMapFetchTotal;
-
-	m_AWP_en_arr = m_accelCfg->m_FAS_cfg_arr[0]->m_AWP_en_arr;
-	auto AWP_cfg_arr = m_accelCfg->m_FAS_cfg_arr[0]->m_AWP_cfg_arr;
-	for(int i = 0; i < MAX_AWP_PER_FAS; i++)
-	{
-		int num_QUAD_Cfg = 0;
-		for(int j = 0; j < NUM_QUADS_PER_AWP; j++)
-		{
-			m_QUAD_en_arr[i][j] = AWP_cfg_arr[i]->m_QUAD_en_arr[j];
-			num_QUAD_Cfg = (m_QUAD_en_arr[i][j]) ? num_QUAD_Cfg++ : num_QUAD_Cfg;
-		}
-		m_num_QUAD_cfgd[i] = num_QUAD_Cfg;
-	}
-
-	int krnl_1x1_depth = MAX_3x3_KERNELS;
-	wait(MAX_1x1_KERNELS * krnl_1x1_depth, SC_NS);
-	for (int i = 0; i <(MAX_3x3_KERNELS * krnl_1x1_depth); i++)
-	{
-		m_krnl_1x1_fifo.nb_write(int());
-	}
-
-
-	for (int i = 0; i < MAX_AWP_PER_FAS; i++)
-	{
-		if (!m_AWP_en_arr[i])
-			continue;
-		for (int j = 0; j < NUM_QUADS_PER_AWP; j++)
-		{
-			if (!m_QUAD_en_arr[i][j])
-				continue;
-			int idx = index2D(NUM_QUADS_PER_AWP, i, j);
-			b_QUAD_config(i, j);
-			b_QUAD_pix_seq_config(i, j);
-			b_QUAD_krnl_config(i, j);
-			b_QUAD_job_start(i, j);
-		}
-	}
-}
-
-
-void FAS::nb_fifo_trans(sc_core::sc_fifo<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width)
-{
-	for (int i = 0; i < fifo_trans_size; i += fifo_trans_width)
-	{
-		for (int j = 0; j < fifo_trans_width; j++)
-		{
-			switch (fifo_cmd)
-			{
-				case FAS::FIFO_READ:
-				{
-					int dummy;
-					fifo.nb_read(dummy);
-					break;
-				}
-				case FAS::FIFO_WRITE:
-				{
-					fifo.nb_write(int());
-					break;
-				}
-			}
-		}
 	}
 }
 
@@ -477,6 +397,100 @@ void FAS::nb_fifo_trans(fifo_sel_t fifo_sel, FAS::fifo_cmd_t fifo_cmd, int fifo_
 		{
 			nb_fifo_trans(m_outBuf_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);			
 			break;
+		}
+	}
+}
+
+
+void FAS::nb_fifo_trans(sc_core::sc_fifo<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width)
+{
+	for (int i = 0; i < fifo_trans_size; i += fifo_trans_width)
+	{
+		for (int j = 0; j < fifo_trans_width; j++)
+		{
+			switch (fifo_cmd)
+			{
+				case FAS::FIFO_READ:
+				{
+					int dummy;
+					fifo.nb_read(dummy);
+					break;
+				}
+				case FAS::FIFO_WRITE:
+				{
+					fifo.nb_write(int());
+					break;
+				}
+			}
+		}
+	}
+}
+
+
+void FAS::b_cfg_Accel()
+{
+	b_getCfgData();
+	b_cfg1x1Kernels();
+	b_sendCfgs();
+}
+
+
+void FAS::b_getCfgData()
+{
+	m_accelCfg->m_address = m_memory[0];
+	m_accelCfg->deserialize();
+
+	wait(clk.posedge_event());
+	AccelConfig::cfg_t* cfg 	= (AccelConfig::cfg_t*)m_accelCfg->m_address;
+	m_first_depth_iter_cfg 		= cfg[0].first_depth_iter;
+	m_last_depth_iter_cfg 		= cfg[0].last_depth_iter;
+	m_do_res_layer_cfg 			= cfg[0].do_res_layer;
+	m_partMapFetchTotal			= cfg[0].partMapFetchTotal;
+	m_inMapFetchTotal    		= cfg[0].inMapFetchTotal;
+	m_krnl1x1FetchTotal     	= cfg[0].krnl1x1FetchTotal;
+	m_resMapFetchTotal   		= cfg[0].resMapFetchTotal;
+
+	m_AWP_en_arr = m_accelCfg->m_FAS_cfg_arr[0]->m_AWP_en_arr;
+	auto AWP_cfg_arr = m_accelCfg->m_FAS_cfg_arr[0]->m_AWP_cfg_arr;
+	for(int i = 0; i < MAX_AWP_PER_FAS; i++)
+	{
+		int num_QUAD_Cfg = 0;
+		for(int j = 0; j < NUM_QUADS_PER_AWP; j++)
+		{
+			m_QUAD_en_arr[i][j] = AWP_cfg_arr[i]->m_QUAD_en_arr[j];
+			num_QUAD_Cfg = (m_QUAD_en_arr[i][j]) ? num_QUAD_Cfg++ : num_QUAD_Cfg;
+		}
+		m_num_QUAD_cfgd[i] = num_QUAD_Cfg;
+	}
+}
+
+
+void FAS::b_cfg1x1Kernels()
+{
+	int krnl_1x1_depth = MAX_3x3_KERNELS;
+	wait(MAX_1x1_KERNELS * krnl_1x1_depth, SC_NS);
+	for (int i = 0; i <(MAX_3x3_KERNELS * krnl_1x1_depth); i++)
+	{
+		m_krnl_1x1_fifo.nb_write(int());
+	}
+}
+
+
+void FAS::b_sendCfgs()
+{
+	for (int i = 0; i < MAX_AWP_PER_FAS; i++)
+	{
+		if (!m_AWP_en_arr[i])
+			continue;
+		for (int j = 0; j < NUM_QUADS_PER_AWP; j++)
+		{
+			if (!m_QUAD_en_arr[i][j])
+				continue;
+			int idx = index2D(NUM_QUADS_PER_AWP, i, j);
+			b_QUAD_config(i, j);
+			b_QUAD_pix_seq_config(i, j);
+			b_QUAD_krnl_config(i, j);
+			b_QUAD_job_start(i, j);
 		}
 	}
 }

@@ -22,45 +22,6 @@ CNN_Layer_Accel::~CNN_Layer_Accel()
 void CNN_Layer_Accel::main_process()
 {
 	string str;
-	// m_AWP_arr[0][0] = false;
-	// m_AWP_arr[0][1] = true;
-	// m_AWP_num_QUADS_cfgd[0][0] = 0;
-	// m_AWP_num_QUADS_cfgd[0][1] = 4;
-	// m_AWP_cfg_QUAD_arr[0][1][0] = true;
-	// m_AWP_cfg_QUAD_arr[0][1][1] = true;
-	// m_AWP_cfg_QUAD_arr[0][1][2] = true;
-	// m_AWP_cfg_QUAD_arr[0][1][3] = true;
-
-	// for (int i = 0; i < NUM_FAS; i++)
-	// {
-	// 	fas[i]->m_accel_trans_arr = new Accel_Trans[MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP];
-	// 	bool first_iter_cfg = true;
-	// 	bool last_iter_cfg = true;
-	// 	bool res_layer_cfg = true;				
-	// 	int num_1x1_kernels = 0;
-	// 	fas[i]->b_cfg_FAS(m_AWP_arr[i], m_AWP_cfg_QUAD_arr[i], m_AWP_num_QUADS_cfgd[i], first_iter_cfg, last_iter_cfg, res_layer_cfg, num_1x1_kernels);
-	// 	for (int j = 0; j < MAX_AWP_PER_FAS; j++)
-	// 	{
-	// 		for (int k = 0; k < NUM_QUADS_PER_AWP; k++)
-	// 		{
-	// 			int idx = index2D(NUM_QUADS_PER_AWP, j, k);
-	// 			fas[i]->m_accel_trans_arr[idx].num_output_col_cfg = 19;
-	// 			fas[i]->m_accel_trans_arr[idx].num_output_rows_cfg = 19;
-	// 			fas[i]->m_accel_trans_arr[idx].num_kernels_cfg = 5;
-	// 			fas[i]->m_accel_trans_arr[idx].master_QUAD_cfg = true;
-	// 			fas[i]->m_accel_trans_arr[idx].cascade_cfg = false;
-	// 			fas[i]->m_accel_trans_arr[idx].num_expd_input_cols_cfg = 19;
-	// 			fas[i]->m_accel_trans_arr[idx].accel_cmd = ACCL_CMD_CFG_WRITE;
-	// 			fas[i]->m_accel_trans_arr[idx].conv_out_fmt0_cfg = false;
-	// 			fas[i]->m_accel_trans_arr[idx].padding_cfg = false;
-	// 			fas[i]->m_accel_trans_arr[idx].upsmaple_cfg = false;
-	// 			fas[i]->m_accel_trans_arr[idx].crpd_input_row_start_cfg = 1;
-	// 			fas[i]->m_accel_trans_arr[idx].crpd_input_row_end_cfg = 17;  // num_output_rows_cfg - 2
-	// 			fas[i]->m_accel_trans_arr[idx].num_1x1_kernels_cfg = 6;
-	// 		}
-	// 	}
-
-	// }
 	while (true)
 	{
 		wait();
@@ -73,7 +34,7 @@ void CNN_Layer_Accel::main_process()
 	 			break;
 	 		}
 	 	}
-	 	if (all_complete)
+	 	if(all_complete)
 	 	{
 	 		str = "Processing Complete at " + sc_time_stamp().to_string() + "\n";
 	 		m_complete.notify();
@@ -111,9 +72,13 @@ void CNN_Layer_Accel::setMemory(uint64_t addr)
 
 void CNN_Layer_Accel::start()
 {
-	// TODO: Extend for multiple FAS 
-	fas[0]->m_start.notify();
-	wait(fas[0]->m_start_ack);
+	// TODO: Extend for multiple FAS
+	for(int i = 0; i < NUM_FAS; i++)
+	{
+		fas[i]->m_start.notify();
+		wait(fas[i]->m_start_ack);
+		wait();
+	}
 }
 
 
