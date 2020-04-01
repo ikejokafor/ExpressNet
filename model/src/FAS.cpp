@@ -484,7 +484,9 @@ void FAS::b_sendCfgs()
 		for (int j = 0; j < NUM_QUADS_PER_AWP; j++)
 		{
 			if (!m_QUAD_en_arr[i][j])
+			{
 				continue;
+			}
 			int idx = index2D(NUM_QUADS_PER_AWP, i, j);
 			b_QUAD_config(i, j);
 			b_QUAD_pix_seq_config(i, j);

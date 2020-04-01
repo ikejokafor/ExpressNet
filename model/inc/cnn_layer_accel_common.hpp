@@ -10,6 +10,7 @@
 #include "util.hpp"
 
 
+// #define VERBOSE_DEBUG
 #define CLK_PRD					10
 #define MAX_NETWORK_TRANS		1
 #define NUM_FAS					1

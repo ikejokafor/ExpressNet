@@ -19,10 +19,14 @@ void QUAD::ctrl_process_0()
         {
             case ST_WAIT_PFB_LOAD:
 			{
-				if(!(m_padding_cfg && (m_input_row == m_crpd_input_row_start_cfg || m_input_row == m_crpd_input_row_end_cfg)))
+				if(m_padding_cfg && (m_input_row < m_crpd_input_row_start_cfg || m_input_row > m_crpd_input_row_end_cfg))
+				{
+					b_pfb_write();
+				}
+				else
 				{
 					b_job_fetch();
-				}
+				}				
                 m_state = m_return_state;
                 break;
             }              
@@ -49,13 +53,14 @@ void QUAD::ctrl_process_0()
             {
 				if(m_output_row != m_num_output_rows_cfg && m_pfb_count == 0)
 				{
-					str = string(name()) + " finished output Row " + to_string(m_output_row) + " at time " + sc_time_stamp().to_string() + "\n";
+					str = string(name()) + " finished output Row " + to_string(m_output_row - 1) + " at time " + sc_time_stamp().to_string() + "\n";
 					cout << str;
 					m_return_state = ST_ACTIVE;
 					m_state = ST_WAIT_PFB_LOAD;
 				}
 				else if (m_output_row == m_num_output_rows_cfg && m_pfb_count == 0)
 				{
+					str = string(name()) + " finished output Row " + to_string(m_output_row - 1) + " at time " + sc_time_stamp().to_string() + "\n";
 					m_state = ST_WAIT_LAST_RES_WRITE;
 				}
 				else
@@ -151,16 +156,22 @@ void QUAD::result_process()
 				}
 				wait();
 			}
+#ifdef VERBOSE_DEBUG
 			int start = sc_time_stamp().to_double();
 			str = string(name()) + " sent a Pixel Write Request at " + sc_time_stamp().to_string() + "\n";
 			cout << str;
+#endif
 			bus->b_request(m_QUAD_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE);
+#ifdef VERBOSE_DEBUG			
 			str = string(name()) + " finished Pixel Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
 			cout << str;
+#endif
 			if (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo.num_available() == 0)
 			{
+#ifdef VERBOSE_DEBUG
 				str = string(name()) + " finished sending last Pixel Write Request at " + sc_time_stamp().to_string() + "\n";
 				cout << str;
+#endif
 				m_last_res_wrtn = true;
 			}
 		}
@@ -191,20 +202,19 @@ void QUAD::b_cfg_write(unsigned char* data)
 void QUAD::print_cfg()
 {
 	string str = 
-		"Number of Output Columns: " + to_string(m_num_output_col_cfg) + ""
-		"Number of Output Rows: " + to_string(m_num_output_rows_cfg);
-
-	// m_num_kernels_cfg			= accel_trans->num_kernels_cfg;
-	// m_master_QUAD_cfg			= accel_trans->master_QUAD_cfg;
-	// m_cascade_cfg				= accel_trans->cascade_cfg;
-	// m_num_expd_input_cols_cfg	= accel_trans->num_expd_input_cols_cfg;
-	// m_conv_out_fmt0_cfg			= accel_trans->conv_out_fmt0_cfg;
-	// m_padding_cfg				= accel_trans->padding_cfg;
-	// m_upsmaple_cfg				= accel_trans->upsmaple_cfg;
-	// m_crpd_input_row_start_cfg  = accel_trans->crpd_input_row_start_cfg;
-	// m_crpd_input_row_end_cfg    = accel_trans->crpd_input_row_end_cfg;
+		string(name()) + "Configured with....\n" + ""
+		"\tNumber of Output Columns:\t\t" + to_string(m_num_output_col_cfg) + "\n"
+		"\tNumber of Output Rows:\t\t\t" + to_string(m_num_output_rows_cfg) + "\n"
+		"\tNumber of Kernels:\t\t\t" + to_string(m_num_kernels_cfg) + "\n" 		
+		"\tMaster QUAD:\t\t\t\t" + to_string(m_master_QUAD_cfg) + "\n"			
+		"\tCascade:\t\t\t\t" + to_string(m_cascade_cfg) + "\n"				
+		"\tNumber of Expanded Input Coloumn:\t" + to_string(m_num_expd_input_cols_cfg) + "\n"	
+		"\tPadding:\t\t\t\t" + to_string(m_padding_cfg) + "\n"				
+		"\tUpsmaple:\t\t\t\t" + to_string(m_upsmaple_cfg) + "\n"				
+		"\tCropped Input Row Start:\t\t" + to_string(m_crpd_input_row_start_cfg) + "\n"  
+		"\tCropped Input Row End:\t\t\t" + to_string(m_crpd_input_row_end_cfg) + "\n"; 
+	cout << str;
 }
-
 
 
 void QUAD::b_pxSeqCfg_write()
@@ -239,12 +249,16 @@ bool QUAD::b_job_start()
 
 void QUAD::b_job_fetch()
 {
+#ifdef VERBOSE_DEBUG
 	int start = sc_time_stamp().to_double();
 	string str = string(name()) + " sent a Pixel Fetch Request at " + sc_time_stamp().to_string() + "\n";
 	cout << str;
+#endif
 	bus->b_request(m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
+#ifdef VERBOSE_DEBUG
 	str = string(name()) + " finished Pixel Fetch Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
 	cout << str;
+#endif
 	wait(m_pfb_wrtn);
 	wait();
 }
@@ -252,8 +266,10 @@ void QUAD::b_job_fetch()
 
 void QUAD::b_pfb_write()
 {
+#ifdef VERBOSE_DEBUG
 	string str = string(name()) + " is doing a Prefetch Buffer Write\n";
 	cout << str;
+#endif
 	wait(m_num_expd_input_cols_cfg, SC_NS);
 	m_pfb_count = m_num_expd_input_cols_cfg;
 	m_pfb_wrtn.notify();
@@ -262,18 +278,7 @@ void QUAD::b_pfb_write()
 
 void QUAD::b_pfb_read()
 {
-	if(m_padding_cfg)
-	{
-		wait(m_num_expd_input_cols_cfg + 2, SC_NS);
-	}
-	else if(m_upsmaple_cfg)
-	{
-		wait(m_num_expd_input_cols_cfg * 2, SC_NS);
-	}
-	else
-	{
-		wait(m_num_expd_input_cols_cfg, SC_NS);
-	}
+	wait(m_num_expd_input_cols_cfg, SC_NS);
 	m_input_row = m_input_row + 1;
 	m_pfb_count = 0;
 }
