@@ -48,7 +48,6 @@ SC_MODULE(CNN_Layer_Accel)
 				fas[i]->rout_init_soc(FAS2AWP_bus.tar_soc);
 				AWP2FAS_bus.init_soc(fas[i]->rout_tar_soc);
 				fas[i]->sys_mem_init_soc(tar_soc);
-				fas[i]->m_memory = m_memory;
 				for (int j = 0; j < MAX_AWP_PER_FAS; j++, k++)
 				{
 					awp[k] = new AWP(("AWP_" + std::to_string(k)).c_str());
@@ -69,10 +68,13 @@ SC_MODULE(CNN_Layer_Accel)
 					sc_core::sc_bind(
 						&CNN_Layer_Accel::complt_process,
 						this,
-						i),
+						i
+					),
 					("complt_process" + std::to_string(i)).c_str(),
-					&args);
-			}	
+					&args
+				);
+			}
+			m_accelCfg = new AccelConfig();
 		}
 
 		// Destructor
@@ -91,6 +93,7 @@ SC_MODULE(CNN_Layer_Accel)
 
 		// Members
 		sc_core::sc_event m_complete;
+		AccelConfig* m_accelCfg;
 		std::vector<uint64_t> m_memory;
 		std::vector<bool> m_FAS_complt_arr;
 		std::vector<std::vector<bool>> m_AWP_arr;

@@ -72,9 +72,11 @@ void CNN_Layer_Accel::setMemory(uint64_t addr)
 
 void CNN_Layer_Accel::start()
 {
-	// TODO: Extend for multiple FAS
+	m_accelCfg->m_address = m_memory[0];
+	m_accelCfg->deserialize();
 	for(int i = 0; i < NUM_FAS; i++)
 	{
+		fas[i]->m_FAS_cfg = m_accelCfg->m_FAS_cfg_arr[i];
 		fas[i]->m_start.notify();
 		wait(fas[i]->m_start_ack);
 		wait();

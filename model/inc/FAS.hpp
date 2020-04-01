@@ -96,8 +96,6 @@ SC_MODULE(FAS)
 			m_krnl1x1FetchCount		= 0;
 			m_resMapFetchCount		= 0;
 			m_resMapFetchTotal		= 0;
-
-			m_accelCfg = new AccelConfig();
 		}
 
 		// Destructor
@@ -129,8 +127,7 @@ SC_MODULE(FAS)
 		void b_QUAD_job_start(int AWP_addr, int QUAD_addr);
 	
 		// Members
-		std::vector<uint64_t>			m_memory				;
-		AccelConfig* 					m_accelCfg				;
+		FAS_cfg*						m_FAS_cfg				;
 		mem_mng							m_mem_mng               ;
 		sc_core::sc_event				m_start                 ;
 		sc_core::sc_event				m_start_ack             ;

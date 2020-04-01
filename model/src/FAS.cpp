@@ -437,30 +437,27 @@ void FAS::b_cfg_Accel()
 
 void FAS::b_getCfgData()
 {
-	m_accelCfg->m_address = m_memory[0];
-	m_accelCfg->deserialize();
-
 	wait(clk.posedge_event());
-	AccelConfig::cfg_t* cfg 	= (AccelConfig::cfg_t*)m_accelCfg->m_address;
-	m_first_depth_iter_cfg 		= cfg[0].first_depth_iter;
-	m_last_depth_iter_cfg 		= cfg[0].last_depth_iter;
-	m_do_res_layer_cfg 			= cfg[0].do_res_layer;
-	m_partMapFetchTotal			= cfg[0].partMapFetchTotal;
-	m_inMapFetchTotal    		= cfg[0].inMapFetchTotal;
-	m_krnl1x1FetchTotal     	= cfg[0].krnl1x1FetchTotal;
-	m_resMapFetchTotal   		= cfg[0].resMapFetchTotal;
+	m_first_depth_iter_cfg 		= m_FAS_cfg->m_first_depth_iter;
+	m_last_depth_iter_cfg 		= m_FAS_cfg->m_last_depth_iter;
+	m_do_res_layer_cfg 			= m_FAS_cfg->m_do_res_layer;
+	m_inMapFetchTotal    		= m_FAS_cfg->m_inMapFetchTotal;
+	m_partMapFetchTotal			= m_FAS_cfg->m_partMapFetchTotal;
+	m_krnl1x1FetchTotal     	= m_FAS_cfg->m_krnl1x1FetchTotal;
+	m_resMapFetchTotal   		= m_FAS_cfg->m_resMapFetchTotal;
 
-	m_AWP_en_arr = m_accelCfg->m_FAS_cfg_arr[0]->m_AWP_en_arr;
-	auto AWP_cfg_arr = m_accelCfg->m_FAS_cfg_arr[0]->m_AWP_cfg_arr;
+	m_AWP_en_arr = m_FAS_cfg->m_AWP_en_arr;
+	auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
+	m_QUAD_en_arr.resize(MAX_AWP_PER_FAS);
 	for(int i = 0; i < MAX_AWP_PER_FAS; i++)
 	{
 		int num_QUAD_Cfg = 0;
 		for(int j = 0; j < NUM_QUADS_PER_AWP; j++)
 		{
-			m_QUAD_en_arr[i][j] = AWP_cfg_arr[i]->m_QUAD_en_arr[j];
+			m_QUAD_en_arr[i].push_back(AWP_cfg_arr[i]->m_QUAD_en_arr[j]);
 			num_QUAD_Cfg = (m_QUAD_en_arr[i][j]) ? num_QUAD_Cfg++ : num_QUAD_Cfg;
 		}
-		m_num_QUAD_cfgd[i] = num_QUAD_Cfg;
+		m_num_QUAD_cfgd.push_back(num_QUAD_Cfg);
 	}
 }
 
@@ -481,7 +478,9 @@ void FAS::b_sendCfgs()
 	for (int i = 0; i < MAX_AWP_PER_FAS; i++)
 	{
 		if (!m_AWP_en_arr[i])
+		{
 			continue;
+		}
 		for (int j = 0; j < NUM_QUADS_PER_AWP; j++)
 		{
 			if (!m_QUAD_en_arr[i][j])
@@ -501,7 +500,7 @@ void FAS::b_QUAD_config(int AWP_addr, int QUAD_addr)
 	wait(clk->posedge_event());
 	sc_time delay;
 	tlm::tlm_generic_payload* trans;
-	auto QUAD_cfg 							= m_accelCfg->m_FAS_cfg_arr[m_FAS_id]->m_AWP_cfg_arr[AWP_addr]->m_QUAD_cfg_arr[QUAD_addr];
+	auto& QUAD_cfg 							= m_FAS_cfg->m_AWP_cfg_arr[AWP_addr]->m_QUAD_cfg_arr[QUAD_addr];
 	Accel_Trans* accel_trans				= new Accel_Trans();
 	accel_trans->accel_cmd					= ACCL_CMD_CFG_WRITE;
 	accel_trans->QUAD_id					= QUAD_addr;
