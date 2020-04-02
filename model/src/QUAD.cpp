@@ -84,7 +84,6 @@ void QUAD::ctrl_process_0()
 	            str = string(name()) + " finished Workload in " + to_string(int(sc_time_stamp().to_double()) - m_start) + "\n";
 	            cout << str;
 	            bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
-				m_num_ex_cycles = 0;
 				m_krnl_count = 0;
 				m_input_row = 0;
 				m_output_col = 0;
@@ -146,8 +145,10 @@ void QUAD::result_process()
 	while(true)
 	{
 		wait();
-		if(m_res_fifo.num_available() >= RES_PKT_SIZE || (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo.num_available() > 0))
-		{
+		if(
+			((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg))
+			&& (m_res_fifo.num_available() >= RES_PKT_SIZE || (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo.num_available() > 0))
+		) {
 			for (int i = 0; i < RES_PKT_SIZE; i += RES_FIFO_RD_WIDTH)
 			{
 				for (int j = 0; (j < RES_FIFO_RD_WIDTH) && (m_res_fifo.num_available() > 0); j++)

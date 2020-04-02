@@ -19,7 +19,7 @@
 #include "InputMaps.hpp"
 #include "PartialMaps.hpp"
 #include "ResidualMaps.hpp"
-#include "Bias.hpp"
+#include "KernelBias.hpp"
 #include "OutputMaps.hpp"
 #include "Kernels.hpp"
 
@@ -67,13 +67,12 @@ SC_MODULE(FAS)
 				m_partMap_fifo(PM_FIFO_SIZE),
 				m_convOutMap_fifo(CO_FIFO_SIZE),
 				m_resMap_fifo(RSM_FIFO_SIZE),
-				m_krnl_1x1_fifo(KRNL_1X1_FIFO_SIZE),
+				m_krnl1x1_fifo(KRNL_1X1_FIFO_SIZE),
+				m_krnl1x1Bias_fifo(KRNL_1X1_FIFO_SIZE),
 				m_outBuf_fifo(OB_FIFO_SIZE),
 				m_sys_mem_bus_sema(MAX_FAS_SYS_MEM_TRNS),
 				m_trans_fifo(MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP)
 		{
-			m_FAS_id = atoi(&std::string(name())[std::string(name()).length() - 1]); 
-
 			rout_tar_soc.register_b_transport(this, &FAS::b_rout_soc_transport);
 			SC_THREAD(ctrl_process);
 				sensitive << clk.pos();
@@ -89,11 +88,19 @@ SC_MODULE(FAS)
 				sensitive << clk.pos();
 			
 			m_state					= ST_IDLE;
+			m_pixSeqCfgFetchTotal	= 0;
+			m_krnl3x3FetchCount		= 0;
+			m_krnl3x3FetchTotal		= 0;
+			m_krnl3x3BiasFetchCount	= 0;
+			m_krnl3x3BiasFetchTotal	= 0;
 			m_partMapFetchCount		= 0;
 			m_partMapFetchTotal		= 0;
 			m_inMapFetchCount		= 0;
 			m_inMapFetchTotal		= 0;
 			m_krnl1x1FetchCount		= 0;
+			m_krnl1x1FetchTotal		= 0;
+			m_krnl1x1BiasFetchCount	= 0;
+			m_krnl1x1BiasFetchTotal	= 0;
 			m_resMapFetchCount		= 0;
 			m_resMapFetchTotal		= 0;
             m_outMapStoreCount      = 0;
@@ -141,15 +148,24 @@ SC_MODULE(FAS)
 		std::vector<std::vector<bool>>	m_QUAD_en_arr       	;
 		std::vector<int>				m_num_QUAD_cfgd     	;
 		int								m_FAS_id                ;
+		int								m_pixSeqCfgFetchCount	;
+		int 							m_pixSeqCfgFetchTotal	;
 		int								m_inMapFetchCount		;
 		int								m_inMapFetchTotal       ;
- 		sc_core::sc_fifo<int>			m_convOutMap_fifo       ;       
-		sc_core::sc_fifo<int>			m_partMap_fifo          ;
-		int								m_partMapFetchCount		;
-		int								m_partMapFetchTotal     ;
-		sc_core::sc_fifo<int>			m_krnl_1x1_fifo         ;
+ 		sc_core::sc_fifo<int>			m_convOutMap_fifo       ;
+		int								m_krnl3x3FetchCount		;
+		int								m_krnl3x3FetchTotal		;
+		int								m_krnl3x3BiasFetchCount	;
+		int								m_krnl3x3BiasFetchTotal	;
+		sc_core::sc_fifo<int>			m_krnl1x1_fifo         	;
 		int								m_krnl1x1FetchCount		;
 		int								m_krnl1x1FetchTotal     ;
+		sc_core::sc_fifo<int>			m_krnl1x1Bias_fifo		;
+		int								m_krnl1x1BiasFetchCount	;
+		int								m_krnl1x1BiasFetchTotal	;
+		sc_core::sc_fifo<int>			m_partMap_fifo          ;
+		int								m_partMapFetchCount		;
+		int								m_partMapFetchTotal     ;		
 		sc_core::sc_fifo<int>			m_resMap_fifo           ;
 		int								m_resMapFetchCount		;
 		int								m_resMapFetchTotal      ;

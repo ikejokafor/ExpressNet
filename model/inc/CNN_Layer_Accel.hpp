@@ -44,6 +44,7 @@ SC_MODULE(CNN_Layer_Accel)
 			for(int i = 0, k = 0; i < NUM_FAS; i++)
 			{
 				fas[i] = new FAS(("FAS_" + std::to_string(i)).c_str());
+				fas[i]->m_FAS_id = i;
 				fas[i]->clk(clk);
 				fas[i]->rout_init_soc(FAS2AWP_bus.tar_soc);
 				AWP2FAS_bus.init_soc(fas[i]->rout_tar_soc);
@@ -51,6 +52,8 @@ SC_MODULE(CNN_Layer_Accel)
 				for (int j = 0; j < MAX_AWP_PER_FAS; j++, k++)
 				{
 					awp[k] = new AWP(("AWP_" + std::to_string(k)).c_str());
+					awp[k]->m_AWP_id = k;
+					awp[k]->bus.m_AWP_id = k;
 					awp[k]->clk(clk);
 					FAS2AWP_bus.init_soc(awp[k]->tar_soc);
 					awp[k]->init_soc(AWP2FAS_bus.tar_soc);

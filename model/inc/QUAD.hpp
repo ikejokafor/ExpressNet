@@ -42,12 +42,10 @@ SC_MODULE(QUAD)
 
             m_state = ST_IDLE;
 			m_pfb_count = 0;
-			m_num_ex_cycles = 0;
 			m_krnl_count = 0;
 			m_input_row = 0;
 			m_output_col = 0;
 			m_output_row = 0;
-	        m_QUAD_id = atoi(&std::string(name())[std::string(name()).length() - 1]);
 	        m_last_res_wrtn = false;
         }
         
@@ -75,7 +73,6 @@ SC_MODULE(QUAD)
 		QUAD_state_t			m_return_state				;
 		uint64_t				m_ex_start_time				;
 		int						m_pfb_count					;
-		uint64_t				m_num_ex_cycles				;
 		int						m_krnl_count				;
         int						m_input_row					;
 		int						m_input_col					;
@@ -87,7 +84,6 @@ SC_MODULE(QUAD)
         int						m_num_kernels_cfg			;
         bool					m_master_QUAD_cfg			;
         bool					m_cascade_cfg				;
-		bool					m_result_QUAD_cfg			;
 		int						m_num_expd_input_cols_cfg	;
 		bool					m_conv_out_fmt0_cfg			;
 		bool					m_padding_cfg				;

@@ -37,8 +37,6 @@ SC_MODULE(AWP)
 				m_num_trans_in_prog(0),
 				m_next_req_id(0)
 		{
-			m_AWP_id = atoi(&std::string(name())[std::string(name()).length() - 1]);
-			bus.m_AWP_id = m_AWP_id;
 			// Bindings
 			tar_soc.register_b_transport(this, &AWP::b_transport);
 			bus_tar_soc.register_b_transport(this, &AWP::bus_tar_b_transport);
@@ -49,9 +47,8 @@ SC_MODULE(AWP)
 			// Create Modules
 			for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
 			{
-				quad[i] = new QUAD(
-					("QUAD_" + std::to_string(i)).c_str()
-				);
+				quad[i] = new QUAD(("QUAD_" + std::to_string(i)).c_str());
+				quad[i]->m_QUAD_id = i;
 				quad[i]->clk(clk);
 				quad[i]->bus(bus);
 			}

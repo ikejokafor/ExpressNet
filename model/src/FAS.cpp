@@ -32,7 +32,8 @@ void FAS::ctrl_process()
 			case ST_ACTIVE:
 			{
 				if(
-					m_partMapFetchCount == m_partMapFetchTotal
+					m_pixSeqCfgFetchCount = m_pixSeqCfgFetchTotal
+					&& m_partMapFetchCount == m_partMapFetchTotal
 					&& m_inMapFetchCount == m_inMapFetchTotal
 					&& m_krnl1x1FetchCount == m_krnl1x1FetchTotal
 					&& m_resMapFetchCount == m_resMapFetchTotal
@@ -79,7 +80,7 @@ void FAS::F_process()
 	while(true)
 	{
 		wait();
-		if(m_state == ST_ACTIVE && !m_first_iter_cfg && m_convOutMap_fifo.num_available() <= PM_LOW_WATERMARK  && m_inMapFetchCount != m_inMapFetchTotal)
+		if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo.num_available() <= PM_LOW_WATERMARK  && m_partMapFetchCount != m_partMapFetchTotal)
 		{
 			trans = nb_createTLMTrans(
 				m_mem_mng,
@@ -106,52 +107,22 @@ void FAS::F_process()
 
 void FAS::A_process()
 {
+	/*
 	while(true)
 	{
 		wait();
 		if(m_state == ST_ACTIVE 
-			&& !m_first_depth_iter_cfg 
-			&& m_convOutMap_fifo.num_available() > 0
-			&& m_partMap_fifo.num_available() > 0 
-		) {
-			// pop input map, pop partial map
-			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
-			wait();
-			// accum
-			wait();
-			// store to buffer
-			m_wr_outBuf.notify();
-		}
-		else if(m_state == ST_ACTIVE 
-			&& m_last_depth_iter_cfg 
-			&& m_do_res_layer_cfg 
-			&& m_convOutMap_fifo.num_available() > 0
-			&& m_partMap_fifo.num_available() > 0 
-			&& m_resMap_fifo.num_available() > 0
-		) {
-			// pop input map, pop partial map, pop res map
-			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
-			nb_fifo_trans(RESMAP_FIFO, FIFO_READ, RSM_NUM_PIX_READ, RSM_FIFO_RD_WIDTH);
-			wait();
-			// add input map, partial map, and residual map pixel
-			wait();
-			// store to buffer
-			m_wr_outBuf.notify();
-		}
-		else if(m_state == ST_ACTIVE 
 			&& m_first_depth_iter_cfg
 			&& m_do_kernel1x1_cfg
 			&& m_convOutMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0
 		) {
-			// pop input map, pop partial map
+			// pop convOut map, pop partial map
 			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
 			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
 			wait();
-			// add input and partial map, pop 1x1 kernel
-			nb_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_NUM_PIX_READ, KRNL_FIFO_RD_WIDTH);
+			// add convOut and partial map, pop 1x1 kernel
+			nb_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_1x1_NUM_PIX_READ, KRNL_1x1_FIFO_RD_WIDTH);
 			wait();	
 			// multiply sum with 1x1
 			wait();
@@ -172,14 +143,14 @@ void FAS::A_process()
 			&& m_convOutMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0
 		) {
-			// pop partial map, pop 1x1 fifo
+			// pop convOut map, pop 1x1 fifo
 			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
-			nb_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_NUM_PIX_READ, KRNL_FIFO_RD_WIDTH);
+			nb_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_1x1_NUM_PIX_READ, KRNL_1x1_FIFO_RD_WIDTH);	
 			wait();
-			// pop input map, multiply partial map with 1x1
-			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, CO_FIFO_RD_WIDTH);	
+			// pop partial map, multiply convOut map with 1x1
+			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);	
 			wait();
-			// add input and partial map 1x1 product
+			// add convOut and partial map 1x1 product
 			wait();
 			// store to buffer
 			if(m_num_ob_wr == OB_FIFO_WR_WIDTH)
@@ -190,9 +161,41 @@ void FAS::A_process()
 			else
 			{
 				m_num_ob_wr++;
-			}	
+			}
+		}
+		else if(m_state == ST_ACTIVE 
+			&& !m_first_depth_iter_cfg 
+			&& m_convOutMap_fifo.num_available() > 0
+			&& m_partMap_fifo.num_available() > 0 
+		) {
+			// pop convOut map, pop partial map
+			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
+			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+			wait();
+			// accum
+			wait();
+			// store to buffer
+			m_wr_outBuf.notify();
+		}
+		else if(m_state == ST_ACTIVE 
+			&& m_last_depth_iter_cfg 
+			&& m_do_res_layer_cfg 
+			&& m_convOutMap_fifo.num_available() > 0
+			&& m_partMap_fifo.num_available() > 0 
+			&& m_resMap_fifo.num_available() > 0
+		) {
+			// pop convOut map, pop partial map, pop res map
+			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
+			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+			nb_fifo_trans(RESMAP_FIFO, FIFO_READ, RSM_NUM_PIX_READ, RSM_FIFO_RD_WIDTH);
+			wait();
+			// add convOut map, partial map, and residual map pixel
+			wait();
+			// store to buffer
+			m_wr_outBuf.notify();
 		}
 	}
+	*/
 }
 
 
@@ -249,7 +252,7 @@ void FAS::resMap_fetch_process()
 	while(true)
 	{
 		wait();
-		if(m_state == ST_ACTIVE && m_last_iter_cfg && m_resMap_fifo.num_available() == RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal)
+		if(m_do_res_layer && m_state == ST_ACTIVE && m_last_depth_iter_cfg && m_resMap_fifo.num_available() <= RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal)
 		{
 			trans = nb_createTLMTrans(
 				m_mem_mng,
@@ -390,7 +393,7 @@ void FAS::nb_fifo_trans(fifo_sel_t fifo_sel, FAS::fifo_cmd_t fifo_cmd, int fifo_
 		}
 		case KRNL_1X1_FIFO:
 		{
-			nb_fifo_trans(m_krnl_1x1_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+			nb_fifo_trans(m_krnl1x1_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
 			break;
 		}
 		case RESMAP_FIFO:
@@ -446,9 +449,13 @@ void FAS::b_getCfgData()
 	m_first_depth_iter_cfg 		= m_FAS_cfg->m_first_depth_iter;
 	m_last_depth_iter_cfg 		= m_FAS_cfg->m_last_depth_iter;
 	m_do_res_layer_cfg 			= m_FAS_cfg->m_do_res_layer;
+	m_pixSeqCfgFetchTotal		= m_FAS_cfg->m_pixSeqCfgFetchTotal;
 	m_inMapFetchTotal    		= m_FAS_cfg->m_inMapFetchTotal;
+	m_krnl3x3FetchTotal     	= m_FAS_cfg->m_krnl3x3FetchTotal;
+	m_krnl3x3BiasFetchTotal		= m_FAS_cfg->m_krnl3x3BiasFetchTotal;
 	m_partMapFetchTotal			= m_FAS_cfg->m_partMapFetchTotal;
 	m_krnl1x1FetchTotal     	= m_FAS_cfg->m_krnl1x1FetchTotal;
+	m_krnl1x1BiasFetchTotal		= m_FAS_cfg->m_krnl1x1BiasFetchTotal;
 	m_resMapFetchTotal   		= m_FAS_cfg->m_resMapFetchTotal;
     m_outMapStoreTotal          = m_FAS_cfg->m_outMapStoreTotal;
 	m_AWP_en_arr = m_FAS_cfg->m_AWP_en_arr;
@@ -473,7 +480,7 @@ void FAS::b_cfg1x1Kernels()
 	wait(MAX_1x1_KERNELS * krnl_1x1_depth, SC_NS);
 	for (int i = 0; i <(krnl_1x1_depth); i++)
 	{
-		m_krnl_1x1_fifo.nb_write(int());
+		m_krnl1x1_fifo.nb_write(int());
 	}
     m_krnl1x1FetchCount += (krnl_1x1_depth * PIXEL_SIZE);
 }
@@ -550,7 +557,8 @@ void FAS::b_QUAD_pix_seq_config(int AWP_addr, int QUAD_addr)
 	Accel_Trans* accel_trans = new Accel_Trans();
 	accel_trans->accel_cmd = ACCL_CMD_PIX_SEQ_CFG_WRITE;
 	accel_trans->QUAD_id = QUAD_addr;
-	accel_trans->FAS_id = m_FAS_id;	
+	accel_trans->FAS_id = m_FAS_id;
+	// TODO: fetch data from memory
 	trans = nb_createTLMTrans(
 		m_mem_mng,
 		AWP_addr,
@@ -576,7 +584,8 @@ void FAS::b_QUAD_krnl_config(int AWP_addr, int QUAD_addr)
 	Accel_Trans* accel_trans = new Accel_Trans();
 	accel_trans->accel_cmd = ACCL_CMD_KRL_CFG_WRITE;
 	accel_trans->QUAD_id = QUAD_addr;
-	accel_trans->FAS_id = m_FAS_id;	
+	accel_trans->FAS_id = m_FAS_id;
+	// TODO: fetch data from memory
 	trans = nb_createTLMTrans(
 		m_mem_mng,
 		AWP_addr,
