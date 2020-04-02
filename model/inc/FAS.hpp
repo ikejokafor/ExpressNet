@@ -38,7 +38,7 @@ SC_MODULE(FAS)
 	typedef enum
 	{
 		PARTMAP_FIFO		= 0,
-		INMAP_FIFO			= 1,
+		CONVOUTMAP_FIFO		= 1,
 		KRNL_1X1_FIFO		= 2,
 		RESMAP_FIFO			= 3,
 		OUTBUF_FIFO			= 4
@@ -65,7 +65,7 @@ SC_MODULE(FAS)
 			:	clk("clk"),
 				m_AWP_complt_arr(MAX_AWP_PER_FAS, false),
 				m_partMap_fifo(PM_FIFO_SIZE),
-				m_inMap_fifo(IM_FIFO_SIZE),
+				m_convOutMap_fifo(CO_FIFO_SIZE),
 				m_resMap_fifo(RSM_FIFO_SIZE),
 				m_krnl_1x1_fifo(KRNL_1X1_FIFO_SIZE),
 				m_outBuf_fifo(OB_FIFO_SIZE),
@@ -96,6 +96,8 @@ SC_MODULE(FAS)
 			m_krnl1x1FetchCount		= 0;
 			m_resMapFetchCount		= 0;
 			m_resMapFetchTotal		= 0;
+            m_outMapStoreCount      = 0;
+            m_outMapStoreTotal      = 0;            
 		}
 
 		// Destructor
@@ -139,12 +141,12 @@ SC_MODULE(FAS)
 		std::vector<std::vector<bool>>	m_QUAD_en_arr       	;
 		std::vector<int>				m_num_QUAD_cfgd     	;
 		int								m_FAS_id                ;
+		int								m_inMapFetchCount		;
+		int								m_inMapFetchTotal       ;
+ 		sc_core::sc_fifo<int>			m_convOutMap_fifo       ;       
 		sc_core::sc_fifo<int>			m_partMap_fifo          ;
 		int								m_partMapFetchCount		;
 		int								m_partMapFetchTotal     ;
-		sc_core::sc_fifo<int>			m_inMap_fifo            ;
-		int								m_inMapFetchCount		;
-		int								m_inMapFetchTotal       ;
 		sc_core::sc_fifo<int>			m_krnl_1x1_fifo         ;
 		int								m_krnl1x1FetchCount		;
 		int								m_krnl1x1FetchTotal     ;
@@ -152,13 +154,15 @@ SC_MODULE(FAS)
 		int								m_resMapFetchCount		;
 		int								m_resMapFetchTotal      ;
 		sc_core::sc_fifo<int>			m_outBuf_fifo           ;
+        int                             m_outMapStoreCount      ;
+        int                             m_outMapStoreTotal      ;
 		bool							m_first_depth_iter_cfg  ;
 		bool							m_last_depth_iter_cfg   ;
 		bool							m_conv_out_fmt0_cfg     ;
 	    int								m_res_pkt_size          ;
 		bool							m_do_res_layer_cfg      ;
 		bool							m_do_kernel1x1_cfg		;
-		int								m_process_count         ;
+		int								m_num_ob_wr             ;
 		sc_core::sc_event				m_job_fetch             ;
 		Accel_Trans 					m_job_fetch_trans       ;
 		sc_core::sc_event				m_wr_outBuf	            ;

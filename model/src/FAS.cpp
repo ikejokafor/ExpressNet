@@ -11,7 +11,7 @@ FAS::~FAS() { }
 
 void FAS::ctrl_process()
 {
-	while (true)
+	while(true)
 	{
 		wait();
 		switch(m_state)
@@ -31,11 +31,12 @@ void FAS::ctrl_process()
 			}
 			case ST_ACTIVE:
 			{
-				if (
+				if(
 					m_partMapFetchCount == m_partMapFetchTotal
 					&& m_inMapFetchCount == m_inMapFetchTotal
 					&& m_krnl1x1FetchCount == m_krnl1x1FetchTotal
 					&& m_resMapFetchCount == m_resMapFetchTotal
+                    && m_outMapStoreCount == m_outMapStoreTotal
 					&& m_outBuf_fifo.num_available() == 0
 				) {
 					m_state = ST_SEND_COMPLETE;
@@ -75,17 +76,17 @@ void FAS::F_process()
 	/*
 	tlm::tlm_generic_payload* trans;
 	sc_time delay;
-	while (true)
+	while(true)
 	{
 		wait();
-		if (m_state == ST_ACTIVE && !m_first_iter_cfg && m_inMap_fifo.num_available() <= IM_LOW_WATERMARK  && m_inMapFetchCount != m_inMapFetchTotal)
+		if(m_state == ST_ACTIVE && !m_first_iter_cfg && m_convOutMap_fifo.num_available() <= PM_LOW_WATERMARK  && m_inMapFetchCount != m_inMapFetchTotal)
 		{
 			trans = nb_createTLMTrans(
 				m_mem_mng,
 				0,
 				TLM_READ_COMMAND,
 				nullptr,
-				(IM_NUM_PIX_READ * PIXEL_SIZE),
+				(PM_NUM_PIX_READ * PIXEL_SIZE),
 				0,
 				nullptr,
 				false,
@@ -95,7 +96,8 @@ void FAS::F_process()
 			sys_mem_init_soc->b_transport(*trans, delay);
 			m_sys_mem_bus_sema.post();
 			trans->release();
-			nb_fifo_trans(INMAP_FIFO, FIFO_WRITE, IM_NUM_PIX_READ, IM_FIFO_WR_WIDTH);
+			nb_fifo_trans(PARTMAP_FIFO, FIFO_WRITE, PM_NUM_PIX_READ, PM_FIFO_WR_WIDTH);
+            m_partMapFetchCount += (PM_NUM_PIX_READ * PIXEL_SIZE);
 		}
 	}
 	*/
@@ -107,13 +109,13 @@ void FAS::A_process()
 	while(true)
 	{
 		wait();
-		if (m_state == ST_ACTIVE 
+		if(m_state == ST_ACTIVE 
 			&& !m_first_depth_iter_cfg 
-			&& m_inMap_fifo.num_available() > 0
+			&& m_convOutMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0 
 		) {
 			// pop input map, pop partial map
-			nb_fifo_trans(INMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, IM_FIFO_RD_WIDTH);
+			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
 			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
 			wait();
 			// accum
@@ -124,12 +126,12 @@ void FAS::A_process()
 		else if(m_state == ST_ACTIVE 
 			&& m_last_depth_iter_cfg 
 			&& m_do_res_layer_cfg 
-			&& m_inMap_fifo.num_available() > 0
+			&& m_convOutMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0 
 			&& m_resMap_fifo.num_available() > 0
 		) {
 			// pop input map, pop partial map, pop res map
-			nb_fifo_trans(INMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, IM_FIFO_RD_WIDTH);
+			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
 			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
 			nb_fifo_trans(RESMAP_FIFO, FIFO_READ, RSM_NUM_PIX_READ, RSM_FIFO_RD_WIDTH);
 			wait();
@@ -138,14 +140,14 @@ void FAS::A_process()
 			// store to buffer
 			m_wr_outBuf.notify();
 		}
-		else if (m_state == ST_ACTIVE 
+		else if(m_state == ST_ACTIVE 
 			&& m_first_depth_iter_cfg
 			&& m_do_kernel1x1_cfg
-			&& m_inMap_fifo.num_available() > 0
+			&& m_convOutMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0
 		) {
 			// pop input map, pop partial map
-			nb_fifo_trans(INMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, IM_FIFO_RD_WIDTH);
+			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
 			nb_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
 			wait();
 			// add input and partial map, pop 1x1 kernel
@@ -154,20 +156,20 @@ void FAS::A_process()
 			// multiply sum with 1x1
 			wait();
 			// store to buffer
-			if(m_process_count == OB_FIFO_WR_WIDTH)
+			if(m_num_ob_wr == OB_FIFO_WR_WIDTH)
 			{
-				m_process_count = 0;
+				m_num_ob_wr = 0;
 				m_wr_outBuf.notify();
 			}
 			else
 			{
-				m_process_count++;
+				m_num_ob_wr++;
 			}			
 		}
-		else if (m_state == ST_ACTIVE 
+		else if(m_state == ST_ACTIVE 
 			&& !m_first_depth_iter_cfg
 			&& m_do_kernel1x1_cfg
-			&& m_inMap_fifo.num_available() > 0
+			&& m_convOutMap_fifo.num_available() > 0
 			&& m_partMap_fifo.num_available() > 0
 		) {
 			// pop partial map, pop 1x1 fifo
@@ -175,19 +177,19 @@ void FAS::A_process()
 			nb_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_NUM_PIX_READ, KRNL_FIFO_RD_WIDTH);
 			wait();
 			// pop input map, multiply partial map with 1x1
-			nb_fifo_trans(INMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, IM_FIFO_RD_WIDTH);	
+			nb_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, IM_NUM_PIX_READ, CO_FIFO_RD_WIDTH);	
 			wait();
 			// add input and partial map 1x1 product
 			wait();
 			// store to buffer
-			if(m_process_count == OB_FIFO_WR_WIDTH)
+			if(m_num_ob_wr == OB_FIFO_WR_WIDTH)
 			{
-				m_process_count = 0;
+				m_num_ob_wr = 0;
 				m_wr_outBuf.notify();
 			}
 			else
 			{
-				m_process_count++;
+				m_num_ob_wr++;
 			}	
 		}
 	}
@@ -211,10 +213,10 @@ void FAS::S_process()
 	/*
 	tlm::tlm_generic_payload* trans;
 	sc_time delay;
-	while (true)
+	while(true)
 	{
 		wait();
-		if (m_state == ST_ACTIVE && m_outBuf_fifo.num_available() >= OB_HIGH_WATERMARK)
+		if(m_state == ST_ACTIVE && m_outBuf_fifo.num_available() >= OB_HIGH_WATERMARK && m_outMapStoreCount != m_outMapStoreTotal)
 		{
 			nb_fifo_trans(OUTBUF_FIFO, FIFO_READ, OB_NUM_PIX_READ, OB_FIFO_RD_WIDTH);
 			trans = nb_createTLMTrans(
@@ -232,6 +234,7 @@ void FAS::S_process()
 			sys_mem_init_soc->b_transport(*trans, delay);
 			m_sys_mem_bus_sema.post();
 			trans->release();
+            m_outMapStoreCount += (OB_NUM_PIX_WRITE * PIXEL_SIZE); 
 		}
 	}
 	*/
@@ -266,6 +269,7 @@ void FAS::resMap_fetch_process()
 			trans->release();
 			nb_fifo_trans(RESMAP_FIFO, FIFO_WRITE, RSM_NUM_PIX_WRITE, RSM_FIFO_WR_WIDTH);
 			wait();
+            m_resMapFetchCount += (RSM_NUM_PIX_READ * PIXEL_SIZE);
 		}
 	}
 	*/
@@ -276,7 +280,7 @@ void FAS::job_fetch_process()
 {
 	tlm::tlm_generic_payload* trans;
 	sc_time delay;
-	while (true)
+	while(true)
 	{
 		wait();
 		if(m_trans_fifo.num_available() > 0)
@@ -292,7 +296,7 @@ void FAS::job_fetch_process()
 				AWP_id,
 				TLM_READ_COMMAND,
 				nullptr,
-				(JF_NUM_PIX_READ * PIXEL_SIZE),
+				(IM_NUM_PIX_READ * PIXEL_SIZE),
 				0,
 				nullptr,
 				false,
@@ -313,7 +317,7 @@ void FAS::job_fetch_process()
 				AWP_id,
 				TLM_WRITE_COMMAND,
 				(unsigned char*)accel_trans,
-				(JF_NUM_PIX_READ * PIXEL_SIZE),
+				(IM_NUM_PIX_READ * PIXEL_SIZE),
 				0,
 				nullptr,
 				false,
@@ -321,6 +325,7 @@ void FAS::job_fetch_process()
 			);
 			rout_init_soc->b_transport(*trans, delay);
 			trans->release();
+            m_inMapFetchCount += (IM_NUM_PIX_READ * PIXEL_SIZE);
 		}
 	}	
 }
@@ -378,9 +383,9 @@ void FAS::nb_fifo_trans(fifo_sel_t fifo_sel, FAS::fifo_cmd_t fifo_cmd, int fifo_
 			nb_fifo_trans(m_partMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
 			break;
 		}
-		case INMAP_FIFO:
+		case CONVOUTMAP_FIFO:
 		{
-			nb_fifo_trans(m_inMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+			nb_fifo_trans(m_convOutMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
 			break;
 		}
 		case KRNL_1X1_FIFO:
@@ -445,7 +450,7 @@ void FAS::b_getCfgData()
 	m_partMapFetchTotal			= m_FAS_cfg->m_partMapFetchTotal;
 	m_krnl1x1FetchTotal     	= m_FAS_cfg->m_krnl1x1FetchTotal;
 	m_resMapFetchTotal   		= m_FAS_cfg->m_resMapFetchTotal;
-
+    m_outMapStoreTotal          = m_FAS_cfg->m_outMapStoreTotal;
 	m_AWP_en_arr = m_FAS_cfg->m_AWP_en_arr;
 	auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
 	m_QUAD_en_arr.resize(MAX_AWP_PER_FAS);
@@ -466,10 +471,11 @@ void FAS::b_cfg1x1Kernels()
 {
 	int krnl_1x1_depth = MAX_3x3_KERNELS;
 	wait(MAX_1x1_KERNELS * krnl_1x1_depth, SC_NS);
-	for (int i = 0; i <(MAX_3x3_KERNELS * krnl_1x1_depth); i++)
+	for (int i = 0; i <(krnl_1x1_depth); i++)
 	{
 		m_krnl_1x1_fifo.nb_write(int());
 	}
+    m_krnl1x1FetchCount += (krnl_1x1_depth * PIXEL_SIZE);
 }
 
 
@@ -477,13 +483,13 @@ void FAS::b_sendCfgs()
 {
 	for (int i = 0; i < MAX_AWP_PER_FAS; i++)
 	{
-		if (!m_AWP_en_arr[i])
+		if(!m_AWP_en_arr[i])
 		{
 			continue;
 		}
 		for (int j = 0; j < NUM_QUADS_PER_AWP; j++)
 		{
-			if (!m_QUAD_en_arr[i][j])
+			if(!m_QUAD_en_arr[i][j])
 			{
 				continue;
 			}

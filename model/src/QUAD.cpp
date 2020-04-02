@@ -61,6 +61,7 @@ void QUAD::ctrl_process_0()
 				else if (m_output_row == m_num_output_rows_cfg && m_pfb_count == 0)
 				{
 					str = string(name()) + " finished output Row " + to_string(m_output_row - 1) + " at time " + sc_time_stamp().to_string() + "\n";
+					cout << str;
 					m_state = ST_WAIT_LAST_RES_WRITE;
 				}
 				else
@@ -80,7 +81,7 @@ void QUAD::ctrl_process_0()
 	        }
             case ST_SEND_COMPLETE:
             {
-	            str = string(name()) + " finished Workload in " + to_string(int(sc_time_stamp().to_double()) - m_start) + " ns and Sent Complete at " + sc_time_stamp().to_string() + "\n";
+	            str = string(name()) + " finished Workload in " + to_string(int(sc_time_stamp().to_double()) - m_start) + "\n";
 	            cout << str;
 	            bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
 				m_num_ex_cycles = 0;

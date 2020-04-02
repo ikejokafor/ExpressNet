@@ -14,7 +14,7 @@
 #define CLK_PRD					10
 #define MAX_NETWORK_TRANS		1
 #define NUM_FAS					1
-#define MAX_AWP_PER_FAS			2
+#define MAX_AWP_PER_FAS			1
 #define NUM_QUADS_PER_AWP		4
 #define MAX_AWP_TRANS			(NUM_QUADS_PER_AWP * 2)	// each quad can send 2 requests at a time
 #define MAX_FAS_SYS_MEM_TRNS	1
@@ -39,11 +39,11 @@
 #define PM_NUM_PIX_READ			8
 #define PM_FIFO_WR_WIDTH		8
 #define PM_FIFO_RD_WIDTH		8
-#define IM_FIFO_SIZE			16
-#define IM_NUM_PIX_READ			8
-#define IM_FIFO_WR_WIDTH		8
-#define IM_FIFO_RD_WIDTH		PM_FIFO_RD_WIDTH
-#define IM_LOW_WATERMARK		16
+#define CO_FIFO_SIZE			16
+#define CO_NUM_PIX_READ			8
+#define CO_FIFO_WR_WIDTH		8
+#define CO_FIFO_RD_WIDTH		PM_FIFO_RD_WIDTH
+#define CO_LOW_WATERMARK		16
 #define RSM_FIFO_SIZE			16
 #define RSM_NUM_PIX_READ		8
 #define RSM_FIFO_WR_WIDTH		8
@@ -52,7 +52,7 @@
 #define RSM_LOW_WATERMARK		8
 #define RES_FIFO_RD_WIDTH		8
 #define RES_PKT_SIZE			RES_FIFO_RD_WIDTH
-#define JF_NUM_PIX_READ			8
+#define IM_NUM_PIX_READ			8
 
 
 typedef enum
