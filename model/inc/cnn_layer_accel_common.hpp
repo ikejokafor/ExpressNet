@@ -29,22 +29,22 @@
 #define KRNL_1X1_FIFO_SIZE		16
 #define KRNL_1x1_NUM_PIX_READ	8
 #define	KRNL_1x1_FIFO_RD_WIDTH	8
-#define OB_FIFO_SIZE			16
+#define OB_FIFO_SIZE			256
 #define OB_FIFO_WR_WIDTH		8
 #define OB_FIFO_RD_WIDTH		8
 #define OB_NUM_PIX_WRITE		8	// 16 bytes
 #define OB_NUM_PIX_READ			8	// 16 bytes
 #define OB_HIGH_WATERMARK		16
-#define PM_FIFO_SIZE			16
+#define PM_FIFO_SIZE			256
 #define PM_NUM_PIX_READ			8
 #define PM_FIFO_WR_WIDTH		8
 #define PM_FIFO_RD_WIDTH		8
 #define PM_LOW_WATERMARK		16
-#define CO_FIFO_SIZE			16
+#define CO_FIFO_SIZE			256
 #define CO_NUM_PIX_READ			8
 #define CO_FIFO_WR_WIDTH		8
 #define CO_FIFO_RD_WIDTH		PM_FIFO_RD_WIDTH
-#define RSM_FIFO_SIZE			16
+#define RSM_FIFO_SIZE			256
 #define RSM_NUM_PIX_READ		8
 #define RSM_FIFO_WR_WIDTH		8
 #define RSM_NUM_PIX_WRITE		8

@@ -32,12 +32,12 @@ void FAS::ctrl_process()
 			case ST_ACTIVE:
 			{
 				if(
-					m_pixSeqCfgFetchCount = m_pixSeqCfgFetchTotal
-					&& m_partMapFetchCount == m_partMapFetchTotal
-					&& m_inMapFetchCount == m_inMapFetchTotal
-					&& m_krnl1x1FetchCount == m_krnl1x1FetchTotal
-					&& m_resMapFetchCount == m_resMapFetchTotal
-                    && m_outMapStoreCount == m_outMapStoreTotal
+					m_pixSeqCfgFetchCount == m_pixSeqCfgFetchTotal_cfg
+					&& m_partMapFetchCount == m_partMapFetchTotal_cfg
+					&& m_inMapFetchCount == m_inMapFetchTotal_cfg
+					&& m_krnl1x1FetchCount == m_krnl1x1FetchTotal_cfg
+					&& m_resMapFetchCount == m_resMapFetchTotal_cfg
+                    && m_outMapStoreCount == m_outMapStoreTotal_cfg
 					&& m_outBuf_fifo.num_available() == 0
 				) {
 					m_state = ST_SEND_COMPLETE;
@@ -49,7 +49,7 @@ void FAS::ctrl_process()
 				bool all_complete = true;
 				for(int i = 0; i < m_AWP_complt_arr.size(); i++)
 				{
-					if(m_AWP_en_arr[i] && !m_AWP_complt_arr[i])
+					if(m_FAS_cfg->m_AWP_en_arr[i] && !m_AWP_complt_arr[i])
 					{
 						all_complete = false;
 						break;
@@ -74,13 +74,12 @@ void FAS::ctrl_process()
 
 void FAS::F_process()
 {
-	/*
 	tlm::tlm_generic_payload* trans;
 	sc_time delay;
 	while(true)
 	{
 		wait();
-		if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo.num_available() <= PM_LOW_WATERMARK  && m_partMapFetchCount != m_partMapFetchTotal)
+		if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo.num_available() <= PM_LOW_WATERMARK  && m_partMapFetchCount != m_partMapFetchTotal_cfg)
 		{
 			trans = nb_createTLMTrans(
 				m_mem_mng,
@@ -101,13 +100,11 @@ void FAS::F_process()
             m_partMapFetchCount += (PM_NUM_PIX_READ * PIXEL_SIZE);
 		}
 	}
-	*/
 }
 
 
 void FAS::A_process()
 {
-	/*
 	while(true)
 	{
 		wait();
@@ -195,7 +192,6 @@ void FAS::A_process()
 			m_wr_outBuf.notify();
 		}
 	}
-	*/
 }
 
 
@@ -213,13 +209,12 @@ void FAS::outBuf_wr_process()
 
 void FAS::S_process()
 {
-	/*
 	tlm::tlm_generic_payload* trans;
 	sc_time delay;
 	while(true)
 	{
 		wait();
-		if(m_state == ST_ACTIVE && m_outBuf_fifo.num_available() >= OB_HIGH_WATERMARK && m_outMapStoreCount != m_outMapStoreTotal)
+		if(m_state == ST_ACTIVE && m_outBuf_fifo.num_available() >= OB_HIGH_WATERMARK && m_outMapStoreCount != m_outMapStoreTotal_cfg)
 		{
 			nb_fifo_trans(OUTBUF_FIFO, FIFO_READ, OB_NUM_PIX_READ, OB_FIFO_RD_WIDTH);
 			trans = nb_createTLMTrans(
@@ -240,19 +235,17 @@ void FAS::S_process()
             m_outMapStoreCount += (OB_NUM_PIX_WRITE * PIXEL_SIZE); 
 		}
 	}
-	*/
 }
 
 
 void FAS::resMap_fetch_process()
 {
-	/*
 	tlm::tlm_generic_payload* trans;
 	sc_time delay;
 	while(true)
 	{
 		wait();
-		if(m_do_res_layer && m_state == ST_ACTIVE && m_last_depth_iter_cfg && m_resMap_fifo.num_available() <= RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal)
+		if(m_state == ST_ACTIVE && m_last_depth_iter_cfg && m_resMap_fifo.num_available() <= RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal_cfg)
 		{
 			trans = nb_createTLMTrans(
 				m_mem_mng,
@@ -267,7 +260,6 @@ void FAS::resMap_fetch_process()
 			);
 			m_sys_mem_bus_sema.wait();
 			sys_mem_init_soc->b_transport(*trans, delay);
-			m_resMapFetchTotal += (RSM_NUM_PIX_READ * PIXEL_SIZE);
 			m_sys_mem_bus_sema.post();
 			trans->release();
 			nb_fifo_trans(RESMAP_FIFO, FIFO_WRITE, RSM_NUM_PIX_WRITE, RSM_FIFO_WR_WIDTH);
@@ -275,7 +267,6 @@ void FAS::resMap_fetch_process()
             m_resMapFetchCount += (RSM_NUM_PIX_READ * PIXEL_SIZE);
 		}
 	}
-	*/
 }
 
 
@@ -446,30 +437,45 @@ void FAS::b_cfg_Accel()
 void FAS::b_getCfgData()
 {
 	wait(clk.posedge_event());
-	m_first_depth_iter_cfg 		= m_FAS_cfg->m_first_depth_iter;
-	m_last_depth_iter_cfg 		= m_FAS_cfg->m_last_depth_iter;
-	m_do_res_layer_cfg 			= m_FAS_cfg->m_do_res_layer;
-	m_pixSeqCfgFetchTotal		= m_FAS_cfg->m_pixSeqCfgFetchTotal;
-	m_inMapFetchTotal    		= m_FAS_cfg->m_inMapFetchTotal;
-	m_krnl3x3FetchTotal     	= m_FAS_cfg->m_krnl3x3FetchTotal;
-	m_krnl3x3BiasFetchTotal		= m_FAS_cfg->m_krnl3x3BiasFetchTotal;
-	m_partMapFetchTotal			= m_FAS_cfg->m_partMapFetchTotal;
-	m_krnl1x1FetchTotal     	= m_FAS_cfg->m_krnl1x1FetchTotal;
-	m_krnl1x1BiasFetchTotal		= m_FAS_cfg->m_krnl1x1BiasFetchTotal;
-	m_resMapFetchTotal   		= m_FAS_cfg->m_resMapFetchTotal;
-    m_outMapStoreTotal          = m_FAS_cfg->m_outMapStoreTotal;
-	m_AWP_en_arr = m_FAS_cfg->m_AWP_en_arr;
+	m_first_depth_iter_cfg 			= m_FAS_cfg->m_first_depth_iter;
+	m_last_depth_iter_cfg 			= m_FAS_cfg->m_last_depth_iter;
+	m_do_res_layer_cfg 				= m_FAS_cfg->m_do_res_layer;
+	m_pixSeqCfgFetchTotal_cfg		= m_FAS_cfg->m_pixSeqCfgFetchTotal;
+	m_inMapFetchTotal_cfg    		= m_FAS_cfg->m_inMapFetchTotal;
+	m_krnl3x3FetchTotal_cfg     	= m_FAS_cfg->m_krnl3x3FetchTotal;
+	m_krnl3x3BiasFetchTotal_cfg		= m_FAS_cfg->m_krnl3x3BiasFetchTotal;
+	m_partMapFetchTotal_cfg			= m_FAS_cfg->m_partMapFetchTotal;
+	m_krnl1x1FetchTotal_cfg    		= m_FAS_cfg->m_krnl1x1FetchTotal;
+	m_krnl1x1BiasFetchTotal_cfg		= m_FAS_cfg->m_krnl1x1BiasFetchTotal;
+	m_resMapFetchTotal_cfg  		= m_FAS_cfg->m_resMapFetchTotal;
+    m_outMapStoreTotal_cfg          = m_FAS_cfg->m_outMapStoreTotal;
+
+	string str = 
+		string(name()) + " Configured with.......\n" + ""
+		"\tFirst depth iter:\t\t\t\t"                     + to_string(m_first_depth_iter_cfg)         + "\n" 			
+		"\tLast depth iter:\t\t\t\t"                      + to_string(m_last_depth_iter_cfg)          + "\n" 			
+		"\tDo Residual layer:\t\t\t\t"                    + to_string(m_do_res_layer_cfg)             + "\n" 				
+		"\tPixel Sequence Configuration Fetch Total:\t"   + to_string(m_pixSeqCfgFetchTotal_cfg)      + "\n"		
+		"\tInput Map Fetch Total:\t\t\t\t"                + to_string(m_inMapFetchTotal_cfg)          + "\n"    		
+		"\tKernel 3x3 Fetch Total:\t\t\t\t"               + to_string(m_krnl3x3FetchTotal_cfg)        + "\n"     	
+		"\tKernel 3x3 Bias Fetch Total:\t\t\t"            + to_string(m_krnl3x3BiasFetchTotal_cfg)    + "\n"		
+		"\tPartial Map Fetch Total:\t\t\t"                + to_string(m_partMapFetchTotal_cfg)        + "\n"			
+		"\tKernel 1x1 Fetch Total:\t\t\t\t"               + to_string(m_krnl1x1FetchTotal_cfg)        + "\n"    		
+		"\tKernel 1x1 Bias Fetch Total:\t\t\t"            + to_string(m_krnl1x1BiasFetchTotal_cfg)    + "\n"		
+		"\tResidual Map Fetch Total:\t\t\t"               + to_string(m_resMapFetchTotal_cfg)         + "\n"  		
+		"\tOutput Map Store Total:\t\t\t\t"               + to_string(m_outMapStoreTotal_cfg)         + "\n";
+	cout << str;
+
 	auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
-	m_QUAD_en_arr.resize(MAX_AWP_PER_FAS);
 	for(int i = 0; i < MAX_AWP_PER_FAS; i++)
 	{
-		int num_QUAD_Cfg = 0;
+		int num_QUAD_cfgd = 0;
 		for(int j = 0; j < NUM_QUADS_PER_AWP; j++)
 		{
-			m_QUAD_en_arr[i].push_back(AWP_cfg_arr[i]->m_QUAD_en_arr[j]);
-			num_QUAD_Cfg = (m_QUAD_en_arr[i][j]) ? num_QUAD_Cfg++ : num_QUAD_Cfg;
+			m_QUAD_en_arr[i][j] = AWP_cfg_arr[i]->m_QUAD_en_arr[j];
+			if(m_QUAD_en_arr[i][j]) num_QUAD_cfgd++;
 		}
-		m_num_QUAD_cfgd.push_back(num_QUAD_Cfg);
+		m_num_QUAD_cfgd[i] = num_QUAD_cfgd;
 	}
 }
 
@@ -490,7 +496,7 @@ void FAS::b_sendCfgs()
 {
 	for (int i = 0; i < MAX_AWP_PER_FAS; i++)
 	{
-		if(!m_AWP_en_arr[i])
+		if(!m_FAS_cfg->m_AWP_en_arr[i])
 		{
 			continue;
 		}

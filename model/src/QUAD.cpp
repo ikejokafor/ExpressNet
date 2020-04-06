@@ -183,8 +183,6 @@ void QUAD::result_process()
 
 void QUAD::b_cfg_write(unsigned char* data)
 {
-	string str = string(name()) + " is doing a Configuration Write\n";
-	cout << str;
 	wait(CLK_PRD, SC_NS);
 	Accel_Trans* accel_trans    = (Accel_Trans*)data;
 	m_num_output_col_cfg		= accel_trans->num_output_col_cfg;
@@ -204,17 +202,17 @@ void QUAD::b_cfg_write(unsigned char* data)
 void QUAD::print_cfg()
 {
 	string str = 
-		string(name()) + "Configured with....\n" + ""
-		"\tNumber of Output Columns:\t\t" + to_string(m_num_output_col_cfg) + "\n"
-		"\tNumber of Output Rows:\t\t\t" + to_string(m_num_output_rows_cfg) + "\n"
-		"\tNumber of Kernels:\t\t\t" + to_string(m_num_kernels_cfg) + "\n" 		
-		"\tMaster QUAD:\t\t\t\t" + to_string(m_master_QUAD_cfg) + "\n"			
-		"\tCascade:\t\t\t\t" + to_string(m_cascade_cfg) + "\n"				
-		"\tNumber of Expanded Input Coloumn:\t" + to_string(m_num_expd_input_cols_cfg) + "\n"	
-		"\tPadding:\t\t\t\t" + to_string(m_padding_cfg) + "\n"				
-		"\tUpsmaple:\t\t\t\t" + to_string(m_upsmaple_cfg) + "\n"				
-		"\tCropped Input Row Start:\t\t" + to_string(m_crpd_input_row_start_cfg) + "\n"  
-		"\tCropped Input Row End:\t\t\t" + to_string(m_crpd_input_row_end_cfg) + "\n"; 
+		string(name()) + " Configured with....\n" + ""
+		"\tNumber of Output Columns:\t\t" 			+ to_string(m_num_output_col_cfg) + "\n"
+		"\tNumber of Output Rows:\t\t\t" 			+ to_string(m_num_output_rows_cfg) + "\n"
+		"\tNumber of Kernels:\t\t\t" 				+ to_string(m_num_kernels_cfg) + "\n" 		
+		"\tMaster QUAD:\t\t\t\t" 					+ to_string(m_master_QUAD_cfg) + "\n"			
+		"\tCascade:\t\t\t\t" 						+ to_string(m_cascade_cfg) + "\n"				
+		"\tNumber of Expanded Input Coloumn:\t" 	+ to_string(m_num_expd_input_cols_cfg) + "\n"	
+		"\tPadding:\t\t\t\t" 						+ to_string(m_padding_cfg) + "\n"				
+		"\tUpsmaple:\t\t\t\t" 						+ to_string(m_upsmaple_cfg) + "\n"				
+		"\tCropped Input Row Start:\t\t" 			+ to_string(m_crpd_input_row_start_cfg) + "\n"  
+		"\tCropped Input Row End:\t\t\t" 			+ to_string(m_crpd_input_row_end_cfg) + "\n"; 
 	cout << str;
 }
 

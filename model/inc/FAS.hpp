@@ -71,7 +71,9 @@ SC_MODULE(FAS)
 				m_krnl1x1Bias_fifo(KRNL_1X1_FIFO_SIZE),
 				m_outBuf_fifo(OB_FIFO_SIZE),
 				m_sys_mem_bus_sema(MAX_FAS_SYS_MEM_TRNS),
-				m_trans_fifo(MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP)
+				m_trans_fifo(MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP),
+				m_QUAD_en_arr(MAX_AWP_PER_FAS, std::vector<bool>(NUM_QUADS_PER_AWP, false)),
+				m_num_QUAD_cfgd(MAX_AWP_PER_FAS, 0)
 		{
 			rout_tar_soc.register_b_transport(this, &FAS::b_rout_soc_transport);
 			SC_THREAD(ctrl_process);
@@ -87,24 +89,24 @@ SC_MODULE(FAS)
 			SC_THREAD(job_fetch_process)
 				sensitive << clk.pos();
 			
-			m_state					= ST_IDLE;
-			m_pixSeqCfgFetchTotal	= 0;
-			m_krnl3x3FetchCount		= 0;
-			m_krnl3x3FetchTotal		= 0;
-			m_krnl3x3BiasFetchCount	= 0;
-			m_krnl3x3BiasFetchTotal	= 0;
-			m_partMapFetchCount		= 0;
-			m_partMapFetchTotal		= 0;
-			m_inMapFetchCount		= 0;
-			m_inMapFetchTotal		= 0;
-			m_krnl1x1FetchCount		= 0;
-			m_krnl1x1FetchTotal		= 0;
-			m_krnl1x1BiasFetchCount	= 0;
-			m_krnl1x1BiasFetchTotal	= 0;
-			m_resMapFetchCount		= 0;
-			m_resMapFetchTotal		= 0;
-            m_outMapStoreCount      = 0;
-            m_outMapStoreTotal      = 0;            
+			m_state							= ST_IDLE;
+			m_pixSeqCfgFetchTotal_cfg		= 0;
+			m_krnl3x3FetchCount				= 0;
+			m_krnl3x3FetchTotal_cfg			= 0;
+			m_krnl3x3BiasFetchCount			= 0;
+			m_krnl3x3BiasFetchTotal_cfg		= 0;
+			m_partMapFetchCount				= 0;
+			m_partMapFetchTotal_cfg			= 0;
+			m_inMapFetchCount				= 0;
+			m_inMapFetchTotal_cfg			= 0;
+			m_krnl1x1FetchCount				= 0;
+			m_krnl1x1FetchTotal_cfg			= 0;
+			m_krnl1x1BiasFetchCount			= 0;
+			m_krnl1x1BiasFetchTotal_cfg		= 0;
+			m_resMapFetchCount				= 0;
+			m_resMapFetchTotal_cfg			= 0;
+            m_outMapStoreCount     			= 0;
+            m_outMapStoreTotal_cfg      	= 0;      
 		}
 
 		// Destructor
@@ -136,52 +138,51 @@ SC_MODULE(FAS)
 		void b_QUAD_job_start(int AWP_addr, int QUAD_addr);
 	
 		// Members
-		FAS_cfg*						m_FAS_cfg				;
-		mem_mng							m_mem_mng               ;
-		sc_core::sc_event				m_start                 ;
-		sc_core::sc_event				m_start_ack             ;
-		sc_core::sc_event				m_complete              ;
-		sc_core::sc_event				m_complete_ack          ;
-		FAS_state_t						m_state                 ;
-		std::vector<bool>				m_AWP_complt_arr        ;
-		std::vector<bool>				m_AWP_en_arr            ;
-		std::vector<std::vector<bool>>	m_QUAD_en_arr       	;
-		std::vector<int>				m_num_QUAD_cfgd     	;
-		int								m_FAS_id                ;
-		int								m_pixSeqCfgFetchCount	;
-		int 							m_pixSeqCfgFetchTotal	;
-		int								m_inMapFetchCount		;
-		int								m_inMapFetchTotal       ;
- 		sc_core::sc_fifo<int>			m_convOutMap_fifo       ;
-		int								m_krnl3x3FetchCount		;
-		int								m_krnl3x3FetchTotal		;
-		int								m_krnl3x3BiasFetchCount	;
-		int								m_krnl3x3BiasFetchTotal	;
-		sc_core::sc_fifo<int>			m_krnl1x1_fifo         	;
-		int								m_krnl1x1FetchCount		;
-		int								m_krnl1x1FetchTotal     ;
-		sc_core::sc_fifo<int>			m_krnl1x1Bias_fifo		;
-		int								m_krnl1x1BiasFetchCount	;
-		int								m_krnl1x1BiasFetchTotal	;
-		sc_core::sc_fifo<int>			m_partMap_fifo          ;
-		int								m_partMapFetchCount		;
-		int								m_partMapFetchTotal     ;		
-		sc_core::sc_fifo<int>			m_resMap_fifo           ;
-		int								m_resMapFetchCount		;
-		int								m_resMapFetchTotal      ;
-		sc_core::sc_fifo<int>			m_outBuf_fifo           ;
-        int                             m_outMapStoreCount      ;
-        int                             m_outMapStoreTotal      ;
-		bool							m_first_depth_iter_cfg  ;
-		bool							m_last_depth_iter_cfg   ;
-		bool							m_conv_out_fmt0_cfg     ;
-	    int								m_res_pkt_size          ;
-		bool							m_do_res_layer_cfg      ;
-		bool							m_do_kernel1x1_cfg		;
-		int								m_num_ob_wr             ;
-		sc_core::sc_event				m_job_fetch             ;
-		Accel_Trans 					m_job_fetch_trans       ;
-		sc_core::sc_event				m_wr_outBuf	            ;
-		sc_core::sc_semaphore			m_sys_mem_bus_sema      ;
-		sc_core::sc_fifo<tlm::tlm_generic_payload*> m_trans_fifo;
+		FAS_cfg*						m_FAS_cfg				        ;
+		mem_mng							m_mem_mng                       ;
+		sc_core::sc_event				m_start                         ;
+		sc_core::sc_event				m_start_ack                     ;
+		sc_core::sc_event				m_complete                      ;
+		sc_core::sc_event				m_complete_ack                  ;
+		FAS_state_t						m_state                         ;
+		std::vector<bool>				m_AWP_complt_arr                ;
+		std::vector<std::vector<bool>>	m_QUAD_en_arr       	        ;
+		std::vector<int>				m_num_QUAD_cfgd     	        ;
+		int								m_FAS_id                        ;
+		int								m_pixSeqCfgFetchCount	        ;
+		int 							m_pixSeqCfgFetchTotal_cfg	    ;
+		int								m_inMapFetchCount		        ;
+		int								m_inMapFetchTotal_cfg           ;
+ 		sc_core::sc_fifo<int>			m_convOutMap_fifo               ;
+		int								m_krnl3x3FetchCount		        ;
+		int								m_krnl3x3FetchTotal_cfg		    ;
+		int								m_krnl3x3BiasFetchCount	        ;
+		int								m_krnl3x3BiasFetchTotal_cfg	    ;
+		sc_core::sc_fifo<int>			m_krnl1x1_fifo         	        ;
+		int								m_krnl1x1FetchCount		        ;
+		int								m_krnl1x1FetchTotal_cfg         ;
+		sc_core::sc_fifo<int>			m_krnl1x1Bias_fifo		        ;
+		int								m_krnl1x1BiasFetchCount	        ;
+		int								m_krnl1x1BiasFetchTotal_cfg	    ;
+		sc_core::sc_fifo<int>			m_partMap_fifo                  ;
+		int								m_partMapFetchCount		        ;
+		int								m_partMapFetchTotal_cfg     	;
+		sc_core::sc_fifo<int>			m_resMap_fifo                   ;
+		int								m_resMapFetchCount		        ;
+		int								m_resMapFetchTotal_cfg          ;
+		sc_core::sc_fifo<int>			m_outBuf_fifo                   ;
+        int                             m_outMapStoreCount              ;
+        int                             m_outMapStoreTotal_cfg          ;
+		bool							m_first_depth_iter_cfg          ;
+		bool							m_last_depth_iter_cfg           ;
+		bool							m_conv_out_fmt0_cfg             ;
+	    int								m_res_pkt_size                  ;
+		bool							m_do_res_layer_cfg              ;
+		bool							m_do_kernel1x1_cfg		        ;
+		int								m_num_ob_wr                     ;
+		sc_core::sc_event				m_job_fetch                     ;
+		Accel_Trans 					m_job_fetch_trans               ;
+		sc_core::sc_event				m_wr_outBuf	                    ;
+		sc_core::sc_semaphore			m_sys_mem_bus_sema              ;
+		sc_core::sc_fifo<tlm::tlm_generic_payload*> m_trans_fifo        ;
 };

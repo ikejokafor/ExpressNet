@@ -66,6 +66,7 @@ SC_MODULE(AWP)
 				m_QUADs_cfgd_arr.push_back(false);
 			}
 			m_num_QUADs_cfgd = 0;
+			m_AWP_cfgd = false;
 		}
 
 		// Destructor
@@ -89,5 +90,6 @@ SC_MODULE(AWP)
 		int	m_next_req_id;
 		std::vector<bool> m_QUADs_cfgd_arr;
 		int m_num_QUADs_cfgd;
+		bool m_AWP_cfgd;
 		sc_core::sc_mutex mutex;
 };

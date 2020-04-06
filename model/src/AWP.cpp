@@ -8,7 +8,7 @@ using namespace tlm_utils;
 
 AWP::~AWP()
 {
-	for (int i = 0; i < NUM_QUADS_PER_AWP; i++)
+	for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
 	{
 		delete quad[i];
 	}
@@ -21,18 +21,18 @@ void AWP::bus_arbitrate()
 	{
 		wait();
 		int numReq = 0;
-		for (int i = 0; i < MAX_AWP_TRANS; i++)
+		for(int i = 0; i < MAX_AWP_TRANS; i++)
 		{
-			if (bus.m_req_arr[i].req_pending)
+			if(bus.m_req_arr[i].req_pending)
 			{
 				numReq++;
 			}
 		}
-		if (numReq > 0 && m_num_trans_in_prog < MAX_NETWORK_TRANS)
+		if(numReq > 0 && m_num_trans_in_prog < MAX_NETWORK_TRANS)
 		{
-			for (int i = m_next_req_id; true; i = (i + 1) % MAX_AWP_TRANS)
+			for(int i = m_next_req_id; true; i = (i + 1) % MAX_AWP_TRANS)
 			{
-				if (bus.m_req_arr[i].req_pending)
+				if(bus.m_req_arr[i].req_pending)
 				{
 					bus.m_req_arr[i].ack.notify();
 					m_next_req_id = (i + 1) % MAX_AWP_TRANS;
@@ -51,18 +51,18 @@ void AWP::send_complete()
 	{
 		wait();
 		bool all_complete = true;
-		for (int i = 0; i < m_QUADs_cfgd_arr.size(); i++)
+		for(int i = 0; i < m_QUADs_cfgd_arr.size(); i++)
 		{
-			if (m_QUADs_cfgd_arr[i] && !bus.m_QUAD_complt_arr[i])
+			if(m_QUADs_cfgd_arr[i] && !bus.m_QUAD_complt_arr[i])
 			{
 				all_complete = false;
 				break;
 			}
 		}
-		if (all_complete && m_num_QUADs_cfgd > 0)
+		if(all_complete && m_num_QUADs_cfgd > 0)
 		{
 			m_num_QUADs_cfgd = 0;
-			for (int i = 0; i < MAX_AWP_PER_FAS; i++)
+			for(int i = 0; i < MAX_AWP_PER_FAS; i++)
 			{
 				bus.m_QUAD_complt_arr[i] = false;
 			}
@@ -83,6 +83,7 @@ void AWP::send_complete()
 			);
 			wait();
 			init_soc->b_transport(*trans, delay);
+			m_AWP_cfgd = false;
 			trans->release();
 		}
 	}
@@ -109,6 +110,15 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
 			m_FAS_id = accel_trans->FAS_id;
 			m_num_QUADs_cfgd = accel_trans->num_QUADS_cfgd;
 			m_QUADs_cfgd_arr[QUAD_id] = true;
+			if(!m_AWP_cfgd)
+			{
+				m_AWP_cfgd = true;
+				string str = 
+					string(name()) + " Configured with.......\n" + ""
+					"\tFAS ID:\t\t\t\t"                 + to_string(m_FAS_id)         + "\n" 			
+					"\tNumber of Quads Configured:\t"   + to_string(m_num_QUADs_cfgd) + "\n";
+				cout << str;
+			}
 			quad[QUAD_id]->b_cfg_write(trans.get_data_ptr());
 			break;
 		}
