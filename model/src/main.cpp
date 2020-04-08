@@ -7,8 +7,8 @@ using namespace std;
 
 int sc_main(int argc, char* argv[])
 {
-	sc_set_time_resolution(1, SC_NS);
-	CNN_Layer_Accel CNN_Layer_Accel("CNN_Layer_Accel");
-	sc_start();
-	return 0;
+    sc_set_time_resolution(1, SC_NS);
+    CNN_Layer_Accel CNN_Layer_Accel("CNN_Layer_Accel");
+    sc_start();
+    return 0;
 }
