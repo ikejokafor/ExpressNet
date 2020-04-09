@@ -128,7 +128,7 @@ SC_MODULE(FAS)
         void b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
 
         // Methods
-        void nb_result_write();
+        void b_result_write();
         void b_fifo_trans(sc_core::sc_fifo<int>& fifo, fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width);
         void b_fifo_trans(fifo_sel_t fifo_sel, fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width);
         void b_cfg_Accel();

@@ -203,6 +203,7 @@ void FAS::outBuf_wr_process()
     {
         wait(m_wr_outBuf);
         wait();
+        cout << "here" << endl;
         b_fifo_trans(OUTBUF_FIFO, FIFO_WRITE, OB_NUM_PIX_WRITE, OB_FIFO_WR_WIDTH);
         wait();
     }
@@ -222,14 +223,13 @@ void FAS::S_process()
             string str =
                 "[" + string(name()) + "]" + " is doing an Output Buffer write at " + sc_time_stamp().to_string() + "\n";
             cout << str;
-            int numValRead = min(OB_HIGH_WATERMARK, m_outBuf_fifo.num_available());
-            b_fifo_trans(OUTBUF_FIFO, FIFO_READ, numValRead, OB_FIFO_RD_WIDTH);
+            b_fifo_trans(OUTBUF_FIFO, FIFO_READ, OB_HIGH_WATERMARK, OB_FIFO_RD_WIDTH);
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_WRITE_COMMAND,
                 nullptr,
-                (numValRead * PIXEL_SIZE),
+                (OB_HIGH_WATERMARK * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -239,7 +239,7 @@ void FAS::S_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             m_sys_mem_bus_sema.post();
             trans->release();
-            m_outMapStoreCount += (numValRead * PIXEL_SIZE);
+            m_outMapStoreCount += (OB_HIGH_WATERMARK * PIXEL_SIZE);
             if(m_state == ST_WAIT_LAST_WRITE && m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
                 m_last_wrt = true;
@@ -345,8 +345,6 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
     m_last_CO_recvd = accel_trans->last_CO;
     if(m_last_CO_recvd)
     {
-        cout << m_outMapStoreCount << endl;
-        cout << m_outBuf_fifo.num_available() << endl;
         string str = "[" + string(name()) + "]: recieved last convolutional output\n";
         cout << str;
     }
@@ -360,7 +358,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_RESULT_WRITE:
         {
-            nb_result_write();
+            b_result_write();
             trans.release();
             break;
         }
@@ -374,7 +372,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
 }
 
 
-void FAS::nb_result_write()
+void FAS::b_result_write()
 {
     if(m_first_depth_iter_cfg)
     {
@@ -432,7 +430,7 @@ void FAS::b_fifo_trans(sc_fifo<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_tr
                 {
                     if(fifo.num_available() == 0)
                     {
-                        continue;
+                        break;
                     }
                     int dummy;
                     fifo.nb_read(dummy);
@@ -443,9 +441,6 @@ void FAS::b_fifo_trans(sc_fifo<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_tr
                     if(fifo.num_free() == 0)
                     {
                         cout << "[" + string(fifo.name()) + "]:" << " is full" << endl;
-                        cout << m_inMapFetchCount << endl;
-                        cout << m_outMapStoreCount << endl;
-                        cout << m_state << endl;
                         sc_stop();
                         return;
                     }

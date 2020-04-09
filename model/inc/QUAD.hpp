@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <queue>
+#include <deque>
 #include <string>
 #include "systemc"
 #include "cnn_layer_accel_common.hpp"
@@ -28,8 +28,7 @@ SC_MODULE(QUAD)
         // Constructor
         SC_CTOR(QUAD)
             :	clk("clk"),
-                bus("bus"),
-                m_res_fifo(QUAD_RES_FIFO_SIZE)
+                bus("bus")
         {
             SC_THREAD(ctrl_process_0);
                 sensitive << clk.pos();
@@ -92,7 +91,8 @@ SC_MODULE(QUAD)
         int						m_crpd_input_row_start_cfg	;
         int						m_crpd_input_row_end_cfg	;
         int						m_QUAD_id					;
-        sc_core::sc_fifo<int>	m_res_fifo					;
+        std::deque<int>	        m_res_fifo					;
+        sc_core::sc_mutex       m_fifo_lock                 ;
         bool					m_last_res_wrtn				;
         sc_core::sc_event 		m_pfb_wrtn					;
         int						m_start						;

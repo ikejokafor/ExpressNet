@@ -29,7 +29,7 @@
 #
 #   Print variable value
 #       MESSAGE("variable is: " ${PROJECT_SOURCE_DIR} )
-#   
+#
 #####################################################################################################################################################
 
 
@@ -96,7 +96,7 @@ SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 
 # BEGIN Target Sources ------------------------------------------------------------------------------------------------------------------------------
-FILE(GLOB TARGET_SRCS 
+FILE(GLOB TARGET_SRCS
     ${PROJECT_SOURCE_DIR}/src/*.c
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
@@ -105,7 +105,7 @@ FILE(GLOB TARGET_SRCS
 
 # BEGIN Target Headers ------------------------------------------------------------------------------------------------------------------------------
 FILE(GLOB TARGET_HEADERS
-    ${PROJECT_SOURCE_DIR}/inc/*.h 
+    ${PROJECT_SOURCE_DIR}/inc/*.h
     ${PROJECT_SOURCE_DIR}/inc/*.hpp
 )
 # END Target Headers --------------------------------------------------------------------------------------------------------------------------------
@@ -130,19 +130,19 @@ ADD_LIBRARY(${TARGET_NAME} STATIC ${TARGET_SRCS} ${TARGET_HEADERS})
 # BEGIN Set Output Path for libs or bins ------------------------------------------------------------------------------------------------------------
 # This command must come after ADD_EXECUTABLE or ADD_LIBRARY
 SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
-                        RUNTIME_OUTPUT_DIRECTORY_DEBUG 
+                        RUNTIME_OUTPUT_DIRECTORY_DEBUG
                         ${PROJECT_SOURCE_DIR}/build/debug)
 SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
-                        RUNTIME_OUTPUT_DIRECTORY_RELEASE 
+                        RUNTIME_OUTPUT_DIRECTORY_RELEASE
                         ${PROJECT_SOURCE_DIR}/build/release)
-            
+
 SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
-                        LIBRARY_OUTPUT_DIRECTORY_DEBUG 
+                        LIBRARY_OUTPUT_DIRECTORY_DEBUG
                         ${PROJECT_SOURCE_DIR}/build/debug)
 SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
                         LIBRARY_OUTPUT_DIRECTORY_RELEASE
                         ${PROJECT_SOURCE_DIR}/build/release)
-             
+
 SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
                         ARCHIVE_OUTPUT_DIRECTORY_DEBUG
                         ${PROJECT_SOURCE_DIR}/build/debug)
@@ -159,8 +159,8 @@ SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
 
 
 # BEGIN Compiler Flags ------------------------------------------------------------------------------------------------------------------------------
-TARGET_COMPILE_OPTIONS(${TARGET_NAME} PUBLIC 
-    "-std=c++14" 
+TARGET_COMPILE_OPTIONS(${TARGET_NAME} PUBLIC
+    "-std=c++14"
     "-Wall"
     "-fexceptions"
 )
@@ -182,6 +182,7 @@ ELSE()
         /usr/local/include/
         /usr/include/
         ${PROJECT_SOURCE_DIR}/inc/
+        ${PROJECT_SOURCE_DIR}/src/
         ${PROJECT_SOURCE_DIR}/../../util/inc
         /home/ikenna/downloaded_repos/systemc-2.3.3/src
         ${PROJECT_SOURCE_DIR}/../../espresso/inc/FPGA/

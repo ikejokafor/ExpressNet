@@ -24,7 +24,7 @@ void Interconnect::run()
 }
 
 
-void Interconnect::b_transport(int id, tlm_generic_payload & trans, sc_core::sc_time & delay)
+void Interconnect::b_transport(int id, tlm_generic_payload& trans, sc_core::sc_time& delay)
 {
     while(true)
     {
