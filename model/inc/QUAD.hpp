@@ -36,7 +36,7 @@ SC_MODULE(QUAD)
                 sensitive << clk.pos();
             SC_THREAD(conv_process)
                 sensitive << clk.pos();
-            SC_THREAD(result_process);
+            SC_THREAD(result_write_process);
                 sensitive << clk.pos();
 
             m_state = ST_IDLE;
@@ -45,6 +45,11 @@ SC_MODULE(QUAD)
             m_input_row = 0;
             m_output_col = 0;
             m_output_row = 0;
+            m_stride_count = 0;
+            m_num_rd_req = 0;
+            m_num_wr_req = 0;
+            m_num_fifo_wr = 0;
+            m_num_fifo_rd = 0;
             m_last_res_wrtn = false;
         }
 
@@ -55,7 +60,7 @@ SC_MODULE(QUAD)
         void ctrl_process_0();
         void ctrl_process_1();
         void conv_process();
-        void result_process();
+        void result_write_process();
 
         // Methods
         void b_cfg_write(unsigned char* data);
@@ -88,12 +93,17 @@ SC_MODULE(QUAD)
         bool					m_conv_out_fmt0_cfg			;
         bool					m_padding_cfg				;
         bool					m_upsmaple_cfg				;
+        int                     m_stride_cfg                ;
+        int                     m_stride_count              ;
         int						m_crpd_input_row_start_cfg	;
         int						m_crpd_input_row_end_cfg	;
         int						m_QUAD_id					;
         std::deque<int>	        m_res_fifo					;
-        sc_core::sc_mutex       m_fifo_lock                 ;
         bool					m_last_res_wrtn				;
         sc_core::sc_event 		m_pfb_wrtn					;
         int						m_start						;
+        int                     m_num_rd_req                ;
+        int                     m_num_wr_req                ;
+        int                     m_num_fifo_wr               ;
+        int                     m_num_fifo_rd               ;
 };

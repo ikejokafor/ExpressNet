@@ -5,7 +5,7 @@
 
 
 #include <vector>
-#include <queue>
+#include <deque>
 #include "systemc"
 #include "tlm.h"
 #include "tlm_utils/peq_with_cb_and_phase.h"
@@ -65,14 +65,7 @@ SC_MODULE(FAS)
         SC_CTOR(FAS)
             :	clk("clk"),
                 m_AWP_complt_arr(MAX_AWP_PER_FAS, false),
-                m_partMap_fifo("Partial_Map_Fifo", PM_FIFO_SIZE),
-                m_convOutMap_fifo("Convolution_Output_Fifo", CO_FIFO_SIZE),
-                m_resMap_fifo("Residual_Map_Fifo", RSM_FIFO_SIZE),
-                m_krnl1x1_fifo("Kernel_1x1_Fifo", KRNL_1X1_FIFO_SIZE),
-                m_krnl1x1Bias_fifo("Kernel_1x1_Bias_Fifo", KRNL_1X1_FIFO_SIZE),
-                m_outBuf_fifo("Output_Buffer_Fifo", OB_FIFO_SIZE),
                 m_sys_mem_bus_sema(MAX_FAS_SYS_MEM_TRNS),
-                m_trans_fifo("Transaction_Fifo", MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP),
                 m_QUAD_en_arr(MAX_AWP_PER_FAS, std::vector<bool>(NUM_QUADS_PER_AWP, false)),
                 m_num_QUAD_cfgd(MAX_AWP_PER_FAS, 0),
                 m_depthFetchAmt(MAX_AWP_PER_FAS, std::vector<int>(NUM_QUADS_PER_AWP, 0))
@@ -129,8 +122,8 @@ SC_MODULE(FAS)
 
         // Methods
         void b_result_write();
-        void b_fifo_trans(sc_core::sc_fifo<int>& fifo, fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width);
-        void b_fifo_trans(fifo_sel_t fifo_sel, fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width);
+        void b_fifo_trans(std::string fifo_name, std::deque<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_depth, int fifo_trans_size, int fifo_trans_width);
+        void b_fifo_trans(fifo_sel_t fifo_sel, fifo_cmd_t fifo_cmd, int fifo_depth, int fifo_trans_size, int fifo_trans_width);
         void b_cfg_Accel();
         void b_getCfgData();
         void b_cfg1x1Kernels();
@@ -157,38 +150,40 @@ SC_MODULE(FAS)
         int                             m_inMapFetchFactor_cfg          ;
         int								m_inMapFetchCount		        ;
         int								m_inMapFetchTotal_cfg           ;
-         sc_core::sc_fifo<int>			m_convOutMap_fifo               ;
+         std::deque<int>			    m_convOutMap_fifo               ;
         int								m_krnl3x3FetchCount		        ;
         int								m_krnl3x3FetchTotal_cfg		    ;
         int								m_krnl3x3BiasFetchCount	        ;
         int								m_krnl3x3BiasFetchTotal_cfg	    ;
-        sc_core::sc_fifo<int>			m_krnl1x1_fifo         	        ;
+        std::deque<int>			        m_krnl1x1_fifo         	        ;
         int								m_krnl1x1FetchCount		        ;
         int								m_krnl1x1FetchTotal_cfg         ;
-        sc_core::sc_fifo<int>			m_krnl1x1Bias_fifo		        ;
+        std::deque<int>			        m_krnl1x1Bias_fifo		        ;
         int								m_krnl1x1BiasFetchCount	        ;
         int								m_krnl1x1BiasFetchTotal_cfg	    ;
-        sc_core::sc_fifo<int>			m_partMap_fifo                  ;
+        std::deque<int>			        m_partMap_fifo                  ;
         int								m_partMapFetchCount		        ;
         int								m_partMapFetchTotal_cfg     	;
-        sc_core::sc_fifo<int>			m_resMap_fifo                   ;
+        std::deque<int>			        m_resMap_fifo                   ;
         int								m_resMapFetchCount		        ;
         int								m_resMapFetchTotal_cfg          ;
-        sc_core::sc_fifo<int>			m_outBuf_fifo                   ;
+        std::deque<int>			        m_outBuf_fifo                   ;
         int                             m_outMapStoreCount              ;
         int                             m_outMapStoreTotal_cfg          ;
+        int                             m_outMapStoreFactor_cfg         ;
         bool							m_first_depth_iter_cfg          ;
         bool							m_last_depth_iter_cfg           ;
         bool							m_conv_out_fmt0_cfg             ;
         int								m_res_pkt_size                  ;
         bool							m_do_res_layer_cfg              ;
         bool							m_do_kernel1x1_cfg		        ;
+        int                             m_num_1x1_kernels_cfg           ;
         int								m_num_ob_wr                     ;
         sc_core::sc_event				m_job_fetch                     ;
         Accel_Trans 					m_job_fetch_trans               ;
         sc_core::sc_event				m_wr_outBuf	                    ;
         sc_core::sc_semaphore			m_sys_mem_bus_sema              ;
-        sc_core::sc_fifo<tlm::tlm_generic_payload*> m_trans_fifo        ;
+        std::deque<tlm::tlm_generic_payload*> m_trans_fifo        ;
         bool                            m_last_wrt                      ;
         bool                            m_last_CO_recvd                 ;
 };

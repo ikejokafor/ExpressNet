@@ -11,6 +11,7 @@ FAS::~FAS() { }
 
 void FAS::ctrl_process()
 {
+    string str;
     while(true)
     {
         wait();
@@ -70,8 +71,18 @@ void FAS::ctrl_process()
                         m_AWP_complt_arr[i] = false;
                     }
                     m_complete.notify();
+                    str = "[" + string(name()) + "]: sent complete\n";
+                    cout << str;
                     wait(m_complete_ack);
-                    m_state = ST_IDLE;
+                    m_state                     = ST_IDLE;
+                    m_krnl3x3FetchCount			= 0;
+                    m_krnl3x3BiasFetchCount		= 0;
+                    m_partMapFetchCount			= 0;
+                    m_inMapFetchCount			= 0;
+                    m_krnl1x1FetchCount			= 0;
+                    m_krnl1x1BiasFetchCount     = 0;
+                    m_resMapFetchCount			= 0;
+                    m_outMapStoreCount     		= 0;
                 }
                 break;
             }
@@ -87,7 +98,7 @@ void FAS::F_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo.num_available() <= PM_LOW_WATERMARK && m_partMapFetchCount != m_partMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo.size() <= PM_LOW_WATERMARK && m_partMapFetchCount != m_partMapFetchTotal_cfg)
         {
             trans = nb_createTLMTrans(
                 m_mem_mng,
@@ -104,7 +115,7 @@ void FAS::F_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             m_sys_mem_bus_sema.post();
             trans->release();
-            b_fifo_trans(PARTMAP_FIFO, FIFO_WRITE, PM_NUM_PIX_READ, PM_FIFO_WR_WIDTH);
+            b_fifo_trans(PARTMAP_FIFO, FIFO_WRITE, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_WR_WIDTH);
             m_partMapFetchCount += (PM_NUM_PIX_READ * PIXEL_SIZE);
         }
     }
@@ -119,14 +130,14 @@ void FAS::A_process()
         if(m_state == ST_ACTIVE
             && m_first_depth_iter_cfg
             && m_do_kernel1x1_cfg
-            && m_convOutMap_fifo.num_available() > 0
-            && m_partMap_fifo.num_available() > 0
+            && m_convOutMap_fifo.size() > 0
+            && m_partMap_fifo.size() > 0
         ) {
             // pop convOut map, pop partial map
-            b_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+            b_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
+            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
             // add convOut and partial map, pop 1x1 kernel
-            b_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_1x1_NUM_PIX_READ, KRNL_1x1_FIFO_RD_WIDTH);
+            b_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_1X1_FIFO_DEPTH, KRNL_1x1_NUM_PIX_READ, KRNL_1x1_FIFO_RD_WIDTH);
             // multiply sum with 1x1
             wait();
             // store to buffer
@@ -143,14 +154,14 @@ void FAS::A_process()
         else if(m_state == ST_ACTIVE
             && !m_first_depth_iter_cfg
             && m_do_kernel1x1_cfg
-            && m_convOutMap_fifo.num_available() > 0
-            && m_partMap_fifo.num_available() > 0
+            && m_convOutMap_fifo.size() > 0
+            && m_partMap_fifo.size() > 0
         ) {
             // pop convOut map, pop 1x1 fifo
-            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
-            b_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_1x1_NUM_PIX_READ, KRNL_1x1_FIFO_RD_WIDTH);
+            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+            b_fifo_trans(KRNL_1X1_FIFO, FIFO_READ, KRNL_1X1_FIFO_DEPTH, KRNL_1x1_NUM_PIX_READ, KRNL_1x1_FIFO_RD_WIDTH);
             // pop partial map, multiply convOut map with 1x1
-            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
+            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
             // add convOut and partial map 1x1 product
             wait();
             // store to buffer
@@ -166,12 +177,12 @@ void FAS::A_process()
         }
         else if(m_state == ST_ACTIVE
             && !m_first_depth_iter_cfg
-            && m_convOutMap_fifo.num_available() > 0
-            && m_partMap_fifo.num_available() > 0
+            && m_convOutMap_fifo.size() > 0
+            && m_partMap_fifo.size() > 0
         ) {
             // pop convOut map, pop partial map
-            b_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+            b_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
+            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
             // accum
             wait();
             // store to buffer
@@ -180,14 +191,14 @@ void FAS::A_process()
         else if(m_state == ST_ACTIVE
             && m_last_depth_iter_cfg
             && m_do_res_layer_cfg
-            && m_convOutMap_fifo.num_available() > 0
-            && m_partMap_fifo.num_available() > 0
-            && m_resMap_fifo.num_available() > 0
+            && m_convOutMap_fifo.size() > 0
+            && m_partMap_fifo.size() > 0
+            && m_resMap_fifo.size() > 0
         ) {
             // pop convOut map, pop partial map, pop res map
-            b_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
-            b_fifo_trans(RESMAP_FIFO, FIFO_READ, RSM_NUM_PIX_READ, RSM_FIFO_RD_WIDTH);
+            b_fifo_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
+            b_fifo_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
+            b_fifo_trans(RESMAP_FIFO, FIFO_READ, RSM_FIFO_DEPTH, RSM_NUM_PIX_READ, RSM_FIFO_RD_WIDTH);
             // add convOut map, partial map, and residual map pixel
             wait();
             // store to buffer
@@ -204,7 +215,7 @@ void FAS::outBuf_wr_process()
         wait(m_wr_outBuf);
         wait();
         cout << "here" << endl;
-        b_fifo_trans(OUTBUF_FIFO, FIFO_WRITE, OB_NUM_PIX_WRITE, OB_FIFO_WR_WIDTH);
+        b_fifo_trans(OUTBUF_FIFO, FIFO_WRITE, OB_FIFO_DEPTH, OB_NUM_PIX_WRITE, OB_FIFO_WR_WIDTH);
         wait();
     }
 }
@@ -217,19 +228,19 @@ void FAS::S_process()
     while(true)
     {
         wait();
-        if((m_state == ST_ACTIVE && m_outBuf_fifo.num_available() >= OB_HIGH_WATERMARK)
-            || (m_state == ST_WAIT_LAST_WRITE && m_outBuf_fifo.num_available() > 0)
+        if((m_state == ST_ACTIVE && m_outBuf_fifo.size() >= m_outMapStoreFactor_cfg)
+            || (m_state == ST_WAIT_LAST_WRITE && m_outBuf_fifo.size() > 0)
         ) {
             string str =
                 "[" + string(name()) + "]" + " is doing an Output Buffer write at " + sc_time_stamp().to_string() + "\n";
             cout << str;
-            b_fifo_trans(OUTBUF_FIFO, FIFO_READ, OB_HIGH_WATERMARK, OB_FIFO_RD_WIDTH);
+            b_fifo_trans(OUTBUF_FIFO, FIFO_READ, OB_FIFO_DEPTH, m_outMapStoreFactor_cfg, OB_FIFO_RD_WIDTH);
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_WRITE_COMMAND,
                 nullptr,
-                (OB_HIGH_WATERMARK * PIXEL_SIZE),
+                (m_outMapStoreFactor_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -239,7 +250,7 @@ void FAS::S_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             m_sys_mem_bus_sema.post();
             trans->release();
-            m_outMapStoreCount += (OB_HIGH_WATERMARK * PIXEL_SIZE);
+            m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
             if(m_state == ST_WAIT_LAST_WRITE && m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
                 m_last_wrt = true;
@@ -258,7 +269,7 @@ void FAS::resMap_fetch_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && m_last_depth_iter_cfg && m_resMap_fifo.num_available() <= RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && m_last_depth_iter_cfg && m_resMap_fifo.size() <= RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal_cfg)
         {
             trans = nb_createTLMTrans(
                 m_mem_mng,
@@ -275,7 +286,7 @@ void FAS::resMap_fetch_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             m_sys_mem_bus_sema.post();
             trans->release();
-            b_fifo_trans(RESMAP_FIFO, FIFO_WRITE, RSM_NUM_PIX_WRITE, RSM_FIFO_WR_WIDTH);
+            b_fifo_trans(RESMAP_FIFO, FIFO_WRITE, RSM_FIFO_DEPTH, RSM_NUM_PIX_WRITE, RSM_FIFO_WR_WIDTH);
             wait();
             m_resMapFetchCount += (RSM_NUM_PIX_READ * PIXEL_SIZE);
         }
@@ -290,9 +301,10 @@ void FAS::job_fetch_process()
     while(true)
     {
         wait();
-        if(m_trans_fifo.num_available() > 0)
+        if(m_trans_fifo.size() > 0)
         {
-            m_trans_fifo.nb_read(trans);
+            trans = m_trans_fifo.front();
+            m_trans_fifo.pop_front();
             Accel_Trans* accel_trans = (Accel_Trans*)trans->get_data_ptr();
             int AWP_id = accel_trans->AWP_id;
             int QUAD_id = accel_trans->QUAD_id;
@@ -342,9 +354,9 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
     trans.acquire();
     Accel_Trans* accel_trans;
     accel_trans = (Accel_Trans*)trans.get_data_ptr();
-    m_last_CO_recvd = accel_trans->last_CO;
-    if(m_last_CO_recvd)
+    if(accel_trans->last_CO)
     {
+        m_last_CO_recvd = accel_trans->last_CO;
         string str = "[" + string(name()) + "]: recieved last convolutional output\n";
         cout << str;
     }
@@ -353,7 +365,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
     {
         case ACCL_CMD_JOB_FETCH:
         {
-            m_trans_fifo.nb_write(&trans);
+            m_trans_fifo.push_back(&trans);
             break;
         }
         case ACCL_CMD_RESULT_WRITE:
@@ -376,49 +388,49 @@ void FAS::b_result_write()
 {
     if(m_first_depth_iter_cfg)
     {
-        b_fifo_trans(OUTBUF_FIFO, FIFO_WRITE, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
+        b_fifo_trans(OUTBUF_FIFO, FIFO_WRITE, OB_FIFO_DEPTH, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
     }
     else
     {
-        b_fifo_trans(PARTMAP_FIFO, FIFO_WRITE, RES_PKT_SIZE, PM_FIFO_WR_WIDTH);
+        b_fifo_trans(PARTMAP_FIFO, FIFO_WRITE, PM_FIFO_DEPTH, RES_PKT_SIZE, PM_FIFO_WR_WIDTH);
     }
 }
 
 
-void FAS::b_fifo_trans(fifo_sel_t fifo_sel, FAS::fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width)
+void FAS::b_fifo_trans(fifo_sel_t fifo_sel, FAS::fifo_cmd_t fifo_cmd, int fifo_depth, int fifo_trans_size, int fifo_trans_width)
 {
     switch(fifo_sel)
     {
         case PARTMAP_FIFO:
         {
-            b_fifo_trans(m_partMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+            b_fifo_trans("Partial Map Fifo", m_partMap_fifo, fifo_cmd, fifo_depth, fifo_trans_size, fifo_trans_width);
             break;
         }
         case CONVOUTMAP_FIFO:
         {
-            b_fifo_trans(m_convOutMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+            b_fifo_trans("Convolutional Map Output Fifo", m_convOutMap_fifo, fifo_cmd, fifo_depth, fifo_trans_size, fifo_trans_width);
             break;
         }
         case KRNL_1X1_FIFO:
         {
-            b_fifo_trans(m_krnl1x1_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+            b_fifo_trans("1x1 Kernel Fifo", m_krnl1x1_fifo, fifo_cmd, fifo_depth, fifo_trans_size, fifo_trans_width);
             break;
         }
         case RESMAP_FIFO:
         {
-            b_fifo_trans(m_resMap_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+            b_fifo_trans("Residual Map Fifo", m_resMap_fifo, fifo_cmd, fifo_depth, fifo_trans_size, fifo_trans_width);
             break;
         }
         case OUTBUF_FIFO:
         {
-            b_fifo_trans(m_outBuf_fifo, fifo_cmd, fifo_trans_size, fifo_trans_width);
+            b_fifo_trans("Output Buffer Fifo", m_outBuf_fifo, fifo_cmd, fifo_depth, fifo_trans_size, fifo_trans_width);
             break;
         }
     }
 }
 
 
-void FAS::b_fifo_trans(sc_fifo<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_trans_size, int fifo_trans_width)
+void FAS::b_fifo_trans(string fifo_name, deque<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_depth, int fifo_trans_size, int fifo_trans_width)
 {
     for (int i = 0; i < fifo_trans_size; i += fifo_trans_width)
     {
@@ -428,23 +440,21 @@ void FAS::b_fifo_trans(sc_fifo<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_tr
             {
                 case FAS::FIFO_READ:
                 {
-                    if(fifo.num_available() == 0)
-                    {
-                        break;
-                    }
-                    int dummy;
-                    fifo.nb_read(dummy);
+                    if(fifo.size() == 0) break;
+                    fifo.pop_front();
                     break;
                 }
                 case FAS::FIFO_WRITE:
                 {
-                    if(fifo.num_free() == 0)
+                    if(fifo.size() == fifo_depth)
                     {
-                        cout << "[" + string(fifo.name()) + "]:" << " is full" << endl;
+                        string str =
+                            "[" + fifo_name + "]: is full\n";
+                        cout << str;
                         sc_stop();
                         return;
                     }
-                    fifo.nb_write(int());
+                    fifo.push_back(int());
                     break;
                 }
             }
@@ -468,6 +478,7 @@ void FAS::b_getCfgData()
     m_first_depth_iter_cfg 			= m_FAS_cfg->m_first_depth_iter;
     m_last_depth_iter_cfg 			= m_FAS_cfg->m_last_depth_iter;
     m_do_res_layer_cfg 				= m_FAS_cfg->m_do_res_layer;
+    // m_do_kernel1x1_cfg              = m_FAS_cfg->m_do_kernels1x1;
     m_pixSeqCfgFetchTotal_cfg		= m_FAS_cfg->m_pixSeqCfgFetchTotal;
     m_inMapFetchTotal_cfg    		= m_FAS_cfg->m_inMapFetchTotal;
     m_krnl3x3FetchTotal_cfg     	= m_FAS_cfg->m_krnl3x3FetchTotal;
@@ -475,14 +486,18 @@ void FAS::b_getCfgData()
     m_partMapFetchTotal_cfg			= m_FAS_cfg->m_partMapFetchTotal;
     m_krnl1x1FetchTotal_cfg    		= m_FAS_cfg->m_krnl1x1FetchTotal;
     m_krnl1x1BiasFetchTotal_cfg		= m_FAS_cfg->m_krnl1x1BiasFetchTotal;
+    m_num_1x1_kernels_cfg           = m_FAS_cfg->m_num_1x1_kernels;
     m_resMapFetchTotal_cfg  		= m_FAS_cfg->m_resMapFetchTotal;
     m_outMapStoreTotal_cfg          = m_FAS_cfg->m_outMapStoreTotal;
     m_inMapFetchFactor_cfg          = m_FAS_cfg->m_inMapFetchFactor;
+    m_outMapStoreFactor_cfg         = m_FAS_cfg->m_outMapStoreFactor;
     string str =
         "[" + string(name()) + "]" + " Configured with.......\n" + ""
         "\tFirst depth iter:                            "   + to_string(m_first_depth_iter_cfg)         + "\n"
         "\tLast depth iter:                             "   + to_string(m_last_depth_iter_cfg)          + "\n"
         "\tDo Residual layer:                           "   + to_string(m_do_res_layer_cfg)             + "\n"
+        "\tDo Kernel 1x1:                               "   + to_string(m_do_kernel1x1_cfg)             + "\n"
+        "\tNum 1x1 Kernels:                             "   + to_string(m_num_1x1_kernels_cfg)          + "\n"
         "\tPixel Sequence Configuration Fetch Total:    "	+ to_string(m_pixSeqCfgFetchTotal_cfg)      + "\n"
         "\tInput Map Fetch Total:                       "   + to_string(m_inMapFetchTotal_cfg)          + "\n"
         "\tInput Map Fetch Factor:                      "   + to_string(m_inMapFetchFactor_cfg)         + "\n"
@@ -516,7 +531,7 @@ void FAS::b_cfg1x1Kernels()
     wait(MAX_1x1_KERNELS * krnl_1x1_depth, SC_NS);
     for (int i = 0; i <(krnl_1x1_depth); i++)
     {
-        m_krnl1x1_fifo.nb_write(int());
+        m_krnl1x1_fifo.push_back(int());
     }
     m_krnl1x1FetchCount += (krnl_1x1_depth * PIXEL_SIZE);
 }
@@ -536,10 +551,23 @@ void FAS::b_sendCfgs()
             {
                 continue;
             }
-            int idx = index2D(NUM_QUADS_PER_AWP, i, j);
             b_QUAD_config(i, j);
             b_QUAD_pix_seq_config(i, j);
             b_QUAD_krnl_config(i, j);
+        }
+    }
+    for (int i = 0; i < MAX_AWP_PER_FAS; i++)
+    {
+        if(!m_FAS_cfg->m_AWP_en_arr[i])
+        {
+            continue;
+        }
+        for (int j = 0; j < NUM_QUADS_PER_AWP; j++)
+        {
+            if(!m_QUAD_en_arr[i][j])
+            {
+                continue;
+            }
             b_QUAD_job_start(i, j);
         }
     }
@@ -567,6 +595,7 @@ void FAS::b_QUAD_config(int AWP_addr, int QUAD_addr)
     accel_trans->conv_out_fmt0_cfg			= true;
     accel_trans->padding_cfg				= QUAD_cfg->m_padding;
     accel_trans->upsample_cfg				= QUAD_cfg->m_upsample;
+    accel_trans->stride_cfg                 = QUAD_cfg->m_stride;
     accel_trans->crpd_input_row_start_cfg	= QUAD_cfg->m_crpd_input_row_start;
     accel_trans->crpd_input_row_end_cfg		= QUAD_cfg->m_crpd_input_row_end;
     trans = nb_createTLMTrans(

@@ -13,9 +13,10 @@ void Interconnect::run()
     while(true)
     {
         wait();
-        if(m_trans_fifo.num_available() > 0)
+        if(m_trans_fifo.size() > 0)
         {
-            m_trans_fifo.nb_read(trans);
+            trans = m_trans_fifo.front();
+            m_trans_fifo.pop_front();
             wait();
             init_soc[trans->get_address()]->b_transport(*trans, delay);
             trans->release();
@@ -29,14 +30,13 @@ void Interconnect::b_transport(int id, tlm_generic_payload& trans, sc_core::sc_t
     while(true)
     {
         wait(clk.posedge_event());
-        if(m_trans_fifo.num_free() > 0)
+        if(m_trans_fifo.size() != MAX_NETWORK_TRANS)
         {
             trans.acquire();
-            m_trans_fifo.nb_write(&trans);
+            m_trans_fifo.push_back(&trans);
             break;
         }
     }
-    // init_soc[trans.get_address()]->b_transport(trans, delay);
 }
 
 

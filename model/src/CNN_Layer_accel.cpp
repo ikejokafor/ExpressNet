@@ -1,7 +1,7 @@
 #include "CNN_Layer_Accel.hpp"
+using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
-using namespace std;
 using namespace tlm;
 using namespace tlm_utils;
 
@@ -26,21 +26,24 @@ void CNN_Layer_Accel::main_process()
     {
         wait();
         bool all_complete = true;
-         for (int i = 0; i < m_FAS_complt_arr.size(); i++)
-         {
-             if (!m_FAS_complt_arr[i])
-             {
-                 all_complete = false;
-                 break;
-             }
-         }
-         if(all_complete)
-         {
-             str = "Processing Complete at " + sc_time_stamp().to_string() + "\n";
-             m_complete.notify();
-            std::cout << str;
-             break;
-         }
+        for (int i = 0; i < m_FAS_complt_arr.size(); i++)
+        {
+            if (!m_FAS_complt_arr[i])
+            {
+                all_complete = false;
+                break;
+            }
+        }
+        if(all_complete)
+        {
+            for (int i = 0; i < m_FAS_complt_arr.size(); i++)
+            {
+                m_FAS_complt_arr[i] = false;
+            }
+            str = "Processing Complete at " + sc_time_stamp().to_string() + "\n";
+            cout << str;
+            m_complete.notify();
+        }
     }
 }
 
@@ -88,6 +91,10 @@ void CNN_Layer_Accel::waitComplete()
 {
     // FIXME: possibility of missing this if complete is triggered same cycle as finished is triggered
     wait(m_complete);
+    // FIXME: might need to read back data
+    delete m_accelCfg;
+    m_memory.clear();
+    m_accelCfg = new AccelConfig();
     wait();
 }
 

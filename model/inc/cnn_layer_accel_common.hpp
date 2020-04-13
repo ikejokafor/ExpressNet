@@ -27,27 +27,27 @@
 #define WINDOW_3x3_NUM_CYCLES	(uint64_t(5))
 #define PIX_SEQ_CFG_WRT_CYCS	(uint64_t(1024) * WINDOW_3x3_NUM_CYCLES)
 #define KRNL_SLOT_SIZE			10
-#define QUAD_RES_FIFO_SIZE		16
-#define KRNL_1X1_FIFO_SIZE		16
+#define QUAD_RES_FIFO_DEPTH		16
+#define KRNL_1X1_FIFO_DEPTH		16
 #define KRNL_1x1_NUM_PIX_READ	8
 #define	KRNL_1x1_FIFO_RD_WIDTH	8
 #define RES_FIFO_RD_WIDTH		8
 #define RES_PKT_SIZE			RES_FIFO_RD_WIDTH
-#define OB_FIFO_SIZE			256
+#define OB_FIFO_DEPTH			256
 #define OB_NUM_PIX_WRITE		RES_PKT_SIZE
 #define OB_FIFO_WR_WIDTH		8
 #define OB_FIFO_RD_WIDTH		8
 #define OB_HIGH_WATERMARK		64
-#define PM_FIFO_SIZE			256
+#define PM_FIFO_DEPTH			256
 #define PM_NUM_PIX_READ			8
 #define PM_FIFO_WR_WIDTH		8
 #define PM_FIFO_RD_WIDTH		8
 #define PM_LOW_WATERMARK		16
-#define CO_FIFO_SIZE			256
+#define CO_FIFO_DEPTH			256
 #define CO_NUM_PIX_READ			8
 #define CO_FIFO_WR_WIDTH		8
 #define CO_FIFO_RD_WIDTH		PM_FIFO_RD_WIDTH
-#define RSM_FIFO_SIZE			256
+#define RSM_FIFO_DEPTH			256
 #define RSM_NUM_PIX_READ		8
 #define RSM_FIFO_WR_WIDTH		8
 #define RSM_NUM_PIX_WRITE		8
@@ -89,6 +89,7 @@ class Accel_Trans
         bool conv_out_fmt0_cfg			;
         bool padding_cfg				;
         bool upsample_cfg				;
+        int stride_cfg                  ;
         int crpd_input_row_start_cfg	;
         int crpd_input_row_end_cfg		;
         bool req_pending				;
