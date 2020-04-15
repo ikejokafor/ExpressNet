@@ -34,6 +34,7 @@ void AWP::bus_arbitrate()
             {
                 if(bus.m_req_arr[i].req_pending)
                 {
+                    wait();
                     bus.m_req_arr[i].ack.notify();
                     m_next_req_id = (i + 1) % MAX_AWP_TRANS;
                     break;
@@ -114,7 +115,7 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
             {
                 m_AWP_cfgd = true;
                 string str =
-                    string(name()) + " Configured with.......\n" + ""
+                    "[" + string(name()) + "]" + " Configured with.......\n"
                     "\tFAS ID:                        " + to_string(m_FAS_id)         + "\n"
                     "\tNumber of Quads Configured:    " + to_string(m_num_QUADs_cfgd) + "\n";
                 cout << str;
@@ -127,15 +128,22 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
             quad[QUAD_id]->b_pxSeqCfg_write();
             break;
         }
-        case ACCL_CMD_KRL_CFG_WRITE:
+        case ACCL_CMD_KRL3x3_CFG_WRITE:
         {
-            quad[QUAD_id]->b_krnlCfg_write();
+            quad[QUAD_id]->b_krnl3x3Cfg_write();
+            break;
+        }
+        case ACCL_CMD_KRL3x3BIAS_CFG_WRITE:
+        {
+            quad[QUAD_id]->b_krnl3x3BiasCfg_write();
             break;
         }
         case ACCL_CMD_JOB_START:
         {
-            if(!quad[QUAD_id]->b_job_start());
+            if(!quad[QUAD_id]->b_job_start())
+            {
                 status = TLM_GENERIC_ERROR_RESPONSE;
+            }
             break;
         }
     };

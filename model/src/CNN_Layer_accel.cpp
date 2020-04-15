@@ -42,6 +42,7 @@ void CNN_Layer_Accel::main_process()
             }
             str = "Processing Complete at " + sc_time_stamp().to_string() + "\n";
             cout << str;
+            wait();
             m_complete.notify();
         }
     }
@@ -80,6 +81,7 @@ void CNN_Layer_Accel::start()
     for(int i = 0; i < NUM_FAS; i++)
     {
         fas[i]->m_FAS_cfg = m_accelCfg->m_FAS_cfg_arr[i];
+        wait();
         fas[i]->m_start.notify();
         wait(fas[i]->m_start_ack);
         wait();
@@ -91,11 +93,11 @@ void CNN_Layer_Accel::waitComplete()
 {
     // FIXME: possibility of missing this if complete is triggered same cycle as finished is triggered
     wait(m_complete);
-    // FIXME: might need to read back data
-    delete m_accelCfg;
-    m_memory.clear();
-    m_accelCfg = new AccelConfig();
     wait();
+    delete m_accelCfg;
+    m_accelCfg = new AccelConfig();
+    // FIXME: might need to read back data
+    m_memory.clear();
 }
 
 

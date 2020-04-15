@@ -40,17 +40,20 @@ SC_MODULE(FAS)
     {
         PARTMAP_FIFO		= 0,
         CONVOUTMAP_FIFO		= 1,
-        KRNL_1X1_FIFO		= 2,
-        RESMAP_FIFO			= 3,
-        OUTBUF_FIFO			= 4
-    } fifo_sel_t;
+        KRNL_1X1_BRAM		= 2,
+        KRNL_1X1_BIAS_BRAM  = 3,
+        RESMAP_FIFO			= 4,
+        OUTBUF_FIFO			= 5
+    } FPGA_mem_sel_t;
 
 
     typedef enum
     {
-        FIFO_READ	= 0,
-        FIFO_WRITE	= 1
-    } fifo_cmd_t;
+        FIFO_WRITE	= 0,
+        FIFO_READ	= 1,
+        BRAM_WRITE	= 2,
+        BRAM_READ	= 3
+    } FPGA_mem_cmd_t;
 
 
     public:
@@ -65,10 +68,10 @@ SC_MODULE(FAS)
         SC_CTOR(FAS)
             :	clk("clk"),
                 m_AWP_complt_arr(MAX_AWP_PER_FAS, false),
-                m_sys_mem_bus_sema(MAX_FAS_SYS_MEM_TRNS),
+                m_sys_mem_bus_sema(MAX_FAS_SYS_MEM_TRANS),
                 m_QUAD_en_arr(MAX_AWP_PER_FAS, std::vector<bool>(NUM_QUADS_PER_AWP, false)),
                 m_num_QUAD_cfgd(MAX_AWP_PER_FAS, 0),
-                m_depthFetchAmt(MAX_AWP_PER_FAS, std::vector<int>(NUM_QUADS_PER_AWP, 0))
+                m_inMapDepthFetchAmt(MAX_AWP_PER_FAS, std::vector<int>(NUM_QUADS_PER_AWP, 0))
         {
             rout_tar_soc.register_b_transport(this, &FAS::b_rout_soc_transport);
             SC_THREAD(ctrl_process);
@@ -122,68 +125,80 @@ SC_MODULE(FAS)
 
         // Methods
         void b_result_write();
-        void b_fifo_trans(std::string fifo_name, std::deque<int>& fifo, FAS::fifo_cmd_t fifo_cmd, int fifo_depth, int fifo_trans_size, int fifo_trans_width);
-        void b_fifo_trans(fifo_sel_t fifo_sel, fifo_cmd_t fifo_cmd, int fifo_depth, int fifo_trans_size, int fifo_trans_width);
+        void b_mem_trans(FPGA_mem_sel_t mem_sel, FPGA_mem_cmd_t mem_cmd, int mem_depth, int mem_trans_size, int mem_trans_width, bool callWait = true);
+        void b_mem_trans(std::string mem_name, std::deque<int>& mem, FPGA_mem_cmd_t mem_cmd, int mem_depth, int mem_trans_size, int mem_trans_width, bool callWait = true);
         void b_cfg_Accel();
         void b_getCfgData();
         void b_cfg1x1Kernels();
         void b_sendCfgs();
+        void b_start_QUADs();
         void b_QUAD_config(int AWP_addr, int QUAD_addr);
         void b_QUAD_pix_seq_config(int AWP_addr, int QUAD_addr);
-        void b_QUAD_krnl_config(int AWP_addr, int QUAD_addr);
+        void b_QUAD_krnl3x3_config(int AWP_addr, int QUAD_addr);
+        void b_QUAD_krnl3x3Bias_config(int AWP_addr, int QUAD_addr);
         void b_QUAD_job_start(int AWP_addr, int QUAD_addr);
 
         // Members
-        FAS_cfg*						m_FAS_cfg				        ;
-        mem_mng							m_mem_mng                       ;
-        sc_core::sc_event				m_start                         ;
-        sc_core::sc_event				m_start_ack                     ;
-        sc_core::sc_event				m_complete                      ;
-        sc_core::sc_event				m_complete_ack                  ;
-        FAS_state_t						m_state                         ;
-        std::vector<bool>				m_AWP_complt_arr                ;
-        std::vector<std::vector<bool>>	m_QUAD_en_arr       	        ;
-        std::vector<int>				m_num_QUAD_cfgd     	        ;
-        int								m_FAS_id                        ;
-        int 							m_pixSeqCfgFetchTotal_cfg	    ;
-        std::vector<std::vector<int>>   m_depthFetchAmt                 ;
-        int                             m_inMapFetchFactor_cfg          ;
-        int								m_inMapFetchCount		        ;
-        int								m_inMapFetchTotal_cfg           ;
-         std::deque<int>			    m_convOutMap_fifo               ;
-        int								m_krnl3x3FetchCount		        ;
-        int								m_krnl3x3FetchTotal_cfg		    ;
-        int								m_krnl3x3BiasFetchCount	        ;
-        int								m_krnl3x3BiasFetchTotal_cfg	    ;
-        std::deque<int>			        m_krnl1x1_fifo         	        ;
-        int								m_krnl1x1FetchCount		        ;
-        int								m_krnl1x1FetchTotal_cfg         ;
-        std::deque<int>			        m_krnl1x1Bias_fifo		        ;
-        int								m_krnl1x1BiasFetchCount	        ;
-        int								m_krnl1x1BiasFetchTotal_cfg	    ;
-        std::deque<int>			        m_partMap_fifo                  ;
-        int								m_partMapFetchCount		        ;
-        int								m_partMapFetchTotal_cfg     	;
-        std::deque<int>			        m_resMap_fifo                   ;
-        int								m_resMapFetchCount		        ;
-        int								m_resMapFetchTotal_cfg          ;
-        std::deque<int>			        m_outBuf_fifo                   ;
-        int                             m_outMapStoreCount              ;
-        int                             m_outMapStoreTotal_cfg          ;
-        int                             m_outMapStoreFactor_cfg         ;
-        bool							m_first_depth_iter_cfg          ;
-        bool							m_last_depth_iter_cfg           ;
-        bool							m_conv_out_fmt0_cfg             ;
-        int								m_res_pkt_size                  ;
-        bool							m_do_res_layer_cfg              ;
-        bool							m_do_kernel1x1_cfg		        ;
-        int                             m_num_1x1_kernels_cfg           ;
-        int								m_num_ob_wr                     ;
-        sc_core::sc_event				m_job_fetch                     ;
-        Accel_Trans 					m_job_fetch_trans               ;
-        sc_core::sc_event				m_wr_outBuf	                    ;
-        sc_core::sc_semaphore			m_sys_mem_bus_sema              ;
-        std::deque<tlm::tlm_generic_payload*> m_trans_fifo        ;
-        bool                            m_last_wrt                      ;
-        bool                            m_last_CO_recvd                 ;
+        FAS_cfg*						        m_FAS_cfg				        ;
+        mem_mng							        m_mem_mng                       ;
+        sc_core::sc_event				        m_start                         ;
+        sc_core::sc_event				        m_start_ack                     ;
+        sc_core::sc_event				        m_complete                      ;
+        sc_core::sc_event				        m_complete_ack                  ;
+        FAS_state_t						        m_state                         ;
+        std::vector<bool>				        m_AWP_complt_arr                ;
+        std::vector<std::vector<bool>>	        m_QUAD_en_arr       	        ;
+        std::vector<int>				        m_num_QUAD_cfgd     	        ;
+        int								        m_FAS_id                        ;
+		int                                     m_krnl1x1Depth_cfg              ;
+        uint64_t                                m_krnl1x1Addr_cfg               ;
+        uint64_t                                m_krnl1x1BiasAddr_cfg           ;
+        uint64_t                                m_pixelSeqAddr_cfg              ;
+		uint64_t                                m_partMapAddr_cfg               ;
+		uint64_t                                m_resMapAddr_cfg                ;
+		uint64_t                                m_outMapAddr_cfg                ;
+        int 							        m_pixSeqCfgFetchTotal_cfg	    ;
+        std::vector<std::vector<uint64_t>>      m_inMapAddrArr                  ;
+		std::vector<std::vector<uint64_t>>      m_krnl3x3AddrArr                ;
+		std::vector<std::vector<uint64_t>>      m_krnl3x3BiasAddrArr            ;
+        std::vector<std::vector<int>>           m_inMapDepthFetchAmt            ;
+        int                                     m_inMapFetchFactor_cfg          ;
+        int								        m_inMapFetchCount		        ;
+        int								        m_inMapFetchTotal_cfg           ;
+        std::deque<int>			                m_convOutMap_fifo               ;
+        int								        m_krnl3x3FetchCount		        ;
+        int								        m_krnl3x3FetchTotal_cfg		    ;
+        int								        m_krnl3x3BiasFetchCount	        ;
+        int								        m_krnl3x3BiasFetchTotal_cfg	    ;
+        std::deque<int>			                m_krnl1x1_bram         	        ;
+        int								        m_krnl1x1FetchCount		        ;
+        int								        m_krnl1x1FetchTotal_cfg         ;
+        std::deque<int>			                m_krnl1x1Bias_bram		        ;
+        int								        m_krnl1x1BiasFetchCount	        ;
+        int								        m_krnl1x1BiasFetchTotal_cfg	    ;
+        std::deque<int>			                m_partMap_fifo                  ;
+        int								        m_partMapFetchCount		        ;
+        int								        m_partMapFetchTotal_cfg     	;
+        std::deque<int>			                m_resMap_fifo                   ;
+        int								        m_resMapFetchCount		        ;
+        int								        m_resMapFetchTotal_cfg          ;
+        std::deque<int>			                m_outBuf_fifo                   ;
+        int                                     m_outMapStoreCount              ;
+        int                                     m_outMapStoreTotal_cfg          ;
+        int                                     m_outMapStoreFactor_cfg         ;
+        bool							        m_first_depth_iter_cfg          ;
+        bool							        m_last_depth_iter_cfg           ;
+        bool							        m_conv_out_fmt0_cfg             ;
+        int								        m_res_pkt_size                  ;
+        bool							        m_do_res_layer_cfg              ;
+        bool							        m_do_kernel1x1_cfg		        ;
+        int                                     m_num_1x1_kernels_cfg           ;
+        int								        m_num_ob_wr                     ;
+        sc_core::sc_event				        m_job_fetch                     ;
+        Accel_Trans 					        m_job_fetch_trans               ;
+        sc_core::sc_event				        m_wr_outBuf	                    ;
+        sc_core::sc_semaphore			        m_sys_mem_bus_sema              ;
+        std::deque<tlm::tlm_generic_payload*>   m_trans_fifo                    ;
+        bool                                    m_last_wrt                      ;
+        bool                                    m_last_CO_recvd                 ;
 };

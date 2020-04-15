@@ -91,5 +91,4 @@ SC_MODULE(AWP)
         std::vector<bool> m_QUADs_cfgd_arr;
         int m_num_QUADs_cfgd;
         bool m_AWP_cfgd;
-        sc_core::sc_mutex mutex;
 };

@@ -66,7 +66,8 @@ SC_MODULE(QUAD)
         void b_cfg_write(unsigned char* data);
         void print_cfg();
         void b_pxSeqCfg_write();
-        void b_krnlCfg_write();
+        void b_krnl3x3Cfg_write();
+        void b_krnl3x3BiasCfg_write();
         bool b_job_start();
         void b_job_fetch();
         void b_pfb_write();

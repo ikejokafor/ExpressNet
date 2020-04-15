@@ -117,8 +117,8 @@ void QUAD::ctrl_process_1()
         wait();
         if(
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
-                && ((m_res_fifo.size() < QUAD_RES_FIFO_DEPTH) || (m_cascade_cfg && !m_master_QUAD_cfg))
-                && m_output_row != m_num_output_rows_cfg && m_stride_count == 0
+            && ((m_res_fifo.size() < QUAD_RES_FIFO_DEPTH) || (m_cascade_cfg && !m_master_QUAD_cfg))
+            && m_output_row != m_num_output_rows_cfg && m_stride_count == 0
         ) {
             if(m_output_col == (m_num_output_cols_cfg - 1))
             {
@@ -229,10 +229,11 @@ void QUAD::b_cfg_write(unsigned char* data)
     print_cfg();
 }
 
+
 void QUAD::print_cfg()
 {
     string str =
-        "[" + string(name()) + "]:" + " Configured with....\n" + ""
+        "[" + string(name()) + "]:" + " Configured with....\n"
         "\tNumber of Output Columns:            " + to_string(m_num_output_cols_cfg) 		+ "\n"
         "\tNumber of Output Rows:               " + to_string(m_num_output_rows_cfg) 		+ "\n"
         "\tNumber of Kernels:                   " + to_string(m_num_kernels_cfg) 			+ "\n"
@@ -255,10 +256,16 @@ void QUAD::b_pxSeqCfg_write()
 }
 
 
-void QUAD::b_krnlCfg_write()
+void QUAD::b_krnl3x3Cfg_write()
 {
     int numcycles = m_num_kernels_cfg * KRNL_SLOT_SIZE;
     wait(numcycles, SC_NS);
+}
+
+
+void QUAD::b_krnl3x3BiasCfg_write()
+{
+    wait(m_num_kernels_cfg, SC_NS);
 }
 
 
@@ -305,6 +312,7 @@ void QUAD::b_pfb_write()
 #endif
     wait(m_num_expd_input_cols_cfg, SC_NS);
     m_pfb_count = m_num_expd_input_cols_cfg;
+    wait();
     m_pfb_wrtn.notify();
 }
 
