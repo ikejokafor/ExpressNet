@@ -39,7 +39,7 @@ SC_MODULE(FAS)
     typedef enum
     {
         PARTMAP_FIFO		= 0,
-        CONVOUTMAP_FIFO		= 1,
+        CONVOUTMAP_BRAM		= 1,
         KRNL_1X1_BRAM		= 2,
         KRNL_1X1_BIAS_BRAM  = 3,
         RESMAP_FIFO			= 4,
@@ -80,6 +80,16 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(A_process)
                 sensitive << clk.pos();
+            SC_THREAD(accum_krnl_1x1_dp_process)
+                sensitive << clk.pos();
+            SC_THREAD(convOut_bram_read_process)
+                sensitive << clk.pos();
+            SC_THREAD(krnl_1x1_bram_read_process)
+                sensitive << clk.pos();
+            SC_THREAD(krnl_1x1_bias_bram_read_process)
+                sensitive << clk.pos();
+            SC_THREAD(accum_dp_wr_process);
+                sensitive << clk.pos();
             SC_THREAD(outBuf_wr_process)
                 sensitive << clk.pos();
             SC_THREAD(S_process)
@@ -105,6 +115,8 @@ SC_MODULE(FAS)
             m_resMapFetchTotal_cfg			= 0;
             m_outMapStoreCount     			= 0;
             m_outMapStoreTotal_cfg      	= 0;
+            m_ob_dwc                        = 0;
+            m_num_ob_wr                     = 0;
             m_last_CO_recvd                 = false;
         }
 
@@ -115,6 +127,11 @@ SC_MODULE(FAS)
         void ctrl_process();
         void F_process();
         void A_process();
+        void accum_krnl_1x1_dp_process();
+        void convOut_bram_read_process();
+        void krnl_1x1_bram_read_process();
+        void krnl_1x1_bias_bram_read_process();
+        void accum_dp_wr_process();
         void outBuf_wr_process();
         void S_process();
         void resMap_fetch_process();
@@ -165,7 +182,7 @@ SC_MODULE(FAS)
         int                                     m_inMapFetchFactor_cfg          ;
         int								        m_inMapFetchCount		        ;
         int								        m_inMapFetchTotal_cfg           ;
-        std::deque<int>			                m_convOutMap_fifo               ;
+        std::deque<int>			                m_convOutMap_bram               ;
         int								        m_krnl3x3FetchCount		        ;
         int								        m_krnl3x3FetchTotal_cfg		    ;
         int								        m_krnl3x3BiasFetchCount	        ;
@@ -187,12 +204,12 @@ SC_MODULE(FAS)
         int                                     m_outMapStoreTotal_cfg          ;
         int                                     m_outMapStoreFactor_cfg         ;
         bool							        m_first_depth_iter_cfg          ;
-        bool							        m_last_depth_iter_cfg           ;
         bool							        m_conv_out_fmt0_cfg             ;
         int								        m_res_pkt_size                  ;
         bool							        m_do_res_layer_cfg              ;
-        bool							        m_do_kernel1x1_cfg		        ;
+        bool							        m_do_kernels1x1_cfg		        ;
         int                                     m_num_1x1_kernels_cfg           ;
+        int                                     m_ob_dwc                        ;
         int								        m_num_ob_wr                     ;
         sc_core::sc_event				        m_job_fetch                     ;
         Accel_Trans 					        m_job_fetch_trans               ;
@@ -201,4 +218,12 @@ SC_MODULE(FAS)
         std::deque<tlm::tlm_generic_payload*>   m_trans_fifo                    ;
         bool                                    m_last_wrt                      ;
         bool                                    m_last_CO_recvd                 ;
+        sc_core::sc_event_queue                 m_accum_krnl_1x1_dp             ;
+        sc_core::sc_event_queue                 m_accum_dp_wr                   ;
+        sc_core::sc_event_queue                 m_convOut_bram_rd               ;
+        sc_core::sc_event_queue                 m_krnl_1x1_bram_rd              ;
+        sc_core::sc_event_queue                 m_krnl_1x1_bias_bram_rd         ;
+        int                                     m_dpth_count                    ;
+        int                                     m_krnl_count                    ;
+
 };

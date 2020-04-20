@@ -23,18 +23,20 @@
 #define MAX_FAS_SYS_MEM_TRANS	            1
 #define MAX_FAS_ROUT_TRANS		            1
 #define MAX_3x3_KERNELS			            64
+#define YOLOV3_MAX_1x1_INPUT_DEPTH          1024
+#define MAX_1x1_KERNEL_DEPTH                YOLOV3_MAX_1x1_INPUT_DEPTH
 #define MAX_1x1_KERNELS			            64
 #define PIXEL_SIZE				            2	// 2 bytes
 #define WINDOW_3x3_NUM_CYCLES	            (uint64_t(5))
 #define PIX_SEQ_CFG_WRT_CYCS	            (uint64_t(1024) * WINDOW_3x3_NUM_CYCLES)
 #define KRNL_SLOT_SIZE			            10
 #define QUAD_RES_FIFO_DEPTH		            16
-#define KRNL_1X1_BRAM_DEPTH		            16
-#define KRNL_1x1_BRAM_NUM_PIX_READ	        64
-#define	KRNL_1x1_BRAM_RD_WIDTH	            64
-#define KRNL_1x1_BRAM_NUM_PIX_WRITE         64
-#define KRNL_1x1_BRAM_WR_WIDTH              64
-#define KRNL_1X1_BIAS_BRAM_DEPTH            QUAD_MAX_KERNELS
+#define KRNL_1X1_BRAM_DEPTH		            (MAX_1x1_KERNEL_DEPTH * MAX_1x1_KERNELS)
+#define KRNL_1x1_BRAM_NUM_PIX_READ	        MAX_1x1_KERNEL_DEPTH
+#define	KRNL_1x1_BRAM_RD_WIDTH	            MAX_1x1_KERNEL_DEPTH
+#define KRNL_1x1_BRAM_NUM_PIX_WRITE         MAX_1x1_KERNEL_DEPTH
+#define KRNL_1x1_BRAM_WR_WIDTH              MAX_1x1_KERNEL_DEPTH
+#define KRNL_1X1_BIAS_BRAM_DEPTH            MAX_1x1_KERNELS
 #define KRNL_1X1_BIAS_BRAM_NUM_PIX_READ     1
 #define KRNL_1X1_BIAS_BRAM_RD_WIDTH         1
 #define KRNL_1X1_BIAS_BRAM_NUM_PIX_WRITE    1
@@ -51,10 +53,10 @@
 #define PM_FIFO_WR_WIDTH		            8
 #define PM_FIFO_RD_WIDTH		            8
 #define PM_LOW_WATERMARK		            16
-#define CO_FIFO_DEPTH			            256
-#define CO_NUM_PIX_READ			            8
-#define CO_FIFO_WR_WIDTH		            8
-#define CO_FIFO_RD_WIDTH		            PM_FIFO_RD_WIDTH
+#define CO_BRAM_DEPTH			            (MAX_1x1_KERNELS * MAX_1x1_KERNEL_DEPTH)
+#define CO_NUM_PIX_READ			            MAX_1x1_KERNEL_DEPTH
+#define CO_BRAM_WR_WIDTH		            8
+#define CO_BRAM_RD_WIDTH		            MAX_1x1_KERNEL_DEPTH
 #define RSM_FIFO_DEPTH			            256
 #define RSM_NUM_PIX_READ		            8
 #define RSM_FIFO_WR_WIDTH		            8

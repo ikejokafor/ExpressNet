@@ -77,14 +77,18 @@ void FAS::ctrl_process()
                     cout << str;
                     wait(m_complete_ack);
                     m_state                     = ST_IDLE;
-                    m_krnl3x3FetchCount			= 0;
-                    m_krnl3x3BiasFetchCount		= 0;
-                    m_partMapFetchCount			= 0;
-                    m_inMapFetchCount			= 0;
-                    m_krnl1x1FetchCount			= 0;
+                    m_krnl3x3FetchCount         = 0;
+                    m_krnl3x3BiasFetchCount     = 0;
+                    m_partMapFetchCount         = 0;
+                    m_inMapFetchCount           = 0;
+                    m_krnl1x1FetchCount         = 0;
                     m_krnl1x1BiasFetchCount     = 0;
-                    m_resMapFetchCount			= 0;
-                    m_outMapStoreCount     		= 0;
+                    m_resMapFetchCount          = 0;
+                    m_outMapStoreCount          = 0;
+                    m_ob_dwc                    = 0;
+                    m_num_ob_wr                 = 0;
+                    m_dpth_count                = 0;
+                    m_krnl_count                = 0;
                 }
                 break;
             }
@@ -126,6 +130,10 @@ void FAS::F_process()
 
 void FAS::A_process()
 {
+    sc_time ONE_CYCLE(1 * CLK_PRD, SC_NS);
+    sc_time TWO_CYCLE(2 * CLK_PRD, SC_NS);
+    sc_time NINE_CYCLES(9 * CLK_PRD, SC_NS);
+    string str;
     while(true)
     {
         wait();
@@ -133,19 +141,14 @@ void FAS::A_process()
             m_state == ST_ACTIVE
             && m_first_depth_iter_cfg
             && m_do_res_layer_cfg
-            && m_do_kernel1x1_cfg
-            && m_convOutMap_fifo.size() > 0
+            && m_do_kernels1x1_cfg
+            && m_convOutMap_bram.size() > 0
             && m_partMap_fifo.size() > 0
             && m_resMap_fifo.size() > 0
         ) {
             // pop convOut map, pop partial map, pop res map
-            b_mem_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-            b_mem_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
-            b_mem_trans(RESMAP_FIFO, FIFO_READ, RSM_FIFO_DEPTH, RSM_NUM_PIX_READ, RSM_FIFO_RD_WIDTH);
             // add convOut map, partial map, and residual map pixel, pop 1x1 krnl
-            b_mem_trans(KRNL_1X1_BRAM, BRAM_READ, KRNL_1X1_BRAM_DEPTH, KRNL_1x1_BRAM_NUM_PIX_READ, KRNL_1x1_BRAM_RD_WIDTH);
             // MACC 1x1, pop 1x1 Bias
-            b_mem_trans(KRNL_1X1_BIAS_BRAM, BRAM_READ, KRNL_1X1_BIAS_BRAM_DEPTH, KRNL_1X1_BIAS_BRAM_NUM_PIX_READ, KRNL_1X1_BIAS_BRAM_RD_WIDTH);
             // Add bias
             wait();
             // store to buffer
@@ -156,12 +159,10 @@ void FAS::A_process()
             m_state == ST_ACTIVE
             && m_first_depth_iter_cfg
             && m_do_res_layer_cfg
-            && m_convOutMap_fifo.size() > 0
+            && m_convOutMap_bram.size() > 0
             && m_resMap_fifo.size() > 0
         ) {
             // pop convOut map, pop res map
-            b_mem_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-            b_mem_trans(RESMAP_FIFO, FIFO_READ, RSM_FIFO_DEPTH, RSM_NUM_PIX_READ, RSM_FIFO_RD_WIDTH);
             // add convOut map and residual map pixel
             wait();
             // store to buffer
@@ -171,41 +172,32 @@ void FAS::A_process()
         else if(
             m_state == ST_ACTIVE
             && m_first_depth_iter_cfg
-            && m_do_kernel1x1_cfg
-            && m_convOutMap_fifo.size() > 0
+            && m_do_kernels1x1_cfg
+            && m_convOutMap_bram.size() == m_krnl1x1Depth_cfg && m_krnl_count != m_num_1x1_kernels_cfg
         ) {
-            // pop convOut map, pop 1x1 kernel
-            b_mem_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-            b_mem_trans(KRNL_1X1_BRAM, BRAM_READ, KRNL_1X1_BRAM_DEPTH, KRNL_1x1_BRAM_NUM_PIX_READ, KRNL_1x1_BRAM_RD_WIDTH);
-            // MACC 1x1, pop 1x1 Bias
-            b_mem_trans(KRNL_1X1_BIAS_BRAM, BRAM_READ, KRNL_1X1_BIAS_BRAM_DEPTH, KRNL_1X1_BIAS_BRAM_NUM_PIX_READ, KRNL_1X1_BIAS_BRAM_RD_WIDTH);
-            wait(2, SC_NS);
-            // Add bias
-            wait();
-            // store to buffer
-            wait();
-            if(m_num_ob_wr == OB_FIFO_WR_WIDTH)
-            {
-                m_num_ob_wr = 0;
-                m_wr_outBuf.notify();
-            }
-            else
-            {
-                m_num_ob_wr++;
-            }
+            str =   "[A_process]: " + sc_time_stamp().to_string() + "\n"
+                    "[A_process]: m_convOutMap_bram.size() - " + to_string(m_convOutMap_bram.size()) + "\n";
+            cout << str;
+            m_accum_krnl_1x1_dp.notify(ONE_CYCLE);
+            // pop convOut map, pop 1x1 kernel; 1 cycle
+            m_convOut_bram_rd.notify(ONE_CYCLE);
+            m_krnl_1x1_bram_rd.notify(ONE_CYCLE);
+            // Multipy 1x1 and pop 1x1 Bias; 1 cycle
+            m_krnl_1x1_bias_bram_rd.notify(TWO_CYCLE);
+            // Sum across depths 64 input adder tree latency = 6 cycles
+            // Add bias; 1 cycle
+            // Pipeline full in 9 cycles, 1 cycle per output
+            m_accum_dp_wr.notify(NINE_CYCLES);
         }
         else if(
             m_state == ST_ACTIVE
             && !m_first_depth_iter_cfg
-            && m_do_kernel1x1_cfg
-            && m_convOutMap_fifo.size() > 0
+            && m_do_kernels1x1_cfg
+            && m_convOutMap_bram.size() > 0
             && m_partMap_fifo.size() > 0
         ) {
             // pop convOut map, pop 1x1 fifo
-            b_mem_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
-            b_mem_trans(KRNL_1X1_BRAM, BRAM_READ, KRNL_1X1_BRAM_DEPTH, KRNL_1x1_BRAM_NUM_PIX_READ, KRNL_1x1_BRAM_RD_WIDTH);
             // pop partial map, multiply convOut map with 1x1
-            b_mem_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
             // add convOut and partial map 1x1 product
             wait();
             // store to buffer
@@ -223,17 +215,109 @@ void FAS::A_process()
         else if(
             m_state == ST_ACTIVE
             && !m_first_depth_iter_cfg
-            && m_convOutMap_fifo.size() > 0
+            && m_convOutMap_bram.size() > 0
             && m_partMap_fifo.size() > 0
         ) {
             // pop convOut map, pop partial map
-            b_mem_trans(CONVOUTMAP_FIFO, FIFO_READ, CO_FIFO_DEPTH, CO_NUM_PIX_READ, CO_FIFO_RD_WIDTH);
-            b_mem_trans(PARTMAP_FIFO, FIFO_READ, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_RD_WIDTH);
             // accum
             wait();
             // store to buffer
             wait();
             m_wr_outBuf.notify();
+        }
+    }
+}
+
+
+void FAS::accum_krnl_1x1_dp_process()
+{
+    while(true)
+    {
+        wait(m_accum_krnl_1x1_dp.default_event());
+        wait();
+        // string str = "[accum_krnl_1x1_dp_process]: " + sc_time_stamp().to_string() + "\n";
+        // cout << str;
+        if(m_dpth_count == m_krnl1x1Depth_cfg)
+        {
+            m_dpth_count = 0;
+            if(m_krnl_count == m_num_1x1_kernels_cfg)
+            {
+                m_krnl_count = 0;
+            }
+            else
+            {
+                // next 1x1 kernel
+                m_krnl_count++;
+                m_convOutMap_bram.resize(
+                    m_convOutMap_bram.size()
+                    - m_krnl1x1Depth_cfg
+                );
+            }
+        }
+        else
+        {
+            m_dpth_count += m_krnl1x1Depth_cfg;
+        }
+    }
+}
+
+
+void FAS::convOut_bram_read_process()
+{
+    while(true)
+    {
+        wait(m_convOut_bram_rd.default_event());
+        wait();
+        // string str = "[convOut_fifo_read_process]: " + sc_time_stamp().to_string() + "\n";
+        // cout << str;
+        // b_mem_trans(CONVOUTMAP_BRAM, BRAM_READ, CO_FIFO_DEPTH, m_krnl1x1Depth_cfg, CO_FIFO_RD_WIDTH);
+    }
+}
+
+
+void FAS::krnl_1x1_bram_read_process()
+{
+    while(true)
+    {
+        wait(m_krnl_1x1_bram_rd.default_event());
+        wait();
+        // string str = "[krnl_1x1_bram_read_process]: " + sc_time_stamp().to_string() + "\n";
+        // cout << str;
+        // b_mem_trans(KRNL_1X1_BRAM, BRAM_READ, KRNL_1X1_BRAM_DEPTH, m_krnl1x1Depth_cfg, KRNL_1x1_BRAM_RD_WIDTH);
+    }
+}
+
+
+void FAS::krnl_1x1_bias_bram_read_process()
+{
+    while(true)
+    {
+        wait(m_krnl_1x1_bias_bram_rd.default_event());
+        wait();
+        // string str = "[krnl_1x1_bias_bram_read_process]: " + sc_time_stamp().to_string() + "\n";
+        // cout << str;
+        // b_mem_trans(KRNL_1X1_BIAS_BRAM, BRAM_READ, KRNL_1X1_BIAS_BRAM_DEPTH, KRNL_1X1_BIAS_BRAM_NUM_PIX_READ, KRNL_1X1_BIAS_BRAM_RD_WIDTH);
+    }
+}
+
+
+void FAS::accum_dp_wr_process()
+{
+    while(true)
+    {
+        wait(m_accum_dp_wr.default_event());
+        wait();
+        // string str = "[accum_dp_wr_process]: " + sc_time_stamp().to_string() + "\n";
+        // cout << str;
+        if(m_ob_dwc == OB_FIFO_WR_WIDTH)
+        {
+            m_ob_dwc = 0;
+            m_num_ob_wr++;
+            m_wr_outBuf.notify();
+        }
+        else
+        {
+            m_ob_dwc++;
         }
     }
 }
@@ -298,7 +382,7 @@ void FAS::resMap_fetch_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && m_last_depth_iter_cfg && m_resMap_fifo.size() <= RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && m_first_depth_iter_cfg && m_resMap_fifo.size() <= RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal_cfg)
         {
             trans = nb_createTLMTrans(
                 m_mem_mng,
@@ -325,6 +409,9 @@ void FAS::resMap_fetch_process()
 
 void FAS::job_fetch_process()
 {
+    // FIXME:   you are fetching the ROWS * DEPTH where DEPTH is the total depth for this iteration
+    //              but instead bc of the way the data is coming in, you are loading the QUADs in
+    //              in round robin order instead of loading QUAD0 completely, then the next quad and next quad
     tlm::tlm_generic_payload* trans;
     sc_time delay;
     while(true)
@@ -339,7 +426,6 @@ void FAS::job_fetch_process()
             int QUAD_id = accel_trans->QUAD_id;
             trans->release();
             int inMapFetchAmt = m_inMapFetchFactor_cfg * m_inMapDepthFetchAmt[AWP_id][QUAD_id] * PIXEL_SIZE;
-
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 AWP_id,
@@ -417,13 +503,13 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
 
 void FAS::b_result_write()
 {
-    if(m_first_depth_iter_cfg)
+    if(m_first_depth_iter_cfg && !m_do_kernels1x1_cfg && !m_do_res_layer_cfg)
     {
         b_mem_trans(OUTBUF_FIFO, FIFO_WRITE, OB_FIFO_DEPTH, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
     }
     else
     {
-        b_mem_trans(PARTMAP_FIFO, FIFO_WRITE, PM_FIFO_DEPTH, RES_PKT_SIZE, PM_FIFO_WR_WIDTH);
+        b_mem_trans(CONVOUTMAP_BRAM, BRAM_WRITE, CO_BRAM_DEPTH, RES_PKT_SIZE, CO_BRAM_WR_WIDTH);
     }
 }
 
@@ -434,32 +520,32 @@ void FAS::b_mem_trans(FPGA_mem_sel_t mem_sel, FPGA_mem_cmd_t mem_cmd, int mem_de
     {
         case PARTMAP_FIFO:
         {
-            b_mem_trans("Partial Map BRAM", m_partMap_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width);
+            b_mem_trans("Partial Map BRAM", m_partMap_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
             break;
         }
-        case CONVOUTMAP_FIFO:
+        case CONVOUTMAP_BRAM:
         {
-            b_mem_trans("Convolutional Map Output FIFO", m_convOutMap_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width);
+            b_mem_trans("Convolutional Map Output FIFO", m_convOutMap_bram, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
             break;
         }
         case KRNL_1X1_BRAM:
         {
-            b_mem_trans("1x1 Kernel BRAM", m_krnl1x1_bram, mem_cmd, mem_depth, mem_trans_size, mem_trans_width);
+            b_mem_trans("1x1 Kernel BRAM", m_krnl1x1_bram, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
             break;
         }
         case KRNL_1X1_BIAS_BRAM:
         {
-            b_mem_trans("1x1 Kernel Bias BRAM", m_krnl1x1Bias_bram, mem_cmd, mem_depth, mem_trans_size, mem_trans_width);
+            b_mem_trans("1x1 Kernel Bias BRAM", m_krnl1x1Bias_bram, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
             break;
         }
         case RESMAP_FIFO:
         {
-            b_mem_trans("Residual Map FIFO", m_resMap_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width);
+            b_mem_trans("Residual Map FIFO", m_resMap_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
             break;
         }
         case OUTBUF_FIFO:
         {
-            b_mem_trans("Output Buffer FIFO", m_outBuf_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width);
+            b_mem_trans("Output Buffer FIFO", m_outBuf_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
             break;
         }
     }
@@ -470,39 +556,41 @@ void FAS::b_mem_trans(std::string mem_name, std::deque<int>& mem, FPGA_mem_cmd_t
 {
     for(int i = 0; i < mem_trans_size; i += mem_trans_width)
     {
-        for(int j = 0; j < mem_trans_width; j++)
+        switch (mem_cmd)
         {
-            switch (mem_cmd)
+            case BRAM_WRITE:
+            case FIFO_WRITE:
             {
-                case BRAM_WRITE:
+                if(mem.size() == mem_depth)
                 {
-                    j = mem_trans_width;
+                    string str =
+                        "[" + mem_name + "]: is full\n";
+                    cout << str;
+                    sc_stop();
+                    return;
+                }
+                mem.resize(mem.size() + mem_trans_width);
+                break;
+            }
+            case BRAM_READ:
+            {
+                break;
+            }
+            case FIFO_READ:
+            {
+                if(mem.size() == 0)
+                {
                     break;
                 }
-                case BRAM_READ:
+                else if(mem.size() < mem_trans_width)
                 {
-                    j = mem_trans_width;
-                    break;
+                    mem.resize(0);
                 }
-                case FIFO_WRITE:
+                else
                 {
-                    if(mem.size() == mem_depth)
-                    {
-                        string str =
-                            "[" + mem_name + "]: is full\n";
-                        cout << str;
-                        sc_stop();
-                        return;
-                    }
-                    mem.push_back(int());
-                    break;
+                    mem.resize(mem.size() - mem_trans_width);
                 }
-                case FIFO_READ:
-                {
-                    if(mem.size() == 0) break;
-                    mem.pop_front();
-                    break;
-                }
+                break;
             }
         }
         (callWait) ? wait() : void();
@@ -521,35 +609,39 @@ void FAS::b_cfg_Accel()
 void FAS::b_getCfgData()
 {
     wait(clk.posedge_event());
-    m_first_depth_iter_cfg 			= m_FAS_cfg->m_first_depth_iter;
-    m_do_res_layer_cfg 				= m_FAS_cfg->m_do_res_layer;
-    m_do_kernel1x1_cfg              = m_FAS_cfg->m_do_kernels1x1;
-    m_pixSeqCfgFetchTotal_cfg		= m_FAS_cfg->m_pixSeqCfgFetchTotal;
-    m_inMapFetchTotal_cfg    		= m_FAS_cfg->m_inMapFetchTotal;
-    m_krnl3x3FetchTotal_cfg     	= m_FAS_cfg->m_krnl3x3FetchTotal;
-    m_krnl3x3BiasFetchTotal_cfg		= m_FAS_cfg->m_krnl3x3BiasFetchTotal;
-    m_partMapFetchTotal_cfg			= m_FAS_cfg->m_partMapFetchTotal;
-    m_krnl1x1FetchTotal_cfg    		= m_FAS_cfg->m_krnl1x1FetchTotal;
-    m_krnl1x1BiasFetchTotal_cfg		= m_FAS_cfg->m_krnl1x1BiasFetchTotal;
+    m_first_depth_iter_cfg          = m_FAS_cfg->m_first_depth_iter;
+    m_do_res_layer_cfg              = m_FAS_cfg->m_do_res_layer;
+    m_do_kernels1x1_cfg             = m_FAS_cfg->m_do_kernels1x1;
+    m_pixSeqCfgFetchTotal_cfg       = m_FAS_cfg->m_pixSeqCfgFetchTotal;
+    m_inMapFetchTotal_cfg           = m_FAS_cfg->m_inMapFetchTotal;
+    m_krnl3x3FetchTotal_cfg         = m_FAS_cfg->m_krnl3x3FetchTotal;
+    m_krnl3x3BiasFetchTotal_cfg     = m_FAS_cfg->m_krnl3x3BiasFetchTotal;
+    m_partMapFetchTotal_cfg         = m_FAS_cfg->m_partMapFetchTotal;
+    m_krnl1x1FetchTotal_cfg         = m_FAS_cfg->m_krnl1x1FetchTotal;
+    m_krnl1x1BiasFetchTotal_cfg     = m_FAS_cfg->m_krnl1x1BiasFetchTotal;
     m_krnl1x1Depth_cfg              = m_FAS_cfg->m_krnl1x1Depth;
     m_num_1x1_kernels_cfg           = m_FAS_cfg->m_num_1x1_kernels;
-    m_resMapFetchTotal_cfg  		= m_FAS_cfg->m_resMapFetchTotal;
+    m_resMapFetchTotal_cfg          = m_FAS_cfg->m_resMapFetchTotal;
     m_outMapStoreTotal_cfg          = m_FAS_cfg->m_outMapStoreTotal;
     m_inMapFetchFactor_cfg          = m_FAS_cfg->m_inMapFetchFactor;
     m_outMapStoreFactor_cfg         = m_FAS_cfg->m_outMapStoreFactor;
-	m_krnl1x1Addr_cfg               = m_FAS_cfg->m_krnl1x1Addr;
+    m_krnl1x1Addr_cfg               = m_FAS_cfg->m_krnl1x1Addr;
     m_krnl1x1BiasAddr_cfg           = m_FAS_cfg->m_krnl1x1BiasAddr;
     m_pixelSeqAddr_cfg              = m_FAS_cfg->m_pixelSeqAddr;
-	m_partMapAddr_cfg               = m_FAS_cfg->m_partMapAddr;
-	m_resMapAddr_cfg                = m_FAS_cfg->m_resMapAddr;
-	m_outMapAddr_cfg                = m_FAS_cfg->m_outMapAddr;
+    m_partMapAddr_cfg               = m_FAS_cfg->m_partMapAddr;
+    m_resMapAddr_cfg                = m_FAS_cfg->m_resMapAddr;
+    m_outMapAddr_cfg                = m_FAS_cfg->m_outMapAddr;
+    m_inMapAddrArr                  = m_FAS_cfg->m_inMapAddrArr;
+    m_krnl3x3AddrArr                = m_FAS_cfg->m_krnl3x3AddrArr;
+    m_krnl3x3BiasAddrArr            = m_FAS_cfg->m_krnl3x3BiasAddrArr;
     string str =
         "[" + string(name()) + "]" + " Configured with.......\n"
         "\tFirst depth iter:                            "   + to_string(m_first_depth_iter_cfg)         + "\n"
         "\tDo Residual layer:                           "   + to_string(m_do_res_layer_cfg)             + "\n"
-        "\tDo Kernel 1x1:                               "   + to_string(m_do_kernel1x1_cfg)             + "\n"
+        "\tDo Kernel 1x1:                               "   + to_string(m_do_kernels1x1_cfg)            + "\n"
         "\tNum 1x1 Kernels:                             "   + to_string(m_num_1x1_kernels_cfg)          + "\n"
-        "\tPixel Sequence Configuration Fetch Total:    "	+ to_string(m_pixSeqCfgFetchTotal_cfg)      + "\n"
+        "\tKernel 1x1 Depth:                            "   + to_string(m_krnl1x1Depth_cfg)             + "\n"
+        "\tPixel Sequence Configuration Fetch Total:    "   + to_string(m_pixSeqCfgFetchTotal_cfg)      + "\n"
         "\tInput Map Fetch Total:                       "   + to_string(m_inMapFetchTotal_cfg)          + "\n"
         "\tInput Map Fetch Factor:                      "   + to_string(m_inMapFetchFactor_cfg)         + "\n"
         "\tKernel 3x3 Fetch Total:                      "   + to_string(m_krnl3x3FetchTotal_cfg)        + "\n"
@@ -678,25 +770,25 @@ void FAS::b_QUAD_config(int AWP_addr, int QUAD_addr)
     wait(clk->posedge_event());
     sc_time delay;
     tlm::tlm_generic_payload* trans;
-    auto& QUAD_cfg 							= m_FAS_cfg->m_AWP_cfg_arr[AWP_addr]->m_QUAD_cfg_arr[QUAD_addr];
-    Accel_Trans* accel_trans				= new Accel_Trans();
-    accel_trans->accel_cmd					= ACCL_CMD_CFG_WRITE;
-    accel_trans->QUAD_id					= QUAD_addr;
-    accel_trans->FAS_id						= m_FAS_id;
-    accel_trans->num_QUADS_cfgd				= m_num_QUAD_cfgd[AWP_addr];
-    accel_trans->num_output_cols_cfg		= QUAD_cfg->m_num_output_cols;
-    accel_trans->num_output_rows_cfg		= QUAD_cfg->m_num_output_rows;
-    accel_trans->num_kernels_cfg			= QUAD_cfg->m_num_kernels;
-    accel_trans->master_QUAD_cfg			= QUAD_cfg->m_master_QUAD;
-    accel_trans->cascade_cfg				= QUAD_cfg->m_cascade;
-    accel_trans->num_expd_input_cols_cfg	= QUAD_cfg->m_num_expd_input_cols;
+    auto& QUAD_cfg                          = m_FAS_cfg->m_AWP_cfg_arr[AWP_addr]->m_QUAD_cfg_arr[QUAD_addr];
+    Accel_Trans* accel_trans                = new Accel_Trans();
+    accel_trans->accel_cmd                  = ACCL_CMD_CFG_WRITE;
+    accel_trans->QUAD_id                    = QUAD_addr;
+    accel_trans->FAS_id                     = m_FAS_id;
+    accel_trans->num_QUADS_cfgd             = m_num_QUAD_cfgd[AWP_addr];
+    accel_trans->num_output_cols_cfg        = QUAD_cfg->m_num_output_cols;
+    accel_trans->num_output_rows_cfg        = QUAD_cfg->m_num_output_rows;
+    accel_trans->num_kernels_cfg            = QUAD_cfg->m_num_kernels;
+    accel_trans->master_QUAD_cfg            = QUAD_cfg->m_master_QUAD;
+    accel_trans->cascade_cfg                = QUAD_cfg->m_cascade;
+    accel_trans->num_expd_input_cols_cfg    = QUAD_cfg->m_num_expd_input_cols;
     accel_trans->num_expd_input_rows_cfg    = QUAD_cfg->m_num_expd_input_rows;
-    accel_trans->conv_out_fmt0_cfg			= true;
-    accel_trans->padding_cfg				= QUAD_cfg->m_padding;
-    accel_trans->upsample_cfg				= QUAD_cfg->m_upsample;
+    accel_trans->conv_out_fmt0_cfg          = true;
+    accel_trans->padding_cfg                = QUAD_cfg->m_padding;
+    accel_trans->upsample_cfg               = QUAD_cfg->m_upsample;
     accel_trans->stride_cfg                 = QUAD_cfg->m_stride;
-    accel_trans->crpd_input_row_start_cfg	= QUAD_cfg->m_crpd_input_row_start;
-    accel_trans->crpd_input_row_end_cfg		= QUAD_cfg->m_crpd_input_row_end;
+    accel_trans->crpd_input_row_start_cfg   = QUAD_cfg->m_crpd_input_row_start;
+    accel_trans->crpd_input_row_end_cfg     = QUAD_cfg->m_crpd_input_row_end;
     trans = nb_createTLMTrans(
         m_mem_mng,
         AWP_addr,
