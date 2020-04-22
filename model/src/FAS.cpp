@@ -89,6 +89,7 @@ void FAS::ctrl_process()
                     m_num_ob_wr                 = 0;
                     m_dpth_count                = 0;
                     m_krnl_count                = 0;
+                    m_num_convOut_wr            = 0;
                 }
                 break;
             }
@@ -138,7 +139,7 @@ void FAS::A_process()
     {
         wait();
         if(
-            m_state == ST_ACTIVE
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && m_first_depth_iter_cfg
             && m_do_res_layer_cfg
             && m_do_kernels1x1_cfg
@@ -150,13 +151,9 @@ void FAS::A_process()
             // add convOut map, partial map, and residual map pixel, pop 1x1 krnl
             // MACC 1x1, pop 1x1 Bias
             // Add bias
-            wait();
-            // store to buffer
-            wait();
-            m_wr_outBuf.notify();
         }
         else if(
-            m_state == ST_ACTIVE
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && m_first_depth_iter_cfg
             && m_do_res_layer_cfg
             && m_convOutMap_bram.size() > 0
@@ -164,21 +161,36 @@ void FAS::A_process()
         ) {
             // pop convOut map, pop res map
             // add convOut map and residual map pixel
-            wait();
-            // store to buffer
-            wait();
-            m_wr_outBuf.notify();
         }
         else if(
-            m_state == ST_ACTIVE
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && m_first_depth_iter_cfg
             && m_do_kernels1x1_cfg
-            && m_convOutMap_bram.size() == m_krnl1x1Depth_cfg && m_krnl_count != m_num_1x1_kernels_cfg
+            && m_convOutMap_bram.size() >= m_krnl1x1Depth_cfg
         ) {
-            str =   "[A_process]: " + sc_time_stamp().to_string() + "\n"
-                    "[A_process]: m_convOutMap_bram.size() - " + to_string(m_convOutMap_bram.size()) + "\n";
-            cout << str;
-            m_accum_krnl_1x1_dp.notify(ONE_CYCLE);
+            // str =   "[A_process]: " + sc_time_stamp().to_string() + "\n"
+            //         "[A_process]: m_convOutMap_bram.size() - " + to_string(m_convOutMap_bram.size()) + "\n";
+            // cout << str;
+            if(m_dpth_count == (m_krnl1x1Depth_cfg - FAS_1x1_KRNL_DPTH_SIMD))
+            {
+                m_dpth_count = 0;
+                if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
+                {
+                    m_krnl_count = 0;
+                    m_convOutMap_bram.resize(
+                        m_convOutMap_bram.size()
+                        - m_krnl1x1Depth_cfg
+                    );
+                }
+                else
+                {
+                    m_krnl_count++;
+                }
+            }
+            else
+            {
+                m_dpth_count += FAS_1x1_KRNL_DPTH_SIMD;
+            }
             // pop convOut map, pop 1x1 kernel; 1 cycle
             m_convOut_bram_rd.notify(ONE_CYCLE);
             m_krnl_1x1_bram_rd.notify(ONE_CYCLE);
@@ -190,7 +202,7 @@ void FAS::A_process()
             m_accum_dp_wr.notify(NINE_CYCLES);
         }
         else if(
-            m_state == ST_ACTIVE
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && !m_first_depth_iter_cfg
             && m_do_kernels1x1_cfg
             && m_convOutMap_bram.size() > 0
@@ -199,31 +211,15 @@ void FAS::A_process()
             // pop convOut map, pop 1x1 fifo
             // pop partial map, multiply convOut map with 1x1
             // add convOut and partial map 1x1 product
-            wait();
-            // store to buffer
-            wait();
-            if(m_num_ob_wr == OB_FIFO_WR_WIDTH)
-            {
-                m_num_ob_wr = 0;
-                m_wr_outBuf.notify();
-            }
-            else
-            {
-                m_num_ob_wr++;
-            }
         }
         else if(
-            m_state == ST_ACTIVE
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && !m_first_depth_iter_cfg
             && m_convOutMap_bram.size() > 0
             && m_partMap_fifo.size() > 0
         ) {
             // pop convOut map, pop partial map
             // accum
-            wait();
-            // store to buffer
-            wait();
-            m_wr_outBuf.notify();
         }
     }
 }
@@ -237,27 +233,7 @@ void FAS::accum_krnl_1x1_dp_process()
         wait();
         // string str = "[accum_krnl_1x1_dp_process]: " + sc_time_stamp().to_string() + "\n";
         // cout << str;
-        if(m_dpth_count == m_krnl1x1Depth_cfg)
-        {
-            m_dpth_count = 0;
-            if(m_krnl_count == m_num_1x1_kernels_cfg)
-            {
-                m_krnl_count = 0;
-            }
-            else
-            {
-                // next 1x1 kernel
-                m_krnl_count++;
-                m_convOutMap_bram.resize(
-                    m_convOutMap_bram.size()
-                    - m_krnl1x1Depth_cfg
-                );
-            }
-        }
-        else
-        {
-            m_dpth_count += m_krnl1x1Depth_cfg;
-        }
+
     }
 }
 
@@ -300,7 +276,7 @@ void FAS::krnl_1x1_bias_bram_read_process()
     }
 }
 
-
+static int t = 0;
 void FAS::accum_dp_wr_process()
 {
     while(true)
@@ -309,10 +285,10 @@ void FAS::accum_dp_wr_process()
         wait();
         // string str = "[accum_dp_wr_process]: " + sc_time_stamp().to_string() + "\n";
         // cout << str;
-        if(m_ob_dwc == OB_FIFO_WR_WIDTH)
+        if(m_ob_dwc == (OB_FIFO_WR_WIDTH - 1))
         {
             m_ob_dwc = 0;
-            m_num_ob_wr++;
+            t++;
             m_wr_outBuf.notify();
         }
         else
@@ -412,12 +388,13 @@ void FAS::job_fetch_process()
     // FIXME:   you are fetching the ROWS * DEPTH where DEPTH is the total depth for this iteration
     //              but instead bc of the way the data is coming in, you are loading the QUADs in
     //              in round robin order instead of loading QUAD0 completely, then the next quad and next quad
+    //              shouldnt affect model accuracy.
     tlm::tlm_generic_payload* trans;
     sc_time delay;
     while(true)
     {
         wait();
-        if(m_trans_fifo.size() > 0)
+        if(m_trans_fifo.size() > 0 && m_convOutMap_bram.size() < m_co_high_watermark_cfg)
         {
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
@@ -466,6 +443,25 @@ void FAS::job_fetch_process()
 }
 
 
+void FAS::result_write_process()
+{
+    while(true)
+    {
+        wait(m_result_write.default_event());
+        wait();
+        m_num_convOut_wr += RES_PKT_SIZE;
+        if(m_first_depth_iter_cfg && !m_do_kernels1x1_cfg && !m_do_res_layer_cfg)
+        {
+            b_mem_trans(OUTBUF_FIFO, FIFO_WRITE, OB_FIFO_DEPTH, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
+        }
+        else
+        {
+            b_mem_trans(CONVOUTMAP_BRAM, BRAM_WRITE, CO_BRAM_DEPTH, RES_PKT_SIZE, CO_BRAM_WR_WIDTH);
+        }
+    }
+}
+
+
 void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
 {
     trans.acquire();
@@ -487,7 +483,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_RESULT_WRITE:
         {
-            b_result_write();
+            m_result_write.notify(SC_ZERO_TIME);
             trans.release();
             break;
         }
@@ -497,19 +493,6 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
             trans.release();
             break;
         }
-    }
-}
-
-
-void FAS::b_result_write()
-{
-    if(m_first_depth_iter_cfg && !m_do_kernels1x1_cfg && !m_do_res_layer_cfg)
-    {
-        b_mem_trans(OUTBUF_FIFO, FIFO_WRITE, OB_FIFO_DEPTH, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
-    }
-    else
-    {
-        b_mem_trans(CONVOUTMAP_BRAM, BRAM_WRITE, CO_BRAM_DEPTH, RES_PKT_SIZE, CO_BRAM_WR_WIDTH);
     }
 }
 
@@ -634,23 +617,26 @@ void FAS::b_getCfgData()
     m_inMapAddrArr                  = m_FAS_cfg->m_inMapAddrArr;
     m_krnl3x3AddrArr                = m_FAS_cfg->m_krnl3x3AddrArr;
     m_krnl3x3BiasAddrArr            = m_FAS_cfg->m_krnl3x3BiasAddrArr;
+    m_co_high_watermark_cfg         = m_FAS_cfg->m_co_high_watermark;
+
     string str =
         "[" + string(name()) + "]" + " Configured with.......\n"
-        "\tFirst depth iter:                            "   + to_string(m_first_depth_iter_cfg)         + "\n"
-        "\tDo Residual layer:                           "   + to_string(m_do_res_layer_cfg)             + "\n"
-        "\tDo Kernel 1x1:                               "   + to_string(m_do_kernels1x1_cfg)            + "\n"
-        "\tNum 1x1 Kernels:                             "   + to_string(m_num_1x1_kernels_cfg)          + "\n"
-        "\tKernel 1x1 Depth:                            "   + to_string(m_krnl1x1Depth_cfg)             + "\n"
-        "\tPixel Sequence Configuration Fetch Total:    "   + to_string(m_pixSeqCfgFetchTotal_cfg)      + "\n"
-        "\tInput Map Fetch Total:                       "   + to_string(m_inMapFetchTotal_cfg)          + "\n"
-        "\tInput Map Fetch Factor:                      "   + to_string(m_inMapFetchFactor_cfg)         + "\n"
-        "\tKernel 3x3 Fetch Total:                      "   + to_string(m_krnl3x3FetchTotal_cfg)        + "\n"
-        "\tKernel 3x3 Bias Fetch Total:                 "   + to_string(m_krnl3x3BiasFetchTotal_cfg)    + "\n"
-        "\tPartial Map Fetch Total:                     "   + to_string(m_partMapFetchTotal_cfg)        + "\n"
-        "\tKernel 1x1 Fetch Total:                      "   + to_string(m_krnl1x1FetchTotal_cfg)        + "\n"
-        "\tKernel 1x1 Bias Fetch Total:                 "   + to_string(m_krnl1x1BiasFetchTotal_cfg)    + "\n"
-        "\tResidual Map Fetch Total:                    "   + to_string(m_resMapFetchTotal_cfg)         + "\n"
-        "\tOutput Map Store Total:                      "   + to_string(m_outMapStoreTotal_cfg)         + "\n";
+        "\tFirst depth iter:                            "  + to_string(m_first_depth_iter_cfg)         + "\n"
+        "\tDo Residual layer:                           "  + to_string(m_do_res_layer_cfg)             + "\n"
+        "\tDo Kernel 1x1:                               "  + to_string(m_do_kernels1x1_cfg)            + "\n"
+        "\tNum 1x1 Kernels:                             "  + to_string(m_num_1x1_kernels_cfg)          + "\n"
+        "\tKernel 1x1 Depth:                            "  + to_string(m_krnl1x1Depth_cfg)             + "\n"
+        "\tPixel Sequence Configuration Fetch Total:    "  + to_string(m_pixSeqCfgFetchTotal_cfg)      + "\n"
+        "\tInput Map Fetch Total:                       "  + to_string(m_inMapFetchTotal_cfg)          + "\n"
+        "\tInput Map Fetch Factor:                      "  + to_string(m_inMapFetchFactor_cfg)         + "\n"
+        "\tKernel 3x3 Fetch Total:                      "  + to_string(m_krnl3x3FetchTotal_cfg)        + "\n"
+        "\tKernel 3x3 Bias Fetch Total:                 "  + to_string(m_krnl3x3BiasFetchTotal_cfg)    + "\n"
+        "\tPartial Map Fetch Total:                     "  + to_string(m_partMapFetchTotal_cfg)        + "\n"
+        "\tKernel 1x1 Fetch Total:                      "  + to_string(m_krnl1x1FetchTotal_cfg)        + "\n"
+        "\tKernel 1x1 Bias Fetch Total:                 "  + to_string(m_krnl1x1BiasFetchTotal_cfg)    + "\n"
+        "\tResidual Map Fetch Total:                    "  + to_string(m_resMapFetchTotal_cfg)         + "\n"
+        "\tOutput Map Store Total:                      "  + to_string(m_outMapStoreTotal_cfg)         + "\n"
+        "\tConvOut High Watermark:                      "  + to_string(m_co_high_watermark_cfg)        + "\n";
     cout << str;
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;

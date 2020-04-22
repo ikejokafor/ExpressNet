@@ -7,408 +7,72 @@
 # //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
 # //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
 # //
-do startsim_sc1.do
-# 1586717348
-# C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1
-# vsim +notimingchecks +outputDir=C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1 +nowarnTSCALE -L work -L {C:\IkennaWorkSpace\simulation\/verif_lib} -L {C:\IkennaWorkSpace\simulation\/soc_it_common} -L {C:\IkennaWorkSpace\simulation\/soc_it_capi} -L {C:\IkennaWorkSpace\simulation\/secureip} -L {C:\IkennaWorkSpace\simulation\/unisims_ver} -L {C:\IkennaWorkSpace\simulation\/simprims_ver} -L {C:\IkennaWorkSpace\simulation\/unimacro_ver} -L {C:\IkennaWorkSpace\simulation\/unifast_ver} -L {C:\IkennaWorkSpace\simulation\/blk_mem_gen_v8_3_5} -fsmdebug -c -t 1ns -novopt work.glbl work.cnl_sc1_testbench 
-# Loading sv_std.std
-# Loading work.glbl
-# Loading work.cnl_sc1_testbench
-# Loading work.clock_gen
-# Loading work.cnn_layer_accel_quad
-# Loading work.pixel_sequence_data_bram
-# Loading work.blk_mem_gen_v8_3_5
-# Loading work.cnn_layer_accel_weight_sequence_table0
-# Loading work.cnn_layer_accel_weight_sequence_table1
-# Loading work.cnn_layer_accel_quad_bram_ctrl
-# Loading work.SRL_bit
-# Loading work.blk_mem_gen_v8_3_5_mem_module
-# Loading work.blk_mem_gen_v8_3_5_output_stage
-# Loading work.blk_mem_gen_v8_3_5_softecc_output_reg_stage
-# Loading work.blk_mem_axi_regs_fwd_v8_3
-# Loading work.cnn_layer_accel_prefetch_buffer
-# Loading work.xilinx_simple_dual_port_no_change_2_clock_ram
-# Loading work.cnn_layer_accel_weight_table_top
-# Loading work.SRL_bus
-# Loading work.xilinx_true_dual_port_no_change_ram
-# Loading work.cnn_layer_accel_awe_rowbuffers
-# Loading work.xilinx_simple_dual_port_no_change_ram_v_unit
-# Loading work.xilinx_simple_dual_port_no_change_ram
-# Loading work.cnn_layer_accel_awe_dsps
-# Loading work.cnn_layer_accel_ce_dsps
-# Loading work.awe_dsp_input_mux
-# Loading work.cnn_layer_accel_ce_macc_0
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# Loading C:\IkennaWorkSpace\simulation\/unisims_ver.DSP48E2
-# Loading work.cnn_layer_accel_ce_macc_1
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Error: (vsim-19) Failed to access library 'C:\IkennaWorkSpace\simulation\/soc_it_capi' at "C:\IkennaWorkSpace\simulation\/soc_it_capi".
-# 
-# No such file or directory. (errno = ENOENT)
-# ** Warning: (vsim-PLI-3691) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(404): Expected a system task, not a system function '$value$plusargs'.
-# 
-#         Region: /cnl_sc1_testbench
-# ** Warning: (vsim-PLI-3691) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(409): Expected a system task, not a system function '$value$plusargs'.
-# 
-#         Region: /cnl_sc1_testbench
-# ** Warning: (vsim-PLI-3691) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(414): Expected a system task, not a system function '$value$plusargs'.
-# 
-#         Region: /cnl_sc1_testbench
-# ** Warning: (vsim-3017) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(204): [TFMPC] - Too few port connections. Expected 38, found 34.
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad
-# ** Warning: (vsim-3722) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(204): [TFMPC] - Missing connection for port 'slv_dbg_rdAddr'.
-# 
-# ** Warning: (vsim-3722) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(204): [TFMPC] - Missing connection for port 'slv_dbg_rdAddr_valid'.
-# 
-# ** Warning: (vsim-3722) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(204): [TFMPC] - Missing connection for port 'slv_dbg_rdAck'.
-# 
-# ** Warning: (vsim-3722) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(204): [TFMPC] - Missing connection for port 'slv_dbg_data'.
-# 
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (1 or 1) does not match connection size (5) for port 'padding'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(39).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(41).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(42).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(137): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'fifo_fwft'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer/i0_xilinx_simple_dual_port_no_change_2_clock_ram
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(363): [PCDPC] - Port size (10 or 10) does not match connection size (19) for port 'slv_dbg_rdAddr'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_weight_table_top.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (1 or 1) does not match connection size (5) for port 'padding'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(39).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(41).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(42).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(137): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'fifo_fwft'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer/i0_xilinx_simple_dual_port_no_change_2_clock_ram
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(363): [PCDPC] - Port size (10 or 10) does not match connection size (19) for port 'slv_dbg_rdAddr'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_weight_table_top.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(418): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(418): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(449): [PCDPC] - Port size (48 or 48) does not match connection size (16) for port 'cascade_datain'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_dsps.v(38).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[0]/AWE_DSP/i0_cnn_layer_accel_awe_dsps
-# ** Warning: (vsim-8607) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
-# 
-# ** Warning: (vsim-8607) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
-# 
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (1 or 1) does not match connection size (5) for port 'padding'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(39).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(41).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(42).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(137): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'fifo_fwft'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer/i0_xilinx_simple_dual_port_no_change_2_clock_ram
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(363): [PCDPC] - Port size (10 or 10) does not match connection size (19) for port 'slv_dbg_rdAddr'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_weight_table_top.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (1 or 1) does not match connection size (5) for port 'padding'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(39).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(41).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(42).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(137): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'fifo_fwft'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer/i0_xilinx_simple_dual_port_no_change_2_clock_ram
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(363): [PCDPC] - Port size (10 or 10) does not match connection size (19) for port 'slv_dbg_rdAddr'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_weight_table_top.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(418): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(418): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[1]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-8607) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
-# 
-# ** Warning: (vsim-8607) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
-# 
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (1 or 1) does not match connection size (5) for port 'padding'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(39).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(41).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(42).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(137): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'fifo_fwft'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer/i0_xilinx_simple_dual_port_no_change_2_clock_ram
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(363): [PCDPC] - Port size (10 or 10) does not match connection size (19) for port 'slv_dbg_rdAddr'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_weight_table_top.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (1 or 1) does not match connection size (5) for port 'padding'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(39).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(41).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(42).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(137): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'fifo_fwft'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer/i0_xilinx_simple_dual_port_no_change_2_clock_ram
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(363): [PCDPC] - Port size (10 or 10) does not match connection size (19) for port 'slv_dbg_rdAddr'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_weight_table_top.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(418): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(418): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[2]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-8607) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
-# 
-# ** Warning: (vsim-8607) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
-# 
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (1 or 1) does not match connection size (5) for port 'padding'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(39).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(41).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(42).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(137): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'fifo_fwft'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_prefetch_buffer/i0_xilinx_simple_dual_port_no_change_2_clock_ram
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(363): [PCDPC] - Port size (10 or 10) does not match connection size (19) for port 'slv_dbg_rdAddr'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_weight_table_top.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[0]/i0_cnn_layer_accel_weight_table_top
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (1 or 1) does not match connection size (5) for port 'padding'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(39).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(41).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(42).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_start'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_col_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(339): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'crpd_input_row_end'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v(137): [PCDPC] - Port size (1 or 1) does not match connection size (32) for port 'fifo_fwft'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.v(45).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_prefetch_buffer/i0_xilinx_simple_dual_port_no_change_2_clock_ram
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(363): [PCDPC] - Port size (10 or 10) does not match connection size (19) for port 'slv_dbg_rdAddr'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_weight_table_top.v(46).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/AWE_BUF_WHT[1]/i0_cnn_layer_accel_weight_table_top
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(418): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(43).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(418): [PCDPC] - Port size (9 or 9) does not match connection size (10) for port 'input_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v(44).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/AWE[3]/i0_cnn_layer_accel_awe_rowbuffers
-# ** Warning: (vsim-8607) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
-# 
-# ** Warning: (vsim-8607) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_ce_dsps.v(312): Non-positive replication multiplier inside concat. Replication will be ignored.
-# 
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad.v(544): [PCDPC] - Port size (3 or 3) does not match connection size (7) for port 'stride'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/cnn_layer_accel_quad_bram_ctrl.v(38).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_cnn_layer_accel_quad/i0_cnn_layer_accel_quad_bram_ctrl
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(241): [PCDPC] - Port size (32 or 32) does not match connection size (10) for port 'output_row'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv(63).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_quad_intf
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(241): [PCDPC] - Port size (32 or 32) does not match connection size (10) for port 'output_col'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv(64).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_quad_intf
-# ** Warning: (vsim-3015) C:/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv(241): [PCDPC] - Port size (32 or 32) does not match connection size (10) for port 'output_depth'. The port definition is at: C:/IkennaWorkSpace//cnn_layer_accel/verification//cnn_layer_accel_quad_intf.sv(65).
-# 
-#         Region: /cnl_sc1_testbench/QUAD[0]/i0_quad_intf
-quit -sim
-vdel -all -lib work
-# ** Warning: (vdel-133) Unable to remove directory "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work".
-# 
-# The system cannot find the file specified.
-# 
-# . (GetLastError() = 2)
 do sim_compile.do
-# ** Error: (vlib-35) Failed to create directory "work".
+# ** Warning: (vlib-34) Library already exists at "work".
 # 
-# File exists. (errno = EEXIST)
 # Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
-# ** Error: (vlog-1933) Unable to create temporary directory C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_temp
+# ** Warning: (vlog-6) -- Waiting for lock by "IkennaOkafor@DESKTOP-TG4V3V4, pid = 14936
+# ". Lockfile is "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock".
 # 
-# Permission denied. (errno = EACCES)
-# ** Error: C:\Xilinx\Vivado\2018.3\data\verilog\src/glbl.v(6): Verilog Compiler exiting
-# ** Error: C:/Modelsim10.1c/win64/vlog failed.
-# Error in macro ./sim_compile.do line 5
-# C:/Modelsim10.1c/win64/vlog failed.
-#     while executing
-# "vlog -lint -sv -work work $env(GLBL_PATH)/glbl.v"
-do sim_compile.do
-# ** Error: (vlib-35) Failed to create directory "work".
+# ** Warning: (vlog-6) -- Waiting for lock by "IkennaOkafor@DESKTOP-TG4V3V4, pid = 14936
+# ". Lockfile is "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock".
 # 
-# File exists. (errno = EEXIST)
-# Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
-# ** Error: (vlog-1933) Unable to create temporary directory C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_temp
+# ** Warning: (vlog-6) -- Waiting for lock by "IkennaOkafor@DESKTOP-TG4V3V4, pid = 14936
+# ". Lockfile is "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock".
 # 
-# Permission denied. (errno = EACCES)
-# ** Error: C:\Xilinx\Vivado\2018.3\data\verilog\src/glbl.v(6): Verilog Compiler exiting
+# ** Warning: (vlog-6) -- Waiting for lock by "IkennaOkafor@DESKTOP-TG4V3V4, pid = 14936
+# ". Lockfile is "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock".
+# 
+# ** Warning: (vlog-6) -- Waiting for lock by "IkennaOkafor@DESKTOP-TG4V3V4, pid = 14936
+# ". Lockfile is "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock".
+# 
+# ** Warning: (vlog-6) -- Waiting for lock by "IkennaOkafor@DESKTOP-TG4V3V4, pid = 14936
+# ". Lockfile is "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock".
+# 
+# ** Warning: (vlog-6) -- Waiting for lock by "IkennaOkafor@DESKTOP-TG4V3V4, pid = 14936
+# ". Lockfile is "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock".
+# 
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# Break key hit 
+# ** Warning: (vlog-7) Failed to open lock file "C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work/_lock" in create mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# SIGSEGV: segmentation violation
 # ** Error: C:/Modelsim10.1c/win64/vlog failed.
 # Error in macro ./sim_compile.do line 5
 # C:/Modelsim10.1c/win64/vlog failed.
@@ -636,8 +300,10 @@ do sim_compile.do
 # 
 # Top level modules:
 # 	pixel_sequence_data_bram
+do sta
+# Cannot open macro file: sta
 do startsim_sc1.do
-# 1586717796
+# 1587432151
 # C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1
 # vsim +notimingchecks +outputDir=C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1 +nowarnTSCALE -L work -L {C:\IkennaWorkSpace\simulation\/verif_lib} -L {C:\IkennaWorkSpace\simulation\/soc_it_common} -L {C:\IkennaWorkSpace\simulation\/soc_it_capi} -L {C:\IkennaWorkSpace\simulation\/secureip} -L {C:\IkennaWorkSpace\simulation\/unisims_ver} -L {C:\IkennaWorkSpace\simulation\/simprims_ver} -L {C:\IkennaWorkSpace\simulation\/unimacro_ver} -L {C:\IkennaWorkSpace\simulation\/unifast_ver} -L {C:\IkennaWorkSpace\simulation\/blk_mem_gen_v8_3_5} -fsmdebug -c -t 1ns -novopt work.glbl work.cnl_sc1_testbench 
 # Refreshing C:/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/work.glbl
@@ -1122,7 +788,7 @@ run -all
 # // Num Input Rows:        19
 # // Num Input Cols:        19
 # // Input Depth:           8
-# // Num Kernels:           2
+# // Num Kernels:           23
 # // Kernel size:           3
 # // Stride                 2
 # // Padding:               0
@@ -1342,7 +1008,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5302
+# // At Time: 5722
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Sending kernel Data
@@ -1350,7 +1016,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5302
+# // At Time: 5722
 # // Test Index: 0
 # // Quad Index: 0
 # // Sent Job Accept
@@ -1358,7 +1024,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5330
+# // At Time: 5750
 # // Test Index: 0
 # // Quad Index: 0
 # // Recieved Job Accept
@@ -1366,14 +1032,14 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5330
+# // At Time: 5750
 # // Test Index: 0
 # // Began Sending Pixel Data
 # // --------------------------------------------------------------
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5340
+# // At Time: 5760
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1381,7 +1047,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5550
+# // At Time: 5970
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1389,7 +1055,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5590
+# // At Time: 6010
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1397,7 +1063,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5800
+# // At Time: 6220
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1405,7 +1071,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 5840
+# // At Time: 6260
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1413,7 +1079,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 6050
+# // At Time: 6470
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1421,7 +1087,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 6090
+# // At Time: 6510
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1429,7 +1095,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 6300
+# // At Time: 6720
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1437,7 +1103,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 6560
+# // At Time: 9710
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1445,7 +1111,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 6770
+# // At Time: 9920
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1453,7 +1119,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 6900
+# // At Time: 10050
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1461,7 +1127,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 7110
+# // At Time: 10260
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1469,7 +1135,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 7370
+# // At Time: 13250
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1477,7 +1143,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 7580
+# // At Time: 13460
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1485,7 +1151,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 7710
+# // At Time: 13590
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1493,7 +1159,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 7920
+# // At Time: 13800
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1501,7 +1167,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 8180
+# // At Time: 16790
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1509,7 +1175,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 8390
+# // At Time: 17000
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1517,7 +1183,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 8520
+# // At Time: 17130
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1525,7 +1191,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 8730
+# // At Time: 17340
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1533,7 +1199,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 8990
+# // At Time: 20330
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1541,7 +1207,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 9200
+# // At Time: 20540
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1549,7 +1215,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 9330
+# // At Time: 20670
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1557,7 +1223,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 9540
+# // At Time: 20880
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1565,7 +1231,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 9800
+# // At Time: 23870
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1573,7 +1239,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 10010
+# // At Time: 24080
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1581,7 +1247,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 10140
+# // At Time: 24210
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1589,7 +1255,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 10350
+# // At Time: 24420
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1597,7 +1263,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 10610
+# // At Time: 27410
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1605,7 +1271,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 10820
+# // At Time: 27620
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1613,7 +1279,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 10950
+# // At Time: 27750
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1621,7 +1287,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 11160
+# // At Time: 27960
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1629,7 +1295,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 11420
+# // At Time: 30950
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1637,7 +1303,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 11630
+# // At Time: 31160
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1645,7 +1311,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 11760
+# // At Time: 31290
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1653,7 +1319,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 11970
+# // At Time: 31500
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1661,7 +1327,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 12230
+# // At Time: 34490
 # // Test Index: 0
 # // Quad Index: 0
 # // Started Servicing Job Fetch Request
@@ -1669,7 +1335,7 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 12440
+# // At Time: 34700
 # // Test Index: 0
 # // Quad Index: 0
 # // Finished Servicing Job Fetch Request
@@ -1677,28 +1343,28 @@ run -all
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 12440
+# // At Time: 34700
 # // Test Index: 0
 # // Finished Sending Pixel Data
 # // --------------------------------------------------------------
 # 
 # 
 # // --------------------------------------------------------------
-# // At Time: 12440
+# // At Time: 34700
 # // Test Index: 0
 # // Waiting for Job Complete
 # // --------------------------------------------------------------
 # 
 # 
 # //---------------------------------------------------------------
-# // At Time: 12850
+# // At Time: 37840
 # // Test Index: 0
 # // Monitor Recieved last output
 # //---------------------------------------------------------------
 # 
 # 
 # // Checking Test ------------------------------------------------
-# // At Time: 12850
+# // At Time: 37840
 # // Test Index: 0
 # // Checking Test ------------------------------------------------
 # 
@@ -1709,25 +1375,3 @@ run -all
 # 
 # 
 # Break in Task cnl_sc1_testbench/cnl_sc1_environment::run at cnl_sc1_environment.sv line 242
-run -all
-# // --------------------------------------------------------------
-# // At Time: 13220
-# // Test Index: 0
-# // Quad Index: 0
-# // Recieved Job Complete
-# // --------------------------------------------------------------
-# 
-# 
-# // Finished Test ------------------------------------------------
-# // At Time: 13230
-# // Test Index: 0
-# // Quad Index: 0
-# // Finished Test ------------------------------------------------
-# 
-# 
-# //---------------------------------------------------------------
-# // At Time: 13230
-# // DUT ready for next test
-# //---------------------------------------------------------------
-# 
-# 

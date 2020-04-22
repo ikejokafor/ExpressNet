@@ -352,7 +352,7 @@ module cnl_sc1_testbench;
         `scX_crtTestParams.num_input_rows = 19;
         `scX_crtTestParams.num_input_cols = 19;
         `scX_crtTestParams.depth = `NUM_CE_PER_QUAD;
-        `scX_crtTestParams.num_kernels = 2;
+        `scX_crtTestParams.num_kernels = 23;
         `scX_crtTestParams.stride = 2;
         `scX_crtTestParams.padding = 0;
         `scX_crtTestParams.upsample = FALSE;

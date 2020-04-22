@@ -96,6 +96,8 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(job_fetch_process)
                 sensitive << clk.pos();
+            SC_THREAD(result_write_process)
+                sensitive << clk.pos();
 
             m_state							= ST_IDLE;
             m_pixSeqCfgFetchTotal_cfg		= 0;
@@ -117,6 +119,9 @@ SC_MODULE(FAS)
             m_outMapStoreTotal_cfg      	= 0;
             m_ob_dwc                        = 0;
             m_num_ob_wr                     = 0;
+            m_dpth_count                    = 0;
+            m_krnl_count                    = 0;
+            m_num_convOut_wr                = 0;
             m_last_CO_recvd                 = false;
         }
 
@@ -136,6 +141,8 @@ SC_MODULE(FAS)
         void S_process();
         void resMap_fetch_process();
         void job_fetch_process();
+        void result_write_process();
+
 
         // Target Socket Inferface
         void b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
@@ -209,6 +216,7 @@ SC_MODULE(FAS)
         bool							        m_do_res_layer_cfg              ;
         bool							        m_do_kernels1x1_cfg		        ;
         int                                     m_num_1x1_kernels_cfg           ;
+        int                                     m_co_high_watermark_cfg         ;
         int                                     m_ob_dwc                        ;
         int								        m_num_ob_wr                     ;
         sc_core::sc_event				        m_job_fetch                     ;
@@ -225,5 +233,6 @@ SC_MODULE(FAS)
         sc_core::sc_event_queue                 m_krnl_1x1_bias_bram_rd         ;
         int                                     m_dpth_count                    ;
         int                                     m_krnl_count                    ;
-
+        sc_core::sc_event_queue                 m_result_write                  ;
+        int                                     m_num_convOut_wr                ;
 };

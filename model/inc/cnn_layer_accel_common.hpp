@@ -25,6 +25,7 @@
 #define MAX_3x3_KERNELS			            64
 #define YOLOV3_MAX_1x1_INPUT_DEPTH          1024
 #define MAX_1x1_KERNEL_DEPTH                YOLOV3_MAX_1x1_INPUT_DEPTH
+#define FAS_1x1_KRNL_DPTH_SIMD              64
 #define MAX_1x1_KERNELS			            64
 #define PIXEL_SIZE				            2	// 2 bytes
 #define WINDOW_3x3_NUM_CYCLES	            (uint64_t(5))
