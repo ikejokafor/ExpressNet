@@ -77,8 +77,6 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(job_fetch_process)
                 sensitive << clk.pos();
-            SC_THREAD(result_write_process)
-                sensitive << clk.pos();
             SC_THREAD(F_process)
                 sensitive << clk.pos();
             SC_THREAD(resMap_fetch_process)
@@ -87,13 +85,7 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(S_process)
                 sensitive << clk.pos();
-            SC_THREAD(partMap_fifo_rd_process)
-                sensitive << clk.pos();
-            SC_THREAD(resMap_fifo_rd_process)
-                sensitive << clk.pos();
-            SC_THREAD(outBuf_fifo_wr_process)
-                sensitive << clk.pos();
-            SC_THREAD(outBuf_fifo_rd_process)
+            SC_THREAD(outBuf_dwc_process)
                 sensitive << clk.pos();
 
             m_state                          = ST_IDLE;
@@ -130,22 +122,18 @@ SC_MODULE(FAS)
         // Processes
         void ctrl_process();
         void job_fetch_process();
-        void result_write_process();
         void F_process();
         void resMap_fetch_process();
         void A_process();
         void S_process();
-        void partMap_fifo_rd_process();
-        void resMap_fifo_rd_process();
-        void outBuf_fifo_wr_process();
-        void outBuf_fifo_rd_process();
-
+        void outBuf_dwc_process();
 
         // Target Socket Inferface
         void b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
 
 
         // Methods
+        void nb_result_write(int res_pkt_size);
         void b_cfg_Accel();
         void b_getCfgData();
         void b_cfg1x1Kernels();
@@ -212,26 +200,16 @@ SC_MODULE(FAS)
         bool                                    m_do_kernels1x1_cfg             ;
         int                                     m_num_1x1_kernels_cfg           ;
         int                                     m_co_high_watermark_cfg         ;
+        int                                     m_rm_low_watermark_cfg          ;
+        int                                     m_pm_low_watermark_cfg          ;
         int                                     m_ob_dwc                        ;
         sc_core::sc_event                       m_job_fetch                     ;
         Accel_Trans                             m_job_fetch_trans               ;
-        sc_core::sc_event                       m_wr_outBuf                     ;
+        sc_core::sc_event_queue                 m_outBuf_dwc                    ;
         sc_core::sc_semaphore                   m_sys_mem_bus_sema              ;
         std::deque<tlm::tlm_generic_payload*>   m_trans_fifo                    ;
         bool                                    m_last_wrt                      ;
         bool                                    m_last_CO_recvd                 ;
-        sc_core::sc_event_queue                 m_accum_krnl_1x1_dp             ;
-        sc_core::sc_event_queue                 m_accum_dp_wr                   ;
-        sc_core::sc_event_queue                 m_convOut_bram_rd               ;
-        sc_core::sc_event_queue                 m_convOut_bram_wr               ;
-        sc_core::sc_event_queue                 m_krnl_1x1_bram_rd              ;
-        sc_core::sc_event_queue                 m_krnl_1x1_bias_bram_rd         ;
-        sc_core::sc_event_queue                 m_outBuf_fifo_rd                ;
-        sc_core::sc_event_queue                 m_outBuf_fifo_wr                ;
         int                                     m_dpth_count                    ;
         int                                     m_krnl_count                    ;
-        sc_core::sc_event_queue                 m_result_write                  ;
-        std::deque<int>                         m_res_pkt_size                  ;
-        sc_core::sc_event_queue                 m_partMap_fifo_rd               ;
-        sc_core::sc_event_queue                 m_resMap_fifo_rd                ;
 };

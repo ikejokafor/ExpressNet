@@ -51,7 +51,7 @@
 #define PM_FIFO_DEPTH                       256
 #define PM_NUM_PIX_READ                     8
 #define PM_FIFO_WR_WIDTH                    8
-#define PM_FIFO_RD_WIDTH                    8
+#define PM_FIFO_RD_WIDTH                    MAX_1x1_KERNEL_DEPTH
 #define PM_LOW_WATERMARK                    16
 #define CO_BRAM_DEPTH                       (MAX_1x1_KERNELS * MAX_1x1_KERNEL_DEPTH)
 #define CO_NUM_PIX_READ                     MAX_1x1_KERNEL_DEPTH

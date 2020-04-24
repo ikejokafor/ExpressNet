@@ -109,9 +109,9 @@ void FAS::job_fetch_process()
     while(true)
     {
         wait();
-        bool convOut_bram_wr = (m_do_kernels1x1_cfg || m_do_res_layer_cfg) && m_convOutMap_bram_sz < m_co_high_watermark_cfg;
-        bool outBuf_fifo_wr = !m_do_kernels1x1_cfg && !m_do_res_layer_cfg;
-        if(m_trans_fifo.size() > 0 && (convOut_bram_wr || outBuf_fifo_wr))
+        bool convOut_bram_wr_en = (m_do_kernels1x1_cfg || m_do_res_layer_cfg) && (m_convOutMap_bram_sz < m_co_high_watermark_cfg);
+        bool outBuf_fifo_wr_en = !m_do_kernels1x1_cfg && !m_do_res_layer_cfg;
+        if(m_trans_fifo.size() > 0 && (convOut_bram_wr_en || outBuf_fifo_wr_en))
         {
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
@@ -160,41 +160,6 @@ void FAS::job_fetch_process()
 }
 
 
-void FAS::result_write_process()
-{
-    string str;
-    while(true)
-    {
-        wait(m_result_write.default_event());
-        wait();
-        int numWr = m_res_pkt_size.front();
-        m_res_pkt_size.pop_front();
-        if(m_first_depth_iter_cfg && !m_do_kernels1x1_cfg && !m_do_res_layer_cfg)
-        {
-            if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
-            {
-                str = "m_outBuf_fifo is full\n";
-                cout << str;
-                sc_stop();
-                return;
-            }
-            m_outBuf_fifo_sz += numWr;
-        }
-        else
-        {
-            if(m_convOutMap_bram_sz == CO_BRAM_DEPTH)
-            {
-                str = "m_convOutMap_bram_sz is full\n";
-                cout << str;
-                sc_stop();
-                return;
-            }
-            m_convOutMap_bram_sz += numWr;
-        }
-    }
-}
-
-
 void FAS::F_process()
 {
     tlm::tlm_generic_payload* trans;
@@ -202,14 +167,14 @@ void FAS::F_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo_sz <= PM_LOW_WATERMARK && m_partMapFetchCount != m_partMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
         {
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_READ_COMMAND,
                 nullptr,
-                (PM_NUM_PIX_READ * PIXEL_SIZE),
+                (m_pm_low_watermark_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -219,13 +184,13 @@ void FAS::F_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             m_sys_mem_bus_sema.post();
             trans->release();
-            m_partMap_fifo_sz += PM_NUM_PIX_READ;
-            m_partMapFetchCount += (PM_NUM_PIX_READ * PIXEL_SIZE);
+            m_partMap_fifo_sz += m_pm_low_watermark_cfg;
+            m_partMapFetchCount += (m_pm_low_watermark_cfg * PIXEL_SIZE);
         }
     }
 }
 
-
+static int t = 0;
 void FAS::resMap_fetch_process()
 {
     tlm::tlm_generic_payload* trans;
@@ -233,14 +198,15 @@ void FAS::resMap_fetch_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && m_first_depth_iter_cfg && m_resMap_fifo_sz <= RM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && m_first_depth_iter_cfg && m_resMap_fifo_sz <= m_rm_low_watermark_cfg && m_resMapFetchCount != m_resMapFetchTotal_cfg)
         {
+            t++;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_READ_COMMAND,
                 nullptr,
-                (RM_NUM_PIX_READ * PIXEL_SIZE),
+                (m_rm_low_watermark_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -250,8 +216,8 @@ void FAS::resMap_fetch_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             m_sys_mem_bus_sema.post();
             trans->release();
-            m_resMap_fifo_sz += RM_NUM_PIX_READ;
-            m_resMapFetchCount += (RM_NUM_PIX_READ * PIXEL_SIZE);
+            m_resMap_fifo_sz += m_rm_low_watermark_cfg;
+            m_resMapFetchCount += (m_rm_low_watermark_cfg * PIXEL_SIZE);
         }
     }
 }
@@ -262,7 +228,6 @@ void FAS::A_process()
     sc_time ONE_CYCLE(1 * CLK_PRD, SC_NS);
     sc_time TWO_CYCLES(2 * CLK_PRD, SC_NS);
     sc_time NINE_CYCLES(9 * CLK_PRD, SC_NS);
-    string str;
     while(true)
     {
         wait();
@@ -271,35 +236,29 @@ void FAS::A_process()
             && m_first_depth_iter_cfg
             && m_do_res_layer_cfg
             && m_do_kernels1x1_cfg
-            && m_convOutMap_bram_sz > 0
-            && m_partMap_fifo_sz > 0
-            && m_resMap_fifo_sz > 0
+            && m_convOutMap_bram_sz > CO_BRAM_RD_WIDTH
+            && m_partMap_fifo_sz > PM_FIFO_RD_WIDTH
+            && m_resMap_fifo_sz > RM_FIFO_RD_WIDTH
         ) {
-            // pop convOut map, pop partial map, pop res map
-            m_convOut_bram_rd.notify(SC_ZERO_TIME);
-            m_partMap_fifo_rd.notify(SC_ZERO_TIME);
-            m_resMap_fifo_rd.notify(SC_ZERO_TIME);
-            // add convOut map, partial map, and residual map pixel, pop 1x1 krnl
-            m_krnl_1x1_bram_rd.notify(ONE_CYCLE);
-            // MACC 1x1, pop 1x1 Bias
-            m_krnl_1x1_bram_rd.notify(TWO_CYCLES);
-            // Add bias
-
-
-            m_outBuf_fifo_wr.notify(NINE_CYCLES);
+            //  Arch
+            //      pop convOut map, pop partial map, pop res map
+            //      add convOut map, partial map, and residual map pixel, pop 1x1 krnl
+            //      MACC 1x1, pop 1x1 Bias
+            //      Add bias
         }
         else if(
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && m_first_depth_iter_cfg
             && m_do_res_layer_cfg
-            && m_convOutMap_bram_sz > 0
-            && m_resMap_fifo_sz > 0
+            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_resMap_fifo_sz >= RM_FIFO_RD_WIDTH
         ) {
-            // pop convOut map, pop res map
-            m_convOut_bram_rd.notify(SC_ZERO_TIME);
-            m_resMap_fifo_rd.notify(SC_ZERO_TIME);
-            // add convOut map and residual map pixel
-            m_outBuf_fifo_wr.notify(TWO_CYCLES);
+            //  Arch
+            //      pop convOut map, pop res map
+            //      element wise add convOut map and residual map pixel
+            m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+            m_convOutMap_bram_sz -= CO_BRAM_RD_WIDTH;
+            m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
         }
         else if(
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
@@ -307,15 +266,16 @@ void FAS::A_process()
             && m_do_kernels1x1_cfg
             && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
         ) {
-            //  pop convOut map, pop 1x1 kernel; 1 cycle
-            //  Multipy 1x1 and pop 1x1 Bias; 1 cycle
-            //  Sum across depths 64 input adder tree latency = 6 cycles
-            //  Add bias; 1 cycle
-            //  Pipeline full in 9 cycles, 1 cycle per output
+            //  Arch
+            //      pop convOut map, pop 1x1 kernel; 1 cycle
+            //      Multipy 1x1 and pop 1x1 Bias; 1 cycle
+            //      Sum across depths 64 input adder tree latency = 6 cycles
+            //      Add bias; 1 cycle
+            //      Pipeline full in 9 cycles, 1 cycle per output
             if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
             {
                 m_dpth_count = 0;
-                m_outBuf_fifo_wr.notify(NINE_CYCLES);
+                m_outBuf_dwc.notify(NINE_CYCLES);
                 if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
                 {
                     m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
@@ -335,8 +295,8 @@ void FAS::A_process()
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && !m_first_depth_iter_cfg
             && m_do_kernels1x1_cfg
-            && m_convOutMap_bram_sz > 0
-            && m_partMap_fifo_sz > 0
+            && m_convOutMap_bram_sz > CO_BRAM_RD_WIDTH
+            && m_partMap_fifo_sz > PM_FIFO_RD_WIDTH
         ) {
             // pop convOut map, pop 1x1 fifo
             // pop partial map, multiply convOut map with 1x1
@@ -345,11 +305,15 @@ void FAS::A_process()
         else if(
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && !m_first_depth_iter_cfg
-            && m_convOutMap_bram_sz > 0
-            && m_partMap_fifo_sz > 0
+            && m_convOutMap_bram_sz > CO_BRAM_RD_WIDTH
+            && m_partMap_fifo_sz > PM_FIFO_RD_WIDTH
         ) {
-            // pop convOut map, pop partial map
-            // accum
+            //  Arch
+            //      pop convOut map, pop res map
+            //      element wise add convOut map and partial map pixel
+            m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
+            m_convOutMap_bram_sz -= CO_BRAM_RD_WIDTH;
+            m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
         }
     }
 }
@@ -367,7 +331,6 @@ void FAS::S_process()
             string str =
                 "[" + string(name()) + "]" + " is doing an Output Buffer write at " + sc_time_stamp().to_string() + "\n";
             cout << str;
-            // m_outBuf_fifo_rd.notify(SC_ZERO_TIME);
             m_outBuf_fifo_sz -= m_outMapStoreFactor_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
@@ -385,7 +348,7 @@ void FAS::S_process()
             m_sys_mem_bus_sema.post();
             trans->release();
             m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
-            if(m_state == ST_WAIT_LAST_WRITE && m_outMapStoreCount == m_outMapStoreTotal_cfg)
+            if(m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
                 m_last_wrt = true;
                 string str = "[" + string(name()) + "]:" + " finished last Output Buffer write at " + sc_time_stamp().to_string() + "\n";
@@ -396,31 +359,11 @@ void FAS::S_process()
 }
 
 
-void FAS::partMap_fifo_rd_process()
+void FAS::outBuf_dwc_process()
 {
     while(true)
     {
-        wait(m_partMap_fifo_rd.default_event());
-        m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
-    }
-}
-
-
-void FAS::resMap_fifo_rd_process()
-{
-    while(true)
-    {
-        wait(m_resMap_fifo_rd.default_event());
-        m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
-    }
-}
-
-
-void FAS::outBuf_fifo_wr_process()
-{
-    while(true)
-    {
-        wait(m_outBuf_fifo_wr.default_event());
+        wait(m_outBuf_dwc.default_event());
         if(m_ob_dwc == (OB_FIFO_WR_WIDTH - 1))
         {
             m_ob_dwc = 0;
@@ -430,16 +373,6 @@ void FAS::outBuf_fifo_wr_process()
         {
             m_ob_dwc++;
         }
-    }
-}
-
-
-void FAS::outBuf_fifo_rd_process()
-{
-    while(true)
-    {
-        wait(m_outBuf_fifo_rd.default_event());
-        m_outBuf_fifo_sz -= OB_FIFO_RD_WIDTH;
     }
 }
 
@@ -465,8 +398,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_RESULT_WRITE:
         {
-            m_res_pkt_size.push_back(accel_trans->res_pkt_size);
-            m_result_write.notify(SC_ZERO_TIME);
+            nb_result_write(accel_trans->res_pkt_size);
             trans.release();
             break;
         }
@@ -476,6 +408,34 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
             trans.release();
             break;
         }
+    }
+}
+
+
+void FAS::nb_result_write(int res_pkt_size)
+{
+    string str;
+    if(m_first_depth_iter_cfg && !m_do_kernels1x1_cfg && !m_do_res_layer_cfg)
+    {
+        if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
+        {
+            str = "m_outBuf_fifo is full\n";
+            cout << str;
+            sc_stop();
+            return;
+        }
+        m_outBuf_fifo_sz += res_pkt_size;
+    }
+    else
+    {
+        if(m_convOutMap_bram_sz == CO_BRAM_DEPTH)
+        {
+            str = "m_convOutMap_bram_sz is full\n";
+            cout << str;
+            sc_stop();
+            return;
+        }
+        m_convOutMap_bram_sz += res_pkt_size;
     }
 }
 
@@ -517,25 +477,30 @@ void FAS::b_getCfgData()
     m_krnl3x3AddrArr                = m_FAS_cfg->m_krnl3x3AddrArr;
     m_krnl3x3BiasAddrArr            = m_FAS_cfg->m_krnl3x3BiasAddrArr;
     m_co_high_watermark_cfg         = m_FAS_cfg->m_co_high_watermark;
+    m_rm_low_watermark_cfg          = m_FAS_cfg->m_rm_low_watermark;
+    m_pm_low_watermark_cfg          = m_FAS_cfg->m_pm_low_watermark;
 
     string str =
         "[" + string(name()) + "]" + " Configured with.......\n"
-        "\tFirst depth iter:                            "  + to_string(m_first_depth_iter_cfg)         + "\n"
-        "\tDo Residual layer:                           "  + to_string(m_do_res_layer_cfg)             + "\n"
-        "\tDo Kernel 1x1:                               "  + to_string(m_do_kernels1x1_cfg)            + "\n"
-        "\tNum 1x1 Kernels:                             "  + to_string(m_num_1x1_kernels_cfg)          + "\n"
-        "\tKernel 1x1 Depth:                            "  + to_string(m_krnl1x1Depth_cfg)             + "\n"
-        "\tPixel Sequence Configuration Fetch Total:    "  + to_string(m_pixSeqCfgFetchTotal_cfg)      + "\n"
-        "\tInput Map Fetch Total:                       "  + to_string(m_inMapFetchTotal_cfg)          + "\n"
-        "\tInput Map Fetch Factor:                      "  + to_string(m_inMapFetchFactor_cfg)         + "\n"
-        "\tKernel 3x3 Fetch Total:                      "  + to_string(m_krnl3x3FetchTotal_cfg)        + "\n"
-        "\tKernel 3x3 Bias Fetch Total:                 "  + to_string(m_krnl3x3BiasFetchTotal_cfg)    + "\n"
-        "\tPartial Map Fetch Total:                     "  + to_string(m_partMapFetchTotal_cfg)        + "\n"
-        "\tKernel 1x1 Fetch Total:                      "  + to_string(m_krnl1x1FetchTotal_cfg)        + "\n"
-        "\tKernel 1x1 Bias Fetch Total:                 "  + to_string(m_krnl1x1BiasFetchTotal_cfg)    + "\n"
-        "\tResidual Map Fetch Total:                    "  + to_string(m_resMapFetchTotal_cfg)         + "\n"
-        "\tOutput Map Store Total:                      "  + to_string(m_outMapStoreTotal_cfg)         + "\n"
-        "\tConvOut High Watermark:                      "  + to_string(m_co_high_watermark_cfg)        + "\n";
+        "\tFirst depth iter:                            "  + to_string(m_first_depth_iter_cfg)          + "\n"
+        "\tDo Residual layer:                           "  + to_string(m_do_res_layer_cfg)              + "\n"
+        "\tDo Kernel 1x1:                               "  + to_string(m_do_kernels1x1_cfg)             + "\n"
+        "\tNum 1x1 Kernels:                             "  + to_string(m_num_1x1_kernels_cfg)           + "\n"
+        "\tKernel 1x1 Depth:                            "  + to_string(m_krnl1x1Depth_cfg)              + "\n"
+        "\tPixel Sequence Configuration Fetch Total:    "  + to_string(m_pixSeqCfgFetchTotal_cfg)       + "\n"
+        "\tInput Map Fetch Total:                       "  + to_string(m_inMapFetchTotal_cfg)           + "\n"
+        "\tInput Map Fetch Factor:                      "  + to_string(m_inMapFetchFactor_cfg)          + "\n"
+        "\tKernel 3x3 Fetch Total:                      "  + to_string(m_krnl3x3FetchTotal_cfg)         + "\n"
+        "\tKernel 3x3 Bias Fetch Total:                 "  + to_string(m_krnl3x3BiasFetchTotal_cfg)     + "\n"
+        "\tPartial Map Fetch Total:                     "  + to_string(m_partMapFetchTotal_cfg)         + "\n"
+        "\tKernel 1x1 Fetch Total:                      "  + to_string(m_krnl1x1FetchTotal_cfg)         + "\n"
+        "\tKernel 1x1 Bias Fetch Total:                 "  + to_string(m_krnl1x1BiasFetchTotal_cfg)     + "\n"
+        "\tResidual Map Fetch Total:                    "  + to_string(m_resMapFetchTotal_cfg)          + "\n"
+        "\tOutput Map Store Total:                      "  + to_string(m_outMapStoreTotal_cfg)          + "\n"
+        "\tConvOut High Watermark:                      "  + to_string(m_co_high_watermark_cfg)         + "\n"
+        "\tResMap Low Watermark:                        "  + to_string(m_rm_low_watermark_cfg)          + "\n"
+        "\tPartMap Low Watermark:                       "  + to_string(m_pm_low_watermark_cfg)          + "\n";
+
     cout << str;
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
