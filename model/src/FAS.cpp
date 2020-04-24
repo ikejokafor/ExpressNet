@@ -86,299 +86,14 @@ void FAS::ctrl_process()
                     m_resMapFetchCount          = 0;
                     m_outMapStoreCount          = 0;
                     m_ob_dwc                    = 0;
-                    m_num_ob_wr                 = 0;
                     m_dpth_count                = 0;
                     m_krnl_count                = 0;
-                    m_num_convOut_wr            = 0;
+                    m_krnl_1x1_bram_sz          = 0;
+                    m_krnl_1x1_bias_bram_sz     = 0;
                 }
                 break;
             }
         };
-    }
-}
-
-
-void FAS::F_process()
-{
-    tlm::tlm_generic_payload* trans;
-    sc_time delay;
-    while(true)
-    {
-        wait();
-        if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo.size() <= PM_LOW_WATERMARK && m_partMapFetchCount != m_partMapFetchTotal_cfg)
-        {
-            trans = nb_createTLMTrans(
-                m_mem_mng,
-                0,
-                TLM_READ_COMMAND,
-                nullptr,
-                (PM_NUM_PIX_READ * PIXEL_SIZE),
-                0,
-                nullptr,
-                false,
-                TLM_INCOMPLETE_RESPONSE
-            );
-            m_sys_mem_bus_sema.wait();
-            sys_mem_init_soc->b_transport(*trans, delay);
-            m_sys_mem_bus_sema.post();
-            trans->release();
-            b_mem_trans(PARTMAP_FIFO, FIFO_WRITE, PM_FIFO_DEPTH, PM_NUM_PIX_READ, PM_FIFO_WR_WIDTH);
-            m_partMapFetchCount += (PM_NUM_PIX_READ * PIXEL_SIZE);
-        }
-    }
-}
-
-
-void FAS::A_process()
-{
-    sc_time ONE_CYCLE(1 * CLK_PRD, SC_NS);
-    sc_time TWO_CYCLE(2 * CLK_PRD, SC_NS);
-    sc_time NINE_CYCLES(9 * CLK_PRD, SC_NS);
-    string str;
-    while(true)
-    {
-        wait();
-        if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && m_first_depth_iter_cfg
-            && m_do_res_layer_cfg
-            && m_do_kernels1x1_cfg
-            && m_convOutMap_bram.size() > 0
-            && m_partMap_fifo.size() > 0
-            && m_resMap_fifo.size() > 0
-        ) {
-            // pop convOut map, pop partial map, pop res map
-            // add convOut map, partial map, and residual map pixel, pop 1x1 krnl
-            // MACC 1x1, pop 1x1 Bias
-            // Add bias
-        }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && m_first_depth_iter_cfg
-            && m_do_res_layer_cfg
-            && m_convOutMap_bram.size() > 0
-            && m_resMap_fifo.size() > 0
-        ) {
-            // pop convOut map, pop res map
-            // add convOut map and residual map pixel
-        }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && m_first_depth_iter_cfg
-            && m_do_kernels1x1_cfg
-            && m_convOutMap_bram.size() >= m_krnl1x1Depth_cfg
-        ) {
-            // str =   "[A_process]: " + sc_time_stamp().to_string() + "\n"
-            //         "[A_process]: m_convOutMap_bram.size() - " + to_string(m_convOutMap_bram.size()) + "\n";
-            // cout << str;
-            if(m_dpth_count == (m_krnl1x1Depth_cfg - FAS_1x1_KRNL_DPTH_SIMD))
-            {
-                m_dpth_count = 0;
-                if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
-                {
-                    m_krnl_count = 0;
-                    m_convOutMap_bram.resize(
-                        m_convOutMap_bram.size()
-                        - m_krnl1x1Depth_cfg
-                    );
-                }
-                else
-                {
-                    m_krnl_count++;
-                }
-            }
-            else
-            {
-                m_dpth_count += FAS_1x1_KRNL_DPTH_SIMD;
-            }
-            // pop convOut map, pop 1x1 kernel; 1 cycle
-            m_convOut_bram_rd.notify(ONE_CYCLE);
-            m_krnl_1x1_bram_rd.notify(ONE_CYCLE);
-            // Multipy 1x1 and pop 1x1 Bias; 1 cycle
-            m_krnl_1x1_bias_bram_rd.notify(TWO_CYCLE);
-            // Sum across depths 64 input adder tree latency = 6 cycles
-            // Add bias; 1 cycle
-            // Pipeline full in 9 cycles, 1 cycle per output
-            m_accum_dp_wr.notify(NINE_CYCLES);
-        }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && !m_first_depth_iter_cfg
-            && m_do_kernels1x1_cfg
-            && m_convOutMap_bram.size() > 0
-            && m_partMap_fifo.size() > 0
-        ) {
-            // pop convOut map, pop 1x1 fifo
-            // pop partial map, multiply convOut map with 1x1
-            // add convOut and partial map 1x1 product
-        }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && !m_first_depth_iter_cfg
-            && m_convOutMap_bram.size() > 0
-            && m_partMap_fifo.size() > 0
-        ) {
-            // pop convOut map, pop partial map
-            // accum
-        }
-    }
-}
-
-
-void FAS::accum_krnl_1x1_dp_process()
-{
-    while(true)
-    {
-        wait(m_accum_krnl_1x1_dp.default_event());
-        wait();
-        // string str = "[accum_krnl_1x1_dp_process]: " + sc_time_stamp().to_string() + "\n";
-        // cout << str;
-
-    }
-}
-
-
-void FAS::convOut_bram_read_process()
-{
-    while(true)
-    {
-        wait(m_convOut_bram_rd.default_event());
-        wait();
-        // string str = "[convOut_fifo_read_process]: " + sc_time_stamp().to_string() + "\n";
-        // cout << str;
-        // b_mem_trans(CONVOUTMAP_BRAM, BRAM_READ, CO_FIFO_DEPTH, m_krnl1x1Depth_cfg, CO_FIFO_RD_WIDTH);
-    }
-}
-
-
-void FAS::krnl_1x1_bram_read_process()
-{
-    while(true)
-    {
-        wait(m_krnl_1x1_bram_rd.default_event());
-        wait();
-        // string str = "[krnl_1x1_bram_read_process]: " + sc_time_stamp().to_string() + "\n";
-        // cout << str;
-        // b_mem_trans(KRNL_1X1_BRAM, BRAM_READ, KRNL_1X1_BRAM_DEPTH, m_krnl1x1Depth_cfg, KRNL_1x1_BRAM_RD_WIDTH);
-    }
-}
-
-
-void FAS::krnl_1x1_bias_bram_read_process()
-{
-    while(true)
-    {
-        wait(m_krnl_1x1_bias_bram_rd.default_event());
-        wait();
-        // string str = "[krnl_1x1_bias_bram_read_process]: " + sc_time_stamp().to_string() + "\n";
-        // cout << str;
-        // b_mem_trans(KRNL_1X1_BIAS_BRAM, BRAM_READ, KRNL_1X1_BIAS_BRAM_DEPTH, KRNL_1X1_BIAS_BRAM_NUM_PIX_READ, KRNL_1X1_BIAS_BRAM_RD_WIDTH);
-    }
-}
-
-static int t = 0;
-void FAS::accum_dp_wr_process()
-{
-    while(true)
-    {
-        wait(m_accum_dp_wr.default_event());
-        wait();
-        // string str = "[accum_dp_wr_process]: " + sc_time_stamp().to_string() + "\n";
-        // cout << str;
-        if(m_ob_dwc == (OB_FIFO_WR_WIDTH - 1))
-        {
-            m_ob_dwc = 0;
-            t++;
-            m_wr_outBuf.notify();
-        }
-        else
-        {
-            m_ob_dwc++;
-        }
-    }
-}
-
-
-void FAS::outBuf_wr_process()
-{
-    while(true)
-    {
-        wait(m_wr_outBuf);
-        wait();
-        b_mem_trans(OUTBUF_FIFO, FIFO_WRITE, OB_FIFO_DEPTH, OB_NUM_PIX_WRITE, OB_FIFO_WR_WIDTH);
-    }
-}
-
-
-void FAS::S_process()
-{
-    tlm::tlm_generic_payload* trans;
-    sc_time delay;
-    while(true)
-    {
-        wait();
-        if((m_state == ST_ACTIVE && m_outBuf_fifo.size() >= m_outMapStoreFactor_cfg)
-            || (m_state == ST_WAIT_LAST_WRITE && m_outBuf_fifo.size() > 0)
-        ) {
-            string str =
-                "[" + string(name()) + "]" + " is doing an Output Buffer write at " + sc_time_stamp().to_string() + "\n";
-            cout << str;
-            b_mem_trans(OUTBUF_FIFO, FIFO_READ, OB_FIFO_DEPTH, m_outMapStoreFactor_cfg, OB_FIFO_RD_WIDTH);
-            trans = nb_createTLMTrans(
-                m_mem_mng,
-                0,
-                TLM_WRITE_COMMAND,
-                nullptr,
-                (m_outMapStoreFactor_cfg * PIXEL_SIZE),
-                0,
-                nullptr,
-                false,
-                TLM_INCOMPLETE_RESPONSE
-            );
-            m_sys_mem_bus_sema.wait();
-            sys_mem_init_soc->b_transport(*trans, delay);
-            m_sys_mem_bus_sema.post();
-            trans->release();
-            m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
-            if(m_state == ST_WAIT_LAST_WRITE && m_outMapStoreCount == m_outMapStoreTotal_cfg)
-            {
-                m_last_wrt = true;
-                string str = "[" + string(name()) + "]:" + " finished last Output Buffer write at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
-            }
-        }
-    }
-}
-
-
-void FAS::resMap_fetch_process()
-{
-    tlm::tlm_generic_payload* trans;
-    sc_time delay;
-    while(true)
-    {
-        wait();
-        if(m_state == ST_ACTIVE && m_first_depth_iter_cfg && m_resMap_fifo.size() <= RSM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal_cfg)
-        {
-            trans = nb_createTLMTrans(
-                m_mem_mng,
-                0,
-                TLM_READ_COMMAND,
-                nullptr,
-                (RSM_NUM_PIX_READ * PIXEL_SIZE),
-                0,
-                nullptr,
-                false,
-                TLM_INCOMPLETE_RESPONSE
-            );
-            m_sys_mem_bus_sema.wait();
-            sys_mem_init_soc->b_transport(*trans, delay);
-            m_sys_mem_bus_sema.post();
-            trans->release();
-            b_mem_trans(RESMAP_FIFO, FIFO_WRITE, RSM_FIFO_DEPTH, RSM_NUM_PIX_WRITE, RSM_FIFO_WR_WIDTH);
-            wait();
-            m_resMapFetchCount += (RSM_NUM_PIX_READ * PIXEL_SIZE);
-        }
     }
 }
 
@@ -394,7 +109,9 @@ void FAS::job_fetch_process()
     while(true)
     {
         wait();
-        if(m_trans_fifo.size() > 0 && m_convOutMap_bram.size() < m_co_high_watermark_cfg)
+        bool convOut_bram_wr = (m_do_kernels1x1_cfg || m_do_res_layer_cfg) && m_convOutMap_bram_sz < m_co_high_watermark_cfg;
+        bool outBuf_fifo_wr = !m_do_kernels1x1_cfg && !m_do_res_layer_cfg;
+        if(m_trans_fifo.size() > 0 && (convOut_bram_wr || outBuf_fifo_wr))
         {
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
@@ -445,19 +162,284 @@ void FAS::job_fetch_process()
 
 void FAS::result_write_process()
 {
+    string str;
     while(true)
     {
         wait(m_result_write.default_event());
         wait();
-        m_num_convOut_wr += RES_PKT_SIZE;
+        int numWr = m_res_pkt_size.front();
+        m_res_pkt_size.pop_front();
         if(m_first_depth_iter_cfg && !m_do_kernels1x1_cfg && !m_do_res_layer_cfg)
         {
-            b_mem_trans(OUTBUF_FIFO, FIFO_WRITE, OB_FIFO_DEPTH, RES_PKT_SIZE, OB_FIFO_WR_WIDTH);
+            if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
+            {
+                str = "m_outBuf_fifo is full\n";
+                cout << str;
+                sc_stop();
+                return;
+            }
+            m_outBuf_fifo_sz += numWr;
         }
         else
         {
-            b_mem_trans(CONVOUTMAP_BRAM, BRAM_WRITE, CO_BRAM_DEPTH, RES_PKT_SIZE, CO_BRAM_WR_WIDTH);
+            if(m_convOutMap_bram_sz == CO_BRAM_DEPTH)
+            {
+                str = "m_convOutMap_bram_sz is full\n";
+                cout << str;
+                sc_stop();
+                return;
+            }
+            m_convOutMap_bram_sz += numWr;
         }
+    }
+}
+
+
+void FAS::F_process()
+{
+    tlm::tlm_generic_payload* trans;
+    sc_time delay;
+    while(true)
+    {
+        wait();
+        if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo_sz <= PM_LOW_WATERMARK && m_partMapFetchCount != m_partMapFetchTotal_cfg)
+        {
+            trans = nb_createTLMTrans(
+                m_mem_mng,
+                0,
+                TLM_READ_COMMAND,
+                nullptr,
+                (PM_NUM_PIX_READ * PIXEL_SIZE),
+                0,
+                nullptr,
+                false,
+                TLM_INCOMPLETE_RESPONSE
+            );
+            m_sys_mem_bus_sema.wait();
+            sys_mem_init_soc->b_transport(*trans, delay);
+            m_sys_mem_bus_sema.post();
+            trans->release();
+            m_partMap_fifo_sz += PM_NUM_PIX_READ;
+            m_partMapFetchCount += (PM_NUM_PIX_READ * PIXEL_SIZE);
+        }
+    }
+}
+
+
+void FAS::resMap_fetch_process()
+{
+    tlm::tlm_generic_payload* trans;
+    sc_time delay;
+    while(true)
+    {
+        wait();
+        if(m_state == ST_ACTIVE && m_first_depth_iter_cfg && m_resMap_fifo_sz <= RM_LOW_WATERMARK && m_resMapFetchCount != m_resMapFetchTotal_cfg)
+        {
+            trans = nb_createTLMTrans(
+                m_mem_mng,
+                0,
+                TLM_READ_COMMAND,
+                nullptr,
+                (RM_NUM_PIX_READ * PIXEL_SIZE),
+                0,
+                nullptr,
+                false,
+                TLM_INCOMPLETE_RESPONSE
+            );
+            m_sys_mem_bus_sema.wait();
+            sys_mem_init_soc->b_transport(*trans, delay);
+            m_sys_mem_bus_sema.post();
+            trans->release();
+            m_resMap_fifo_sz += RM_NUM_PIX_READ;
+            m_resMapFetchCount += (RM_NUM_PIX_READ * PIXEL_SIZE);
+        }
+    }
+}
+
+
+void FAS::A_process()
+{
+    sc_time ONE_CYCLE(1 * CLK_PRD, SC_NS);
+    sc_time TWO_CYCLES(2 * CLK_PRD, SC_NS);
+    sc_time NINE_CYCLES(9 * CLK_PRD, SC_NS);
+    string str;
+    while(true)
+    {
+        wait();
+        if(
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
+            && m_first_depth_iter_cfg
+            && m_do_res_layer_cfg
+            && m_do_kernels1x1_cfg
+            && m_convOutMap_bram_sz > 0
+            && m_partMap_fifo_sz > 0
+            && m_resMap_fifo_sz > 0
+        ) {
+            // pop convOut map, pop partial map, pop res map
+            m_convOut_bram_rd.notify(SC_ZERO_TIME);
+            m_partMap_fifo_rd.notify(SC_ZERO_TIME);
+            m_resMap_fifo_rd.notify(SC_ZERO_TIME);
+            // add convOut map, partial map, and residual map pixel, pop 1x1 krnl
+            m_krnl_1x1_bram_rd.notify(ONE_CYCLE);
+            // MACC 1x1, pop 1x1 Bias
+            m_krnl_1x1_bram_rd.notify(TWO_CYCLES);
+            // Add bias
+
+
+            m_outBuf_fifo_wr.notify(NINE_CYCLES);
+        }
+        else if(
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
+            && m_first_depth_iter_cfg
+            && m_do_res_layer_cfg
+            && m_convOutMap_bram_sz > 0
+            && m_resMap_fifo_sz > 0
+        ) {
+            // pop convOut map, pop res map
+            m_convOut_bram_rd.notify(SC_ZERO_TIME);
+            m_resMap_fifo_rd.notify(SC_ZERO_TIME);
+            // add convOut map and residual map pixel
+            m_outBuf_fifo_wr.notify(TWO_CYCLES);
+        }
+        else if(
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
+            && m_first_depth_iter_cfg
+            && m_do_kernels1x1_cfg
+            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
+        ) {
+            //  pop convOut map, pop 1x1 kernel; 1 cycle
+            //  Multipy 1x1 and pop 1x1 Bias; 1 cycle
+            //  Sum across depths 64 input adder tree latency = 6 cycles
+            //  Add bias; 1 cycle
+            //  Pipeline full in 9 cycles, 1 cycle per output
+            if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
+            {
+                m_dpth_count = 0;
+                m_outBuf_fifo_wr.notify(NINE_CYCLES);
+                if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
+                {
+                    m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
+                    m_krnl_count = 0;
+                }
+                else
+                {
+                    m_krnl_count++;
+                }
+            }
+            else
+            {
+                m_dpth_count += CO_BRAM_RD_WIDTH;
+            }
+        }
+        else if(
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
+            && !m_first_depth_iter_cfg
+            && m_do_kernels1x1_cfg
+            && m_convOutMap_bram_sz > 0
+            && m_partMap_fifo_sz > 0
+        ) {
+            // pop convOut map, pop 1x1 fifo
+            // pop partial map, multiply convOut map with 1x1
+            // add convOut and partial map 1x1 product
+        }
+        else if(
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
+            && !m_first_depth_iter_cfg
+            && m_convOutMap_bram_sz > 0
+            && m_partMap_fifo_sz > 0
+        ) {
+            // pop convOut map, pop partial map
+            // accum
+        }
+    }
+}
+
+
+void FAS::S_process()
+{
+    tlm::tlm_generic_payload* trans;
+    sc_time delay;
+    while(true)
+    {
+        wait();
+        if(m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE))
+        {
+            string str =
+                "[" + string(name()) + "]" + " is doing an Output Buffer write at " + sc_time_stamp().to_string() + "\n";
+            cout << str;
+            // m_outBuf_fifo_rd.notify(SC_ZERO_TIME);
+            m_outBuf_fifo_sz -= m_outMapStoreFactor_cfg;
+            trans = nb_createTLMTrans(
+                m_mem_mng,
+                0,
+                TLM_WRITE_COMMAND,
+                nullptr,
+                (m_outMapStoreFactor_cfg * PIXEL_SIZE),
+                0,
+                nullptr,
+                false,
+                TLM_INCOMPLETE_RESPONSE
+            );
+            m_sys_mem_bus_sema.wait();
+            sys_mem_init_soc->b_transport(*trans, delay);
+            m_sys_mem_bus_sema.post();
+            trans->release();
+            m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
+            if(m_state == ST_WAIT_LAST_WRITE && m_outMapStoreCount == m_outMapStoreTotal_cfg)
+            {
+                m_last_wrt = true;
+                string str = "[" + string(name()) + "]:" + " finished last Output Buffer write at " + sc_time_stamp().to_string() + "\n";
+                cout << str;
+            }
+        }
+    }
+}
+
+
+void FAS::partMap_fifo_rd_process()
+{
+    while(true)
+    {
+        wait(m_partMap_fifo_rd.default_event());
+        m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
+    }
+}
+
+
+void FAS::resMap_fifo_rd_process()
+{
+    while(true)
+    {
+        wait(m_resMap_fifo_rd.default_event());
+        m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+    }
+}
+
+
+void FAS::outBuf_fifo_wr_process()
+{
+    while(true)
+    {
+        wait(m_outBuf_fifo_wr.default_event());
+        if(m_ob_dwc == (OB_FIFO_WR_WIDTH - 1))
+        {
+            m_ob_dwc = 0;
+            m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
+        }
+        else
+        {
+            m_ob_dwc++;
+        }
+    }
+}
+
+
+void FAS::outBuf_fifo_rd_process()
+{
+    while(true)
+    {
+        wait(m_outBuf_fifo_rd.default_event());
+        m_outBuf_fifo_sz -= OB_FIFO_RD_WIDTH;
     }
 }
 
@@ -483,6 +465,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_RESULT_WRITE:
         {
+            m_res_pkt_size.push_back(accel_trans->res_pkt_size);
             m_result_write.notify(SC_ZERO_TIME);
             trans.release();
             break;
@@ -493,90 +476,6 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
             trans.release();
             break;
         }
-    }
-}
-
-
-void FAS::b_mem_trans(FPGA_mem_sel_t mem_sel, FPGA_mem_cmd_t mem_cmd, int mem_depth, int mem_trans_size, int mem_trans_width, bool callWait)
-{
-    switch(mem_sel)
-    {
-        case PARTMAP_FIFO:
-        {
-            b_mem_trans("Partial Map BRAM", m_partMap_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
-            break;
-        }
-        case CONVOUTMAP_BRAM:
-        {
-            b_mem_trans("Convolutional Map Output FIFO", m_convOutMap_bram, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
-            break;
-        }
-        case KRNL_1X1_BRAM:
-        {
-            b_mem_trans("1x1 Kernel BRAM", m_krnl1x1_bram, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
-            break;
-        }
-        case KRNL_1X1_BIAS_BRAM:
-        {
-            b_mem_trans("1x1 Kernel Bias BRAM", m_krnl1x1Bias_bram, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
-            break;
-        }
-        case RESMAP_FIFO:
-        {
-            b_mem_trans("Residual Map FIFO", m_resMap_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
-            break;
-        }
-        case OUTBUF_FIFO:
-        {
-            b_mem_trans("Output Buffer FIFO", m_outBuf_fifo, mem_cmd, mem_depth, mem_trans_size, mem_trans_width, callWait);
-            break;
-        }
-    }
-}
-
-
-void FAS::b_mem_trans(std::string mem_name, std::deque<int>& mem, FPGA_mem_cmd_t mem_cmd, int mem_depth, int mem_trans_size, int mem_trans_width, bool callWait)
-{
-    for(int i = 0; i < mem_trans_size; i += mem_trans_width)
-    {
-        switch (mem_cmd)
-        {
-            case BRAM_WRITE:
-            case FIFO_WRITE:
-            {
-                if(mem.size() == mem_depth)
-                {
-                    string str =
-                        "[" + mem_name + "]: is full\n";
-                    cout << str;
-                    sc_stop();
-                    return;
-                }
-                mem.resize(mem.size() + mem_trans_width);
-                break;
-            }
-            case BRAM_READ:
-            {
-                break;
-            }
-            case FIFO_READ:
-            {
-                if(mem.size() == 0)
-                {
-                    break;
-                }
-                else if(mem.size() < mem_trans_width)
-                {
-                    mem.resize(0);
-                }
-                else
-                {
-                    mem.resize(mem.size() - mem_trans_width);
-                }
-                break;
-            }
-        }
-        (callWait) ? wait() : void();
     }
 }
 
@@ -659,6 +558,7 @@ void FAS::b_cfg1x1Kernels()
     int krnl_1x1_depth = MAX_3x3_KERNELS;
     sc_time delay;
     tlm::tlm_generic_payload* trans;
+
     trans = nb_createTLMTrans(
         m_mem_mng,
         m_krnl1x1Addr_cfg,
@@ -674,14 +574,9 @@ void FAS::b_cfg1x1Kernels()
     sys_mem_init_soc->b_transport(*trans, delay);
     m_sys_mem_bus_sema.post();
     trans->release();
-    b_mem_trans(
-        KRNL_1X1_BRAM,
-        BRAM_WRITE,
-        KRNL_1X1_BRAM_DEPTH,
-        KRNL_1x1_BRAM_NUM_PIX_WRITE,
-        KRNL_1x1_BRAM_WR_WIDTH,
-        false
-    );
+
+    wait((int)ceil(m_krnl1x1FetchTotal_cfg / KRNL_1x1_BRAM_WR_WIDTH), SC_NS);
+
     trans = nb_createTLMTrans(
         m_mem_mng,
         m_krnl1x1BiasAddr_cfg,
@@ -697,14 +592,8 @@ void FAS::b_cfg1x1Kernels()
     sys_mem_init_soc->b_transport(*trans, delay);
     m_sys_mem_bus_sema.post();
     trans->release();
-    b_mem_trans(
-        KRNL_1X1_BIAS_BRAM,
-        BRAM_WRITE,
-        KRNL_1X1_BIAS_BRAM_DEPTH,
-        KRNL_1X1_BIAS_BRAM_NUM_PIX_WRITE,
-        KRNL_1X1_BIAS_BRAM_WR_WIDTH,
-        false
-    );
+
+    wait((int)ceil(m_krnl1x1BiasFetchTotal_cfg / KRNL_1X1_BIAS_BRAM_WR_WIDTH), SC_NS);
 }
 
 

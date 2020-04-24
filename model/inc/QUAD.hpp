@@ -46,10 +46,7 @@ SC_MODULE(QUAD)
             m_output_col = 0;
             m_output_row = 0;
             m_stride_count = 0;
-            m_num_rd_req = 0;
-            m_num_wr_req = 0;
-            m_num_fifo_wr = 0;
-            m_num_fifo_rd = 0;
+            m_res_fifo = 0;
             m_last_res_wrtn = false;
         }
 
@@ -99,12 +96,8 @@ SC_MODULE(QUAD)
         int						m_crpd_input_row_start_cfg	;
         int						m_crpd_input_row_end_cfg	;
         int						m_QUAD_id					;
-        std::deque<int>	        m_res_fifo					;
+        int         	        m_res_fifo					;
         bool					m_last_res_wrtn				;
         sc_core::sc_event 		m_pfb_wrtn					;
-        int						m_start						;
-        int                     m_num_rd_req                ;
-        int                     m_num_wr_req                ;
-        int                     m_num_fifo_wr               ;
-        int                     m_num_fifo_rd               ;
+        uint64_t				m_start						;
 };

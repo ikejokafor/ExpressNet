@@ -82,26 +82,12 @@ void QUAD::ctrl_process_0()
             }
             case ST_SEND_COMPLETE:
             {
-                // str = "[" + string(name()) + "]:" + " finished Workload in " + to_string(int(sc_time_stamp().to_double()) - m_start) + " ns\n";
-                // cout << str;
-                // str = "[" + string(name()) + "]: num_rd_req - " + to_string(m_num_rd_req) + "\n";
-                // cout << str;
-                // str = "[" + string(name()) + "]: num_wr_req - " + to_string(m_num_wr_req) + "\n";
-                // cout << str;
-                // str = "[" + string(name()) + "]: num_fifo_wr - " + to_string(m_num_fifo_wr) + "\n";
-                // cout << str;
-                // str = "[" + string(name()) + "]: num_fifo_rd - " + to_string(m_num_fifo_rd) + "\n";
-                // cout << str;
                 bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
                 m_krnl_count = 0;
                 m_input_row = 0;
                 m_output_col = 0;
                 m_output_row = 0;
                 m_stride_count = 0;
-                m_num_rd_req = 0;
-                m_num_wr_req = 0;
-                m_num_fifo_wr = 0;
-                m_num_fifo_rd = 0;
                 m_state = ST_IDLE;
                 break;
             }
@@ -117,7 +103,7 @@ void QUAD::ctrl_process_1()
         wait();
         if(
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
-            && ((m_res_fifo.size() < QUAD_RES_FIFO_DEPTH) || (m_cascade_cfg && !m_master_QUAD_cfg))
+            && ((m_res_fifo < QUAD_RES_FIFO_DEPTH) || (m_cascade_cfg && !m_master_QUAD_cfg))
             && m_output_row != m_num_output_rows_cfg && m_stride_count == 0
         ) {
             if(m_output_col == (m_num_output_cols_cfg - 1))
@@ -156,12 +142,11 @@ void QUAD::conv_process()
         if(
             ((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
             && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
-            && (m_res_fifo.size() < QUAD_RES_FIFO_DEPTH)
+            && (m_res_fifo < QUAD_RES_FIFO_DEPTH)
             && m_output_row != m_num_output_rows_cfg
             && m_stride_count != 1
         ) {
-            m_res_fifo.push_back(int());
-            m_num_fifo_wr++;
+            m_res_fifo++;
         }
     }
 }
@@ -170,30 +155,40 @@ void QUAD::conv_process()
 void QUAD::result_write_process()
 {
     string str;
+    int numRd;
     while(true)
     {
         wait();
         if(
             ((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
-            && (m_res_fifo.size() >= RES_PKT_SIZE || (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo.size() > 0 && m_res_fifo.size() < RES_PKT_SIZE && m_output_row == m_num_output_rows_cfg))
+            && (m_res_fifo >= RES_PKT_SIZE || (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo > 0 && m_res_fifo < RES_PKT_SIZE && m_output_row == m_num_output_rows_cfg))
         ) {
             for(int i = 0; i < RES_PKT_SIZE; i += RES_FIFO_RD_WIDTH)
             {
-                for(int j = 0; (j < RES_FIFO_RD_WIDTH) && (m_res_fifo.size() > 0); j++)
+                if(m_res_fifo == 0)
                 {
-                    m_res_fifo.pop_front();
-                    m_num_fifo_rd++;
+                    break;
+                }
+                else if(m_res_fifo < RES_FIFO_RD_WIDTH)
+                {
+                    numRd = m_res_fifo;
+                    m_res_fifo = 0;
+                }
+                else
+                {
+                    numRd = RES_FIFO_RD_WIDTH;
+                    m_res_fifo -= RES_FIFO_RD_WIDTH;
                 }
                 wait();
             }
-            bool last_CO = (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo.size() == 0 && m_output_row == m_num_output_rows_cfg) ? true : false;
+            bool last_CO = (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo == 0 && m_output_row == m_num_output_rows_cfg) ? true : false;
 #ifdef VERBOSE_DEBUG
             int start = sc_time_stamp().to_double();
             str = "[" + string(name()) + "]:" + " sent a Pixel Write Request at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif
-            bus->b_request(m_QUAD_id, ACCL_CMD_RESULT_WRITE, RES_PKT_SIZE, last_CO);
-            m_num_wr_req++;
+            // TODO: numRd should be RES_PKT_SIZE
+            bus->b_request(m_QUAD_id, ACCL_CMD_RESULT_WRITE, numRd, last_CO);
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Pixel Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -294,7 +289,6 @@ void QUAD::b_job_fetch()
     cout << str;
 #endif
     bus->b_request(m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
-    m_num_rd_req++;
 #ifdef VERBOSE_DEBUG
     str = "[" + string(name()) + "]:" + " finished Pixel Fetch Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
     cout << str;
@@ -312,7 +306,6 @@ void QUAD::b_pfb_write()
 #endif
     wait(m_num_expd_input_cols_cfg, SC_NS);
     m_pfb_count = m_num_expd_input_cols_cfg;
-    wait();
     m_pfb_wrtn.notify();
 }
 
