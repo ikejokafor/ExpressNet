@@ -85,7 +85,9 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(S_process)
                 sensitive << clk.pos();
-            SC_THREAD(outBuf_dwc_process)
+            SC_THREAD(outBuf_dwc_wr_process)
+                sensitive << clk.pos();
+            SC_THREAD(outBuf_wr_process)
                 sensitive << clk.pos();
 
             m_state                          = ST_IDLE;
@@ -113,6 +115,7 @@ SC_MODULE(FAS)
             m_partMap_fifo_sz                = 0;
             m_resMap_fifo_sz                 = 0;
             m_convOutMap_bram_sz             = 0;
+            m_last_wrt                       = false;
             m_last_CO_recvd                  = false;
         }
 
@@ -126,7 +129,8 @@ SC_MODULE(FAS)
         void resMap_fetch_process();
         void A_process();
         void S_process();
-        void outBuf_dwc_process();
+        void outBuf_dwc_wr_process();
+        void outBuf_wr_process();
 
         // Target Socket Inferface
         void b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
@@ -205,11 +209,12 @@ SC_MODULE(FAS)
         int                                     m_ob_dwc                        ;
         sc_core::sc_event                       m_job_fetch                     ;
         Accel_Trans                             m_job_fetch_trans               ;
-        sc_core::sc_event_queue                 m_outBuf_dwc                    ;
         sc_core::sc_semaphore                   m_sys_mem_bus_sema              ;
         std::deque<tlm::tlm_generic_payload*>   m_trans_fifo                    ;
         bool                                    m_last_wrt                      ;
         bool                                    m_last_CO_recvd                 ;
         int                                     m_dpth_count                    ;
         int                                     m_krnl_count                    ;
+        sc_core::sc_event_queue                 m_outBuf_wr                     ;
+        sc_core::sc_event_queue                 m_outBuf_dwc_wr                 ;
 };

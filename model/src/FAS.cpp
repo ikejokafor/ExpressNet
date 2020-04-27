@@ -85,6 +85,9 @@ void FAS::ctrl_process()
                     m_krnl1x1BiasFetchCount     = 0;
                     m_resMapFetchCount          = 0;
                     m_outMapStoreCount          = 0;
+                    m_partMapFetchTotal_cfg     = 0;
+                    m_inMapFetchTotal_cfg       = 0;
+                    m_resMapFetchTotal_cfg      = 0;
                     m_ob_dwc                    = 0;
                     m_dpth_count                = 0;
                     m_krnl_count                = 0;
@@ -190,7 +193,7 @@ void FAS::F_process()
     }
 }
 
-static int t = 0;
+
 void FAS::resMap_fetch_process()
 {
     tlm::tlm_generic_payload* trans;
@@ -200,7 +203,6 @@ void FAS::resMap_fetch_process()
         wait();
         if(m_state == ST_ACTIVE && m_first_depth_iter_cfg && m_resMap_fifo_sz <= m_rm_low_watermark_cfg && m_resMapFetchCount != m_resMapFetchTotal_cfg)
         {
-            t++;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
@@ -226,8 +228,9 @@ void FAS::resMap_fetch_process()
 void FAS::A_process()
 {
     sc_time ONE_CYCLE(1 * CLK_PRD, SC_NS);
-    sc_time TWO_CYCLES(2 * CLK_PRD, SC_NS);
-    sc_time NINE_CYCLES(9 * CLK_PRD, SC_NS);
+    sc_time THREE_CYCLES(3 * CLK_PRD, SC_NS);
+    sc_time TEN_CYCLES(10 * CLK_PRD, SC_NS);
+    sc_time THIRTY_TWO_CYCLES(32 * CLK_PRD, SC_NS);
     while(true)
     {
         wait();
@@ -236,46 +239,26 @@ void FAS::A_process()
             && m_first_depth_iter_cfg
             && m_do_res_layer_cfg
             && m_do_kernels1x1_cfg
-            && m_convOutMap_bram_sz > CO_BRAM_RD_WIDTH
-            && m_partMap_fifo_sz > PM_FIFO_RD_WIDTH
-            && m_resMap_fifo_sz > RM_FIFO_RD_WIDTH
-        ) {
-            //  Arch
-            //      pop convOut map, pop partial map, pop res map
-            //      add convOut map, partial map, and residual map pixel, pop 1x1 krnl
-            //      MACC 1x1, pop 1x1 Bias
-            //      Add bias
-        }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && m_first_depth_iter_cfg
-            && m_do_res_layer_cfg
             && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
             && m_resMap_fifo_sz >= RM_FIFO_RD_WIDTH
         ) {
             //  Arch
-            //      pop convOut map, pop res map
-            //      element wise add convOut map and residual map pixel
-            m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
-            m_convOutMap_bram_sz -= CO_BRAM_RD_WIDTH;
-            m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
-        }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && m_first_depth_iter_cfg
-            && m_do_kernels1x1_cfg
-            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
-        ) {
-            //  Arch
-            //      pop convOut map, pop 1x1 kernel; 1 cycle
-            //      Multipy 1x1 and pop 1x1 Bias; 1 cycle
-            //      Sum across depths 64 input adder tree latency = 6 cycles
+            //      pop convOut map, pop res map; 1 cycle
+            //      add convOut map and residual map pixel, pop 1x1 krnl; 1 cycle
+            //      MACC 1x1; 1 cycle
+            //      Sum across depth with 1024 input adder tree and pop 1x1 Bias; 10 cycles
             //      Add bias; 1 cycle
-            //      Pipeline full in 9 cycles, 1 cycle per output
+            //      buffer up OB_FIFO_WR_WIDTH: 32 cycles
+            //      write to output buffer; 1 cycle
             if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
             {
                 m_dpth_count = 0;
-                m_outBuf_dwc.notify(NINE_CYCLES);
+                m_outBuf_dwc_wr.notify(
+                    ONE_CYCLE
+                    + ONE_CYCLE
+                    + TEN_CYCLES
+                    + ONE_CYCLE
+                );
                 if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
                 {
                     m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
@@ -295,25 +278,106 @@ void FAS::A_process()
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && !m_first_depth_iter_cfg
             && m_do_kernels1x1_cfg
-            && m_convOutMap_bram_sz > CO_BRAM_RD_WIDTH
-            && m_partMap_fifo_sz > PM_FIFO_RD_WIDTH
+            && m_partMap_fifo_sz >= PM_FIFO_RD_WIDTH
+            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
         ) {
-            // pop convOut map, pop 1x1 fifo
-            // pop partial map, multiply convOut map with 1x1
-            // add convOut and partial map 1x1 product
+            //  Arch
+            //      pop convOut map, pop 1x1 kernel; 1 cycle
+            //      Multipy 1x1; 1 cycle
+            //      Sum across depth with 1024 input adder tree: 10 cycles
+            //      pop partial map; buffer up PM_FIFO_RD_WIDTH in DWC fifo; 32 cycles
+            //      element wise add partial map; 1 cycle
+            //      write to buffer
+            if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
+            {
+                m_dpth_count = 0;
+                m_outBuf_dwc_wr.notify(
+                    ONE_CYCLE
+                    + ONE_CYCLE
+                    + TEN_CYCLES
+                    + ONE_CYCLE
+                );
+                if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
+                {
+                    m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
+                    m_partMap_fifo_sz -= m_krnl1x1Depth_cfg;
+                    m_krnl_count = 0;
+                }
+                else
+                {
+                    m_krnl_count++;
+                }
+            }
+            else
+            {
+                m_dpth_count += CO_BRAM_RD_WIDTH;
+            }
+        }
+        else if(
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
+            && m_first_depth_iter_cfg
+            && m_do_kernels1x1_cfg
+            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
+        ) {
+            //  Arch
+            //      pop convOut map, pop 1x1 kernel; 1 cycle
+            //      Multipy 1x1; 1 cycle
+            //      Sum across depth with 1024 input adder tree and pop 1x1 Bias; 10 cycles
+            //      Add bias; 1 cycle
+            //      buffer up OB_FIFO_WR_WIDTH in DWC fifo 32 cycles
+            //      write to buffer
+            if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
+            {
+                m_dpth_count = 0;
+                m_outBuf_dwc_wr.notify(
+                    ONE_CYCLE
+                    + ONE_CYCLE
+                    + TEN_CYCLES
+                    + ONE_CYCLE
+                );
+                if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
+                {
+                    m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
+                    m_krnl_count = 0;
+                }
+                else
+                {
+                    m_krnl_count++;
+                }
+            }
+            else
+            {
+                m_dpth_count += CO_BRAM_RD_WIDTH;
+            }
+        }
+        else if(
+            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
+            && m_first_depth_iter_cfg
+            && m_do_res_layer_cfg
+            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_resMap_fifo_sz >= RM_FIFO_RD_WIDTH
+        ) {
+            //  Arch
+            //      pop convOut map, pop res map; 1 cycle
+            //      element wise add convOut map and residual map pixel; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+            m_convOutMap_bram_sz -= CO_BRAM_RD_WIDTH;
+            m_outBuf_wr.notify(THREE_CYCLES);
         }
         else if(
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
             && !m_first_depth_iter_cfg
-            && m_convOutMap_bram_sz > CO_BRAM_RD_WIDTH
-            && m_partMap_fifo_sz > PM_FIFO_RD_WIDTH
+            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_partMap_fifo_sz >= PM_FIFO_RD_WIDTH
         ) {
             //  Arch
-            //      pop convOut map, pop res map
-            //      element wise add convOut map and partial map pixel
+            //      pop convOut map, pop res map; 1 cycle
+            //      element wise add convOut map and partial map pixel; 1 cycle
+            //      write to output buffer; 1 cycle
             m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
             m_convOutMap_bram_sz -= CO_BRAM_RD_WIDTH;
-            m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
+            m_outBuf_wr.notify(THREE_CYCLES);
         }
     }
 }
@@ -328,9 +392,6 @@ void FAS::S_process()
         wait();
         if(m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE))
         {
-            string str =
-                "[" + string(name()) + "]" + " is doing an Output Buffer write at " + sc_time_stamp().to_string() + "\n";
-            cout << str;
             m_outBuf_fifo_sz -= m_outMapStoreFactor_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
@@ -351,28 +412,36 @@ void FAS::S_process()
             if(m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
                 m_last_wrt = true;
-                string str = "[" + string(name()) + "]:" + " finished last Output Buffer write at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
             }
         }
     }
 }
 
 
-void FAS::outBuf_dwc_process()
+void FAS::outBuf_dwc_wr_process()
 {
     while(true)
     {
-        wait(m_outBuf_dwc.default_event());
+        wait(m_outBuf_dwc_wr.default_event());
         if(m_ob_dwc == (OB_FIFO_WR_WIDTH - 1))
         {
             m_ob_dwc = 0;
-            m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
+            m_outBuf_wr.notify(SC_ZERO_TIME);
         }
         else
         {
             m_ob_dwc++;
         }
+    }
+}
+
+
+void FAS::outBuf_wr_process()
+{
+    while(true)
+    {
+        wait(m_outBuf_wr.default_event());
+        m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
     }
 }
 
@@ -398,6 +467,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_RESULT_WRITE:
         {
+            // FIXME: add DWC code here
             nb_result_write(accel_trans->res_pkt_size);
             trans.release();
             break;

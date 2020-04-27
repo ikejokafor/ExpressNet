@@ -14,7 +14,7 @@ AWPBus::~AWPBus()
 
 void AWPBus::b_request(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size, bool last_CO)
 {
-    if (accel_cmd == ACCL_CMD_JOB_COMPLETE)
+    if(accel_cmd == ACCL_CMD_JOB_COMPLETE)
     {
         m_QUAD_complt_arr[QUAD_id] = true;
     }

@@ -39,7 +39,6 @@ void QUAD::ctrl_process_0()
                 }
                 else if(m_input_row == 3)
                 {
-                    str = "[" + string(name()) + "]:" + " finished Priming its buffer at " + sc_time_stamp().to_string() + "\n";
                     cout << str;
                     m_state = ST_ACTIVE;
                 }
@@ -51,6 +50,7 @@ void QUAD::ctrl_process_0()
             }
             case ST_ACTIVE:
             {
+                // FIXME: add code to wait for other QUADs to be filled before Master quad starts during cascade
                 if(m_input_row != (m_num_expd_input_rows_cfg - 1) && m_pfb_count == 0)
                 {
                     m_return_state = ST_ACTIVE;
@@ -300,10 +300,6 @@ void QUAD::b_job_fetch()
 
 void QUAD::b_pfb_write()
 {
-#ifdef VERBOSE_DEBUG
-    string str = "[" + string(name()) + "]:" + " is doing a Prefetch Buffer Write\n";
-    cout << str;
-#endif
     wait(m_num_expd_input_cols_cfg, SC_NS);
     m_pfb_count = m_num_expd_input_cols_cfg;
     m_pfb_wrtn.notify();
