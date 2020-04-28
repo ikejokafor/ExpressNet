@@ -88,11 +88,15 @@ void FAS::ctrl_process()
                     m_partMapFetchTotal_cfg     = 0;
                     m_inMapFetchTotal_cfg       = 0;
                     m_resMapFetchTotal_cfg      = 0;
-                    m_ob_dwc                    = 0;
                     m_dpth_count                = 0;
                     m_krnl_count                = 0;
                     m_krnl_1x1_bram_sz          = 0;
                     m_krnl_1x1_bias_bram_sz     = 0;
+                    if(m_pm_dwc != 0 || m_ob_dwc != 0 || m_outBuf_fifo_sz != 0 || m_convOutMap_bram_sz != 0 || m_resMap_fifo_sz != 0 || m_partMap_fifo_sz != 0)
+                    {
+                        sc_stop();
+                        return;
+                    }
                 }
                 break;
             }
@@ -229,8 +233,7 @@ void FAS::A_process()
 {
     sc_time ONE_CYCLE(1 * CLK_PRD, SC_NS);
     sc_time THREE_CYCLES(3 * CLK_PRD, SC_NS);
-    sc_time TEN_CYCLES(10 * CLK_PRD, SC_NS);
-    sc_time THIRTY_TWO_CYCLES(32 * CLK_PRD, SC_NS);
+    sc_time FIVE_CYCLES(5 * CLK_PRD, SC_NS);
     while(true)
     {
         wait();
@@ -246,7 +249,7 @@ void FAS::A_process()
             //      pop convOut map, pop res map; 1 cycle
             //      add convOut map and residual map pixel, pop 1x1 krnl; 1 cycle
             //      MACC 1x1; 1 cycle
-            //      Sum across depth with 1024 input adder tree and pop 1x1 Bias; 10 cycles
+            //      Sum across depth with 32 input adder tree and pop 1x1 Bias; 5 cycles
             //      Add bias; 1 cycle
             //      buffer up OB_FIFO_WR_WIDTH: 32 cycles
             //      write to output buffer; 1 cycle
@@ -256,12 +259,13 @@ void FAS::A_process()
                 m_outBuf_dwc_wr.notify(
                     ONE_CYCLE
                     + ONE_CYCLE
-                    + TEN_CYCLES
+                    + FIVE_CYCLES
                     + ONE_CYCLE
                 );
                 if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
                 {
                     m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
+                    m_resMap_fifo_sz -= m_krnl1x1Depth_cfg;
                     m_krnl_count = 0;
                 }
                 else
@@ -284,23 +288,22 @@ void FAS::A_process()
             //  Arch
             //      pop convOut map, pop 1x1 kernel; 1 cycle
             //      Multipy 1x1; 1 cycle
-            //      Sum across depth with 1024 input adder tree: 10 cycles
-            //      pop partial map; buffer up PM_FIFO_RD_WIDTH in DWC fifo; 32 cycles
+            //      Sum across depth with 32 input adder tree; 5 cycles
+            //      buffer up PM_FIFO_RD_WIDTH in DWC fifo, pop partial map; 2 cycles
             //      element wise add partial map; 1 cycle
             //      write to buffer
             if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
             {
                 m_dpth_count = 0;
-                m_outBuf_dwc_wr.notify(
+                m_partMap_dwc_wr.notify(
                     ONE_CYCLE
                     + ONE_CYCLE
-                    + TEN_CYCLES
+                    + FIVE_CYCLES
                     + ONE_CYCLE
                 );
                 if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
                 {
                     m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
-                    m_partMap_fifo_sz -= m_krnl1x1Depth_cfg;
                     m_krnl_count = 0;
                 }
                 else
@@ -322,7 +325,7 @@ void FAS::A_process()
             //  Arch
             //      pop convOut map, pop 1x1 kernel; 1 cycle
             //      Multipy 1x1; 1 cycle
-            //      Sum across depth with 1024 input adder tree and pop 1x1 Bias; 10 cycles
+            //      Sum across depth with 32 input adder tree and pop 1x1 Bias; 5 cycles
             //      Add bias; 1 cycle
             //      buffer up OB_FIFO_WR_WIDTH in DWC fifo 32 cycles
             //      write to buffer
@@ -332,7 +335,7 @@ void FAS::A_process()
                 m_outBuf_dwc_wr.notify(
                     ONE_CYCLE
                     + ONE_CYCLE
-                    + TEN_CYCLES
+                    + FIVE_CYCLES
                     + ONE_CYCLE
                 );
                 if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
@@ -413,6 +416,26 @@ void FAS::S_process()
             {
                 m_last_wrt = true;
             }
+        }
+    }
+}
+
+
+void FAS::partMap_dwc_wr_process()
+{
+    sc_time TWO_CYCLE(2 * CLK_PRD, SC_NS);
+    while(true)
+    {
+        wait(m_partMap_dwc_wr.default_event());
+        if(m_pm_dwc == (PM_FIFO_RD_WIDTH - 1))
+        {
+            m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
+            m_pm_dwc = 0;
+            m_outBuf_wr.notify(TWO_CYCLE);
+        }
+        else
+        {
+            m_pm_dwc++;
         }
     }
 }

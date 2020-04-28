@@ -85,6 +85,8 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(S_process)
                 sensitive << clk.pos();
+            SC_THREAD(partMap_dwc_wr_process)
+                sensitive << clk.pos();
             SC_THREAD(outBuf_dwc_wr_process)
                 sensitive << clk.pos();
             SC_THREAD(outBuf_wr_process)
@@ -109,6 +111,7 @@ SC_MODULE(FAS)
             m_outMapStoreCount               = 0;
             m_outMapStoreTotal_cfg           = 0;
             m_ob_dwc                         = 0;
+            m_pm_dwc                         = 0;
             m_dpth_count                     = 0;
             m_krnl_count                     = 0;
             m_outBuf_fifo_sz                 = 0;
@@ -129,6 +132,7 @@ SC_MODULE(FAS)
         void resMap_fetch_process();
         void A_process();
         void S_process();
+        void partMap_dwc_wr_process();
         void outBuf_dwc_wr_process();
         void outBuf_wr_process();
 
@@ -207,6 +211,7 @@ SC_MODULE(FAS)
         int                                     m_rm_low_watermark_cfg          ;
         int                                     m_pm_low_watermark_cfg          ;
         int                                     m_ob_dwc                        ;
+        int                                     m_pm_dwc                        ;
         sc_core::sc_event                       m_job_fetch                     ;
         Accel_Trans                             m_job_fetch_trans               ;
         sc_core::sc_semaphore                   m_sys_mem_bus_sema              ;
@@ -217,4 +222,5 @@ SC_MODULE(FAS)
         int                                     m_krnl_count                    ;
         sc_core::sc_event_queue                 m_outBuf_wr                     ;
         sc_core::sc_event_queue                 m_outBuf_dwc_wr                 ;
+        sc_core::sc_event_queue                 m_partMap_dwc_wr                ;
 };
