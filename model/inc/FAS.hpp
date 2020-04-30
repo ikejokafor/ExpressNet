@@ -210,6 +210,9 @@ SC_MODULE(FAS)
         int                                     m_co_high_watermark_cfg         ;
         int                                     m_rm_low_watermark_cfg          ;
         int                                     m_pm_low_watermark_cfg          ;
+        bool                                    m_krnl1x1_pding                 ;
+        int                                     m_krnl1x1_pad_bgn               ;
+        int                                     m_krnl1x1_pad_end               ;
         int                                     m_ob_dwc                        ;
         int                                     m_pm_dwc                        ;
         sc_core::sc_event                       m_job_fetch                     ;

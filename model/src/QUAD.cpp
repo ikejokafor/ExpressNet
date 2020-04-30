@@ -74,6 +74,7 @@ void QUAD::ctrl_process_0()
                     m_state = ST_SEND_COMPLETE;
                     m_last_res_wrtn = false;
                 }
+                // FIXME: when cascading this works, but does not fully push out last row for non master quads
                 else if(m_cascade_cfg && !m_master_QUAD_cfg)
                 {
                     m_state = ST_SEND_COMPLETE;

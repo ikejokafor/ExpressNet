@@ -555,7 +555,7 @@ void FAS::b_getCfgData()
     m_krnl1x1FetchTotal_cfg         = m_FAS_cfg->m_krnl1x1FetchTotal;
     m_krnl1x1BiasFetchTotal_cfg     = m_FAS_cfg->m_krnl1x1BiasFetchTotal;
     m_krnl1x1Depth_cfg              = m_FAS_cfg->m_krnl1x1Depth;
-    m_num_1x1_kernels_cfg           = m_FAS_cfg->m_num_1x1_kernels;
+    m_num_1x1_kernels_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
     m_resMapFetchTotal_cfg          = m_FAS_cfg->m_resMapFetchTotal;
     m_outMapStoreTotal_cfg          = m_FAS_cfg->m_outMapStoreTotal;
     m_inMapFetchFactor_cfg          = m_FAS_cfg->m_inMapFetchFactor;
@@ -572,7 +572,9 @@ void FAS::b_getCfgData()
     m_co_high_watermark_cfg         = m_FAS_cfg->m_co_high_watermark;
     m_rm_low_watermark_cfg          = m_FAS_cfg->m_rm_low_watermark;
     m_pm_low_watermark_cfg          = m_FAS_cfg->m_pm_low_watermark;
-
+    m_krnl1x1_pding                 = m_FAS_cfg->m_krnl1x1_pding;
+    m_krnl1x1_pad_bgn               = m_FAS_cfg->m_krnl1x1_pad_bgn;
+    m_krnl1x1_pad_end               = m_FAS_cfg->m_krnl1x1_pad_end;
     string str =
         "[" + string(name()) + "]" + " Configured with.......\n"
         "\tFirst depth iter:                            "  + to_string(m_first_depth_iter_cfg)          + "\n"
@@ -592,8 +594,10 @@ void FAS::b_getCfgData()
         "\tOutput Map Store Total:                      "  + to_string(m_outMapStoreTotal_cfg)          + "\n"
         "\tConvOut High Watermark:                      "  + to_string(m_co_high_watermark_cfg)         + "\n"
         "\tResMap Low Watermark:                        "  + to_string(m_rm_low_watermark_cfg)          + "\n"
-        "\tPartMap Low Watermark:                       "  + to_string(m_pm_low_watermark_cfg)          + "\n";
-
+        "\tPartMap Low Watermark:                       "  + to_string(m_pm_low_watermark_cfg)          + "\n"
+        "\tKernel 1x1 padding:                          "  + to_string(m_krnl1x1_pding)                 + "\n"
+        "\tKernel 1x1 Padding begin:                    "  + to_string(m_krnl1x1_pad_bgn)               + "\n"
+        "\tKernel 1x1 Padding end:                      "  + to_string(m_krnl1x1_pad_end)               + "\n";
     cout << str;
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
