@@ -92,11 +92,6 @@ void FAS::ctrl_process()
                     m_krnl_count                = 0;
                     m_krnl_1x1_bram_sz          = 0;
                     m_krnl_1x1_bias_bram_sz     = 0;
-                    if(m_pm_dwc != 0 || m_ob_dwc != 0 || m_outBuf_fifo_sz != 0 || m_convOutMap_bram_sz != 0 || m_resMap_fifo_sz != 0 || m_partMap_fifo_sz != 0)
-                    {
-                        sc_stop();
-                        return;
-                    }
                 }
                 break;
             }

@@ -39,8 +39,40 @@ void QUAD::ctrl_process_0()
                 }
                 else if(m_input_row == 3)
                 {
-                    cout << str;
-                    m_state = ST_ACTIVE;
+                    *m_primed = true;
+                    if(m_cascade_cfg && m_master_QUAD_cfg)
+                    {
+                        bool all_primed = true;
+                        for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
+                        {
+                            if(!(*m_primed))
+                            {
+                                all_primed = false;
+                            }
+                        }
+                        if(all_primed)
+                        {
+                            m_QUAD_start->notify(SC_ZERO_TIME);
+                            *m_primed = false;
+                            str = "[" + string(name()) + "]: is starting at " + sc_time_stamp().to_string() + "\n";
+                            cout << str;
+                            m_state = ST_ACTIVE;
+                        }
+                    }
+                    else if(m_cascade_cfg && !m_master_QUAD_cfg)
+                    {
+                        wait(m_QUAD_start->default_event());
+                        *m_primed = false;
+                        str = "[" + string(name()) + "]: is starting at " + sc_time_stamp().to_string() + "\n";
+                        cout << str;
+                        m_state = ST_ACTIVE;
+                    }
+                    else
+                    {
+                        str = "[" + string(name()) + "]: is starting at "+ sc_time_stamp().to_string() + "\n";
+                        cout << str;
+                        m_state = ST_ACTIVE;
+                    }
                 }
                 else if(m_input_row != 3)
                 {
@@ -50,7 +82,6 @@ void QUAD::ctrl_process_0()
             }
             case ST_ACTIVE:
             {
-                // FIXME: add code to wait for other QUADs to be filled before Master quad starts during cascade
                 if(m_input_row != (m_num_expd_input_rows_cfg - 1) && m_pfb_count == 0)
                 {
                     m_return_state = ST_ACTIVE;
@@ -69,15 +100,10 @@ void QUAD::ctrl_process_0()
             }
             case ST_WAIT_LAST_RES_WRITE:
             {
-                if(m_last_res_wrtn && m_master_QUAD_cfg)
+                if(m_last_res_wrtn && m_master_QUAD_cfg || (m_cascade_cfg && !m_master_QUAD_cfg && m_output_row == m_num_output_rows_cfg))
                 {
                     m_state = ST_SEND_COMPLETE;
                     m_last_res_wrtn = false;
-                }
-                // FIXME: when cascading this works, but does not fully push out last row for non master quads
-                else if(m_cascade_cfg && !m_master_QUAD_cfg)
-                {
-                    m_state = ST_SEND_COMPLETE;
                 }
                 break;
             }
@@ -272,7 +298,6 @@ bool QUAD::b_job_start()
         string str = "[" + string(name()) + "]:" + " Started Workload at " + sc_time_stamp().to_string() + "\n";
         cout << str;
         m_state = ST_PRIM_BUFFER;
-        m_start = int(sc_time_stamp().to_double());
         return true;
     }
     else

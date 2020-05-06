@@ -35,26 +35,6 @@ SC_MODULE(FAS)
     } FAS_state_t;
 
 
-    typedef enum
-    {
-        PARTMAP_FIFO        = 0,
-        CONVOUTMAP_BRAM     = 1,
-        KRNL_1X1_BRAM       = 2,
-        KRNL_1X1_BIAS_BRAM  = 3,
-        RESMAP_FIFO         = 4,
-        OUTBUF_FIFO         = 5
-    } FPGA_mem_sel_t;
-
-
-    typedef enum
-    {
-        FIFO_WRITE  = 0,
-        FIFO_READ   = 1,
-        BRAM_WRITE  = 2,
-        BRAM_READ   = 3
-    } FPGA_mem_cmd_t;
-
-
     public:
         // Ports
         sc_core::sc_in<bool>                        clk;

@@ -46,7 +46,8 @@ module xilinx_simple_dual_port_no_change_ram #(
     datain      ,        
     clk         ,
     wren        ,       
-    rden        ,       
+    rden        ,
+    fifo_fwft   ,    
     dataout   
 );	
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -63,7 +64,8 @@ module xilinx_simple_dual_port_no_change_ram #(
     input       [     C_RAM_WIDTH - 1:0]   datain;        
     input                                  clk;
     input                                  wren;       
-    input                                  rden;     
+    input                                  rden;
+    input  logic                           fifo_fwft;
     output      [     C_RAM_WIDTH - 1:0]   dataout;
   
     
