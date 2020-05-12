@@ -28,7 +28,10 @@ void FAS::ctrl_process()
             case ST_CFG_START_AWP:
             {
                 b_cfg_Accel();
-                b_start_QUADs();
+                if(!m_krnl_1x1_layer_cfg)
+                {
+                    b_start_QUADs();
+                }
                 m_state = ST_ACTIVE;
                 break;
             }
@@ -36,9 +39,9 @@ void FAS::ctrl_process()
             {
                 if(
                     m_partMapFetchCount == m_partMapFetchTotal_cfg
-                    && m_inMapFetchCount == m_inMapFetchTotal_cfg
+                    && (m_inMapFetchCount == m_inMapFetchTotal_cfg || m_krnl_1x1_layer_cfg)
                     && m_resMapFetchCount == m_resMapFetchTotal_cfg
-                    && m_last_CO_recvd
+                    && (m_last_CO_recvd || m_krnl_1x1_layer_cfg)
                 ) {
                     m_state = ST_WAIT_LAST_WRITE;
                 }
@@ -65,7 +68,7 @@ void FAS::ctrl_process()
                         break;
                     }
                 }
-                if(all_complete)
+                if(all_complete || m_krnl_1x1_layer_cfg)
                 {
                     for(int i = 0; i < MAX_AWP_PER_FAS; i++)
                     {
@@ -76,26 +79,60 @@ void FAS::ctrl_process()
                     str = "[" + string(name()) + "]: sent complete\n";
                     cout << str;
                     wait(m_complete_ack);
-                    m_state                     = ST_IDLE;
-                    m_krnl3x3FetchCount         = 0;
-                    m_krnl3x3BiasFetchCount     = 0;
-                    m_partMapFetchCount         = 0;
-                    m_inMapFetchCount           = 0;
-                    m_krnl1x1FetchCount         = 0;
-                    m_krnl1x1BiasFetchCount     = 0;
-                    m_resMapFetchCount          = 0;
-                    m_outMapStoreCount          = 0;
-                    m_partMapFetchTotal_cfg     = 0;
-                    m_inMapFetchTotal_cfg       = 0;
-                    m_resMapFetchTotal_cfg      = 0;
-                    m_dpth_count                = 0;
-                    m_krnl_count                = 0;
-                    m_krnl_1x1_bram_sz          = 0;
-                    m_krnl_1x1_bias_bram_sz     = 0;
-                }
+                    m_state                         = ST_IDLE;
+                    m_krnl3x3FetchCount             = 0;
+                    m_krnl3x3BiasFetchCount         = 0;
+                    m_partMapFetchCount             = 0;
+                    m_inMapFetchCount               = 0;
+                    m_krnl1x1FetchCount             = 0;
+                    m_krnl1x1BiasFetchCount         = 0;
+                    m_resMapFetchCount              = 0;
+                    m_outMapStoreCount              = 0;
+                    m_partMapFetchTotal_cfg         = 0;
+                    m_inMapFetchTotal_cfg           = 0;
+                    m_resMapFetchTotal_cfg          = 0;
+                    m_dpth_count                    = 0;
+                    m_krnl_count                    = 0;
+                    m_krnl_1x1_bram_sz              = 0;
+                    m_krnl_1x1_bias_bram_sz         = 0;
+                    m_first_depth_iter_cfg          = 0;
+                    m_do_res_layer_cfg              = 0;
+                    m_do_kernels1x1_cfg             = 0;
+                    m_pixSeqCfgFetchTotal_cfg       = 0;
+                    m_inMapFetchTotal_cfg           = 0;
+                    m_krnl3x3FetchTotal_cfg         = 0;
+                    m_krnl3x3BiasFetchTotal_cfg     = 0;
+                    m_partMapFetchTotal_cfg         = 0;
+                    m_krnl1x1FetchTotal_cfg         = 0;
+                    m_krnl1x1BiasFetchTotal_cfg     = 0;
+                    m_krnl1x1Depth_cfg              = 0;
+                    m_num_1x1_kernels_cfg           = 0;
+                    m_resMapFetchTotal_cfg          = 0;
+                    m_outMapStoreTotal_cfg          = 0;
+                    m_inMapFetchFactor_cfg          = 0;
+                    m_outMapStoreFactor_cfg         = 0;
+                    m_krnl1x1Addr_cfg               = 0;
+                    m_krnl1x1BiasAddr_cfg           = 0;
+                    m_pixelSeqAddr_cfg              = 0;
+                    m_partMapAddr_cfg               = 0;
+                    m_resMapAddr_cfg                = 0;
+                    m_outMapAddr_cfg                = 0;
+                    m_co_high_watermark_cfg         = 0;
+                    m_rm_low_watermark_cfg          = 0;
+                    m_pm_low_watermark_cfg          = 0;
+                    m_krnl1x1_pding_cfg             = 0;
+                    m_krnl1x1_pad_bgn_cfg           = 0;
+                    m_krnl1x1_pad_end_cfg           = 0;
+                    m_krnl_1x1_layer_cfg            = 0;
+                    // if(m_partMap_fifo_sz > 0 || m_convOutMap_bram_sz > 0 || m_outBuf_fifo_sz > 0 || m_pm_dwc > 0 || m_pm_dwc > 0)
+                    // {
+                    //     sc_stop();
+                    //     return;
+                    // }
+                }//
                 break;
             }
-        };
+        }
     }
 }
 
@@ -169,8 +206,10 @@ void FAS::F_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && !m_first_depth_iter_cfg && m_partMap_fifo_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
-        {
+        if(m_state == ST_ACTIVE
+            && ((!m_first_depth_iter_cfg && m_partMap_fifo_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
+                || (m_krnl_1x1_layer_cfg && m_convOutMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg))
+        ) {
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
@@ -186,7 +225,14 @@ void FAS::F_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             m_sys_mem_bus_sema.post();
             trans->release();
-            m_partMap_fifo_sz += m_pm_low_watermark_cfg;
+            if(m_krnl_1x1_layer_cfg)
+            {
+                m_convOutMap_bram_sz += m_pm_low_watermark_cfg;
+            }
+            else
+            {
+                m_partMap_fifo_sz += m_pm_low_watermark_cfg;
+            }
             m_partMapFetchCount += (m_pm_low_watermark_cfg * PIXEL_SIZE);
         }
     }
@@ -313,8 +359,7 @@ void FAS::A_process()
         }
         else if(
             (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && m_first_depth_iter_cfg
-            && m_do_kernels1x1_cfg
+            && ((m_first_depth_iter_cfg && m_do_kernels1x1_cfg) || m_krnl_1x1_layer_cfg)
             && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
         ) {
             //  Arch
@@ -499,7 +544,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
     }
 }
 
-
+static int t = 0;
 void FAS::nb_result_write(int res_pkt_size)
 {
     string str;
@@ -524,6 +569,7 @@ void FAS::nb_result_write(int res_pkt_size)
             return;
         }
         m_convOutMap_bram_sz += res_pkt_size;
+        t += res_pkt_size;
     }
 }
 
@@ -532,7 +578,10 @@ void FAS::b_cfg_Accel()
 {
     b_getCfgData();
     b_cfg1x1Kernels();
-    b_sendCfgs();
+    if(!m_krnl_1x1_layer_cfg)
+    {
+        b_sendQUADCfgs();
+    }
 }
 
 
@@ -567,9 +616,10 @@ void FAS::b_getCfgData()
     m_co_high_watermark_cfg         = m_FAS_cfg->m_co_high_watermark;
     m_rm_low_watermark_cfg          = m_FAS_cfg->m_rm_low_watermark;
     m_pm_low_watermark_cfg          = m_FAS_cfg->m_pm_low_watermark;
-    m_krnl1x1_pding                 = m_FAS_cfg->m_krnl1x1_pding;
-    m_krnl1x1_pad_bgn               = m_FAS_cfg->m_krnl1x1_pad_bgn;
-    m_krnl1x1_pad_end               = m_FAS_cfg->m_krnl1x1_pad_end;
+    m_krnl1x1_pding_cfg             = m_FAS_cfg->m_krnl1x1_pding;
+    m_krnl1x1_pad_bgn_cfg           = m_FAS_cfg->m_krnl1x1_pad_bgn;
+    m_krnl1x1_pad_end_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
+    m_krnl_1x1_layer_cfg            = m_FAS_cfg->m_krnl_1x1_layer;
     string str =
         "[" + string(name()) + "]" + " Configured with.......\n"
         "\tFirst depth iter:                            "  + to_string(m_first_depth_iter_cfg)          + "\n"
@@ -587,12 +637,14 @@ void FAS::b_getCfgData()
         "\tKernel 1x1 Bias Fetch Total:                 "  + to_string(m_krnl1x1BiasFetchTotal_cfg)     + "\n"
         "\tResidual Map Fetch Total:                    "  + to_string(m_resMapFetchTotal_cfg)          + "\n"
         "\tOutput Map Store Total:                      "  + to_string(m_outMapStoreTotal_cfg)          + "\n"
+        "\tOutput Map Store Factor:                     "  + to_string(m_outMapStoreFactor_cfg)         + "\n"
         "\tConvOut High Watermark:                      "  + to_string(m_co_high_watermark_cfg)         + "\n"
         "\tResMap Low Watermark:                        "  + to_string(m_rm_low_watermark_cfg)          + "\n"
         "\tPartMap Low Watermark:                       "  + to_string(m_pm_low_watermark_cfg)          + "\n"
-        "\tKernel 1x1 padding:                          "  + to_string(m_krnl1x1_pding)                 + "\n"
-        "\tKernel 1x1 Padding begin:                    "  + to_string(m_krnl1x1_pad_bgn)               + "\n"
-        "\tKernel 1x1 Padding end:                      "  + to_string(m_krnl1x1_pad_end)               + "\n";
+        "\tKernel 1x1 padding:                          "  + to_string(m_krnl1x1_pding_cfg)             + "\n"
+        "\tKernel 1x1 Padding begin:                    "  + to_string(m_krnl1x1_pad_bgn_cfg)           + "\n"
+        "\tKernel 1x1 Padding end:                      "  + to_string(m_krnl1x1_pad_end_cfg)           + "\n"
+        "\tKernel 1x1 Layer:                            "  + to_string(m_krnl_1x1_layer_cfg)            + "\n";
     cout << str;
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
@@ -654,7 +706,7 @@ void FAS::b_cfg1x1Kernels()
 }
 
 
-void FAS::b_sendCfgs()
+void FAS::b_sendQUADCfgs()
 {
     for(int i = 0; i < MAX_AWP_PER_FAS; i++)
     {
