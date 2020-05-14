@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <random>
 #include "systemc"
 #include "tlm.h"
 #include "tlm_utils/peq_with_cb_and_phase.h"
@@ -33,10 +34,7 @@ SC_MODULE(CNN_Layer_Accel)
         SC_CTOR(CNN_Layer_Accel)
             :	clk("clk"),
                 FAS2AWP_bus("FAS2AWP_bus"),
-                AWP2FAS_bus("AWP2FAS_bus"),
-                m_AWP_arr(NUM_FAS, std::vector<bool>(MAX_AWP_PER_FAS, false)),
-                m_AWP_cfg_QUAD_arr(NUM_FAS, std::vector<std::vector<bool>>(MAX_AWP_PER_FAS, std::vector<bool>(NUM_QUADS_PER_AWP, false))),
-                m_AWP_num_QUADS_cfgd(NUM_FAS, std::vector<int>(MAX_AWP_PER_FAS, 0))
+                AWP2FAS_bus("AWP2FAS_bus")
         {
             tar_soc.register_b_transport(this, &CNN_Layer_Accel::b_transport);
             FAS2AWP_bus.clk(clk);
@@ -59,8 +57,14 @@ SC_MODULE(CNN_Layer_Accel)
                     awp[k]->init_soc(AWP2FAS_bus.tar_soc);
                 }
             }
+
             SC_THREAD(main_process);
                 sensitive << clk.pos();
+            SC_THREAD(system_mem_read_arb_process)
+                sensitive << clk.pos();
+            SC_THREAD(system_mem_write_arb_process)
+                sensitive << clk.pos();
+
             for(int i = 0 ; i < NUM_FAS ; i++)
             {
                 m_FAS_complt_arr.push_back(false);
@@ -77,7 +81,19 @@ SC_MODULE(CNN_Layer_Accel)
                     &args
                 );
             }
+            for(int i = 0; i < MAX_FAS_RD_REQ; i++)
+            {
+                m_rd_req_arr[i].req_pending = false;
+            }
+            for(int i = 0; i < MAX_FAS_WR_REQ; i++)
+            {
+                m_wr_req_arr[i].req_pending = false;
+            }
             m_accelCfg = new AccelConfig();
+            m_num_sys_mem_wr_in_prog = 0;
+            m_num_sys_mem_rd_in_prog = 0;
+            m_next_wr_req_id = 0;
+            m_next_rd_req_id = 0;
         }
 
         // Destructor
@@ -86,6 +102,8 @@ SC_MODULE(CNN_Layer_Accel)
         // Processes
         void main_process();
         int complt_process(int idx);
+        void system_mem_read_arb_process();
+        void system_mem_write_arb_process();
 
 
         // Methods
@@ -94,12 +112,16 @@ SC_MODULE(CNN_Layer_Accel)
         void start();
         void waitComplete();
 
+
         // Members
-        sc_core::sc_event m_complete;
+        sc_core::sc_event_queue m_complete;
         AccelConfig* m_accelCfg;
         std::vector<uint64_t> m_memory;
         std::vector<bool> m_FAS_complt_arr;
-        std::vector<std::vector<bool>> m_AWP_arr;
-        std::vector<std::vector<std::vector<bool>>> m_AWP_cfg_QUAD_arr;
-        std::vector<std::vector<int>> m_AWP_num_QUADS_cfgd;
+        Accel_Trans	m_rd_req_arr[MAX_FAS_RD_REQ];
+        Accel_Trans	m_wr_req_arr[MAX_FAS_WR_REQ];
+        int m_num_sys_mem_wr_in_prog;
+        int m_num_sys_mem_rd_in_prog;
+        int m_next_wr_req_id;
+        int m_next_rd_req_id;
 };

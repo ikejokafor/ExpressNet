@@ -22,6 +22,10 @@ class AWPBus : public sc_core::sc_module, public AWP_if
             {
                 m_QUAD_complt_arr.push_back(false);
             }
+            for(int i = 0; i < MAX_AWP_TRANS; i++)
+            {
+                m_req_arr[i].req_pending = false;
+            }
         }
 
         ~AWPBus();

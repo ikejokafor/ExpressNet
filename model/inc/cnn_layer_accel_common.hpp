@@ -11,6 +11,12 @@
 
 
 // #define VERBOSE_DEBUG
+#define BITS_PER_PIXEL                      16
+#define ACCEL_BUS_SIZE                      512
+#define MAX_FAS_RD_REQ                      3
+#define MAX_FAS_WR_REQ                      1
+#define MAX_SYS_MEM_RD_TRANS                1
+#define MAX_SYS_MEM_WR_TRANS                1
 #define CLK_PRD                             10
 #define PIXEL_SEQUENCE_SIZE                 8192
 #define MAX_NETWORK_TRANS                   1
@@ -78,6 +84,20 @@ typedef enum
 } accel_cmd_t;
 
 
+typedef enum
+{
+    FAS_JOB_FETCH_ID = 0,
+    FAS_RES_MAP_FETCH_ID = 1,
+    FAS_PART_MAP_FETCH_ID = 2
+} fas_rd_id_t;
+
+
+typedef enum
+{
+    FAS_STORE_ID = 0,
+} fas_wr_id_t;
+
+
 class Accel_Trans
 {
     public:
@@ -106,6 +126,8 @@ class Accel_Trans
         bool last_CO                    ;
         sc_core::sc_event ack           ;
         sc_core::sc_event request       ;
+        fas_rd_id_t fas_rd_id           ;
+        fas_wr_id_t fas_wr_id           ;
 };
 
 

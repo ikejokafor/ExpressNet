@@ -129,7 +129,7 @@ void FAS::ctrl_process()
                     //     sc_stop();
                     //     return;
                     // }
-                }//
+                }
                 break;
             }
         }
@@ -159,20 +159,20 @@ void FAS::job_fetch_process()
             int QUAD_id = accel_trans->QUAD_id;
             trans->release();
             int inMapFetchAmt = m_inMapFetchFactor_cfg * m_inMapDepthFetchAmt[AWP_id][QUAD_id] * PIXEL_SIZE;
+            accel_trans = new Accel_Trans();
+            accel_trans->fas_rd_id = FAS_JOB_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 AWP_id,
                 TLM_READ_COMMAND,
-                nullptr,
+                (unsigned char*)accel_trans,
                 inMapFetchAmt,
                 0,
                 nullptr,
                 false,
                 TLM_INCOMPLETE_RESPONSE
             );
-            m_sys_mem_bus_sema.wait();
             sys_mem_init_soc->b_transport(*trans, delay);
-            m_sys_mem_bus_sema.post();
             trans->release();
             accel_trans = new Accel_Trans();
             accel_trans->accel_cmd = ACCL_CMD_JOB_FETCH;
@@ -203,6 +203,7 @@ void FAS::F_process()
 {
     tlm::tlm_generic_payload* trans;
     sc_time delay;
+    Accel_Trans* accel_trans;
     while(true)
     {
         wait();
@@ -210,20 +211,20 @@ void FAS::F_process()
             && ((!m_first_depth_iter_cfg && m_partMap_fifo_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
                 || (m_krnl_1x1_layer_cfg && m_convOutMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg))
         ) {
+            accel_trans = new Accel_Trans();
+            accel_trans->fas_rd_id = FAS_PART_MAP_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_READ_COMMAND,
-                nullptr,
+                (unsigned char*)accel_trans,
                 (m_pm_low_watermark_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
                 TLM_INCOMPLETE_RESPONSE
             );
-            m_sys_mem_bus_sema.wait();
             sys_mem_init_soc->b_transport(*trans, delay);
-            m_sys_mem_bus_sema.post();
             trans->release();
             if(m_krnl_1x1_layer_cfg)
             {
@@ -243,16 +244,19 @@ void FAS::resMap_fetch_process()
 {
     tlm::tlm_generic_payload* trans;
     sc_time delay;
+    Accel_Trans* accel_trans;
     while(true)
     {
         wait();
         if(m_state == ST_ACTIVE && m_first_depth_iter_cfg && m_resMap_fifo_sz <= m_rm_low_watermark_cfg && m_resMapFetchCount != m_resMapFetchTotal_cfg)
         {
+            accel_trans = new Accel_Trans();
+            accel_trans->fas_rd_id = FAS_RES_MAP_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_READ_COMMAND,
-                nullptr,
+                (unsigned char*)accel_trans,
                 (m_rm_low_watermark_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
@@ -430,17 +434,20 @@ void FAS::S_process()
 {
     tlm::tlm_generic_payload* trans;
     sc_time delay;
+    Accel_Trans* accel_trans;
     while(true)
     {
         wait();
         if(m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE))
         {
+            accel_trans = new Accel_Trans();
+            accel_trans->fas_wr_id = FAS_STORE_ID;
             m_outBuf_fifo_sz -= m_outMapStoreFactor_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_WRITE_COMMAND,
-                nullptr,
+                (unsigned char*)accel_trans,
                 (m_outMapStoreFactor_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
@@ -544,7 +551,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
     }
 }
 
-static int t = 0;
+
 void FAS::nb_result_write(int res_pkt_size)
 {
     string str;
@@ -569,7 +576,6 @@ void FAS::nb_result_write(int res_pkt_size)
             return;
         }
         m_convOutMap_bram_sz += res_pkt_size;
-        t += res_pkt_size;
     }
 }
 

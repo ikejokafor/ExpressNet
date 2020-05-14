@@ -43,7 +43,7 @@ void CNN_Layer_Accel::main_process()
             str = "Processing Complete at " + sc_time_stamp().to_string() + "\n";
             cout << str;
             wait();
-            m_complete.notify();
+            m_complete.notify(SC_ZERO_TIME);
         }
     }
 }
@@ -51,7 +51,7 @@ void CNN_Layer_Accel::main_process()
 
 int CNN_Layer_Accel::complt_process(int idx)
 {
-    while (true)
+    while(true)
     {
         wait(fas[idx]->m_complete);
         wait();
@@ -61,9 +61,102 @@ int CNN_Layer_Accel::complt_process(int idx)
 }
 
 
+void CNN_Layer_Accel::system_mem_read_arb_process()
+{
+    while (true)
+    {
+        wait();
+        int numReq = 0;
+        for(int i = 0; i < MAX_FAS_RD_REQ; i++)
+        {
+            if(m_rd_req_arr[i].req_pending)
+            {
+                numReq++;
+            }
+        }
+        if(numReq > 0 && m_num_sys_mem_rd_in_prog < MAX_SYS_MEM_RD_TRANS)
+        {
+            for(int i = m_next_rd_req_id; true; i = (i + 1) % MAX_FAS_RD_REQ)
+            {
+                if(m_rd_req_arr[i].req_pending)
+                {
+                    wait();
+                    m_rd_req_arr[i].ack.notify();
+                    m_next_rd_req_id = (i + 1) % MAX_FAS_RD_REQ;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+
+void CNN_Layer_Accel::system_mem_write_arb_process()
+{
+    while (true)
+    {
+        wait();
+        int numReq = 0;
+        for(int i = 0; i < MAX_FAS_WR_REQ; i++)
+        {
+            if(m_wr_req_arr[i].req_pending)
+            {
+                numReq++;
+            }
+        }
+        if(numReq > 0 && m_num_sys_mem_wr_in_prog < MAX_SYS_MEM_WR_TRANS)
+        {
+            for(int i = m_next_wr_req_id; true; i = (i + 1) % MAX_FAS_WR_REQ)
+            {
+                if(m_wr_req_arr[i].req_pending)
+                {
+                    wait();
+                    m_wr_req_arr[i].ack.notify();
+                    m_next_wr_req_id = (i + 1) % MAX_FAS_WR_REQ;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+
 void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay)
 {
     trans.acquire();
+    int num_mem_trans_cycles = (int)ceil((float)(trans.get_data_length() * BITS_PER_PIXEL) / (float)ACCEL_BUS_SIZE);
+    int num_stall_cycles = 0;
+    std::default_random_engine generator;
+    std::bernoulli_distribution distribution(0.5);
+    for(int i = 0; i < num_mem_trans_cycles; i++)
+    {
+        if(distribution(generator)) num_stall_cycles++;
+    }
+    num_mem_trans_cycles += num_stall_cycles;
+    Accel_Trans* accel_trans = (Accel_Trans*)trans.get_data_ptr();
+    switch(trans.get_command())
+    {
+        case TLM_READ_COMMAND:
+        {
+            int req_idx = accel_trans->fas_rd_id;
+            m_rd_req_arr[req_idx].req_pending = true;
+            wait(m_rd_req_arr[req_idx].ack);
+            m_num_sys_mem_rd_in_prog++;
+            wait(num_mem_trans_cycles);
+            m_num_sys_mem_rd_in_prog--;
+            break;
+        }
+        case TLM_WRITE_COMMAND:
+        {
+            int req_idx = accel_trans->fas_wr_id;
+            m_wr_req_arr[req_idx].req_pending = true;
+            wait(m_wr_req_arr[req_idx].ack);
+            m_num_sys_mem_wr_in_prog++;
+            wait(num_mem_trans_cycles);
+            m_num_sys_mem_wr_in_prog--;
+            break;
+        }
+    }
     trans.release();
 }
 
@@ -91,8 +184,7 @@ void CNN_Layer_Accel::start()
 
 void CNN_Layer_Accel::waitComplete()
 {
-    // FIXME: possibility of missing this if complete is triggered same cycle as finished is triggered
-    wait(m_complete);
+    wait(m_complete.default_event());
     wait();
     delete m_accelCfg;
     m_accelCfg = new AccelConfig();
