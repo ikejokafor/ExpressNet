@@ -1,3 +1,34 @@
+// --------------------------------------------------------------------------------------------------------------------------------------------------
+//
+//  M: Memory Cycle Latency
+//  C: Number of Input Columns
+//  R: Number of Input Rows
+//  K_3: Number of 3x3 Kernels
+//  K_1: Number of 1x1 Kernels
+//  K_1_D: 1x1 Kernel Depth
+//
+//  QUAD Cycle Latency:
+//       PIX_SEQ_WRT_LAT
+//          + KRNL_3x3_WRT_LAT
+//          + KRNL_3x3_BIAS_WRT_LAT
+//          + PRIM_LAT
+//          + PRFTCH_WRT_LAT
+//          + EXE_LAT
+//
+//       [M + 8192]
+//          + [M + (10 * K_3)]
+//          + [M +  K_3)]
+//          + [3 * (M + C)]
+//          + [(R - 3)(M + C)]
+//          + [R * C]
+//
+//
+//  FAS Cycle Latency:
+//
+//      [M + K_1 * K_1_D]   +   [M + K_1]
+//
+//
+// --------------------------------------------------------------------------------------------------------------------------------------------------
 #pragma once
 
 

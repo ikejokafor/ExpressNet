@@ -11,18 +11,20 @@
 
 
 // #define VERBOSE_DEBUG
+// #define SIMULATE_MEMORY_LATENCY
 #define BITS_PER_PIXEL                      16
-#define ACCEL_BUS_SIZE                      512
+#define AXI_BUS_SIZE                        512
+#define AXI_ACCEL_CLK_RATIO                 5
 #define MAX_FAS_RD_REQ                      3
 #define MAX_FAS_WR_REQ                      1
 #define MAX_SYS_MEM_RD_TRANS                1
 #define MAX_SYS_MEM_WR_TRANS                1
 #define CLK_PRD                             10
 #define PIXEL_SEQUENCE_SIZE                 8192
-#define MAX_NETWORK_TRANS                   1
 #define NUM_FAS                             1
 #define MAX_AWP_PER_FAS                     1
 #define NUM_QUADS_PER_AWP                   4
+#define MAX_NETWORK_TRANS                   (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP)
 #define QUAD_MAX_DEPTH                      8
 #define QUAD_DEPTH_SIMD                     (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP * QUAD_MAX_DEPTH)
 #define MAX_AWP_TRANS                       (NUM_QUADS_PER_AWP * 2)    // each quad can send 2 requests at a time

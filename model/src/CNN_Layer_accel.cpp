@@ -63,6 +63,7 @@ int CNN_Layer_Accel::complt_process(int idx)
 
 void CNN_Layer_Accel::system_mem_read_arb_process()
 {
+#ifdef SIMULATE_MEMORY_LATENCY
     while (true)
     {
         wait();
@@ -88,11 +89,13 @@ void CNN_Layer_Accel::system_mem_read_arb_process()
             }
         }
     }
+#endif
 }
 
 
 void CNN_Layer_Accel::system_mem_write_arb_process()
 {
+#ifdef SIMULATE_MEMORY_LATENCY
     while (true)
     {
         wait();
@@ -118,13 +121,15 @@ void CNN_Layer_Accel::system_mem_write_arb_process()
             }
         }
     }
+#endif
 }
 
 
 void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay)
 {
     trans.acquire();
-    int num_mem_trans_cycles = (int)ceil((float)(trans.get_data_length() * BITS_PER_PIXEL) / (float)ACCEL_BUS_SIZE);
+#ifdef SIMULATE_MEMORY_LATENCY
+    int num_mem_trans_cycles = (int)ceil((float)(trans.get_data_length() * BITS_PER_PIXEL) / (float)(AXI_BUS_SIZE * AXI_ACCEL_CLK_RATIO));
     int num_stall_cycles = 0;
     std::default_random_engine generator;
     std::bernoulli_distribution distribution(0.5);
@@ -157,6 +162,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
             break;
         }
     }
+#endif
     trans.release();
 }
 
@@ -191,8 +197,3 @@ void CNN_Layer_Accel::waitComplete()
     // FIXME: might need to read back data
     m_memory.clear();
 }
-
-
-#ifdef MODEL_TECH
-SC_MODULE_EXPORT(CNN_Layer_Accel);
-#endif
