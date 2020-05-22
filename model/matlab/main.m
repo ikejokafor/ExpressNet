@@ -1,3 +1,7 @@
+clc
+clear
+
+
 MAX_AWP_PER_FAS     = 1;
 NUM_QUAD_PER_AWP    = 1;
 NUM_TOTAL_QUADS     = MAX_AWP_PER_FAS * NUM_QUAD_PER_AWP;
@@ -10,45 +14,48 @@ do_krnl1x1          = 0;
 do_resLayer         = 0;
 
 
-inputMapDepth = 64;
-numInputMapRows = 128;
-numInputMapCols = 128;
+inputMapDepth = 128;
+numInputMapRows = 16;
+numInputMapCols = 16;
 padding = 0;
 stride = 1;
-num3x3Kernels = 512;
-num1x1Kernels = 128;
+num3x3Kernels = 64;
+num1x1Kernels = 32;
 numKernelRows = 3;
 numKernelCols = 3;
 numOutputRows = floor((numInputMapRows - numKernelRows + 2 * padding) / stride) + 1;
 numOutputCols = floor((numInputMapCols - numKernelCols + 2 * padding) / stride) + 1;
 outputDepth3x3 = num3x3Kernels;
 
+
 inputMaps = randi([1, 8], [numInputMapRows, numInputMapCols, inputMapDepth]);
 kernels3x3 = randi([1, 8],[numKernelRows, numKernelCols, inputMapDepth,  num3x3Kernels]);
-kernels1x1 = randi([1, 8],[1, 1, num3x3Kernels,  num1x1Kernels]);
 bias3x3 = randi([1 8], [1, num3x3Kernels]);
-bias1x1 = randi([1 8], [1, num3x3Kernels]);
-if(do_resLayer)
-    residualMaps = randi([1, 8],[numOutputRows,  numOutputCols, outputDepth3x3]);    
+if(do_krnl1x1)
+    kernels1x1 = randi([1, 8],[1, 1, num3x3Kernels,  num1x1Kernels]);
+    bias1x1 = randi([1 8], [1, num3x3Kernels]);
+else
+    kernels1x1 = [];
+    bias1x1 = [];  
 end
+if(do_resLayer)
+    residualMaps = randi([1, 8],[numOutputRows,  numOutputCols, outputDepth3x3]);
+else
+    residualMaps = [];
+end
+
 
 outputMapSol = zeros(numOutputRows, numOutputCols, num3x3Kernels);
 outputMapSol = Convolution(kernels3x3, inputMaps, outputMapSol, bias3x3);
-outputMapSol = Convolution(kernels1x1, outputMapSol, outputMapSol, bias1x1);
+if(do_krnl1x1)
+    outputMapSol = Convolution(kernels1x1, outputMapSol, outputMapSol, bias1x1);
+end
+writematrix(outputMapSol);
 
 
-if(krnl_1x1_layer)
-    num_krnl_iter = 1;
-else
-    num_krnl_iter = ceil(num3x3Kernels / QUAD_MAX_KERNELS);
-end
-if(krnl_1x1_layer)
-    num_depth_iter = 1;
-else
-    num_depth_iter = ceil(inputMapDepth / QUAD_DPTH_SIMD);
-end
+num_krnl_iter = ceil(num3x3Kernels / QUAD_MAX_KERNELS);
+num_depth_iter = ceil(inputMapDepth / QUAD_DPTH_SIMD);
 remNumKrnl = num3x3Kernels;
-
 krnlBgn = 1;
 li_outMaps = [];
 for i = 1:num_krnl_iter
@@ -82,7 +89,7 @@ for i = 1:num_krnl_iter
         );
 
         [ ...
-            li_outMaps
+            li_outMaps ...
         ] = Process( ...
             li_inMaps, ...
             li_krnl3x3, ...
@@ -95,16 +102,28 @@ for i = 1:num_krnl_iter
             i, ...
             num_depth_iter, ...
             j, ...
-            numKrnl3x3, ...
-            nOutRows, ...
-            nOutCols, ...
+            size(li_krnl3x3, 4), ...
+            numOutputRows, ...
+            numOutputCols, ...
             do_krnl1x1, ...
-            do_resLayer
-        )
-
+            do_resLayer ...
+        );
+        
         remDepth = remDepth - depth;
         depthBgn = depthBgn + depth;
     end
     remNumKrnl = remNumKrnl - numKrnl;
     krnlBgn = krnlBgn + numKrnl;
+    if(i == 1)
+        outputMapQry = li_outMaps;
+    else
+        outputMapQry = cat(3, outputMapQry, li_outMaps);
+    end
+end
+
+
+if(isequal(outputMapQry, outputMapSol))
+    disp('Good');
+else
+    disp('Bad');
 end

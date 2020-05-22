@@ -1,7 +1,4 @@
-function
-[ ...
-    li_outMaps
-] = Process( ...
+function [li_outMaps] = Process( ...
     li_inMaps, ...
     li_krnl3x3, ...
     li_krnl3x3bias, ...
@@ -17,9 +14,32 @@ function
     nOutRows, ...
     nOutCols, ...
     do_krnl1x1, ...
-    do_resLayer
+    do_resLayer ...
 )
     li_outMaps = zeros(nOutRows, nOutCols, numKrnl3x3);
-    li_outMaps = Convolution(li_krnl3x3, li_inMaps, li_outMaps, li_krnl3x3bias);  
+    if(dpth_iter == num_depth_iter)
+        li_outMaps = Convolution(li_krnl3x3, li_inMaps, li_outMaps, li_krnl3x3bias);  
+    else
+        li_outMaps = Convolution(li_krnl3x3, li_inMaps, li_outMaps);
+    end  
 
+   
+    if(dpth_iter ~= 1)
+        li_outMaps = li_outMaps + li_partMaps;
+    end
+    
+
+    %{    
+    if(0)
+        
+    elseif(0)
+    
+    elseif(0)
+    
+    elseif(0)
+    
+    elseif(dpth_iter ~= 1)
+        li_outMaps + li_partMaps;
+    end
+    %}
 end
