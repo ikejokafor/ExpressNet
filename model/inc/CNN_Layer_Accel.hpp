@@ -7,6 +7,9 @@
 //  K_1: Number of 1x1 Kernels
 //  K_1_D: 1x1 Kernel Depth
 //
+//  IDD2P
+//
+//
 //  QUAD Cycle Latency:
 //       PIX_SEQ_WRT_LAT
 //          + KRNL_3x3_WRT_LAT
@@ -26,6 +29,12 @@
 //  FAS Cycle Latency:
 //
 //      [M + K_1 * K_1_D]   +   [M + K_1]
+//
+//  Power Consumption:
+//
+//      IDD2P x VDD
+//      IDD2F x VDD
+//      IDD3P * VDD
 //
 //
 // --------------------------------------------------------------------------------------------------------------------------------------------------
@@ -141,7 +150,8 @@ SC_MODULE(CNN_Layer_Accel)
         void b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
         void setMemory(uint64_t addr);
         void start();
-        void waitComplete();
+        void waitComplete(double& elapsedTime, double& memPower);
+        double calculateMemPower();
 
 
         // Members
@@ -155,4 +165,5 @@ SC_MODULE(CNN_Layer_Accel)
         int m_num_sys_mem_rd_in_prog;
         int m_next_wr_req_id;
         int m_next_rd_req_id;
+        double m_start_time;
 };

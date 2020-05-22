@@ -63,7 +63,7 @@ int CNN_Layer_Accel::complt_process(int idx)
 
 void CNN_Layer_Accel::system_mem_read_arb_process()
 {
-#ifdef SIMULATE_MEMORY_LATENCY
+#ifdef SIMULATE_MEMORY
     while (true)
     {
         wait();
@@ -95,7 +95,7 @@ void CNN_Layer_Accel::system_mem_read_arb_process()
 
 void CNN_Layer_Accel::system_mem_write_arb_process()
 {
-#ifdef SIMULATE_MEMORY_LATENCY
+#ifdef SIMULATE_MEMORY
     while (true)
     {
         wait();
@@ -128,7 +128,7 @@ void CNN_Layer_Accel::system_mem_write_arb_process()
 void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay)
 {
     trans.acquire();
-#ifdef SIMULATE_MEMORY_LATENCY
+#ifdef SIMULATE_MEMORY
     int num_mem_trans_cycles = (int)ceil((float)(trans.get_data_length() * BITS_PER_PIXEL) / (float)(AXI_BUS_SIZE * AXI_ACCEL_CLK_RATIO));
     int num_stall_cycles = 0;
     std::default_random_engine generator;
@@ -175,6 +175,7 @@ void CNN_Layer_Accel::setMemory(uint64_t addr)
 
 void CNN_Layer_Accel::start()
 {
+    m_start_time = sc_time_stamp().to_double();
     m_accelCfg->m_address = m_memory[0];
     m_accelCfg->deserialize();
     for(int i = 0; i < NUM_FAS; i++)
@@ -188,12 +189,20 @@ void CNN_Layer_Accel::start()
 }
 
 
-void CNN_Layer_Accel::waitComplete()
+void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower)
 {
     wait(m_complete.default_event());
     wait();
+    elapsedTime = sc_time_stamp().to_double() - m_start_time;
+    memPower = calculateMemPower();
     delete m_accelCfg;
     m_accelCfg = new AccelConfig();
     // FIXME: might need to read back data
     m_memory.clear();
+}
+
+
+double CNN_Layer_Accel::calculateMemPower()
+{
+
 }

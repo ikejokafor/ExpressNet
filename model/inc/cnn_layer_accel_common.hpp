@@ -11,7 +11,7 @@
 
 
 // #define VERBOSE_DEBUG
-// #define SIMULATE_MEMORY_LATENCY
+// #define SIMULATE_MEMORY
 #define BITS_PER_PIXEL                      16
 #define AXI_BUS_SIZE                        512
 #define AXI_ACCEL_CLK_RATIO                 5
