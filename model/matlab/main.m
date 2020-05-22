@@ -14,43 +14,44 @@ do_krnl1x1          = 0;
 do_resLayer         = 0;
 
 
-inputMapDepth = 128;
+inputMapDepth = 16;
 numInputMapRows = 16;
 numInputMapCols = 16;
 padding = 0;
 stride = 1;
-num3x3Kernels = 64;
+num3x3Kernels = 128;
 num1x1Kernels = 32;
 numKernelRows = 3;
 numKernelCols = 3;
-numOutputRows = floor((numInputMapRows - numKernelRows + 2 * padding) / stride) + 1;
-numOutputCols = floor((numInputMapCols - numKernelCols + 2 * padding) / stride) + 1;
+num3x3OutputRows = floor((numInputMapRows - numKernelRows + 2 * padding) / stride) + 1;
+num3x3OutputCols = floor((numInputMapCols - numKernelCols + 2 * padding) / stride) + 1;
 outputDepth3x3 = num3x3Kernels;
+num1x1OutputRows = num3x3OutputRows;
+num1x1OutputCols = num3x3OutputCols;
+outputDepth1x1 = num1x1Kernels;
 
 
-inputMaps = randi([1, 8], [numInputMapRows, numInputMapCols, inputMapDepth]);
-kernels3x3 = randi([1, 8],[numKernelRows, numKernelCols, inputMapDepth,  num3x3Kernels]);
+inputMaps = randi([1, 8], [numInputMapCols, numInputMapRows, inputMapDepth]);
+kernels3x3 = randi([1, 8],[numKernelCols, numKernelRows, inputMapDepth,  num3x3Kernels]);
 bias3x3 = randi([1 8], [1, num3x3Kernels]);
 if(do_krnl1x1)
     kernels1x1 = randi([1, 8],[1, 1, num3x3Kernels,  num1x1Kernels]);
-    bias1x1 = randi([1 8], [1, num3x3Kernels]);
+    bias1x1 = randi([1 8], [1, num1x1Kernels]);
 else
     kernels1x1 = [];
     bias1x1 = [];  
 end
 if(do_resLayer)
-    residualMaps = randi([1, 8],[numOutputRows,  numOutputCols, outputDepth3x3]);
+    residualMaps = randi([1, 8],[numOutputCols, numOutputRows, outputDepth3x3]);
 else
     residualMaps = [];
 end
 
 
-outputMapSol = zeros(numOutputRows, numOutputCols, num3x3Kernels);
-outputMapSol = Convolution(kernels3x3, inputMaps, outputMapSol, bias3x3);
+outputMapSol = Convolution(kernels3x3, bias3x3, inputMaps, num3x3OutputCols, num3x3OutputRows, outputDepth3x3);
 if(do_krnl1x1)
-    outputMapSol = Convolution(kernels1x1, outputMapSol, outputMapSol, bias1x1);
+    outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
 end
-writematrix(outputMapSol);
 
 
 num_krnl_iter = ceil(num3x3Kernels / QUAD_MAX_KERNELS);
@@ -58,6 +59,7 @@ num_depth_iter = ceil(inputMapDepth / QUAD_DPTH_SIMD);
 remNumKrnl = num3x3Kernels;
 krnlBgn = 1;
 li_outMaps = [];
+outputMapQry = [];
 for i = 1:num_krnl_iter
     numKrnl = min(remNumKrnl, QUAD_MAX_KERNELS);
     remDepth = inputMapDepth;
@@ -102,11 +104,16 @@ for i = 1:num_krnl_iter
             i, ...
             num_depth_iter, ...
             j, ...
-            size(li_krnl3x3, 4), ...
-            numOutputRows, ...
-            numOutputCols, ...
+            num3x3Kernels, ...
+            num3x3OutputRows, ...
+            num3x3OutputCols, ...
+            outputDepth3x3, ...
+            num1x1OutputRows, ...
+            num1x1OutputCols, ...
+            outputDepth1x1, ...            
             do_krnl1x1, ...
-            do_resLayer ...
+            do_resLayer, ...
+            outputMapQry ... 
         );
         
         remDepth = remDepth - depth;
@@ -114,9 +121,9 @@ for i = 1:num_krnl_iter
     end
     remNumKrnl = remNumKrnl - numKrnl;
     krnlBgn = krnlBgn + numKrnl;
-    if(i == 1)
+    if(do_krnl1x1 || i == 1)
         outputMapQry = li_outMaps;
-    else
+    elseif(~do_krnl1x1)
         outputMapQry = cat(3, outputMapQry, li_outMaps);
     end
 end

@@ -1,14 +1,14 @@
-function ret = Convolution(kernels, inputMaps, outputMap, bias)
-    ret = zeros(size(outputMap, 1), size(outputMap, 2), size(outputMap, 3));
+function ret = Convolution(kernels, bias, inputMaps, nOutCols, nOutRows, outDepth)
+    ret = zeros(nOutCols, nOutRows, outDepth);
     for i = 1:size(kernels, 4)
-        convSum = zeros(size(outputMap, 1), size(outputMap, 2));
+        convSum = zeros(nOutCols, nOutRows);
         for j = 1:size(inputMaps, 3)                                
             inputMap_slice = inputMaps(:, :, j);
             kernel_slice = kernels(:, :, j, i);
             %flip kernel if values matter
             convSum = convSum + convn(inputMap_slice, kernel_slice, 'valid');
         end
-        if(nargin == 4)
+        if(~isempty(bias))
             ret(:, :, i) = (convSum + bias(i));
         else
             ret(:, :, i) = convSum;
