@@ -10,11 +10,11 @@ QUAD_MAX_DEPTH		= 8;
 QUAD_DPTH_SIMD		= QUAD_MAX_DEPTH * NUM_TOTAL_QUADS;
 KRNL_1x1_SIMD       = 8;
 krnl_1x1_layer      = 0;
-do_krnl1x1          = 1;
+do_krnl1x1          = 0;
 do_resLayer         = 0;
 
 
-inputMapDepth = 16;
+inputMapDepth = 32;
 numInputMapRows = 16;
 numInputMapCols = 16;
 padding = 0;
