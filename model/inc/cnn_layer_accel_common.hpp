@@ -49,7 +49,7 @@
 #define KRNL_1X1_BIAS_BRAM_RD_WIDTH         1
 #define KRNL_1X1_BIAS_BRAM_NUM_PIX_WRITE    1
 #define KRNL_1X1_BIAS_BRAM_WR_WIDTH         1
-#define RES_FIFO_RD_WIDTH                   8
+#define RES_FIFO_RD_WIDTH                   128
 #define RES_PKT_SIZE                        RES_FIFO_RD_WIDTH
 #define OB_FIFO_DEPTH                       256
 #define OB_NUM_PIX_WRITE                    RES_PKT_SIZE

@@ -10,16 +10,19 @@ QUAD_MAX_DEPTH		= 8;
 QUAD_DPTH_SIMD		= QUAD_MAX_DEPTH * NUM_TOTAL_QUADS;
 KRNL_1x1_SIMD       = 8;
 krnl_1x1_layer      = 0;
+do_res_1x1          = 0;
+do_1x1_res          = 0;
 do_krnl1x1          = 0;
-do_resLayer         = 0;
+do_resLayer         = 1;
 
 
-inputMapDepth = 32;
+
+inputMapDepth = 53;
 numInputMapRows = 16;
 numInputMapCols = 16;
 padding = 0;
 stride = 1;
-num3x3Kernels = 128;
+num3x3Kernels = 64;
 num1x1Kernels = 32;
 numKernelRows = 3;
 numKernelCols = 3;
@@ -42,15 +45,26 @@ else
     bias1x1 = [];  
 end
 if(do_resLayer)
-    residualMaps = randi([1, 8],[numOutputCols, numOutputRows, outputDepth3x3]);
+    residualMaps = randi([1, 8],[num3x3OutputCols, num3x3OutputRows, outputDepth3x3]);
 else
     residualMaps = [];
 end
 
 
 outputMapSol = Convolution(kernels3x3, bias3x3, inputMaps, num3x3OutputCols, num3x3OutputRows, outputDepth3x3);
+if(do_res_1x1)
+    outputMapSol = outputMapSol + residualMaps;    
+    outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
+end
+if(do_1x1_res)
+    outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
+    outputMapSol = outputMapSol + residualMaps;
+end
 if(do_krnl1x1)
     outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
+end
+if(do_resLayer)
+    outputMapSol = outputMapSol + residualMaps;
 end
 
 
@@ -114,9 +128,8 @@ for i = 1:num_krnl_iter
             outputDepth1x1, ...            
             do_krnl1x1, ...
             do_resLayer, ...
-            outputMapQry ... 
+            outputMapQry ...
         );
-        
         remDepth = remDepth - depth;
         depthBgn = depthBgn + depth;
     end

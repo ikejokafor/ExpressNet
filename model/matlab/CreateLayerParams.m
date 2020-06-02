@@ -37,7 +37,7 @@ function ...
     else
         li_krnel1x1 = [];
     end
-    if(dpth_iter == 1 && do_resLayer)
+    if(dpth_iter == num_depth_iter && do_resLayer)
         li_resMaps = resMaps(:, :, krnl3x3Bgn:(krnl3x3Bgn + (numKrnl3x3 - 1)));
     else
         li_resMaps = [];

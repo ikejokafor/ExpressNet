@@ -166,4 +166,7 @@ SC_MODULE(CNN_Layer_Accel)
         int m_next_wr_req_id;
         int m_next_rd_req_id;
         double m_start_time;
+        bool target;
+        int interbuffer;
+        int* interbuf_ptr;
 };

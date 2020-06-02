@@ -124,11 +124,11 @@ void FAS::ctrl_process()
                     m_krnl1x1_pad_bgn_cfg           = 0;
                     m_krnl1x1_pad_end_cfg           = 0;
                     m_krnl_1x1_layer_cfg            = 0;
-                    // if(m_partMap_fifo_sz > 0 || m_convOutMap_bram_sz > 0 || m_outBuf_fifo_sz > 0 || m_pm_dwc > 0 || m_pm_dwc > 0)
-                    // {
-                    //     sc_stop();
-                    //     return;
-                    // }
+                    if(m_partMap_fifo_sz > 0 || m_convOutMap_bram_sz > 0 || m_outBuf_fifo_sz > 0 || m_pm_dwc > 0 || m_pm_dwc > 0)
+                    {
+                        sc_stop();
+                        return;
+                    }
                 }
                 break;
             }
