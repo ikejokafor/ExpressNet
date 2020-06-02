@@ -10,14 +10,13 @@ QUAD_MAX_DEPTH		= 8;
 QUAD_DPTH_SIMD		= QUAD_MAX_DEPTH * NUM_TOTAL_QUADS;
 KRNL_1x1_SIMD       = 8;
 krnl_1x1_layer      = 0;
-do_res_1x1          = 0;
+do_res_1x1          = 1;
 do_1x1_res          = 0;
 do_krnl1x1          = 0;
-do_resLayer         = 1;
+do_resLayer         = 0;
 
 
-
-inputMapDepth = 53;
+inputMapDepth = 16;
 numInputMapRows = 16;
 numInputMapCols = 16;
 padding = 0;
@@ -37,14 +36,14 @@ outputDepth1x1 = num1x1Kernels;
 inputMaps = randi([1, 8], [numInputMapCols, numInputMapRows, inputMapDepth]);
 kernels3x3 = randi([1, 8],[numKernelCols, numKernelRows, inputMapDepth,  num3x3Kernels]);
 bias3x3 = randi([1 8], [1, num3x3Kernels]);
-if(do_krnl1x1)
+if(do_krnl1x1 || do_res_1x1 || do_1x1_res)
     kernels1x1 = randi([1, 8],[1, 1, num3x3Kernels,  num1x1Kernels]);
     bias1x1 = randi([1 8], [1, num1x1Kernels]);
 else
     kernels1x1 = [];
     bias1x1 = [];  
 end
-if(do_resLayer)
+if(do_resLayer || do_res_1x1 || do_1x1_res)
     residualMaps = randi([1, 8],[num3x3OutputCols, num3x3OutputRows, outputDepth3x3]);
 else
     residualMaps = [];
@@ -55,15 +54,14 @@ outputMapSol = Convolution(kernels3x3, bias3x3, inputMaps, num3x3OutputCols, num
 if(do_res_1x1)
     outputMapSol = outputMapSol + residualMaps;    
     outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
-end
-if(do_1x1_res)
+    do_krnl1x1 = 1;
+    do_resLayer = 1;
+elseif(do_1x1_res)
     outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
     outputMapSol = outputMapSol + residualMaps;
-end
-if(do_krnl1x1)
+elseif(do_krnl1x1)
     outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
-end
-if(do_resLayer)
+elseif(do_resLayer)
     outputMapSol = outputMapSol + residualMaps;
 end
 
@@ -125,7 +123,9 @@ for i = 1:num_krnl_iter
             numKrnl, ...
             num1x1OutputRows, ...
             num1x1OutputCols, ...
-            outputDepth1x1, ...            
+            outputDepth1x1, ...
+            do_res_1x1, ...
+            do_1x1_res, ...
             do_krnl1x1, ...
             do_resLayer, ...
             outputMapQry ...
