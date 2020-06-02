@@ -9,9 +9,10 @@ QUAD_MAX_KERNELS	= 64;
 QUAD_MAX_DEPTH		= 8;
 QUAD_DPTH_SIMD		= QUAD_MAX_DEPTH * NUM_TOTAL_QUADS;
 KRNL_1x1_SIMD       = 8;
-krnl_1x1_layer      = 0;
-do_res_1x1          = 1;
-do_1x1_res          = 0;
+
+
+do_res_1x1          = 0;
+do_1x1_res          = 1;
 do_krnl1x1          = 0;
 do_resLayer         = 0;
 
@@ -21,8 +22,8 @@ numInputMapRows = 16;
 numInputMapCols = 16;
 padding = 0;
 stride = 1;
-num3x3Kernels = 64;
-num1x1Kernels = 32;
+num3x3Kernels = 96;
+num1x1Kernels = 56;
 numKernelRows = 3;
 numKernelCols = 3;
 num3x3OutputRows = floor((numInputMapRows - numKernelRows + 2 * padding) / stride) + 1;
@@ -34,7 +35,7 @@ outputDepth1x1 = num1x1Kernels;
 
 
 inputMaps = randi([1, 8], [numInputMapCols, numInputMapRows, inputMapDepth]);
-kernels3x3 = randi([1, 8],[numKernelCols, numKernelRows, inputMapDepth,  num3x3Kernels]);
+kernels3x3 = randi([1, 8],[numKernelCols, numKernelRows, inputMapDepth, num3x3Kernels]);
 bias3x3 = randi([1 8], [1, num3x3Kernels]);
 if(do_krnl1x1 || do_res_1x1 || do_1x1_res)
     kernels1x1 = randi([1, 8],[1, 1, num3x3Kernels,  num1x1Kernels]);
@@ -43,8 +44,10 @@ else
     kernels1x1 = [];
     bias1x1 = [];  
 end
-if(do_resLayer || do_res_1x1 || do_1x1_res)
+if(do_resLayer || do_res_1x1)
     residualMaps = randi([1, 8],[num3x3OutputCols, num3x3OutputRows, outputDepth3x3]);
+elseif(do_resLayer || do_1x1_res)
+    residualMaps = randi([1, 8],[num1x1OutputCols, num1x1OutputRows, outputDepth1x1]);
 else
     residualMaps = [];
 end
@@ -59,6 +62,8 @@ if(do_res_1x1)
 elseif(do_1x1_res)
     outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
     outputMapSol = outputMapSol + residualMaps;
+    do_krnl1x1 = 1;
+    do_resLayer = 1;
 elseif(do_krnl1x1)
     outputMapSol = Convolution(kernels1x1, bias1x1, outputMapSol, num1x1OutputCols, num1x1OutputRows, outputDepth1x1);
 elseif(do_resLayer)
@@ -99,6 +104,7 @@ for i = 1:num_krnl_iter
             depth, ...
             krnlBgn, ...
             numKrnl, ...
+            do_1x1_res, ...
             do_resLayer, ...
             do_krnl1x1, ...
             li_outMaps ...
@@ -135,9 +141,9 @@ for i = 1:num_krnl_iter
     end
     remNumKrnl = remNumKrnl - numKrnl;
     krnlBgn = krnlBgn + numKrnl;
-    if(do_krnl1x1 || i == 1)
+    if(do_1x1_res || i == 1 || do_krnl1x1)
         outputMapQry = li_outMaps;
-    elseif(~do_krnl1x1)
+    else
         outputMapQry = cat(3, outputMapQry, li_outMaps);
     end
 end

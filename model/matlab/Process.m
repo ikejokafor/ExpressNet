@@ -29,8 +29,19 @@ function [li_outMaps] = Process( ...
     end
 
     
-    
-    if(do_res_1x1 && dpth_iter == num_depth_iter && num_depth_iter > 1 && krnl_iter == 1)
+    if(do_1x1_res && dpth_iter == num_depth_iter && num_depth_iter > 1 && krnl_iter == 1)
+        li_outMaps = li_outMaps + li_partMaps;
+        li_outMaps = Convolution(kernels1x1, bias1x1, li_outMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth);
+        li_outMaps = li_outMaps + li_resMaps;      
+    elseif(do_1x1_res && dpth_iter == num_depth_iter && num_depth_iter > 1 && krnl_iter ~= 1)
+        li_outMaps = li_outMaps + li_partMaps;
+        li_outMaps = Convolution(kernels1x1, [], li_outMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth) + prevLIOut;   
+    elseif(do_1x1_res && dpth_iter == num_depth_iter && krnl_iter == 1)
+        li_outMaps = Convolution(kernels1x1, bias1x1, li_outMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth);
+        li_outMaps = li_outMaps + li_resMaps;       
+    elseif(do_1x1_res && dpth_iter == num_depth_iter && krnl_iter ~= 1)
+        li_outMaps = Convolution(kernels1x1, [], li_outMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth) + prevLIOut;
+    elseif(do_res_1x1 && dpth_iter == num_depth_iter && num_depth_iter > 1 && krnl_iter == 1)
         li_outMaps = li_outMaps + li_partMaps;
         li_outMaps = li_outMaps + li_resMaps;
         li_outMaps = Convolution(kernels1x1, bias1x1, li_outMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth);
