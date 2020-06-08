@@ -33,6 +33,7 @@
 #define MAX_3x3_KERNELS                     64
 #define YOLOV3_MAX_1x1_INPUT_DEPTH          1024
 #define KERNEL_1x1_DEPTH_SIMD               32
+#define LOG2_KERNEL_1x1_DEPTH_SIMD          log2(KERNEL_1x1_DEPTH_SIMD)
 #define MAX_1x1_KERNELS                     1024
 #define PIXEL_SIZE                          2    // 2 bytes
 #define WINDOW_3x3_NUM_CYCLES               (uint64_t(5))
@@ -59,8 +60,11 @@
 #define PM_FIFO_DEPTH                       256
 #define PM_NUM_PIX_READ                     8
 #define PM_FIFO_WR_WIDTH                    8
-#define PM_FIFO_RD_WIDTH                    KERNEL_1x1_DEPTH_SIMD
+#define PM_BRAM_RD_WIDTH                    OB_FIFO_WR_WIDTH
 #define PM_LOW_WATERMARK                    16
+#define PV_FIFO_DEPTH                       256
+#define PV_FIFO_WR_WIDTH                    8
+#define PV_FIFO_RD_WIDTH                    OB_FIFO_WR_WIDTH
 #define CO_BRAM_DEPTH                       (MAX_1x1_KERNELS * KERNEL_1x1_DEPTH_SIMD)
 #define CO_NUM_PIX_READ                     KERNEL_1x1_DEPTH_SIMD
 #define CO_BRAM_WR_WIDTH                    8
@@ -69,7 +73,7 @@
 #define RM_NUM_PIX_READ                     8
 #define RM_FIFO_WR_WIDTH                    8
 #define RM_NUM_PIX_WRITE                    8
-#define RM_FIFO_RD_WIDTH                    KERNEL_1x1_DEPTH_SIMD
+#define RM_FIFO_RD_WIDTH                    OB_FIFO_WR_WIDTH
 #define RM_LOW_WATERMARK                    8
 
 

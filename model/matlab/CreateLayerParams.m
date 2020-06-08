@@ -28,19 +28,19 @@ function ...
     li_inMaps = inMaps(:, :, depthBgn:(depthBgn + (depth - 1)));
     li_krnl3x3 = kernels3x3(:, :, depthBgn:(depthBgn + (depth - 1)), krnl3x3Bgn:(krnl3x3Bgn + (numKrnl3x3 - 1)));
     li_krnl3x3bias = bias3x3(krnl3x3Bgn:(krnl3x3Bgn + (numKrnl3x3 - 1)));
-    if(dpth_iter == 1)
-        li_partMaps = [];
-    else
-        li_partMaps = prevOutMaps;
-    end
     if(do_krnl1x1)
         li_krnel1x1 = kernels1x1(:, :, krnl3x3Bgn:(krnl3x3Bgn + (numKrnl3x3 - 1)), :);
     else
         li_krnel1x1 = [];
     end
+    if(dpth_iter == 1)
+        li_partMaps = [];
+    else
+        li_partMaps = prevOutMaps;
+    end
     if(dpth_iter == num_depth_iter && do_resLayer && ~do_1x1_res)
         li_resMaps = resMaps(:, :, krnl3x3Bgn:(krnl3x3Bgn + (numKrnl3x3 - 1)));
-    elseif(dpth_iter == num_depth_iter && do_1x1_res && krnl_iter == 1)
+    elseif(dpth_iter == num_depth_iter && do_resLayer && do_1x1_res && krnl_iter == 1)
         li_resMaps = resMaps;
     else
         li_resMaps = [];

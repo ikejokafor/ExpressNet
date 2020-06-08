@@ -41,6 +41,7 @@ void FAS::ctrl_process()
                     m_partMapFetchCount == m_partMapFetchTotal_cfg
                     && (m_inMapFetchCount == m_inMapFetchTotal_cfg || m_krnl_1x1_layer_cfg)
                     && m_resMapFetchCount == m_resMapFetchTotal_cfg
+                    && m_prev1x1MapFetchCount == m_prev1x1MapFetchTotal
                     && (m_last_CO_recvd || m_krnl_1x1_layer_cfg)
                 ) {
                     m_state = ST_WAIT_LAST_WRITE;
@@ -124,7 +125,11 @@ void FAS::ctrl_process()
                     m_krnl1x1_pad_bgn_cfg           = 0;
                     m_krnl1x1_pad_end_cfg           = 0;
                     m_krnl_1x1_layer_cfg            = 0;
-                    if(m_partMap_fifo_sz > 0 || m_convOutMap_bram_sz > 0 || m_outBuf_fifo_sz > 0 || m_pm_dwc > 0 || m_pm_dwc > 0)
+                    m_do_1x1_res_cfg                = 0;
+                    m_do_res_1x1_cfg                = 0;
+                    m_prev1x1MapFetchCount          = 0;
+                    m_prev1x1MapFetchTotal          = 0;
+                    if(m_partMap_fifo_sz > 0 || m_convMap_bram_sz > 0 || m_outBuf_fifo_sz > 0 || m_pm_dwc > 0 || m_pm_dwc > 0)
                     {
                         sc_stop();
                         return;
@@ -148,9 +153,9 @@ void FAS::job_fetch_process()
     while(true)
     {
         wait();
-        bool convOut_bram_wr_en = (m_do_kernels1x1_cfg || m_do_res_layer_cfg) && (m_convOutMap_bram_sz < m_co_high_watermark_cfg);
+        bool conv_bram_wr_en = (m_do_kernels1x1_cfg || m_do_res_layer_cfg) && (m_convMap_bram_sz < m_co_high_watermark_cfg);
         bool outBuf_fifo_wr_en = !m_do_kernels1x1_cfg && !m_do_res_layer_cfg;
-        if(m_trans_fifo.size() > 0 && (convOut_bram_wr_en || outBuf_fifo_wr_en))
+        if(m_trans_fifo.size() > 0 && (conv_bram_wr_en || outBuf_fifo_wr_en))
         {
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
@@ -199,7 +204,7 @@ void FAS::job_fetch_process()
 }
 
 
-void FAS::F_process()
+void FAS::partMap_fetch_process()
 {
     tlm::tlm_generic_payload* trans;
     sc_time delay;
@@ -209,7 +214,7 @@ void FAS::F_process()
         wait();
         if(m_state == ST_ACTIVE
             && ((!m_first_depth_iter_cfg && m_partMap_fifo_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
-                || (m_krnl_1x1_layer_cfg && m_convOutMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg))
+                || (m_krnl_1x1_layer_cfg && m_convMap_bram_sz <= m_co_high_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg))
         ) {
             accel_trans = new Accel_Trans();
             accel_trans->fas_rd_id = FAS_PART_MAP_FETCH_ID;
@@ -228,7 +233,46 @@ void FAS::F_process()
             trans->release();
             if(m_krnl_1x1_layer_cfg)
             {
-                m_convOutMap_bram_sz += m_pm_low_watermark_cfg;
+                m_convMap_bram_sz += m_pm_low_watermark_cfg;
+            }
+            else
+            {
+                m_partMap_fifo_sz += m_pm_low_watermark_cfg;
+            }
+            m_partMapFetchCount += (m_pm_low_watermark_cfg * PIXEL_SIZE);
+        }
+    }
+}
+
+
+void FAS::prev1x1Map_fetch_process()
+{
+    tlm::tlm_generic_payload* trans;
+    sc_time delay;
+    Accel_Trans* accel_trans;
+    while(true)
+    {
+        wait();
+        if(m_state == ST_ACTIVE && m_prev1x1Map_fifo_sz <= m_pv_low_watermark_cfg && m_prev1x1MapFetchCount != m_prev1x1MapFetchTotal_cfg)
+        {
+            accel_trans = new Accel_Trans();
+            accel_trans->fas_rd_id = FAS_PART_MAP_FETCH_ID;
+            trans = nb_createTLMTrans(
+                m_mem_mng,
+                0,
+                TLM_READ_COMMAND,
+                (unsigned char*)accel_trans,
+                (m_pm_low_watermark_cfg * PIXEL_SIZE),
+                0,
+                nullptr,
+                false,
+                TLM_INCOMPLETE_RESPONSE
+            );
+            sys_mem_init_soc->b_transport(*trans, delay);
+            trans->release();
+            if(m_krnl_1x1_layer_cfg)
+            {
+                m_convMap_bram_sz += m_pm_low_watermark_cfg;
             }
             else
             {
@@ -248,7 +292,7 @@ void FAS::resMap_fetch_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && m_first_depth_iter_cfg && m_resMap_fifo_sz <= m_rm_low_watermark_cfg && m_resMapFetchCount != m_resMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && m_resMap_fifo_sz <= m_rm_low_watermark_cfg && m_resMapFetchCount != m_resMapFetchTotal_cfg)
         {
             accel_trans = new Accel_Trans();
             accel_trans->fas_rd_id = FAS_RES_MAP_FETCH_ID;
@@ -276,156 +320,456 @@ void FAS::resMap_fetch_process()
 
 void FAS::A_process()
 {
-    sc_time ONE_CYCLE(1 * CLK_PRD, SC_NS);
-    sc_time THREE_CYCLES(3 * CLK_PRD, SC_NS);
-    sc_time FIVE_CYCLES(5 * CLK_PRD, SC_NS);
     while(true)
     {
         wait();
-        if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && m_first_depth_iter_cfg
-            && m_do_res_layer_cfg
-            && m_do_kernels1x1_cfg
-            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
-            && m_resMap_fifo_sz >= RM_FIFO_RD_WIDTH
+        if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode0_cfg
+            && m_convMap_bram_sz >= m_krnl1x1Depth_cfg
+            && m_partMap_bram_sz >= m_krnl1x1Depth_cfg
+            && m_resdMap_bram_sz >= RM_FIFO_FD_WIDTH
         ) {
             //  Arch
-            //      pop convOut map, pop res map; 1 cycle
-            //      add convOut map and residual map pixel, pop 1x1 krnl; 1 cycle
-            //      MACC 1x1; 1 cycle
-            //      Sum across depth with 32 input adder tree and pop 1x1 Bias; 5 cycles
-            //      Add bias; 1 cycle
-            //      buffer up OB_FIFO_WR_WIDTH: 32 cycles
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map, pop part map; 1 cycle
+            //          add [conv map, part map], pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //          pop 1x1 Bias; last iteration
+            //      Add bias - 1 1x1 krnl done; 1 cycle
+            //      Buffer up RM_FIFO_RD_WIDTH values; RM_FIFO_RD_WIDTH cycles
+            //      add resMap; 1 cycle
             //      write to output buffer; 1 cycle
-            if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
+            m_krnl_1x1_read_valid.notify(m_two_cycles_later);
+            if(m_resMap_dwc_fifo_sz == RM_FIFO_RD_WIDTH)
             {
-                m_dpth_count = 0;
-                m_outBuf_dwc_wr.notify(
-                    ONE_CYCLE
-                    + ONE_CYCLE
-                    + FIVE_CYCLES
-                    + ONE_CYCLE
-                );
-                if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
-                {
-                    m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
-                    m_resMap_fifo_sz -= m_krnl1x1Depth_cfg;
-                    m_krnl_count = 0;
-                }
-                else
-                {
-                    m_krnl_count++;
-                }
-            }
-            else
-            {
-                m_dpth_count += CO_BRAM_RD_WIDTH;
+                m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+                m_resMap_dwc_fifo_sz = 0;
+                m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && !m_first_depth_iter_cfg
-            && m_do_kernels1x1_cfg
-            && m_partMap_fifo_sz >= PM_FIFO_RD_WIDTH
-            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode1_cfg
+            && m_convMap_bram_sz >= m_krnl1x1Depth_cfg
+            && m_partMap_bram_sz >= m_krnl1x1Depth_cfg
+            && m_prevMap_fifo_sz >= PV_FIFO_FD_WIDTH
         ) {
             //  Arch
-            //      pop convOut map, pop 1x1 kernel; 1 cycle
-            //      Multipy 1x1; 1 cycle
-            //      Sum across depth with 32 input adder tree; 5 cycles
-            //      buffer up PM_FIFO_RD_WIDTH in DWC fifo, pop partial map; 2 cycles
-            //      element wise add partial map; 1 cycle
-            //      write to buffer
-            if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
-            {
-                m_dpth_count = 0;
-                m_partMap_dwc_wr.notify(
-                    ONE_CYCLE
-                    + ONE_CYCLE
-                    + FIVE_CYCLES
-                    + ONE_CYCLE
-                );
-                if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
-                {
-                    m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
-                    m_krnl_count = 0;
-                }
-                else
-                {
-                    m_krnl_count++;
-                }
-            }
-            else
-            {
-                m_dpth_count += CO_BRAM_RD_WIDTH;
-            }
-        }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && ((m_first_depth_iter_cfg && m_do_kernels1x1_cfg) || m_krnl_1x1_layer_cfg)
-            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
-        ) {
-            //  Arch
-            //      pop convOut map, pop 1x1 kernel; 1 cycle
-            //      Multipy 1x1; 1 cycle
-            //      Sum across depth with 32 input adder tree and pop 1x1 Bias; 5 cycles
-            //      Add bias; 1 cycle
-            //      buffer up OB_FIFO_WR_WIDTH in DWC fifo 32 cycles
-            //      write to buffer
-            if(m_dpth_count >= (m_krnl1x1Depth_cfg - CO_BRAM_RD_WIDTH))
-            {
-                m_dpth_count = 0;
-                m_outBuf_dwc_wr.notify(
-                    ONE_CYCLE
-                    + ONE_CYCLE
-                    + FIVE_CYCLES
-                    + ONE_CYCLE
-                );
-                if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
-                {
-                    m_convOutMap_bram_sz -= m_krnl1x1Depth_cfg;
-                    m_krnl_count = 0;
-                }
-                else
-                {
-                    m_krnl_count++;
-                }
-            }
-            else
-            {
-                m_dpth_count += CO_BRAM_RD_WIDTH;
-            }
-        }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && m_first_depth_iter_cfg
-            && m_do_res_layer_cfg
-            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
-            && m_resMap_fifo_sz >= RM_FIFO_RD_WIDTH
-        ) {
-            //  Arch
-            //      pop convOut map, pop res map; 1 cycle
-            //      element wise add convOut map and residual map pixel; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map, pop part map; 1 cycle
+            //          add [conv map, part map], pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
+            //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
-            m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
-            m_convOutMap_bram_sz -= CO_BRAM_RD_WIDTH;
-            m_outBuf_wr.notify(THREE_CYCLES);
+            m_krnl_1x1_read_valid.notify(m_two_cycles_later);
+            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            {
+                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+                m_prevMap_dwc_fifo_sz = 0;
+                m_outBuf_wr.notify(m_two_cycles_later);
+            }
         }
-        else if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)
-            && !m_first_depth_iter_cfg
-            && m_convOutMap_bram_sz >= CO_BRAM_RD_WIDTH
-            && m_partMap_fifo_sz >= PM_FIFO_RD_WIDTH
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode2_cfg
+            && m_convMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_resdMap_bram_sz >= RM_FIFO_FD_WIDTH
         ) {
             //  Arch
-            //      pop convOut map, pop res map; 1 cycle
-            //      element wise add convOut map and partial map pixel; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //          pop 1x1 Bias; last iteration
+            //      Add bias - 1 1x1 krnl done; 1 cycle
+            //      Buffer up RM_FIFO_RD_WIDTH values; RM_FIFO_RD_WIDTH cycles
+            //      add resMap; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_krnl_1x1_read_valid.notify(m_two_cycles_later);
+            if(m_resMap_dwc_fifo_sz == RM_FIFO_RD_WIDTH)
+            {
+                m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+                m_resMap_dwc_fifo_sz = 0;
+                m_outBuf_wr.notify(m_two_cycles_later);
+            }
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode3_cfg
+            && m_convMap_bram_sz >= m_krnl1x1Depth_cfg
+            && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH
+        ) {
+            //  Arch
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map, pop part map; 1 cycle
+            //          add [conv map, part map], pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
+            //      add prevMap; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_krnl_1x1_read_valid.notify(m_two_cycles_later);
+            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            {
+                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+                m_prevMap_dwc_fifo_sz = 0;
+                m_outBuf_wr.notify(m_two_cycles_later);
+            }
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode4_cfg
+            && m_convMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
+            && m_resdMap_bram_sz >= RM_FIFO_FD_WIDTH
+        ) {
+            //  Arch
+            //      pop conv map, pop part map; 1 cycle
+            //      add [conv map, part map], pop resd map; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //          pop 1x1 Bias; last iteration
+            //      Add bias - 1 1x1 krnl done; 1 cycle
             //      write to output buffer; 1 cycle
             m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
-            m_convOutMap_bram_sz -= CO_BRAM_RD_WIDTH;
-            m_outBuf_wr.notify(THREE_CYCLES);
+            m_resdMap_read_valid.notify(m_two_cycles_later);
+            m_krnl_1x1_read_valid.notify(m_three_cycles_later);
         }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode5_cfg
+            && m_convMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
+            && m_resdMap_bram_sz >= RM_FIFO_FD_WIDTH
+            && m_prevMap_fifo_sz >= PV_FIFO_FD_WIDTH
+        ) {
+            //  Arch
+            //      pop conv map, pop part map; 1 cycle
+            //      add [conv map, part map], pop resd map; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //          pop 1x1 Bias; last iteration
+            //      Add bias - 1 1x1 krnl done; 1 cycle
+            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
+            //      add prevMap; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
+            m_resdMap_read_valid.notify(m_two_cycles_later);
+            m_krnl_1x1_read_valid.notify(m_three_cycles_later);
+            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            {
+                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+                m_prevMap_dwc_fifo_sz = 0;
+                m_outBuf_wr.notify(m_two_cycles_later);
+            }
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode6_cfg
+            && m_convMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_resdMap_bram_sz >= RM_FIFO_FD_WIDTH
+        ) {
+            //  Arch
+            //      pop conv map, pop resd map; 1 cycle
+            //      add [conv map, resd map]; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //          pop 1x1 Bias; last iteration
+            //      Add bias - 1 1x1 krnl done; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+            m_krnl_1x1_read_valid.notify(m_two_cycles_later);
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode7_cfg
+            && m_convMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_resdMap_bram_sz >= RM_FIFO_FD_WIDTH
+            && m_prevMap_fifo_sz >= PV_FIFO_FD_WIDTH
+        ) {
+            //  Arch
+            //      pop conv map, pop resd map; 1 cycle
+            //      add conv map, resd map; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
+            //      add prevMap; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_convMap_bram_sz -= CO_BRAM_RD_WIDTH;
+            m_resdMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            {
+                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+                m_prevMap_dwc_fifo_sz = 0;
+                m_outBuf_wr.notify(m_two_cycles_later);
+            }
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode8_cfg
+            && m_convMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
+            && m_resdMap_bram_sz >= RM_FIFO_FD_WIDTH
+        ) {
+            //  Arch
+            //      pop conv map, pop part map; 1 cycle
+            //      add [conv map, part map], pop res map; 1 cycle
+            //      add [..., res map]; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_convMap_bram_sz -= CO_BRAM_RD_WIDTH;
+            m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
+            m_resdMap_read_valid.notify(m_two_cycles_later);
+            m_outBuf_wr.notify(m_two_cycles_later);
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode9_cfg
+            && m_convMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_resdMap_bram_sz >= RM_FIFO_FD_WIDTH
+        ) {
+            //  Arch
+            //      pop conv map, pop resd map; 1 cycle
+            //      add [conv map, res map]; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_convMap_bram_sz -= CO_BRAM_RD_WIDTH;
+            m_resdMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+            m_outBuf_wr.notify(m_three_cycles_later);
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode10_cfg
+            && m_convMap_bram_sz >= CO_BRAM_RD_WIDTH
+            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
+        ) {
+            //  Arch
+            //      pop conv map, pop part map; 1 cycle
+            //      add conv map, part map; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //      write to output buffer; 1 cycle
+            m_krnl_1x1_read_valid.notify(m_two_cycles_later);
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode11_cfg)
+        {
+            //  Arch
+            //      pop conv map, pop part map; 1 cycle
+            //      add conv map, part map; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
+            //      add prevMap; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_krnl_1x1_read_valid.notify(m_two_cycles_later);
+            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            {
+                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+                m_prevMap_dwc_fifo_sz = 0;
+                m_outBuf_wr.notify(m_two_cycles_later);
+            }
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode12_cfg)
+        {
+            //  Arch
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //          pop 1x1 Bias; last iteration
+            //      Add bias - 1 1x1 krnl done; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_krnl_1x1_read_valid.notify(SC_ZERO_TIME);
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode13_cfg)
+        {
+            //  Arch
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //      write to output buffer; 1 cycle
+            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
+            //      add prevMap; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_krnl_1x1_read_valid.notify(SC_ZERO_TIME);
+            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            {
+                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+                m_prevMap_dwc_fifo_sz = 0;
+                m_outBuf_wr.notify(m_two_cycles_later);
+            }
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode14_cfg)
+        {
+            //  Arch
+            //      pop conv map, pop part map; 1 cycle
+            //      add conv map, part map; 1 cycle
+            //      for(KRNL_DPTH / DPTH_SIMD) cycles
+            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
+            //          Multiply 1x1; 1 cycle
+            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
+            //          pop 1x1 Bias; last iteration
+            //      Add bias - 1 1x1 krnl done; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_krnl_1x1_read_valid.notify(SC_ZERO_TIME);
+        }
+        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode15_cfg)
+        {
+            //  Arch
+            //      pop conv map, pop part map; 1 cycle
+            //      add [conv map, part map]; 1 cycle
+            //      write to output buffer; 1 cycle
+            m_convMap_bram_sz -= CO_BRAM_RD_WIDTH;
+            m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
+            m_outBuf_wr.notify(m_three_cycles_later);
+        }
+    }
+}
+
+
+void FAS::krnl_1x1_bram_rd_process()
+{
+    while(true)
+    {
+        wait(m_krnl_1x1_read_valid.default_event());
+        if(m_dpth_count >= (m_krnl1x1Depth_cfg - KRNL_1x1_BRAM_RD_WIDTH))
+        {
+            m_dpth_count = 0;
+            if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
+            {
+                buffer_update();
+                m_krnl_count = 0;
+            }
+            else
+            {
+                m_krnl_count++;
+            }
+        }
+        else
+        {
+            m_dpth_count += KRNL_1x1_BRAM_RD_WIDTH;
+        }
+        m_adder_tree_datain_valid.notify(m_two_cycles_later);
+    }
+}
+
+
+void FAS::buffer_update()
+{
+    if(
+        m_opcode0_cfg 
+        || m_opcode1_cfg 
+        || m_opcode4_cfg 
+        || m_opcode5_cfg 
+        || m_opcode10_cfg 
+        || m_opcode11_cfg
+    ) {
+        m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
+        m_partMap_bram_sz -= m_krnl1x1Depth_cfg;
+    }
+    else if(
+        m_opcode2_cfg 
+        || m_opcode3_cfg 
+        || m_opcode12_cfg 
+        || m_opcode13_cfg 
+        || m_opcode14_cfg
+    ) {
+        m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
+    }
+}
+
+
+void FAS::adder_tree_start_process()
+{
+    while(true)
+    {
+        wait(m_adder_tree_datain_valid.default_event());
+        if(m_addre_tree_count == (m_krnl1x1Depth_cfg / KERNEL_1x1_DEPTH_SIMD))
+        {
+            m_addre_tree_count = 0;
+            double time;
+            if(m_opcode0_cfg
+                || m_opcode2_cfg
+                || m_opcode4_cfg
+                || m_opcode6_cfg
+                || m_opcode10_cfg
+                || m_opcode12_cfg
+                || m_opcode14_cfg)
+            {
+                time = (LOG2_KERNEL_1x1_DEPTH_SIMD + 1) * CLK_PRD;
+            }
+            else
+            {
+                time = (LOG2_KERNEL_1x1_DEPTH_SIMD) * CLK_PRD;
+            }
+            m_adder_tree_dataout_valid.notify(sc_time(time, sc_core::SC_NS));
+        }
+        else 
+        {
+            m_addre_tree_count++;
+        }
+    }
+}
+
+
+void FAS::adder_tree_done_process()
+{
+    while(true)
+    {
+        wait(m_adder_tree_dataout_valid.default_event());
+        if(m_opcode0_cfg || m_opcode2_cfg)
+        {
+            m_resMap_dwc_fifo_sz++;
+        }
+        else if(m_opcode1_cfg
+            || m_opcode3_cfg
+            || m_opcode5_cfg
+            || m_opcode7_cfg
+            || m_opcode11_cfg
+            || m_opcode13_cfg) 
+        {
+            m_prevMap_dwc_fifo_sz++;
+        }
+        else if(m_opcode3_cfg
+            || m_opcode4_cfg
+            || m_opcode6_cfg
+            || m_opcode10_cfg
+            || m_opcode12_cfg
+            || m_opcode14_cfg)
+        {
+            m_outBuf_dwc_wr.notify(SC_ZERO_TIME);
+        }
+    }
+}
+
+
+void FAS::resdMap_read_process()
+{
+    while(true)
+    {
+        wait(m_resdMap_read_valid.default_event());
+        m_resMap_fifo_sz -= RM_FIFO_RD_WIDTH;
+    }
+}
+
+
+void FAS::outBuf_dwc_wr_process()
+{
+    while(true)
+    {
+        wait(m_outBuf_dwc_wr.default_event());
+        if(m_ob_dwc == (OB_FIFO_WR_WIDTH - 1))
+        {
+            m_ob_dwc = 0;
+            m_outBuf_wr.notify(SC_ZERO_TIME);
+        }
+        else
+        {
+            m_ob_dwc++;
+        }
+    }
+}
+
+
+void FAS::outBuf_wr_process()
+{
+    while(true)
+    {
+        wait(m_outBuf_wr.default_event());
+        m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
     }
 }
 
@@ -464,54 +808,6 @@ void FAS::S_process()
                 m_last_wrt = true;
             }
         }
-    }
-}
-
-
-void FAS::partMap_dwc_wr_process()
-{
-    sc_time TWO_CYCLE(2 * CLK_PRD, SC_NS);
-    while(true)
-    {
-        wait(m_partMap_dwc_wr.default_event());
-        if(m_pm_dwc == (PM_FIFO_RD_WIDTH - 1))
-        {
-            m_partMap_fifo_sz -= PM_FIFO_RD_WIDTH;
-            m_pm_dwc = 0;
-            m_outBuf_wr.notify(TWO_CYCLE);
-        }
-        else
-        {
-            m_pm_dwc++;
-        }
-    }
-}
-
-
-void FAS::outBuf_dwc_wr_process()
-{
-    while(true)
-    {
-        wait(m_outBuf_dwc_wr.default_event());
-        if(m_ob_dwc == (OB_FIFO_WR_WIDTH - 1))
-        {
-            m_ob_dwc = 0;
-            m_outBuf_wr.notify(SC_ZERO_TIME);
-        }
-        else
-        {
-            m_ob_dwc++;
-        }
-    }
-}
-
-
-void FAS::outBuf_wr_process()
-{
-    while(true)
-    {
-        wait(m_outBuf_wr.default_event());
-        m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
     }
 }
 
@@ -568,14 +864,14 @@ void FAS::nb_result_write(int res_pkt_size)
     }
     else
     {
-        if(m_convOutMap_bram_sz == CO_BRAM_DEPTH)
+        if(m_convMap_bram_sz == CO_BRAM_DEPTH)
         {
-            str = "m_convOutMap_bram_sz is full\n";
+            str = "m_convMap_bram_sz is full\n";
             cout << str;
             sc_stop();
             return;
         }
-        m_convOutMap_bram_sz += res_pkt_size;
+        m_convMap_bram_sz += res_pkt_size;
     }
 }
 
@@ -595,6 +891,8 @@ void FAS::b_getCfgData()
 {
     wait(clk.posedge_event());
     m_first_depth_iter_cfg          = m_FAS_cfg->m_first_depth_iter;
+    m_last_depth_iter_cfg           = m_FAS_cfg->m_last_depth_iter;
+    m_first_krnl_iter_cfg           = m_FAS_cfg->m_first_krnl_iter;
     m_do_res_layer_cfg              = m_FAS_cfg->m_do_res_layer;
     m_do_kernels1x1_cfg             = m_FAS_cfg->m_do_kernels1x1;
     m_pixSeqCfgFetchTotal_cfg       = m_FAS_cfg->m_pixSeqCfgFetchTotal;
@@ -622,35 +920,49 @@ void FAS::b_getCfgData()
     m_co_high_watermark_cfg         = m_FAS_cfg->m_co_high_watermark;
     m_rm_low_watermark_cfg          = m_FAS_cfg->m_rm_low_watermark;
     m_pm_low_watermark_cfg          = m_FAS_cfg->m_pm_low_watermark;
+    m_pv_low_watermark_cfg          = m_FAS_cfg->m_pv_low_watermark;
     m_krnl1x1_pding_cfg             = m_FAS_cfg->m_krnl1x1_pding;
     m_krnl1x1_pad_bgn_cfg           = m_FAS_cfg->m_krnl1x1_pad_bgn;
     m_krnl1x1_pad_end_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
     m_krnl_1x1_layer_cfg            = m_FAS_cfg->m_krnl_1x1_layer;
+    m_do_1x1_res_cfg                = m_FAS_cfg->m_do_1x1_res;
+    m_do_res_1x1_cfg                = m_FAS_cfg->m_do_res_1x1;
     string str =
         "[" + string(name()) + "]" + " Configured with.......\n"
-        "\tFirst depth iter:                            "  + to_string(m_first_depth_iter_cfg)          + "\n"
-        "\tDo Residual layer:                           "  + to_string(m_do_res_layer_cfg)              + "\n"
-        "\tDo Kernel 1x1:                               "  + to_string(m_do_kernels1x1_cfg)             + "\n"
-        "\tNum 1x1 Kernels:                             "  + to_string(m_num_1x1_kernels_cfg)           + "\n"
-        "\tKernel 1x1 Depth:                            "  + to_string(m_krnl1x1Depth_cfg)              + "\n"
-        "\tPixel Sequence Configuration Fetch Total:    "  + to_string(m_pixSeqCfgFetchTotal_cfg)       + "\n"
-        "\tInput Map Fetch Total:                       "  + to_string(m_inMapFetchTotal_cfg)           + "\n"
-        "\tInput Map Fetch Factor:                      "  + to_string(m_inMapFetchFactor_cfg)          + "\n"
-        "\tKernel 3x3 Fetch Total:                      "  + to_string(m_krnl3x3FetchTotal_cfg)         + "\n"
-        "\tKernel 3x3 Bias Fetch Total:                 "  + to_string(m_krnl3x3BiasFetchTotal_cfg)     + "\n"
-        "\tPartial Map Fetch Total:                     "  + to_string(m_partMapFetchTotal_cfg)         + "\n"
-        "\tKernel 1x1 Fetch Total:                      "  + to_string(m_krnl1x1FetchTotal_cfg)         + "\n"
-        "\tKernel 1x1 Bias Fetch Total:                 "  + to_string(m_krnl1x1BiasFetchTotal_cfg)     + "\n"
-        "\tResidual Map Fetch Total:                    "  + to_string(m_resMapFetchTotal_cfg)          + "\n"
-        "\tOutput Map Store Total:                      "  + to_string(m_outMapStoreTotal_cfg)          + "\n"
-        "\tOutput Map Store Factor:                     "  + to_string(m_outMapStoreFactor_cfg)         + "\n"
-        "\tConvOut High Watermark:                      "  + to_string(m_co_high_watermark_cfg)         + "\n"
-        "\tResMap Low Watermark:                        "  + to_string(m_rm_low_watermark_cfg)          + "\n"
-        "\tPartMap Low Watermark:                       "  + to_string(m_pm_low_watermark_cfg)          + "\n"
-        "\tKernel 1x1 padding:                          "  + to_string(m_krnl1x1_pding_cfg)             + "\n"
-        "\tKernel 1x1 Padding begin:                    "  + to_string(m_krnl1x1_pad_bgn_cfg)           + "\n"
-        "\tKernel 1x1 Padding end:                      "  + to_string(m_krnl1x1_pad_end_cfg)           + "\n"
-        "\tKernel 1x1 Layer:                            "  + to_string(m_krnl_1x1_layer_cfg)            + "\n";
+        "\tOpcode0:                                     " + to_string(m_opcode0_cfg)    + "\n"
+        "\tOpcode1:                                     " + to_string(m_opcode1_cfg)    + "\n"
+        "\tOpcode2:                                     " + to_string(m_opcode2_cfg)    + "\n"
+        "\tOpcode3:                                     " + to_string(m_opcode3_cfg)    + "\n"
+        "\tOpcode4:                                     " + to_string(m_opcode4_cfg)    + "\n"
+        "\tOpcode5:                                     " + to_string(m_opcode5_cfg)    + "\n"
+        "\tOpcode6:                                     " + to_string(m_opcode6_cfg)    + "\n"
+        "\tOpcode7:                                     " + to_string(m_opcode7_cfg)    + "\n"
+        "\tOpcode8:                                     " + to_string(m_opcode8_cfg)    + "\n"
+        "\tOpcode9:                                     " + to_string(m_opcode9_cfg)    + "\n"
+        "\tOpcode10:                                    " + to_string(m_opcode10_cfg    + "\n"
+        "\tOpcode11:                                    " + to_string(m_opcode11_cfg    + "\n"
+        "\tOpcode12:                                    " + to_string(m_opcode12_cfg    + "\n"
+        "\tOpcode13:                                    " + to_string(m_opcode13_cfg    + "\n"
+        "\tNum 1x1 Kernels:                             " + to_string(m_num_1x1_kernels_cfg)           + "\n"
+        "\tKernel 1x1 Depth:                            " + to_string(m_krnl1x1Depth_cfg)              + "\n"
+        "\tPixel Sequence Configuration Fetch Total:    " + to_string(m_pixSeqCfgFetchTotal_cfg)       + "\n"
+        "\tInput Map Fetch Total:                       " + to_string(m_inMapFetchTotal_cfg)           + "\n"
+        "\tInput Map Fetch Factor:                      " + to_string(m_inMapFetchFactor_cfg)          + "\n"
+        "\tKernel 3x3 Fetch Total:                      " + to_string(m_krnl3x3FetchTotal_cfg)         + "\n"
+        "\tKernel 3x3 Bias Fetch Total:                 " + to_string(m_krnl3x3BiasFetchTotal_cfg)     + "\n"
+        "\tPartial Map Fetch Total:                     " + to_string(m_partMapFetchTotal_cfg)         + "\n"
+        "\tKernel 1x1 Fetch Total:                      " + to_string(m_krnl1x1FetchTotal_cfg)         + "\n"
+        "\tKernel 1x1 Bias Fetch Total:                 " + to_string(m_krnl1x1BiasFetchTotal_cfg)     + "\n"
+        "\tResidual Map Fetch Total:                    " + to_string(m_resMapFetchTotal_cfg)          + "\n"
+        "\tOutput Map Store Total:                      " + to_string(m_outMapStoreTotal_cfg)          + "\n"
+        "\tOutput Map Store Factor:                     " + to_string(m_outMapStoreFactor_cfg)         + "\n"
+        "\tConvOut High Watermark:                      " + to_string(m_co_high_watermark_cfg)         + "\n"
+        "\tResMap Low Watermark:                        " + to_string(m_rm_low_watermark_cfg)          + "\n"
+        "\tPartMap Low Watermark:                       " + to_string(m_pm_low_watermark_cfg)          + "\n"
+        "\tKernel 1x1 padding:                          " + to_string(m_krnl1x1_pding_cfg)             + "\n"
+        "\tKernel 1x1 Padding begin:                    " + to_string(m_krnl1x1_pad_bgn_cfg)           + "\n"
+        "\tKernel 1x1 Padding end:                      " + to_string(m_krnl1x1_pad_end_cfg)           + "\n"
+        "\tKernel 1x1 Layer:                            " + to_string(m_krnl_1x1_layer_cfg)            + "\n";
     cout << str;
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
@@ -665,6 +977,7 @@ void FAS::b_getCfgData()
         }
         m_num_QUAD_cfgd[i] = num_QUAD_cfgd;
     }
+    set_accum_time();
 }
 
 
