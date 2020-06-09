@@ -71,9 +71,9 @@
 #define CO_BRAM_RD_WIDTH                    KERNEL_1x1_DEPTH_SIMD
 #define RM_FIFO_DEPTH                       256
 #define RM_NUM_PIX_READ                     8
-#define RM_FIFO_WR_WIDTH                    8
+#define RM_BRAM_WR_WIDTH                    8
 #define RM_NUM_PIX_WRITE                    8
-#define RM_FIFO_RD_WIDTH                    OB_FIFO_WR_WIDTH
+#define RM_BRAM_RD_WIDTH                    OB_FIFO_WR_WIDTH
 #define RM_LOW_WATERMARK                    8
 
 
