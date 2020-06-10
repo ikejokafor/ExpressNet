@@ -47,16 +47,12 @@ SC_MODULE(FAS)
         SC_CTOR(FAS)
             :   clk("clk"),
                 m_AWP_complt_arr(MAX_AWP_PER_FAS, false),
-                m_sys_mem_bus_sema(MAX_FAS_SYS_MEM_TRANS),
                 m_QUAD_en_arr(MAX_AWP_PER_FAS, std::vector<bool>(NUM_QUADS_PER_AWP, false)),
                 m_num_QUAD_cfgd(MAX_AWP_PER_FAS, 0),
                 m_inMapDepthFetchAmt(MAX_AWP_PER_FAS, std::vector<int>(NUM_QUADS_PER_AWP, 0)),
                 m_two_cycles_later(2 * CLK_PRD, sc_core::SC_NS),
                 m_three_cycles_later(3 * CLK_PRD, sc_core::SC_NS),
-                m_four_cycles_later(4 * CLK_PRD, sc_core::SC_NS),
-                m_adder_tree_lat((log2(KERNEL_1x1_DEPTH_SIMD) + 1) * CLK_PRD, sc_core::SC_NS),
-                m_adder_tree_bias_lat((log2(KERNEL_1x1_DEPTH_SIMD) + 1) * CLK_PRD, sc_core::SC_NS)
-
+                m_four_cycles_later(4 * CLK_PRD, sc_core::SC_NS)
         {
             rout_tar_soc.register_b_transport(this, &FAS::b_rout_soc_transport);
             SC_THREAD(ctrl_process)
@@ -102,17 +98,13 @@ SC_MODULE(FAS)
             m_resMapFetchTotal_cfg          = 0;
             m_outMapStoreCount              = 0;
             m_outMapStoreTotal_cfg          = 0;
-            m_ob_dwc                        = 0;
-            m_pm_dwc                        = 0;
+            m_ob_dwc_fifo_sz                = 0;
             m_dpth_count                    = 0;
             m_krnl_count                    = 0;
             m_outBuf_fifo_sz                = 0;
             m_partMap_bram_sz               = 0;
             m_resdMap_bram_sz               = 0;
             m_convMap_bram_sz               = 0;
-            m_first_depth_iter_cfg          = 0;
-            m_do_resLayer_cfg               = 0;
-            m_do_kernels1x1_cfg             = 0;
             m_pixSeqCfgFetchTotal_cfg       = 0;
             m_inMapFetchTotal_cfg           = 0;
             m_krnl3x3FetchTotal_cfg         = 0;
@@ -135,30 +127,17 @@ SC_MODULE(FAS)
             m_co_high_watermark_cfg         = 0;
             m_rm_low_watermark_cfg          = 0;
             m_pm_low_watermark_cfg          = 0;
+            m_rm_fetch_amount_cfg           = 0;
+            m_pm_fetch_amount_cfg           = 0;
+            m_pv_fetch_amount_cfg           = 0;
             m_krnl1x1_pding_cfg             = 0;
             m_krnl1x1_pad_bgn_cfg           = 0;
             m_krnl1x1_pad_end_cfg           = 0;
-            m_krnl_1x1_layer_cfg            = 0;
-            m_prev1x1MapFetchCount          = 0;
-            m_prev1x1MapFetchTotal_cfg      = 0;
+            m_prevMapFetchCount             = 0;
+            m_prevMapFetchTotal_cfg         = 0;
             m_prevMap_fifo_sz               = 0;
             m_prevMap_dwc_fifo_sz           = 0;
-            m_opcode0_cfg                   = 0;
-            m_opcode1_cfg                   = 0;
-            m_opcode2_cfg                   = 0;
-            m_opcode3_cfg                   = 0;
-            m_opcode4_cfg                   = 0;
-            m_opcode5_cfg                   = 0;
-            m_opcode6_cfg                   = 0;
-            m_opcode7_cfg                   = 0;
-            m_opcode8_cfg                   = 0;
-            m_opcode9_cfg                   = 0;
-            m_opcode10_cfg                  = 0;
-            m_opcode11_cfg                  = 0;
-            m_opcode12_cfg                  = 0;
-            m_opcode13_cfg                  = 0;
-            m_opcode14_cfg                  = 0;
-            m_opcode15_cfg                  = 0;
+            m_opcode_cfg                    = -1;
             m_last_wrt                      = 0;
             m_last_CO_recvd                 = 0;
             m_adder_tree_rdv_count          = 0;
@@ -171,7 +150,7 @@ SC_MODULE(FAS)
         void ctrl_process();
         void job_fetch_process();
         void partMap_fetch_process();
-        void prev1x1Map_fetch_process();
+        void prevMap_fetch_process();
         void resdMap_fetch_process();
         void A_process();
         void krnl_1x1_bram_rd_process();
@@ -250,57 +229,30 @@ SC_MODULE(FAS)
         int                                     m_outMapStoreCount              ;
         int                                     m_outMapStoreTotal_cfg          ;
         int                                     m_outMapStoreFactor_cfg         ;
-        int                                     m_prev1x1MapFetchCount          ;
-        int                                     m_prev1x1MapFetchTotal_cfg      ;
-        bool                                    m_first_depth_iter_cfg          ;
-        bool                                    m_last_depth_iter_cfg           ;
-        bool                                    m_first_krnl_iter_cfg           ;
+        int                                     m_prevMapFetchCount             ;
+        int                                     m_prevMapFetchTotal_cfg         ;
         bool                                    m_conv_out_fmt0_cfg             ;
-        bool                                    m_do_resLayer_cfg              ;
-        bool                                    m_do_kernels1x1_cfg             ;
         int                                     m_num_1x1_kernels_cfg           ;
         int                                     m_co_high_watermark_cfg         ;
         int                                     m_rm_low_watermark_cfg          ;
         int                                     m_pm_low_watermark_cfg          ;
         int                                     m_pv_low_watermark_cfg          ;
-        bool                                    m_krnl_1x1_layer_cfg            ;
+        int                                     m_rm_fetch_amount_cfg           ;
+        int                                     m_pm_fetch_amount_cfg           ;                                     
+        int                                     m_pv_fetch_amount_cfg           ;
         bool                                    m_krnl1x1_pding_cfg             ;
         int                                     m_krnl1x1_pad_bgn_cfg           ;
         int                                     m_krnl1x1_pad_end_cfg           ;
-        bool                                    m_num_depth_iter_gt_1_cfg       ;
-        bool                                    m_do_1x1_res_cfg                ;
-        bool                                    m_do_res_1x1_cfg                ;
-        bool                                    m_opcode0_cfg                   ;
-        bool                                    m_opcode1_cfg                   ;
-        bool                                    m_opcode2_cfg                   ;
-        bool                                    m_opcode3_cfg                   ;
-        bool                                    m_opcode4_cfg                   ;
-        bool                                    m_opcode5_cfg                   ;
-        bool                                    m_opcode6_cfg                   ;
-        bool                                    m_opcode7_cfg                   ;
-        bool                                    m_opcode8_cfg                   ;
-        bool                                    m_opcode9_cfg                   ;
-        bool                                    m_opcode10_cfg                  ;
-        bool                                    m_opcode11_cfg                  ;
-        bool                                    m_opcode12_cfg                  ;
-        bool                                    m_opcode13_cfg                  ;
-        bool                                    m_opcode14_cfg                  ;
-        bool                                    m_opcode15_cfg                  ;
-        int                                     m_ob_dwc                        ;
-        int                                     m_pm_dwc                        ;
-        sc_core::sc_event                       m_job_fetch                     ;
-        Accel_Trans                             m_job_fetch_trans               ;
-        sc_core::sc_semaphore                   m_sys_mem_bus_sema              ;
+        int                                     m_opcode_cfg                    ;
+        int                                     m_ob_dwc_fifo_sz                ;
         std::deque<tlm::tlm_generic_payload*>   m_trans_fifo                    ;
         bool                                    m_last_wrt                      ;
         bool                                    m_last_CO_recvd                 ;
         int                                     m_dpth_count                    ;
         int                                     m_krnl_count                    ;
-        int                                     m_prev1x1Map_fifo_sz            ;
+        int                                     m_prevMap_fifo_sz               ;
         sc_core::sc_event_queue                 m_outBuf_wr                     ;
         sc_core::sc_event_queue                 m_outBuf_dwc_wr                 ;
-        sc_core::sc_event_queue                 m_partMap_dwc_wr                ;
-        sc_core::sc_event_queue                 m_resMap_dwc_wr                 ;
         sc_core::sc_event_queue                 m_krnl_1x1_read_valid           ;
         sc_core::sc_event_queue                 m_resdMap_read_valid            ;
         sc_core::sc_time                        m_two_cycles_later              ;
@@ -308,9 +260,6 @@ SC_MODULE(FAS)
         sc_core::sc_event_queue                 m_adder_tree_dataout_valid      ;
         sc_core::sc_time                        m_three_cycles_later            ;
         sc_core::sc_time                        m_four_cycles_later             ;
-        sc_core::sc_time                        m_adder_tree_lat                ;
-        sc_core::sc_time                        m_adder_tree_bias_lat           ;
         int                                     m_adder_tree_rdv_count          ;
-        int                                     m_prevMap_fifo_sz               ;
         int                                     m_prevMap_dwc_fifo_sz           ;
 };

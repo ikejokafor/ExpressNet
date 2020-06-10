@@ -96,6 +96,8 @@ function [li_outMaps] = Process( ...
     elseif(dpth_iter > 1)
         % 15
         li_outMaps = li_outMaps + li_partMaps;
+    elseif(num_depth_iter == 1)
+        % 16
+        return
     end
-    
 end

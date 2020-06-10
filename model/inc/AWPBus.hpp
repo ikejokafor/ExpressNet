@@ -25,6 +25,7 @@ class AWPBus : public sc_core::sc_module, public AWP_if
             for(int i = 0; i < MAX_AWP_TRANS; i++)
             {
                 m_req_arr[i].req_pending = false;
+                m_trans_in_prog_arr[i] = false;
             }
         }
 
@@ -39,6 +40,7 @@ class AWPBus : public sc_core::sc_module, public AWP_if
         int					m_AWP_id;
         int					m_FAS_id;
         Accel_Trans			m_req_arr[MAX_AWP_TRANS];
+        bool                m_trans_in_prog_arr[MAX_AWP_TRANS];
         std::vector<bool>	m_QUAD_complt_arr;
         mem_mng				m_mem_mng;
 };

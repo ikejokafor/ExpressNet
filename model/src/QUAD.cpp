@@ -39,13 +39,13 @@ void QUAD::ctrl_process_0()
                 }
                 else if(m_input_row == 3)
                 {
-                    *m_primed = true;
+                    m_primed[m_QUAD_id] = true;
                     if(m_cascade_cfg && m_master_QUAD_cfg)
                     {
                         bool all_primed = true;
                         for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
                         {
-                            if(!(*m_primed))
+                            if(!m_primed[i])
                             {
                                 all_primed = false;
                             }
@@ -53,8 +53,8 @@ void QUAD::ctrl_process_0()
                         if(all_primed)
                         {
                             m_QUAD_start->notify(SC_ZERO_TIME);
-                            *m_primed = false;
-                            str = "[" + string(name()) + "]: is starting at " + sc_time_stamp().to_string() + "\n";
+                            m_primed[m_QUAD_id] = false;
+                            str = "[" + string(name()) + "]: All Quads primed. Starting Convolution process at " + sc_time_stamp().to_string() + "\n";
                             cout << str;
                             m_state = ST_ACTIVE;
                         }
@@ -62,14 +62,14 @@ void QUAD::ctrl_process_0()
                     else if(m_cascade_cfg && !m_master_QUAD_cfg)
                     {
                         wait(m_QUAD_start->default_event());
-                        *m_primed = false;
-                        str = "[" + string(name()) + "]: is starting at " + sc_time_stamp().to_string() + "\n";
+                        m_primed[m_QUAD_id] = false;
+                        str = "[" + string(name()) + "]: finished Priming at" + sc_time_stamp().to_string() + "\n";
                         cout << str;
                         m_state = ST_ACTIVE;
                     }
                     else
                     {
-                        str = "[" + string(name()) + "]: is starting at "+ sc_time_stamp().to_string() + "\n";
+                        str = "[" + string(name()) + "]: Starting Convolution process "+ sc_time_stamp().to_string() + "\n";
                         cout << str;
                         m_state = ST_ACTIVE;
                     }
@@ -128,11 +128,10 @@ void QUAD::ctrl_process_1()
     while(true)
     {
         wait();
-        if(
-            (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
+        if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
             && ((m_res_fifo < QUAD_RES_FIFO_DEPTH) || (m_cascade_cfg && !m_master_QUAD_cfg))
-            && m_output_row != m_num_output_rows_cfg && m_stride_count == 0
-        ) {
+            && m_output_row != m_num_output_rows_cfg && m_stride_count == 0)
+        {
             if(m_output_col == (m_num_output_cols_cfg - 1))
             {
                 m_output_col = 0;
@@ -166,13 +165,12 @@ void QUAD::conv_process()
     while(true)
     {
         wait();
-        if(
-            ((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
+        if(((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
             && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
             && (m_res_fifo < QUAD_RES_FIFO_DEPTH)
             && m_output_row != m_num_output_rows_cfg
-            && m_stride_count != 1
-        ) {
+            && m_stride_count != 1)
+        {
             m_res_fifo++;
         }
     }
@@ -186,10 +184,9 @@ void QUAD::result_write_process()
     while(true)
     {
         wait();
-        if(
-            ((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
-            && (m_res_fifo >= RES_PKT_SIZE || (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo > 0 && m_res_fifo < RES_PKT_SIZE && m_output_row == m_num_output_rows_cfg))
-        ) {
+        if(((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
+            && (m_res_fifo >= RES_PKT_SIZE || (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo > 0 && m_res_fifo < RES_PKT_SIZE && m_output_row == m_num_output_rows_cfg)))
+        {
             for(int i = 0; i < RES_PKT_SIZE; i += RES_FIFO_RD_WIDTH)
             {
                 if(m_res_fifo == 0)

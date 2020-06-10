@@ -15,7 +15,7 @@
 #define BITS_PER_PIXEL                      16
 #define AXI_BUS_SIZE                        512
 #define AXI_ACCEL_CLK_RATIO                 5
-#define MAX_FAS_RD_REQ                      3
+#define MAX_FAS_RD_REQ                      4
 #define MAX_FAS_WR_REQ                      1
 #define MAX_SYS_MEM_RD_TRANS                1
 #define MAX_SYS_MEM_WR_TRANS                1
@@ -24,10 +24,10 @@
 #define NUM_FAS                             1
 #define MAX_AWP_PER_FAS                     1
 #define NUM_QUADS_PER_AWP                   4
-#define MAX_NETWORK_TRANS                   (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP)
+#define MAX_AWP_TRANS                       (NUM_QUADS_PER_AWP * 2)    // each quad can send 2 requests at a time
+#define MAX_NETWORK_TRANS                   (MAX_AWP_PER_FAS * MAX_AWP_TRANS)
 #define QUAD_MAX_DEPTH                      8
 #define QUAD_DEPTH_SIMD                     (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP * QUAD_MAX_DEPTH)
-#define MAX_AWP_TRANS                       (NUM_QUADS_PER_AWP * 2)    // each quad can send 2 requests at a time
 #define MAX_FAS_SYS_MEM_TRANS               1
 #define MAX_FAS_ROUT_TRANS                  1
 #define MAX_3x3_KERNELS                     64
@@ -50,31 +50,28 @@
 #define KRNL_1X1_BIAS_BRAM_RD_WIDTH         1
 #define KRNL_1X1_BIAS_BRAM_NUM_PIX_WRITE    1
 #define KRNL_1X1_BIAS_BRAM_WR_WIDTH         1
-#define RES_FIFO_RD_WIDTH                   128
+#define RES_FIFO_RD_WIDTH                   8
 #define RES_PKT_SIZE                        RES_FIFO_RD_WIDTH
 #define OB_FIFO_DEPTH                       256
 #define OB_NUM_PIX_WRITE                    RES_PKT_SIZE
 #define OB_FIFO_WR_WIDTH                    KERNEL_1x1_DEPTH_SIMD
 #define OB_FIFO_RD_WIDTH                    KERNEL_1x1_DEPTH_SIMD
-#define OB_HIGH_WATERMARK                   64
 #define PM_FIFO_DEPTH                       256
 #define PM_NUM_PIX_READ                     8
 #define PM_FIFO_WR_WIDTH                    8
 #define PM_BRAM_RD_WIDTH                    OB_FIFO_WR_WIDTH
-#define PM_LOW_WATERMARK                    16
 #define PV_FIFO_DEPTH                       256
 #define PV_FIFO_WR_WIDTH                    8
 #define PV_FIFO_RD_WIDTH                    OB_FIFO_WR_WIDTH
-#define CO_BRAM_DEPTH                       (MAX_1x1_KERNELS * KERNEL_1x1_DEPTH_SIMD)
-#define CO_NUM_PIX_READ                     KERNEL_1x1_DEPTH_SIMD
-#define CO_BRAM_WR_WIDTH                    8
-#define CO_BRAM_RD_WIDTH                    KERNEL_1x1_DEPTH_SIMD
+#define CM_BRAM_DEPTH                       (MAX_1x1_KERNELS * KERNEL_1x1_DEPTH_SIMD)
+#define CM_NUM_PIX_READ                     KERNEL_1x1_DEPTH_SIMD
+#define CM_BRAM_WR_WIDTH                    8
+#define CM_BRAM_RD_WIDTH                    KERNEL_1x1_DEPTH_SIMD
 #define RM_FIFO_DEPTH                       256
 #define RM_NUM_PIX_READ                     8
 #define RM_BRAM_WR_WIDTH                    8
 #define RM_NUM_PIX_WRITE                    8
 #define RM_BRAM_RD_WIDTH                    OB_FIFO_WR_WIDTH
-#define RM_LOW_WATERMARK                    8
 
 
 typedef enum
@@ -94,7 +91,8 @@ typedef enum
 {
     FAS_JOB_FETCH_ID = 0,
     FAS_RES_MAP_FETCH_ID = 1,
-    FAS_PART_MAP_FETCH_ID = 2
+    FAS_PART_MAP_FETCH_ID = 2,
+    FAS_PREV_MAP_FETCH_ID = 3,
 } fas_rd_id_t;
 
 

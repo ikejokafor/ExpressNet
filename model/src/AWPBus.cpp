@@ -29,13 +29,16 @@ void AWPBus::b_request(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size, boo
         wait(m_req_arr[reqArrIdx].ack);
         wait(clk.posedge_event());
         m_req_arr[reqArrIdx].req_pending = false;
+        m_trans_in_prog_arr[reqArrIdx] = true;
         b_transaction(reqArrIdx, last_CO);
+        m_trans_in_prog_arr[reqArrIdx] = false;
     }
 }
 
 
 void AWPBus::b_transaction(int idx, bool last_CO)
 {
+    string str;
     sc_time delay;
     tlm_command tlm_cmd = (m_req_arr[idx].accel_cmd == ACCL_CMD_JOB_FETCH) ? TLM_READ_COMMAND
                         : (m_req_arr[idx].accel_cmd == ACCL_CMD_RESULT_WRITE) ? TLM_WRITE_COMMAND
@@ -61,4 +64,8 @@ void AWPBus::b_transaction(int idx, bool last_CO)
     wait(clk->posedge_event());
     init_soc->b_transport(*trans, delay);
     trans->release();
+#ifdef VERBOSE_DEBUG
+    str = "[" + string(name()) + "]: relinquished bus at " + sc_time_stamp().to_string() + "\n";
+    cout << str;
+#endif
 }
