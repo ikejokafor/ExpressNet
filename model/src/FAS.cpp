@@ -39,7 +39,7 @@ void FAS::ctrl_process()
             {
                 if(m_partMapFetchCount == m_partMapFetchTotal_cfg
                     && (m_inMapFetchCount == m_inMapFetchTotal_cfg || m_opcode_cfg == 14)
-                    && m_resMapFetchCount == m_resMapFetchTotal_cfg
+                    && m_resdMapFetchCount == m_resdMapFetchTotal_cfg
                     && m_prevMapFetchCount == m_prevMapFetchTotal_cfg
                     && (m_last_CO_recvd || m_opcode_cfg == 14))
                 {
@@ -76,8 +76,6 @@ void FAS::ctrl_process()
                     }
                     wait();
                     m_complete.notify();
-                    str = "[" + string(name()) + "]: sent complete\n";
-                    cout << str;
                     wait(m_complete_ack);
                     m_state                         = ST_IDLE;
                     m_krnl3x3FetchCount             = 0;
@@ -86,10 +84,10 @@ void FAS::ctrl_process()
                     m_inMapFetchCount               = 0;
                     m_krnl1x1FetchCount             = 0;
                     m_krnl1x1BiasFetchCount         = 0;
-                    m_resMapFetchCount              = 0;
+                    m_resdMapFetchCount              = 0;
                     m_outMapStoreCount              = 0;
                     m_inMapFetchTotal_cfg           = 0;
-                    m_resMapFetchTotal_cfg          = 0;
+                    m_resdMapFetchTotal_cfg          = 0;
                     m_prevMapFetchTotal_cfg         = 0;
                     m_dpth_count                    = 0;
                     m_krnl_count                    = 0;
@@ -104,7 +102,7 @@ void FAS::ctrl_process()
                     m_krnl1x1BiasFetchTotal_cfg     = 0;
                     m_krnl1x1Depth_cfg              = 0;
                     m_num_1x1_kernels_cfg           = 0;
-                    m_resMapFetchTotal_cfg          = 0;
+                    m_resdMapFetchTotal_cfg          = 0;
                     m_outMapStoreTotal_cfg          = 0;
                     m_inMapFetchFactor_cfg          = 0;
                     m_outMapStoreFactor_cfg         = 0;
@@ -112,9 +110,8 @@ void FAS::ctrl_process()
                     m_krnl1x1BiasAddr_cfg           = 0;
                     m_pixelSeqAddr_cfg              = 0;
                     m_partMapAddr_cfg               = 0;
-                    m_resMapAddr_cfg                = 0;
+                    m_resdMapAddr_cfg                = 0;
                     m_outMapAddr_cfg                = 0;
-                    m_opcode_cfg                    = 0;
                     m_co_high_watermark_cfg         = 0;
                     m_rm_low_watermark_cfg          = 0;
                     m_pm_low_watermark_cfg          = 0;
@@ -124,12 +121,18 @@ void FAS::ctrl_process()
                     m_krnl1x1_pad_end_cfg           = 0;
                     m_prevMapFetchCount             = 0;
                     m_prevMapFetchTotal_cfg         = 0;
-                    m_opcode_cfg                    = NULL_OPCODE;
-                    if(m_partMap_bram_sz > 0 || m_convMap_bram_sz > 0 || m_outBuf_fifo_sz > 0)
+                    m_opcode_cfg                    = -1;
+                    if(m_prevMap_fifo_sz > 0 || m_resdMap_bram_sz > 0 
+                        || m_partMap_bram_sz > 0 || m_convMap_bram_sz > 0 
+                        || m_outBuf_fifo_sz > 0)
                     {
+                        str = "Buffers are not empty\n";
+                        cout << str;
                         sc_stop();
                         return;
                     }
+                    str = "[" + string(name()) + "]: sent complete\n";
+                    cout << str;
                 }
                 break;
             }
@@ -140,12 +143,12 @@ void FAS::ctrl_process()
 
 void FAS::job_fetch_process()
 {
-    // FIXME:   you are fetching the ROWS * DEPTH where DEPTH is the total depth for this iteration
-    //              but instead bc of the way the data is coming in, you are loading the QUADs in
-    //              in round robin order instead of loading QUAD0 completely, then the next quad and next quad
-    //              shouldnt affect model accuracy.
+    // FIXME:   In this model you are loading a QUAD completely before moving to the next QUAD
+    //              but in the hardware you will actually load the QUADs in a round robin fashion
+    //              Shouldnt affect model accuracy.
     tlm::tlm_generic_payload* trans;
     sc_time delay;
+    string str;
     while(true)
     {
         wait();
@@ -193,6 +196,11 @@ void FAS::job_fetch_process()
             rout_init_soc->b_transport(*trans, delay);
             trans->release();
             m_inMapFetchCount += inMapFetchAmt;
+            if(m_inMapFetchCount == m_inMapFetchTotal_cfg)
+            {
+                str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + "\n";
+                cout << str;
+            }
         }
     }
 }
@@ -221,7 +229,7 @@ void FAS::partMap_fetch_process()
                 0,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                (m_pm_low_watermark_cfg * PIXEL_SIZE),
+                (m_pm_fetch_amount_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -229,27 +237,24 @@ void FAS::partMap_fetch_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            if(m_opcode_cfg == OPCODE_14)
+            if(m_opcode_cfg == 14)
             {
-                m_convMap_bram_sz += m_pm_low_watermark_cfg;
+                m_convMap_bram_sz += m_pm_fetch_amount_cfg;
             }
             else
             {
-                m_partMap_bram_sz += m_pm_low_watermark_cfg;
+                m_partMap_bram_sz += m_pm_fetch_amount_cfg;
             }
             m_partMapFetchCount += (m_pm_fetch_amount_cfg * PIXEL_SIZE);
 #ifdef VERBOSE_DEBUG
+            str = "[" + string(name()) + "]:" + " finished Part Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+            cout << str;
+#endif
             if(m_partMapFetchCount == m_partMapFetchTotal_cfg)
             {
-                str = "[" + string(name()) + "]:" + " finished last Part Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+                str = "[" + string(name()) + "]:" + " finished last Part Map Fetch at " + sc_time_stamp().to_string() + "\n";
                 cout << str;
             }
-            else
-            {
-                str = "[" + string(name()) + "]:" + " finished Part Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
-            }
-#endif
         }
     }
 }
@@ -279,7 +284,7 @@ void FAS::prevMap_fetch_process()
                 0,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                (m_pm_low_watermark_cfg * PIXEL_SIZE),
+                (m_pv_fetch_amount_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -287,19 +292,17 @@ void FAS::prevMap_fetch_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
+            m_prevMap_fifo_sz += m_pv_fetch_amount_cfg;
             m_prevMapFetchCount += (m_pv_fetch_amount_cfg * PIXEL_SIZE);
 #ifdef VERBOSE_DEBUG
+            str = "[" + string(name()) + "]:" + " finished Prev Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+            cout << str;
+#endif
             if(m_prevMapFetchCount == m_prevMapFetchTotal_cfg)
             {
-                str = "[" + string(name()) + "]:" + " finished last Prev Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+                str = "[" + string(name()) + "]:" + " finished last Prev Map Fetch at " + sc_time_stamp().to_string() + "\n";
                 cout << str;
             }
-            else
-            {
-                str = "[" + string(name()) + "]:" + " finished Prev Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
-            }
-#endif
         }
     }
 }
@@ -314,7 +317,7 @@ void FAS::resdMap_fetch_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && m_resdMap_bram_sz <= m_rm_low_watermark_cfg && m_resMapFetchCount != m_resMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && m_resdMap_bram_sz <= m_rm_low_watermark_cfg && m_resdMapFetchCount != m_resdMapFetchTotal_cfg)
         {
 #ifdef VERBOSE_DEBUG
             int start = sc_time_stamp().to_double();
@@ -328,7 +331,7 @@ void FAS::resdMap_fetch_process()
                 0,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                (m_rm_low_watermark_cfg * PIXEL_SIZE),
+                (m_rm_fetch_amount_cfg * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -336,20 +339,17 @@ void FAS::resdMap_fetch_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_resdMap_bram_sz += m_rm_low_watermark_cfg;
-            m_resMapFetchCount += (m_rm_fetch_amount_cfg * PIXEL_SIZE);
+            m_resdMap_bram_sz += m_rm_fetch_amount_cfg;
+            m_resdMapFetchCount += (m_rm_fetch_amount_cfg * PIXEL_SIZE);
 #ifdef VERBOSE_DEBUG
-            if(m_resMapFetchCount == m_resMapFetchTotal_cfg)
-            {
-                str = "[" + string(name()) + "]:" + " finished last Resd Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
-            }
-            else
-            {
-                str = "[" + string(name()) + "]:" + " finished Resd Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
-            }
+            str = "[" + string(name()) + "]:" + " finished Resd Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+            cout << str;
 #endif
+            if(m_resdMapFetchCount == m_resdMapFetchTotal_cfg)
+            {
+                str = "[" + string(name()) + "]:" + " finished last Resd Map Fetch at " + sc_time_stamp().to_string() + "\n";
+                cout << str;
+            }
         }
     }
 }
@@ -360,7 +360,7 @@ void FAS::A_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 0
+        if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 0
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
@@ -374,17 +374,17 @@ void FAS::A_process()
             //          pop 1x1 Bias; last iteration
             //      Add bias - 1 1x1 krnl done; 1 cycle
             //      Buffer up RM_BRAM_RD_WIDTH values; RM_BRAM_RD_WIDTH cycles
-            //      add resMap; 1 cycle
+            //      add resdMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_resMap_dwc_fifo_sz == RM_BRAM_RD_WIDTH)
+            if(m_resdMap_dwc_fifo_sz == RM_BRAM_RD_WIDTH)
             {
                 m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
-                m_resMap_dwc_fifo_sz = 0;
+                m_resdMap_dwc_fifo_sz = 0;
                 m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 1
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 1
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
             && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH) 
@@ -406,7 +406,7 @@ void FAS::A_process()
                 m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 2
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 2
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
         {
@@ -418,17 +418,17 @@ void FAS::A_process()
             //          pop 1x1 Bias; last iteration
             //      Add bias - 1 1x1 krnl done; 1 cycle
             //      Buffer up RM_BRAM_RD_WIDTH values; RM_BRAM_RD_WIDTH cycles
-            //      add resMap; 1 cycle
+            //      add resdMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_resMap_dwc_fifo_sz == RM_BRAM_RD_WIDTH)
+            if(m_resdMap_dwc_fifo_sz == RM_BRAM_RD_WIDTH)
             {
                 m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
-                m_resMap_dwc_fifo_sz = 0;
+                m_resdMap_dwc_fifo_sz = 0;
                 m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 3
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 3
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH) 
         {
@@ -449,7 +449,7 @@ void FAS::A_process()
                 m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 4
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 4
             && m_convMap_bram_sz >= m_krnl1x1Depth_cfg
             && m_partMap_bram_sz >= m_krnl1x1Depth_cfg
             && m_resdMap_bram_sz >= m_krnl1x1Depth_cfg) 
@@ -466,7 +466,7 @@ void FAS::A_process()
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_three_cycles_later);
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 5
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 5
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH
@@ -492,7 +492,7 @@ void FAS::A_process()
                 m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 6
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 6
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
         {
@@ -508,7 +508,7 @@ void FAS::A_process()
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 7
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 7
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH
             && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH) 
@@ -531,34 +531,34 @@ void FAS::A_process()
                 m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 8
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 8
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
         {
             //  Arch
             //      pop conv map, pop part map; 1 cycle
-            //      add [conv map, part map], pop res map; 1 cycle
-            //      add [..., res map]; 1 cycle
+            //      add [conv map, part map], pop resd Map; 1 cycle
+            //      add [..., resd Map]; 1 cycle
             //      write to output buffer; 1 cycle
             m_convMap_bram_sz -= CM_BRAM_RD_WIDTH;
             m_partMap_bram_sz -= PM_BRAM_RD_WIDTH;
             m_resdMap_read_valid.notify(m_two_cycles_later);
             m_outBuf_wr.notify(m_four_cycles_later);
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 9
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 9
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
         {
             //  Arch
             //      pop conv map, pop resd map; 1 cycle
-            //      add [conv map, res map]; 1 cycle
+            //      add [conv map, resd map]; 1 cycle
             //      write to output buffer; 1 cycle
             m_convMap_bram_sz -= CM_BRAM_RD_WIDTH;
             m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
             m_outBuf_wr.notify(m_three_cycles_later);
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 10
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 10
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH) 
         {
@@ -572,7 +572,7 @@ void FAS::A_process()
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 11
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 11
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
             && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH) 
@@ -595,7 +595,7 @@ void FAS::A_process()
                 m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 12
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 12
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH)
         {
             //  Arch
@@ -608,7 +608,7 @@ void FAS::A_process()
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(SC_ZERO_TIME);
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 13
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 13
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH)
         {
@@ -629,7 +629,7 @@ void FAS::A_process()
                 m_outBuf_wr.notify(m_two_cycles_later);
             }
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 14
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 14
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH)
         {
             //  Arch
@@ -644,7 +644,7 @@ void FAS::A_process()
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(SC_ZERO_TIME);
         }
-        else if(m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE && m_opcode_cfg == 15
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 15
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH)
         {
             //  Arch
@@ -691,7 +691,7 @@ void FAS::adder_tree_start_process()
     while(true)
     {
         wait(m_adder_tree_datain_valid.default_event());
-        if(m_adder_tree_rdv_count == (m_krnl1x1Depth_cfg / KERNEL_1x1_DEPTH_SIMD))
+        if(m_adder_tree_rdv_count == ((m_krnl1x1Depth_cfg / KERNEL_1x1_DEPTH_SIMD) - 1))
         {
             m_adder_tree_rdv_count = 0;
             double time;
@@ -726,7 +726,7 @@ void FAS::adder_tree_done_process()
         wait(m_adder_tree_dataout_valid.default_event());
         if(m_opcode_cfg == 0 || m_opcode_cfg == 2)
         {
-            m_resMap_dwc_fifo_sz++;
+            m_resdMap_dwc_fifo_sz++;
         }
         else if(m_opcode_cfg == 1
             || m_opcode_cfg == 3
@@ -821,7 +821,6 @@ void FAS::S_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
             m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
-       
             if(m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Output Buffer Write at " + sc_time_stamp().to_string() + "\n";
@@ -911,7 +910,7 @@ void FAS::buffer_update()
 void FAS::nb_result_write(int res_pkt_size)
 {
     string str;
-    if(m_opcode_cfg == 8 || m_opcode_cfg == 9 || m_opcode_cfg == 15 || m_opcode_cfg == 16)
+    if(m_opcode_cfg == 16)
     {
         if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
         {
@@ -961,7 +960,7 @@ void FAS::b_getCfgData()
     m_prevMapFetchTotal_cfg         = m_FAS_cfg->m_prevMapFetchTotal;
     m_krnl1x1Depth_cfg              = m_FAS_cfg->m_krnl1x1Depth;
     m_num_1x1_kernels_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
-    m_resMapFetchTotal_cfg          = m_FAS_cfg->m_resMapFetchTotal;
+    m_resdMapFetchTotal_cfg          = m_FAS_cfg->m_resMapFetchTotal;
     m_outMapStoreTotal_cfg          = m_FAS_cfg->m_outMapStoreTotal;
     m_inMapFetchFactor_cfg          = m_FAS_cfg->m_inMapFetchFactor;
     m_outMapStoreFactor_cfg         = m_FAS_cfg->m_outMapStoreFactor;
@@ -969,7 +968,7 @@ void FAS::b_getCfgData()
     m_krnl1x1BiasAddr_cfg           = m_FAS_cfg->m_krnl1x1BiasAddr;
     m_pixelSeqAddr_cfg              = m_FAS_cfg->m_pixelSeqAddr;
     m_partMapAddr_cfg               = m_FAS_cfg->m_partMapAddr;
-    m_resMapAddr_cfg                = m_FAS_cfg->m_resMapAddr;
+    m_resdMapAddr_cfg                = m_FAS_cfg->m_resMapAddr;
     m_outMapAddr_cfg                = m_FAS_cfg->m_outMapAddr;
     m_inMapAddrArr                  = m_FAS_cfg->m_inMapAddrArr;
     m_krnl3x3AddrArr                = m_FAS_cfg->m_krnl3x3AddrArr;
@@ -984,34 +983,7 @@ void FAS::b_getCfgData()
     m_krnl1x1_pding_cfg             = m_FAS_cfg->m_krnl1x1_pding;
     m_krnl1x1_pad_bgn_cfg           = m_FAS_cfg->m_krnl1x1_pad_bgn;
     m_krnl1x1_pad_end_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
-    string str =
-        "[" + string(name()) + "]" + " Configured with.......\n"
-        "\tOpcode :                                     " + to_string(m_opcode_cfg)                    + "\n"
-        "\tNum 1x1 Kernels:                             " + to_string(m_num_1x1_kernels_cfg)           + "\n"
-        "\tKernel 1x1 Depth:                            " + to_string(m_krnl1x1Depth_cfg)              + "\n"
-        "\tPixel Sequence Configuration Fetch Total:    " + to_string(m_pixSeqCfgFetchTotal_cfg)       + "\n"
-        "\tInput Map Fetch Total:                       " + to_string(m_inMapFetchTotal_cfg)           + "\n"
-        "\tInput Map Fetch Factor:                      " + to_string(m_inMapFetchFactor_cfg)          + "\n"
-        "\tKernel 3x3 Fetch Total:                      " + to_string(m_krnl3x3FetchTotal_cfg)         + "\n"
-        "\tKernel 3x3 Bias Fetch Total:                 " + to_string(m_krnl3x3BiasFetchTotal_cfg)     + "\n"
-        "\tPartial Map Fetch Total:                     " + to_string(m_partMapFetchTotal_cfg)         + "\n"
-        "\tKernel 1x1 Fetch Total:                      " + to_string(m_krnl1x1FetchTotal_cfg)         + "\n"
-        "\tKernel 1x1 Bias Fetch Total:                 " + to_string(m_krnl1x1BiasFetchTotal_cfg)     + "\n"
-        "\tResidual Map Fetch Total:                    " + to_string(m_resMapFetchTotal_cfg)          + "\n"
-        "\tOutput Map Store Total:                      " + to_string(m_outMapStoreTotal_cfg)          + "\n"
-        "\tPrev1x1 Map Fetch Total                      " + to_string(m_prevMapFetchTotal_cfg)         + "\n"
-        "\tOutput Map Store Factor:                     " + to_string(m_outMapStoreFactor_cfg)         + "\n"
-        "\tConvOut High Watermark:                      " + to_string(m_co_high_watermark_cfg)         + "\n"
-        "\tResdMap Low Watermark:                       " + to_string(m_rm_low_watermark_cfg)          + "\n"
-        "\tPartMap Low Watermark:                       " + to_string(m_pm_low_watermark_cfg)          + "\n"
-        "\tPrev1x1 Low Watermark:                       " + to_string(m_pv_low_watermark_cfg)          + "\n"
-        "\tResdMap Fetch Amount:                        " + to_string(m_rm_fetch_amount_cfg)           + "\n"   
-        "\tPartMap Fetch Amount:                        " + to_string(m_pm_fetch_amount_cfg)           + "\n"
-        "\tPrev1x1 Fetch Amount:                        " + to_string(m_pv_fetch_amount_cfg)           + "\n"
-        "\tKernel 1x1 padding:                          " + to_string(m_krnl1x1_pding_cfg)             + "\n"
-        "\tKernel 1x1 Padding begin:                    " + to_string(m_krnl1x1_pad_bgn_cfg)           + "\n"
-        "\tKernel 1x1 Padding end:                      " + to_string(m_krnl1x1_pad_end_cfg)           + "\n";
-    cout << str;
+    // print_cfg();
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
     for(int i = 0; i < MAX_AWP_PER_FAS; i++)
@@ -1296,4 +1268,37 @@ void FAS::b_QUAD_job_start(int AWP_addr, int QUAD_addr)
     wait(clk->posedge_event());
     rout_init_soc->b_transport(*trans, delay);
     trans->release();
+}
+
+
+void FAS::nb_print_cfg()
+{
+    string str =
+        "[" + string(name()) + "]" + " Configured with.......\n"
+        "\tOpcode :                                     " + to_string(m_opcode_cfg)                    + "\n"
+        "\tNum 1x1 Kernels:                             " + to_string(m_num_1x1_kernels_cfg)           + "\n"
+        "\tKernel 1x1 Depth:                            " + to_string(m_krnl1x1Depth_cfg)              + "\n"
+        "\tPixel Sequence Configuration Fetch Total:    " + to_string(m_pixSeqCfgFetchTotal_cfg)       + "\n"
+        "\tInput Map Fetch Total:                       " + to_string(m_inMapFetchTotal_cfg)           + "\n"
+        "\tInput Map Fetch Factor:                      " + to_string(m_inMapFetchFactor_cfg)          + "\n"
+        "\tKernel 3x3 Fetch Total:                      " + to_string(m_krnl3x3FetchTotal_cfg)         + "\n"
+        "\tKernel 3x3 Bias Fetch Total:                 " + to_string(m_krnl3x3BiasFetchTotal_cfg)     + "\n"
+        "\tPartial Map Fetch Total:                     " + to_string(m_partMapFetchTotal_cfg)         + "\n"
+        "\tKernel 1x1 Fetch Total:                      " + to_string(m_krnl1x1FetchTotal_cfg)         + "\n"
+        "\tKernel 1x1 Bias Fetch Total:                 " + to_string(m_krnl1x1BiasFetchTotal_cfg)     + "\n"
+        "\tResidual Map Fetch Total:                    " + to_string(m_resdMapFetchTotal_cfg)          + "\n"
+        "\tOutput Map Store Total:                      " + to_string(m_outMapStoreTotal_cfg)          + "\n"
+        "\tPrev1x1 Map Fetch Total                      " + to_string(m_prevMapFetchTotal_cfg)         + "\n"
+        "\tOutput Map Store Factor:                     " + to_string(m_outMapStoreFactor_cfg)         + "\n"
+        "\tConvOut High Watermark:                      " + to_string(m_co_high_watermark_cfg)         + "\n"
+        "\tResdMap Low Watermark:                       " + to_string(m_rm_low_watermark_cfg)          + "\n"
+        "\tPartMap Low Watermark:                       " + to_string(m_pm_low_watermark_cfg)          + "\n"
+        "\tPrev1x1 Low Watermark:                       " + to_string(m_pv_low_watermark_cfg)          + "\n"
+        "\tResdMap Fetch Amount:                        " + to_string(m_rm_fetch_amount_cfg)           + "\n"   
+        "\tPartMap Fetch Amount:                        " + to_string(m_pm_fetch_amount_cfg)           + "\n"
+        "\tPrev1x1 Fetch Amount:                        " + to_string(m_pv_fetch_amount_cfg)           + "\n"
+        "\tKernel 1x1 padding:                          " + to_string(m_krnl1x1_pding_cfg)             + "\n"
+        "\tKernel 1x1 Padding begin:                    " + to_string(m_krnl1x1_pad_bgn_cfg)           + "\n"
+        "\tKernel 1x1 Padding end:                      " + to_string(m_krnl1x1_pad_end_cfg)           + "\n";
+    cout << str;
 }

@@ -98,7 +98,7 @@ SC_MODULE(QUAD)
         int						    m_QUAD_id					;
         int         	            m_res_fifo					;
         bool					    m_last_res_wrtn				;
-        sc_core::sc_event 		    m_pfb_wrtn					;
+        sc_core::sc_event_queue     m_pfb_wrtn					;
         sc_core::sc_event_queue*    m_prev_quad_ack				;
         bool*                       m_primed    				;
         sc_core::sc_event_queue*    m_QUAD_start   				;

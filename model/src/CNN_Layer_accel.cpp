@@ -204,5 +204,5 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower)
 
 double CNN_Layer_Accel::calculateMemPower()
 {
-
+    return 0.0f;
 }

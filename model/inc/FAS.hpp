@@ -94,8 +94,8 @@ SC_MODULE(FAS)
             m_krnl1x1FetchTotal_cfg         = 0;
             m_krnl1x1BiasFetchCount         = 0;
             m_krnl1x1BiasFetchTotal_cfg     = 0;
-            m_resMapFetchCount              = 0;
-            m_resMapFetchTotal_cfg          = 0;
+            m_resdMapFetchCount              = 0;
+            m_resdMapFetchTotal_cfg          = 0;
             m_outMapStoreCount              = 0;
             m_outMapStoreTotal_cfg          = 0;
             m_ob_dwc_fifo_sz                = 0;
@@ -114,7 +114,7 @@ SC_MODULE(FAS)
             m_krnl1x1BiasFetchTotal_cfg     = 0;
             m_krnl1x1Depth_cfg              = 0;
             m_num_1x1_kernels_cfg           = 0;
-            m_resMapFetchTotal_cfg          = 0;
+            m_resdMapFetchTotal_cfg          = 0;
             m_outMapStoreTotal_cfg          = 0;
             m_inMapFetchFactor_cfg          = 0;
             m_outMapStoreFactor_cfg         = 0;
@@ -122,7 +122,7 @@ SC_MODULE(FAS)
             m_krnl1x1BiasAddr_cfg           = 0;
             m_pixelSeqAddr_cfg              = 0;
             m_partMapAddr_cfg               = 0;
-            m_resMapAddr_cfg                = 0;
+            m_resdMapAddr_cfg                = 0;
             m_outMapAddr_cfg                = 0;
             m_co_high_watermark_cfg         = 0;
             m_rm_low_watermark_cfg          = 0;
@@ -178,7 +178,7 @@ SC_MODULE(FAS)
         void b_QUAD_krnl3x3_config(int AWP_addr, int QUAD_addr);
         void b_QUAD_krnl3x3Bias_config(int AWP_addr, int QUAD_addr);
         void b_QUAD_job_start(int AWP_addr, int QUAD_addr);
-
+        void nb_print_cfg();
 
         // Members
         FAS_cfg*                                m_FAS_cfg                       ;
@@ -197,7 +197,7 @@ SC_MODULE(FAS)
         uint64_t                                m_krnl1x1BiasAddr_cfg           ;
         uint64_t                                m_pixelSeqAddr_cfg              ;
         uint64_t                                m_partMapAddr_cfg               ;
-        uint64_t                                m_resMapAddr_cfg                ;
+        uint64_t                                m_resdMapAddr_cfg                ;
         uint64_t                                m_outMapAddr_cfg                ;
         int                                     m_pixSeqCfgFetchTotal_cfg       ;
         std::vector<std::vector<uint64_t>>      m_inMapAddrArr                  ;
@@ -221,10 +221,10 @@ SC_MODULE(FAS)
         int                                     m_partMap_bram_sz               ;
         int                                     m_partMapFetchCount             ;
         int                                     m_partMapFetchTotal_cfg         ;
-        int                                     m_resMap_dwc_fifo_sz            ;
+        int                                     m_resdMap_dwc_fifo_sz            ;
         int                                     m_resdMap_bram_sz               ;
-        int                                     m_resMapFetchCount              ;
-        int                                     m_resMapFetchTotal_cfg          ;
+        int                                     m_resdMapFetchCount              ;
+        int                                     m_resdMapFetchTotal_cfg          ;
         int                                     m_outBuf_fifo_sz                ;
         int                                     m_outMapStoreCount              ;
         int                                     m_outMapStoreTotal_cfg          ;

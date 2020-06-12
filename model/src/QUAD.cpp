@@ -40,6 +40,11 @@ void QUAD::ctrl_process_0()
                 else if(m_input_row == 3)
                 {
                     m_primed[m_QUAD_id] = true;
+                    if(!m_primed[m_QUAD_id])
+                    {
+                        str = "[" + string(name()) + "]: finished Priming at " + sc_time_stamp().to_string() + "\n";
+                        m_primed[m_QUAD_id] = true;
+                    }
                     if(m_cascade_cfg && m_master_QUAD_cfg)
                     {
                         bool all_primed = true;
@@ -63,7 +68,6 @@ void QUAD::ctrl_process_0()
                     {
                         wait(m_QUAD_start->default_event());
                         m_primed[m_QUAD_id] = false;
-                        str = "[" + string(name()) + "]: finished Priming at" + sc_time_stamp().to_string() + "\n";
                         cout << str;
                         m_state = ST_ACTIVE;
                     }
@@ -207,14 +211,13 @@ void QUAD::result_write_process()
             }
             bool last_CO = (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo == 0 && m_output_row == m_num_output_rows_cfg) ? true : false;
 #ifdef VERBOSE_DEBUG
-            int start = sc_time_stamp().to_double();
             str = "[" + string(name()) + "]:" + " sent a Pixel Write Request at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif
             // TODO: numRd should be RES_PKT_SIZE
             bus->b_request(m_QUAD_id, ACCL_CMD_RESULT_WRITE, numRd, last_CO);
 #ifdef VERBOSE_DEBUG
-            str = "[" + string(name()) + "]:" + " finished Pixel Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+            str = "[" + string(name()) + "]:" + " finished Pixel Write Request at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif
             if(last_CO)
@@ -245,7 +248,7 @@ void QUAD::b_cfg_write(unsigned char* data)
     m_stride_cfg                = accel_trans->stride_cfg;
     m_crpd_input_row_start_cfg  = accel_trans->crpd_input_row_start_cfg;
     m_crpd_input_row_end_cfg    = accel_trans->crpd_input_row_end_cfg;
-    print_cfg();
+    // print_cfg();
 }
 
 
@@ -307,25 +310,22 @@ bool QUAD::b_job_start()
 void QUAD::b_job_fetch()
 {
 #ifdef VERBOSE_DEBUG
-    int start = sc_time_stamp().to_double();
     string str = "[" + string(name()) + "]:" + " sent a Pixel Fetch Request at " + sc_time_stamp().to_string() + "\n";
     cout << str;
 #endif
     bus->b_request(m_QUAD_id, ACCL_CMD_JOB_FETCH, int());
 #ifdef VERBOSE_DEBUG
-    str = "[" + string(name()) + "]:" + " finished Pixel Fetch Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+    str = "[" + string(name()) + "]:" + " finished Pixel Fetch Request at " + sc_time_stamp().to_string() + "\n";
     cout << str;
 #endif
-    wait(m_pfb_wrtn);
-    wait();
+    wait(m_pfb_wrtn.default_event());
 }
-
 
 void QUAD::b_pfb_write()
 {
     wait(m_num_expd_input_cols_cfg, SC_NS);
     m_pfb_count = m_num_expd_input_cols_cfg;
-    m_pfb_wrtn.notify();
+    m_pfb_wrtn.notify(SC_ZERO_TIME);
 }
 
 

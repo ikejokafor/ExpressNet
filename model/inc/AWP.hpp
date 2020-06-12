@@ -52,7 +52,7 @@ SC_MODULE(AWP)
                 quad[i]->m_QUAD_id = i;
                 quad[i]->clk(clk);
                 quad[i]->bus(bus);
-                quad[i]->m_primed = &m_primed[i];
+                quad[i]->m_primed = m_primed;
                 quad[i]->m_QUAD_start = &m_QUAD_start;
             }
 

@@ -119,11 +119,11 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
             if(!m_AWP_cfgd)
             {
                 m_AWP_cfgd = true;
-                string str =
-                    "[" + string(name()) + "]" + " Configured with.......\n"
-                    "\tFAS ID:                        " + to_string(m_FAS_id)         + "\n"
-                    "\tNumber of Quads Configured:    " + to_string(m_num_QUADs_cfgd) + "\n";
-                cout << str;
+                // string str =
+                //     "[" + string(name()) + "]" + " Configured with.......\n"
+                //     "\tFAS ID:                        " + to_string(m_FAS_id)         + "\n"
+                //     "\tNumber of Quads Configured:    " + to_string(m_num_QUADs_cfgd) + "\n";
+                // cout << str;
             }
             quad[QUAD_id]->b_cfg_write(trans.get_data_ptr());
             break;
