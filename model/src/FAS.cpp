@@ -900,6 +900,7 @@ void FAS::buffer_update()
         || m_opcode_cfg == 3 
         || m_opcode_cfg == 12 
         || m_opcode_cfg == 13
+        || m_opcode_cfg == 14
         || m_opcode_cfg == 15) 
     {
         m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
