@@ -73,7 +73,11 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(adder_tree_done_process)
                 sensitive << clk.pos();
+            SC_THREAD(resdMap_dwc_fifo_process)
+                sensitive << clk.pos();
             SC_THREAD(resdMap_read_process)
+                sensitive << clk.pos();
+            SC_THREAD(prevMap_dwc_fifo_process)
                 sensitive << clk.pos();
             SC_THREAD(S_process)
                 sensitive << clk.pos();
@@ -158,7 +162,9 @@ SC_MODULE(FAS)
         void krnl_1x1_bram_rd_process();
         void adder_tree_start_process();
         void adder_tree_done_process();
+        void resdMap_dwc_fifo_process();
         void resdMap_read_process();
+        void prevMap_dwc_fifo_process();
         void S_process();
         void outBuf_dwc_wr_process();
         void outBuf_wr_process();

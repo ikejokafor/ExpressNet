@@ -354,7 +354,7 @@ void FAS::resdMap_fetch_process()
     }
 }
 
-
+static int fuck = 0;
 void FAS::A_process()
 {
     while(true)
@@ -377,12 +377,6 @@ void FAS::A_process()
             //      add resdMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_resdMap_dwc_fifo_sz >= RM_BRAM_RD_WIDTH)
-            {
-                m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
-                m_resdMap_dwc_fifo_sz = 0;
-                m_outBuf_wr.notify(m_two_cycles_later);
-            }
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 1
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
@@ -399,12 +393,6 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
-            {
-                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
-                m_prevMap_dwc_fifo_sz = 0;
-                m_outBuf_wr.notify(m_two_cycles_later);
-            }
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 2
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
@@ -421,12 +409,6 @@ void FAS::A_process()
             //      add resdMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_resdMap_dwc_fifo_sz >= RM_BRAM_RD_WIDTH)
-            {
-                m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
-                m_resdMap_dwc_fifo_sz = 0;
-                m_outBuf_wr.notify(m_two_cycles_later);
-            }
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 3
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
@@ -442,12 +424,6 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
-            {
-                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
-                m_prevMap_dwc_fifo_sz = 0;
-                m_outBuf_wr.notify(m_two_cycles_later);
-            }
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 4
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
@@ -485,12 +461,6 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_three_cycles_later);
-            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
-            {
-                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
-                m_prevMap_dwc_fifo_sz = 0;
-                m_outBuf_wr.notify(m_two_cycles_later);
-            }
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 6
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
@@ -524,12 +494,6 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
-            {
-                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
-                m_prevMap_dwc_fifo_sz = 0;
-                m_outBuf_wr.notify(m_two_cycles_later);
-            }
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 8
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
@@ -588,12 +552,7 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
-            {
-                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
-                m_prevMap_dwc_fifo_sz = 0;
-                m_outBuf_wr.notify(m_two_cycles_later);
-            }
+            fuck++;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 12
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH)
@@ -622,12 +581,6 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(SC_ZERO_TIME);
-            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
-            {
-                m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
-                m_prevMap_dwc_fifo_sz = 0;
-                m_outBuf_wr.notify(m_two_cycles_later);
-            }
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 14
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH)
@@ -751,12 +704,42 @@ void FAS::adder_tree_done_process()
 }
 
 
+void FAS::resdMap_dwc_fifo_process()
+{
+    while(true)
+    {
+        wait();
+        if(m_resdMap_dwc_fifo_sz >= RM_BRAM_RD_WIDTH)
+        {
+            m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
+            m_resdMap_dwc_fifo_sz = 0;
+            m_outBuf_wr.notify(m_two_cycles_later);
+        }
+    }
+}
+
+
 void FAS::resdMap_read_process()
 {
     while(true)
     {
         wait(m_resdMap_read_valid.default_event());
         m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
+    }
+}
+
+
+void FAS::prevMap_dwc_fifo_process()
+{
+    while(true)
+    {
+        wait();
+        if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
+        {
+            m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+            m_prevMap_dwc_fifo_sz = 0;
+            m_outBuf_wr.notify(m_two_cycles_later);
+        }
     }
 }
 
