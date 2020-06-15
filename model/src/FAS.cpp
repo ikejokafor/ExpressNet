@@ -377,7 +377,7 @@ void FAS::A_process()
             //      add resdMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_resdMap_dwc_fifo_sz == RM_BRAM_RD_WIDTH)
+            if(m_resdMap_dwc_fifo_sz >= RM_BRAM_RD_WIDTH)
             {
                 m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
                 m_resdMap_dwc_fifo_sz = 0;
@@ -399,7 +399,7 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
             {
                 m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
                 m_prevMap_dwc_fifo_sz = 0;
@@ -421,7 +421,7 @@ void FAS::A_process()
             //      add resdMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_resdMap_dwc_fifo_sz == RM_BRAM_RD_WIDTH)
+            if(m_resdMap_dwc_fifo_sz >= RM_BRAM_RD_WIDTH)
             {
                 m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
                 m_resdMap_dwc_fifo_sz = 0;
@@ -442,7 +442,7 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
             {
                 m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
                 m_prevMap_dwc_fifo_sz = 0;
@@ -450,9 +450,9 @@ void FAS::A_process()
             }
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 4
-            && m_convMap_bram_sz >= m_krnl1x1Depth_cfg
-            && m_partMap_bram_sz >= m_krnl1x1Depth_cfg
-            && m_resdMap_bram_sz >= m_krnl1x1Depth_cfg) 
+            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
+            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
+            && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
         {
             //  Arch
             //      pop conv map, pop part map; 1 cycle
@@ -485,7 +485,7 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_three_cycles_later);
-            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
             {
                 m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
                 m_prevMap_dwc_fifo_sz = 0;
@@ -524,7 +524,7 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
             {
                 m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
                 m_prevMap_dwc_fifo_sz = 0;
@@ -588,7 +588,7 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
             {
                 m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
                 m_prevMap_dwc_fifo_sz = 0;
@@ -622,7 +622,7 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(SC_ZERO_TIME);
-            if(m_prevMap_dwc_fifo_sz == PV_FIFO_RD_WIDTH)
+            if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH)
             {
                 m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
                 m_prevMap_dwc_fifo_sz = 0;
@@ -645,6 +645,7 @@ void FAS::A_process()
             m_krnl_1x1_read_valid.notify(SC_ZERO_TIME);
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 15
+            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH)
         {
             //  Arch
@@ -900,8 +901,7 @@ void FAS::buffer_update()
         || m_opcode_cfg == 3 
         || m_opcode_cfg == 12 
         || m_opcode_cfg == 13
-        || m_opcode_cfg == 14
-        || m_opcode_cfg == 15) 
+        || m_opcode_cfg == 14) 
     {
         m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
     }
@@ -984,6 +984,10 @@ void FAS::b_getCfgData()
     m_krnl1x1_pding_cfg             = m_FAS_cfg->m_krnl1x1_pding;
     m_krnl1x1_pad_bgn_cfg           = m_FAS_cfg->m_krnl1x1_pad_bgn;
     m_krnl1x1_pad_end_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
+    if(m_krnl1x1_pding_cfg)
+    {
+        m_num_1x1_kernels_cfg           = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);
+    }
     // print_cfg();
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;

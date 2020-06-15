@@ -90,14 +90,14 @@ function [li_outMaps] = Process( ...
     elseif(do_krnl1x1 && ~do_krnl_layer_1x1 && dpth_iter == num_depth_iter && krnl_iter ~= 1)
         % 13
         li_outMaps = Convolution(kernels1x1, [], li_outMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth);
-        li_outMaps = li_outMaps + prevLIOut;
+        li_outMaps = li_outMaps + prevLIOut;     
     elseif(do_krnl_layer_1x1)
         % 14
         li_outMaps = Convolution(kernels1x1, bias1x1, li_inMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth);
     elseif(dpth_iter > 1)
         % 15
         li_outMaps = li_outMaps + li_partMaps;
-    elseif(num_depth_iter == 1)
+    else
         % 16
         return
     end

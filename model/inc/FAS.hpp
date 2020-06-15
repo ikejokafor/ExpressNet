@@ -63,6 +63,8 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(resdMap_fetch_process)
                 sensitive << clk.pos();
+            SC_THREAD(prevMap_fetch_process)
+                sensitive << clk.pos();
             SC_THREAD(A_process)
                 sensitive << clk.pos();
             SC_THREAD(krnl_1x1_bram_rd_process)
