@@ -133,7 +133,7 @@ void QUAD::ctrl_process_1()
     {
         wait();
         if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
-            && ((m_res_fifo < QUAD_RES_FIFO_DEPTH) || (m_cascade_cfg && !m_master_QUAD_cfg))
+            && ((m_res_fifo < RES_FIFO_DEPTH) || (m_cascade_cfg && !m_master_QUAD_cfg))
             && m_output_row != m_num_output_rows_cfg && m_stride_count == 0)
         {
             if(m_output_col == (m_num_output_cols_cfg - 1))
@@ -171,7 +171,7 @@ void QUAD::conv_process()
         wait();
         if(((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
             && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
-            && (m_res_fifo < QUAD_RES_FIFO_DEPTH)
+            && (m_res_fifo < RES_FIFO_DEPTH)
             && m_output_row != m_num_output_rows_cfg
             && m_stride_count != 1)
         {

@@ -39,7 +39,9 @@
 #define WINDOW_3x3_NUM_CYCLES               (uint64_t(5))
 #define PIX_SEQ_CFG_WRT_CYCS                (uint64_t(1024) * WINDOW_3x3_NUM_CYCLES)
 #define KRNL_SLOT_SIZE                      10
-#define QUAD_RES_FIFO_DEPTH                 16
+#define RES_FIFO_RD_WIDTH                   8
+#define RES_PKT_SIZE                        RES_FIFO_RD_WIDTH
+#define RES_FIFO_DEPTH                      (RES_FIFO_RD_WIDTH * 2)
 #define KRNL_1X1_BRAM_DEPTH                 (KERNEL_1x1_DEPTH_SIMD * MAX_1x1_KERNELS)
 #define KRNL_1x1_BRAM_NUM_PIX_READ          KERNEL_1x1_DEPTH_SIMD
 #define KRNL_1x1_BRAM_RD_WIDTH              KERNEL_1x1_DEPTH_SIMD
@@ -50,8 +52,6 @@
 #define KRNL_1X1_BIAS_BRAM_RD_WIDTH         1
 #define KRNL_1X1_BIAS_BRAM_NUM_PIX_WRITE    1
 #define KRNL_1X1_BIAS_BRAM_WR_WIDTH         1
-#define RES_FIFO_RD_WIDTH                   8
-#define RES_PKT_SIZE                        RES_FIFO_RD_WIDTH
 #define OB_FIFO_DEPTH                       256
 #define OB_NUM_PIX_WRITE                    RES_PKT_SIZE
 #define OB_FIFO_WR_WIDTH                    KERNEL_1x1_DEPTH_SIMD
