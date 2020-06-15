@@ -120,7 +120,7 @@ SC_MODULE(FAS)
             m_krnl1x1BiasFetchTotal_cfg     = 0;
             m_krnl1x1Depth_cfg              = 0;
             m_num_1x1_kernels_cfg           = 0;
-            m_resdMapFetchTotal_cfg          = 0;
+            m_resdMapFetchTotal_cfg         = 0;
             m_outMapStoreTotal_cfg          = 0;
             m_inMapFetchFactor_cfg          = 0;
             m_outMapStoreFactor_cfg         = 0;
@@ -128,7 +128,7 @@ SC_MODULE(FAS)
             m_krnl1x1BiasAddr_cfg           = 0;
             m_pixelSeqAddr_cfg              = 0;
             m_partMapAddr_cfg               = 0;
-            m_resdMapAddr_cfg                = 0;
+            m_resdMapAddr_cfg               = 0;
             m_outMapAddr_cfg                = 0;
             m_co_high_watermark_cfg         = 0;
             m_rm_low_watermark_cfg          = 0;

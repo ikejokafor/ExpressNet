@@ -102,7 +102,7 @@ void FAS::ctrl_process()
                     m_krnl1x1BiasFetchTotal_cfg     = 0;
                     m_krnl1x1Depth_cfg              = 0;
                     m_num_1x1_kernels_cfg           = 0;
-                    m_resdMapFetchTotal_cfg          = 0;
+                    m_resdMapFetchTotal_cfg         = 0;
                     m_outMapStoreTotal_cfg          = 0;
                     m_inMapFetchFactor_cfg          = 0;
                     m_outMapStoreFactor_cfg         = 0;
@@ -110,7 +110,7 @@ void FAS::ctrl_process()
                     m_krnl1x1BiasAddr_cfg           = 0;
                     m_pixelSeqAddr_cfg              = 0;
                     m_partMapAddr_cfg               = 0;
-                    m_resdMapAddr_cfg                = 0;
+                    m_resdMapAddr_cfg               = 0;
                     m_outMapAddr_cfg                = 0;
                     m_co_high_watermark_cfg         = 0;
                     m_rm_low_watermark_cfg          = 0;
@@ -126,7 +126,15 @@ void FAS::ctrl_process()
                         || m_partMap_bram_sz > 0 || m_convMap_bram_sz > 0 
                         || m_outBuf_fifo_sz > 0)
                     {
-                        str = "Buffers are not empty\n";
+                        str = 
+                            "Buffers are not empty\n"
+                            "\tm_prevMap_fifo_sz:     " + to_string(m_prevMap_fifo_sz)      + "\n"
+                            "\tm_resdMap_bram_sz:     " + to_string(m_resdMap_bram_sz)      + "\n"
+                            "\tm_resdMap_dwc_fifo_sz: " + to_string(m_resdMap_dwc_fifo_sz)  + "\n"
+                            "\tm_prevMap_dwc_fifo_sz: " + to_string(m_prevMap_dwc_fifo_sz)  + "\n"
+                            "\tm_partMap_bram_sz:     " + to_string(m_partMap_bram_sz)      + "\n"
+                            "\tm_convMap_bram_sz:     " + to_string(m_convMap_bram_sz)      + "\n"
+                            "\tm_outBuf_fifo_sz:      " + to_string(m_outBuf_fifo_sz)       + "\n";
                         cout << str;
                         sc_stop();
                         return;
@@ -943,8 +951,8 @@ void FAS::b_getCfgData()
     m_krnl1x1BiasFetchTotal_cfg     = m_FAS_cfg->m_krnl1x1BiasFetchTotal;
     m_prevMapFetchTotal_cfg         = m_FAS_cfg->m_prevMapFetchTotal;
     m_krnl1x1Depth_cfg              = m_FAS_cfg->m_krnl1x1Depth;
-    m_num_1x1_kernels_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
-    m_resdMapFetchTotal_cfg          = m_FAS_cfg->m_resMapFetchTotal;
+    m_num_1x1_kernels_cfg           = m_FAS_cfg->m_num_1x1_kernels;
+    m_resdMapFetchTotal_cfg         = m_FAS_cfg->m_resMapFetchTotal;
     m_outMapStoreTotal_cfg          = m_FAS_cfg->m_outMapStoreTotal;
     m_inMapFetchFactor_cfg          = m_FAS_cfg->m_inMapFetchFactor;
     m_outMapStoreFactor_cfg         = m_FAS_cfg->m_outMapStoreFactor;
@@ -952,7 +960,7 @@ void FAS::b_getCfgData()
     m_krnl1x1BiasAddr_cfg           = m_FAS_cfg->m_krnl1x1BiasAddr;
     m_pixelSeqAddr_cfg              = m_FAS_cfg->m_pixelSeqAddr;
     m_partMapAddr_cfg               = m_FAS_cfg->m_partMapAddr;
-    m_resdMapAddr_cfg                = m_FAS_cfg->m_resMapAddr;
+    m_resdMapAddr_cfg               = m_FAS_cfg->m_resMapAddr;
     m_outMapAddr_cfg                = m_FAS_cfg->m_outMapAddr;
     m_inMapAddrArr                  = m_FAS_cfg->m_inMapAddrArr;
     m_krnl3x3AddrArr                = m_FAS_cfg->m_krnl3x3AddrArr;
@@ -969,7 +977,7 @@ void FAS::b_getCfgData()
     m_krnl1x1_pad_end_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
     if(m_krnl1x1_pding_cfg)
     {
-        m_num_1x1_kernels_cfg           = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);
+        m_num_1x1_kernels_cfg       = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);
     }
     // print_cfg();
 
