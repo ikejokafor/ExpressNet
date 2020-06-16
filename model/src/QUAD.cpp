@@ -119,6 +119,12 @@ void QUAD::ctrl_process_0()
                 m_output_col = 0;
                 m_output_row = 0;
                 m_stride_count = 0;
+                if(m_res_fifo > 0)
+                {
+                    str = "[" + string(name()) + "]: m_res_fifo is not empty\n";
+                    cout << str;
+                    raise(SIGINT);
+                }
                 m_state = ST_IDLE;
                 break;
             }

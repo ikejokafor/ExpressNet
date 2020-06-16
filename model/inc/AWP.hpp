@@ -15,6 +15,7 @@
 #include "QUAD.hpp"
 #include "AWP_if.hpp"
 #include "AWPBus.hpp"
+#include <csignal>
 
 
 SC_MODULE(AWP)

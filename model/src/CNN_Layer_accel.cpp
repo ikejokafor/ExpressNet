@@ -44,6 +44,16 @@ void CNN_Layer_Accel::main_process()
             cout << str;
             wait();
             m_complete.notify(SC_ZERO_TIME);
+
+            if(FAS2AWP_bus.m_trans_fifo.size() > 0
+                || AWP2FAS_bus.m_trans_fifo.size() > 0)
+            {
+                str = "[" + string(name()) + "]: Buffers are not empty\n"
+                    "\tFAS2AWP_bus.m_trans_fifo_sz:     " + to_string(FAS2AWP_bus.m_trans_fifo.size()) + "\n"
+                    "\tAWP2FAS_bus.m_trans_fifo.sz:     " + to_string(AWP2FAS_bus.m_trans_fifo.size()) + "\n";
+                cout << str;
+                raise(SIGINT);
+            }
         }
     }
 }

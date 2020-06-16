@@ -84,10 +84,10 @@ void FAS::ctrl_process()
                     m_inMapFetchCount               = 0;
                     m_krnl1x1FetchCount             = 0;
                     m_krnl1x1BiasFetchCount         = 0;
-                    m_resdMapFetchCount              = 0;
+                    m_resdMapFetchCount             = 0;
                     m_outMapStoreCount              = 0;
                     m_inMapFetchTotal_cfg           = 0;
-                    m_resdMapFetchTotal_cfg          = 0;
+                    m_resdMapFetchTotal_cfg         = 0;
                     m_prevMapFetchTotal_cfg         = 0;
                     m_dpth_count                    = 0;
                     m_krnl_count                    = 0;
@@ -123,21 +123,21 @@ void FAS::ctrl_process()
                     m_prevMapFetchTotal_cfg         = 0;
                     m_opcode_cfg                    = -1;
                     if(m_prevMap_fifo_sz > 0 || m_resdMap_bram_sz > 0 
+                        || m_resdMap_dwc_fifo_sz > 0 || m_prevMap_dwc_fifo_sz > 0
                         || m_partMap_bram_sz > 0 || m_convMap_bram_sz > 0 
-                        || m_outBuf_fifo_sz > 0)
+                        || m_outBuf_fifo_sz > 0 || m_trans_fifo.size() > 0)
                     {
-                        str = 
-                            "Buffers are not empty\n"
+                        str = "[" + string(name()) + "]: Buffers are not empty\n"
                             "\tm_prevMap_fifo_sz:     " + to_string(m_prevMap_fifo_sz)      + "\n"
                             "\tm_resdMap_bram_sz:     " + to_string(m_resdMap_bram_sz)      + "\n"
                             "\tm_resdMap_dwc_fifo_sz: " + to_string(m_resdMap_dwc_fifo_sz)  + "\n"
                             "\tm_prevMap_dwc_fifo_sz: " + to_string(m_prevMap_dwc_fifo_sz)  + "\n"
                             "\tm_partMap_bram_sz:     " + to_string(m_partMap_bram_sz)      + "\n"
                             "\tm_convMap_bram_sz:     " + to_string(m_convMap_bram_sz)      + "\n"
-                            "\tm_outBuf_fifo_sz:      " + to_string(m_outBuf_fifo_sz)       + "\n";
+                            "\tm_outBuf_fifo_sz:      " + to_string(m_outBuf_fifo_sz)       + "\n"
+                            "\tm_trans_fifo_sz:       " + to_string(m_trans_fifo.size())    + "\n";
                         cout << str;
-                        sc_stop();
-                        return;
+                        raise(SIGINT);
                     }
                     str = "[" + string(name()) + "]: sent complete\n";
                     cout << str;
@@ -220,13 +220,14 @@ void FAS::partMap_fetch_process()
     sc_time delay;
     Accel_Trans* accel_trans;
     string str;
+    int start;
     while(true)
     {
         wait();
         if(m_state == ST_ACTIVE && m_partMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
         {
 #ifdef VERBOSE_DEBUG
-            int start = sc_time_stamp().to_double();
+            start = sc_time_stamp().to_double();
             str = "[" + string(name()) + "]:" + " Starting Resd Map Fetch at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif
@@ -281,7 +282,7 @@ void FAS::prevMap_fetch_process()
         if(m_state == ST_ACTIVE && m_prevMap_fifo_sz <= m_pv_low_watermark_cfg && m_prevMapFetchCount != m_prevMapFetchTotal_cfg)
         {
 #ifdef VERBOSE_DEBUG
-            int start = sc_time_stamp().to_double();
+            start = sc_time_stamp().to_double();
             str = "[" + string(name()) + "]:" + " Starting Prev Map Fetch at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif
@@ -322,13 +323,14 @@ void FAS::resdMap_fetch_process()
     sc_time delay;
     Accel_Trans* accel_trans;
     string str;
+    int start;
     while(true)
     {
         wait();
         if(m_state == ST_ACTIVE && m_resdMap_bram_sz <= m_rm_low_watermark_cfg && m_resdMapFetchCount != m_resdMapFetchTotal_cfg)
         {
 #ifdef VERBOSE_DEBUG
-            int start = sc_time_stamp().to_double();
+            start = sc_time_stamp().to_double();
             str = "[" + string(name()) + "]:" + " Starting Resd Map Fetch at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif
@@ -362,7 +364,7 @@ void FAS::resdMap_fetch_process()
     }
 }
 
-static int fuck = 0;
+
 void FAS::A_process()
 {
     while(true)
@@ -560,7 +562,6 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             m_krnl_1x1_read_valid.notify(m_two_cycles_later);
-            fuck++;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 12
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH)
@@ -786,13 +787,14 @@ void FAS::S_process()
     tlm::tlm_generic_payload* trans;
     sc_time delay;
     Accel_Trans* accel_trans;
+    int start;
     while(true)
     {
         wait();
         if(m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE))
         {
 #ifdef VERBOSE_DEBUG
-            int start = sc_time_stamp().to_double();
+            start = sc_time_stamp().to_double();
             str = "[" + string(name()) + "]:" + " Starting Output Buffer Write at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif
@@ -813,6 +815,17 @@ void FAS::S_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
             m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
+            if(m_opcode_cfg == 14)
+            {
+                float total_store_trans = m_outMapStoreTotal_cfg / m_outMapStoreFactor_cfg;
+                float trans_no = m_outMapStoreCount / m_outMapStoreFactor_cfg;
+                int perct = floor(trans_no / total_store_trans) * 100;
+                if(perct % 10 == 0)
+                {
+                    str = "[" + string(name()) + "]: finished " + to_string((int)trans_no) + "/" + to_string((int)total_store_trans) + " store transactions\n";
+                    cout << str;
+                }
+            }
             if(m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Output Buffer Write at " + sc_time_stamp().to_string() + "\n";
@@ -1001,7 +1014,7 @@ void FAS::b_cfg1x1Kernels()
     int krnl_1x1_depth = MAX_3x3_KERNELS;
     sc_time delay;
     tlm::tlm_generic_payload* trans;
-
+    //////
     trans = nb_createTLMTrans(
         m_mem_mng,
         m_krnl1x1Addr_cfg,
@@ -1015,9 +1028,9 @@ void FAS::b_cfg1x1Kernels()
     );
     sys_mem_init_soc->b_transport(*trans, delay);
     trans->release();
-
+    //////
     wait((int)ceil(m_krnl1x1FetchTotal_cfg / KRNL_1x1_BRAM_WR_WIDTH), SC_NS);
-
+    //////
     trans = nb_createTLMTrans(
         m_mem_mng,
         m_krnl1x1BiasAddr_cfg,
@@ -1031,7 +1044,7 @@ void FAS::b_cfg1x1Kernels()
     );
     sys_mem_init_soc->b_transport(*trans, delay);
     trans->release();
-
+    //////
     wait((int)ceil(m_krnl1x1BiasFetchTotal_cfg / KRNL_1X1_BIAS_BRAM_WR_WIDTH), SC_NS);
 }
 

@@ -4,6 +4,7 @@
 #include <deque>
 #include <string>
 #include "systemc"
+#include <csignal>
 #include "cnn_layer_accel_common.hpp"
 #include "AWP_if.hpp"
 
