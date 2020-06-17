@@ -68,20 +68,20 @@ void AWP::send_complete()
         }
         if(all_complete && m_num_QUADs_cfgd > 0)
         {
-            for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
-            {
-                if(quad[i]->m_state != 0)
-                {
-                    str = "[" + string(name()) + "]: All QUADs not IDLE\n";
-                    cout << str;
-                    raise(SIGINT);
-                }
-            }
             for(int i = 0; i < MAX_AWP_TRANS; i++)
             {
                 if(bus.m_req_arr[i].req_pending)
                 {
                     str = "[" + string(name()) + "]: QUAD request(s) are still pending\n";
+                    cout << str;
+                    raise(SIGINT);
+                }
+            }
+            for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
+            {
+                if(quad[i]->m_state != 0)
+                {
+                    str = "[" + string(name()) + "]: All QUADs not IDLE\n";
                     cout << str;
                     raise(SIGINT);
                 }

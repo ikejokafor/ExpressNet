@@ -70,6 +70,23 @@ void FAS::ctrl_process()
                 }
                 if(all_complete || m_opcode_cfg == 14)
                 {
+                    if(m_prevMap_fifo_sz > 0 || m_resdMap_bram_sz > 0 
+                        || m_resdMap_dwc_fifo_sz > 0 || m_prevMap_dwc_fifo_sz > 0
+                        || m_partMap_bram_sz > 0 || m_convMap_bram_sz > 0 
+                        || m_outBuf_fifo_sz > 0 || m_trans_fifo.size() > 0)
+                    {
+                        str = "[" + string(name()) + "]: Buffers are not empty\n"
+                            "\tm_prevMap_fifo_sz:     " + to_string(m_prevMap_fifo_sz)      + "\n"
+                            "\tm_resdMap_bram_sz:     " + to_string(m_resdMap_bram_sz)      + "\n"
+                            "\tm_resdMap_dwc_fifo_sz: " + to_string(m_resdMap_dwc_fifo_sz)  + "\n"
+                            "\tm_prevMap_dwc_fifo_sz: " + to_string(m_prevMap_dwc_fifo_sz)  + "\n"
+                            "\tm_partMap_bram_sz:     " + to_string(m_partMap_bram_sz)      + "\n"
+                            "\tm_convMap_bram_sz:     " + to_string(m_convMap_bram_sz)      + "\n"
+                            "\tm_outBuf_fifo_sz:      " + to_string(m_outBuf_fifo_sz)       + "\n"
+                            "\tm_trans_fifo_sz:       " + to_string(m_trans_fifo.size())    + "\n";
+                        cout << str;
+                        raise(SIGINT);
+                    }
                     for(int i = 0; i < MAX_AWP_PER_FAS; i++)
                     {
                         m_AWP_complt_arr[i] = false;
@@ -122,23 +139,7 @@ void FAS::ctrl_process()
                     m_prevMapFetchCount             = 0;
                     m_prevMapFetchTotal_cfg         = 0;
                     m_opcode_cfg                    = -1;
-                    if(m_prevMap_fifo_sz > 0 || m_resdMap_bram_sz > 0 
-                        || m_resdMap_dwc_fifo_sz > 0 || m_prevMap_dwc_fifo_sz > 0
-                        || m_partMap_bram_sz > 0 || m_convMap_bram_sz > 0 
-                        || m_outBuf_fifo_sz > 0 || m_trans_fifo.size() > 0)
-                    {
-                        str = "[" + string(name()) + "]: Buffers are not empty\n"
-                            "\tm_prevMap_fifo_sz:     " + to_string(m_prevMap_fifo_sz)      + "\n"
-                            "\tm_resdMap_bram_sz:     " + to_string(m_resdMap_bram_sz)      + "\n"
-                            "\tm_resdMap_dwc_fifo_sz: " + to_string(m_resdMap_dwc_fifo_sz)  + "\n"
-                            "\tm_prevMap_dwc_fifo_sz: " + to_string(m_prevMap_dwc_fifo_sz)  + "\n"
-                            "\tm_partMap_bram_sz:     " + to_string(m_partMap_bram_sz)      + "\n"
-                            "\tm_convMap_bram_sz:     " + to_string(m_convMap_bram_sz)      + "\n"
-                            "\tm_outBuf_fifo_sz:      " + to_string(m_outBuf_fifo_sz)       + "\n"
-                            "\tm_trans_fifo_sz:       " + to_string(m_trans_fifo.size())    + "\n";
-                        cout << str;
-                        raise(SIGINT);
-                    }
+                    m_prog_factor                   = 10;
                     str = "[" + string(name()) + "]: sent complete\n";
                     cout << str;
                 }
@@ -786,12 +787,13 @@ void FAS::S_process()
             m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
             if(m_opcode_cfg == 14)
             {
-                float total_store_trans = m_outMapStoreTotal_cfg / m_outMapStoreFactor_cfg;
-                float trans_no = m_outMapStoreCount / m_outMapStoreFactor_cfg;
-                int perct = floor(trans_no / total_store_trans) * 100;
-                if(perct % 10 == 0)
+                float total_store_trans = (float)m_outMapStoreTotal_cfg / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE);
+                float trans_no = (float)m_outMapStoreCount / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE);
+                int perct = floor((trans_no / total_store_trans) * 100.0f);
+                if((perct % m_prog_factor) == 0 && perct > 0)
                 {
-                    str = "[" + string(name()) + "]: finished " + to_string((int)trans_no) + "/" + to_string((int)total_store_trans) + " store transactions\n";
+                    m_prog_factor += 10;
+                    str = "[" + string(name()) + "]: finished " + to_string((int)trans_no) + " / " + to_string((int)total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + "\n";
                     cout << str;
                 }
             }

@@ -36,15 +36,6 @@ void CNN_Layer_Accel::main_process()
         }
         if(all_complete)
         {
-            for (int i = 0; i < m_FAS_complt_arr.size(); i++)
-            {
-                m_FAS_complt_arr[i] = false;
-            }
-            str = "Processing Complete at " + sc_time_stamp().to_string() + "\n";
-            cout << str;
-            wait();
-            m_complete.notify(SC_ZERO_TIME);
-
             if(FAS2AWP_bus.m_trans_fifo.size() > 0
                 || AWP2FAS_bus.m_trans_fifo.size() > 0)
             {
@@ -54,6 +45,14 @@ void CNN_Layer_Accel::main_process()
                 cout << str;
                 raise(SIGINT);
             }
+            for (int i = 0; i < m_FAS_complt_arr.size(); i++)
+            {
+                m_FAS_complt_arr[i] = false;
+            }
+            str = "[" + string(name()) + "]: Processing Complete at " + sc_time_stamp().to_string() + "\n";
+            cout << str;
+            wait();
+            m_complete.notify(SC_ZERO_TIME);
         }
     }
 }

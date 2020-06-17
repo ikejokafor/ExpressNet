@@ -146,6 +146,7 @@ SC_MODULE(FAS)
             m_last_wrt                      = 0;
             m_last_CO_recvd                 = 0;
             m_adder_tree_rdv_count          = 0;
+            m_prog_factor                   = 10;
         }
 
         // Destructor
@@ -269,6 +270,7 @@ SC_MODULE(FAS)
         sc_core::sc_time                        m_five_cycles_later             ;
         int                                     m_adder_tree_rdv_count          ;
         int                                     m_prevMap_dwc_fifo_sz           ;
-        sc_core::sc_event_queue                 m_prevMap_dwc_fifo_wr;
-        sc_core::sc_event_queue                 m_resdMap_dwc_fifo_wr;
+        sc_core::sc_event_queue                 m_prevMap_dwc_fifo_wr           ;
+        sc_core::sc_event_queue                 m_resdMap_dwc_fifo_wr           ;
+        int                                     m_prog_factor                   ;
 };

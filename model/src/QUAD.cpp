@@ -113,18 +113,18 @@ void QUAD::ctrl_process_0()
             }
             case ST_SEND_COMPLETE:
             {
-                bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
-                m_krnl_count = 0;
-                m_input_row = 0;
-                m_output_col = 0;
-                m_output_row = 0;
-                m_stride_count = 0;
                 if(m_res_fifo > 0)
                 {
                     str = "[" + string(name()) + "]: m_res_fifo is not empty\n";
                     cout << str;
                     raise(SIGINT);
                 }
+                bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
+                m_krnl_count = 0;
+                m_input_row = 0;
+                m_output_col = 0;
+                m_output_row = 0;
+                m_stride_count = 0;
                 m_state = ST_IDLE;
                 break;
             }
