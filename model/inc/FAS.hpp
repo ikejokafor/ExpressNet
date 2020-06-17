@@ -52,7 +52,8 @@ SC_MODULE(FAS)
                 m_inMapDepthFetchAmt(MAX_AWP_PER_FAS, std::vector<int>(NUM_QUADS_PER_AWP, 0)),
                 m_two_cycles_later(2 * CLK_PRD, sc_core::SC_NS),
                 m_three_cycles_later(3 * CLK_PRD, sc_core::SC_NS),
-                m_four_cycles_later(4 * CLK_PRD, sc_core::SC_NS)
+                m_four_cycles_later(4 * CLK_PRD, sc_core::SC_NS),
+                m_five_cycles_later(5 * CLK_PRD, sc_core::SC_NS)
         {
             rout_tar_soc.register_b_transport(this, &FAS::b_rout_soc_transport);
             SC_THREAD(ctrl_process)
@@ -66,8 +67,6 @@ SC_MODULE(FAS)
             SC_THREAD(prevMap_fetch_process)
                 sensitive << clk.pos();
             SC_THREAD(A_process)
-                sensitive << clk.pos();
-            SC_THREAD(krnl_1x1_bram_rd_process)
                 sensitive << clk.pos();
             SC_THREAD(adder_tree_start_process)
                 sensitive << clk.pos();
@@ -159,7 +158,6 @@ SC_MODULE(FAS)
         void prevMap_fetch_process();
         void resdMap_fetch_process();
         void A_process();
-        void krnl_1x1_bram_rd_process();
         void adder_tree_start_process();
         void adder_tree_done_process();
         void resdMap_dwc_fifo_process();
@@ -174,6 +172,7 @@ SC_MODULE(FAS)
 
 
         // Methods
+        void nb_krnl_1x1_bram_rd();
         void buffer_update();
         void nb_result_write(int res_pkt_size);
         void b_cfg_Accel();
@@ -261,13 +260,15 @@ SC_MODULE(FAS)
         int                                     m_prevMap_fifo_sz               ;
         sc_core::sc_event_queue                 m_outBuf_wr                     ;
         sc_core::sc_event_queue                 m_outBuf_dwc_wr                 ;
-        sc_core::sc_event_queue                 m_krnl_1x1_read_valid           ;
         sc_core::sc_event_queue                 m_resdMap_read_valid            ;
-        sc_core::sc_time                        m_two_cycles_later              ;
         sc_core::sc_event_queue                 m_adder_tree_datain_valid       ;
         sc_core::sc_event_queue                 m_adder_tree_dataout_valid      ;
+        sc_core::sc_time                        m_two_cycles_later              ;
         sc_core::sc_time                        m_three_cycles_later            ;
         sc_core::sc_time                        m_four_cycles_later             ;
+        sc_core::sc_time                        m_five_cycles_later             ;
         int                                     m_adder_tree_rdv_count          ;
         int                                     m_prevMap_dwc_fifo_sz           ;
+        sc_core::sc_event_queue                 m_prevMap_dwc_fifo_wr;
+        sc_core::sc_event_queue                 m_resdMap_dwc_fifo_wr;
 };
