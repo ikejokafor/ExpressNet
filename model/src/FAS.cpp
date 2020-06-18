@@ -949,13 +949,13 @@ void FAS::nb_result_write(int res_pkt_size)
     }
     else
     {
-        // if(m_convMap_bram_sz == CM_BRAM_DEPTH)
-        // {
-        //     str = "m_convMap_bram_sz is full\n";
-        //     cout << str;
-        //     sc_stop();
-        //     return;
-        // }
+        if(m_convMap_bram_sz == CM_BRAM_DEPTH)
+        {
+            str = "m_convMap_bram_sz is full\n";
+            cout << str;
+            sc_stop();
+            return;
+        }
         m_convMap_bram_sz += res_pkt_size;
     }
 }
