@@ -367,7 +367,7 @@ void FAS::resdMap_fetch_process()
     }
 }
 
-static int fuck = 0;
+
 void FAS::A_process()
 {
     while(true)
