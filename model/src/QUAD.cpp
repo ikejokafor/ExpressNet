@@ -104,7 +104,7 @@ void QUAD::ctrl_process_0()
             }
             case ST_WAIT_LAST_RES_WRITE:
             {
-                if(m_last_res_wrtn && m_master_QUAD_cfg || (m_cascade_cfg && !m_master_QUAD_cfg && m_output_row == m_num_output_rows_cfg))
+                if((m_last_res_wrtn && m_master_QUAD_cfg) || (m_cascade_cfg && !m_master_QUAD_cfg && m_output_row == m_num_output_rows_cfg))
                 {
                     m_state = ST_SEND_COMPLETE;
                     m_last_res_wrtn = false;

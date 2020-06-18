@@ -37,6 +37,7 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 3.3.2)
 # END CMAKE Version ---------------------------------------------------------------------------------------------------------------------------------
 
+#set (CMAKE_CXX_STANDARD 11)
 
 # BEGIN Target Name ---------------------------------------------------------------------------------------------------------------------------------
 SET(TARGET_NAME cnn_layer_accel_model)
@@ -193,6 +194,7 @@ ELSE()
         ${PROJECT_SOURCE_DIR}/../../espresso/inc/FPGA/
         ${PROJECT_SOURCE_DIR}/../../FPGA_shim/inc/
         ${PROJECT_SOURCE_DIR}/../../fixedPoint/inc/
+		/home/mdl/izo5011/IkennaWorkSpace/izo5011_dev_tools/x86/include/
         #<include_path0>
         #<include_path1>
         #<include_pathN>
