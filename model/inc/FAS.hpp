@@ -68,6 +68,8 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(A_process)
                 sensitive << clk.pos();
+            SC_THREAD(buffer_update_process)
+                sensitive << clk.pos();
             SC_THREAD(adder_tree_start_process)
                 sensitive << clk.pos();
             SC_THREAD(adder_tree_done_process)
@@ -159,6 +161,7 @@ SC_MODULE(FAS)
         void prevMap_fetch_process();
         void resdMap_fetch_process();
         void A_process();
+        void buffer_update_process();
         void adder_tree_start_process();
         void adder_tree_done_process();
         void resdMap_dwc_fifo_process();
@@ -174,7 +177,6 @@ SC_MODULE(FAS)
 
         // Methods
         void nb_krnl_1x1_bram_rd();
-        void buffer_update();
         void nb_result_write(int res_pkt_size);
         void b_cfg_Accel();
         void b_getCfgData();
@@ -273,4 +275,5 @@ SC_MODULE(FAS)
         sc_core::sc_event_queue                 m_prevMap_dwc_fifo_wr           ;
         sc_core::sc_event_queue                 m_resdMap_dwc_fifo_wr           ;
         int                                     m_prog_factor                   ;
+        sc_core::sc_event_queue                 m_buffer_update                 ;
 };

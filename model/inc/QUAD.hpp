@@ -103,4 +103,5 @@ SC_MODULE(QUAD)
         sc_core::sc_event_queue*    m_prev_quad_ack				;
         bool*                       m_primed    				;
         sc_core::sc_event_queue*    m_QUAD_start   				;
+        int                         m_start                     ;
 };

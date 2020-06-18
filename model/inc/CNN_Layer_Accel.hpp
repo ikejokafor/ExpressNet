@@ -1,16 +1,20 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------------
 //
 //  M: Memory Cycle Latency
-//  C: Number of Input Columns
-//  R: Number of Input Rows
+//  I_R: Number of Input Rows
+//  I_C: Number of Input Columns
+//  O_R: Number of Output Rows
+//  O_C: Number of Output Columns
 //  K_3: Number of 3x3 Kernels
 //  K_1: Number of 1x1 Kernels
 //  K_1_D: 1x1 Kernel Depth
+//  K_1_DS: 1x1 Kernel Depth SIMD
 //
 //  IDD2P
 //
 //
 //  QUAD Cycle Latency:
+//
 //       PIX_SEQ_WRT_LAT
 //          + KRNL_3x3_WRT_LAT
 //          + KRNL_3x3_BIAS_WRT_LAT
@@ -21,14 +25,17 @@
 //       [M + 8192]
 //          + [M + (10 * K_3)]
 //          + [M +  K_3)]
-//          + [3 * (M + C)]
-//          + [(R - 3)(M + C)]
-//          + [R * C]
+//          + [3 * (M + I_C)]
+//          + [(I_R - 3)(M + I_C)]
+//          + [K_3 * O_R * O_C]
 //
 //
 //  FAS Cycle Latency:
 //
-//      [M + K_1 * K_1_D]   +   [M + K_1]
+//      EXE_LAT
+//
+//      [M + (R * C)] * [(K_1_D / K_1_DS) * K_1)]
+//  
 //
 //  Power Consumption:
 //

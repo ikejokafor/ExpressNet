@@ -225,7 +225,9 @@ void FAS::partMap_fetch_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && m_partMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE &&
+			((m_opcode_cfg != 14 && m_partMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
+			|| (m_opcode_cfg == 14 && m_convMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)))
         {
 #ifdef VERBOSE_DEBUG
             start = sc_time_stamp().to_double();
@@ -615,6 +617,43 @@ void FAS::A_process()
 }
 
 
+void FAS::buffer_update_process()
+{
+    while(true)
+    {
+        wait(m_buffer_update.default_event());
+        if(m_opcode_cfg == 0 
+            || m_opcode_cfg == 1 
+            || m_opcode_cfg == 10
+            || m_opcode_cfg == 11) 
+        {
+            m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
+            m_partMap_bram_sz -= m_krnl1x1Depth_cfg;
+        }
+        else if(m_opcode_cfg == 4 || m_opcode_cfg == 5)
+        {
+            m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
+            m_partMap_bram_sz -= m_krnl1x1Depth_cfg;
+            m_resdMap_bram_sz -= m_krnl1x1Depth_cfg;
+        }
+        else if(m_opcode_cfg == 6 || m_opcode_cfg == 7)
+        {
+            m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
+            m_resdMap_bram_sz -= m_krnl1x1Depth_cfg;
+        }
+        else if(m_opcode_cfg == 2 
+            || m_opcode_cfg == 3 
+            || m_opcode_cfg == 12 
+            || m_opcode_cfg == 13
+            || m_opcode_cfg == 14) 
+        {
+            m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
+        }
+    }
+
+}
+
+
 void FAS::adder_tree_start_process()
 {
     while(true)
@@ -858,7 +897,7 @@ void FAS::nb_krnl_1x1_bram_rd()
         m_dpth_count = 0;
         if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
         {
-            buffer_update();
+            m_buffer_update.notify(SC_ZERO_TIME);
             m_krnl_count = 0;
         }
         else
@@ -894,38 +933,6 @@ void FAS::nb_krnl_1x1_bram_rd()
 }
 
 
-void FAS::buffer_update()
-{
-    if(m_opcode_cfg == 0 
-        || m_opcode_cfg == 1 
-        || m_opcode_cfg == 10
-        || m_opcode_cfg == 11) 
-    {
-        m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
-        m_partMap_bram_sz -= m_krnl1x1Depth_cfg;
-    }
-    else if(m_opcode_cfg == 4 || m_opcode_cfg == 5)
-    {
-        m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
-        m_partMap_bram_sz -= m_krnl1x1Depth_cfg;
-        m_resdMap_bram_sz -= m_krnl1x1Depth_cfg;
-    }
-    else if(m_opcode_cfg == 6 || m_opcode_cfg == 7)
-    {
-        m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
-        m_resdMap_bram_sz -= m_krnl1x1Depth_cfg;
-    }
-    else if(m_opcode_cfg == 2 
-        || m_opcode_cfg == 3 
-        || m_opcode_cfg == 12 
-        || m_opcode_cfg == 13
-        || m_opcode_cfg == 14) 
-    {
-        m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
-    }
-}
-
-
 void FAS::nb_result_write(int res_pkt_size)
 {
     string str;
@@ -942,13 +949,13 @@ void FAS::nb_result_write(int res_pkt_size)
     }
     else
     {
-        if(m_convMap_bram_sz == CM_BRAM_DEPTH)
-        {
-            str = "m_convMap_bram_sz is full\n";
-            cout << str;
-            sc_stop();
-            return;
-        }
+        // if(m_convMap_bram_sz == CM_BRAM_DEPTH)
+        // {
+        //     str = "m_convMap_bram_sz is full\n";
+        //     cout << str;
+        //     sc_stop();
+        //     return;
+        // }
         m_convMap_bram_sz += res_pkt_size;
     }
 }
