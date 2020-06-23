@@ -81,6 +81,7 @@ SC_MODULE(QUAD)
         int						    m_input_col					;
         int						    m_output_col				;
         int						    m_output_row				;
+        int                         m_res_high_watermark_cfg    ;
         int						    m_num_input_cols_cfg		;
         int						    m_num_output_cols_cfg		;
         int						    m_num_output_rows_cfg		;
@@ -103,5 +104,5 @@ SC_MODULE(QUAD)
         sc_core::sc_event_queue*    m_prev_quad_ack				;
         bool*                       m_primed    				;
         sc_core::sc_event_queue*    m_QUAD_start   				;
-        int                         m_start                     ;
+        int                         m_start_time                ;
 };

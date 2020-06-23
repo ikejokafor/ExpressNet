@@ -91,7 +91,7 @@ void QUAD::ctrl_process_0()
                     m_return_state = ST_ACTIVE;
                     m_state = ST_WAIT_PFB_LOAD;
                 }
-                else if(m_stride_count == 1)
+                else if(m_stride_count > 0)
                 {
                     b_pfb_read();
                     m_stride_count = (m_stride_count + 1) % m_stride_cfg;
@@ -115,7 +115,7 @@ void QUAD::ctrl_process_0()
             {
                 if(m_master_QUAD_cfg)
                 {
-                    int elpTime = (int)sc_time_stamp().to_double() - m_start;
+                    int elpTime = (int)sc_time_stamp().to_double() - m_start_time;
                     str = "[" + string(name()) + "]: QUAD processing time: " + to_string(elpTime) + " ns\n";
                     cout << str;
                 }
@@ -183,7 +183,7 @@ void QUAD::conv_process()
         wait();
         if(((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
             && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
-            && (m_res_fifo < RES_FIFO_DEPTH)
+            && (m_res_fifo < m_res_high_watermark_cfg)
             && m_output_row != m_num_output_rows_cfg
             && m_stride_count != 1)
         {
@@ -247,6 +247,7 @@ void QUAD::b_cfg_write(unsigned char* data)
 {
     wait(CLK_PRD, SC_NS);
     Accel_Trans* accel_trans    = (Accel_Trans*)data;
+    m_res_high_watermark_cfg    = accel_trans->res_high_watermark_cfg;
     m_num_output_cols_cfg		= accel_trans->num_output_cols_cfg;
     m_num_output_rows_cfg		= accel_trans->num_output_rows_cfg;
     m_num_kernels_cfg			= accel_trans->num_kernels_cfg;
@@ -268,6 +269,7 @@ void QUAD::print_cfg()
 {
     string str =
         "[" + string(name()) + "]:" + " Configured with....\n"
+        "\tResult Fifo HighWatermark:           " + to_string(m_res_high_watermark_cfg)     + "\n"
         "\tNumber of Output Columns:            " + to_string(m_num_output_cols_cfg) 		+ "\n"
         "\tNumber of Output Rows:               " + to_string(m_num_output_rows_cfg) 		+ "\n"
         "\tNumber of Kernels:                   " + to_string(m_num_kernels_cfg) 			+ "\n"
@@ -309,7 +311,7 @@ bool QUAD::b_job_start()
     {
         string str = "[" + string(name()) + "]:" + " Started Workload at " + sc_time_stamp().to_string() + "\n";
         cout << str;
-        m_start = (int)sc_time_stamp().to_double();
+        m_start_time = (int)sc_time_stamp().to_double();
         m_state = ST_PRIM_BUFFER;
         return true;
     }
@@ -333,6 +335,7 @@ void QUAD::b_job_fetch()
 #endif
     wait(m_pfb_wrtn.default_event());
 }
+
 
 void QUAD::b_pfb_write()
 {

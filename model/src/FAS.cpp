@@ -161,7 +161,8 @@ void FAS::job_fetch_process()
     while(true)
     {
         wait();
-        if(m_trans_fifo.size() > 0 && m_convMap_bram_sz < m_co_high_watermark_cfg)
+        // if(m_trans_fifo.size() > 0 && m_convMap_bram_sz < m_co_high_watermark_cfg)
+        if(m_trans_fifo.size() > 0)
         {
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
@@ -692,6 +693,10 @@ void FAS::adder_tree_done_process()
     while(true)
     {
         wait(m_adder_tree_dataout_valid.default_event());
+        if(m_state == ST_WAIT_LAST_WRITE && m_convMap_bram_sz == 0)
+        {
+            m_last_output = true;
+        }
         if(m_opcode_cfg == 0 || m_opcode_cfg == 2)
         {
             m_resdMap_dwc_fifo_wr.notify(SC_ZERO_TIME);
@@ -729,6 +734,10 @@ void FAS::resdMap_dwc_fifo_process()
             m_resdMap_dwc_fifo_sz = 0;
             m_outBuf_wr.notify(m_two_cycles_later);
         }
+        else
+        {
+            m_resdMap_dwc_fifo_sz += KERNEL_1x1_SIMD;
+        }
     }
 }
 
@@ -748,15 +757,18 @@ void FAS::prevMap_dwc_fifo_process()
     while(true)
     {
         wait(m_prevMap_dwc_fifo_wr.default_event());
-        if(m_prevMap_dwc_fifo_sz == (PV_FIFO_RD_WIDTH - 1) && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH)
+        m_prevMap_dwc_fifo_sz += KERNEL_1x1_SIMD;
+        if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH  && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH)
         {
             m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
             m_prevMap_dwc_fifo_sz = 0;
             m_outBuf_wr.notify(m_two_cycles_later);
         }
-        else
+        else if(m_prevMap_dwc_fifo_sz > 0 && m_last_output)
         {
-            m_prevMap_dwc_fifo_sz++;
+            m_last_output = false;
+            m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+            m_prevMap_dwc_fifo_sz = 0;
         }
     }
 }
@@ -767,14 +779,17 @@ void FAS::outBuf_dwc_wr_process()
     while(true)
     {
         wait(m_outBuf_dwc_wr.default_event());
-        if(m_ob_dwc_fifo_sz == (OB_FIFO_WR_WIDTH - 1))
+        m_ob_dwc_fifo_sz += KERNEL_1x1_SIMD;
+        if(m_ob_dwc_fifo_sz >= OB_FIFO_WR_WIDTH)
         {
             m_ob_dwc_fifo_sz = 0;
             m_outBuf_wr.notify(SC_ZERO_TIME);
         }
-        else
+        else if(m_ob_dwc_fifo_sz > 0 && m_last_output)
         {
-            m_ob_dwc_fifo_sz++;
+            m_last_output = false;
+            m_outBuf_fifo_sz += m_ob_dwc_fifo_sz;
+            m_ob_dwc_fifo_sz = 0;
         }
     }
 }
@@ -875,7 +890,6 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_RESULT_WRITE:
         {
-            // FIXME: add DWC code here
             nb_result_write(accel_trans->res_pkt_size);
             trans.release();
             break;
@@ -895,7 +909,7 @@ void FAS::nb_krnl_1x1_bram_rd()
     if(m_dpth_count == (m_krnl1x1Depth_cfg - KRNL_1x1_BRAM_RD_WIDTH))
     {
         m_dpth_count = 0;
-        if(m_krnl_count == (m_num_1x1_kernels_cfg - 1))
+        if(m_krnl_count == ((m_num_1x1_kernels_cfg / KERNEL_1x1_SIMD) - 1))
         {
             m_buffer_update.notify(SC_ZERO_TIME);
             m_krnl_count = 0;
@@ -942,18 +956,21 @@ void FAS::nb_result_write(int res_pkt_size)
         {
             str = "m_outBuf_fifo is full\n";
             cout << str;
-            sc_stop();
+            raise(SIGINT);
+            // reset_Accel();
             return;
         }
         m_outBuf_fifo_sz += res_pkt_size;
     }
     else
     {
-        if(m_convMap_bram_sz == CM_BRAM_DEPTH)
+        // if(m_convMap_bram_sz == CM_BRAM_DEPTH)
+        if(m_convMap_bram_sz == 10)
         {
             str = "m_convMap_bram_sz is full\n";
             cout << str;
-            sc_stop();
+            raise(SIGINT);
+            // reset_Accel();
             return;
         }
         m_convMap_bram_sz += res_pkt_size;
@@ -1124,6 +1141,7 @@ void FAS::b_QUAD_config(int AWP_addr, int QUAD_addr)
     accel_trans->QUAD_id                    = QUAD_addr;
     accel_trans->FAS_id                     = m_FAS_id;
     accel_trans->num_QUADS_cfgd             = m_num_QUAD_cfgd[AWP_addr];
+    accel_trans->res_high_watermark_cfg     = QUAD_cfg->m_res_high_watermark;
     accel_trans->num_output_cols_cfg        = QUAD_cfg->m_num_output_cols;
     accel_trans->num_output_rows_cfg        = QUAD_cfg->m_num_output_rows;
     accel_trans->num_kernels_cfg            = QUAD_cfg->m_num_kernels;

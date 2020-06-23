@@ -149,6 +149,7 @@ SC_MODULE(FAS)
             m_last_CO_recvd                 = 0;
             m_adder_tree_rdv_count          = 0;
             m_prog_factor                   = 10;
+            m_last_output                   = false;
         }
 
         // Destructor
@@ -276,4 +277,6 @@ SC_MODULE(FAS)
         sc_core::sc_event_queue                 m_resdMap_dwc_fifo_wr           ;
         int                                     m_prog_factor                   ;
         sc_core::sc_event_queue                 m_buffer_update                 ;
+        int                                     m_res_high_watermark_cfg        ;
+        bool                                    m_last_output                   ;
 };

@@ -7,8 +7,9 @@
 //  O_C: Number of Output Columns
 //  K_3: Number of 3x3 Kernels
 //  K_1: Number of 1x1 Kernels
+//  K_1_S: 1x1 Kernel SIMD
 //  K_1_D: 1x1 Kernel Depth
-//  K_1_DS: 1x1 Kernel Depth SIMD
+//  K_1_D_S: 1x1 Kernel Depth SIMD
 //
 //  IDD2P
 //
@@ -27,14 +28,14 @@
 //          + [M +  K_3)]
 //          + [3 * (M + I_C)]
 //          + [(I_R - 3)(M + I_C)]
-//          + [K_3 * O_R * O_C]
+//          + [K_3 * I_R * O_C]
 //
 //
 //  FAS Cycle Latency:
 //
 //      EXE_LAT
 //
-//      [M + (R * C)] * [(K_1_D / K_1_DS) * K_1)]
+//      [M + (R * C)] * [(K_1_D / K_1_D_S) * (K_1 / K_1_S)]
 //  
 //
 //  Power Consumption:

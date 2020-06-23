@@ -8,6 +8,7 @@ using namespace tlm_utils;
 
 void Interconnect::run()
 {
+#ifdef SIMULATE_NOC_LATENCY
     sc_time delay;
     tlm_generic_payload* trans;
     while(true)
@@ -22,11 +23,13 @@ void Interconnect::run()
             trans->release();
         }
     }
+#endif
 }
 
 
 void Interconnect::b_transport(int id, tlm_generic_payload& trans, sc_core::sc_time& delay)
 {
+#ifdef SIMULATE_NOC_LATENCY
     while(true)
     {
         wait(clk.posedge_event());
@@ -37,6 +40,9 @@ void Interconnect::b_transport(int id, tlm_generic_payload& trans, sc_core::sc_t
             break;
         }
     }
+#else
+    init_soc[trans.get_address()]->b_transport(trans, delay);
+#endif
 }
 
 
