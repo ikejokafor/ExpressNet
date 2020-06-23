@@ -5,7 +5,7 @@ vlib work
 
 
 # Xilinx Lib
-vlog -lint -sv -work work $env(GLBL_PATH)/glbl.v
+vlog -work work $env(GLBL_PATH)/glbl.v
 
 
 # Verification Files

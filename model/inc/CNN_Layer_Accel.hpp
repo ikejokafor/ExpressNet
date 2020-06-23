@@ -16,20 +16,28 @@
 //
 //  QUAD Cycle Latency:
 //
-//       PIX_SEQ_WRT_LAT
+//      PIX_SEQ_WRT_LAT
 //          + KRNL_3x3_WRT_LAT
 //          + KRNL_3x3_BIAS_WRT_LAT
 //          + PRIM_LAT
 //          + PRFTCH_WRT_LAT
 //          + EXE_LAT
 //
-//       [M + 8192]
+//      For stride 1:
+//          [M + 8192]
 //          + [M + (10 * K_3)]
 //          + [M +  K_3)]
 //          + [3 * (M + I_C)]
 //          + [(I_R - 3)(M + I_C)]
 //          + [K_3 * I_R * O_C]
 //
+//      For stride 2:
+//          [M + 8192]
+//          + [M + (10 * K_3)]
+//          + [M +  K_3)]
+//          + [3 * (M + I_C)]
+//          + [(I_R - 3)(M + I_C)]
+//          + [K_3 * O_R * O_C] + [I_R / 2]
 //
 //  FAS Cycle Latency:
 //
