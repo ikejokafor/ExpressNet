@@ -161,8 +161,8 @@ void FAS::job_fetch_process()
     while(true)
     {
         wait();
-        // if(m_trans_fifo.size() > 0 && m_convMap_bram_sz < m_co_high_watermark_cfg)
-        if(m_trans_fifo.size() > 0)
+        if(m_trans_fifo.size() > 0 && m_convMap_bram_sz < m_co_high_watermark_cfg)
+        // if(m_trans_fifo.size() > 0)
         {
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
@@ -758,7 +758,7 @@ void FAS::prevMap_dwc_fifo_process()
     {
         wait(m_prevMap_dwc_fifo_wr.default_event());
         m_prevMap_dwc_fifo_sz += KERNEL_1x1_SIMD;
-        if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH  && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH)
+        if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH)
         {
             m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
             m_prevMap_dwc_fifo_sz = 0;
@@ -767,7 +767,8 @@ void FAS::prevMap_dwc_fifo_process()
         else if(m_prevMap_dwc_fifo_sz > 0 && m_last_output)
         {
             m_last_output = false;
-            m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
+            m_prevMap_fifo_sz -= m_prevMap_dwc_fifo_sz;
+            m_outBuf_fifo_sz += m_prevMap_dwc_fifo_sz;
             m_prevMap_dwc_fifo_sz = 0;
         }
     }
@@ -952,27 +953,27 @@ void FAS::nb_result_write(int res_pkt_size)
     string str;
     if(m_opcode_cfg == 16)
     {
-        if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
-        {
-            str = "m_outBuf_fifo is full\n";
-            cout << str;
-            raise(SIGINT);
-            // reset_Accel();
-            return;
-        }
+        // if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
+        // {
+        //     str = "m_outBuf_fifo is full\n";
+        //     cout << str;
+        //     raise(SIGINT);
+        //     // reset_Accel();
+        //     return;
+        // }
         m_outBuf_fifo_sz += res_pkt_size;
     }
     else
     {
         // if(m_convMap_bram_sz == CM_BRAM_DEPTH)
-        if(m_convMap_bram_sz == 10)
-        {
-            str = "m_convMap_bram_sz is full\n";
-            cout << str;
-            raise(SIGINT);
-            // reset_Accel();
-            return;
-        }
+        // if(m_convMap_bram_sz == 10)
+        // {
+        //     str = "m_convMap_bram_sz is full\n";
+        //     cout << str;
+        //     raise(SIGINT);
+        //     // reset_Accel();
+        //     return;
+        // }
         m_convMap_bram_sz += res_pkt_size;
     }
 }

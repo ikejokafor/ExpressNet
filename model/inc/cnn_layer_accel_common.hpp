@@ -32,7 +32,7 @@
 #define MAX_FAS_ROUT_TRANS                  1
 #define MAX_3x3_KERNELS                     64
 #define YOLOV3_MAX_1x1_INPUT_DEPTH          1024
-#define KERNEL_1x1_SIMD                     16
+#define KERNEL_1x1_SIMD                     1
 #define KERNEL_1x1_DEPTH_SIMD               32
 #define LOG2_KERNEL_1x1_DEPTH_SIMD          log2(KERNEL_1x1_DEPTH_SIMD)
 #define MAX_1x1_KERNELS                     1024
