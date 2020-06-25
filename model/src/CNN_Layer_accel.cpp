@@ -105,7 +105,7 @@ void CNN_Layer_Accel::system_mem_read_arb_process()
 void CNN_Layer_Accel::system_mem_write_arb_process()
 {
 #ifdef SIMULATE_MEMORY
-    while (true)
+    while(true)
     {
         wait();
         int numReq = 0;

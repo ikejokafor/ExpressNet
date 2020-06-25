@@ -28,7 +28,7 @@ void FAS::ctrl_process()
             case ST_CFG_START_AWP:
             {
                 b_cfg_Accel();
-                if(m_opcode_cfg != 14)
+                if(m_opcode_cfg != 14 && m_opcode_cfg != 17)
                 {
                     b_start_QUADs();
                 }
@@ -38,10 +38,10 @@ void FAS::ctrl_process()
             case ST_ACTIVE:
             {
                 if(m_partMapFetchCount == m_partMapFetchTotal_cfg
-                    && (m_inMapFetchCount == m_inMapFetchTotal_cfg || m_opcode_cfg == 14)
+                    && (m_inMapFetchCount == m_inMapFetchTotal_cfg || m_opcode_cfg == 14 || m_opcode_cfg == 17)
                     && m_resdMapFetchCount == m_resdMapFetchTotal_cfg
                     && m_prevMapFetchCount == m_prevMapFetchTotal_cfg
-                    && (m_last_CO_recvd || m_opcode_cfg == 14))
+                    && (m_last_CO_recvd || m_opcode_cfg == 14 || m_opcode_cfg == 17))
                 {
                     m_state = ST_WAIT_LAST_WRITE;
                 }
@@ -68,7 +68,7 @@ void FAS::ctrl_process()
                         break;
                     }
                 }
-                if(all_complete || m_opcode_cfg == 14)
+                if(all_complete || m_opcode_cfg == 14 || m_opcode_cfg == 17)
                 {
                     if(m_prevMap_fifo_sz > 0 || m_resdMap_bram_sz > 0 
                         || m_resdMap_dwc_fifo_sz > 0 || m_prevMap_dwc_fifo_sz > 0
@@ -161,8 +161,8 @@ void FAS::job_fetch_process()
     while(true)
     {
         wait();
-        if(m_trans_fifo.size() > 0 && m_convMap_bram_sz < m_co_high_watermark_cfg)
-        // if(m_trans_fifo.size() > 0)
+        // if(m_trans_fifo.size() > 0 && m_convMap_bram_sz < m_co_high_watermark_cfg)
+        if(m_trans_fifo.size() > 0)
         {
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
@@ -228,7 +228,7 @@ void FAS::partMap_fetch_process()
         wait();
         if(m_state == ST_ACTIVE &&
 			((m_opcode_cfg != 14 && m_partMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
-			|| (m_opcode_cfg == 14 && m_convMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)))
+			|| ((m_opcode_cfg == 14 || m_opcode_cfg == 17) && m_convMap_bram_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)))
         {
 #ifdef VERBOSE_DEBUG
             start = sc_time_stamp().to_double();
@@ -250,7 +250,7 @@ void FAS::partMap_fetch_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            if(m_opcode_cfg == 14)
+            if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
                 m_convMap_bram_sz += m_pm_fetch_amount_cfg;
             }
@@ -518,7 +518,7 @@ void FAS::A_process()
             m_resdMap_read_valid.notify(m_two_cycles_later);
             m_outBuf_wr.notify(m_four_cycles_later);
         }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 9
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && (m_opcode_cfg == 9 || m_opcode_cfg == 17)
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
         {
@@ -840,7 +840,7 @@ void FAS::S_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
             m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
-            if(m_opcode_cfg == 14)
+            if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
                 float total_store_trans = (float)m_outMapStoreTotal_cfg / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE);
                 float trans_no = (float)m_outMapStoreCount / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE);
@@ -983,7 +983,7 @@ void FAS::b_cfg_Accel()
 {
     b_getCfgData();
     b_cfg1x1Kernels();
-    if(m_opcode_cfg != 14)
+    if(m_opcode_cfg != 14 && m_opcode_cfg != 17)
     {
         b_sendQUADCfgs();
     }
