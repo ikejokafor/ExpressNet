@@ -62,7 +62,8 @@
 
 #include <vector>
 #include <string>
-#include <random>
+#include <iomanip>
+#include <sstream>
 #include "systemc"
 #include "tlm.h"
 #include "tlm_utils/peq_with_cb_and_phase.h"
@@ -78,8 +79,45 @@
 SC_MODULE(CNN_Layer_Accel)
 {
     public:
-        // Clocks
-        sc_core::sc_in<bool> clk;
+	sc_core::sc_in<bool>						clk				;
+#ifdef SIMULATE_MEMORY	
+	sc_core::sc_in<bool >  						axi_awready		;	// Indicates slave is ready to accept a 
+	sc_core::sc_out<sc_lv<32> >  				axi_awid		;	// Write ID
+	sc_core::sc_out<sc_lv<33> > 				axi_awaddr		;	// Write address
+	sc_core::sc_out<sc_lv<8> >  				axi_awlen		;	// Write Burst Length
+	sc_core::sc_out<sc_lv<3> >  				axi_awsize		;	// Write Burst size
+	sc_core::sc_out<sc_lv<2> >  				axi_awburst		;	// Write Burst type
+	sc_core::sc_out<sc_lv<4> >  				axi_awcache		;	// Write Cache type
+	sc_core::sc_out<sc_lv<3> >					axi_awprot		;	// Write Protection type
+	sc_core::sc_out<bool >  					axi_awvalid		;	// Write address valid
+	// AXI write data channel signals
+	sc_core::sc_in<bool >  						axi_wready		;	// Write data ready
+	sc_core::sc_out<sc_lv<512> >  				axi_wdata		;	// Write data
+	sc_core::sc_out<sc_lv<64> >  				axi_wstrb		;	// Write strobes
+	sc_core::sc_out<bool >  					axi_wlast		;	// Last write transaction   
+	sc_core::sc_out<bool >  					axi_wvalid		;	// Write valid  
+	// AXI write response channel signals
+	sc_core::sc_in<sc_lv<32> >  				axi_bid			;	// Response ID
+	sc_core::sc_in<sc_lv<2> >  					axi_bresp		;	// Write response
+	sc_core::sc_in<bool >  						axi_bvalid		;	// Write reponse valid
+	sc_core::sc_out<bool>  						axi_bready		;	// Response ready
+	// AXI read address channel signals
+	sc_core::sc_in<bool >  						axi_arready		;   // Read address ready
+	sc_core::sc_out<sc_lv<32> > 				axi_arid		;	// Read ID
+	sc_core::sc_out<sc_lv<33> >					axi_araddr		;   // Read address
+	sc_core::sc_out<sc_lv<8> > 					axi_arlen		;   // Read Burst Length
+	sc_core::sc_out<sc_lv<3> > 					axi_arsize		;   // Read Burst size
+	sc_core::sc_out<sc_lv<2> > 					axi_arburst		;   // Read Burst type
+	sc_core::sc_out<sc_lv<4> > 					axi_arcache		;   // Read Cache type
+	sc_core::sc_out<bool >  					axi_arvalid		;   // Read address valid 
+	// AXI read data channel signals   
+	sc_core::sc_in<sc_lv<32> > 					axi_rid			;   // Response ID
+	sc_core::sc_in<sc_lv<2> > 					axi_rresp		;   // Read response
+	sc_core::sc_in<bool> 						axi_rvalid		;   // Read reponse valid
+	sc_core::sc_in<sc_lv<512> > 				axi_rdata		;   // Read data
+	sc_core::sc_in<bool> 						axi_rlast		;   // Read last
+	sc_core::sc_out<bool> 						axi_rready		;   // Read Response ready
+#endif	
         tlm_utils::simple_target_socket<CNN_Layer_Accel>	tar_soc;
 
         AWP* awp[MAX_AWP_PER_FAS];
@@ -160,6 +198,8 @@ SC_MODULE(CNN_Layer_Accel)
         int complt_process(int idx);
         void system_mem_read_arb_process();
         void system_mem_write_arb_process();
+		int system_mem_read(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size);
+		int system_mem_write(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size);
 
 
         // Methods

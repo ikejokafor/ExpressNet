@@ -40,7 +40,7 @@ void AWP::bus_arbitrate()
                         str = "[" + string(name()) + "]: Gave QUAD " + to_string(i) + " the bus at " + sc_time_stamp().to_string() + "\n";
                         cout << str;
 #endif
-                    bus.m_req_arr[i].ack.notify();
+                    bus.m_req_arr[i].ack.notify(SC_ZERO_TIME);
                     m_next_req_id = (i + 1) % MAX_AWP_TRANS;
                     break;
                 }

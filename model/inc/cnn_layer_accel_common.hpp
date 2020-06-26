@@ -11,7 +11,6 @@
 
 
 // #define VERBOSE_DEBUG
-// #define SIMULATE_MEMORY
 #define BITS_PER_PIXEL                      16
 #define AXI_BUS_SIZE                        512
 #define AXI_ACCEL_CLK_RATIO                 5
@@ -130,7 +129,8 @@ class Accel_Trans
         int crpd_input_row_end_cfg      ;
         bool req_pending                ;
         bool last_CO                    ;
-        sc_core::sc_event ack           ;
+		int* memory						;
+        sc_core::sc_event_queue ack     ;
         sc_core::sc_event request       ;
         fas_rd_id_t fas_rd_id           ;
         fas_wr_id_t fas_wr_id           ;
