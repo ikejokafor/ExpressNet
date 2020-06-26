@@ -46,6 +46,14 @@ set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==bd_9054_iomodul
 # IP: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_1/ddr4_0_phy.xci
 set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==ddr4_0_phy || ORIG_REF_NAME==ddr4_0_phy} -quiet] -quiet
 
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0_board.xdc
+# XDC: The top module name and the constraint reference have the same name: 'ddr4_0'. Do not add the DONT_TOUCH constraint.
+set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
+
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/par/ddr4_0.xdc
+# XDC: The top module name and the constraint reference have the same name: 'ddr4_0'. Do not add the DONT_TOUCH constraint.
+#dup# set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
+
 # XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/bd_0/ip/ip_0/bd_9054_microblaze_I_0.xdc
 set_property DONT_TOUCH TRUE [get_cells [split [join [get_cells -hier -filter {REF_NAME==bd_9054_microblaze_I_0 || ORIG_REF_NAME==bd_9054_microblaze_I_0} -quiet] {/U0 } ]/U0 ] -quiet] -quiet
 
@@ -78,14 +86,6 @@ set_property DONT_TOUCH TRUE [get_cells [split [join [get_cells -hier -filter {R
 # XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_0/ddr4_0_microblaze_mcs_ooc.xdc
 
 # XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_1/par/ddr4_0_phy_ooc.xdc
-
-# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0_board.xdc
-# XDC: The top module name and the constraint reference have the same name: 'ddr4_0'. Do not add the DONT_TOUCH constraint.
-set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
-
-# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/par/ddr4_0.xdc
-# XDC: The top module name and the constraint reference have the same name: 'ddr4_0'. Do not add the DONT_TOUCH constraint.
-#dup# set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
 
 # IP: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0.xci
 # IP: The module: 'ddr4_0' is the root of the design. Do not add the DONT_TOUCH constraint.
@@ -132,6 +132,14 @@ set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
 # IP: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_1/ddr4_0_phy.xci
 #dup# set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==ddr4_0_phy || ORIG_REF_NAME==ddr4_0_phy} -quiet] -quiet
 
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0_board.xdc
+# XDC: The top module name and the constraint reference have the same name: 'ddr4_0'. Do not add the DONT_TOUCH constraint.
+#dup# set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
+
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/par/ddr4_0.xdc
+# XDC: The top module name and the constraint reference have the same name: 'ddr4_0'. Do not add the DONT_TOUCH constraint.
+#dup# set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
+
 # XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/bd_0/ip/ip_0/bd_9054_microblaze_I_0.xdc
 #dup# set_property DONT_TOUCH TRUE [get_cells [split [join [get_cells -hier -filter {REF_NAME==bd_9054_microblaze_I_0 || ORIG_REF_NAME==bd_9054_microblaze_I_0} -quiet] {/U0 } ]/U0 ] -quiet] -quiet
 
@@ -164,11 +172,3 @@ set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
 # XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_0/ddr4_0_microblaze_mcs_ooc.xdc
 
 # XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_1/par/ddr4_0_phy_ooc.xdc
-
-# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0_board.xdc
-# XDC: The top module name and the constraint reference have the same name: 'ddr4_0'. Do not add the DONT_TOUCH constraint.
-#dup# set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet
-
-# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/par/ddr4_0.xdc
-# XDC: The top module name and the constraint reference have the same name: 'ddr4_0'. Do not add the DONT_TOUCH constraint.
-#dup# set_property DONT_TOUCH TRUE [get_cells inst -quiet] -quiet

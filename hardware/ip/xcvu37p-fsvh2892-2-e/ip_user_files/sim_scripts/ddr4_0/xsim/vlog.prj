@@ -1,10 +1,10 @@
-verilog xil_defaultlib --include "../../../../ddr4_0/ip_1/rtl/map" --include "../../../../ddr4_0/rtl/ip_top" --include "../../../../ddr4_0/rtl/cal" \
+verilog xil_defaultlib --include "../../../../ddr4_0/rtl/ip_top" --include "../../../../ddr4_0/rtl/cal" --include "../../../../ddr4_0/ip_1/rtl/map" \
 "../../../../ddr4_0/bd_0/ip/ip_6/sim/bd_9054_lmb_bram_I_0.v" \
 "../../../../ddr4_0/bd_0/ip/ip_9/sim/bd_9054_second_lmb_bram_I_0.v" \
 "../../../../ddr4_0/bd_0/sim/bd_9054.v" \
 "../../../../ddr4_0/ip_0/sim/ddr4_0_microblaze_mcs.v" \
 
-sv xil_defaultlib --include "../../../../ddr4_0/ip_1/rtl/map" --include "../../../../ddr4_0/rtl/ip_top" --include "../../../../ddr4_0/rtl/cal" \
+sv xil_defaultlib --include "../../../../ddr4_0/rtl/ip_top" --include "../../../../ddr4_0/rtl/cal" --include "../../../../ddr4_0/ip_1/rtl/map" \
 "../../../../ddr4_0/ip_1/rtl/phy/ddr4_phy_v2_2_xiphy_behav.sv" \
 "../../../../ddr4_0/ip_1/rtl/phy/ddr4_phy_v2_2_xiphy.sv" \
 "../../../../ddr4_0/ip_1/rtl/iob/ddr4_phy_v2_2_iob_byte.sv" \

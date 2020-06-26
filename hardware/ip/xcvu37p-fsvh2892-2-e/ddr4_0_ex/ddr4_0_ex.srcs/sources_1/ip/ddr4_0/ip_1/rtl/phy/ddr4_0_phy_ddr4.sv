@@ -100,9 +100,9 @@ module ddr4_0_phy_ddr4 #
    ,parameter integer CS_WIDTH             = 1
    ,parameter integer ODT_WIDTH            = 1
    ,parameter         DRAM_TYPE            = "DDR4"
-   ,parameter integer DQ_WIDTH             = 8
-   ,parameter integer DQS_WIDTH            = 1
-   ,parameter integer DM_WIDTH             = 1
+   ,parameter integer DQ_WIDTH             = 72
+   ,parameter integer DQS_WIDTH            = 9
+   ,parameter integer DM_WIDTH             = 9
    ,parameter         C_FAMILY             = "virtexuplusHBM"
 
    ,parameter         tCK                  = 750
@@ -115,31 +115,31 @@ module ddr4_0_phy_ddr4 #
    ,parameter         SYSCLK_TYPE          = "DIFFERENTIAL"
                                 // input clock type
    
-   ,parameter         BACKBONE_ROUTE       = "FALSE"
-   ,parameter         PLL_WIDTH            = 1
+   ,parameter         BACKBONE_ROUTE       = "TRUE"
+   ,parameter         PLL_WIDTH            = 3
    ,parameter         CLKOUTPHY_MODE       = "VCO_2X"
 
    ,parameter         SIM_DEVICE           = "ULTRASCALE_PLUS"
-   ,parameter integer BYTES                = 4
-   ,parameter integer DBYTES               = 1
-   ,parameter [39*BYTES-1:0] IOBTYPE       = {                                                                                   39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_000_000_000_000_000_000_000_000_001_001_001_001,                                                                                  39'b001_001_001_000_000_001_001_001_001_001_001_001_001,                                                                                  39'b000_001_001_001_001_101_101_001_001_001_001_001_001   }
+   ,parameter integer BYTES                = 12
+   ,parameter integer DBYTES               = 9
+   ,parameter [39*BYTES-1:0] IOBTYPE       = {                                                                                   39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_011_011_011_011_111_111_011_011_011_011_000_011,                                                                                  39'b000_000_000_000_000_000_000_000_000_001_001_001_001,                                                                                  39'b001_001_001_000_000_001_001_001_001_001_001_001_001,                                                                                  39'b000_001_001_001_001_101_101_001_001_001_001_001_001   }
    ,parameter                PLLCLK_SRC         = 1'b0
    ,parameter [1:0]          DIV_MODE           = 2'b00
    ,parameter                DATA_WIDTH         = 8
    ,parameter [1:0]          CTRL_CLK           = 2'b11
    ,parameter [15*BYTES-1:0] INIT               = {15*BYTES{1'b1}}
-   ,parameter [BYTES-1:0]    PING_PONG_CH1_BYTES_MAP = 4'b0000
-   ,parameter [15*BYTES-1:0] RX_DATA_TYPE       = { 15'b011110_11_11110_01,                                                                                15'b000000_00_00111_11,                                                                                15'b111001_11_11111_11,                                                                                15'b011111_11_11111_11                                                                                }
-   ,parameter [13*BYTES-1:0] TX_OUTPUT_PHASE_90 = { 13'b0000011000000,                                                                                13'b0000000001111,                                                                                13'b1110011111111,                                                                                13'b0111111111111                                                                                }
-   ,parameter [13*BYTES-1:0] RXTX_BITSLICE_EN   = {13'b0111101111101,                                                                                13'b0000000001111,                                                                                13'b1110011111111,                                                                                13'b0111101111111                                                                                }
+   ,parameter [BYTES-1:0]    PING_PONG_CH1_BYTES_MAP = 12'b000000000000
+   ,parameter [15*BYTES-1:0] RX_DATA_TYPE       = { 15'b011110_11_11110_01,                                                                                15'b011110_11_11110_01,                                                                                15'b011110_11_11110_01,                                                                                15'b011110_11_11110_01,                                                                                15'b011110_11_11110_01,                                                                                15'b011110_11_11110_01,                                                                                15'b011110_11_11110_01,                                                                                15'b011110_11_11110_01,                                                                                15'b011110_11_11110_01,                                                                                15'b000000_00_00111_11,                                                                                15'b111001_11_11111_11,                                                                                15'b011111_11_11111_11                                                                                }
+   ,parameter [13*BYTES-1:0] TX_OUTPUT_PHASE_90 = { 13'b0000011000000,                                                                                13'b0000011000000,                                                                                13'b0000011000000,                                                                                13'b0000011000000,                                                                                13'b0000011000000,                                                                                13'b0000011000000,                                                                                13'b0000011000000,                                                                                13'b0000011000000,                                                                                13'b0000011000000,                                                                                13'b0000000001111,                                                                                13'b1110011111111,                                                                                13'b0111111111111                                                                                }
+   ,parameter [13*BYTES-1:0] RXTX_BITSLICE_EN   = {13'b0111101111101,                                                                                13'b0111101111101,                                                                                13'b0111101111101,                                                                                13'b0111101111101,                                                                                13'b0111101111101,                                                                                13'b0111101111101,                                                                                13'b0111101111101,                                                                                13'b0111101111101,                                                                                13'b0111101111101,                                                                                13'b0000000001111,                                                                                13'b1110011111111,                                                                                13'b0111101111111                                                                                }
    ,parameter [13*BYTES-1:0] NATIVE_ODELAY_BYPASS = {(13*BYTES){1'b0}}
-   ,parameter [2*BYTES-1:0]  EN_OTHER_PCLK      = {{1{2'b01}}, {3{2'b00}}} 
-   ,parameter [2*BYTES-1:0]  EN_OTHER_NCLK      = {{1{2'b01}}, {3{2'b00}}} 
-   ,parameter [2*BYTES-1:0]  RX_CLK_PHASE_P     = {{1{2'b11}}, {3{2'b00}}} 
-   ,parameter [2*BYTES-1:0]  RX_CLK_PHASE_N     = {{1{2'b11}}, {3{2'b00}}} 
-   ,parameter [2*BYTES-1:0]  TX_GATING          = {{1{2'b11}}, {3{2'b00}}} 
-   ,parameter [2*BYTES-1:0]  RX_GATING          = {{1{2'b11}}, {3{2'b00}}} 
-   ,parameter [2*BYTES-1:0]  EN_DYN_ODLY_MODE   = {{1{2'b11}}, {3{2'b00}}} 
+   ,parameter [2*BYTES-1:0]  EN_OTHER_PCLK      = {{9{2'b01}}, {3{2'b00}}} 
+   ,parameter [2*BYTES-1:0]  EN_OTHER_NCLK      = {{9{2'b01}}, {3{2'b00}}} 
+   ,parameter [2*BYTES-1:0]  RX_CLK_PHASE_P     = {{9{2'b11}}, {3{2'b00}}} 
+   ,parameter [2*BYTES-1:0]  RX_CLK_PHASE_N     = {{9{2'b11}}, {3{2'b00}}} 
+   ,parameter [2*BYTES-1:0]  TX_GATING          = {{9{2'b11}}, {3{2'b00}}} 
+   ,parameter [2*BYTES-1:0]  RX_GATING          = {{9{2'b11}}, {3{2'b00}}} 
+   ,parameter [2*BYTES-1:0]  EN_DYN_ODLY_MODE   = {{9{2'b11}}, {3{2'b00}}} 
    ,parameter                BANK_TYPE          = "HP_IO"
    ,parameter [2*BYTES-1:0] IDLY_VT_TRACK       = (RANKS == 1)?{(2*BYTES){1'b1}}:
                                                                  {(2*BYTES){1'b0}}
@@ -152,7 +152,7 @@ module ddr4_0_phy_ddr4 #
    ,parameter [2*BYTES-1:0]  SELF_CALIBRATE     = {(2*BYTES){1'b0}}
   `else
    ,parameter                SIM_MODE           = "FULL"
-   ,parameter [2*BYTES-1:0]  SELF_CALIBRATE     = {4{2'b11}} 
+   ,parameter [2*BYTES-1:0]  SELF_CALIBRATE     = {12{2'b11}} 
   `endif
   )
   (

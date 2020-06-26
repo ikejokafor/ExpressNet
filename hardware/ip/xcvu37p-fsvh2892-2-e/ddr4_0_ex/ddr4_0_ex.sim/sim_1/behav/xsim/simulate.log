@@ -1,0 +1,252 @@
+Vivado Simulator 2018.3
+Time resolution is 1 ps
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[0].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[0].ddr4_model:Configured as x8 8G stack:1
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[1].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[1].ddr4_model:Configured as x8 8G stack:1
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[2].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[2].ddr4_model:Configured as x8 8G stack:1
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[3].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[3].ddr4_model:Configured as x8 8G stack:1
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[4].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[4].ddr4_model:Configured as x8 8G stack:1
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[5].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[5].ddr4_model:Configured as x8 8G stack:1
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[6].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[6].ddr4_model:Configured as x8 8G stack:1
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[7].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[7].ddr4_model:Configured as x8 8G stack:1
+Loading timesets for 'sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[8].ddr4_model.LoadTiming' @0
+	Loaded timeset:TS_1875
+	Loaded timeset:TS_1500
+	Loaded timeset:TS_1250
+	Loaded timeset:TS_1072
+	Loaded timeset:TS_938
+	Loaded timeset:TS_833
+	Loaded timeset:TS_750
+	Loaded timeset:TS_682
+	Loaded timeset:TS_625
+Model based on DDR4 DDS version 0.999 6/06/2014 (build data 5/06/2016)
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[8].ddr4_model:Configured as x8 8G stack:1
+DEBUG:::BOOT_MODE:::at time =              533329 executing instruction 0
+DEBUG:::CUSTOM_MODE:::at time =              533329 executing instruction 0
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[3].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[4].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[5].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[6].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[7].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[8].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[9].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[10].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+Info: [Unisim HPIO_VREF-1] Fabric Tune Value changed to 0011111. Instance: sim_tb_top.u_example_top.u_ddr4_0.inst.u_ddr4_mem_intfc.u_mig_ddr4_phy.inst.u_ddr_iob.genByte[11].u_ddr_iob_byte.genblk1.genVref.u_hpio_vref
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[0].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[1].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[2].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[3].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[4].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[5].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[6].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[7].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+sim_tb_top.mem_model_x8.memModels_Ri1[0].memModel1[8].ddr4_model.always_diff_ck.if_diff_ck:Initialization complete @3417318
+DEBUG:::BOOT_MODE::::at time =             4225375 instruction =00 axi_size_count =6 axi_length_count=63
+DEBUG:::BOOT_MODE::::at time =             4963485 instruction =00 axi_size_count =6 axi_length_count=31
+DEBUG:::BOOT_MODE::::at time =             5395549 instruction =00 axi_size_count =6 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =             5683591 instruction =00 axi_size_count =6 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =             5899623 instruction =00 axi_size_count =6 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =             6079650 instruction =00 axi_size_count =6 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =             6241674 instruction =00 axi_size_count =6 axi_length_count=0
+DEBUG:::BOOT_MODE::::at time =             6397697 instruction =00 axi_size_count =5 axi_length_count=63
+DEBUG:::BOOT_MODE::::at time =             7120804 instruction =00 axi_size_count =5 axi_length_count=31
+DEBUG:::BOOT_MODE::::at time =             7555869 instruction =00 axi_size_count =5 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =             7846912 instruction =00 axi_size_count =5 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =             8065944 instruction =00 axi_size_count =5 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =             8248971 instruction =00 axi_size_count =5 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =             8416996 instruction =00 axi_size_count =5 axi_length_count=0
+DEBUG:::BOOT_MODE::::at time =             8627027 instruction =00 axi_size_count =4 axi_length_count=63
+DEBUG:::BOOT_MODE::::at time =             9356135 instruction =00 axi_size_count =4 axi_length_count=31
+DEBUG:::BOOT_MODE::::at time =             9797201 instruction =00 axi_size_count =4 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            10094245 instruction =00 axi_size_count =4 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            10319278 instruction =00 axi_size_count =4 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            10511307 instruction =00 axi_size_count =4 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            10739340 instruction =00 axi_size_count =4 axi_length_count=0
+DEBUG:::BOOT_MODE::::at time =            10961373 instruction =00 axi_size_count =3 axi_length_count=63
+DEBUG:::BOOT_MODE::::at time =            11702483 instruction =00 axi_size_count =3 axi_length_count=31
+DEBUG:::BOOT_MODE::::at time =            12155550 instruction =00 axi_size_count =3 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            12665626 instruction =00 axi_size_count =3 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            12905661 instruction =00 axi_size_count =3 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            13169700 instruction =00 axi_size_count =3 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            13421738 instruction =00 axi_size_count =3 axi_length_count=0
+DEBUG:::BOOT_MODE::::at time =            13667774 instruction =00 axi_size_count =2 axi_length_count=63
+DEBUG:::BOOT_MODE::::at time =            14432887 instruction =00 axi_size_count =2 axi_length_count=31
+DEBUG:::BOOT_MODE::::at time =            14909958 instruction =00 axi_size_count =2 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            15246008 instruction =00 axi_size_count =2 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            15582058 instruction =00 axi_size_count =2 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            15894104 instruction =00 axi_size_count =2 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            16194148 instruction =00 axi_size_count =2 axi_length_count=0
+DEBUG:::BOOT_MODE::::at time =            16488192 instruction =00 axi_size_count =1 axi_length_count=63
+DEBUG:::BOOT_MODE::::at time =            17301312 instruction =00 axi_size_count =1 axi_length_count=31
+DEBUG:::BOOT_MODE::::at time =            17829391 instruction =00 axi_size_count =1 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            18309462 instruction =00 axi_size_count =1 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            18741526 instruction =00 axi_size_count =1 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            19149586 instruction =00 axi_size_count =1 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            19545645 instruction =00 axi_size_count =1 axi_length_count=0
+DEBUG:::BOOT_MODE::::at time =            19935703 instruction =00 axi_size_count =0 axi_length_count=63
+DEBUG:::BOOT_MODE::::at time =            20847838 instruction =00 axi_size_count =0 axi_length_count=31
+DEBUG:::BOOT_MODE::::at time =            21615951 instruction =00 axi_size_count =0 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            22288051 instruction =00 axi_size_count =0 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            22912143 instruction =00 axi_size_count =0 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            23512232 instruction =00 axi_size_count =0 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            24100319 instruction =00 axi_size_count =0 axi_length_count=0
+DEBUG:::BOOT_MODE:::at time =            24685406 executing instruction 1
+DEBUG:::BOOT_MODE::::at time =            24688407 instruction =01 axi_size_count =6 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            24985451 instruction =01 axi_size_count =6 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            25201483 instruction =01 axi_size_count =6 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            25381509 instruction =01 axi_size_count =6 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            25543533 instruction =01 axi_size_count =5 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            25834576 instruction =01 axi_size_count =5 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            26053609 instruction =01 axi_size_count =5 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            26236636 instruction =01 axi_size_count =5 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            26404661 instruction =01 axi_size_count =4 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            26701705 instruction =01 axi_size_count =4 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            26926738 instruction =01 axi_size_count =4 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            27118767 instruction =01 axi_size_count =4 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            27346800 instruction =01 axi_size_count =3 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            27661847 instruction =01 axi_size_count =3 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            28198927 instruction =01 axi_size_count =3 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            28462966 instruction =01 axi_size_count =3 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            28715003 instruction =01 axi_size_count =2 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            29051053 instruction =01 axi_size_count =2 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            29387103 instruction =01 axi_size_count =2 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            29699149 instruction =01 axi_size_count =2 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            29999193 instruction =01 axi_size_count =1 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            30479264 instruction =01 axi_size_count =1 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            30911328 instruction =01 axi_size_count =1 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            31319389 instruction =01 axi_size_count =1 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            31715447 instruction =01 axi_size_count =0 axi_length_count=15
+DEBUG:::BOOT_MODE::::at time =            32387547 instruction =01 axi_size_count =0 axi_length_count=7
+DEBUG:::BOOT_MODE::::at time =            33011639 instruction =01 axi_size_count =0 axi_length_count=3
+DEBUG:::BOOT_MODE::::at time =            33611728 instruction =01 axi_size_count =0 axi_length_count=1
+DEBUG:::BOOT_MODE:::at time =            34202816 executing instruction 2
+DEBUG:::BOOT_MODE::::at time =            34205816 instruction =02 axi_size_count =6 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            34418848 instruction =02 axi_size_count =5 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            34631879 instruction =02 axi_size_count =4 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            34856913 instruction =02 axi_size_count =3 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            35108950 instruction =02 axi_size_count =2 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            35408995 instruction =02 axi_size_count =1 axi_length_count=1
+DEBUG:::BOOT_MODE::::at time =            36021085 instruction =02 axi_size_count =0 axi_length_count=1
+DEBUG:::BOOT_MODE:::at time =            36612173 executing instruction 3
+DEBUG:::BOOT_MODE:::at time =            36618174 executing instruction 0
+DEBUG:::PRBS_MODE::::at time =            36618174 instruction =0 axi_addr = xxxxxxxxx length =x size =x burst =x strb_pattern =X)
+DEBUG:::PRBS_MODE::::at time =            37206261 instruction =1 axi_addr = 0abcd1234 length =1 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            37794348 instruction =2 axi_addr = 1579a2468 length =1 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            38382435 instruction =3 axi_addr = 0af3448d0 length =1 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            38985524 instruction =4 axi_addr = 15e6891a0 length =1 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            39585613 instruction =5 axi_addr = 0bcd12340 length =3 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            40209706 instruction =6 axi_addr = 179a24680 length =7 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            40809795 instruction =7 axi_addr = 0f3448d00 length =3 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            41433887 instruction =8 axi_addr = 1e6891a00 length =7 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            42042977 instruction =9 axi_addr = 1cd123400 length =3 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            42667070 instruction =10 axi_addr = 19a246800 length =7 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            43276160 instruction =11 axi_addr = 13448d000 length =3 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            43948259 instruction =12 axi_addr = 06891a000 length =15 size =0 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            44428331 instruction =13 axi_addr = 0d1234000 length =15 size =1 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            44764380 instruction =14 axi_addr = 1a2468000 length =15 size =2 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            44983413 instruction =15 axi_addr = 1448d0000 length =7 size =5 burst =2 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            45736524 instruction =16 axi_addr = 0891a0000 length =60 size =2 burst =1 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            47806831 instruction =17 axi_addr = 112340000 length =121 size =5 burst =1 strb_pattern =2)
+DEBUG:::PRBS_MODE::::at time =            49076019 instruction =18 axi_addr = 024680000 length =115 size =2 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            50213187 instruction =19 axi_addr = 048d00000 length =102 size =5 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            51119322 instruction =20 axi_addr = 091a00000 length =77 size =3 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            51815425 instruction =21 axi_addr = 123400000 length =26 size =6 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            52487524 instruction =22 axi_addr = 046800000 length =52 size =6 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            53627693 instruction =23 axi_addr = 08d000000 length =104 size =6 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            54590836 instruction =24 axi_addr = 11a000000 length =81 size =4 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            55229931 instruction =25 axi_addr = 034000000 length =34 size =1 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            56079056 instruction =26 axi_addr = 068000000 length =68 size =3 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            56277086 instruction =27 axi_addr = 0d0000000 length =3 size =6 burst =2 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            56658142 instruction =28 axi_addr = 1a0000000 length =18 size =5 burst =1 strb_pattern =1)
+DEBUG:::PRBS_MODE::::at time =            57213224 instruction =29 axi_addr = 140000000 length =36 size =2 burst =1 strb_pattern =2)
+ALL AXI TRANSACTIONS COMPLETE
+TEST PASSED
+Test Completed Successfully
+$finish called at time : 58080353 ps : File "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0_ex/imports/ddr4_v2_2_axi_tg_top.sv" Line 573

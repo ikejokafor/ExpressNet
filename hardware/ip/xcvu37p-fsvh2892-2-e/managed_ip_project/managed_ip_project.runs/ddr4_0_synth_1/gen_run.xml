@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="ddr4_0_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1582142576">
+<GenRun Id="ddr4_0_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1593127901">
   <File Type="VDS-TIMING-PB" Name="ddr4_0_timing_summary_synth.pb"/>
   <File Type="VDS-TIMINGSUMMARY" Name="ddr4_0_timing_summary_synth.rpt"/>
   <File Type="RDS-DCP" Name="ddr4_0.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="ddr4_0_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="ddr4_0_utilization_synth.rpt"/>
+  <File Type="RDS-PROPCONSTRS" Name="ddr4_0_drc_synth.rpt"/>
+  <File Type="RDS-RDS" Name="ddr4_0.vds"/>
   <File Type="REPORTS-TCL" Name="ddr4_0_reports.tcl"/>
   <File Type="PA-TCL" Name="ddr4_0.tcl"/>
-  <File Type="RDS-RDS" Name="ddr4_0.vds"/>
-  <File Type="RDS-PROPCONSTRS" Name="ddr4_0_drc_synth.rpt"/>
-  <File Type="RDS-UTIL" Name="ddr4_0_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="ddr4_0_utilization_synth.pb"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/ddr4_0">
     <File Path="$PPRDIR/../ddr4_0/ddr4_0.xci">
       <FileInfo>
@@ -42,9 +42,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2018">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2018"/>
     <Step Id="synth_design"/>
   </Strategy>
 </GenRun>

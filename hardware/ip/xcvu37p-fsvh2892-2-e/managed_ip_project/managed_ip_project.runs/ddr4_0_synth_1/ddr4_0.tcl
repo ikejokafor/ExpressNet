@@ -35,6 +35,8 @@ set_property target_language Verilog [current_project]
 set_property ip_output_repo /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 read_ip -quiet /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0.xci
+set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0_board.xdc]
+set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/par/ddr4_0.xdc]
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/bd_0/ip/ip_0/bd_9054_microblaze_I_0.xdc]
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/bd_0/ip/ip_0/bd_9054_microblaze_I_0_ooc_debug.xdc]
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/bd_0/ip/ip_1/bd_9054_rst_0_0_board.xdc]
@@ -48,8 +50,6 @@ set_property used_in_implementation false [get_files -all /home/mdl/izo5011/Iken
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_0/ddr4_0_microblaze_mcs_board.xdc]
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_0/ddr4_0_microblaze_mcs_ooc.xdc]
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ip_1/par/ddr4_0_phy_ooc.xdc]
-set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/ddr4_0_board.xdc]
-set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0/par/ddr4_0.xdc]
 
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the

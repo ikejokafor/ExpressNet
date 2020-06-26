@@ -102,16 +102,16 @@
   PhyIP_TimePeriod = 750,
   PhyIP_InputClockPeriod = 13501,
   PhyIP_MemoryType = "Components",
-  PhyIP_MemoryPart = "MT40A512M8RH-075E",
+  PhyIP_MemoryPart = "MT40A1G8PM-075E",
   PhyIP_PhyClockRatio = "4:1",
-  PhyIP_ECC = "false",
+  PhyIP_ECC = "true",
   PhyIP_CasLatency = 18,
   PhyIP_CasWriteLatency = 14,
-  PhyIP_DataWidth = 8,
+  PhyIP_DataWidth = 72,
   PhyIP_ChipSelect = "true",
   PhyIP_Slot = "Single",
   PhyIP_isCKEShared = "false",
-  PhyIP_DataMask = "DM_NO_DBI",
+  PhyIP_DataMask = "NO_DM_NO_DBI",
   PhyIP_MemoryVoltage = "1.2V",
   PhyIP_PARTIAL_RECONFIG_FLOW_MIG = "false",
   
@@ -135,10 +135,10 @@
   PhyIP_Phy_Only = "Complete_Memory_Controller",
   PhyIP_DEBUG_SIGNAL = "Disable",
   PhyIP_CLKOUTPHY_MODE = "VCO_2X",
-  PhyIP_DQ_WIDTH = 8,
+  PhyIP_DQ_WIDTH = 72,
   PhyIP_MEM_DEVICE_WIDTH = 8,
   PhyIP_MIN_PERIOD = 750,
-  PhyIP_USE_DM_PORT = "DM_NO_DBI",
+  PhyIP_USE_DM_PORT = "NO_DM_NO_DBI",
   PhyIP_USE_CS_PORT = "true",
   PhyIP_ADDR_WIDTH = 17,
   PhyIP_BANK_WIDTH = 2,
@@ -155,14 +155,14 @@
   PhyIP_ODT_WIDTH = 1,
   PhyIP_nCS_PER_RANK = 1,
   PhyIP_DATABITS_PER_STROBE = 8,
-  PhyIP_DQS_WIDTH = 1,
-  PhyIP_DM_WIDTH = 1
+  PhyIP_DQS_WIDTH = 9,
+  PhyIP_DM_WIDTH = 9
 
 *)
 module ddr4_0_ddr4 #
  (
     parameter integer ADDR_WIDTH              = 17,
-    parameter integer ROW_WIDTH               = 15,
+    parameter integer ROW_WIDTH               = 16,
     parameter integer BANK_WIDTH              = 2,
     parameter integer BANK_GROUP_WIDTH        = 2,
     parameter integer S_HEIGHT                = 1,
@@ -172,14 +172,14 @@ module ddr4_0_ddr4 #
     parameter integer COL_WIDTH               = 10,
     parameter integer CS_WIDTH                = 1,
     parameter integer ODT_WIDTH               = 1,
-    parameter integer DQ_WIDTH                = 8,
-    parameter integer DQS_WIDTH               = 1,
-    parameter integer DM_WIDTH                = 1,
+    parameter integer DQ_WIDTH                = 72,
+    parameter integer DQS_WIDTH               = 9,
+    parameter integer DM_WIDTH                = 9,
 
     parameter         DRAM_TYPE               = "DDR4",
     parameter         MEM_ADDR_ORDER          = "ROW_COLUMN_BANK",
 
-    parameter DM_DBI                          = "DM_NODBI",
+    parameter DM_DBI                          = "NODM_NODBI",
 
     parameter         PARTIAL_RECONFIG        = "Disable", // Partial Reconfig enablement
     parameter         USE_CS_PORT             = 1,
@@ -193,7 +193,7 @@ module ddr4_0_ddr4 #
     parameter         tRTW                    = 10, // CL + (BL/2) - CWL + 2tCK In DDR4 clock cycles
     parameter         tWTR_L                  = 10, //In DDR4 clock cycles
     parameter         tWTR_S                  = 4, //In DDR4 clock cycles
-    parameter         tRFC                    = 347, //In DDR4 clock cycles
+    parameter         tRFC                    = 467, //In DDR4 clock cycles
     parameter         tREFI                   = 10400, //In DDR4 clock cycles
     parameter         ZQINTVL                 = 1333333334, //In DDR4 clock cycles
     parameter         tZQCS                   = 128, //In DDR4 clock cycles
@@ -232,9 +232,9 @@ module ddr4_0_ddr4 #
     parameter         STARVE_COUNT_WIDTH      = 9,
     parameter         EXTRA_CMD_DELAY         = 0,
     parameter         nCK_PER_CLK             = 4,
-    parameter         APP_ADDR_WIDTH          = 29,
-    parameter         APP_DATA_WIDTH          = 64,
-    parameter         APP_MASK_WIDTH          = 8,
+    parameter         APP_ADDR_WIDTH          = 30,
+    parameter         APP_DATA_WIDTH          = 512,
+    parameter         APP_MASK_WIDTH          = 64,
 
     parameter         CLKIN_PERIOD_MMCM        = 13501,
     parameter         CLKFBOUT_MULT_MMCM       = 18,
@@ -248,22 +248,22 @@ module ddr4_0_ddr4 #
     parameter         CLKOUTPHY_MODE           = "VCO_2X",
     parameter         C_FAMILY                 = "virtexuplusHBM",
 
-    parameter C_S_AXI_ID_WIDTH                = 4,
+    parameter C_S_AXI_ID_WIDTH                = 32,
                                               // Width of all master and slave ID signals.
                                               // # = >= 1.
-    parameter C_S_AXI_ADDR_WIDTH              = 29,
+    parameter C_S_AXI_ADDR_WIDTH              = 33,
                                               // Width of S_AXI_AWADDR, S_AXI_ARADDR, M_AXI_AWADDR and
                                               // M_AXI_ARADDR for all SI/MI slots.
                                               // # = 32.
-    parameter C_S_AXI_DATA_WIDTH              = 64,
+    parameter C_S_AXI_DATA_WIDTH              = 512,
                                               // Width of WDATA and RDATA on SI slot.
                                               // Must be <= APP_DATA_WIDTH.
                                               // # = 32, 64, 128, 256.
     parameter BURST_MODE                      = "8",     // Burst length
-    parameter C_S_AXI_SUPPORTS_NARROW_BURST   = 0,
+    parameter C_S_AXI_SUPPORTS_NARROW_BURST   = 1,
                                               // Indicates whether to instatiate upsizer
                                               // Range: 0, 1
-    parameter C_RD_WR_ARB_ALGORITHM           = "RD_PRI_REG",
+    parameter C_RD_WR_ARB_ALGORITHM           = "ROUND_ROBIN",
                                              // Indicates the Arbitration
                                              // Allowed values - "TDM", "ROUND_ROBIN",
                                              // "RD_PRI_REG", "RD_PRI_REG_STARVE_LIMIT"
@@ -293,7 +293,17 @@ module ddr4_0_ddr4 #
     parameter C_S_AXI_REG_EN1                 = 20'h00000,
                                              // Same as C_S_AXI_REG_EN0, but this register is after
                                              // the upsizer
-    parameter ECC                               = "OFF",
+    parameter C_S_AXI_CTRL_ADDR_WIDTH         = 32,
+                                             // Width of AXI-4-Lite address bus
+    parameter C_S_AXI_CTRL_DATA_WIDTH         = 32,
+                                             // Width of AXI-4-Lite data buses
+    parameter C_S_AXI_BASEADDR                = 32'h0000_0000,
+                                             // Base address of AXI4 Memory Mapped bus.
+    parameter C_ECC_ONOFF_RESET_VALUE         = 1,
+                                             // Controls ECC on/off value at startup/reset
+    parameter C_ECC_CE_COUNTER_WIDTH          = 8,
+                                             // The external memory to controller clock ratio.
+    parameter ECC                               = "ON",
     parameter ECC_TEST                          = "OFF",
     parameter PAYLOAD_WIDTH                     = (ECC == "OFF") ? DQ_WIDTH : APP_DATA_WIDTH/8,
     parameter AUTO_AP_COL_A3                    = "OFF",
@@ -309,12 +319,12 @@ module ddr4_0_ddr4 #
     parameter SAVE_RESTORE                      = "false",
 
     parameter IS_CKE_SHARED                     = "false",
-    parameter MEMORY_PART                       = "MT40A512M8RH-075E",
+    parameter MEMORY_PART                       = "MT40A1G8PM-075E",
     parameter integer COMPONENT_WIDTH           = 8,
     parameter NUM_SLOT                          = 1,
     parameter RANK_SLOT                         = 1,
     parameter         PING_PONG_PHY             = 1, 
-    parameter MEMORY_DENSITY                    = "4Gb",
+    parameter MEMORY_DENSITY                    = "8Gb",
     parameter MEMORY_SPEED_GRADE                = "075E",
     parameter MEMORY_WIDTH                      = "8",
     parameter MEMORY_CONFIGURATION              = "COMPONENT",
@@ -327,7 +337,7 @@ module ddr4_0_ddr4 #
     parameter         DDR4_CLAMSHELL       = "OFF",
 
     parameter DDR4_REG_PARITY_ENABLE            = "OFF",
-    parameter integer DBYTES                    = 1,
+    parameter integer DBYTES                    = 9,
     parameter         MR0                       = 13'b0101101000000,
     parameter         DDR4_DB_HIF_RTT_NOM     = 4'b0011, 
     parameter         DDR4_DB_HIF_RTT_WR      = 4'b0000, 
@@ -341,7 +351,7 @@ module ddr4_0_ddr4 #
     parameter         ODTWR                     = 16'h0021,
     parameter         ODTRD                     = 16'h0000,
     parameter         MR1                       = 13'b0001100000001,
-    parameter         MR5                       = 13'b0010000000000,
+    parameter         MR5                       = 13'b0000000000000,
     parameter         MR6                       = 13'b0110000010100,
 
 
@@ -363,7 +373,7 @@ module ddr4_0_ddr4 #
     parameter         DDR4_REG_RC04             = {9'b0_0000_0100, 4'b0000},
 
     parameter         DDR4_REG_RC05             = {9'b0_0000_0101, 4'b0000},
-    parameter         tXPR                      = 90, // In fabric clock cycles
+    parameter         tXPR                      = 120, // In fabric clock cycles
     parameter         tMOD                      = 6, // In fabric clock cycles
     parameter         tMRD                      = 2, // In fabric clock cycles
     parameter         tZQINIT                   = 256, // In fabric clock cycles
@@ -416,7 +426,7 @@ module ddr4_0_ddr4 #
     parameter         CAL_RDLVL                 = "FULL",
     parameter         CAL_RDLVL_DBI             = "SKIP",
     parameter         CAL_WR_DQS_DQ             = "FULL",
-    parameter         CAL_WR_DQS_DM_DBI         = "FULL",
+    parameter         CAL_WR_DQS_DM_DBI         = "SKIP",
     parameter         CAL_WRITE_LAT             = "FULL",
     parameter         CAL_RDLVL_COMPLEX         = "FULL",
     parameter         CAL_WR_DQS_COMPLEX        = "FULL",
@@ -464,6 +474,30 @@ module ddr4_0_ddr4 #
    (* KEEP = "true" *) output [16:0]  sl_oport0,
    output                              c0_ddr4_ui_clk,
    output                              c0_ddr4_ui_clk_sync_rst,
+   // AXI CTRL port
+   input                                c0_ddr4_s_axi_ctrl_awvalid,
+   output                               c0_ddr4_s_axi_ctrl_awready,
+   input  [C_S_AXI_CTRL_ADDR_WIDTH-1:0] c0_ddr4_s_axi_ctrl_awaddr,
+   // Slave Interface Write Data Ports
+   input                                c0_ddr4_s_axi_ctrl_wvalid,
+   output                               c0_ddr4_s_axi_ctrl_wready,
+   input  [C_S_AXI_CTRL_DATA_WIDTH-1:0] c0_ddr4_s_axi_ctrl_wdata,
+   // Slave Interface Write Response Ports
+   output                               c0_ddr4_s_axi_ctrl_bvalid,
+   input                                c0_ddr4_s_axi_ctrl_bready,
+   output [1:0]                         c0_ddr4_s_axi_ctrl_bresp,
+   // Slave Interface Read Address Ports
+   input                                c0_ddr4_s_axi_ctrl_arvalid,
+   output                               c0_ddr4_s_axi_ctrl_arready,
+   input  [C_S_AXI_CTRL_ADDR_WIDTH-1:0] c0_ddr4_s_axi_ctrl_araddr,
+   // Slave Interface Read Data Ports
+   output                               c0_ddr4_s_axi_ctrl_rvalid,
+   input                                c0_ddr4_s_axi_ctrl_rready,
+   output [C_S_AXI_CTRL_DATA_WIDTH-1:0] c0_ddr4_s_axi_ctrl_rdata,
+   output [1:0]                         c0_ddr4_s_axi_ctrl_rresp,
+
+   // Interrupt output
+   output                               c0_ddr4_interrupt,
    // Slave Interface Write Address Ports
    input                              c0_ddr4_aresetn,
    input  [C_S_AXI_ID_WIDTH-1:0]      c0_ddr4_s_axi_awid,
@@ -557,6 +591,16 @@ module ddr4_0_ddr4 #
   wire [DQ_WIDTH/8-1:0]                  c0_ddr4_fi_xor_we;
   wire [DQ_WIDTH-1:0]                    c0_ddr4_fi_xor_wrdata;
 
+  reg  [MC_ERR_ADDR_WIDTH-1:0]           c0_ddr4_ecc_err_addr_r1;
+  reg  [2*nCK_PER_CLK-1:0]               c0_ddr4_ecc_single_r1;
+  reg  [2*nCK_PER_CLK-1:0]               c0_ddr4_ecc_multiple_r1;
+
+  // Added a single register stage to fix timing
+  always@(posedge c0_div_clk)begin
+    c0_ddr4_ecc_err_addr_r1 <= #TCQ c0_ddr4_ecc_err_addr_int;
+    c0_ddr4_ecc_single_r1 <= #TCQ c0_ddr4_ecc_single_int;
+    c0_ddr4_ecc_multiple_r1 <= #TCQ c0_ddr4_ecc_multiple_int;
+  end
 
   //***************************************************************************
   // Added a single register stage for the calib_done to fix timing
@@ -842,7 +886,7 @@ u_ddr4_mem_intfc
    .app_wdf_end           (c0_ddr4_app_wdf_end),
    .app_wdf_mask          (c0_ddr4_app_wdf_mask),
    .app_wdf_wren          (c0_ddr4_app_wdf_wren),
-   .app_correct_en_i      (1'b1),
+   .app_correct_en_i      (c0_ddr4_app_correct_en_i),
    .app_raw_not_ecc       (c0_ddr4_app_raw_not_ecc),
    .app_ecc_multiple_err  (c0_ddr4_app_ecc_multiple_err),
    .app_rd_data           (c0_ddr4_app_rd_data),
@@ -1015,8 +1059,66 @@ ddr4_v2_2_6_axi #
      .mc_app_ecc_multiple_err                (c0_ddr4_app_ecc_multiple_err)
      );
 
-    assign c0_ddr4_app_raw_not_ecc    = {2*nCK_PER_CLK{1'b0}};
-    assign c0_ddr4_fi_xor_we          = {DQ_WIDTH/8{1'b0}};
-    assign c0_ddr4_fi_xor_wrdata      = {DQ_WIDTH{1'b0}};
+    reg  [DQ_WIDTH*8-1:0]                  c0_ddr4_rd_data_phy2mc_r1;
+    reg  [DQ_WIDTH*8-1:0]                  c0_ddr4_rd_data_phy2mc_r2;
+  always@(posedge c0_div_clk)begin
+    c0_ddr4_rd_data_phy2mc_r1 <= #TCQ c0_ddr4_rd_data_phy2mc;
+    c0_ddr4_rd_data_phy2mc_r2 <= #TCQ c0_ddr4_rd_data_phy2mc_r1;
+  end
+
+  ddr4_v2_2_6_axi_ctrl_top # (
+    .C_S_AXI_CTRL_ADDR_WIDTH (C_S_AXI_CTRL_ADDR_WIDTH) ,
+    .C_S_AXI_CTRL_DATA_WIDTH (C_S_AXI_CTRL_DATA_WIDTH) ,
+    .C_S_AXI_ADDR_WIDTH      (C_S_AXI_ADDR_WIDTH) ,
+    .C_S_AXI_BASEADDR        (C_S_AXI_BASEADDR) ,
+    .C_ECC_TEST              (ECC_TEST) ,
+    .C_DQ_WIDTH              (DQ_WIDTH) ,
+    .C_ECC_WIDTH             (ECC_WIDTH) ,
+    .C_MEM_ADDR_ORDER        (MEM_ADDR_ORDER) ,
+    .C_BANK_WIDTH            (BANK_WIDTH) ,
+    .C_ROW_WIDTH             (ROW_WIDTH) ,
+    .C_COL_WIDTH             (COL_WIDTH) ,
+    .C_ECC_ONOFF_RESET_VALUE (C_ECC_ONOFF_RESET_VALUE) ,
+    .C_ECC_CE_COUNTER_WIDTH  (C_ECC_CE_COUNTER_WIDTH) ,
+    .C_NCK_PER_CLK           (nCK_PER_CLK) ,
+    .C_MC_ERR_ADDR_WIDTH     (MC_ERR_ADDR_WIDTH)
+  ) axi_ctrl_top_0 (
+    .aclk           (aclk) ,
+    .aresetn        (c0_ddr4_aresetn) ,
+    .s_axi_awvalid  (c0_ddr4_s_axi_ctrl_awvalid) ,
+    .s_axi_awready  (c0_ddr4_s_axi_ctrl_awready) ,
+    .s_axi_awaddr   (c0_ddr4_s_axi_ctrl_awaddr) ,
+    .s_axi_wvalid   (c0_ddr4_s_axi_ctrl_wvalid) ,
+    .s_axi_wready   (c0_ddr4_s_axi_ctrl_wready) ,
+    .s_axi_wdata    (c0_ddr4_s_axi_ctrl_wdata) ,
+    .s_axi_bvalid   (c0_ddr4_s_axi_ctrl_bvalid) ,
+    .s_axi_bready   (c0_ddr4_s_axi_ctrl_bready) ,
+    .s_axi_bresp    (c0_ddr4_s_axi_ctrl_bresp) ,
+    .s_axi_arvalid  (c0_ddr4_s_axi_ctrl_arvalid) ,
+    .s_axi_arready  (c0_ddr4_s_axi_ctrl_arready) ,
+    .s_axi_araddr   (c0_ddr4_s_axi_ctrl_araddr) ,
+    .s_axi_rvalid   (c0_ddr4_s_axi_ctrl_rvalid) ,
+    .s_axi_rready   (c0_ddr4_s_axi_ctrl_rready) ,
+    .s_axi_rdata    (c0_ddr4_s_axi_ctrl_rdata) ,
+    .s_axi_rresp    (c0_ddr4_s_axi_ctrl_rresp) ,
+    .interrupt      (c0_ddr4_interrupt) ,
+    .init_complete  (c0_ddr4_init_calib_complete_r) ,
+    .ecc_single     (c0_ddr4_ecc_single_r1) ,
+    .ecc_multiple   (c0_ddr4_ecc_multiple_r1) ,
+    .ecc_err_addr   (c0_ddr4_ecc_err_addr_r1) ,
+    .app_correct_en (c0_ddr4_app_correct_en) ,
+    .dfi_rddata     (c0_ddr4_rd_data_phy2mc_r2) ,
+    .fi_xor_we      (c0_ddr4_fi_xor_we) ,
+    .fi_xor_wrdata  (c0_ddr4_fi_xor_wrdata)
+  );
+
+  assign c0_ddr4_app_correct_en_i = c0_ddr4_app_correct_en ;
+  generate
+    if(ECC_TEST == "ON") begin :gen_ECC_TEST
+      assign c0_ddr4_app_raw_not_ecc = {2*nCK_PER_CLK{1'b1}};
+    end else begin
+      assign c0_ddr4_app_raw_not_ecc = {2*nCK_PER_CLK{1'b0}};
+    end
+  endgenerate
 
 endmodule

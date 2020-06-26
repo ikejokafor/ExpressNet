@@ -134,66 +134,24 @@ void CNN_Layer_Accel::system_mem_write_arb_process()
 }
 
 
-const char* toHexCharArr(int value)
-{
-	stringstream stream;
-	stream << hex << value;
-	return (string("0x") + stream.str()).c_str();
-}
-
-
 #ifdef SIMULATE_MEMORY
-int CNN_Layer_Accel::system_mem_read(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size)
+int CNN_Layer_Accel::system_mem_read(int* memory, int id, uint64_t mem_trans_addr, uint32_t mem_trans_size)
 {
-	while(true) 
-	{
-		wait();
-		if(axi_arready.read())
-		{
-			break;
-		}
-	}
-	//////
-	wait();
-	axi_arvalid 	= true;
-	char* id 		= toHexCharArr(req_idx);
-	axi_arid 		= toHexCharArr(req_idx);
-	axi_araddr 		= toHexCharArr(mem_trans_addr);
-	axi_arlen 		= toHexCharArr(mem_trans_size);
-	axi_arsize		= "0x3"; 	// clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes
-	axi_arburst		= "0x1";	// ALWAYS 1
-	axi_rready 		= "0x1";
-	wait();
-	axi_arvalid  	= "0x0";
-	//////
+    // FIXME: add error checking
+    const char* id_c = toHexCharArr(id);
 	while(true)
 	{
 		wait();
-		if(axi_rvalid->read())
+		if(axi_rvalid->read() && axi_rid->read() == id_c)
 		{
-			if(axi_rid->read() == id)
-			{
-				mem_trans_size -= AXI_BUS_SIZE;
-				(*memory) += std::min((uint32_t)AXI_BUS_SIZE, mem_trans_size);				
-			}
+            mem_trans_size -= AXI_BUS_SIZE;
+            (*memory) += std::min((uint32_t)AXI_BUS_SIZE, mem_trans_size);
 			if(axi_rlast->read())
 			{
 				break;
 			}
 		}
 	}
-	//////
-	axi_arid 	= "0x0";
-	axi_araddr 	= false;
-	axi_arlen 	= false;
-	axi_arsize	= "0x3";
-	axi_arburst	= "0x0";
-	axi_rready 	= false;
-	// FIXME: add error checking
-	// if(axi_rvalid->read())
-	// {
-	// 	raise(SIGINT);
-	// }
 	m_rd_req_arr[req_idx].ack.notify(SC_ZERO_TIME);
 }
 
@@ -201,26 +159,8 @@ int CNN_Layer_Accel::system_mem_read(int* memory, int req_idx, uint64_t mem_tran
 int CNN_Layer_Accel::system_mem_write(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size)
 {
 	int AXITransSizeCount = ceilf((float)mem_trans_size / (float)AXI_BUS_SIZE) * AXI_BUS_SIZE;
-	while(true) 
-	{
-		wait();
-		if(axi_awready->read()) 
-		{
-			break;
-		}
-	}
-	//////
-	wait();
-	axi_awvalid = true;
-	char* id 	= toHexCharArr(req_idx);
-	axi_awid 	= id; 			
-	axi_awaddr 	= toHexCharArr(mem_trans_addr);
-	axi_awlen 	= toHexCharArr(mem_trans_size);	
-	axi_awsize 	= "0x3";
-	axi_awburst = "0x1";
-	axi_wstrb 	= "0xFF";
-	wait();
-	axi_awvalid->write(false);
+	int rem_tran_size = mem_trans_size;
+    axi_awvalid->write(false);
 	//////	
 	axi_wdata = toHexCharArr(rand());
 	wait();
@@ -240,34 +180,43 @@ int CNN_Layer_Accel::system_mem_write(int* memory, int req_idx, uint64_t mem_tra
 		{
 			axi_wdata = toHexCharArr(rand());
 		}
-		mem_trans_size -= AXI_BUS_SIZE;
+		rem_tran_size = ((rem_tran_size - AXI_BUS_SIZE) < 0) ? rem_tran_size : (rem_tran_size - AXI_BUS_SIZE);
 		AXITransSizeCount -= AXI_BUS_SIZE;
-		(*memory) -= std::min((uint32_t)AXI_BUS_SIZE, mem_trans_size);
+		(*memory) -= std::min((uint32_t)AXI_BUS_SIZE, rem_tran_size);
 	}
-	axi_wvalid->write(true);
-	axi_wlast->write("0x0");
-	//////
+	axi_wvalid = true;
+	axi_wlast = "0x0";
+	m_wr_req_arr[req_idx].ack.notify(SC_ZERO_TIME);
+}
+
+
+void CNN_Layer_Accel::read_resp_process()
+{
+    while(true)
+    {
+        wait();
+        // FIXME: add error checking
+        if(axi_rvalid->read() && axi_rresp->read() != )
+        {
+            // axi_rid
+            raise(SIGINT);
+        }
+    }
+}
+
+
+void CNN_Layer_Accel::write_resp_process()
+{
 	while(true) 
 	{
 		wait();
-		if(axi_bvalid->read()) 
+        // FIXME: add error checking
+		if(axi_bvalid->read() && axi_bresp->read() != ) 
 		{
-			// FIXME: add error checking
-			// if(axi_bresp->read() != )
-			// {
-			// 	raise(SIGINT);
-			// }
-			break;
+            // axi_bid 
+			raise(SIGINT);
 		}
 	}
-	axi_awvalid = false;	
-	axi_awid = "0x0"; 			
-	axi_awaddr = "0x00000000";
-	axi_awlen = "0x00";	
-	axi_awsize = "0x0";
-	axi_awburst = "0x0";
-	axi_wstrb = "0x00";
-	m_wr_req_arr[req_idx].ack.notify(SC_ZERO_TIME);
 }
 #endif
 
@@ -283,13 +232,15 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
         {
 			int req_idx = accel_trans->fas_rd_id;
             m_rd_req_arr[req_idx].req_pending = true;
-			m_num_sys_mem_rd_in_prog++;
 			wait(m_rd_req_arr[req_idx].ack.default_event());
-			sc_core::sc_spawn_options args;
+            m_num_sys_mem_rd_in_prog++;
+            sc_core::sc_spawn_options args;
 			args.set_sensitivity(&clk);
-			sc_core::sc_spawn(
+			sc_core::sc_spawn
+            (
 				nullptr,
-				sc_core::sc_bind(
+				sc_core::sc_bind
+                (
 					&CNN_Layer_Accel::system_mem_read,
 					this,
 					accel_trans->memory,
@@ -299,7 +250,8 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
 				),
 				("system_mem_read" + std::to_string(req_idx)).c_str(),
 				&args
-			);
+			);         
+            b_schedule_read(req_idx, trans.get_address(), trans.get_data_length());
 			wait(m_rd_req_arr[req_idx].ack.default_event());
 			m_num_sys_mem_rd_in_prog--;
             break;
@@ -312,9 +264,11 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
             m_num_sys_mem_wr_in_prog++;
 			sc_core::sc_spawn_options args;
 			args.set_sensitivity(&clk);
-			sc_core::sc_spawn(
+			sc_core::sc_spawn
+            (
 				nullptr,
-				sc_core::sc_bind(
+				sc_core::sc_bind
+                (
 					&CNN_Layer_Accel::system_mem_write,
 					this,
 					accel_trans->memory,
@@ -325,6 +279,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
 				("system_mem_write" + std::to_string(req_idx)).c_str(),
 				&args
 			);
+            b_schedule_write(req_idx, trans.get_address(), trans.get_data_length());
 			wait(m_rd_req_arr[req_idx].ack.default_event());
             m_num_sys_mem_wr_in_prog--;
             break;
@@ -374,3 +329,89 @@ double CNN_Layer_Accel::calculateMemPower()
 {
     return 0.0f;
 }
+
+#ifdef SIMULATE_MEMORY
+void CNN_Layer_Accel::b_schedule_read(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size)
+{
+    while(true) 
+    {
+        wait(clk->posedge_event());
+        if(axi_arready.read())
+        {
+            break;
+        }
+    }
+    //////
+    wait(clk->posedge_event());
+    axi_arvalid 	    = true;
+    axi_arid 		    = toHexCharArr(req_idx);
+    axi_araddr 		    = toHexCharArr(mem_trans_addr);
+    axi_arlen 		    = toHexCharArr(mem_trans_size);
+    axi_arsize		    = toHexCharArr(ceil(log2(AXI_BUS_WIDTH / BITS_PER_BYTE)));
+    axi_arburst		    = "0x1";	// ALWAYS 1
+    wait(clk->posedge_event());
+    axi_arvalid  	    = false;
+    wait(clk->posedge_event());
+    axi_arid 	        = "0x00000000";
+	axi_araddr 	        = "0x0000000000000000";
+	axi_arlen 	        = "0x00";
+	axi_arsize	        = "0x0";
+	axi_arburst	        = "0x0";
+}
+
+
+void CNN_Layer_Accel::b_schedule_write(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size)
+{
+	while(true) 
+	{
+		wait(clk->posedge_event());
+		if(axi_awready->read()) 
+		{
+			break;
+		}
+	}
+	//////
+	wait(clk->posedge_event());
+	axi_awvalid     = true;
+	axi_awid 	    = toHexCharArr(req_idx); 			
+	axi_awaddr 	    = toHexCharArr(mem_trans_addr);
+	axi_awlen 	    = toHexCharArr(mem_trans_size);	
+	axi_awsize 	    = "110";
+	axi_awburst     = "0x1";	// ALWAYS 1
+	axi_wstrb 	    = "0xFFFFFFFFFFFFFFFF";
+    wait(clk->posedge_event());
+    axi_awid 	    = "0x00000000";			
+	axi_awaddr 	    = "0x0000000000000000";
+	axi_awlen 	    = "0x00";
+	axi_awsize 	    = "000";
+	axi_awburst     = "0x0";
+	axi_wstrb 	    = "0x0000000000000000";
+}
+#endif
+
+
+const char* CNN_Layer_Accel::toHexCharArr(int value)
+{
+	stringstream stream;
+	stream << hex << value;
+	return (string("0x") + stream.str()).c_str();
+}
+
+
+const char* CNN_Layer_Accel::toHexCharArr(uint32_t value)
+{
+	stringstream stream;
+	stream << hex << value;
+	return (string("0x") + stream.str()).c_str();
+}
+
+
+const char* CNN_Layer_Accel::toHexCharArr(uint64_t value)
+{
+	stringstream stream;
+	stream << hex << value;
+	return (string("0x") + stream.str()).c_str();
+}
+
+
+

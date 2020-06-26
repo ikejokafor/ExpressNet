@@ -6,7 +6,7 @@
 <Project Version="7" Minor="39" Path="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0_ex/ddr4_0_ex.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
-    <Option Name="Id" Val="644c7ac320df4204b5409018ddbd1f5c"/>
+    <Option Name="Id" Val="5daac0a78d5c4b21a5f3a85e9373f695"/>
     <Option Name="Part" Val="xcvu37p-fsvh2892-2-e"/>
     <Option Name="CompiledLibDir" Val="$PPRDIR/../../../../../vivado_2018.3_sim_libs"/>
     <Option Name="CompiledLibDirXSim" Val=""/>
@@ -17,7 +17,6 @@
     <Option Name="CompiledLibDirVCS" Val="$PCACHEDIR/compile_simlib/vcs"/>
     <Option Name="CompiledLibDirRiviera" Val="$PCACHEDIR/compile_simlib/riviera"/>
     <Option Name="CompiledLibDirActivehdl" Val="$PCACHEDIR/compile_simlib/activehdl"/>
-    <Option Name="TargetSimulator" Val="Questa"/>
     <Option Name="BoardPart" Val=""/>
     <Option Name="ActiveSimSet" Val="sim_1"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
@@ -32,9 +31,9 @@
     <Option Name="EnableBDX" Val="FALSE"/>
     <Option Name="DSAVendor" Val="xilinx"/>
     <Option Name="DSANumComputeUnits" Val="60"/>
-    <Option Name="WTXSimLaunchSim" Val="0"/>
+    <Option Name="WTXSimLaunchSim" Val="1"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
-    <Option Name="WTQuestaLaunchSim" Val="1"/>
+    <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
     <Option Name="WTVcsLaunchSim" Val="0"/>
     <Option Name="WTRivieraLaunchSim" Val="0"/>
@@ -63,7 +62,7 @@
       <File Path="$PSRCDIR/sources_1/ip/ddr4_0/ddr4_0.xci">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../ddr4_0/ddr4_0.xci"/>
-          <Attr Name="ImportTime" Val="1582142479"/>
+          <Attr Name="ImportTime" Val="1593127859"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>

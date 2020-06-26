@@ -1308,7 +1308,7 @@ ddr4_v2_2_6_cal_top # (
    ,.cal_error_code              (cal_error_code)
 
    ,.traffic_wr_done                (traffic_wr_done)
-   ,.traffic_error                  (traffic_error)
+   ,.traffic_error                  ({{(8*(DQ_WIDTH/9)){1'b0}},traffic_error})
    ,.traffic_clr_error              (traffic_clr_error)
    ,.traffic_status_err_bit_valid   (traffic_status_err_bit_valid)
    ,.traffic_status_err_type_valid  (traffic_status_err_type_valid)
