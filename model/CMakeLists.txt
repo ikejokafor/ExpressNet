@@ -185,8 +185,9 @@ IF(WIN32)
     )
 ELSE()
     TARGET_INCLUDE_DIRECTORIES(${TARGET_NAME} PUBLIC
-        /usr/local/include/
         /usr/include/
+        /usr/local/include/
+        $ENV{IZO5011_X86_DEV_TOOLS}/include/
         ${PROJECT_SOURCE_DIR}/inc/
         ${PROJECT_SOURCE_DIR}/src/
         ${PROJECT_SOURCE_DIR}/../../util/inc
@@ -220,6 +221,7 @@ ELSE()
         -L/usr/local/lib/
         -L/usr/lib/
         -L/home/ikenna/downloaded_repos/build/systemc-2.3.3/src/
+        -L$ENV{IZO5011_X86_DEV_TOOLS}/lib/
         #-L<path_to_lib0>
         #-L<path_to_lib1>
         #-L<path_to_libN>
