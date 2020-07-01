@@ -117,6 +117,8 @@ SC_MODULE(CNN_Layer_Accel)
 	sc_core::sc_in<sc_bv<512> > 				axi_rdata		;   // Read data
 	sc_core::sc_in<bool> 						axi_rlast		;   // Read last
 	sc_core::sc_out<bool> 						axi_rready		;   // Read Response ready
+    
+    sc_core::sc_signal<sc_bv<MAX_FAS_WR_REQ> >  axi_wvalid_i    ;
 #endif	
         tlm_utils::simple_target_socket<CNN_Layer_Accel>	tar_soc;
 

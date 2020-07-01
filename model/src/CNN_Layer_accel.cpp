@@ -135,17 +135,27 @@ void CNN_Layer_Accel::system_mem_write_arb_process()
 
 
 #ifdef SIMULATE_MEMORY
-int CNN_Layer_Accel::system_mem_read(int* memory, int id, uint64_t mem_trans_addr, uint32_t mem_trans_size)
+void CNN_Layer_Accel::axi_awvalid_process()
 {
-    // FIXME: add error checking
-    const char* id_c = toHexCharArr(id);
+    bool 
+    while(true)
+    {
+        axi_awvalid = axi_awvalid_i.or_reduce();
+    }
+}
+
+
+int CNN_Layer_Accel::system_mem_read(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size)
+{
+    const char* id_c = toHexCharArr(req_idx);
+    int rem_tran_size = mem_trans_size;
 	while(true)
 	{
 		wait();
 		if(axi_rvalid->read() && axi_rid->read() == id_c)
 		{
-            mem_trans_size -= AXI_BUS_SIZE;
-            (*memory) += std::min((uint32_t)AXI_BUS_SIZE, mem_trans_size);
+            rem_tran_size = ((rem_tran_size - AXI_BUS_SIZE) < 0) ? rem_tran_size : (rem_tran_size - AXI_BUS_SIZE);
+            (*memory) += std::min((uint32_t)(AXI_BUS_SIZE / BITS_PER_PIXEL), rem_tran_size);
 			if(axi_rlast->read())
 			{
 				break;
@@ -158,13 +168,10 @@ int CNN_Layer_Accel::system_mem_read(int* memory, int id, uint64_t mem_trans_add
 
 int CNN_Layer_Accel::system_mem_write(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size)
 {
-	int AXITransSizeCount = ceilf((float)mem_trans_size / (float)AXI_BUS_SIZE) * AXI_BUS_SIZE;
+	int AXITransSizeCount = ceil((float)mem_trans_size / (float)(AXI_BUS_SIZE / BITS_PER_BYTE));
 	int rem_tran_size = mem_trans_size;
-    axi_awvalid->write(false);
-	//////	
-	axi_wdata = toHexCharArr(rand());
 	wait();
-	axi_wvalid->write(true);
+	axi_wvalid_i[req_idx] = true;
 	while(true) 
 	{
 		wait();
@@ -174,9 +181,10 @@ int CNN_Layer_Accel::system_mem_write(int* memory, int req_idx, uint64_t mem_tra
 		}
 		if(AXITransSizeCount == 1) 
 		{
+            // FIXME: possible needs support for write interleaving
 			axi_wlast = true;
 		}
-		if(axi_wready->read() && axi_bid->read() == id) 
+		if(axi_wready->read()) 
 		{
 			axi_wdata = toHexCharArr(rand());
 		}
@@ -184,7 +192,8 @@ int CNN_Layer_Accel::system_mem_write(int* memory, int req_idx, uint64_t mem_tra
 		AXITransSizeCount -= AXI_BUS_SIZE;
 		(*memory) -= std::min((uint32_t)AXI_BUS_SIZE, rem_tran_size);
 	}
-	axi_wvalid = true;
+	axi_wvalid_i[req_idx] = true;
+    // FIXME: possible needs support for write interleaving
 	axi_wlast = "0x0";
 	m_wr_req_arr[req_idx].ack.notify(SC_ZERO_TIME);
 }
@@ -192,13 +201,13 @@ int CNN_Layer_Accel::system_mem_write(int* memory, int req_idx, uint64_t mem_tra
 
 void CNN_Layer_Accel::read_resp_process()
 {
+    string str;
     while(true)
     {
         wait();
-        // FIXME: add error checking
-        if(axi_rvalid->read() && axi_rresp->read() != )
+        if(axi_rvalid->read() && axi_rresp->read() != "00")
         {
-            // axi_rid
+            str = "[" + string(name()) + "]:" + axi_rid->read() + " failedn\n";
             raise(SIGINT);
         }
     }
@@ -210,11 +219,10 @@ void CNN_Layer_Accel::write_resp_process()
 	while(true) 
 	{
 		wait();
-        // FIXME: add error checking
-		if(axi_bvalid->read() && axi_bresp->read() != ) 
+		if(axi_bvalid->read() && axi_bresp->read() != "00") 
 		{
-            // axi_bid 
-			raise(SIGINT);
+            str = "[" + string(name()) + "]:" + axi_bid->read() + " failedn\n";
+            raise(SIGINT);
 		}
 	}
 }
@@ -330,9 +338,17 @@ double CNN_Layer_Accel::calculateMemPower()
     return 0.0f;
 }
 
+
 #ifdef SIMULATE_MEMORY
 void CNN_Layer_Accel::b_schedule_read(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size)
 {
+    wait(clk->posedge_event());
+    axi_arvalid 	    = true;
+    axi_arid 		    = toHexCharArr(req_idx);
+    axi_araddr 		    = toHexCharArr(mem_trans_addr);
+    axi_arlen 		    = toHexCharArr(mem_trans_size / AXI_BUS_SIZE);
+    axi_arsize		    = "110";    // encoding for 64 byte transfer
+    axi_arburst		    = "0x1";    // encoding for incremental address
     while(true) 
     {
         wait(clk->posedge_event());
@@ -341,17 +357,8 @@ void CNN_Layer_Accel::b_schedule_read(int id, uint64_t mem_trans_addr, uint32_t 
             break;
         }
     }
-    //////
-    wait(clk->posedge_event());
-    axi_arvalid 	    = true;
-    axi_arid 		    = toHexCharArr(req_idx);
-    axi_araddr 		    = toHexCharArr(mem_trans_addr);
-    axi_arlen 		    = toHexCharArr(mem_trans_size);
-    axi_arsize		    = toHexCharArr(ceil(log2(AXI_BUS_WIDTH / BITS_PER_BYTE)));
-    axi_arburst		    = "0x1";	// ALWAYS 1
     wait(clk->posedge_event());
     axi_arvalid  	    = false;
-    wait(clk->posedge_event());
     axi_arid 	        = "0x00000000";
 	axi_araddr 	        = "0x0000000000000000";
 	axi_arlen 	        = "0x00";
@@ -362,7 +369,15 @@ void CNN_Layer_Accel::b_schedule_read(int id, uint64_t mem_trans_addr, uint32_t 
 
 void CNN_Layer_Accel::b_schedule_write(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size)
 {
-	while(true) 
+	wait(clk->posedge_event());
+	axi_awvalid     = true;
+	axi_awid 	    = toHexCharArr(req_idx); 			
+	axi_awaddr 	    = toHexCharArr(mem_trans_addr);
+	axi_awlen 	    = toHexCharArr(mem_trans_size / AXI_BUS_SIZE);	
+	axi_awsize 	    = "110";    // encoding for 64 byte transfer
+	axi_awburst     = "0x1";	// encoding for incremental address
+	axi_wstrb 	    = "0xFFFFFFFFFFFFFFFF"; // encoding for all bytes are valid
+    while(true) 
 	{
 		wait(clk->posedge_event());
 		if(axi_awready->read()) 
@@ -370,16 +385,8 @@ void CNN_Layer_Accel::b_schedule_write(int id, uint64_t mem_trans_addr, uint32_t
 			break;
 		}
 	}
-	//////
-	wait(clk->posedge_event());
-	axi_awvalid     = true;
-	axi_awid 	    = toHexCharArr(req_idx); 			
-	axi_awaddr 	    = toHexCharArr(mem_trans_addr);
-	axi_awlen 	    = toHexCharArr(mem_trans_size);	
-	axi_awsize 	    = "110";
-	axi_awburst     = "0x1";	// ALWAYS 1
-	axi_wstrb 	    = "0xFFFFFFFFFFFFFFFF";
     wait(clk->posedge_event());
+    axi_awvalid     = false;
     axi_awid 	    = "0x00000000";			
 	axi_awaddr 	    = "0x0000000000000000";
 	axi_awlen 	    = "0x00";
@@ -412,6 +419,3 @@ const char* CNN_Layer_Accel::toHexCharArr(uint64_t value)
 	stream << hex << value;
 	return (string("0x") + stream.str()).c_str();
 }
-
-
-
