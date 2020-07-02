@@ -80,6 +80,7 @@ SC_MODULE(CNN_Layer_Accel)
 {
     public:
 		sc_core::sc_in<bool>						clk				;
+		sc_core::sc_in<bool>						rst				;
 #ifdef SIMULATE_MEMORY	
 		sc_core::sc_in<bool >  						axi_awready		;	// Indicates slave is ready to accept a 
 		sc_core::sc_out<sc_bv<32> >  				axi_awid		;	// Write ID
@@ -156,8 +157,8 @@ SC_MODULE(CNN_Layer_Accel)
             SC_THREAD(system_mem_write_arb_process)
                 sensitive << clk.pos();
 #ifdef SIMULATE_MEMORY
-			SC_THREAD(axi_awvalid_process)
-				sensitive << clk.pos();
+			// SC_THREAD(axi_awvalid_process)
+			// 	sensitive << clk.pos();
             SC_THREAD(read_resp_process)
                 sensitive << clk.pos();
             SC_THREAD(write_resp_process)       
@@ -192,24 +193,6 @@ SC_MODULE(CNN_Layer_Accel)
             m_num_sys_mem_rd_in_prog    = 0;
             m_next_wr_req_id            = 0;
             m_next_rd_req_id            = 0;
-#ifdef SIMULATE_MEMORY
-            // READ
-            axi_arvalid  	= false;
-            axi_arid 	    = "0x00000000";
-            axi_araddr 	    = "0x0000000000000000";
-            axi_arlen 	    = "0x00";
-            axi_arsize	    = "0x0";
-            axi_arburst	    = "0x0";
-            axi_rready 		= true;
-            // WRITE
-            axi_awid 	    = "0x00000000";			
-            axi_awaddr 	    = "0x0000000000000000";
-            axi_awlen 	    = "0x00";
-            axi_awsize 	    = "0x0";
-            axi_awburst     = "0x0";
-            axi_wstrb 	    = "0x0000000000000000";
-            axi_bready      = true;
-#endif
         }
 
         // Destructor
@@ -221,7 +204,7 @@ SC_MODULE(CNN_Layer_Accel)
 #ifdef SIMULATE_MEMORY
         void system_mem_read_arb_process();
         void system_mem_write_arb_process();
-		void axi_awvalid_process();
+		// void axi_awvalid_process();
 		int system_mem_read(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size);
 		int system_mem_write(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size);
 		void read_resp_process();

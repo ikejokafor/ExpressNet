@@ -25,6 +25,25 @@ void CNN_Layer_Accel::main_process()
     while (true)
     {
         wait();
+		if(rst->read())
+		{
+			// READ
+            axi_arvalid  	= false;
+            axi_arid 	    = "0x00000000";
+            axi_araddr 	    = "0x0000000000000000";
+            axi_arlen 	    = "0x00";
+            axi_arsize	    = "0x0";
+            axi_arburst	    = "0x0";
+            axi_rready 		= true;
+            // WRITE
+            axi_awid 	    = "0x00000000";			
+            axi_awaddr 	    = "0x0000000000000000";
+            axi_awlen 	    = "0x00";
+            axi_awsize 	    = "0x0";
+            axi_awburst     = "0x0";
+            axi_wstrb 	    = "0x0000000000000000";
+            axi_bready      = true;
+		}
         bool all_complete = true;
         for (int i = 0; i < m_FAS_complt_arr.size(); i++)
         {
@@ -200,13 +219,14 @@ int CNN_Layer_Accel::system_mem_write(int* memory, int req_idx, uint64_t mem_tra
 
 void CNN_Layer_Accel::read_resp_process()
 {
-    string str;
+	stringstream stream;
     while(true)
     {
         wait();
         if(axi_rvalid->read() && axi_rresp->read() != "00")
         {
-            // str = "[" + string(name()) + "]:" + string(axi_rid->read()) + " failedn\n";
+			stream << "[" << string(name()) << "]:" << axi_rid->read() << " failed" << endl;
+			cout << stream.str();
             raise(SIGINT);
         }
     }
@@ -215,12 +235,14 @@ void CNN_Layer_Accel::read_resp_process()
 
 void CNN_Layer_Accel::write_resp_process()
 {
+	stringstream stream;
 	while(true) 
 	{
 		wait();
 		if(axi_bvalid->read() && axi_bresp->read() != "00") 
 		{
-            // str = "[" + string(name()) + "]:" + string(axi_bid->read()) + " failedn\n";
+			stream << "[" << string(name()) << "]:" << axi_bid->read() << " failed" << endl;
+			cout << stream.str();
             raise(SIGINT);
 		}
 	}
