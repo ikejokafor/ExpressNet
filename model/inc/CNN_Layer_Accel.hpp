@@ -79,46 +79,41 @@
 SC_MODULE(CNN_Layer_Accel)
 {
     public:
-	sc_core::sc_in<bool>						clk				;
+		sc_core::sc_in<bool>						clk				;
 #ifdef SIMULATE_MEMORY	
-	sc_core::sc_in<bool >  						axi_awready		;	// Indicates slave is ready to accept a 
-	sc_core::sc_out<sc_bv<32> >  				axi_awid		;	// Write ID
-	sc_core::sc_out<sc_bv<33> > 				axi_awaddr		;	// Write address
-	sc_core::sc_out<sc_bv<8> >  				axi_awlen		;	// Write Burst Length
-	sc_core::sc_out<sc_bv<3> >  				axi_awsize		;	// Write Burst size
-	sc_core::sc_out<sc_bv<2> >  				axi_awburst		;	// Write Burst type
-	sc_core::sc_out<sc_bv<4> >  				axi_awcache		;	// Write Cache type
-	sc_core::sc_out<sc_bv<3> >					axi_awprot		;	// Write Protection type
-	sc_core::sc_out<bool >  					axi_awvalid		;	// Write address valid
-	// AXI write data channel signals
-	sc_core::sc_in<bool >  						axi_wready		;	// Write data ready
-	sc_core::sc_out<sc_bv<512> >  				axi_wdata		;	// Write data
-	sc_core::sc_out<sc_bv<64> >  				axi_wstrb		;	// Write strobes
-	sc_core::sc_out<bool >  					axi_wlast		;	// Last write transaction   
-	sc_core::sc_out<bool >  					axi_wvalid		;	// Write valid  
-	// AXI write response channel signals
-	sc_core::sc_in<sc_bv<32> >  				axi_bid			;	// Response ID
-	sc_core::sc_in<sc_bv<2> >  					axi_bresp		;	// Write response
-	sc_core::sc_in<bool >  						axi_bvalid		;	// Write reponse valid
-	sc_core::sc_out<bool>  						axi_bready		;	// Response ready
-	// AXI read address channel signals
-	sc_core::sc_in<bool >  						axi_arready		;   // Read address ready
-	sc_core::sc_out<sc_bv<32> > 				axi_arid		;	// Read ID
-	sc_core::sc_out<sc_bv<33> >					axi_araddr		;   // Read address
-	sc_core::sc_out<sc_bv<8> > 					axi_arlen		;   // Read Burst Length
-	sc_core::sc_out<sc_bv<3> > 					axi_arsize		;   // Read Burst size
-	sc_core::sc_out<sc_bv<2> > 					axi_arburst		;   // Read Burst type
-	sc_core::sc_out<sc_bv<4> > 					axi_arcache		;   // Read Cache type
-	sc_core::sc_out<bool >  					axi_arvalid		;   // Read address valid 
-	// AXI read data channel signals   
-	sc_core::sc_in<sc_bv<32> > 					axi_rid			;   // Response ID
-	sc_core::sc_in<sc_bv<2> > 					axi_rresp		;   // Read response
-	sc_core::sc_in<bool> 						axi_rvalid		;   // Read reponse valid
-	sc_core::sc_in<sc_bv<512> > 				axi_rdata		;   // Read data
-	sc_core::sc_in<bool> 						axi_rlast		;   // Read last
-	sc_core::sc_out<bool> 						axi_rready		;   // Read Response ready
-    
-    sc_core::sc_signal<sc_bv<MAX_FAS_WR_REQ> >  axi_wvalid_i    ;
+		sc_core::sc_in<bool >  						axi_awready		;	// Indicates slave is ready to accept a 
+		sc_core::sc_out<sc_bv<32> >  				axi_awid		;	// Write ID
+		sc_core::sc_out<sc_bv<33> > 				axi_awaddr		;	// Write address
+		sc_core::sc_out<sc_bv<8> >  				axi_awlen		;	// Write Burst Length
+		sc_core::sc_out<sc_bv<3> >  				axi_awsize		;	// Write Burst size
+		sc_core::sc_out<sc_bv<2> >  				axi_awburst		;	// Write Burst type
+		sc_core::sc_out<bool >  					axi_awvalid		;	// Write address valid
+		// AXI write data channel signals
+		sc_core::sc_in<bool >  						axi_wready		;	// Write data ready
+		sc_core::sc_out<sc_bv<512> >  				axi_wdata		;	// Write data
+		sc_core::sc_out<sc_bv<64> >  				axi_wstrb		;	// Write strobes
+		sc_core::sc_out<bool >  					axi_wlast		;	// Last write transaction   
+		sc_core::sc_out<bool >  					axi_wvalid		;	// Write valid  
+		// AXI write response channel signals
+		sc_core::sc_in<sc_bv<32> >  				axi_bid			;	// Response ID
+		sc_core::sc_in<sc_bv<2> >  					axi_bresp		;	// Write response
+		sc_core::sc_in<bool >  						axi_bvalid		;	// Write reponse valid
+		sc_core::sc_out<bool>  						axi_bready		;	// Response ready
+		// AXI read address channel signals
+		sc_core::sc_in<bool >  						axi_arready		;   // Read address ready
+		sc_core::sc_out<sc_bv<32> > 				axi_arid		;	// Read ID
+		sc_core::sc_out<sc_bv<33> >					axi_araddr		;   // Read address
+		sc_core::sc_out<sc_bv<8> > 					axi_arlen		;   // Read Burst Length
+		sc_core::sc_out<sc_bv<3> > 					axi_arsize		;   // Read Burst size
+		sc_core::sc_out<sc_bv<2> > 					axi_arburst		;   // Read Burst type
+		sc_core::sc_out<bool >  					axi_arvalid		;   // Read address valid 
+		// AXI read data channel signals   
+		sc_core::sc_in<sc_bv<32> > 					axi_rid			;   // Response ID
+		sc_core::sc_in<sc_bv<2> > 					axi_rresp		;   // Read response
+		sc_core::sc_in<bool> 						axi_rvalid		;   // Read reponse valid
+		sc_core::sc_in<sc_bv<512> > 				axi_rdata		;   // Read data
+		sc_core::sc_in<bool> 						axi_rlast		;   // Read last
+		sc_core::sc_out<bool> 						axi_rready		;   // Read Response ready
 #endif	
         tlm_utils::simple_target_socket<CNN_Layer_Accel>	tar_soc;
 
@@ -160,11 +155,14 @@ SC_MODULE(CNN_Layer_Accel)
                 sensitive << clk.pos();
             SC_THREAD(system_mem_write_arb_process)
                 sensitive << clk.pos();
+#ifdef SIMULATE_MEMORY
+			SC_THREAD(axi_awvalid_process)
+				sensitive << clk.pos();
             SC_THREAD(read_resp_process)
                 sensitive << clk.pos();
             SC_THREAD(write_resp_process)       
                 sensitive << clk.pos();
-
+#endif
             for(int i = 0 ; i < NUM_FAS ; i++)
             {
                 m_FAS_complt_arr.push_back(false);
@@ -220,20 +218,30 @@ SC_MODULE(CNN_Layer_Accel)
         // Processes
         void main_process();
         int complt_process(int idx);
+#ifdef SIMULATE_MEMORY
         void system_mem_read_arb_process();
         void system_mem_write_arb_process();
+		void axi_awvalid_process();
 		int system_mem_read(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size);
 		int system_mem_write(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size);
-        void read_resp_process();
-        void write_resp_process();
+		void read_resp_process();
+		void write_resp_process();
+#endif
         
         // Methods
         void b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
         void setMemory(uint64_t addr);
         void start();
         void waitComplete(double& elapsedTime, double& memPower);
+#ifdef SIMULATE_MEMORY
+		void b_schedule_read(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size);
+		void b_schedule_write(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size);
+#endif
+		
         double calculateMemPower();
-        const char* toHexCharArr(int value);
+		const char* toHexCharArr(int value);
+		const char* toHexCharArr(uint32_t value);
+		const char* toHexCharArr(uint64_t value);
 
 
         // Members
@@ -248,7 +256,4 @@ SC_MODULE(CNN_Layer_Accel)
         int m_next_wr_req_id;
         int m_next_rd_req_id;
         double m_start_time;
-        bool target;
-        int interbuffer;
-        int* interbuf_ptr;
 };

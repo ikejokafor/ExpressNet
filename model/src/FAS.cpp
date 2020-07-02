@@ -161,8 +161,8 @@ void FAS::job_fetch_process()
     while(true)
     {
         wait();
-        // if(m_trans_fifo.size() > 0 && m_convMap_bram_sz < m_co_high_watermark_cfg)
-        if(m_trans_fifo.size() > 0)
+        if(m_trans_fifo.size() > 0 && m_convMap_bram_sz < m_co_high_watermark_cfg)
+        // if(m_trans_fifo.size() > 0)
         {
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
@@ -953,27 +953,26 @@ void FAS::nb_result_write(int res_pkt_size)
     string str;
     if(m_opcode_cfg == 16)
     {
-        // if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
-        // {
-        //     str = "m_outBuf_fifo is full\n";
-        //     cout << str;
-        //     raise(SIGINT);
-        //     // reset_Accel();
-        //     return;
-        // }
+        if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
+        {
+            str = "m_outBuf_fifo is full\n";
+            cout << str;
+            raise(SIGINT);
+            // reset_Accel();
+            return;
+        }
         m_outBuf_fifo_sz += res_pkt_size;
     }
     else
     {
-        // if(m_convMap_bram_sz == CM_BRAM_DEPTH)
-        // if(m_convMap_bram_sz == 10)
-        // {
-        //     str = "m_convMap_bram_sz is full\n";
-        //     cout << str;
-        //     raise(SIGINT);
-        //     // reset_Accel();
-        //     return;
-        // }
+        if(m_convMap_bram_sz == CM_BRAM_DEPTH)
+        {
+            str = "m_convMap_bram_sz is full\n";
+            cout << str;
+            raise(SIGINT);
+            // reset_Accel();
+            return;
+        }
         m_convMap_bram_sz += res_pkt_size;
     }
 }
@@ -1014,8 +1013,9 @@ void FAS::b_getCfgData()
     m_partMapAddr_cfg               = m_FAS_cfg->m_partMapAddr;
     m_resdMapAddr_cfg               = m_FAS_cfg->m_resMapAddr;
     m_outMapAddr_cfg                = m_FAS_cfg->m_outMapAddr;
-    m_inMapAddrArr                  = m_FAS_cfg->m_inMapAddrArr;
-    m_krnl3x3AddrArr                = m_FAS_cfg->m_krnl3x3AddrArr;
+    m_inMapAddrArr_cfg              = m_FAS_cfg->m_inMapAddrArr;
+    m_krnl3x3AddrArr_cfg            = m_FAS_cfg->m_krnl3x3AddrArr;
+	m_prevMapAddr_cfg				= m_FAS_cfg->m_prevMapAddr;
     m_krnl3x3BiasAddrArr            = m_FAS_cfg->m_krnl3x3BiasAddrArr;
     m_co_high_watermark_cfg         = m_FAS_cfg->m_co_high_watermark;
     m_rm_low_watermark_cfg          = m_FAS_cfg->m_rm_low_watermark;
@@ -1031,7 +1031,7 @@ void FAS::b_getCfgData()
     {
         m_num_1x1_kernels_cfg       = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);
     }
-    // print_cfg();
+    // nb_print_cfg();
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
     for(int i = 0; i < MAX_AWP_PER_FAS; i++)
@@ -1220,7 +1220,7 @@ void FAS::b_QUAD_krnl3x3_config(int AWP_addr, int QUAD_addr)
     tlm::tlm_generic_payload* trans;
     trans = nb_createTLMTrans(
         m_mem_mng,
-        m_krnl3x3AddrArr[AWP_addr][QUAD_addr],
+        m_krnl3x3AddrArr_cfg[AWP_addr][QUAD_addr],
         TLM_IGNORE_COMMAND,
         nullptr,
         m_krnl3x3BiasFetchTotal_cfg,
