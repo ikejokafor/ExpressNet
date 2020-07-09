@@ -651,7 +651,6 @@ void FAS::buffer_update_process()
             m_convMap_bram_sz -= m_krnl1x1Depth_cfg;
         }
     }
-
 }
 
 

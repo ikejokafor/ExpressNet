@@ -275,5 +275,34 @@
 `define ACTV_FIELD                          (`ACTV_HIGH):(`ACTV_LOW) // [122:122]
 
 
-`endif
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+// [7] FAS OPCODE
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+`define OPCODE_0                            0 
+`define OPCODE_1                            1 
+`define OPCODE_2                            2 
+`define OPCODE_3                            3 
+`define OPCODE_4                            4 
+`define OPCODE_5                            5 
+`define OPCODE_6                            6 
+`define OPCODE_7                            7 
+`define OPCODE_8                            8 
+`define OPCODE_9                            9 
+`define OPCODE_10                           10
+`define OPCODE_11                           11
+`define OPCODE_12                           12
+`define OPCODE_13                           13
+`define OPCODE_14                           14
+`define OPCODE_15                           15
+`define OPCODE_16                           16
+`define OPCODE_17                           17
+`define OPCODE_NULL                         -1
 
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+// [7] FAS OPCODE
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+`define KERNEL_1x1_SIMD
+`define KERNEL_1x1_SIMD_SHMAT               (clog2(KERNEL_1x1_SIMD))
+
+`endif
