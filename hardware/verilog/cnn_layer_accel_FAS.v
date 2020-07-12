@@ -455,14 +455,7 @@ module cnn_layer_accel_FAS #(
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
-
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    always@(*) begin
-    
-    end
-    // END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+   
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     integer i0, i1;
     always@(*) begin
@@ -491,7 +484,19 @@ module cnn_layer_accel_FAS #(
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
-    
+ 
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+    integer i3
+    always@(*) begin
+        always@(posedge clk) begin
+            for(i3 = 0; i3 < `VECTOR_MULT
+            vector_mult
+            
+        end
+    end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
+
+ 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign convMap_bram_empty       = (convMap_bram_count > 0);
     assign convMap_bram_prog_full   = (convMap_bram_count > cm_high_watermark_cfg);
@@ -845,8 +850,7 @@ module cnn_layer_accel_FAS #(
                 && (opcode_cfg == `OPCODE_0
                     || opcode_cfg == `OPCODE_1
                     || opcode_cfg == `OPCODE_10
-                    || opcode_cfg == `OPCODE_11
-                    || opcode_cfg == `OPCODE_12)
+                    || opcode_cfg == `OPCODE_11)
                 && !convMap_bram_empty
                 && !partMap_bram_empty
                 && !buffer_update && !buffer_update_in_prog)                
@@ -855,6 +859,7 @@ module cnn_layer_accel_FAS #(
             end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) 
                 && (opcode_cfg == `OPCODE_2
                     || opcode_cfg == `OPCODE_3
+                    || opcode_cfg == `OPCODE_12
                     || opcode_cfg == `OPCODE_13
                     || opcode_cfg == `OPCODE_14)
                 && !convMap_bram_empty

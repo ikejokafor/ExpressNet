@@ -1,10 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------------
 //
 //  M: Memory Cycle Latency
-//  I_R: Number of Input Rows
-//  I_C: Number of Input Columns
-//  O_R: Number of Output Rows
-//  O_C: Number of Output Columns
+//  I_R: Number of Ssliding WIndow Input Rows
+//  I_C: Number of Ssliding WIndow Input Columns
+//  O_R: Number of Sliding Window Output Rows
+//  O_C: Number of Sliding Window Output Columns
 //  K_3: Number of 3x3 Kernels
 //  K_1: Number of 1x1 Kernels
 //  K_1_S: 1x1 Kernel SIMD
@@ -29,7 +29,7 @@
 //          + [M +  K_3)]
 //          + [3 * (M + I_C)]
 //          + [(I_R - 3)(M + I_C)]
-//          + [K_3 * I_R * O_C]
+//          + [K_3 * O_R * O_C]
 //
 //      For stride 2:
 //          [M + 8192]
@@ -43,7 +43,7 @@
 //
 //      EXE_LAT
 //
-//      [M + (R * C)] * [(K_1_D / K_1_D_S) * (K_1 / K_1_S)]
+//      [M + (O_R * O_C)] * (K_1_D / K_1_D_S) * (K_1 / K_1_S)
 //  
 //
 //  Power Consumption:
@@ -80,8 +80,8 @@ SC_MODULE(CNN_Layer_Accel)
 {
     public:
 		sc_core::sc_in<bool>						clk				;
-		sc_core::sc_in<bool>						rst				;
-#ifdef SIMULATE_MEMORY	
+#ifdef SIMULATE_MEMORY
+    	sc_core::sc_in<bool>						rst				;
 		sc_core::sc_in<bool >  						axi_awready		;	// Indicates slave is ready to accept a 
 		sc_core::sc_out<sc_bv<32> >  				axi_awid		;	// Write ID
 		sc_core::sc_out<sc_bv<33> > 				axi_awaddr		;	// Write address
@@ -152,11 +152,11 @@ SC_MODULE(CNN_Layer_Accel)
 
             SC_THREAD(main_process);
                 sensitive << clk.pos();
+#ifdef SIMULATE_MEMORY                
             SC_THREAD(system_mem_read_arb_process)
                 sensitive << clk.pos();
             SC_THREAD(system_mem_write_arb_process)
                 sensitive << clk.pos();
-#ifdef SIMULATE_MEMORY
 			// SC_THREAD(axi_awvalid_process)
 			// 	sensitive << clk.pos();
             SC_THREAD(read_resp_process)

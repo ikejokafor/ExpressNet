@@ -374,7 +374,11 @@ void FAS::A_process()
     while(true)
     {
         wait();
-        if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 0
+        if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) 
+            && (m_opcode_cfg == 0
+                || m_opcode_cfg == 1
+                || m_opcode_cfg == 10
+                || m_opcode_cfg == 11)
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH) 
         {
@@ -391,22 +395,12 @@ void FAS::A_process()
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
         }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 1
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
-            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH) 
-        {
-            //  Arch
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map, pop part map; 1 cycle
-            //          add [conv map, part map], pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
-            //      add prevMap; 1 cycle
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 2
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) 
+            && (m_opcode_cfg == 2
+                || m_opcode_cfg == 3
+                || m_opcode_cfg == 12
+                || m_opcode_cfg == 13
+                || m_opcode_cfg == 14)
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH) 
         {
             //  Arch
@@ -421,21 +415,9 @@ void FAS::A_process()
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
         }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 3
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH) 
-        {
-            //  Arch
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map, pop part map; 1 cycle
-            //          add [conv map, part map], pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
-            //      add prevMap; 1 cycle
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 4
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) 
+            && (m_opcode_cfg == 4
+                || m_opcode_cfg == 5)
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
@@ -452,26 +434,9 @@ void FAS::A_process()
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
         }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 5
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
-            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH
-            && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
-        {
-            //  Arch
-            //      pop conv map, pop part map; 1 cycle
-            //      add [conv map, part map], pop resd map; 1 cycle
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //          pop 1x1 Bias; last iteration
-            //      Add bias - 1 1x1 krnl done; 1 cycle
-            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
-            //      add prevMap; 1 cycle
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 6
+        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) 
+            && (m_opcode_cfg == 6
+                || m_opcode_cfg == 7)
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
             && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
         {
@@ -484,22 +449,6 @@ void FAS::A_process()
             //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
             //          pop 1x1 Bias; last iteration
             //      Add bias - 1 1x1 krnl done; 1 cycle
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 7
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
-            && m_resdMap_bram_sz >= RM_BRAM_RD_WIDTH) 
-        {
-            //  Arch
-            //      pop conv map, pop resd map; 1 cycle
-            //      add conv map, resd map; 1 cycle
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
-            //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
         }
@@ -529,78 +478,6 @@ void FAS::A_process()
             m_convMap_bram_sz -= CM_BRAM_RD_WIDTH;
             m_resdMap_bram_sz -= RM_BRAM_RD_WIDTH;
             m_outBuf_wr.notify(m_three_cycles_later);
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 10
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
-            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH) 
-        {
-            //  Arch
-            //      pop conv map, pop part map; 1 cycle
-            //      add conv map, part map; 1 cycle
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 11
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH
-            && m_partMap_bram_sz >= PM_BRAM_RD_WIDTH) 
-        {
-            //  Arch
-            //      pop conv map, pop part map; 1 cycle
-            //      add conv map, part map; 1 cycle
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
-            //      add prevMap; 1 cycle
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 12
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH)
-        {
-            //  Arch
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //          pop 1x1 Bias; last iteration
-            //      Add bias - 1 1x1 krnl done; 1 cycle
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 13
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH)
-        {
-            //  Arch
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //      write to output buffer; 1 cycle
-            //      Buffer up PV_FIFO_RD_WIDTH values; PV_FIFO_RD_WIDTH cycles
-            //      add prevMap; 1 cycle
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
-        }
-        else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 14
-            && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH)
-        {
-            //  Arch
-            //      pop conv map, pop part map; 1 cycle
-            //      add conv map, part map; 1 cycle
-            //      for(KRNL_DPTH / DPTH_SIMD) cycles
-            //          pop conv map; pop 1x1 krnl depth chunk; 1 cycle
-            //          Multiply 1x1; 1 cycle
-            //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
-            //          pop 1x1 Bias; last iteration
-            //      Add bias - 1 1x1 krnl done; 1 cycle
-            //      write to output buffer; 1 cycle
-            nb_krnl_1x1_bram_rd();
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 15
             && m_convMap_bram_sz >= CM_BRAM_RD_WIDTH

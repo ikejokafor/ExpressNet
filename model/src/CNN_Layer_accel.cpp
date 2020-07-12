@@ -25,6 +25,7 @@ void CNN_Layer_Accel::main_process()
     while (true)
     {
         wait();
+#ifdef SIMULATE_MEMORY
 		if(rst->read())
 		{
 			// READ
@@ -44,6 +45,7 @@ void CNN_Layer_Accel::main_process()
             axi_wstrb 	    = "0x0000000000000000";
             axi_bready      = true;
 		}
+#endif
         bool all_complete = true;
         for (int i = 0; i < m_FAS_complt_arr.size(); i++)
         {
