@@ -112,7 +112,7 @@ void CNN_Layer_Accel::system_mem_read_arb_process()
                 if(m_rd_req_arr[i].req_pending)
                 {
                     wait();
-                    m_rd_req_arr[i].ack.notify(SC_ZERO_TIME);
+                    m_rd_req_arr[i].ack.notify_delayed(SC_ZERO_TIME);
                     m_next_rd_req_id = (i + 1) % MAX_FAS_RD_REQ;
                     break;
                 }
@@ -143,7 +143,7 @@ void CNN_Layer_Accel::system_mem_write_arb_process()
                 if(m_wr_req_arr[i].req_pending)
                 {
                     wait();
-                    m_wr_req_arr[i].ack.notify(SC_ZERO_TIME);
+                    m_wr_req_arr[i].ack.notify_delayed(SC_ZERO_TIME);
                     m_next_wr_req_id = (i + 1) % MAX_FAS_WR_REQ;
                     break;
                 }
@@ -180,7 +180,7 @@ int CNN_Layer_Accel::system_mem_read(int* memory, int req_idx, uint64_t mem_tran
 			}
 		}
 	}
-	m_rd_req_arr[req_idx].ack.notify(SC_ZERO_TIME);
+	m_rd_req_arr[req_idx].ack.notify_delayed(SC_ZERO_TIME);
 }
 
 
@@ -215,7 +215,7 @@ int CNN_Layer_Accel::system_mem_write(int* memory, int req_idx, uint64_t mem_tra
 	axi_wvalid = false;
 	axi_wlast = "0x0";
 	//////
-	m_wr_req_arr[req_idx].ack.notify(SC_ZERO_TIME);
+	m_wr_req_arr[req_idx].ack.notify_delayed(SC_ZERO_TIME);
 }
 
 
@@ -263,7 +263,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
         {
 			int req_idx = accel_trans->fas_rd_id;
             m_rd_req_arr[req_idx].req_pending = true;
-			wait(m_rd_req_arr[req_idx].ack.default_event());
+			wait(m_rd_req_arr[req_idx].ack);
             m_num_sys_mem_rd_in_prog++;
             sc_core::sc_spawn_options args;
 			args.set_sensitivity(&clk);
@@ -283,7 +283,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
 				&args
 			);         
             b_schedule_read(req_idx, trans.get_address(), trans.get_data_length());
-			wait(m_rd_req_arr[req_idx].ack.default_event());
+			wait(m_rd_req_arr[req_idx].ack);
 			m_num_sys_mem_rd_in_prog--;
             break;
         }
@@ -291,7 +291,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
         {
             int req_idx = accel_trans->fas_wr_id;
             m_wr_req_arr[req_idx].req_pending = true;
-            wait(m_wr_req_arr[req_idx].ack.default_event());
+            wait(m_wr_req_arr[req_idx].ack);
             m_num_sys_mem_wr_in_prog++;
 			sc_core::sc_spawn_options args;
 			args.set_sensitivity(&clk);
@@ -311,7 +311,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
 				&args
 			);
             b_schedule_write(req_idx, trans.get_address(), trans.get_data_length());
-			wait(m_rd_req_arr[req_idx].ack.default_event());
+			wait(m_rd_req_arr[req_idx].ack);
             m_num_sys_mem_wr_in_prog--;
             break;
         }

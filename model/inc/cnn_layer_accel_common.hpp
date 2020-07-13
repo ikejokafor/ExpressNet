@@ -1,5 +1,6 @@
 #pragma once
 
+#define SC_INCLUDE_DYNAMIC_PROCESSES
 
 #include "systemc"
 #include "mem_mng.hpp"
@@ -130,7 +131,7 @@ class Accel_Trans
         bool req_pending                ;
         bool last_CO                    ;
 		int* memory						;
-        sc_core::sc_event_queue ack     ;
+        sc_core::sc_event ack           ;
         sc_core::sc_event request       ;
         fas_rd_id_t fas_rd_id           ;
         fas_wr_id_t fas_wr_id           ;

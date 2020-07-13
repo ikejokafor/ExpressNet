@@ -26,7 +26,7 @@ void AWPBus::b_request(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size, boo
         m_req_arr[reqArrIdx].accel_cmd = accel_cmd;
         m_req_arr[reqArrIdx].res_pkt_size = res_pkt_size;
         m_req_arr[reqArrIdx].req_pending = true;
-        wait(m_req_arr[reqArrIdx].ack.default_event());
+        wait(m_req_arr[reqArrIdx].ack);
         wait(clk.posedge_event());
         m_req_arr[reqArrIdx].req_pending = false;
         m_trans_in_prog_arr[reqArrIdx] = true;
