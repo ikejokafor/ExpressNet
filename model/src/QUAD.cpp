@@ -115,8 +115,8 @@ void QUAD::ctrl_process_0()
             {
                 if(m_master_QUAD_cfg)
                 {
-                    int elpTime = (int)sc_time_stamp().to_double() - m_start_time;
-                    str = "[" + string(name()) + "]: QUAD processing time: " + to_string(elpTime) + " ns\n";
+                    m_QUAD_time = sc_time_stamp().to_double() - m_start_time;
+                    str = "[" + string(name()) + "]: QUAD processing time: " + to_string((int)m_QUAD_time) + " ns\n";
                     cout << str;
                 }
                 if(m_res_fifo > 0)
@@ -311,7 +311,7 @@ bool QUAD::b_job_start()
     {
         string str = "[" + string(name()) + "]:" + " Started Workload at " + sc_time_stamp().to_string() + "\n";
         cout << str;
-        m_start_time = (int)sc_time_stamp().to_double();
+        m_start_time = sc_time_stamp().to_double();
         m_state = ST_PRIM_BUFFER;
         return true;
     }

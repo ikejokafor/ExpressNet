@@ -5,6 +5,8 @@
 //  I_C: Number of Ssliding WIndow Input Columns
 //  O_R: Number of Sliding Window Output Rows
 //  O_C: Number of Sliding Window Output Columns
+//  O_D: Output Depth
+//  A_S: Accumulation SIMD
 //  K_3: Number of 3x3 Kernels
 //  K_1: Number of 1x1 Kernels
 //  K_1_S: 1x1 Kernel SIMD
@@ -45,6 +47,11 @@
 //
 //      (M + (O_R * O_C)) * (K_1_D / K_1_D_S) * (K_1 / K_1_S)
 //  
+//  Streaming Accumulation Latency
+//      
+//      EXE_LAT
+//
+//      (M + (O_R * O_C * O_D) / A_S)
 //
 //  Power Consumption:
 //
@@ -215,7 +222,7 @@ SC_MODULE(CNN_Layer_Accel)
         void b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
         void setMemory(uint64_t addr);
         void start();
-        void waitComplete(double& elapsedTime, double& memPower);
+        void waitComplete(double& elapsedTime, double& memPower, double& QUAD_time, double& FAS_time);
 #ifdef SIMULATE_MEMORY
 		void b_schedule_read(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size);
 		void b_schedule_write(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size);
@@ -239,4 +246,6 @@ SC_MODULE(CNN_Layer_Accel)
         int m_next_wr_req_id;
         int m_next_rd_req_id;
         double m_start_time;
+        double m_QUAD_time;
+        double m_FAS_time;
 };

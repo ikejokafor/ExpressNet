@@ -343,12 +343,14 @@ void CNN_Layer_Accel::start()
 }
 
 
-void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower)
+void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double& QUAD_time, double& FAS_time)
 {
     wait(m_complete.default_event());
     wait();
     elapsedTime = sc_time_stamp().to_double() - m_start_time;
     memPower = calculateMemPower();
+    QUAD_time = awp[0]->quad[0]->m_QUAD_time;
+    FAS_time = fas[0]->m_FAS_time;
     delete m_accelCfg;
     m_accelCfg = new AccelConfig();
     // FIXME: might need to read back data

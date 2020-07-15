@@ -21,6 +21,7 @@ void FAS::ctrl_process()
             {
                 wait(m_start);
                 wait();
+                m_start_time = sc_time_stamp().to_double();
                 m_start_ack.notify();
                 m_state = ST_CFG_START_AWP;
                 break;
@@ -91,6 +92,8 @@ void FAS::ctrl_process()
                     {
                         m_AWP_complt_arr[i] = false;
                     }
+                    m_FAS_time = sc_time_stamp().to_double() - m_start_time;
+                    str = "[" + string(name()) + "]: FAS processing time: " + to_string((int)m_FAS_time) + " ns\n";
                     wait();
                     m_complete.notify();
                     wait(m_complete_ack);

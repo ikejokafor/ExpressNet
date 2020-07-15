@@ -280,4 +280,6 @@ SC_MODULE(FAS)
         sc_core::sc_event_queue                 m_buffer_update                 ;
         int                                     m_res_high_watermark_cfg        ;
         bool                                    m_last_output                   ;
+        double                                  m_start_time                    ;
+        double                                  m_FAS_time;
 };
