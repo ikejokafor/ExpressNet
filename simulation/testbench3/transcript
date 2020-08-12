@@ -1,0 +1,770 @@
+# //  Questa Sim-64
+# //  Version 2019.4_2 linux_x86_64 Dec  7 2019
+# //
+# //  Copyright 1991-2019 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+do sim_compile.do
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:18 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 15:36:20 on Aug 12,2020, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:20 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/clock_gen.v 
+# -- Compiling module clock_gen
+# 
+# Top level modules:
+# 	clock_gen
+# End time: 15:36:20 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:20 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/cnn_layer_accel_quad_intf.sv 
+# -- Compiling interface cnn_layer_accel_quad_intf
+# 
+# Top level modules:
+# 	--none--
+# End time: 15:36:20 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:20 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_testbench.sv 
+# -- Compiling module cnl_sc1_testbench
+# -- Compiling interface cnn_layer_accel_quad_intf
+# -- Compiling interface cnn_layer_accel_synch_intf
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1//cnl_sc1_generator.sv(117): (vlog-2579) Enum type mismatch between operands of inside expression.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1//cnl_sc1_environment.sv(160): (vlog-2972) Array assignments require equivalent element types.
+# 
+# Top level modules:
+# 	cnl_sc1_testbench
+# End time: 15:36:20 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 2
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:21 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_environment.sv 
+# -- Compiling package cnl_sc1_environment_sv_unit
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1//cnl_sc1_generator.sv(117): (vlog-2579) Enum type mismatch between operands of inside expression.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_environment.sv(160): (vlog-2972) Array assignments require equivalent element types.
+# -- Compiling interface cnn_layer_accel_quad_intf
+# -- Compiling interface cnn_layer_accel_synch_intf
+# 
+# Top level modules:
+# 	--none--
+# End time: 15:36:21 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 2
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:21 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_generator.sv 
+# -- Compiling package cnl_sc1_generator_sv_unit
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_generator.sv(117): (vlog-2579) Enum type mismatch between operands of inside expression.
+# 
+# Top level modules:
+# 	--none--
+# End time: 15:36:21 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:21 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_monitor.sv 
+# -- Compiling package cnl_sc1_monitor_sv_unit
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1//cnl_sc1_generator.sv(117): (vlog-2579) Enum type mismatch between operands of inside expression.
+# -- Compiling interface cnn_layer_accel_quad_intf
+# -- Compiling interface cnn_layer_accel_synch_intf
+# 
+# Top level modules:
+# 	--none--
+# End time: 15:36:21 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:21 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_scoreboard.sv 
+# -- Compiling package cnl_sc1_scoreboard_sv_unit
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1//cnl_sc1_generator.sv(117): (vlog-2579) Enum type mismatch between operands of inside expression.
+# -- Compiling interface cnn_layer_accel_quad_intf
+# -- Compiling interface cnn_layer_accel_synch_intf
+# 
+# Top level modules:
+# 	--none--
+# End time: 15:36:22 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:22 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_agent.sv 
+# -- Compiling package cnl_sc1_agent_sv_unit
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1//cnl_sc1_generator.sv(117): (vlog-2579) Enum type mismatch between operands of inside expression.
+# -- Compiling interface cnn_layer_accel_quad_intf
+# -- Compiling interface cnn_layer_accel_synch_intf
+# 
+# Top level modules:
+# 	--none--
+# End time: 15:36:22 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:22 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_driver.sv 
+# -- Compiling package cnl_sc1_driver_sv_unit
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1//cnl_sc1_generator.sv(117): (vlog-2579) Enum type mismatch between operands of inside expression.
+# -- Compiling interface cnn_layer_accel_quad_intf
+# -- Compiling interface cnn_layer_accel_synch_intf
+# 
+# Top level modules:
+# 	--none--
+# End time: 15:36:22 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:22 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/verification/scenario1/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//verif_lib/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/verification/scenario1/cnl_sc1_DUTOutput.sv 
+# -- Compiling package cnl_sc1_DUTOutput_sv_unit
+# 
+# Top level modules:
+# 	--none--
+# End time: 15:36:23 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:23 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" "+define+VERIFICATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_awe_rowbuffers.v 
+# -- Compiling module cnn_layer_accel_awe_rowbuffers
+# 
+# Top level modules:
+# 	cnn_layer_accel_awe_rowbuffers
+# End time: 15:36:23 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:23 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" "+define+VERIFICATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_prefetch_buffer.v 
+# -- Compiling module cnn_layer_accel_prefetch_buffer
+# 
+# Top level modules:
+# 	cnn_layer_accel_prefetch_buffer
+# End time: 15:36:23 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:36:23 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" "+define+VERIFICATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace//soc_it_common/hardware/include" "+incdir+/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_ram.v 
+# ** Error: (vlog-7) Failed to open design unit file "/home/mdl/izo5011/IkennaWorkSpace//cnn_layer_accel/hardware/verilog/xilinx_simple_dual_port_no_change_ram.v" in read mode.
+# No such file or directory. (errno = ENOENT)
+# End time: 15:36:23 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 24
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION +define+VERIFICATION -work work +incdir+$env(SOC_IT_ROOT)/soc_it_common/hardware/include +incdir+$env(SOC_IT_ROOT)/c..."
+pwd
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+ls
+# sim_compile.do
+# startsim.do
+# testbench.sv
+# transcript
+# work
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:39:29 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 15:39:30 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:39:30 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft_prog_full_count.v 
+# -- Compiling module fifo_fwft_prog_full_count
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft_prog_full_count.v(5): near ")": syntax error, unexpected ')'.
+# End time: 15:39:30 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 8
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ $env(WORKSPACE_PATH)/accel_infst_common..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:42:12 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 15:42:13 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:42:13 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft_prog_full_count.v 
+# -- Compiling module fifo_fwft_prog_full_count
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft_prog_full_count.v(5): near ")": syntax error, unexpected ')'.
+# End time: 15:42:13 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 8
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ $env(WORKSPACE_PATH)/accel_infst_common..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:44:35 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 15:44:35 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:44:35 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft_prog_full_count.v 
+# -- Compiling module fifo_fwft_prog_full_count
+# 
+# Top level modules:
+# 	fifo_fwft_prog_full_count
+# End time: 15:44:36 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:44:36 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft.v 
+# -- Compiling module fifo_fwft
+# 
+# Top level modules:
+# 	fifo_fwft
+# End time: 15:44:36 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:44:36 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/SRL_bit.v 
+# -- Compiling module SRL_bit
+# 
+# Top level modules:
+# 	SRL_bit
+# End time: 15:44:36 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:44:36 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/SRL_bus.v 
+# -- Compiling module SRL_bus
+# 
+# Top level modules:
+# 	SRL_bus
+# End time: 15:44:36 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:44:36 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/clock_gen.v 
+# -- Compiling module clock_gen
+# 
+# Top level modules:
+# 	clock_gen
+# End time: 15:44:36 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:44:36 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(41): near "start_FAS": syntax error, unexpected IDENTIFIER, expecting ')'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(137): (vlog-2163) Macro `MAX_AWP_PER_FAS is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(140): (vlog-2163) Macro `MAX_FAS_RD_ID is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(464): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(464): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(465): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(465): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(465): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(465): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(470): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(470): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(471): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(471): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(471): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(471): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(480): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(480): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(481): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(481): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(481): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(481): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(493): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(493): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(494): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(494): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(494): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(494): (vlog-2163) Macro `PIXEL_SIZE is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(577): (vlog-2163) Macro `MAX_AWP_PER_FAS is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(736): (vlog-2163) Macro `KRNL_1x1_BRAM_RD_WIDTH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(745): (vlog-2163) Macro `KRNL_1x1_BRAM_RD_WIDTH is undefined.
+# End time: 15:44:37 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 30, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 16
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:50:45 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:50:46 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:50:46 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft_prog_full_count.v 
+# -- Compiling module fifo_fwft_prog_full_count
+# 
+# Top level modules:
+# 	fifo_fwft_prog_full_count
+# End time: 17:50:46 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:50:46 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft.v 
+# -- Compiling module fifo_fwft
+# 
+# Top level modules:
+# 	fifo_fwft
+# End time: 17:50:46 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:50:46 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/SRL_bit.v 
+# -- Compiling module SRL_bit
+# 
+# Top level modules:
+# 	SRL_bit
+# End time: 17:50:46 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:50:46 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/SRL_bus.v 
+# -- Compiling module SRL_bus
+# 
+# Top level modules:
+# 	SRL_bus
+# End time: 17:50:46 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:50:46 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/clock_gen.v 
+# -- Compiling module clock_gen
+# 
+# Top level modules:
+# 	clock_gen
+# End time: 17:50:47 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:50:47 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(94): near "logic": syntax error, unexpected "SystemVerilog keyword 'logic'", expecting ';' or ','.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(131): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(132): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(133): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(134): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(135): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(136): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(137): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(138): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(139): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(140): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(141): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(142): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(143): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(144): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(145): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(146): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(147): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(148): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(149): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(150): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(151): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(152): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(153): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(154): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(155): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(156): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(157): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(158): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(159): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(160): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(161): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(162): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(163): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(164): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(165): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(166): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(167): (vlog-13169) Packed dimension must specify a range.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(169): near "logic": syntax error, unexpected "SystemVerilog keyword 'logic'", expecting ';' or ','.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(182): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(201): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(219): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(238): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(262): (vlog-2623) Undefined variable: partMap_bram_wren.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(263): (vlog-2623) Undefined variable: partMap_bram_datain.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(274): near "=": syntax error, unexpected '=', expecting '('.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(295): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(319): (vlog-2623) Undefined variable: rst.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(320): (vlog-2623) Undefined variable: trans_fifo_wren.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(321): (vlog-2623) Undefined variable: trans_fifo_rden.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(322): (vlog-2623) Undefined variable: trans_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(323): (vlog-2623) Undefined variable: trans_fifo_dataout.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(324): (vlog-2623) Undefined variable: trans_fifo_empty.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(338): (vlog-2623) Undefined variable: adder_tree_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(354): (vlog-2623) Undefined variable: vector_add_0.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(355): (vlog-2623) Undefined variable: vector_add_0_d.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(366): (vlog-2623) Undefined variable: vector_add_1.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(367): (vlog-2623) Undefined variable: vector_add_1_d.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(368): (vlog-13282) 'i0_SRL_bit' already declared in this scope.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(378): (vlog-2623) Undefined variable: resdMap_bram_wren_w1.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(379): (vlog-2623) Undefined variable: resdMap_bram_rden_w1_d.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(380): (vlog-13282) 'i0_SRL_bit' already declared in this scope.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): (vlog-2623) Undefined variable: outBuf_fifo_wren_w1.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(391): (vlog-2623) Undefined variable: outBuf_fifo_wren_w1_d.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(392): (vlog-13282) 'i0_SRL_bit' already declared in this scope.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(402): (vlog-2623) Undefined variable: outBuf_fifo_wren_w2.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(403): (vlog-2623) Undefined variable: outBuf_fifo_wren_w2_d.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(404): (vlog-13282) 'i0_SRL_bit' already declared in this scope.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(408): (vlog-2730) Undefined variable: 'ckk'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(409): (vlog-2730) Undefined variable: 'process_cmpl'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(435): (vlog-2730) Undefined variable: 'co_high_watermark_cfg'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(448): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(448): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(449): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(449): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(450): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(450): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(451): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(451): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(452): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(452): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(453): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(453): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(454): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(454): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(455): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(455): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(456): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(456): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(457): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(457): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(458): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(458): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(459): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(459): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(460): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(460): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(461): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(461): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(462): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(462): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(463): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(463): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(464): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(464): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(465): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(465): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(466): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(466): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(467): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(467): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(468): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(468): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(469): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(469): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(470): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(470): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(471): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(471): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(472): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(472): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(473): (vlog-2730) Undefined variable: 'co_high_watermark_cfg'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(473): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(473): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(474): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(474): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(475): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(475): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(476): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(476): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(477): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(477): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(478): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(478): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(479): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(479): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(480): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(480): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(481): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(481): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(482): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(482): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(483): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(483): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(484): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(484): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(495): (vlog-2730) Undefined variable: 'vector_add_out_0'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(496): (vlog-2730) Undefined variable: 'convMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(496): (vlog-2730) Undefined variable: 'partMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(501): (vlog-2730) Undefined variable: 'vector_add_out_0'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(502): (vlog-2730) Undefined variable: 'convMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(502): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(511): (vlog-2730) Undefined variable: 'vector_add_out_1'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(512): (vlog-2730) Undefined variable: 'vector_add_out_0'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(512): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(515): near "end": syntax error, unexpected end.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(523): (vlog-13205) Syntax error found in the scope following 'i3'. Is there a missing '::'?
+# End time: 17:50:47 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 138, Warnings: 19
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 16
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:51:05 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:51:06 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:51:06 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft_prog_full_count.v 
+# -- Compiling module fifo_fwft_prog_full_count
+# 
+# Top level modules:
+# 	fifo_fwft_prog_full_count
+# End time: 17:51:06 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:51:06 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft.v 
+# -- Compiling module fifo_fwft
+# 
+# Top level modules:
+# 	fifo_fwft
+# End time: 17:51:06 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:51:06 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/SRL_bit.v 
+# -- Compiling module SRL_bit
+# 
+# Top level modules:
+# 	SRL_bit
+# End time: 17:51:06 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:51:06 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/SRL_bus.v 
+# -- Compiling module SRL_bus
+# 
+# Top level modules:
+# 	SRL_bus
+# End time: 17:51:06 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:51:06 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/clock_gen.v 
+# -- Compiling module clock_gen
+# 
+# Top level modules:
+# 	clock_gen
+# End time: 17:51:07 on Aug 12,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:51:07 on Aug 12,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(94): near "logic": syntax error, unexpected "SystemVerilog keyword 'logic'", expecting ';' or ','.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(131): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(132): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(133): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(134): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(135): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(136): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(137): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(138): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(139): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(140): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(141): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(142): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(143): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(144): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(145): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(146): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(147): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(148): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(149): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(150): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(151): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(152): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(153): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(154): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(155): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(156): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(157): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(158): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(159): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(160): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(161): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(162): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(163): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(164): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(165): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(166): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(167): (vlog-13169) Packed dimension must specify a range.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(169): near "logic": syntax error, unexpected "SystemVerilog keyword 'logic'", expecting ';' or ','.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(182): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(201): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(219): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(238): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(262): (vlog-2623) Undefined variable: partMap_bram_wren.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(263): (vlog-2623) Undefined variable: partMap_bram_datain.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(274): near "=": syntax error, unexpected '=', expecting '('.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(295): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(319): (vlog-2623) Undefined variable: rst.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(320): (vlog-2623) Undefined variable: trans_fifo_wren.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(321): (vlog-2623) Undefined variable: trans_fifo_rden.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(322): (vlog-2623) Undefined variable: trans_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(323): (vlog-2623) Undefined variable: trans_fifo_dataout.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(324): (vlog-2623) Undefined variable: trans_fifo_empty.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(338): (vlog-2623) Undefined variable: adder_tree_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(354): (vlog-2623) Undefined variable: vector_add_0.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(355): (vlog-2623) Undefined variable: vector_add_0_d.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(366): (vlog-2623) Undefined variable: vector_add_1.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(367): (vlog-2623) Undefined variable: vector_add_1_d.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(368): (vlog-13282) 'i0_SRL_bit' already declared in this scope.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(378): (vlog-2623) Undefined variable: resdMap_bram_wren_w1.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(379): (vlog-2623) Undefined variable: resdMap_bram_rden_w1_d.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(380): (vlog-13282) 'i0_SRL_bit' already declared in this scope.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): (vlog-2623) Undefined variable: outBuf_fifo_wren_w1.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(391): (vlog-2623) Undefined variable: outBuf_fifo_wren_w1_d.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(392): (vlog-13282) 'i0_SRL_bit' already declared in this scope.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(402): (vlog-2623) Undefined variable: outBuf_fifo_wren_w2.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(403): (vlog-2623) Undefined variable: outBuf_fifo_wren_w2_d.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(404): (vlog-13282) 'i0_SRL_bit' already declared in this scope.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(408): (vlog-2730) Undefined variable: 'ckk'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(409): (vlog-2730) Undefined variable: 'process_cmpl'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(435): (vlog-2730) Undefined variable: 'co_high_watermark_cfg'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(448): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(448): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(449): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(449): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(450): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(450): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(451): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(451): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(452): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(452): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(453): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(453): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(454): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(454): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(455): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(455): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(456): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(456): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(457): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(457): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(458): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(458): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(459): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(459): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(460): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(460): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(461): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(461): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(462): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(462): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(463): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(463): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(464): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(464): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(465): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(465): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(466): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(466): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(467): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(467): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(468): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(468): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(469): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(469): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(470): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(470): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(471): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(471): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(472): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(472): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(473): (vlog-2730) Undefined variable: 'co_high_watermark_cfg'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(473): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(473): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(474): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(474): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(475): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(475): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(476): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(476): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(477): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(477): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(478): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(478): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(479): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(479): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(480): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(480): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(481): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(481): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(482): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(482): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(483): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(483): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(484): near "]": syntax error, unexpected ']'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(484): (vlog-13299) Undefined variable: 'cfg_data'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(495): (vlog-2730) Undefined variable: 'vector_add_out_0'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(496): (vlog-2730) Undefined variable: 'convMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(496): (vlog-2730) Undefined variable: 'partMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(501): (vlog-2730) Undefined variable: 'vector_add_out_0'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(502): (vlog-2730) Undefined variable: 'convMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(502): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(511): (vlog-2730) Undefined variable: 'vector_add_out_1'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(512): (vlog-2730) Undefined variable: 'vector_add_out_0'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(512): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(515): near "end": syntax error, unexpected end.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(523): (vlog-13205) Syntax error found in the scope following 'i3'. Is there a missing '::'?
+# End time: 17:51:07 on Aug 12,2020, Elapsed time: 0:00:00
+# Errors: 138, Warnings: 19
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 16
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."

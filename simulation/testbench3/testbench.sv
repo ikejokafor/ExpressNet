@@ -26,16 +26,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-module cnl_sc1_testbench;
+module testbench;
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    `include "cnl_sc1_verif_defs.svh"
+    `include "math.svh"
     `include "cnn_layer_accel_defs.vh"
-    `include "cnn_layer_accel_verif_defs.svh"
-    `include "cnl_sc1_generator.sv"
-    `include "cnl_sc1_environment.sv"
-    `include "cnn_layer_accel_quad_intf.sv"
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -43,21 +39,43 @@ module cnl_sc1_testbench;
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     parameter C_PERIOD_100MHz = 10;    
     parameter C_PERIOD_500MHz = 2; 
-    parameter C_NUM_RAND_TESTS = 0;
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     // Module Connection Variables
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    logic            clk_core                                ;
-    logic            rst                                     ;
-
-
-
-	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	// Verification Variables
-	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-
+    logic clk_core                 	;
+    logic rst                      	;
+	logic start_FAS               	;
+	logic start_FAS_ack             ;
+	logic cfg_data                  ;
+	logic sys_mem_read_req          ;
+	logic sys_mem_read_req_ack      ;
+	logic sys_mem_read_in_prog      ;
+	logic sys_mem_read_cmpl         ;
+	logic sys_mem_write_req         ;
+	logic sys_mem_write_req_ack     ;
+	logic sys_mem_write_in_prog     ;
+	logic sys_mem_write_cmpl		;
+	logic trans_fifo_wren           ;
+	logic convMap_bram_wren         ;
+	logic resdMap_bram_wren         ;
+	logic partMap_bram_wren         ;
+	logic prevMap_fifo_wren         ;
+	logic krnl1x1_bram_wren         ;
+	logic krnl1x1Bias_bram_wren     ;
+	logic trans_fifo_datain         ;
+	logic convMap_bram_datain       ;
+	logic resdMap_bram_datain       ;
+	logic partMap_bram_datain       ;
+	logic prevMap_fifo_datain       ;
+	logic krnl1x1_bram_datain       ;
+	logic krnl1x1Bias_bram_datain   ;
+	logic outBuf_fifo_rden          ;
+	logic outBuf_fifo_dout          ;
+	logic AWP_complete              ;
+	logic send_FAS_complete         ;
+	logic FAS_complete_ack          ;
     
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -109,7 +127,8 @@ module cnl_sc1_testbench;
  
     
     initial begin
-        
+        rst = 1;
+		#(C_PERIOD_500MHz * 10) rst <= 0;    // 10 cycle rst asserted is arbitrairy
     end
     
 
