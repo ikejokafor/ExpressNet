@@ -113,10 +113,10 @@ void QUAD::ctrl_process_0()
             }
             case ST_SEND_COMPLETE:
             {
+                m_QUAD_time = sc_time_stamp().to_double() - m_start_time;
+                str = "[" + string(name()) + "]: QUAD processing time: " + to_string((int)m_QUAD_time) + " ns\n";
                 if(m_master_QUAD_cfg)
                 {
-                    m_QUAD_time = sc_time_stamp().to_double() - m_start_time;
-                    str = "[" + string(name()) + "]: QUAD processing time: " + to_string((int)m_QUAD_time) + " ns\n";
                     cout << str;
                 }
                 if(m_res_fifo > 0)

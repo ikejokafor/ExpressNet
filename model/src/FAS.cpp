@@ -94,6 +94,7 @@ void FAS::ctrl_process()
                     }
                     m_FAS_time = sc_time_stamp().to_double() - m_start_time;
                     str = "[" + string(name()) + "]: FAS processing time: " + to_string((int)m_FAS_time) + " ns\n";
+                    cout << str;            
                     wait();
                     m_complete.notify();
                     wait(m_complete_ack);

@@ -348,7 +348,7 @@ module cnn_layer_accel_FAS #(
         .data_out   ( resdMap_bram_rden_w1_d   )
     );
 
-    
+
     SRL_bit #(
         .C_CLOCK_CYCLES ( 4 )
     )
@@ -360,7 +360,7 @@ module cnn_layer_accel_FAS #(
         .data_out   ( outBuf_fifo_wren_w1_d     )
     );
     
-    
+
     SRL_bit #(
         .C_CLOCK_CYCLES ( 1 )
     )
@@ -371,7 +371,7 @@ module cnn_layer_accel_FAS #(
         .data_in    ( outBuf_fifo_wren_w2       ),
         .data_out   ( outBuf_fifo_wren_w2_d     )
     );
-    
+  
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge ckk) begin
@@ -489,9 +489,10 @@ module cnn_layer_accel_FAS #(
     integer i3
     always@(*) begin
         always@(posedge clk) begin
-            for(i3 = 0; i3 < `VECTOR_MULT
-            vector_mult
-            
+            for(i3 = 0; i3 < `VECTOR_MULT_SIMD; i3 = i3 + 1) begin
+                vector_mult[(i3 * `PIXEL_SIZE) +: `PIXEL_SIZE]
+                    = convMap_bram_dout[(i3 * `PIXEL_SIZE) +: `PIXEL_SIZE] + krnl1x1_bram_dout[(i3 * `PIXEL_SIZE) +: `PIXEL_SIZE];
+            end
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
@@ -646,7 +647,7 @@ module cnn_layer_accel_FAS #(
             trans_fifo_rden <= 0;
         end else begin
             trans_fifo_rden <= 0;
-            if(!trans_fifo_empty && convMap_bram_prog_full) begin
+            if(!trans_fifo_empty && !convMap_bram_prog_full) begin
                 trans_fifo_rden <= 1
             end
         end
@@ -969,7 +970,6 @@ module cnn_layer_accel_FAS #(
             vector_add_0            <= 1;
             outBuffer_fifo_wren_w2  <= 1;
         end
-    end
     end
 
     always@(posedge clk)

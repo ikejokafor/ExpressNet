@@ -302,7 +302,10 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // [7] FAS OPCODE
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define KERNEL_1x1_SIMD
+`define KERNEL_1x1_SIMD                     1
+`define KERNEL_1x1_DEPTH_SIMD               8
 `define KERNEL_1x1_SIMD_SHMAT               (clog2(KERNEL_1x1_SIMD))
+`define VECTOR_ADD_SIMD                     `KERNEL_1x1_DEPTH_SIMD
+`define VECTOR_MULT_SIMD                    `KERNEL_1x1_DEPTH_SIMD
 
 `endif
