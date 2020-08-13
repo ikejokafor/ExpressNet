@@ -85,6 +85,8 @@ module cnn_layer_accel_FAS #(
     localparam ST_ACTIVE            = 6'b001000;
     localparam ST_WAIT_LAST_WRITE   = 6'b010000;
     localparam ST_SEND_COMPLETE     = 6'b100000;
+	
+	localparam C_VECTOR_ADD_WTH 	= `PIXEL_WIDTH * VECTOR_ADD_SIMD;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -128,47 +130,50 @@ module cnn_layer_accel_FAS #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Variables
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    logic [5:0]  state                          ;
-    logic [15:0] krnl1x1Depth_cfg               ;
-    logic [15:0] krnl1x1Addr_cfg                ;
-    logic [15:0] krnl1x1BiasAddr_cfg            ;
-    logic [15:0] pixelSeqAddr_cfg               ;
-    logic [15:0] partMapAddr_cfg                ;
-    logic [15:0] resdMapAddr_cfg                ;
-    logic [15:0] outMapAddr_cfg                 ;
-    logic [15:0] pixSeqCfgFetchTotal_cfg        ;
-    logic [15:0] inMapAddrArr_cfg               ;
-    logic [15:0] krnl3x3AddrArr_cfg             ;
-    logic [15:0] prevMapAddr_cfg			    ;
-    logic [15:0] inMapFetchFactor_cfg           ;
-    logic [15:0] inMapFetchTotal_cfg            ;
-    logic [15:0] krnl3x3FetchTotal_cfg          ;
-    logic [15:0] krnl3x3BiasFetchCount          ;
-    logic [15:0] krnl3x3BiasFetchTotal_cfg      ;
-    logic [15:0] krnl1x1FetchTotal_cfg          ;
-    logic [15:0] krnl1x1BiasFetchTotal_cfg      ;
-    logic [15:0] partMapFetchTotal_cfg          ;
-    logic [15:0] resdMapFetchTotal_cfg          ;
-    logic [15:0] outMapStoreTotal_cfg           ;
-    logic [15:0] outMapStoreFactor_cfg          ;
-    logic [15:0] prevMapFetchTotal_cfg          ;
-    logic [15:0] num_1x1_kernels_cfg            ;
-    logic [15:0] cm_high_watermark_cfg          ;
-    logic [15:0] rm_low_watermark_cfg           ;
-    logic [15:0] pm_low_watermark_cfg           ;
-    logic [15:0] pv_low_watermark_cfg           ;
-    logic [15:0] rm_fetch_amount_cfg            ;
-    logic [15:0] pm_fetch_amount_cfg            ;
-    logic [15:0] pv_fetch_amount_cfg            ;
-    logic [15:0] krnl1x1_pding_cfg              ;
-    logic [15:0] krnl1x1_pad_bgn_cfg            ;
-    logic [15:0] krnl1x1_pad_end_cfg            ;
-    logic [15:0] opcode_cfg                     ;
-    logic [15:0] res_high_watermark_cfg         ;
-    logic [`MAX_AWP_PER_FAS - 1:0] all_AWP_complete
-    logic [] FAS_complete_acked
-    logic [] vector_add_out;
-    logic [`MAX_FAS_RD_ID - 1:0] sys_mem_read_req_acked;
+    logic [					   5:0]	state                          	;
+	logic [					  15:0] 	krnl1x1Depth_cfg                ;
+	logic [					  15:0] 	krnl1x1Addr_cfg                 ;
+	logic [					  15:0] 	krnl1x1BiasAddr_cfg             ;
+	logic [					  15:0] 	pixelSeqAddr_cfg                ;
+	logic [					  15:0] 	partMapAddr_cfg                 ;
+	logic [					  15:0] 	resdMapAddr_cfg                 ;
+	logic [					  15:0] 	outMapAddr_cfg                  ;
+	logic [					  15:0] 	pixSeqCfgFetchTotal_cfg         ;
+	logic [					  15:0] 	inMapAddr_cfg            	    ;
+	logic [					  15:0] 	prevMapAddr_cfg			        ;
+	logic [					  15:0] 	inMapFetchFactor_cfg            ;
+	logic [					  15:0] 	inMapFetchTotal_cfg             ;
+	logic [					  15:0] 	krnl3x3Addr_cfg				    ;
+	logic [					  15:0] 	krnl3x3BiasAddr_cfg			    ;
+	logic [					  15:0] 	krnl3x3FetchTotal_cfg           ;
+	logic [					  15:0] 	krnl3x3BiasFetchTotal_cfg       ;
+	logic [					  15:0] 	krnl1x1FetchTotal_cfg           ;
+	logic [					  15:0] 	krnl1x1BiasFetchTotal_cfg       ;
+	logic [					  15:0] 	partMapFetchTotal_cfg           ;
+	logic [					  15:0] 	resdMapFetchTotal_cfg           ;
+	logic [					  15:0] 	outMapStoreTotal_cfg            ;
+	logic [					  15:0] 	outMapStoreFactor_cfg           ;
+	logic [					  15:0] 	prevMapFetchTotal_cfg           ;
+	logic [					  15:0] 	num_1x1_kernels_cfg             ;
+	logic [					  15:0] 	cm_high_watermark_cfg           ;
+	logic [					  15:0] 	rm_low_watermark_cfg            ;
+	logic [					  15:0] 	pm_low_watermark_cfg            ;
+	logic [					  15:0] 	pv_low_watermark_cfg            ;
+	logic [					  15:0] 	rm_fetch_amount_cfg             ;
+	logic [					  15:0] 	pm_fetch_amount_cfg             ;
+	logic [					  15:0] 	pv_fetch_amount_cfg             ;
+	logic [					  15:0] 	krnl1x1_pding_cfg               ;
+	logic [					  15:0] 	krnl1x1_pad_bgn_cfg             ;
+	logic [					  15:0] 	krnl1x1_pad_end_cfg             ;
+	logic [					  15:0] 	opcode_cfg                      ;
+	logic [					  15:0] 	res_high_watermark_cfg      	;
+    logic [ `MAX_AWP_PER_FAS - 1:0] 	all_AWP_complete				;
+    logic 								FAS_complete_acked				;
+    logic [ C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_0				;
+	logic [ C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_1			   	;
+	logic [C_VECTOR_MULT_WTH - 1:0] 	vector_mult						;
+    logic [   `MAX_FAS_RD_ID - 1:0] 	sys_mem_read_req_acked         	;
+	logic 								sys_mem_writereq_acked         	;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -407,79 +412,79 @@ module cnn_layer_accel_FAS #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge ckk) begin
         if(rst || process_cmpl) begin
-            krnl1x1Depth_cfg            <= 0;
-            krnl1x1Addr_cfg             <= 0;
-            krnl1x1BiasAddr_cfg         <= 0;
-            pixelSeqAddr_cfg            <= 0;
-            partMapAddr_cfg             <= 0;
-            resdMapAddr_cfg             <= 0;
-            outMapAddr_cfg              <= 0;
-            pixSeqCfgFetchTotal_cfg     <= 0;
-            inMapAddrArr_cfg            <= 0;
-            krnl3x3AddrArr_cfg          <= 0;
-            prevMapAddr_cfg			    <= 0;
-            inMapFetchFactor_cfg        <= 0;
-            inMapFetchTotal_cfg         <= 0;
-            krnl3x3FetchTotal_cfg       <= 0;
-            krnl3x3BiasFetchCount       <= 0;
-            krnl3x3BiasFetchTotal_cfg   <= 0;
-            krnl1x1FetchTotal_cfg       <= 0;
-            krnl1x1BiasFetchTotal_cfg   <= 0;
-            partMapFetchTotal_cfg       <= 0;
-            resdMapFetchTotal_cfg       <= 0;
-            outMapStoreTotal_cfg        <= 0;
-            outMapStoreFactor_cfg       <= 0;
-            prevMapFetchTotal_cfg       <= 0;
-            num_1x1_kernels_cfg         <= 0;
-            co_high_watermark_cfg       <= 0;
-            rm_low_watermark_cfg        <= 0;
-            pm_low_watermark_cfg        <= 0;
-            pv_low_watermark_cfg        <= 0;
-            rm_fetch_amount_cfg         <= 0;
-            pm_fetch_amount_cfg         <= 0;
-            pv_fetch_amount_cfg         <= 0;
-            krnl1x1_pding_cfg           <= 0;
-            krnl1x1_pad_bgn_cfg         <= 0;
-            krnl1x1_pad_end_cfg         <= 0;
-            opcode_cfg                  <= 0;
-            res_high_watermark_cfg      <= 0;       
+			krnl1x1Depth_cfg            <= 0;
+			krnl1x1Addr_cfg             <= 0;
+			krnl1x1BiasAddr_cfg         <= 0;
+			pixelSeqAddr_cfg            <= 0;
+			partMapAddr_cfg             <= 0;
+			resdMapAddr_cfg             <= 0;
+			outMapAddr_cfg              <= 0;
+			pixSeqCfgFetchTotal_cfg     <= 0;
+			inMapAddr_cfg            	<= 0;
+			prevMapAddr_cfg			    <= 0;
+			inMapFetchFactor_cfg        <= 0;
+			inMapFetchTotal_cfg         <= 0;
+			krnl3x3Addr_cfg				<= 0;
+			krnl3x3BiasAddr_cfg			<= 0;
+			krnl3x3FetchTotal_cfg       <= 0;
+			krnl3x3BiasFetchTotal_cfg	<= 0;
+			krnl1x1FetchTotal_cfg       <= 0;
+			krnl1x1BiasFetchTotal_cfg   <= 0;
+			partMapFetchTotal_cfg       <= 0;
+			resdMapFetchTotal_cfg       <= 0;
+			outMapStoreTotal_cfg        <= 0;
+			outMapStoreFactor_cfg       <= 0;
+			prevMapFetchTotal_cfg       <= 0;
+			num_1x1_kernels_cfg         <= 0;
+			cm_high_watermark_cfg       <= 0;
+			rm_low_watermark_cfg        <= 0;
+			pm_low_watermark_cfg        <= 0;
+			pv_low_watermark_cfg        <= 0;
+			rm_fetch_amount_cfg         <= 0;
+			pm_fetch_amount_cfg         <= 0;
+			pv_fetch_amount_cfg         <= 0;
+			krnl1x1_pding_cfg           <= 0;
+			krnl1x1_pad_bgn_cfg         <= 0;
+			krnl1x1_pad_end_cfg         <= 0;
+			opcode_cfg                  <= 0;
+			res_high_watermark_cfg      <= 0;     
         end else begin
-            krnl1x1Depth_cfg            <= cfg_data[];
-            krnl1x1Addr_cfg             <= cfg_data[];
-            krnl1x1BiasAddr_cfg         <= cfg_data[];
-            pixelSeqAddr_cfg            <= cfg_data[];
-            partMapAddr_cfg             <= cfg_data[];
-            resdMapAddr_cfg             <= cfg_data[];
-            outMapAddr_cfg              <= cfg_data[];
-            pixSeqCfgFetchTotal_cfg     <= cfg_data[];
-            inMapAddrArr_cfg            <= cfg_data[];
-            krnl3x3AddrArr_cfg          <= cfg_data[];
-            prevMapAddr_cfg			    <= cfg_data[];
-            inMapFetchFactor_cfg        <= cfg_data[];  
-            inMapFetchTotal_cfg         <= cfg_data[];  
-            krnl3x3FetchTotal_cfg       <= cfg_data[];  
-            krnl3x3BiasFetchCount       <= cfg_data[];  
-            krnl3x3BiasFetchTotal_cfg   <= cfg_data[];  
-            krnl1x1FetchTotal_cfg       <= cfg_data[];  
-            krnl1x1BiasFetchTotal_cfg   <= cfg_data[];  
-            partMapFetchTotal_cfg       <= cfg_data[];  
-            resdMapFetchTotal_cfg       <= cfg_data[];  
-            outMapStoreTotal_cfg        <= cfg_data[];  
-            outMapStoreFactor_cfg       <= cfg_data[];  
-            prevMapFetchTotal_cfg       <= cfg_data[];  
-            num_1x1_kernels_cfg         <= cfg_data[];  
-            co_high_watermark_cfg       <= cfg_data[];  
-            rm_low_watermark_cfg        <= cfg_data[];  
-            pm_low_watermark_cfg        <= cfg_data[];  
-            pv_low_watermark_cfg        <= cfg_data[];  
-            rm_fetch_amount_cfg         <= cfg_data[];  
-            pm_fetch_amount_cfg         <= cfg_data[];  
-            pv_fetch_amount_cfg         <= cfg_data[];  
-            krnl1x1_pding_cfg           <= cfg_data[];  
-            krnl1x1_pad_bgn_cfg         <= cfg_data[];  
-            krnl1x1_pad_end_cfg         <= cfg_data[];  
-            opcode_cfg                  <= cfg_data[];  
-            res_high_watermark_cfg      <= cfg_data[];
+            krnl1x1Depth_cfg            <= cfg_data[`KRNL1X1_DEPTH_FIELD];
+            krnl1x1Addr_cfg             <= cfg_data[`KRNL1X1_ADDR_FIELD];
+            krnl1x1BiasAddr_cfg         <= cfg_data[`KRNL1X1_BIAS_ADDR_FIELD];
+            pixelSeqAddr_cfg            <= cfg_data[`PIXEL_SEQ_ADDR_FIELD];
+            partMapAddr_cfg             <= cfg_data[`PARTMAP_ADDR_FIELD];
+            resdMapAddr_cfg             <= cfg_data[`RESDMAP_ADDR_FIELD];
+            outMapAddr_cfg              <= cfg_data[`OUTMAP_ADDR_FIELD];
+            pixSeqCfgFetchTotal_cfg     <= cfg_data[`INMAP_ADDR_FIELD];
+            inMapAddr_cfg            	<= cfg_data[`INMAP_ADDR_FIELD];
+            prevMapAddr_cfg			    <= cfg_data[`PREVMAP_ADDR_FIELD];
+            inMapFetchFactor_cfg        <= cfg_data[`INMAP_FETCHFACTOR_FIELD];  
+            inMapFetchTotal_cfg         <= cfg_data[`INMAP_FETCHTOTAL_FIELD];
+			krnl3x3Addr_cfg				<= cfg_data[`KRNL3X3_ADDR_FIELD]; 					
+			krnl3x3BiasAddr_cfg			<= cfg_data[`KRNL3X3_BIAS_ADDR_FIELD]; 	
+            krnl3x3FetchTotal_cfg       <= cfg_data[`KRNL3X3_FETCHTOTAL_FIELD];  
+            krnl3x3BiasFetchTotal_cfg   <= cfg_data[`KRNL3X3_BIAS_FETCHTOTAL_FIELD];  
+            krnl1x1FetchTotal_cfg       <= cfg_data[`KRNL1X1_FETCHTOTAL_FIELD];  
+            krnl1x1BiasFetchTotal_cfg   <= cfg_data[`KRNL1X1_BIAS_FETCHTOTAL_FIELD];  
+            partMapFetchTotal_cfg       <= cfg_data[`PARTMAP_FETCHTOTAL_FIELD];  
+            resdMapFetchTotal_cfg       <= cfg_data[`RESDMAP_FETCHTOTAL_FIELD];  
+            outMapStoreTotal_cfg        <= cfg_data[`OUTMAP_STORETOTAL_FIELD];  
+            outMapStoreFactor_cfg       <= cfg_data[`OUTMAP_STOREFACTOR_FIELD];  
+            prevMapFetchTotal_cfg       <= cfg_data[`PREVMAP_FETCHTOTAL_FIELD];  
+            num_1x1_kernels_cfg         <= cfg_data[`NUM_1X1_KERNELS_FIELD];  
+            cm_high_watermark_cfg       <= cfg_data[`CM_HIGH_WATERMARK_FIELD];  
+            rm_low_watermark_cfg        <= cfg_data[`RM_LOW_WATERMARK_FIELD];  
+            pm_low_watermark_cfg        <= cfg_data[`PM_LOW_WATERMARK_FIELD];  
+            pv_low_watermark_cfg        <= cfg_data[`PV_LOW_WATERMARK_FIELD];  
+            rm_fetch_amount_cfg         <= cfg_data[`RM_FETCH_AMOUNT_FIELD];  
+            pm_fetch_amount_cfg         <= cfg_data[`PM_FETCH_AMOUNT_FIELD];  
+            pv_fetch_amount_cfg         <= cfg_data[`PV_FETCH_AMOUNT_FIELD];  
+            krnl1x1_pding_cfg           <= cfg_data[`KRNL1X1_PDING_FIELD];  
+            krnl1x1_pad_bgn_cfg         <= cfg_data[`KRNL1X1_PAD_BGN_FIELD];  
+            krnl1x1_pad_end_cfg         <= cfg_data[`KRNL1X1_PAD_END_FIELD];  
+            opcode_cfg                  <= cfg_data[`OPCODE_FIELD];  
+            res_high_watermark_cfg      <= cfg_data[`RES_HIGH_WATERMARK_FIELD];
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
@@ -520,7 +525,7 @@ module cnn_layer_accel_FAS #(
         always@(posedge clk) begin
             for(i3 = 0; i3 < `VECTOR_MULT_SIMD; i3 = i3 + 1) begin
                 vector_mult[(i3 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
-                    = convMap_bram_dout[(i3 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] + krnl1x1_bram_dout[(i3 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
+                    = convMap_bram_dout[(i3 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] * krnl1x1_bram_dout[(i3 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
             end
         end
     end
