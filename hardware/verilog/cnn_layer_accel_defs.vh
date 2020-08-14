@@ -306,10 +306,11 @@
 `define MAX_FAS_RD_ID						4
 `define KERNEL_1x1_SIMD                     1
 `define KERNEL_1x1_DEPTH_SIMD               8
-`define KERNEL_1x1_SIMD_SHMAT               (clog2(KERNEL_1x1_SIMD))
+`define KRNL_1x1_DPH_SIMD_SHMAT             (clog2(`KERNEL_1x1_DEPTH_SIMD))
 `define KRNL_1x1_BRAM_RD_WIDTH				`KERNEL_1x1_DEPTH_SIMD
 `define VECTOR_ADD_SIMD                     `KERNEL_1x1_DEPTH_SIMD
 `define VECTOR_MULT_SIMD                    `KERNEL_1x1_DEPTH_SIMD
+`define KRNL_1x1_SIMD_SHMAT                 
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------

@@ -92,26 +92,30 @@ module cnn_layer_accel_FAS #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Module Ports
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    input clk     						;
-    input rst                           ;
-    input start_FAS                     ;
-    output start_FAS_ack                 ;
-    input [] cfg_data                   ;
-    output [] sys_mem_read_req           ;
-    input [] sys_mem_read_req_ack       ;
-    input [] sys_mem_read_in_prog       ;
-    input [] sys_mem_read_cmpl          ;
-    output sys_mem_write_req             ;
-    input sys_mem_write_req_ack         ;
-    input sys_mem_write_in_prog         ;
-    input sys_mem_write_cmpl            ;
-    input trans_fifo_wren               ;
-    input convMap_bram_wren             ;
-    input resdMap_bram_wren             ;
-    input partMap_bram_wren             ;
-    input prevMap_fifo_wren             ;
-    input krnl1x1_bram_wren             ;
-    input krnl1x1Bias_bram_wren         ;
+    input     clk     				    ;
+    input     rst                       ;
+    input     start_FAS                 ;
+    output    start_FAS_ack             ;
+    input  [`CFG_DATA_WIDTH - 1:0] cfg_data                  ;
+    output [] sys_mem_read_req          ;
+    output [] sys_mem_read_addr         ;
+    output [] sys_mem_read_size         ;
+    input  [] sys_mem_read_req_ack      ;
+    input  [] sys_mem_read_in_prog      ;
+    input  [] sys_mem_read_cmpl         ;
+    output    sys_mem_write_req         ;
+    output [] sys_mem_write_addr        ;
+    output [] sys_mem_write_size        ;
+    input     sys_mem_write_req_ack     ;
+    input     sys_mem_write_in_prog     ;
+    input     sys_mem_write_cmpl        ;
+    input     trans_fifo_wren           ;
+    input     convMap_bram_wren         ;
+    input     resdMap_bram_wren         ;
+    input     partMap_bram_wren         ;
+    input     prevMap_fifo_wren         ;
+    input     krnl1x1_bram_wren         ;
+    input     krnl1x1Bias_bram_wren     ;
     input [] trans_fifo_datain          ;
     input [] convMap_bram_datain        ;
     input [] resdMap_bram_datain        ;
@@ -119,18 +123,18 @@ module cnn_layer_accel_FAS #(
     input [] prevMap_fifo_datain        ;
     input [] krnl1x1_bram_datain        ;
     input [] krnl1x1Bias_bram_datain    ;
-    input outBuf_fifo_rden              ;
-	input outBuf_fifo_dout_valid		;
+    input    outBuf_fifo_rden           ;
+	input    outBuf_fifo_dout_valid		;
     input [] outBuf_fifo_dout           ;
     input [] AWP_complete               ;
-    input send_FAS_complete             ;
-    input FAS_complete_ack              ;
+    input    send_FAS_complete          ;
+    input    FAS_complete_ack           ;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Variables
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    logic [					   5:0]	state                          	;
+    logic [					   5:0]	    state                          	;
 	logic [					  15:0] 	krnl1x1Depth_cfg                ;
 	logic [					  15:0] 	krnl1x1Addr_cfg                 ;
 	logic [					  15:0] 	krnl1x1BiasAddr_cfg             ;
@@ -774,7 +778,7 @@ module cnn_layer_accel_FAS #(
             if(krnl_1x1_bram_rden) begin
                 if(dpth_count == (krnl1x1Depth_cfg - `KRNL_1x1_BRAM_RD_WIDTH)) begin
                     dpth_count <= 0;
-                    if(krnl_count == ((num_1x1_kernels_cfg >> `KERNEL_1x1_SIMD_SHMAT) - 1)) begin
+                    if(krnl_count == (num_1x1_kernels_cfg  - 1)) begin
                         buffer_update   <= 1;
                         krnl_count      <= 0;
                     end else begin
@@ -824,42 +828,88 @@ module cnn_layer_accel_FAS #(
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin
-        if(rst) begin
+        if(rst || process_cmpl) begin
 			convMap_bram_rdAddr <= 0;
 			partMap_bram_rdAddr <= 0;
 			resdMap_bram_rdAddr <= 0;
+            krnl_1x1_bram_rdAddr <= 0;
+            convMap_bram_rd_ofst <= 0;
+  			partMap_bram_rd_ofst <= 0;
+			resdMap_bram_rd_ofst <= 0;          
         end else if(buffer_update) begin
+            krnl_1x1_bram_rdAddr <= krnl_1x1_bram_rdAddr + 1;
 			if(opcode_cfg == `OPCODE_0;
 				|| opcode_cfg == `OPCODE_1
 				|| opcode_cfg == `OPCODE_10
-				|| opcode_cfg == `OPCODE_11)
+				|| opcode_cfg == `OPCODE_11
+                || opcode_cfg == `OPCODE_15)
 			begin
-				convMap_bram_rdAddr <= convMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-				partMap_bram_rdAddr <= partMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-			end else if(opcode_cfg == `OPCODE_4 || opcode_cfg == `OPCODE_5) begin
-				convMap_bram_rdAddr <= convMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-				partMap_bram_rdAddr <= partMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-				resdMap_bram_rdAddr <= resdMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-			end else if(opcode_cfg == `OPCODE_6 || opcode_cfg == `OPCODE_7) begin
-				convMap_bram_rdAddr <= convMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-				resdMap_bram_rdAddr <= resdMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-			end else if(opcode_cfg == `OPCODE_2
+                if(krnl_count == (num_1x1_kernels_cfg - 1)) begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    partMap_bram_rdAddr     <= partMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    convMap_bram_rd_ofst    <= convMap_bram_rd_ofst + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    partMap_bram_rd_ofst    <= partMap_bram_rd_ofst + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                end else if(dpth_count == ((krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT) - 1)) begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr + convMap_bram_rd_ofst;
+                    partMap_bram_rdAddr     <= partMap_bram_rdAddr + partMap_bram_rd_ofst;
+                end else begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr + 1;
+                    partMap_bram_rdAddr     <= partMap_bram_rdAddr + 1;
+                end
+			end else if(
+                opcode_cfg == `OPCODE_4 
+                || opcode_cfg == `OPCODE_5 
+                || opcode_cfg == `OPCODE_8) 
+            begin
+                if(krnl_count == (num_1x1_kernels_cfg - 1)) begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    partMap_bram_rdAddr     <= partMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    resdMap_bram_rdAddr     <= resdMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    convMap_bram_rd_ofst    <= convMap_bram_rd_ofst + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    partMap_bram_rd_ofst    <= partMap_bram_rd_ofst + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    resdMap_bram_rd_ofst    <= resdMap_bram_rd_ofst + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                end else if(dpth_count == ((krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT) - 1)) begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr + convMap_bram_rd_ofst;
+                    partMap_bram_rdAddr     <= partMap_bram_rdAddr + partMap_bram_rd_ofst;
+                    resdMap_bram_rdAddr     <= resdMap_bram_rdAddr + resdMap_bram_rd_ofst;
+                end else begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr + 1;
+                    partMap_bram_rdAddr     <= partMap_bram_rdAddr + 1;
+                    resdMap_bram_rdAddr     <= resdMap_bram_rdAddr + 1;
+                end
+			end else if(
+                opcode_cfg == `OPCODE_6 
+                || opcode_cfg == `OPCODE_7 
+                || opcode_cfg == `OPCODE_9 
+                || opcode_cfg == `OPCODE_17)
+            begin
+                if(krnl_count == (num_1x1_kernels_cfg - 1)) begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    resdMap_bram_rdAddr     <= resdMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    convMap_bram_rd_ofst    <= convMap_bram_rd_ofst + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    resdMap_bram_rd_ofst    <= resdMap_bram_rd_ofst + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                end else if(dpth_count == ((krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT) - 1)) begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr + convMap_bram_rd_ofst;
+                    resdMap_bram_rdAddr     <= resdMap_bram_rdAddr + resdMap_bram_rd_ofst;
+                end else begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr + 1;
+                    resdMap_bram_rdAddr     <= resdMap_bram_rdAddr + 1;
+                end
+			end else if(
+                opcode_cfg == `OPCODE_2
 				|| opcode_cfg == `OPCODE_3
 				|| opcode_cfg == `OPCODE_12
 				|| opcode_cfg == `OPCODE_13
 				|| opcode_cfg == `OPCODE_14)
 			begin
-				convMap_bram_rdAddr <= convMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-			end else if(opcode_cfg == `OPCODE_8)
-				convMap_bram_rdAddr <= convMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-				partMap_bram_rdAddr <= partMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-				resdMap_bram_rdAddr <= resdMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-			end else if(opcode_cfg == `OPCODE_9 && opcode_cfg == `OPCODE_17)
-				convMap_bram_rdAddr <= convMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-				resdMap_bram_rdAddr <= resdMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-			end else if(opcode_cfg == `OPCODE_15)
-				convMap_bram_rdAddr <= convMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
-				partMap_bram_rdAddr <= partMap_bram_rdAddr + (krnl1x1Depth_cfg >> `KERNEL_1x1_SIMD_SHMAT);
+                if(krnl_count == (num_1x1_kernels_cfg - 1)) begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                    convMap_bram_rd_ofst    <= convMap_bram_rd_ofst + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
+                end else if(dpth_count == ((krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT) - 1)) begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr + convMap_bram_rd_ofst;
+                end else begin
+                    convMap_bram_rdAddr     <= convMap_bram_rdAddr + 1;
+                end
 			end
         end
     end
@@ -1018,6 +1068,3 @@ module cnn_layer_accel_FAS #(
     // DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
     // DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
 endmodule
-
-
-`endif
