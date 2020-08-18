@@ -78,7 +78,7 @@ module cnn_layer_accel_awe_dsps #(
    	input  logic       							  rst			 	   ;
     input  logic         						  clk             	   ;
     input  logic         						  clk_5x          	   ;
-	                                                                   
+
 	input  logic        						  new_map		 	   ;		   
 	input  logic [  C_KERNAL_SIZE_WIDTH-1:0]      kernal_window_size   ; 
 	input  logic [         C_MODE_WIDTH-1:0]      mode                 ;	
@@ -341,8 +341,7 @@ module cnn_layer_accel_awe_dsps #(
     ); 
 	
 	
-			
-			
+
 	cnn_layer_accel_ce_dsps #(
     )
 	i0_cnn_layer_accel_ce_dsps (	

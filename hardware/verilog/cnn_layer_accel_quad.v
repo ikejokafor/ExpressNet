@@ -69,12 +69,7 @@ module cnn_layer_accel_quad  (
     
     pixel_valid             ,
     pixel_ready             ,
-    pixel_data              ,
-
-    slv_dbg_rdAddr         ,
-    slv_dbg_rdAddr_valid   ,
-    slv_dbg_rdAck          ,
-    slv_dbg_data           
+    pixel_data                   
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
@@ -152,11 +147,6 @@ module cnn_layer_accel_quad  (
     output logic            pixel_ready             ;
     input  logic [127:0]    pixel_data              ;
 
-    input logic [20:0]   slv_dbg_rdAddr                     ;
-    input logic           slv_dbg_rdAddr_valid               ;
-    output logic          slv_dbg_rdAck                      ;
-    output logic [31:0]   slv_dbg_data                       ;
-
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Variables
@@ -167,108 +157,104 @@ module cnn_layer_accel_quad  (
         genvar g1; `UNPACK_ARRAY_1D(`PIXEL_WIDTH, 8, config_data, config_data_arr, g1);   
     logic [`WEIGHT_WIDTH - 1:0] weight_data_arr[7:0];
         genvar g2; `UNPACK_ARRAY_1D(`WEIGHT_WIDTH, 8, weight_data, weight_data_arr, g2); 
-    logic                                       job_fetch_request_w                             ;
-    logic                                       job_fetch_ack_r                                 ;
-    logic                                       job_fetch_ack_w                                 ;
-    logic                                       job_fetch_in_progress           	            ;
-    logic                                       job_fetch_complete_w                            ;
-    logic                                       job_fetch_complete_r                            ;
-    logic                                       job_accept_w                    	            ;
-    logic    [                            4:0]  job_accept_r                    	            ;
-    logic    [                            1:0]  gray_code                       	            ;
-    logic    [    C_PIXEL_DATAOUT_WIDTH - 1:0]  ce0_pixel_dataout[`NUM_AWE - 1:0]	            ;
-    logic    [    C_PIXEL_DATAOUT_WIDTH - 1:0]  ce1_pixel_dataout[`NUM_AWE - 1:0]	            ;
-    logic    [             `PIXEL_WIDTH - 1:0]  ce0_pixel_datain[`NUM_AWE - 1:0]	            ;
-    logic    [             `PIXEL_WIDTH - 1:0]  ce1_pixel_datain[`NUM_AWE - 1:0]	            ;
-    logic                                       pfb_wren                        	            ;
-    logic                                       pfb_rden                        	            ;
-    logic    [             `PIXEL_WIDTH - 1:0]  pfb_dataout[`NUM_CE - 1:0]     	            ;
-    logic    [             `PIXEL_WIDTH - 1:0]  pfb_datain[`NUM_CE - 1:0]     	                ;
-    logic                                       cncl_fetch_req[`NUM_CE - 1:0]                  ;   
-    logic    [             `PIXEL_WIDTH - 1:0]  pixel_data_r[`NUM_CE - 1:0]                    ;
-    logic    [                 `NUM_CE - 1:0]  ce_execute                       	            ;
-    logic    [                            2:0]  ce_cycle_counter[`NUM_CE - 1:0] 	            ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_row                        	            ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_col                        	            ;   
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 2:0]  row_matric_wrAddr                	            ;
-    genvar                                      i                                	            ;
-    genvar                                      j                                	            ;
-    logic    [                            9:0]  pfb_full_count_cfg                              ;
-    logic    [                            6:0]  stride_cfg    		                            ;
-    logic                                       conv_out_fmt_cfg                                ;
-	logic    [                            4:0]  dsp_kernel_size_cfg    		 		            ;
-    logic    [                            4:0]  padding_cfg                                     ;
-    logic    [                            9:0]  num_output_rows_cfg                             ;
-    logic    [                            9:0]  num_output_cols_cfg                             ;
-    logic    [                           11:0]  pix_seq_data_full_count_cfg                     ;
-    logic                                       upsample_cfg                                    ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  num_expd_input_cols_cfg                         ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  num_expd_input_rows_cfg                         ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_start_cfg                        ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_start_cfg                        ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_end_cfg                          ;
-    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_end_cfg                          ;
-    logic    [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]  num_kernels_cfg                               ;
-    logic                                       master_quad_cfg                                 ;
-    logic                                       cascade_cfg                                     ;
-    logic                                       actv_cfg                                        ;
-    
-    logic                                       pix_seq_bram_rden                               ;
-    logic                                       ctrl_pix_seq_bram_rden               	        ;
-    logic                                       slv_pix_seq_bram_rden               	        ;
-    logic    [                            8:0]  pix_seq_bram_wrAddr             	            ;
-    logic    [                           11:0]  pix_seq_bram_rdAddr             	            ;    
-    logic    [                           11:0]  ctrl_pix_seq_bram_rdAddr             	        ;
-    logic    [                           15:0]  pix_seq_bram_dout               	            ;
-    logic                                       pix_seq_bram_wren                               ;
+    logic                                       job_fetch_request_w                                     ;
+    logic                                       job_fetch_ack_r                                         ;
+    logic                                       job_fetch_ack_w                                         ;
+    logic                                       job_fetch_in_progress           	                    ;
+    logic                                       job_fetch_complete_w                                    ;
+    logic                                       job_fetch_complete_r                                    ;
+    logic                                       job_accept_w                    	                    ;
+    logic    [                            4:0]  job_accept_r                    	                    ;
+    logic    [                            1:0]  gray_code                       	                    ;
+    logic    [    C_PIXEL_DATAOUT_WIDTH - 1:0]  ce0_pixel_dataout[`NUM_AWE - 1:0]	                    ;
+    logic    [    C_PIXEL_DATAOUT_WIDTH - 1:0]  ce1_pixel_dataout[`NUM_AWE - 1:0]	                    ;
+    logic    [             `PIXEL_WIDTH - 1:0]  ce0_pixel_datain[`NUM_AWE - 1:0]	                    ;
+    logic    [             `PIXEL_WIDTH - 1:0]  ce1_pixel_datain[`NUM_AWE - 1:0]	                    ;
+	logic    [			   `PIXEL_WIDTH - 1:0]  ce0_pixel_dout[`NUM_AWE - 1:0][`KRNL_3X3_SIMD - 1:0]    ;
+	logic    [			   `PIXEL_WIDTH - 1:0]  ce1_pixel_dout[`NUM_AWE - 1:0][`KRNL_3X3_SIMD - 1:0]    ;
 
-    logic                                       kernel_config_valid             	            ;
-    logic                                       config_mode                     	 	        ;
+    logic                                       pfb_wren                        	                    ;
+    logic                                       pfb_rden                        	                    ;
+    logic    [             `PIXEL_WIDTH - 1:0]  pfb_dataout[`NUM_CE - 1:0]     	                        ;
+    logic    [             `PIXEL_WIDTH - 1:0]  pfb_datain[`NUM_CE - 1:0]     	                        ;
+    logic                                       cncl_fetch_req[`NUM_CE - 1:0]                           ;   
+    logic    [             `PIXEL_WIDTH - 1:0]  pixel_data_r[`NUM_CE - 1:0]                             ;
+    logic    [                 `NUM_CE - 1:0]  ce_execute                       	                    ;
+    logic    [                            2:0]  ce_cycle_counter[`NUM_CE - 1:0] 	                    ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_row                        	                    ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  input_col                        	                    ;   
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 2:0]  row_matric_wrAddr                	                    ;
+    genvar                                      i                                	                    ;
+    genvar                                      j                                	                    ;
+    logic    [                            9:0]  pfb_full_count_cfg                                      ;
+    logic    [                            6:0]  stride_cfg    		                                    ;
+    logic                                       conv_out_fmt_cfg                                        ;
+	logic    [                            4:0]  dsp_kernel_size_cfg    		 		                    ;
+    logic    [                            4:0]  padding_cfg                                             ;
+    logic    [                            9:0]  num_output_rows_cfg                                     ;
+    logic    [                            9:0]  num_output_cols_cfg                                     ;
+    logic    [                           11:0]  pix_seq_data_full_count_cfg                             ;
+    logic                                       upsample_cfg                                            ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  num_expd_input_cols_cfg                                 ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  num_expd_input_rows_cfg                                 ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_start_cfg                                ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_start_cfg                                ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_col_end_cfg                                  ;
+    logic    [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]  crpd_input_row_end_cfg                                  ;
+    logic    [C_CLG2_MAX_BRAM_3x3_KERNELS - 1:0]  num_kernels_cfg                                       ;
+    logic                                       master_quad_cfg                                         ;
+    logic                                       cascade_cfg                                             ;
+    logic                                       actv_cfg                                                ;
 
-    logic   [                            2:0]   cycle_counter                   	            ;
-    logic   [                 `NUM_AWE - 1:0]   ce0_pixel_dataout_valid         	            ;
-    logic   [                 `NUM_AWE - 1:0]   ce1_pixel_dataout_valid         	            ;
+    logic                                       pix_seq_bram_rden                                       ;
+    logic                                       ctrl_pix_seq_bram_rden               	                ;
+    logic    [                            8:0]  pix_seq_bram_wrAddr             	                    ;
+    logic    [                           11:0]  pix_seq_bram_rdAddr             	                    ;    
+    logic    [                           11:0]  ctrl_pix_seq_bram_rdAddr             	                ;
+    logic    [                           15:0]  pix_seq_bram_dout               	                    ;
+    logic                                       pix_seq_bram_wren                                       ;
 
-    logic   [                 `NUM_CE - 1:0]   next_kernel                     	                ;
-	logic   [                 `NUM_CE - 1:0]   move_one_row_down              	                ;
-    logic   [                 `NUM_CE - 1:0]   last_kernel                     	                ;
-    logic                                       awe_last_kernel                                 ;
-    logic                                       ctrl_last_kernel                                ;
+    logic                                       kernel_config_valid             	                    ;
+    logic                                       config_mode                     	 	                ;
 
-    logic   [                            5:0]   state                           	            ;
+    logic   [                            2:0]   cycle_counter                   	                    ;
+    logic   [                 `NUM_AWE - 1:0]   ce0_pixel_dataout_valid         	                    ;
+    logic   [                 `NUM_AWE - 1:0]   ce1_pixel_dataout_valid         	                    ;
 
-    logic   [                            3:0]   wht_seq_addr0                                   ;
-    logic   [                            3:0]   wht_seq_addr1                                   ;
-    logic   [         C_WHT_DOUT_WIDTH - 1:0]   ce_wht_table_dout[`NUM_CE - 1:0]                ;
-    logic   [                 `NUM_CE - 1:0]   ce_wht_table_dout_valid                          ;
-    logic                                       wht_config_wren                                 ;
-    logic   [             C_ACTV_WIDTH - 1:0]   actv_out[`NUM_CE - 1:0]                         ;
-    integer                                     idx                                             ;
-    integer                                     idx0                                            ;
-    integer                                     idx1                                            ;
-    integer                                     idx2                                            ;
-    integer                                     idx3                                            ;
-    integer                                     idx4                                            ;
-    logic                                       pipeline_flushed                                ;
-	logic                                       wht_sequence_selector				            ;
+    logic   [                 `NUM_CE - 1:0]   next_kernel                     	                        ;
+	logic   [                 `NUM_CE - 1:0]   move_one_row_down              	                        ;
+    logic   [                 `NUM_CE - 1:0]   last_kernel                     	                        ;
+    logic                                       awe_last_kernel                                         ;
+    logic                                       ctrl_last_kernel                                        ;
 
-	logic  								        awe_cascade_dataout_valid[`NUM_AWE - 1:0]	    ;
-	logic                                	    awe_cascade_carryout[`NUM_AWE - 1:0]            ;
-	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_cascade_dataout	[`NUM_AWE - 1:0]	        ;
-	logic  								        awe_dataout_valid[`NUM_AWE - 1:0]			    ;
-	logic                                	    awe_carryout[`NUM_AWE - 1:0]        		    ;
-	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_dataout	[`NUM_AWE - 1:0]	    	        ;
-    logic                                       next_state_tran                                 ;
-    logic                                       next_row                                        ;
-    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_row                                      ;
-    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_col                                      ;
-    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_depth                                    ;
-    logic                                       cascade_in_ready_arr[`NUM_AWE - 1:0]            ;
-    logic   [`NUM_WHT_TABLES - 1:0]             slv_wht_table_rden               ;
-    logic  [18:0]                               slv_dbg_rdAddr_w    ;
-    logic  [20:0]    slv_wht_tble_rdAddr                             ;
-    logic [2:0]                                 slv_dwc_idx;
-    logic [2:0]                                 slv_wht_table_sel               ;
+
+    logic   [                            5:0]   state                           	                    ;
+    logic   [                            3:0]   wht_seq_addr0                                           ;
+    logic   [                            3:0]   wht_seq_addr1                                           ;
+    logic   [         C_WHT_DOUT_WIDTH - 1:0]   ce_wht_table_dout[`NUM_CE - 1:0][`KRNL_3X3_SIMD - 1:0]  ;
+    logic   [                 `NUM_CE - 1:0]   ce_wht_table_dout_valid[`KRNL_3X3_SIMD - 1:0]            ;
+    logic                                       wht_config_wren                                         ;
+    logic   [             C_ACTV_WIDTH - 1:0]   actv_out[`NUM_CE - 1:0]                                 ;
+    integer                                     idx                                                     ;
+    integer                                     idx0                                                    ;
+    integer                                     idx1                                                    ;
+    integer                                     idx2                                                    ;
+    integer                                     idx3                                                    ;
+    integer                                     idx4                                                    ;
+    logic                                       pipeline_flushed                                        ;
+	logic                                       wht_sequence_selector				                    ;
+	logic  								        awe_cascade_dataout_valid[`NUM_AWE - 1:0]	            ;
+	logic                                	    awe_cascade_carryout[`NUM_AWE - 1:0]                    ;
+	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_cascade_dataout	[`NUM_AWE - 1:0]	                ;
+	logic  								        awe_dataout_valid[`NUM_AWE - 1:0]			            ;
+	logic                                	    awe_carryout[`NUM_AWE - 1:0]        		            ;
+	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_dataout	[`NUM_AWE - 1:0]	    	                ;
+    logic                                       next_state_tran                                         ;
+    logic                                       next_row                                                ;
+    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_row                                              ;
+    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_col                                              ;
+    logic [C_CLG2_ROW_BUF_BRAM_DEPTH - 1:0]     output_depth                                            ;
+    logic                                       cascade_in_ready_arr[`NUM_AWE - 1:0]                    ;
 
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -337,33 +323,10 @@ module cnn_layer_accel_quad  (
                     .next_row                 ( next_row                                  ),
                     .state                    ( state                                     )
                 );
-
-
-                cnn_layer_accel_weight_table_top #(
-                    .C_CE_WHT_SEQ_ADDR_DELAY   ( ((i * `NUM_CE_PER_AWE + j) + 3) )
-                )
-                i0_cnn_layer_accel_weight_table_top (
-                    .clk                        ( clk_core                                          ),
-                    .rst                        ( rst                                               ),
-                    .config_mode                ( config_mode                                       ),
-                    .job_accept                 ( job_accept_w                                      ),
-                    .next_kernel                ( next_kernel[i * `NUM_CE_PER_AWE + j]              ),
-					.last_kernel                ( last_kernel[i * `NUM_CE_PER_AWE + j]              ), 
-                    .wht_config_wren            ( wht_config_wren                                   ),
-                    .wht_config_data            ( weight_data_arr[i * `NUM_CE_PER_AWE + j]          ),
-                    .wht_seq_addr0              ( wht_seq_addr0                                     ),
-                    .wht_seq_addr1              ( wht_seq_addr1                                     ),
-                    .ce_execute                 ( ce_execute[i * `NUM_CE_PER_AWE + j]               ),
-                    .wht_table_dout             ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + j]        ),
-                    .wht_table_dout_valid       ( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + j]  ),
-                    .conv_out_fmt               ( conv_out_fmt_cfg                                  ),
-                    .num_kernels                ( num_kernels_cfg                                   ),
-                    .slv_wht_table_rden         ( slv_wht_table_rden[i * `NUM_CE_PER_AWE + j]       ),
-                    .slv_dbg_rdAddr             ( slv_dbg_rdAddr_w                                  )
-                ); 
                 
                 // assign actv_out[i * `NUM_CE_PER_AWE + j] = pfb_dataout[i * `NUM_CE_PER_AWE + j][`PIXEL_WIDTH - 1] ? pfb_dataout[i * `NUM_CE_PER_AWE + j] * 16'h0666 : pfb_dataout[i * `NUM_CE_PER_AWE + j];
                 assign actv_out[i * `NUM_CE_PER_AWE + j] = 0;
+
             end
 
             
@@ -387,7 +350,7 @@ module cnn_layer_accel_quad  (
                 .gray_code                  ( gray_code                                             ),
                 .pix_seq_datain             ( pix_seq_bram_dout                                     ),     
                 .pfb_rden                   ( pfb_rden                                              ),
-                .last_kernel                ( last_kernel[`NUM_CE - 1]                             ),
+                .last_kernel                ( last_kernel[`NUM_CE - 1]                              ),
                 .row_matric                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_MATRIC_FIELD]     ),
 				.row_rename                 ( pix_seq_bram_dout[`PIX_SEQ_DATA_ROW_RENAME_FIELD]     ),
                 .ce0_pixel_datain           ( ce0_pixel_datain[i]                                   ),
@@ -417,73 +380,139 @@ module cnn_layer_accel_quad  (
 `endif
             );
 			
-            
-			if (i == 0 ) begin: AWE_DSP
-				cnn_layer_accel_awe_dsps #(
-					.C_DATAIN_DELAY				(	(i * 2)							)
-				)
-				i0_cnn_layer_accel_awe_dsps (	
-					.rst						( rst													    	),
-					.clk						( clk_if														), 
-					.clk_5x					    ( clk_core														),
-					.new_map				    ( job_accept_w													),
-					.kernal_window_size			( dsp_kernel_size_cfg    								        ),
-					.mode						( 2'b00													        ),	
-					.cascade_datain			    ( cascade_in_data                      							),    
-					.cascade_carryin			( 1'b0 															),
-					.cascade_datain_valid	    ( cascade_in_valid              							    ),
-					.ce0_pixel_valid		    ( ce0_pixel_dataout_valid[i]                                    ),
-					.ce0_pixel_datain		    ( ce0_pixel_dataout[i]											),
-					.ce1_pixel_valid	    	( ce1_pixel_dataout_valid[i]									),
-					.ce1_pixel_datain 			( ce1_pixel_dataout[i]											),
-					.ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0]				), 
-					.ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0]					),
-					.ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1]				), 
-					.ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1]					),
-					.dataout_valid				( awe_dataout_valid[i]											),
-					.dataout_p					( awe_dataout[i]												),
-					.dataout_c					( awe_carryout[i]		 										),
-					.cascade_dataout			( awe_cascade_dataout[i]										),
-					.cascade_carryout			( awe_cascade_carryout[i]										),
-					.cascade_dataout_valid		( awe_cascade_dataout_valid[i]									)
-				);
-			end else begin: AWE_DSP 
-				cnn_layer_accel_awe_dsps #(
-					.C_DATAIN_DELAY				(	(i * 2)							)
-				)
-				i0_cnn_layer_accel_awe_dsps (	
-					.rst						( rst													    	),
-					.clk						( clk_if														), 
-					.clk_5x					    ( clk_core														),
-					.new_map				    ( job_accept_w													),
-					.kernal_window_size			( dsp_kernel_size_cfg									        ),
-					.mode						( 2'b00													        ),	
-					.cascade_datain			    ( awe_cascade_dataout[i - 1]          				            ),    
-					.cascade_carryin			( awe_cascade_carryout[i - 1]       							),
-					.cascade_datain_valid	    ( awe_cascade_dataout_valid[i - 1]  	                		),
-					.ce0_pixel_valid		    ( ce0_pixel_dataout_valid[i]                                    ),
-					.ce0_pixel_datain		    ( ce0_pixel_dataout[i]											),
-					.ce1_pixel_valid	    	( ce1_pixel_dataout_valid[i]									),
-					.ce1_pixel_datain 			( ce1_pixel_dataout[i]											),
-					.ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0]				), 
-					.ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0]					),
-					.ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1]				), 
-					.ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1]					),
-					.dataout_valid				( awe_dataout_valid[i]											),
-					.dataout_p					( awe_dataout[i]												),
-					.dataout_c					( awe_carryout[i]		 										),
-					.cascade_dataout			( awe_cascade_dataout[i]										),
-					.cascade_carryout			( awe_cascade_carryout[i]										),
-					.cascade_dataout_valid		( awe_cascade_dataout_valid[i]									)
-				);
-			end	
-            
-            // assign ce0_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 0][(`ACTV_FIELD - 1): C_ACTV_WIDTH] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
-            // assign ce1_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 1][(`ACTV_FIELD - 1): C_ACTV_WIDTH] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
-            assign ce0_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 0] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
-            assign ce1_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 1] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
-            
+			// assign ce0_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 0][(`ACTV_FIELD - 1): C_ACTV_WIDTH] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
+			// assign ce1_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 1][(`ACTV_FIELD - 1): C_ACTV_WIDTH] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
+			assign ce0_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 0] : pfb_dataout[i * `NUM_CE_PER_AWE + 0];
+			assign ce1_pixel_datain[i] = (actv_cfg) ? actv_out[i * `NUM_CE_PER_AWE + 1] : pfb_dataout[i * `NUM_CE_PER_AWE + 1];
         end
+	endgenerate
+
+
+	generate
+		for(k = 1; k < `KRNL_3X3_SIMD; k = k + 1) begin: KRNL_SIMD
+			for(i = 0; i < `NUM_AWE; i = i + 1) begin: AWE
+				if(k == 0) begin
+					ce0_pixel_dout_simd[i][k] 		= ce0_pixel_dataout[i];
+					ce1_pixel_dout_simd[i][k] 		= ce1_pixel_dataout[i];
+					ce0_pixel_dout_valid_simd[i][k] = ce0_pixel_dataout_valid;
+					ce1_pixel_dout_valid_simd[i][k] = ce1_pixel_dataout_valid;
+				end else begin
+					ce0_pixel_dout_simd[i][k] = ce0_pixel_dout_simd[i][k - 1];
+					ce1_pixel_dout_simd[i][k] = ce1_pixel_dout_simd[i][k - 1];	
+					SRL_bit #(
+						.C_CLOCK_CYCLES ( k ) 
+					)
+					i0_SRL_bit (
+						.clk        ( clk                   				),
+						.ce         ( 1'b1                  				),
+						.rst        ( rst                   				),
+						.data_in    ( ce0_pixel_dataout_valid  				),
+						.data_out   ( ce0_pixel_dout_valid_simd[i][k]       )
+					);
+					
+					SRL_bit #(
+						.C_CLOCK_CYCLES ( k )
+					)
+					i1_SRL_bit (
+						.clk        ( clk                   				),
+						.ce         ( 1'b1                  				),
+						.rst        ( rst                   				),
+						.data_in    ( ce1_pixel_dataout_valid  				),
+						.data_out   ( ce1_pixel_dout_valid_simd[i][k]       )
+					);
+				end
+			end
+		end
+	endgenerate
+
+
+    generate		
+		for(k = 0; k < `KRNL_3X3_SIMD; k = k + 1) begin: KRNL_SIMD
+			for(i = 0; i < `NUM_AWE; i = i + 1) begin: AWE
+				if(i == 0) begin: AWE_DSP
+					cnn_layer_accel_awe_dsps #(
+						.C_DATAIN_DELAY((i * 2) + k)
+					)
+					i0_cnn_layer_accel_awe_dsps (	
+						.rst						( rst													    	),
+						.clk						( clk_if														), 
+						.clk_5x					    ( clk_core														),
+						.new_map				    ( job_accept_w													),
+						.kernal_window_size			( dsp_kernel_size_cfg    								        ),
+						.mode						( 2'b00													        ),	
+						.cascade_datain			    ( cascade_in_data                      							),    
+						.cascade_carryin			( 1'b0 															),
+						.cascade_datain_valid	    ( cascade_in_valid              							    ),
+						.ce0_pixel_valid		    ( ce0_pixel_dout_valid_simd[i][k]                               ),
+						.ce0_pixel_datain		    ( ce0_pixel_dout_simd[i][k]    									),
+						.ce1_pixel_valid	    	( ce1_pixel_dout_valid_simd[i][k]								),
+						.ce1_pixel_datain 			( ce1_pixel_dout_simd[i][k]										),
+						.ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0][k]			), 
+						.ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0][k]					),
+						.ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1][k]			), 
+						.ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1][k]					),
+						.dataout_valid				( awe_dataout_valid[i]											),
+						.dataout_p					( awe_dataout[i]												),
+						.dataout_c					( awe_carryout[i]		 										),
+						.cascade_dataout			( awe_cascade_dataout[i]										),
+						.cascade_carryout			( awe_cascade_carryout[i]										),
+						.cascade_dataout_valid		( awe_cascade_dataout_valid[i]									)
+					);
+				end else begin: AWE_DSP 
+					cnn_layer_accel_awe_dsps #(
+						.C_DATAIN_DELAY((i * 2) * k)
+					)
+					i0_cnn_layer_accel_awe_dsps (	
+						.rst						( rst													    	),
+						.clk						( clk_if														), 
+						.clk_5x					    ( clk_core														),
+						.new_map				    ( job_accept_w													),
+						.kernal_window_size			( dsp_kernel_size_cfg									        ),
+						.mode						( 2'b00													        ),	
+						.cascade_datain			    ( awe_cascade_dataout[i - 1]          				            ),    
+						.cascade_carryin			( awe_cascade_carryout[i - 1]       							),
+						.cascade_datain_valid	    ( awe_cascade_dataout_valid[i - 1]  	                		),
+						.ce0_pixel_valid		    ( ce0_pixel_dout_valid_simd[i][k]                               ),
+						.ce0_pixel_datain		    ( ce0_pixel_dout_simd[i][k]    									),
+						.ce1_pixel_valid	    	( ce1_pixel_dout_valid_simd[i][k]								),
+						.ce1_pixel_datain 			( ce1_pixel_dout_simd[i][k]										),
+						.ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0][k]			), 
+						.ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0][k]					),
+						.ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1][k]			), 
+						.ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1][k] 				),
+						.dataout_valid				( awe_dataout_valid[i]											),
+						.dataout_p					( awe_dataout[i]												),
+						.dataout_c					( awe_carryout[i]		 										),
+						.cascade_dataout			( awe_cascade_dataout[i]										),
+						.cascade_carryout			( awe_cascade_carryout[i]										),
+						.cascade_dataout_valid		( awe_cascade_dataout_valid[i]									)
+					);
+				end
+					
+				for(j = 0; j < `NUM_CE_PER_AWE; j = j + 1) begin: AWE_BUF_WHT					
+					cnn_layer_accel_weight_table_top #(
+						.C_CE_WHT_SEQ_ADDR_DELAY   ( ((i * `NUM_CE_PER_AWE + j) + 3) )
+					)
+					i0_cnn_layer_accel_weight_table_top (
+						.clk                        ( clk_core                                              ),
+						.rst                        ( rst                                                   ),
+						.config_mode                ( config_mode                                           ),
+						.job_accept                 ( job_accept_w                                          ),
+						.next_kernel                ( next_kernel[i * `NUM_CE_PER_AWE + j]                  ),
+						.last_kernel                ( last_kernel[i * `NUM_CE_PER_AWE + j]                  ), 
+						.wht_config_wren            ( wht_config_wren                                       ),
+						.wht_config_data            ( weight_data_arr[i * `NUM_CE_PER_AWE + j]              ),
+						.wht_seq_addr0              ( wht_seq_addr0                                         ),
+						.wht_seq_addr1              ( wht_seq_addr1                                         ),
+						.ce_execute                 ( ce_execute[i * `NUM_CE_PER_AWE + j]                   ),
+						.wht_table_dout             ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + j][k]         ),
+						.wht_table_dout_valid       ( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + j][k]   ),
+						.conv_out_fmt               ( conv_out_fmt_cfg                                      ),
+						.num_kernels                ( num_kernels_cfg                                       )
+					);
+				end
+			end
+		end
 		
 		assign cascade_out_data     = awe_cascade_dataout[`NUM_AWE - 1];
 		assign cascade_out_valid    = awe_cascade_dataout_valid[`NUM_AWE - 1];
@@ -658,8 +687,8 @@ module cnn_layer_accel_quad  (
 
 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    assign pix_seq_bram_rden = (slv_dbg_rdAddr_valid && state == ST_IDLE) ? slv_pix_seq_bram_rden : ctrl_pix_seq_bram_rden;
-    assign pix_seq_bram_rdAddr = (slv_dbg_rdAddr_valid && state == ST_IDLE) ? slv_dbg_rdAddr_w : ctrl_pix_seq_bram_rdAddr;
+    assign pix_seq_bram_rden = ctrl_pix_seq_bram_rden;
+    assign pix_seq_bram_rdAddr = ctrl_pix_seq_bram_rdAddr;
     assign pix_seq_bram_wren = config_accept[0] && config_valid[0];
 
     always@(posedge clk_if) begin
@@ -725,89 +754,7 @@ module cnn_layer_accel_quad  (
     end
     // END Network Output Data Logic ----------------------------------------------------------------------------------------------------------------
     
-    
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-`ifdef SLV_DEBUG
-    assign slv_dbg_rdAddr_w = slv_dbg_rdAddr >> 2;
-    assign slv_wht_table_sel = slv_dbg_rdAddr[14:12];
-    
-    always@(posedge clk_if) begin
-        if(rst) begin
-            slv_dwc_idx <= 0;
-        end else begin
-            if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_CFG_REG_LOW && slv_dbg_rdAddr <= `SLV_SPCE_CFG_REG_HIGH) begin
-                slv_dwc_idx <= slv_dwc_idx + 1;
-            end
-        end
-    end
-    
-    always@(posedge clk_if) begin
-        if(rst) begin
-            slv_dbg_rdAck           <= 0;
-            slv_pix_seq_bram_rden   <= 0;
-            for(idx3 = 0; idx3 < `NUM_WHT_TABLES; idx3 = idx3 + 1) begin
-                slv_wht_table_rden[idx3]  <= 0;
-            end
-        end else begin
-            slv_dbg_rdAck           <= 0;
-            slv_pix_seq_bram_rden   <= 0;
-            for(idx4 = 0; idx4 < `NUM_WHT_TABLES; idx4 = idx4 + 1) begin
-                slv_wht_table_rden[idx4]  <= 0;
-            end
-            if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH) begin
-                slv_pix_seq_bram_rden <= 1;
-            end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH) begin
-                slv_wht_table_rden[slv_wht_table_sel] <= 1;
-            end
-            if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH && slv_pix_seq_bram_rden) begin
-                slv_dbg_rdAck <= 1;
-            end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH && |slv_wht_table_rden) begin
-                slv_dbg_rdAck <= 1;
-            end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_CFG_REG_LOW && slv_dbg_rdAddr <= `SLV_SPCE_CFG_REG_HIGH) begin
-                slv_dbg_rdAck <= 1;
-            end
-        end
-    end
-    
-    always@(posedge clk_if) begin
-        if(rst) begin
-            slv_dbg_data <= 0;
-        end else begin
-            if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH) begin
-                slv_dbg_data[15:0] <= pix_seq_bram_dout;
-            end if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW && slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH) begin
-                slv_dbg_data[15:0] <= ce_wht_table_dout[idx1][`WEIGHT_WIDTH - 1:0];
-            end else if(slv_dbg_rdAddr_valid && slv_dbg_rdAddr >= `SLV_SPCE_CFG_REG_LOW && slv_dbg_rdAddr <= `SLV_SPCE_CFG_REG_HIGH) begin
-                slv_dbg_data[15:0] <= job_parameters[(slv_dwc_idx * 16) +: 16];
-            end
-        end
-    end
-`else
-    assign slv_dwc_idx = 0;
-    assign slv_dbg_rdAck = 0;
-    assign slv_dbg_data = 0; 
-    assign slv_pix_seq_bram_rden = 0;
-    assign slv_wht_table_rden[0] = 0;
-    assign slv_wht_table_rden[1] = 0;
-    assign slv_wht_table_rden[2] = 0;
-    assign slv_wht_table_rden[3] = 0;
-    assign slv_wht_table_rden[4] = 0;
-    assign slv_wht_table_rden[5] = 0;
-    assign slv_wht_table_rden[6] = 0;
-    assign slv_wht_table_rden[7] = 0;
-    // always@(*) begin
-    //     slv_dwc_idx = 0;
-    //     slv_dbg_rdAck = 0;
-    //     slv_dbg_data = 0; 
-    //     slv_pix_seq_bram_rden = 0;
-    //     for(idx2 = 0; idx2 < `NUM_WHT_TABLES; idx2 = idx2 + 1) begin
-    //         slv_wht_table_rden[idx2] = 0;
-    //     end
-    // end
-`endif
-    // END ---------------------------------------------------------------------------------------------------------------------------------------
-
-
+ 
 `ifdef SIMULATION
     string state_s;
     always@(state) begin 

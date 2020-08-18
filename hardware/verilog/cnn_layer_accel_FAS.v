@@ -217,7 +217,7 @@ module cnn_layer_accel_FAS #(
         .wren        ( krnl1x1_bram_wren ),
         .rden        (),
         .fifo_fwft   ( 1 ),
-        .dataout     ()
+        .dataout     ( krnl1x1_bram_dout )
     );
 
 
@@ -289,7 +289,7 @@ module cnn_layer_accel_FAS #(
         .wren           ( prevMap_fifo_wren ),
         .rden           (),
         .datain         ( prevMap_fifo_datain ),
-        .dataout        (),
+        .dataout        ( prevMap_fifo_dout   ),
         .empty          (),
         .full           (),
         .thresh         (),
@@ -333,23 +333,40 @@ module cnn_layer_accel_FAS #(
         .empty          ( trans_fifo_empty      ),
         .full           (                       )
     );
-
-
-    adder_tree #(
+	
+	
+	vector_multiply
+	i0_vector_multiply
+	#(
+		.C_OP_WIDTH 	( `PIXEL_WIDTH 		),
+		.C_NUM_OPERANDS	( `VECTOR_MULT_SIMD )
+	(
+		.clk     			( clk 								),
+		.rst            	( rst 								),
+		.datain	            ( {vec_mult_din, krnl1x1_bram_dout}	),
+		.datain_ready		( 									),
+		.datain_valid		( vec_mult_din_vld					),
+		.dout				( vec_mult_dout 					),
+		.dout_ready			( 1'b1								),
+		.dout_valid         ( vec_mult_dout_vld					)
+	);
+	
+	
+	adder_tree #(
         .C_NUINPUTS         ( ),
         .C_INPUT_WIDTH      ( ),
         .C_OUTPUT_WIDTH     ( )
     )
     i0_adder_tree
     (
-        .clk                (),
-        .rst                (),
-        .datain_ready       ( adder_tree_datain ),
-        .datain_valid       (),
-        .datain             (),
-        .dataout_ready      (),
-        .dataout_valid      (),
-        .dataout            ()
+        .clk                ( clk 					),
+        .rst                (						),
+        .datain_ready       ( 1'b1 					),
+        .datain_valid       ( vec_mult_dout_vld 	),
+        .datain             ( vec_mult_dout			),
+        .dataout_ready      ( 1'b1					),
+        .dataout_valid      ( adder_tree_out_vld	),
+        .dataout            ( adder_tree_out 		)
     );
 
 
@@ -496,6 +513,31 @@ module cnn_layer_accel_FAS #(
    
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     integer i0, i1;
+	
+	always@(*) begin
+		if(opcode_cfg == `OPCODE_0 
+			|| opcode_cfg == `OPCODE_1
+			|| opcode_cfg == `OPCODE_6
+			|| opcode_cfg == `OPCODE_7
+			|| opcode_cfg == `OPCODE_10
+			|| opcode_cfg == `OPCODE_11) 
+		begin
+			vec_mult_din = vector_add_out_0;
+		end else if(opcode_cfg == `OPCODE_4
+					|| opcode_cfg == `OPCODE_5) 
+		begin
+			vec_mult_din = vector_add_out_1;
+		end else if(opcode_cfg == `OPCODE_2
+					|| opcode_cfg == `OPCODE_3
+					|| opcode_cfg == `OPCODE_12
+					|| opcode_cfg == `OPCODE_13
+					|| opcode_cfg == `OPCODE_14)
+		begin
+			vec_mult_din = convMap_bram_dout;
+		end
+	end
+	
+	integer i1, i1;
     always@(*) begin
         if(opcode_cfg == `OPCODE_8 && opcode_cfg == `OPCODE_15 && vector_add_0_d) begin
             for(i0 = 0; i0 < `VECTOR_ADD_SIMD; i0 = i0 + 1) begin
@@ -508,7 +550,7 @@ module cnn_layer_accel_FAS #(
                 vector_add_out_0[(i1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
                     = convMap_bram_dout[(i1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] + resdMap_bram_dout[(i1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
             end
-        end
+        end	
     end
     
     integer i2;
@@ -520,19 +562,16 @@ module cnn_layer_accel_FAS #(
             end
         end
     end
-    // END logic ------------------------------------------------------------------------------------------------------------------------------------
-
- 
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    integer i3
-    always@(*) begin
-        always@(posedge clk) begin
-            for(i3 = 0; i3 < `VECTOR_MULT_SIMD; i3 = i3 + 1) begin
-                vector_mult[(i3 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
-                    = convMap_bram_dout[(i3 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] * krnl1x1_bram_dout[(i3 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
+	
+	integer i3;
+	always@(*) begin
+        if(opcode_cfg == `OPCODE_8 && vector_add_2_d) begin
+            for(i3 = 0; i3 < `VECTOR_ADD_SIMD; i3 = i3 + 1)
+                vector_add_out_2[(i2 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
+                    = adder_tree_out[(i2 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] + prevMap_fifo_dout[(i2 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
             end
-        end
-    end
+        end	
+	end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
  

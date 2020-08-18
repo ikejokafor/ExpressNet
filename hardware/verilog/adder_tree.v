@@ -14,7 +14,7 @@ module adder_tree
 	input			[(C_NUM_INPUTS*C_INPUT_WIDTH)-1:0]	datain,
 	input												dataout_ready,
 	output												dataout_valid,
-	output signed	[C_OUTPUT_WIDTH-1:0]					dataout
+	output signed	[C_OUTPUT_WIDTH-1:0]				dataout
 );
 	
 	function integer cadivb;
