@@ -79,43 +79,46 @@ module cnn_layer_accel_FAS #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Parameters
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam ST_IDLE              = 6'b000001;
-    localparam ST_CFG_AWP           = 6'b000010;
-    localparam ST_START_AWP         = 6'b000100;    
-    localparam ST_ACTIVE            = 6'b001000;
-    localparam ST_WAIT_LAST_WRITE   = 6'b010000;
-    localparam ST_SEND_COMPLETE     = 6'b100000;
-	
-	localparam C_VECTOR_ADD_WTH 	= `PIXEL_WIDTH * VECTOR_ADD_SIMD;
+    localparam ST_IDLE                  = 6'b000001;
+    localparam ST_CFG_AWP               = 6'b000010;
+    localparam ST_START_AWP             = 6'b000100;
+    localparam ST_ACTIVE                = 6'b001000;
+    localparam ST_WAIT_LAST_WRITE       = 6'b010000;
+    localparam ST_SEND_COMPLETE         = 6'b100000;
+
+	localparam C_VECTOR_ADD_WTH 	    = `PIXEL_WIDTH * VECTOR_ADD_SIMD;
+    localparam C_SYS_MEM_RD_ADDR_WTH    = `MAX_FAS_RD_ID * `AXI_RD_ADDR_WIDTH;
+    localparam C_SYS_MEM_RD_LEN_WTH     = `MAX_FAS_RD_ID * `AXI_RD_LEN_WIDTH;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Module Ports
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    input     clk     				    ;
-    input     rst                       ;
-    input     start_FAS                 ;
-    output    start_FAS_ack             ;
-    input  [`CFG_DATA_WIDTH - 1:0] cfg_data                  ;
-    output [] sys_mem_read_req          ;
-    output [] sys_mem_read_addr         ;
-    output [] sys_mem_read_size         ;
-    input  [] sys_mem_read_req_ack      ;
-    input  [] sys_mem_read_in_prog      ;
-    input  [] sys_mem_read_cmpl         ;
-    output    sys_mem_write_req         ;
-    output [] sys_mem_write_addr        ;
-    output [] sys_mem_write_size        ;
-    input     sys_mem_write_req_ack     ;
-    input     sys_mem_write_in_prog     ;
-    input     sys_mem_write_cmpl        ;
-    input     trans_fifo_wren           ;
-    input     convMap_bram_wren         ;
-    input     resdMap_bram_wren         ;
-    input     partMap_bram_wren         ;
-    input     prevMap_fifo_wren         ;
-    input     krnl1x1_bram_wren         ;
-    input     krnl1x1Bias_bram_wren     ;
+    input                                   clk     				  ;
+    input                                   rst                       ;
+    input                                   start_FAS                 ;
+    output                                  start_FAS_ack             ;
+    input  [      `CFG_DATA_WIDTH - 1:0]    cfg_data                  ;
+    output [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_req          ;
+    output [C_SYS_MEM_RD_ADDR_WTH - 1:0]    sys_mem_read_addr         ;
+    output [ C_SYS_MEM_RD_LEN_WTH - 1:0]    sys_mem_read_len          ;
+    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_req_ack      ;
+    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_in_prog      ;
+    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_cmpl         ;
+    
+    output                                  sys_mem_write_req         ;
+    output [   `AXI_RD_ADDR_WIDTH - 1:0]    sys_mem_write_addr        ;
+    output [    `AXI_RD_LEN_WIDTH - 1:0]    sys_mem_write_size        ;
+    input                                   sys_mem_write_req_ack     ;
+    input                                   sys_mem_write_in_prog     ;
+    input                                   sys_mem_write_cmpl        ;
+    input                                   trans_fifo_wren           ;
+    input                                   convMap_bram_wren         ;
+    input                                   resdMap_bram_wren         ;
+    input                                   partMap_bram_wren         ;
+    input                                   prevMap_fifo_wren         ;
+    input  [     `KERNEL_1X1_SIMD - 1:0]    krnl1x1_bram_wren         ;
+    input  [     `KERNEL_1X1_SIMD - 1:0]    krnl1x1Bias_bram_wren     ;
     input [] trans_fifo_datain          ;
     input [] convMap_bram_datain        ;
     input [] resdMap_bram_datain        ;
@@ -125,15 +128,19 @@ module cnn_layer_accel_FAS #(
     input [] krnl1x1Bias_bram_datain    ;
     input    outBuf_fifo_rden           ;
 	input    outBuf_fifo_dout_valid		;
-    input [] outBuf_fifo_dout           ;
+    output [] outBuf_fifo_dout           ;
     input [] AWP_complete               ;
     input    send_FAS_complete          ;
-    input    FAS_complete_ack           ;
+    output    FAS_complete_ack           ;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Variables
     //-----------------------------------------------------------------------------------------------------------------------------------------------
+    logic [`AXI_RD_ADDR_WIDTH - 1:0] sys_mem_read_addr_arr[`MAX_FAS_RD_ID - 1:0];
+        genvar g0; `UNPACK_ARRAY_1D(`AXI_RD_ADDR_WIDTH, `MAX_FAS_RD_ID , sys_mem_read_addr, sys_mem_read_addr_arr, g0);
+    logic [`AXI_RD_LEN_WIDTH - 1:0] sys_mem_read_len_arr[`MAX_FAS_RD_ID - 1:0];
+        genvar g1; `UNPACK_ARRAY_1D(`AXI_RD_LEN_WIDTH, `MAX_FAS_RD_ID , sys_mem_read_len, sys_mem_read_len_arr, g1);
     logic [					   5:0]	    state                          	;
 	logic [					  15:0] 	krnl1x1Depth_cfg                ;
 	logic [					  15:0] 	krnl1x1Addr_cfg                 ;
@@ -175,19 +182,23 @@ module cnn_layer_accel_FAS #(
     logic 								FAS_complete_acked				;
     logic [ C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_0				;
 	logic [ C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_1			   	;
+	logic [ C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_2			   	;
 	logic [C_VECTOR_MULT_WTH - 1:0] 	vector_mult						;
     logic [   `MAX_FAS_RD_ID - 1:0] 	sys_mem_read_req_acked         	;
 	logic 								sys_mem_writereq_acked         	;
+	logic								conv_1x1_vld   					;
+	logic								conv_1x1_vld_r 					;
+	logic								conv_1x1_vld_d 					;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Module Instantiations
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     xilinx_simple_dual_port_no_change_asym_width_count_2_clock_ram #(
-        .C_RAM_WR_WIDTH        ( ), 
-        .C_RAM_WR_DEPTH        ( ), 
-        .C_RAM_RD_WIDTH        ( ), 
-        .C_RD_PORT_HIGH_PERF   ( ), 
+        .C_RAM_WR_WIDTH        ( ),
+        .C_RAM_WR_DEPTH        ( ),
+        .C_RAM_RD_WIDTH        ( ),
+        .C_RD_PORT_HIGH_PERF   ( ),
     )
     convMap_bram (
         .wr_clk      ( clk                  ),
@@ -240,10 +251,10 @@ module cnn_layer_accel_FAS #(
 
 
     xilinx_simple_dual_port_no_change_asym_width_count_2_clock_ram #(
-        .C_RAM_WR_WIDTH        ( ), 
-        .C_RAM_WR_DEPTH        ( ), 
-        .C_RAM_RD_WIDTH        ( ), 
-        .C_RD_PORT_HIGH_PERF   ( ), 
+        .C_RAM_WR_WIDTH        ( ),
+        .C_RAM_WR_DEPTH        ( ),
+        .C_RAM_RD_WIDTH        ( ),
+        .C_RD_PORT_HIGH_PERF   ( ),
     )
     resdMap_bram (
         wr_clk      ( clk ),
@@ -277,8 +288,8 @@ module cnn_layer_accel_FAS #(
         fifo_fwft   (),
         dout        ()
     );
-    
-    
+
+
     fifo_fwft_prog_full_count #(
         .C_DATA_WIDTH = 128,
         .C_FIFO_DEPTH = 16,
@@ -295,6 +306,23 @@ module cnn_layer_accel_FAS #(
         .thresh         (),
         .prog_full      (),
         .count          ()
+    );
+
+
+    fifo_fwft #(
+        C_DATA_WIDTH                ( ),
+        C_FIFO_DEPTH                ( )
+    )
+    outBuf_dwc_fifo
+    (
+        .clk            ( clk                   ),
+        .rst            ( rst                   ),
+        .wren           ( trans_fifo_wren       ),
+        .rden           ( trans_fifo_rden       ),
+        .datain         ( trans_fifo_datain     ),
+        .dataout        ( trans_fifo_dataout    ),
+        .empty          ( trans_fifo_empty      ),
+        .full           (                       )
     );
 
 
@@ -316,8 +344,8 @@ module cnn_layer_accel_FAS #(
         .prog_full      (                       ),
         .count          (                       )
     );
-    
-    
+
+
     fifo_fwft #(
         C_DATA_WIDTH                ( ),
         C_FIFO_DEPTH                ( )
@@ -333,8 +361,25 @@ module cnn_layer_accel_FAS #(
         .empty          ( trans_fifo_empty      ),
         .full           (                       )
     );
-	
-	
+    
+    
+    fifo_fwft #(
+        C_DATA_WIDTH                ( ),
+        C_FIFO_DEPTH                ( )
+    )
+    prevMap_dwc_fifo
+    (
+        .clk            ( clk                   ),
+        .rst            ( rst                   ),
+        .wren           ( trans_fifo_wren       ),
+        .rden           ( trans_fifo_rden       ),
+        .datain         ( trans_fifo_datain     ),
+        .dataout        ( trans_fifo_dataout    ),
+        .empty          ( trans_fifo_empty      ),
+        .full           (                       )
+    );
+
+
 	vector_multiply
 	i0_vector_multiply
 	#(
@@ -350,8 +395,8 @@ module cnn_layer_accel_FAS #(
 		.dout_ready			( 1'b1								),
 		.dout_valid         ( vec_mult_dout_vld					)
 	);
-	
-	
+
+
 	adder_tree #(
         .C_NUINPUTS         ( ),
         .C_INPUT_WIDTH      ( ),
@@ -380,24 +425,24 @@ module cnn_layer_accel_FAS #(
         .data_in    ( vector_add_0          ),
         .data_out   ( vector_add_0_d        )
     );
-    
-    
+
+
     SRL_bit #(
         .C_CLOCK_CYCLES ( 2 )
     )
-    i0_SRL_bit (
+    i1_SRL_bit (
         .clk        ( clk                   ),
         .ce         ( 1'b1                  ),
         .rst        ( rst                   ),
         .data_in    ( vector_add_1          ),
         .data_out   ( vector_add_1_d        )
     );
-    
-    
+
+
     SRL_bit #(
         .C_CLOCK_CYCLES ( 3 )
     )
-    i0_SRL_bit (
+    i2_SRL_bit (
         .clk        ( clk                      ),
         .ce         ( 1'b1                     ),
         .rst        ( rst                      ),
@@ -409,26 +454,38 @@ module cnn_layer_accel_FAS #(
     SRL_bit #(
         .C_CLOCK_CYCLES ( 4 )
     )
-    i0_SRL_bit (
+    i3_SRL_bit (
         .clk        ( clk                       ),
         .ce         ( 1'b1                      ),
         .rst        ( rst                       ),
         .data_in    ( outBuf_fifo_wren_w1       ),
         .data_out   ( outBuf_fifo_wren_w1_d     )
     );
-    
+
 
     SRL_bit #(
         .C_CLOCK_CYCLES ( 1 )
     )
-    i0_SRL_bit (
+    i4_SRL_bit (
         .clk        ( clk                       ),
         .ce         ( 1'b1                      ),
         .rst        ( rst                       ),
         .data_in    ( outBuf_fifo_wren_w2       ),
         .data_out   ( outBuf_fifo_wren_w2_d     )
     );
-  
+
+
+    SRL_bit #(
+        .C_CLOCK_CYCLES ( 1 )
+    )
+    i5_SRL_bit (
+        .clk        ( clk                ),
+        .ce         ( 1'b1               ),
+        .rst        ( rst                ),
+        .data_in    ( conv_1x1_vld_r     ),
+        .data_out   ( conv_1x1_vld_d     )
+    );
+
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge ckk) begin
@@ -468,7 +525,7 @@ module cnn_layer_accel_FAS #(
 			krnl1x1_pad_bgn_cfg         <= 0;
 			krnl1x1_pad_end_cfg         <= 0;
 			opcode_cfg                  <= 0;
-			res_high_watermark_cfg      <= 0;     
+			res_high_watermark_cfg      <= 0;
         end else begin
             krnl1x1Depth_cfg            <= cfg_data[`KRNL1X1_DEPTH_FIELD];
             krnl1x1Addr_cfg             <= cfg_data[`KRNL1X1_ADDR_FIELD];
@@ -480,51 +537,51 @@ module cnn_layer_accel_FAS #(
             pixSeqCfgFetchTotal_cfg     <= cfg_data[`INMAP_ADDR_FIELD];
             inMapAddr_cfg            	<= cfg_data[`INMAP_ADDR_FIELD];
             prevMapAddr_cfg			    <= cfg_data[`PREVMAP_ADDR_FIELD];
-            inMapFetchFactor_cfg        <= cfg_data[`INMAP_FETCHFACTOR_FIELD];  
+            inMapFetchFactor_cfg        <= cfg_data[`INMAP_FETCHFACTOR_FIELD];
             inMapFetchTotal_cfg         <= cfg_data[`INMAP_FETCHTOTAL_FIELD];
-			krnl3x3Addr_cfg				<= cfg_data[`KRNL3X3_ADDR_FIELD]; 					
-			krnl3x3BiasAddr_cfg			<= cfg_data[`KRNL3X3_BIAS_ADDR_FIELD]; 	
-            krnl3x3FetchTotal_cfg       <= cfg_data[`KRNL3X3_FETCHTOTAL_FIELD];  
-            krnl3x3BiasFetchTotal_cfg   <= cfg_data[`KRNL3X3_BIAS_FETCHTOTAL_FIELD];  
-            krnl1x1FetchTotal_cfg       <= cfg_data[`KRNL1X1_FETCHTOTAL_FIELD];  
-            krnl1x1BiasFetchTotal_cfg   <= cfg_data[`KRNL1X1_BIAS_FETCHTOTAL_FIELD];  
-            partMapFetchTotal_cfg       <= cfg_data[`PARTMAP_FETCHTOTAL_FIELD];  
-            resdMapFetchTotal_cfg       <= cfg_data[`RESDMAP_FETCHTOTAL_FIELD];  
-            outMapStoreTotal_cfg        <= cfg_data[`OUTMAP_STORETOTAL_FIELD];  
-            outMapStoreFactor_cfg       <= cfg_data[`OUTMAP_STOREFACTOR_FIELD];  
-            prevMapFetchTotal_cfg       <= cfg_data[`PREVMAP_FETCHTOTAL_FIELD];  
-            num_1x1_kernels_cfg         <= cfg_data[`NUM_1X1_KERNELS_FIELD];  
-            cm_high_watermark_cfg       <= cfg_data[`CM_HIGH_WATERMARK_FIELD];  
-            rm_low_watermark_cfg        <= cfg_data[`RM_LOW_WATERMARK_FIELD];  
-            pm_low_watermark_cfg        <= cfg_data[`PM_LOW_WATERMARK_FIELD];  
-            pv_low_watermark_cfg        <= cfg_data[`PV_LOW_WATERMARK_FIELD];  
-            rm_fetch_amount_cfg         <= cfg_data[`RM_FETCH_AMOUNT_FIELD];  
-            pm_fetch_amount_cfg         <= cfg_data[`PM_FETCH_AMOUNT_FIELD];  
-            pv_fetch_amount_cfg         <= cfg_data[`PV_FETCH_AMOUNT_FIELD];  
-            krnl1x1_pding_cfg           <= cfg_data[`KRNL1X1_PDING_FIELD];  
-            krnl1x1_pad_bgn_cfg         <= cfg_data[`KRNL1X1_PAD_BGN_FIELD];  
-            krnl1x1_pad_end_cfg         <= cfg_data[`KRNL1X1_PAD_END_FIELD];  
-            opcode_cfg                  <= cfg_data[`OPCODE_FIELD];  
+			krnl3x3Addr_cfg				<= cfg_data[`KRNL3X3_ADDR_FIELD];
+			krnl3x3BiasAddr_cfg			<= cfg_data[`KRNL3X3_BIAS_ADDR_FIELD];
+            krnl3x3FetchTotal_cfg       <= cfg_data[`KRNL3X3_FETCHTOTAL_FIELD];
+            krnl3x3BiasFetchTotal_cfg   <= cfg_data[`KRNL3X3_BIAS_FETCHTOTAL_FIELD];
+            krnl1x1FetchTotal_cfg       <= cfg_data[`KRNL1X1_FETCHTOTAL_FIELD];
+            krnl1x1BiasFetchTotal_cfg   <= cfg_data[`KRNL1X1_BIAS_FETCHTOTAL_FIELD];
+            partMapFetchTotal_cfg       <= cfg_data[`PARTMAP_FETCHTOTAL_FIELD];
+            resdMapFetchTotal_cfg       <= cfg_data[`RESDMAP_FETCHTOTAL_FIELD];
+            outMapStoreTotal_cfg        <= cfg_data[`OUTMAP_STORETOTAL_FIELD];
+            outMapStoreFactor_cfg       <= cfg_data[`OUTMAP_STOREFACTOR_FIELD];
+            prevMapFetchTotal_cfg       <= cfg_data[`PREVMAP_FETCHTOTAL_FIELD];
+            num_1x1_kernels_cfg         <= cfg_data[`NUM_1X1_KERNELS_FIELD];
+            cm_high_watermark_cfg       <= cfg_data[`CM_HIGH_WATERMARK_FIELD];
+            rm_low_watermark_cfg        <= cfg_data[`RM_LOW_WATERMARK_FIELD];
+            pm_low_watermark_cfg        <= cfg_data[`PM_LOW_WATERMARK_FIELD];
+            pv_low_watermark_cfg        <= cfg_data[`PV_LOW_WATERMARK_FIELD];
+            rm_fetch_amount_cfg         <= cfg_data[`RM_FETCH_AMOUNT_FIELD];
+            pm_fetch_amount_cfg         <= cfg_data[`PM_FETCH_AMOUNT_FIELD];
+            pv_fetch_amount_cfg         <= cfg_data[`PV_FETCH_AMOUNT_FIELD];
+            krnl1x1_pding_cfg           <= cfg_data[`KRNL1X1_PDING_FIELD];
+            krnl1x1_pad_bgn_cfg         <= cfg_data[`KRNL1X1_PAD_BGN_FIELD];
+            krnl1x1_pad_end_cfg         <= cfg_data[`KRNL1X1_PAD_END_FIELD];
+            opcode_cfg                  <= cfg_data[`OPCODE_FIELD];
             res_high_watermark_cfg      <= cfg_data[`RES_HIGH_WATERMARK_FIELD];
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
-   
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     integer i0, i1;
-	
+
 	always@(*) begin
-		if(opcode_cfg == `OPCODE_0 
+		if(opcode_cfg == `OPCODE_0
 			|| opcode_cfg == `OPCODE_1
 			|| opcode_cfg == `OPCODE_6
 			|| opcode_cfg == `OPCODE_7
 			|| opcode_cfg == `OPCODE_10
-			|| opcode_cfg == `OPCODE_11) 
+			|| opcode_cfg == `OPCODE_11)
 		begin
 			vec_mult_din = vector_add_out_0;
 		end else if(opcode_cfg == `OPCODE_4
-					|| opcode_cfg == `OPCODE_5) 
+					|| opcode_cfg == `OPCODE_5)
 		begin
 			vec_mult_din = vector_add_out_1;
 		end else if(opcode_cfg == `OPCODE_2
@@ -536,23 +593,23 @@ module cnn_layer_accel_FAS #(
 			vec_mult_din = convMap_bram_dout;
 		end
 	end
-	
+
 	integer i1, i1;
     always@(*) begin
         if(opcode_cfg == `OPCODE_8 && opcode_cfg == `OPCODE_15 && vector_add_0_d) begin
             for(i0 = 0; i0 < `VECTOR_ADD_SIMD; i0 = i0 + 1) begin
-                vector_add_out_0[(i0 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
+                vector_add_out_0[(i0 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
                     = convMap_bram_dout[(i0 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] + partMap_bram_dout[(i0 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
             end
         end
         if(opcode_cfg == `OPCODE_9 && opcode_cfg == `OPCODE_17 && vector_add_0_d) begin
             for(i1 = 0; i1 < `VECTOR_ADD_SIMD; i1 = i1 + 1) begin
-                vector_add_out_0[(i1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] 
+                vector_add_out_0[(i1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
                     = convMap_bram_dout[(i1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] + resdMap_bram_dout[(i1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
             end
-        end	
+        end
     end
-    
+
     integer i2;
     always@(*) begin
         if(opcode_cfg == `OPCODE_8 && vector_add_1_d) begin
@@ -562,7 +619,7 @@ module cnn_layer_accel_FAS #(
             end
         end
     end
-	
+
 	integer i3;
 	always@(*) begin
         if(opcode_cfg == `OPCODE_8 && vector_add_2_d) begin
@@ -570,11 +627,30 @@ module cnn_layer_accel_FAS #(
                 vector_add_out_2[(i2 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
                     = adder_tree_out[(i2 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] + prevMap_fifo_dout[(i2 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
             end
-        end	
+        end
+	end
+
+	always@(posedge clk) begin
+		if(rst) begin
+			conv_1x1_vld <= 0;
+		end else begin
+			conv_1x1_vld <= 0;
+			if(adder_tree_out_vld && opcode_cfg != `OPCODE_0
+				&& opcode_cfg != `OPCODE_2 && opcode_cfg == `OPCODE_4
+				&& opcode_cfg != `OPCODE_6 && opcode_cfg == `OPCODE_10
+				&& opcode_cfg != `OPCODE_12 && opcode_cfg == `OPCODE_14)
+			begin
+				conv_1x1_vld <= 1;
+			end else begin
+                krnl1x1_bias_bram_rden  <= 1;
+				adder_tree_out          <= adder_tree_out + krnl1x1Bias_bram_dout;
+				conv_1x1_vld_r          <= 1;
+			end
+		end
 	end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
- 
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign convMap_bram_empty       = (convMap_bram_count > 0);
     assign convMap_bram_prog_full   = (convMap_bram_count > cm_high_watermark_cfg);
@@ -592,10 +668,10 @@ module cnn_layer_accel_FAS #(
                 convMap_bram_count <= convMap_bram_count - 1;
             end
         end
-    end  
+    end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign partMap_bram_empty       = (partMap_bram_count > 0);
     assign partMap_bram_prog_full   = (partMap_bram_count > pm_high_watermark_cfg);
@@ -615,8 +691,8 @@ module cnn_layer_accel_FAS #(
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign resdMap_bram_empty       = (resdMap_bram_count > 0);
     assign resdMap_bram_prog_full   = (resdMap_bram_count > cm_high_watermark_cfg);
@@ -703,7 +779,7 @@ module cnn_layer_accel_FAS #(
                             krnl3x3FetchCount           <= 0;
                             krnl3x3BiasFetchCount       <= 0;
                             partMapFetchCount           <= 0;
-                            prevMapFetchCount           <= 0;                            
+                            prevMapFetchCount           <= 0;
                             inMapFetchCount             <= 0;
                             krnl1x1FetchCount           <= 0;
                             krnl1x1BiasFetchCount       <= 0;
@@ -716,8 +792,8 @@ module cnn_layer_accel_FAS #(
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk)
         if(rst) begin
@@ -743,7 +819,7 @@ module cnn_layer_accel_FAS #(
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
-    
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin
         if(rst) begin
@@ -761,7 +837,7 @@ module cnn_layer_accel_FAS #(
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
-    
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin
         if(rst) begin
@@ -775,8 +851,8 @@ module cnn_layer_accel_FAS #(
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin
         if(rst) begin
@@ -799,7 +875,7 @@ module cnn_layer_accel_FAS #(
             dpth_count              <= 0;
             krnl_count              <= 0;
             buffer_update           <= 0;
-			buffer_update_in_prog   <= 0;			
+			buffer_update_in_prog   <= 0;
             convMap_bram_rden_w0    <= 0;
             partMap_bram_rden_w0    <= 0;
             resdMap_bram_rden_w0    <= 0;
@@ -874,7 +950,7 @@ module cnn_layer_accel_FAS #(
             krnl_1x1_bram_rdAddr <= 0;
             convMap_bram_rd_ofst <= 0;
   			partMap_bram_rd_ofst <= 0;
-			resdMap_bram_rd_ofst <= 0;          
+			resdMap_bram_rd_ofst <= 0;
         end else if(buffer_update) begin
             krnl_1x1_bram_rdAddr <= krnl_1x1_bram_rdAddr + 1;
 			if(opcode_cfg == `OPCODE_0;
@@ -896,9 +972,9 @@ module cnn_layer_accel_FAS #(
                     partMap_bram_rdAddr     <= partMap_bram_rdAddr + 1;
                 end
 			end else if(
-                opcode_cfg == `OPCODE_4 
-                || opcode_cfg == `OPCODE_5 
-                || opcode_cfg == `OPCODE_8) 
+                opcode_cfg == `OPCODE_4
+                || opcode_cfg == `OPCODE_5
+                || opcode_cfg == `OPCODE_8)
             begin
                 if(krnl_count == (num_1x1_kernels_cfg - 1)) begin
                     convMap_bram_rdAddr     <= convMap_bram_rdAddr  + (krnl1x1Depth_cfg >> `KRNL_1x1_DPH_SIMD_SHMAT);
@@ -917,9 +993,9 @@ module cnn_layer_accel_FAS #(
                     resdMap_bram_rdAddr     <= resdMap_bram_rdAddr + 1;
                 end
 			end else if(
-                opcode_cfg == `OPCODE_6 
-                || opcode_cfg == `OPCODE_7 
-                || opcode_cfg == `OPCODE_9 
+                opcode_cfg == `OPCODE_6
+                || opcode_cfg == `OPCODE_7
+                || opcode_cfg == `OPCODE_9
                 || opcode_cfg == `OPCODE_17)
             begin
                 if(krnl_count == (num_1x1_kernels_cfg - 1)) begin
@@ -952,9 +1028,21 @@ module cnn_layer_accel_FAS #(
 			end
         end
     end
+    
+    always@(posedge clk) begin
+        if(rst) begin
+            krnl1x1_bias_bram_rdAddr <= 0;
+        end else begin
+            if(krnl1x1_bias_bram_rden && krnl_count == num_1x1_kernels_cfg) begin
+                krnl1x1_bias_bram_rdAddr <= 0;
+            end else if(krnl1x1_bias_bram_rden) begin
+                krnl1x1_bias_bram_rdAddr <= krnl1x1_bias_bram_rdAddr + 1
+            end
+        end        
+    end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk) begin
         if(rst) begin
@@ -972,42 +1060,42 @@ module cnn_layer_accel_FAS #(
             resdMap_bram_rden_w2    <= 0;
             partMap_bram_rden_w1    <= 0;
             outBuffer_fifo_wren_w1  <= 0;
-            outBuffer_fifo_wren_w2  <= 0;            
-            if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) 
+            outBuffer_fifo_wren_w2  <= 0;
+            if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE)
                 && (opcode_cfg == `OPCODE_0
                     || opcode_cfg == `OPCODE_1
                     || opcode_cfg == `OPCODE_10
                     || opcode_cfg == `OPCODE_11)
                 && !convMap_bram_empty
                 && !partMap_bram_empty
-                && !buffer_update && !buffer_update_in_prog)                
+                && !buffer_update && !buffer_update_in_prog)
             begin
                 krnl_1x1_bram_rden <= 1;
-            end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) 
+            end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE)
                 && (opcode_cfg == `OPCODE_2
                     || opcode_cfg == `OPCODE_3
                     || opcode_cfg == `OPCODE_12
                     || opcode_cfg == `OPCODE_13
                     || opcode_cfg == `OPCODE_14)
                 && !convMap_bram_empty
-                && !buffer_update && !buffer_update_in_prog)                
+                && !buffer_update && !buffer_update_in_prog)
             begin
                 krnl_1x1_bram_rden <= 1;
-            end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) 
+            end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE)
                 && (opcode_cfg == `OPCODE_4
                     || opcode_cfg == `OPCODE_5)
                 && !convMap_bram_empty
                 && !partMap_bram_empty
                 && !resdMap_bram_empty
-                && !buffer_update && !buffer_update_in_prog)                
+                && !buffer_update && !buffer_update_in_prog)
             begin
                 krnl_1x1_bram_rden <= 1;
-            end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) 
+            end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE)
                 && (opcode_cfg == `OPCODE_6
                     || opcode_cfg == `OPCODE_7)
                 && !convMap_bram_empty
                 && !resdMap_bram_empty
-                && !buffer_update && !buffer_update_in_prog)               
+                && !buffer_update && !buffer_update_in_prog)
             begin
                 krnl_1x1_bram_rden <= 1;
             end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && opcode_cfg == `OPCODE_8
@@ -1051,7 +1139,7 @@ module cnn_layer_accel_FAS #(
 
     always@(*) begin
         if(opcode_cfg == `OPCODE_0
-            || opcode_cfg == `OPCODE_1         
+            || opcode_cfg == `OPCODE_1
             || opcode_cfg == `OPCODE_2
             || opcode_cfg == `OPCODE_3
             || opcode_cfg == `OPCODE_4
@@ -1064,12 +1152,12 @@ module cnn_layer_accel_FAS #(
             || opcode_cfg == `OPCODE_13
             || opcode_cfg == `OPCODE_14)
         begin
-            outBuf_fifo_datain = outBuf_dwc_fifo_dout; 
+            outBuf_fifo_datain = outBuf_dwc_fifo_dout;
         end else if(opcode_cfg == `OPCODE_9 || opcode_cfg == `OPCODE_17 || opcode_cfg == `OPCODE_15) begin
-			outBuf_fifo_datain = vector_add_out_0; 
+			outBuf_fifo_datain = vector_add_out_0;
         end else if(opcode_cfg == `OPCODE_8) begin
 			outBuf_fifo_datain = vector_add_out_1;
-        end 
+        end
     end
 
     always@(posedge clk)
@@ -1081,7 +1169,7 @@ module cnn_layer_accel_FAS #(
                 sys_mem_write_req_acked    <= sys_mem_write_req_ack  ? 1'b1 :  sys_mem_write_req_acked;
             end
         end
-    end    
+    end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 

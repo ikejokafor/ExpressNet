@@ -304,6 +304,10 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 `define MAX_AWP_PER_FAS						1
 `define MAX_FAS_RD_ID						4
+`define FAS_JOB_FETCH_ID                    0
+`define FAS_RES_MAP_FETCH_ID                1
+`define FAS_PART_MAP_FETCH_ID               2
+`define FAS_PREV_MAP_FETCH_ID               3
 `define KERNEL_1x1_SIMD                     1
 `define KERNEL_1x1_DEPTH_SIMD               8
 `define KRNL_1x1_DPH_SIMD_SHMAT             (clog2(`KERNEL_1x1_DEPTH_SIMD))
