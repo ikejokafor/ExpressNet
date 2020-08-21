@@ -88,50 +88,48 @@ module cnn_layer_accel_FAS #(
 
 	localparam C_VECTOR_ADD_WTH 	    = `PIXEL_WIDTH * VECTOR_ADD_SIMD;
     localparam C_SYS_MEM_RD_ADDR_WTH    = `MAX_FAS_RD_ID * `AXI_RD_ADDR_WIDTH;
-    localparam C_SYS_MEM_RD_LEN_WTH     = `MAX_FAS_RD_ID * `AXI_RD_LEN_WIDTH;
+    localparam C_SYS_MEM_RD_LEN_WTH     = `MAX_FAS_RD_ID * `RD_LEN_WIDTH;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Module Ports
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    input                                   clk     				  ;
-    input                                   rst                       ;
-    input                                   start_FAS                 ;
-    output                                  start_FAS_ack             ;
-    input  [      `CFG_DATA_WIDTH - 1:0]    cfg_data                  ;
-    output [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_req          ;
-    output [C_SYS_MEM_RD_ADDR_WTH - 1:0]    sys_mem_read_addr         ;
-    output [ C_SYS_MEM_RD_LEN_WTH - 1:0]    sys_mem_read_len          ;
-    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_req_ack      ;
-    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_in_prog      ;
-    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_cmpl         ;
-    
-    output                                  sys_mem_write_req         ;
-    output [   `AXI_RD_ADDR_WIDTH - 1:0]    sys_mem_write_addr        ;
-    output [    `AXI_RD_LEN_WIDTH - 1:0]    sys_mem_write_size        ;
-    input                                   sys_mem_write_req_ack     ;
-    input                                   sys_mem_write_in_prog     ;
-    input                                   sys_mem_write_cmpl        ;
-    input                                   trans_fifo_wren           ;
-    input                                   convMap_bram_wren         ;
-    input                                   resdMap_bram_wren         ;
-    input                                   partMap_bram_wren         ;
-    input                                   prevMap_fifo_wren         ;
-    input  [     `KERNEL_1X1_SIMD - 1:0]    krnl1x1_bram_wren         ;
-    input  [     `KERNEL_1X1_SIMD - 1:0]    krnl1x1Bias_bram_wren     ;
-    input [] trans_fifo_datain          ;
-    input [] convMap_bram_datain        ;
-    input [] resdMap_bram_datain        ;
-    input [] partMap_bram_datain        ;
-    input [] prevMap_fifo_datain        ;
-    input [] krnl1x1_bram_datain        ;
-    input [] krnl1x1Bias_bram_datain    ;
-    input    outBuf_fifo_rden           ;
-	input    outBuf_fifo_dout_valid		;
-    output [] outBuf_fifo_dout           ;
-    input [] AWP_complete               ;
-    input    send_FAS_complete          ;
-    output    FAS_complete_ack           ;
+    input                                   clk     				    ;
+    input                                   rst                         ;
+    input                                   start_FAS                   ;
+    output                                  start_FAS_ack               ;
+    input  [      `CFG_DATA_WIDTH - 1:0]    cfg_data                    ;
+    output [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_req            ;
+    output [C_SYS_MEM_RD_ADDR_WTH - 1:0]    sys_mem_read_addr           ;
+    output [ C_SYS_MEM_RD_LEN_WTH - 1:0]    sys_mem_read_len            ;
+    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_req_ack        ;
+    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_in_prog        ;
+    input  [       `MAX_FAS_RD_ID - 1:0]    sys_mem_read_cmpl           ;
+    output                                  sys_mem_write_req           ;
+    output [   `AXI_WR_ADDR_WIDTH - 1:0]    sys_mem_write_addr          ;
+    output [        `WR_LEN_WIDTH - 1:0]    sys_mem_write_len           ;
+    input                                   sys_mem_write_req_ack       ;
+    input                                   sys_mem_write_in_prog       ;
+    input                                   sys_mem_write_cmpl          ;
+    input                                   trans_fifo_wren             ;
+    input                                   convMap_bram_wren           ;
+    input                                   resdMap_bram_wren           ;
+    input                                   partMap_bram_wren           ;
+    input                                   prevMap_fifo_wren           ;
+    input  [     `KERNEL_1X1_SIMD - 1:0]    krnl1x1_bram_wren           ;
+    input  [     `KERNEL_1X1_SIMD - 1:0]    krnl1x1Bias_bram_wren       ;
+    input  [   `TRANS_FIFO_DATAIN - 1:0]    trans_fifo_datain           ;
+    input  [   `AXI_RD_DATA_WIDTH - 1:0]    resdMap_bram_datain         ;
+    input  [   `AXI_RD_DATA_WIDTH - 1:0]    partMap_bram_datain         ;
+    input  [   `AXI_RD_DATA_WIDTH - 1:0]    prevMap_fifo_datain         ;
+    input  [   `AXI_RD_DATA_WIDTH - 1:0]    krnl1x1_bram_datain         ;
+    input  [   `AXI_RD_DATA_WIDTH - 1:0]    krnl1x1Bias_bram_datain     ;
+    input                                   outBuf_fifo_rden            ;
+	input                                   outBuf_fifo_dout_valid		;
+    output [   `AXI_WR_DATA_WIDTH - 1:0]    outBuf_fifo_dout            ;
+    input  [     `MAX_AWP_PER_FAS - 1:0]    AWP_complete                ;
+    input                                   send_FAS_complete           ;
+    output                                  FAS_complete_ack            ;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -139,56 +137,59 @@ module cnn_layer_accel_FAS #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     logic [`AXI_RD_ADDR_WIDTH - 1:0] sys_mem_read_addr_arr[`MAX_FAS_RD_ID - 1:0];
         genvar g0; `UNPACK_ARRAY_1D(`AXI_RD_ADDR_WIDTH, `MAX_FAS_RD_ID , sys_mem_read_addr, sys_mem_read_addr_arr, g0);
-    logic [`AXI_RD_LEN_WIDTH - 1:0] sys_mem_read_len_arr[`MAX_FAS_RD_ID - 1:0];
-        genvar g1; `UNPACK_ARRAY_1D(`AXI_RD_LEN_WIDTH, `MAX_FAS_RD_ID , sys_mem_read_len, sys_mem_read_len_arr, g1);
-    logic [					   5:0]	    state                          	;
-	logic [					  15:0] 	krnl1x1Depth_cfg                ;
-	logic [					  15:0] 	krnl1x1Addr_cfg                 ;
-	logic [					  15:0] 	krnl1x1BiasAddr_cfg             ;
-	logic [					  15:0] 	pixelSeqAddr_cfg                ;
-	logic [					  15:0] 	partMapAddr_cfg                 ;
-	logic [					  15:0] 	resdMapAddr_cfg                 ;
-	logic [					  15:0] 	outMapAddr_cfg                  ;
-	logic [					  15:0] 	pixSeqCfgFetchTotal_cfg         ;
-	logic [					  15:0] 	inMapAddr_cfg            	    ;
-	logic [					  15:0] 	prevMapAddr_cfg			        ;
-	logic [					  15:0] 	inMapFetchFactor_cfg            ;
-	logic [					  15:0] 	inMapFetchTotal_cfg             ;
-	logic [					  15:0] 	krnl3x3Addr_cfg				    ;
-	logic [					  15:0] 	krnl3x3BiasAddr_cfg			    ;
-	logic [					  15:0] 	krnl3x3FetchTotal_cfg           ;
-	logic [					  15:0] 	krnl3x3BiasFetchTotal_cfg       ;
-	logic [					  15:0] 	krnl1x1FetchTotal_cfg           ;
-	logic [					  15:0] 	krnl1x1BiasFetchTotal_cfg       ;
-	logic [					  15:0] 	partMapFetchTotal_cfg           ;
-	logic [					  15:0] 	resdMapFetchTotal_cfg           ;
-	logic [					  15:0] 	outMapStoreTotal_cfg            ;
-	logic [					  15:0] 	outMapStoreFactor_cfg           ;
-	logic [					  15:0] 	prevMapFetchTotal_cfg           ;
-	logic [					  15:0] 	num_1x1_kernels_cfg             ;
-	logic [					  15:0] 	cm_high_watermark_cfg           ;
-	logic [					  15:0] 	rm_low_watermark_cfg            ;
-	logic [					  15:0] 	pm_low_watermark_cfg            ;
-	logic [					  15:0] 	pv_low_watermark_cfg            ;
-	logic [					  15:0] 	rm_fetch_amount_cfg             ;
-	logic [					  15:0] 	pm_fetch_amount_cfg             ;
-	logic [					  15:0] 	pv_fetch_amount_cfg             ;
-	logic [					  15:0] 	krnl1x1_pding_cfg               ;
-	logic [					  15:0] 	krnl1x1_pad_bgn_cfg             ;
-	logic [					  15:0] 	krnl1x1_pad_end_cfg             ;
-	logic [					  15:0] 	opcode_cfg                      ;
-	logic [					  15:0] 	res_high_watermark_cfg      	;
-    logic [ `MAX_AWP_PER_FAS - 1:0] 	all_AWP_complete				;
-    logic 								FAS_complete_acked				;
-    logic [ C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_0				;
-	logic [ C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_1			   	;
-	logic [ C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_2			   	;
-	logic [C_VECTOR_MULT_WTH - 1:0] 	vector_mult						;
-    logic [   `MAX_FAS_RD_ID - 1:0] 	sys_mem_read_req_acked         	;
+    logic [`RD_LEN_WIDTH - 1:0] sys_mem_read_len_arr[`MAX_FAS_RD_ID - 1:0];
+        genvar g1; `UNPACK_ARRAY_1D(`RD_LEN_WIDTH, `MAX_FAS_RD_ID , sys_mem_read_len, sys_mem_read_len_arr, g1);
+    logic [  				     5:0]	state                          	;
+	logic [  				    15:0] 	krnl1x1Depth_cfg                ;
+	logic [  				    15:0] 	krnl1x1Addr_cfg                 ;
+	logic [  				    15:0] 	krnl1x1BiasAddr_cfg             ;
+	logic [  				    15:0] 	pixelSeqAddr_cfg                ;
+	logic [  				    15:0] 	partMapAddr_cfg                 ;
+	logic [  				    15:0] 	resdMapAddr_cfg                 ;
+	logic [  				    15:0] 	outMapAddr_cfg                  ;
+	logic [  				    15:0] 	pixSeqCfgFetchTotal_cfg         ;
+	logic [  				    15:0] 	inMapAddr_cfg            	    ;
+	logic [  				    15:0] 	prevMapAddr_cfg			        ;
+	logic [  				    15:0] 	inMapFetchFactor_cfg            ;
+	logic [  				    15:0] 	inMapFetchTotal_cfg             ;
+	logic [  				    15:0] 	krnl3x3Addr_cfg				    ;
+	logic [  				    15:0] 	krnl3x3BiasAddr_cfg			    ;
+	logic [  				    15:0] 	krnl3x3FetchTotal_cfg           ;
+	logic [  				    15:0] 	krnl3x3BiasFetchTotal_cfg       ;
+	logic [  				    15:0] 	krnl1x1FetchTotal_cfg           ;
+	logic [  				    15:0] 	krnl1x1BiasFetchTotal_cfg       ;
+	logic [  				    15:0] 	partMapFetchTotal_cfg           ;
+	logic [  				    15:0] 	resdMapFetchTotal_cfg           ;
+	logic [  				    15:0] 	outMapStoreTotal_cfg            ;
+	logic [  				    15:0] 	outMapStoreFactor_cfg           ;
+	logic [  				    15:0] 	prevMapFetchTotal_cfg           ;
+	logic [  				    15:0] 	num_1x1_kernels_cfg             ;
+	logic [  				    15:0] 	cm_high_watermark_cfg           ;
+	logic [  				    15:0] 	rm_low_watermark_cfg            ;
+	logic [  				    15:0] 	pm_low_watermark_cfg            ;
+	logic [  				    15:0] 	pv_low_watermark_cfg            ;
+	logic [  				    15:0] 	rm_fetch_amount_cfg             ;
+	logic [  				    15:0] 	pm_fetch_amount_cfg             ;
+	logic [  				    15:0] 	pv_fetch_amount_cfg             ;
+	logic [  				    15:0] 	krnl1x1_pding_cfg               ;
+	logic [  				    15:0] 	krnl1x1_pad_bgn_cfg             ;
+	logic [  				    15:0] 	krnl1x1_pad_end_cfg             ;
+	logic [  				    15:0] 	opcode_cfg                      ;
+	logic [  				    15:0] 	res_high_watermark_cfg      	;
+    logic [  ` MAX_AWP_PER_FAS - 1:0] 	all_AWP_complete				;
+    logic 	  							FAS_complete_acked				;
+    logic [   C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_0				;
+	logic [   C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_1			   	;
+	logic [   C_VECTOR_ADD_WTH - 1:0] 	vector_add_out_2			   	;
+	logic [  C_VECTOR_MULT_WTH - 1:0] 	vector_mult						;
+    logic [     `MAX_FAS_RD_ID - 1:0] 	sys_mem_read_req_acked         	;
 	logic 								sys_mem_writereq_acked         	;
 	logic								conv_1x1_vld   					;
 	logic								conv_1x1_vld_r 					;
 	logic								conv_1x1_vld_d 					;
+    logic [`TRANS_FIFO_DIN_WTH - 1:0]   trans_fifo_datain               ;
+    logic [`TRANS_FIFO_DIN_WTH - 1:0]   trans_fifo_dataout              ;
+
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -201,16 +202,16 @@ module cnn_layer_accel_FAS #(
         .C_RD_PORT_HIGH_PERF   ( ),
     )
     convMap_bram (
-        .wr_clk      ( clk                  ),
-        .wrAddr      ( convMap_bram_wrAddr  ),
-        .wren        ( convMap_bram_wren    ),
-        .din         ( convMap_bram_datain  ),
-        .rd_clk      ( clk                  ),
-        .rdAddr      ( convMap_bram_rdAddr  ),
-        .rden        ( convMap_bram_rden    ),
-        .rd_mode     (),
-        .fifo_fwft   (),
-        .dout        ( convMap_bram_dout    )
+        .wr_clk      ( clk                                      ),
+        .wrAddr      ( convMap_bram_wrAddr                      ),
+        .wren        ( convMap_bram_wren                        ),
+        .din         ( trans_fifo_dataout[`TRANS_DATA_FIELD]    ),
+        .rd_clk      ( clk                                      ),
+        .rdAddr      ( convMap_bram_rdAddr                      ),
+        .rden        ( convMap_bram_rden                        ),
+        .rd_mode     ( 1'b1                                     ),
+        .fifo_fwft   ( 1'b1                                     ),
+        .dout        ( convMap_bram_dout                        )
     );
 
 
@@ -221,14 +222,14 @@ module cnn_layer_accel_FAS #(
     )
     krnl1x1_bram
     (
-        .wrAddr      (),
-        .rdAddr      (),
-        .datain      ( krnl1x1_bram_datain ),
-        .clk         ( clk ),
-        .wren        ( krnl1x1_bram_wren ),
-        .rden        (),
-        .fifo_fwft   ( 1 ),
-        .dataout     ( krnl1x1_bram_dout )
+        .wrAddr      ( krnl1x1_bram_wrAddr  ),
+        .rdAddr      ( krnl1x1_bram_rdAddr  ),
+        .datain      ( krnl1x1_bram_datain  ),
+        .clk         ( clk                  ),
+        .wren        ( krnl1x1_bram_wren    ),
+        .rden        ( krnl1x1_bram_rden    ),    
+        .fifo_fwft   ( 1                    ),
+        .dataout     ( krnl1x1_bram_dout    )
     );
 
 
@@ -239,14 +240,14 @@ module cnn_layer_accel_FAS #(
     )
     krnl1x1Bias_bram
     (
-        .wrAddr      (),
-        .rdAddr      (),
-        .datain      ( krnl1x1Bias_bram_datain ),
-        .clk         ( clk ),
-        .wren        ( krnl1x1Bias_bram_wren ),
-        .rden        (),
-        .fifo_fwft   ( 1 ),
-        .dataout     ()
+        .wrAddr      ( krnl1x1Bias_bram_wrAddr  ),
+        .rdAddr      ( krnl1x1Bias_bram_rdAddr  ),
+        .datain      ( krnl1x1Bias_bram_datain  ),
+        .clk         ( clk                      ),
+        .wren        ( krnl1x1Bias_bram_wren    ),
+        .rden        ( krnl1x1Bias_bram_rden    ),
+        .fifo_fwft   ( 1'b1                     ),
+        .dataout     ( krnl1x1Bias_bram_dout    )
     );
 
 
@@ -257,16 +258,16 @@ module cnn_layer_accel_FAS #(
         .C_RD_PORT_HIGH_PERF   ( ),
     )
     resdMap_bram (
-        wr_clk      ( clk ),
-        wrAddr      (),
-        wren        ( resdMap_bram_wren ),
-        din         ( resdMap_bram_datain ),
-        rd_clk      ( clk ),
-        rdAddr      (),
-        rden        (),
-        rd_mode     (),
-        fifo_fwft   (),
-        dout        ()
+        wr_clk      ( clk                   ),
+        wrAddr      ( resdMap_bram_wrAddr   ),
+        wren        ( resdMap_bram_wren     ),
+        din         ( resdMap_bram_datain   ),
+        rd_clk      ( clk                   ),
+        rdAddr      ( resdMap_bram_rdAddr   ),
+        rden        ( resdMap_bram_rden     ),
+        rd_mode     ( 1'b1                  ),
+        fifo_fwft   ( 1'b1                  ),
+        dout        ( resdMap_bram_dout     )
     );
 
 
@@ -277,52 +278,71 @@ module cnn_layer_accel_FAS #(
         .C_RD_PORT_HIGH_PERF   ( )
     )
     partMap_bram (
-        wr_clk      ( clk ),
-        wrAddr      (),
-        wren        ( partMap_bram_wren ),
-        din         ( partMap_bram_datain ),
-        rd_clk      ( clk ),
-        rdAddr      (),
-        rden        (),
-        rd_mode     (),
-        fifo_fwft   (),
-        dout        ()
+        wr_clk      ( clk                   ),
+        wrAddr      ( partMap_bram_wrAddr   ),
+        wren        ( partMap_bram_wren     ),
+        din         ( partMap_bram_datain   ),
+        rd_clk      ( clk                   ),
+        rdAddr      ( partMap_bram_rdAddr   ),
+        rden        ( partMap_bram_rden     ),
+        rd_mode     ( 1'b1                  ),
+        fifo_fwft   ( 1'b100000             ),
+        dout        ( partMap_bram_dout     )
     );
-
-
-    fifo_fwft_prog_full_count #(
-        .C_DATA_WIDTH = 128,
-        .C_FIFO_DEPTH = 16,
-    )
-    prevMap_fifo (
-        .clk            ( clk ),
-        .rst            ( rst ),
-        .wren           ( prevMap_fifo_wren ),
-        .rden           (),
-        .datain         ( prevMap_fifo_datain ),
-        .dataout        ( prevMap_fifo_dout   ),
-        .empty          (),
-        .full           (),
-        .thresh         (),
-        .prog_full      (),
-        .count          ()
-    );
-
 
     fifo_fwft #(
         C_DATA_WIDTH                ( ),
         C_FIFO_DEPTH                ( )
     )
-    outBuf_dwc_fifo
+    prevMap_dwc_fifo
     (
+        .clk            ( clk                       ),
+        .rst            ( rst                       ),
+        .wren           ( prevMap_dwc_fifo_wren     ),
+        .rden           ( prevMap_dwc_fifo_rden     ),
+        .datain         ( prevMap_dwc_fifo_din      ),
+        .dataout        ( prevMap_dwc_fifo_dout     ),
+        .empty          ( prevMap_dwc_fifo_empty    ),
+        .full           (                           )
+    );
+    
+    
+    fifo_fwft_prog_full_count #(
+        .C_DATA_WIDTH = 128,
+        .C_FIFO_DEPTH = 16,
+    )
+    prevMap_fifo (
         .clk            ( clk                   ),
         .rst            ( rst                   ),
-        .wren           ( trans_fifo_wren       ),
-        .rden           ( trans_fifo_rden       ),
-        .datain         ( trans_fifo_datain     ),
-        .dataout        ( trans_fifo_dataout    ),
-        .empty          ( trans_fifo_empty      ),
-        .full           (                       )
+        .wren           ( prevMap_fifo_wren     ),
+        .rden           ( prevMap_fifo_rden     ),
+        .datain         ( prevMap_fifo_din      ),
+        .dataout        ( prevMap_fifo_dout     ),
+        .empty          (                       ),
+        .full           (                       ),
+        .thresh         (                       ),
+        .prog_full      (                       ),
+        .count          ( prevMap_fifo_count    )
+    );
+
+
+    fifo_fwft_prog_full_count #(
+        C_DATA_WIDTH                ( ),
+        C_FIFO_DEPTH                ( )
+    )
+    outBuf_dwc_fifo
+    (
+        .clk            ( clk                       ),
+        .rst            ( rst                       ),
+        .wren           ( outBuf_dwc_fifo_wren      ),
+        .rden           ( outBuf_dwc_fifo_rden      ),
+        .datain         ( outBuf_dwc_fifo_din       ),
+        .dataout        ( outBuf_dwc_fifo_dout      ),
+        .empty          (                           ),
+        .full           (                           ),
+        .thresh         (                           ),
+        .prog_full      (                           ),
+        .count          ( outBuf_dwc_fifo_count     )
     );
 
 
@@ -330,7 +350,7 @@ module cnn_layer_accel_FAS #(
         .C_DATA_WIDTH   ( ),
         .C_FIFO_DEPTH   ( ),
     )
-    outputBuffer_fifo
+    outBuf_fifo
     (
         .clk            ( clk                   ),
         .rst            ( rst                   ),
@@ -347,8 +367,8 @@ module cnn_layer_accel_FAS #(
 
 
     fifo_fwft #(
-        C_DATA_WIDTH                ( ),
-        C_FIFO_DEPTH                ( )
+        C_DATA_WIDTH ( ),
+        C_FIFO_DEPTH ( )
     )
     trans_fifo
     (
@@ -358,34 +378,17 @@ module cnn_layer_accel_FAS #(
         .rden           ( trans_fifo_rden       ),
         .datain         ( trans_fifo_datain     ),
         .dataout        ( trans_fifo_dataout    ),
-        .empty          ( trans_fifo_empty      ),
-        .full           (                       )
-    );
-    
-    
-    fifo_fwft #(
-        C_DATA_WIDTH                ( ),
-        C_FIFO_DEPTH                ( )
-    )
-    prevMap_dwc_fifo
-    (
-        .clk            ( clk                   ),
-        .rst            ( rst                   ),
-        .wren           ( trans_fifo_wren       ),
-        .rden           ( trans_fifo_rden       ),
-        .datain         ( trans_fifo_datain     ),
-        .dataout        ( trans_fifo_dataout    ),
-        .empty          ( trans_fifo_empty      ),
+        .empty          (                       ),
         .full           (                       )
     );
 
 
 	vector_multiply
-	i0_vector_multiply
 	#(
 		.C_OP_WIDTH 	( `PIXEL_WIDTH 		),
 		.C_NUM_OPERANDS	( `VECTOR_MULT_SIMD )
 	(
+    i0_vector_multiply
 		.clk     			( clk 								),
 		.rst            	( rst 								),
 		.datain	            ( {vec_mult_din, krnl1x1_bram_dout}	),
@@ -569,8 +572,6 @@ module cnn_layer_accel_FAS #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    integer i0, i1;
-
 	always@(*) begin
 		if(opcode_cfg == `OPCODE_0
 			|| opcode_cfg == `OPCODE_1
@@ -594,7 +595,7 @@ module cnn_layer_accel_FAS #(
 		end
 	end
 
-	integer i1, i1;
+	integer i0, i1;
     always@(*) begin
         if(opcode_cfg == `OPCODE_8 && opcode_cfg == `OPCODE_15 && vector_add_0_d) begin
             for(i0 = 0; i0 < `VECTOR_ADD_SIMD; i0 = i0 + 1) begin
@@ -629,7 +630,14 @@ module cnn_layer_accel_FAS #(
             end
         end
 	end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
+
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+    assign outBuf_dwc_fifo_wren = conv_1x1_vld || conv_1x1_vld_d;
+    assign outBuf_dwc_fifo_din  = conv_1x1_out;
+    assign outBuf_dwc_fifo_rden = outBuf_dwc_fifo_count == `OUTBUF_DEPTH;
+    
 	always@(posedge clk) begin
 		if(rst) begin
 			conv_1x1_vld <= 0;
@@ -640,10 +648,11 @@ module cnn_layer_accel_FAS #(
 				&& opcode_cfg != `OPCODE_6 && opcode_cfg == `OPCODE_10
 				&& opcode_cfg != `OPCODE_12 && opcode_cfg == `OPCODE_14)
 			begin
-				conv_1x1_vld <= 1;
+				conv_1x1_vld            <= 1;
+                conv_1x1_out            <= adder_tree_out;
 			end else begin
                 krnl1x1_bias_bram_rden  <= 1;
-				adder_tree_out          <= adder_tree_out + krnl1x1Bias_bram_dout;
+				conv_1x1_out            <= adder_tree_out + krnl1x1Bias_bram_dout;
 				conv_1x1_vld_r          <= 1;
 			end
 		end
@@ -1109,7 +1118,7 @@ module cnn_layer_accel_FAS #(
                 vector_add_0            <= 1;
                 vector_add_1            <= 1;
                 resdMap_bram_rden_w1    <= 1;
-                outBuffer_fifo_wren_w1  <= 1;
+                outBuf_fifo_wren_w1     <= 1;
             end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && (opcode_cfg == `OPCODE_9 || opcode_cfg == `OPCODE_17)
                 && !convMap_bram_empty
                 && !resdMap_bram_empty
@@ -1118,7 +1127,7 @@ module cnn_layer_accel_FAS #(
                 convMap_bram_rden_w1    <= 1;
                 resdMap_bram_rden_w2    <= 1;
                 vector_add_0            <= 1;
-                outBuffer_fifo_wren_w2  <= 1;
+                outBuf_fifo_wren_w2     <= 1;
             end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && opcode_cfg == `OPCODE_15
                 && !convMap_bram_empty
                 && !partMap_bram_empty
@@ -1127,7 +1136,7 @@ module cnn_layer_accel_FAS #(
                 convMap_bram_rden_w1    <= 1;
                 partMap_bram_rden_w1    <= 1;
                 vector_add_0            <= 1;
-                outBuffer_fifo_wren_w2  <= 1;
+                outBuf_fifo_wren_w2     <= 1;
             end
         end
     end
@@ -1135,28 +1144,17 @@ module cnn_layer_accel_FAS #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    assign outBuf_fifo_wren = (outBuffer_fifo_wren_w1_d | outBuffer_fifo_wren_w2_d);
-
+    assign outBuf_fifo_wren = (outBuf_fifo_wren_w1_d | outBuf_fifo_wren_w2_d | outBuf_dwc_fifo_rden);
     always@(*) begin
-        if(opcode_cfg == `OPCODE_0
-            || opcode_cfg == `OPCODE_1
-            || opcode_cfg == `OPCODE_2
-            || opcode_cfg == `OPCODE_3
-            || opcode_cfg == `OPCODE_4
-            || opcode_cfg == `OPCODE_5
-            || opcode_cfg == `OPCODE_6
-            || opcode_cfg == `OPCODE_7
-            || opcode_cfg == `OPCODE_10
-            || opcode_cfg == `OPCODE_11
-            || opcode_cfg == `OPCODE_12
-            || opcode_cfg == `OPCODE_13
-            || opcode_cfg == `OPCODE_14)
+        if(opcode_cfg == `OPCODE_8) begin
+            outBuf_fifo_din = vector_add_out_1;
+        end else if(opcode_cfg == `OPCODE_9
+                   || opcode_cfg == `OPCODE_17
+                   || opcode_cfg == `OPCODE_15) 
         begin
-            outBuf_fifo_datain = outBuf_dwc_fifo_dout;
-        end else if(opcode_cfg == `OPCODE_9 || opcode_cfg == `OPCODE_17 || opcode_cfg == `OPCODE_15) begin
-			outBuf_fifo_datain = vector_add_out_0;
-        end else if(opcode_cfg == `OPCODE_8) begin
-			outBuf_fifo_datain = vector_add_out_1;
+            outBuf_fifo_din = vector_add_out_0;
+        end else if() begin
+            outBuf_fifo_din = outBuf_dwc_fifo_dout;
         end
     end
 
