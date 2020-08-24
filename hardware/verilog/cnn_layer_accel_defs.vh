@@ -306,19 +306,30 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // [8] FAS GENERAL DEFS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
+`define CONVMAP_BRAM_WR_DEPTH				256
+`define CONVMAP_BRAM_RD_DEPTH				256
+`define KRNL_1X1_BRAM_WR_DEPTH				256
+`define KRNL_1X1_BRAM_RD_DEPTH              256
+`define KRNL_1X1_BIAS_BRAM_WR_DEPTH         256
+`define KRNL_1X1_BIAS_BRAM_RD_DEPTH         256
+`define	RESDMAP_BRAM_WR_DEPTH               256
+`define	RESDMAP_BRAM_RD_DEPTH               256
+`define	PARTMAP_BRAM_WR_DEPTH               256
+`define	PARTMAP_BRAM_RD_DEPTH               256
+`define OUTBUF_FIFO_DEPTH					256
 `define MAX_AWP_PER_FAS						1
 `define MAX_FAS_RD_ID						4
 `define FAS_JOB_FETCH_ID                    0
 `define FAS_RES_MAP_FETCH_ID                1
 `define FAS_PART_MAP_FETCH_ID               2
 `define FAS_PREV_MAP_FETCH_ID               3
-`define KERNEL_1x1_SIMD                     1
-`define KERNEL_1x1_DEPTH_SIMD               8
-`define KRNL_1x1_DPH_SIMD_SHMAT             (clog2(`KERNEL_1x1_DEPTH_SIMD))
-`define KRNL_1x1_BRAM_RD_WIDTH				`KERNEL_1x1_DEPTH_SIMD
-`define VECTOR_ADD_SIMD                     `KERNEL_1x1_DEPTH_SIMD
-`define VECTOR_MULT_SIMD                    `KERNEL_1x1_DEPTH_SIMD
-`define KRNL_1x1_SIMD_SHMAT                 (clog2(`KERNEL_1x1_SIMD))
+`define KRNL_1X1_SIMD                       1
+`define KRNL_1X1_DEPTH_SIMD                 8
+`define KRNL_1X1_DPH_SIMD_SHMAT             (clog2(`KRNL_1X1_DEPTH_SIMD))
+`define KRNL_1X1_BRAM_RD_WIDTH				`KRNL_1X1_DEPTH_SIMD
+`define VECTOR_ADD_SIMD                     `KRNL_1X1_DEPTH_SIMD
+`define VECTOR_MULT_SIMD                    `KRNL_1X1_DEPTH_SIMD
+`define KRNL_1X1_SIMD_SHMAT                 (clog2(`KRNL_1X1_SIMD))
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -464,6 +475,41 @@
 `define RES_HIGH_WATERMARK_LOW			    (`OPCODE_HIGH + 1)
 `define RES_HIGH_WATERMARK_HIGH				(`RES_HIGH_WATERMARK_LOW + (`RES_HIGH_WATERMARK_WIDTH - 1))
 `define RES_HIGH_WATERMARK_FIELD			(`RES_HIGH_WATERMARK_HIGH:`RES_HIGH_WATERMARK_LOW)
+`define CFG_DATA_WIDTH						`KRNL1X1_DEPTH_WIDTH			    	\
+											+ `KRNL1X1_ADDR_WIDTH				    \
+											+ `KRNL1X1_BIAS_ADDR_WIDTH		    	\
+											+ `KRNL1X1_FETCHTOTAL_WIDTH		    	\
+											+ `KRNL1X1_BIAS_FETCHTOTAL_WIDTH	    \
+											+ `PIXEL_SEQ_ADDR_WIDTH			    	\
+											+ `PARTMAP_ADDR_WIDTH				    \
+											+ `RESDMAP_ADDR_WIDTH				    \
+											+ `OUTMAP_ADDR_WIDTH				    \
+											+ `INMAP_ADDR_WIDTH				   		\
+											+ `PREVMAP_ADDR_WIDTH				    \
+											+ `INMAP_FETCHFACTOR_WIDTH		    	\
+											+ `INMAP_FETCHTOTAL_WIDTH			    \
+											+ `KRNL3X3_ADDR_WIDTH				    \
+											+ `KRNL3X3_BIAS_ADDR_WIDTH		    	\
+											+ `KRNL3X3_FETCHTOTAL_WIDTH				\
+											+ `KRNL3X3_BIAS_FETCHTOTAL_WIDTH		\	
+											+ `PARTMAP_FETCHTOTAL_WIDTH				\
+											+ `RESDMAP_FETCHTOTAL_WIDTH		        \
+											+ `OUTMAP_STORETOTAL_WIDTH		        \
+											+ `OUTMAP_STOREFACTOR_WIDTH		        \
+											+ `PREVMAP_FETCHTOTAL_WIDTH		        \
+											+ `NUM_1X1_KERNELS_WIDTH			    \
+											+ `CM_HIGH_WATERMARK_WIDTH		        \
+											+ `RM_LOW_WATERMARK_WIDTH			    \
+											+ `PM_LOW_WATERMARK_WIDTH			    \
+											+ `PV_LOW_WATERMARK_WIDTH			    \
+											+ `RM_FETCH_AMOUNT_WIDTH			    \
+											+ `PM_FETCH_AMOUNT_WIDTH			    \
+											+ `PV_FETCH_AMOUNT_WIDTH			    \
+											+ `KRNL1X1_PDING_WIDTH			        \
+											+ `KRNL1X1_PAD_BGN_WIDTH			    \
+											+ `KRNL1X1_PAD_END_WIDTH			    \
+											+ `OPCODE_WIDTH					        \
+											+ `RES_HIGH_WATERMARK_WIDTH		        
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -476,11 +522,11 @@
 `define TRANS_OP_LOW			            0
 `define TRANS_OP_HIGH				        (`TRANS_OP_LOW + (`TRANS_OP_WIDTH  - 1))
 `define TRANS_OP_FIELD			            (`TRANS_OP_HIGH:`TRANS_OP_LOW)
-`define TRANS_DATA_WIDTH			        (`PIXEL_SIZE * 7)
+`define TRANS_DATA_WIDTH			        (`PIXEL_WIDTH * 7)
 `define TRANS_DATA_LOW			            (`TRANS_OP_HIGH + 1)
 `define TRANS_DATA_HIGH				        (`TRANS_DATA_LOW + (`TRANS_DATA_WIDTH - 1))
 `define TRANS_DATA_FIELD			        (`TRANS_DATA_HIGH:`TRANS_DATA_LOW)
-`define TRANS_FIFO_DATAIN_WIDTH             (`TRANS_OP_WIDTH + `TRANS_DATA_WIDTH)
+`define TRANS_FIFO_DT_WIH               	(`TRANS_OP_WIDTH + `TRANS_DATA_WIDTH)
 
 
 `endif
