@@ -94,25 +94,25 @@ module cnn_layer_accel_FAS #(
 	localparam C_VEC_ADD_WIDTH 	               	    = `KRNL_1X1_SIMD * `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_SYS_MEM_RD_ADDR_WTH                = `MAX_FAS_RD_ID * `AXI_RD_ADDR_WIDTH;
     localparam C_SYS_MEM_RD_LEN_WTH                 = `MAX_FAS_RD_ID * `RD_LEN_WIDTH;
+	localparam C_CONVMAP_BRAM_RD_WTH                = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_CONVMAP_WR_ADDR_WTH                = clog2(`CONVMAP_BRAM_WR_DEPTH);
     localparam C_CONVMAP_RD_ADDR_WTH                = clog2(`CONVMAP_BRAM_RD_DEPTH);
-    localparam C_CONVMAP_BRAM_DOUT_WTH              = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
 	localparam C_CONVMAP_CT_WITH   		            = clog2(`CONVMAP_BRAM_RD_DEPTH);
-	localparam C_CONVMAP_BRAM_WR_WIDTH
     localparam C_KRNL_1X1_BRAM_WR_ADDR_WTH          = clog2(`KRNL_1X1_BRAM_WR_DEPTH);
     localparam C_KRNL_1X1_BRAM_RD_ADDR_WTH          = clog2(`KRNL_1X1_BRAM_RD_DEPTH);
-    localparam C_KRNL_1X1_BRAM_DOUT_WTH             = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
+    localparam C_KRNL_1X1_BRAM_RD_WTH               = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_KRNL_1X1_BIAS_BRAM_WR_ADDR_WTH     = clog2(`KRNL_1X1_BIAS_BRAM_WR_DEPTH);
     localparam C_KRNL_1X1_BIAS_BRAM_RD_ADDR_WTH     = clog2(`KRNL_1X1_BIAS_BRAM_RD_DEPTH);
+	localparam C_KRNL_1X1_BIAS_BRAM_RD_WTH          = `PIXEL_WIDTH;
     localparam C_RESDMAP_BRAM_WR_ADDR_WTH           = clog2(`RESDMAP_BRAM_WR_DEPTH);
     localparam C_RESDMAP_BRAM_RD_ADDR_WTH           = clog2(`RESDMAP_BRAM_RD_DEPTH);
-    localparam C_RESDMAP_BRAM_DOUT_WTH              = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
+    localparam C_RESDMAP_BRAM_RD_WTH                = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_RESDMAP_BRAM_CT_WTH                = clog2(`RESDMAP_BRAM_WR_DEPTH);
     localparam C_PARTMAP_BRAM_WR_ADDR               = clog2(`PARTMAP_BRAM_WR_DEPTH);
     localparam C_PARTMAP_BRAM_RD_ADDR               = clog2(`PARTMAP_BRAM_RD_DEPTH);
-    localparam C_PARTMAP_BRAM_DOUT_WTH              = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
+    localparam C_PARTMAP_BRAM_RD_WTH                = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_PARTMAP_BRAM_CT_WTH                = clog2(`PARTMAP_BRAM_RD_DEPTH);
-    localparam C_PREVMAP_FIFO_DOUT_WTH              = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
+    localparam C_PREVMAP_FIFO_RD_WTH                = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_PREVMAP_FIFO_CT_WTH                = clog2(`KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH);
     localparam C_OUTBUF_DWC_FIFO_DIN                = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_OUTBUF_DWC_FIFO_DOUT               = `KRNL_1X1_SIMD * `PIXEL_WIDTH;
@@ -220,29 +220,25 @@ module cnn_layer_accel_FAS #(
     logic                                           vector_add_0_d             	;
     logic                                           vector_add_1               	;
     logic                                           vector_add_1_d             	;
-    logic [                   C_VEC_ADD_WTH - 1:0]  vector_add_out_0			;
-	logic [                   C_VEC_ADD_WTH - 1:0]  vector_add_out_1			;
-	logic [                   C_VEC_ADD_WTH - 1:0]  vector_add_out_2			;
-	logic [                  C_VEC_MULT_WTH - 1:0]	vector_mult					;
+    logic [                 C_VEC_ADD_WIDTH - 1:0]  vector_add_out_0			;
+	logic [                 C_VEC_ADD_WIDTH - 1:0]  vector_add_out_1			;
+	logic [                 C_VEC_ADD_WIDTH - 1:0]  vector_add_out_2			;
+	logic [                C_VEC_MULT_WIDTH - 1:0]	vector_mult					;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [                  `MAX_FAS_RD_ID - 1:0]  sys_mem_read_req_acked      ;
 	logic 								            sys_mem_writereq_acked      ;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-	logic								            conv_1x1_vld   			    ;
-	logic								            conv_1x1_vld_r 			    ;
-	logic								            conv_1x1_vld_d 			    ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 	logic [           C_CONVMAP_WR_ADDR_WTH - 1:0]  convMap_bram_wrAddr         ;
     logic                                           convMap_bram_wren           ;
     logic [           C_CONVMAP_RD_ADDR_WTH - 1:0]  convMap_bram_rdAddr         ;
     logic                                           convMap_bram_rden           ;
 	logic [              C_CONVMAP_CT_WITH - 1:0]	convMap_bram_count          ;
-    logic [         C_CONVMAP_BRAM_DOUT_WTH - 1:0]  convMap_bram_dout           ;
+    logic [           C_CONVMAP_BRAM_RD_WTH - 1:0]  convMap_bram_dout           ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    logic [     C_KRNL_1X1_BRAM_WR_ADDR_WTH - 1:0]  krnl1x1_bram_wrAddr         ;
+    logic [     C_KRNL_1X1_BRAM_WR_ADDR_WTH - 1:0]  krnl1x1_bram_wrAddr[`KRNL_1X1_SIMD];
     logic [     C_KRNL_1X1_BRAM_RD_ADDR_WTH - 1:0]  krnl1x1_bram_rdAddr         ;
     logic                                           krnl1x1_bram_rden           ;
-    logic [        C_KRNL_1X1_BRAM_DOUT_WTH - 1:0]  krnl1x1_bram_dout           ;
+    logic [          C_KRNL_1X1_BRAM_RD_WTH - 1:0]  krnl1x1_bram_dout           ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [C_KRNL_1X1_BIAS_BRAM_WR_ADDR_WTH - 1:0]	krnl1x1Bias_bram_wrAddr     ;
     logic [C_KRNL_1X1_BIAS_BRAM_RD_ADDR_WTH - 1:0]  krnl1x1Bias_bram_rdAddr     ;
@@ -253,7 +249,7 @@ module cnn_layer_accel_FAS #(
     logic                                           resdMap_bram_wren           ;
     logic [      C_RESDMAP_BRAM_RD_ADDR_WTH - 1:0]  resdMap_bram_rdAddr         ;
     logic                                           resdMap_bram_rden           ;
-    logic [         C_RESDMAP_BRAM_DOUT_WTH - 1:0]  resdMap_bram_dout           ;
+    logic [           C_RESDMAP_BRAM_RD_WTH - 1:0]  resdMap_bram_dout           ;
     logic                                           resdMap_bram_wren_w1        ;
     logic                                           resdMap_bram_rden_w1_d      ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
@@ -261,14 +257,14 @@ module cnn_layer_accel_FAS #(
     logic [          C_PARTMAP_BRAM_RD_ADDR - 1:0]  partMap_bram_rdAddr         ;
     logic                                           partMap_bram_rden           ;
     logic [           C_PARTMAP_BRAM_CT_WTH - 1:0]  partMap_bram_count          ;
-    logic [         C_PARTMAP_BRAM_DOUT_WTH - 1:0]  partMap_bram_dout           ;
+    logic [           C_PARTMAP_BRAM_RD_WTH - 1:0]  partMap_bram_dout           ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                           prevMap_dwc_fifo_rden       ;
-    logic [         C_PREVMAP_FIFO_DOUT_WTH - 1:0]  prevMap_dwc_fifo_dout       ;
+    logic [           C_PREVMAP_FIFO_RD_WTH - 1:0]  prevMap_dwc_fifo_dout       ;
     logic                                           prevMap_dwc_fifo_empty      ;
     logic                                           prevMap_fifo_wren           ;
     logic                                           prevMap_fifo_rden           ;
-    logic [         C_PREVMAP_FIFO_DOUT_WTH - 1:0]  prevMap_fifo_dout           ;
+    logic [           C_PREVMAP_FIFO_RD_WTH - 1:0]  prevMap_fifo_dout           ;
     logic [           C_PREVMAP_FIFO_CT_WTH - 1:0]  prevMap_fifo_count          ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                           outBuf_dwc_fifo_wren        ;
@@ -284,8 +280,7 @@ module cnn_layer_accel_FAS #(
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                           trans_fifo_wren             ;
     logic                                           trans_fifo_rden             ;
-    logic [           `TRANS_FIFO_DIN_WIDTH - 1:0]  trans_fifo_datain           ;
-    logic [           `TRANS_FIFO_DIN_WIDTH - 1:0]  trans_fifo_dataout          ;
+    logic [              `TRANS_FIFO_DT_WIH - 1:0]  trans_fifo_dataout          ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [                C_VEC_MULT_WIDTH - 1:0]  vec_mult_din                ;
     logic                                           vec_mult_din_vld            ;
@@ -293,7 +288,7 @@ module cnn_layer_accel_FAS #(
     logic [                C_VEC_MULT_WIDTH - 1:0]  vec_mult_dout               ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [                  `KRNL_1X1_SIMD - 1:0]  adder_tree_out_vld          ;
-    logic [              C_VECTOR_ADD_WIDTH - 1:0]  adder_tree_out              ;
+    logic [                    `PIXEL_WIDTH - 1:0]  adder_tree_out              ;
     logic                                           conv_1x1_vld   				;
     logic                                           conv_1x1_vld_r              ;
     logic                                           conv_1x1_vld_d              ;
@@ -303,10 +298,10 @@ module cnn_layer_accel_FAS #(
     //  Module Instantiations
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     xilinx_simple_dual_port_no_change_asym_width_count_2_clock_ram #(
-        .C_RAM_WR_WIDTH        ( `CONVMAP_BRAM_WR_WIDTH ),
+        .C_RAM_WR_WIDTH        ( `AXI_WR_DATA_WIDTH     ),
         .C_RAM_WR_DEPTH        ( `CONVMAP_BRAM_WR_DEPTH ),
-        .C_RAM_RD_WIDTH        ( `CONVMAP_BRAM_RD_WIDTH ),
-        .C_RD_PORT_HIGH_PERF   ( "HIGH_PERFORMANCE"		),
+        .C_RAM_RD_WIDTH        (  C_CONVMAP_BRAM_RD_WTH ),
+        .C_RD_PORT_HIGH_PERF   ( "HIGH_PERFORMANCE"		)
     )
     convMap_bram (
         .wr_clk      ( clk                                      ),
@@ -321,49 +316,58 @@ module cnn_layer_accel_FAS #(
 		.count		 ( convMap_bram_count						),
         .dout        ( convMap_bram_dout                        )
     );
+	
+	// genvar gi;
+	// generate
+	// 	for(gi = 0; gi < 
+		xilinx_simple_dual_port_no_change_asym_width_count_2_clock_ram #(
+			.C_RAM_WR_WIDTH        ( `AXI_WR_DATA_WIDTH     	),
+			.C_RAM_WR_DEPTH        ( `KRNL_1X1_BRAM_WR_DEPTH 	),
+			.C_RAM_RD_WIDTH        ( C_KRNL_1X1_BRAM_RD_WTH 	),
+			.C_RD_PORT_HIGH_PERF   ( "HIGH_PERFORMANCE"			)
+		)
+		krnl1x1_bram (
+			.wr_clk      ( clk                      ),
+			.wrAddr      ( krnl1x1_bram_wrAddr      ),
+			.wren        ( krnl1x1_bram_wren        ),
+			.din         ( krnl1x1_bram_datain		),
+			.rd_clk      ( clk                      ),
+			.rdAddr      ( krnl1x1_bram_rdAddr      ),
+			.rden        ( krnl1x1_bram_rden        ),
+			.rd_mode     ( 1'b1                     ),
+			.fifo_fwft   ( 1'b1                     ),
+			.count		 ( 							),
+			.dout        ( krnl1x1_bram_dout        )
+		);
 
 
-    xilinx_simple_dual_port_no_change_ram #(
-        .C_RAM_WIDTH       ( `KRNL_1X1_BRAM_WR_WIDTH 	),
-        .C_RAM_DEPTH       ( `KRNL_1X1_BRAM_DEPTH 		),
-        .C_RAM_PERF        ( "HIGH_PERFORMANCE"			)
-    )
-    krnl1x1_bram
-    (
-        .wrAddr      ( krnl1x1_bram_wrAddr  ),
-        .rdAddr      ( krnl1x1_bram_rdAddr  ),
-        .datain      ( krnl1x1_bram_datain  ),
-        .clk         ( clk                  ),
-        .wren        ( krnl1x1_bram_wren    ),
-        .rden        ( krnl1x1_bram_rden    ),
-        .fifo_fwft   ( 1                    ),
-        .dataout     ( krnl1x1_bram_dout    )
-    );
-
-
-    xilinx_simple_dual_port_no_change_ram #(
-        .C_RAM_WIDTH       ( ),
-        .C_RAM_DEPTH       ( ),
-        .C_RAM_PERF        ( ),
-    )
-    krnl1x1Bias_bram
-    (
-        .wrAddr      ( krnl1x1Bias_bram_wrAddr  ),
-        .rdAddr      ( krnl1x1Bias_bram_rdAddr  ),
-        .datain      ( krnl1x1Bias_bram_datain  ),
-        .clk         ( clk                      ),
-        .wren        ( krnl1x1Bias_bram_wren    ),
-        .rden        ( krnl1x1Bias_bram_rden    ),
-        .fifo_fwft   ( 1'b1                     ),
-        .dataout     ( krnl1x1Bias_bram_dout    )
-    );
+		xilinx_simple_dual_port_no_change_asym_width_count_2_clock_ram #(
+			.C_RAM_WR_WIDTH        ( `AXI_WR_DATA_WIDTH     		),
+			.C_RAM_WR_DEPTH        ( `CONVMAP_BRAM_WR_DEPTH 		),
+			.C_RAM_RD_WIDTH        ( C_KRNL_1X1_BIAS_BRAM_RD_WTH 	),
+			.C_RD_PORT_HIGH_PERF   ( "HIGH_PERFORMANCE"				)
+		)
+		krnl1x1Bias_bram (
+			.wr_clk      ( clk                      ),
+			.wrAddr      ( krnl1x1Bias_bram_wrAddr  ),
+			.wren        ( krnl1x1Bias_bram_wren    ),
+			.din         ( krnl1x1Bias_bram_datain	),
+			.rd_clk      ( clk                      ),
+			.rdAddr      ( krnl1x1Bias_bram_rdAddr	),
+			.rden        ( krnl1x1Bias_bram_rden    ),
+			.rd_mode     ( 1'b1                     ),
+			.fifo_fwft   ( 1'b1                     ),
+			.count		 ( 							),
+			.dout        ( krnl1x1Bias_bram_dout    )
+		);
+	// endgenerate
 
 
     xilinx_simple_dual_port_no_change_asym_width_count_2_clock_ram #(
-        .C_RAM_WR_WIDTH        ( ),
-        .C_RAM_WR_DEPTH        ( ),
-        .C_RAM_RD_WIDTH        ( ),
-        .C_RD_PORT_HIGH_PERF   ( ),
+        .C_RAM_WR_WIDTH        ( `AXI_WR_DATA_WIDTH 		),
+        .C_RAM_WR_DEPTH        ( `RESDMAP_BRAM_WR_DEPTH		),
+        .C_RAM_RD_WIDTH        ( C_RESDMAP_BRAM_RD_WTH		),
+        .C_RD_PORT_HIGH_PERF   ( "HIGH_PERFORMANCE"			)
     )
     resdMap_bram (
         wr_clk      ( clk                   ),
@@ -380,10 +384,10 @@ module cnn_layer_accel_FAS #(
 
 
     xilinx_simple_dual_port_no_change_asym_width_count_2_clock_ram #(
-        .C_RAM_WR_WIDTH        ( ),
-        .C_RAM_WR_DEPTH        ( ),
-        .C_RAM_RD_WIDTH        ( ),
-        .C_RD_PORT_HIGH_PERF   ( )
+        .C_RAM_WR_WIDTH        ( `AXI_WR_DATA_WIDTH 	),
+        .C_RAM_WR_DEPTH        ( `PARTMAP_BRAM_WR_DEPTH ),
+        .C_RAM_RD_WIDTH        ( C_PARTMAP_BRAM_RD_WTH 	),
+        .C_RD_PORT_HIGH_PERF   ( "HIGH_PERFORMANCE"		)
     )
     partMap_bram (
         wr_clk      ( clk                   ),
@@ -398,9 +402,10 @@ module cnn_layer_accel_FAS #(
         dout        ( partMap_bram_dout     )
     );
 
+	/*
     fifo_fwft #(
-        C_DATA_WIDTH                ( ),
-        C_FIFO_DEPTH                ( )
+        .C_DATA_WIDTH  ( ),
+        .C_FIFO_DEPTH  ( )
     )
     prevMap_dwc_fifo
     (
@@ -412,6 +417,48 @@ module cnn_layer_accel_FAS #(
         .dataout        ( prevMap_dwc_fifo_dout     ),
         .empty          ( prevMap_dwc_fifo_empty    ),
         .full           (                           )
+    );
+	
+	
+   // FIFO_SYNC_MACRO: Synchronous First-In, First-Out (FIFO) RAM Buffer
+   //                  Virtex-7
+   // Xilinx HDL Language Template, version 2018.3
+   /////////////////////////////////////////////////////////////////
+   // DATA_WIDTH | FIFO_SIZE | FIFO Depth | RDCOUNT/WRCOUNT Width //
+   // ===========|===========|============|=======================//
+   //   37-72    |  "36Kb"   |     512    |         9-bit         //
+   //   19-36    |  "36Kb"   |    1024    |        10-bit         //
+   //   19-36    |  "18Kb"   |     512    |         9-bit         //
+   //   10-18    |  "36Kb"   |    2048    |        11-bit         //
+   //   10-18    |  "18Kb"   |    1024    |        10-bit         //
+   //    5-9     |  "36Kb"   |    4096    |        12-bit         //
+   //    5-9     |  "18Kb"   |    2048    |        11-bit         //
+   //    1-4     |  "36Kb"   |    8192    |        13-bit         //
+   //    1-4     |  "18Kb"   |    4096    |        12-bit         //
+   /////////////////////////////////////////////////////////////////
+   FIFO_SYNC_MACRO  #(
+      .DEVICE				( "7SERIES"		), // Target Device: "7SERIES" 
+      .ALMOST_EMPTY_OFFSET	( 0				), // Sets the almost empty threshold
+      .ALMOST_FULL_OFFSET	( 0				),  // Sets almost full threshold
+      .DATA_WIDTH			(`PIXEL_WIDTH	), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+      .DO_REG				( 1				),     // Optional output register (0 or 1)
+      .FIFO_SIZE ("18Kb")  // Target BRAM: "18Kb" or "36Kb" 
+   ) 
+   prevMap_dwc_fifo (
+      .ALMOSTEMPTY(ALMOSTEMPTY), // 1-bit output almost empty
+      .ALMOSTFULL(ALMOSTFULL),   // 1-bit output almost full
+      .DO(DO),                   // Output data, width defined by DATA_WIDTH parameter
+      .EMPTY(EMPTY),             // 1-bit output empty
+      .FULL(FULL),               // 1-bit output full
+      .RDCOUNT(RDCOUNT),         // Output read count, width determined by FIFO depth
+      .RDERR(RDERR),             // 1-bit output read error
+      .WRCOUNT(WRCOUNT),         // Output write count, width determined by FIFO depth
+      .WRERR(WRERR),             // 1-bit output write error
+      .CLK(CLK),                 // 1-bit input clock
+      .DI(DI),                   // Input data, width defined by DATA_WIDTH parameter
+      .RDEN(RDEN),               // 1-bit input read enable
+      .RST(RST),                 // 1-bit input reset
+      .WREN(WREN)                // 1-bit input write enable
     );
 
 
@@ -434,12 +481,54 @@ module cnn_layer_accel_FAS #(
     );
 
 
+	// FIFO_DUALCLOCK_MACRO: Dual Clock First-In, First-Out (FIFO) RAM Buffer
+	//                       Virtex-7
+	// Xilinx HDL Language Template, version 2018.3
+	/////////////////////////////////////////////////////////////////
+	// DATA_WIDTH | FIFO_SIZE | FIFO Depth | RDCOUNT/WRCOUNT Width //
+	// ===========|===========|============|=======================//
+	//   37-72    |  "36Kb"   |     512    |         9-bit         //
+	//   19-36    |  "36Kb"   |    1024    |        10-bit         //
+	//   19-36    |  "18Kb"   |     512    |         9-bit         //
+	//   10-18    |  "36Kb"   |    2048    |        11-bit         //
+	//   10-18    |  "18Kb"   |    1024    |        10-bit         //
+	//    5-9     |  "36Kb"   |    4096    |        12-bit         //
+	//    5-9     |  "18Kb"   |    2048    |        11-bit         //
+	//    1-4     |  "36Kb"   |    8192    |        13-bit         //
+	//    1-4     |  "18Kb"   |    4096    |        12-bit         //
+	/////////////////////////////////////////////////////////////////
+	FIFO_DUALCLOCK_MACRO  #(
+		.ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
+		.ALMOST_FULL_OFFSET(9'h080),  // Sets almost full threshold
+		.DATA_WIDTH(0),   // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+		.DEVICE("7SERIES"),  // Target device: "7SERIES" 
+		.FIFO_SIZE ("18Kb"), // Target BRAM: "18Kb" or "36Kb" 
+		.FIRST_WORD_FALL_THROUGH ("FALSE") // Sets the FIFO FWFT to "TRUE" or "FALSE" 
+	) 
+	prevMap_fifo (
+		.ALMOSTEMPTY(ALMOSTEMPTY), // 1-bit output almost empty
+		.ALMOSTFULL(ALMOSTFULL),   // 1-bit output almost full
+		.DO(DO),                   // Output data, width defined by DATA_WIDTH parameter
+		.EMPTY(EMPTY),             // 1-bit output empty
+		.FULL(FULL),               // 1-bit output full
+		.RDCOUNT(RDCOUNT),         // Output read count, width determined by FIFO depth
+		.RDERR(RDERR),             // 1-bit output read error
+		.WRCOUNT(WRCOUNT),         // Output write count, width determined by FIFO depth
+		.WRERR(WRERR),             // 1-bit output write error
+		.DI(DI),                   // Input data, width defined by DATA_WIDTH parameter
+		.RDCLK(RDCLK),             // 1-bit input read clock
+		.RDEN(RDEN),               // 1-bit input read enable
+		.RST(RST),                 // 1-bit input reset
+		.WRCLK(WRCLK),             // 1-bit input write clock
+		.WREN(WREN)                // 1-bit input write enable
+	);
+
+
     fifo_fwft_prog_full_count #(
         C_DATA_WIDTH                ( ),
         C_FIFO_DEPTH                ( )
     )
-    outBuf_dwc_fifo
-    (
+    outBuf_dwc_fifo (
         .clk            ( clk                       ),
         .rst            ( rst                       ),
         .wren           ( outBuf_dwc_fifo_wren      ),
@@ -452,14 +541,55 @@ module cnn_layer_accel_FAS #(
         .prog_full      (                           ),
         .count          ( outBuf_dwc_fifo_count     )
     );
+	
+	
+	// FIFO_SYNC_MACRO: Synchronous First-In, First-Out (FIFO) RAM Buffer
+	//                  Virtex-7
+	// Xilinx HDL Language Template, version 2018.3
+	/////////////////////////////////////////////////////////////////
+	// DATA_WIDTH | FIFO_SIZE | FIFO Depth | RDCOUNT/WRCOUNT Width //
+	// ===========|===========|============|=======================//
+	//   37-72    |  "36Kb"   |     512    |         9-bit         //
+	//   19-36    |  "36Kb"   |    1024    |        10-bit         //
+	//   19-36    |  "18Kb"   |     512    |         9-bit         //
+	//   10-18    |  "36Kb"   |    2048    |        11-bit         //
+	//   10-18    |  "18Kb"   |    1024    |        10-bit         //
+	//    5-9     |  "36Kb"   |    4096    |        12-bit         //
+	//    5-9     |  "18Kb"   |    2048    |        11-bit         //
+	//    1-4     |  "36Kb"   |    8192    |        13-bit         //
+	//    1-4     |  "18Kb"   |    4096    |        12-bit         //
+	/////////////////////////////////////////////////////////////////
+	FIFO_SYNC_MACRO  #(
+		.DEVICE("7SERIES"), // Target Device: "7SERIES" 
+		.ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
+		.ALMOST_FULL_OFFSET(9'h080),  // Sets almost full threshold
+		.DATA_WIDTH(0), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+		.DO_REG(0),     // Optional output register (0 or 1)
+		.FIFO_SIZE ("18Kb")  // Target BRAM: "18Kb" or "36Kb" 
+	) 
+	outBuf_dwc_fifo (
+		.ALMOSTEMPTY(ALMOSTEMPTY), // 1-bit output almost empty
+		.ALMOSTFULL(ALMOSTFULL),   // 1-bit output almost full
+		.DO(DO),                   // Output data, width defined by DATA_WIDTH parameter
+		.EMPTY(EMPTY),             // 1-bit output empty
+		.FULL(FULL),               // 1-bit output full
+		.RDCOUNT(RDCOUNT),         // Output read count, width determined by FIFO depth
+		.RDERR(RDERR),             // 1-bit output read error
+		.WRCOUNT(WRCOUNT),         // Output write count, width determined by FIFO depth
+		.WRERR(WRERR),             // 1-bit output write error
+		.CLK(CLK),                 // 1-bit input clock
+		.DI(DI),                   // Input data, width defined by DATA_WIDTH parameter
+		.RDEN(RDEN),               // 1-bit input read enable
+		.RST(RST),                 // 1-bit input reset
+		.WREN(WREN)                // 1-bit input write enable
+	);
 
 
     fifo_fwft_prog_full_count #(
         .C_DATA_WIDTH   ( ),
         .C_FIFO_DEPTH   ( ),
     )
-    outBuf_fifo
-    (
+    outBuf_fifo (
         .clk            ( clk                   ),
         .rst            ( rst                   ),
         .wren           ( outBuf_fifo_wren      ),
@@ -472,7 +602,50 @@ module cnn_layer_accel_FAS #(
         .prog_full      (                       ),
         .count          (                       )
     );
-
+	
+	
+	// FIFO_DUALCLOCK_MACRO: Dual Clock First-In, First-Out (FIFO) RAM Buffer
+	//                       Virtex-7
+	// Xilinx HDL Language Template, version 2018.3
+	/////////////////////////////////////////////////////////////////
+	// DATA_WIDTH | FIFO_SIZE | FIFO Depth | RDCOUNT/WRCOUNT Width //
+	// ===========|===========|============|=======================//
+	//   37-72    |  "36Kb"   |     512    |         9-bit         //
+	//   19-36    |  "36Kb"   |    1024    |        10-bit         //
+	//   19-36    |  "18Kb"   |     512    |         9-bit         //
+	//   10-18    |  "36Kb"   |    2048    |        11-bit         //
+	//   10-18    |  "18Kb"   |    1024    |        10-bit         //
+	//    5-9     |  "36Kb"   |    4096    |        12-bit         //
+	//    5-9     |  "18Kb"   |    2048    |        11-bit         //
+	//    1-4     |  "36Kb"   |    8192    |        13-bit         //
+	//    1-4     |  "18Kb"   |    4096    |        12-bit         //
+	/////////////////////////////////////////////////////////////////
+   FIFO_DUALCLOCK_MACRO  #(
+      .ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
+      .ALMOST_FULL_OFFSET(9'h080),  // Sets almost full threshold
+      .DATA_WIDTH(0),   // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+      .DEVICE("7SERIES"),  // Target device: "7SERIES" 
+      .FIFO_SIZE ("18Kb"), // Target BRAM: "18Kb" or "36Kb" 
+      .FIRST_WORD_FALL_THROUGH ("FALSE") // Sets the FIFO FWFT to "TRUE" or "FALSE" 
+   ) 
+   outBuf_fifo (
+      .ALMOSTEMPTY(ALMOSTEMPTY), // 1-bit output almost empty
+      .ALMOSTFULL(ALMOSTFULL),   // 1-bit output almost full
+      .DO(DO),                   // Output data, width defined by DATA_WIDTH parameter
+      .EMPTY(EMPTY),             // 1-bit output empty
+      .FULL(FULL),               // 1-bit output full
+      .RDCOUNT(RDCOUNT),         // Output read count, width determined by FIFO depth
+      .RDERR(RDERR),             // 1-bit output read error
+      .WRCOUNT(WRCOUNT),         // Output write count, width determined by FIFO depth
+      .WRERR(WRERR),             // 1-bit output write error
+      .DI(DI),                   // Input data, width defined by DATA_WIDTH parameter
+      .RDCLK(RDCLK),             // 1-bit input read clock
+      .RDEN(RDEN),               // 1-bit input read enable
+      .RST(RST),                 // 1-bit input reset
+      .WRCLK(WRCLK),             // 1-bit input write clock
+      .WREN(WREN)                // 1-bit input write enable
+   );
+	
 
     fifo_fwft #(
         C_DATA_WIDTH ( ),
@@ -489,6 +662,51 @@ module cnn_layer_accel_FAS #(
         .empty          (                       ),
         .full           (                       )
     );
+	
+
+	// FIFO_DUALCLOCK_MACRO: Dual Clock First-In, First-Out (FIFO) RAM Buffer
+	//                       Virtex-7
+	// Xilinx HDL Language Template, version 2018.3
+	/////////////////////////////////////////////////////////////////
+	// DATA_WIDTH | FIFO_SIZE | FIFO Depth | RDCOUNT/WRCOUNT Width //
+	// ===========|===========|============|=======================//
+	//   37-72    |  "36Kb"   |     512    |         9-bit         //
+	//   19-36    |  "36Kb"   |    1024    |        10-bit         //
+	//   19-36    |  "18Kb"   |     512    |         9-bit         //
+	//   10-18    |  "36Kb"   |    2048    |        11-bit         //
+	//   10-18    |  "18Kb"   |    1024    |        10-bit         //
+	//    5-9     |  "36Kb"   |    4096    |        12-bit         //
+	//    5-9     |  "18Kb"   |    2048    |        11-bit         //
+	//    1-4     |  "36Kb"   |    8192    |        13-bit         //
+	//    1-4     |  "18Kb"   |    4096    |        12-bit         //
+	/////////////////////////////////////////////////////////////////
+   FIFO_DUALCLOCK_MACRO  #(
+      .ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
+      .ALMOST_FULL_OFFSET(9'h080),  // Sets almost full threshold
+      .DATA_WIDTH(0),   // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+      .DEVICE("7SERIES"),  // Target device: "7SERIES" 
+      .FIFO_SIZE ("18Kb"), // Target BRAM: "18Kb" or "36Kb" 
+      .FIRST_WORD_FALL_THROUGH ("FALSE") // Sets the FIFO FWFT to "TRUE" or "FALSE" 
+   ) 
+   trans_fifo (
+      .ALMOSTEMPTY(ALMOSTEMPTY), // 1-bit output almost empty
+      .ALMOSTFULL(ALMOSTFULL),   // 1-bit output almost full
+      .DO(DO),                   // Output data, width defined by DATA_WIDTH parameter
+      .EMPTY(EMPTY),             // 1-bit output empty
+      .FULL(FULL),               // 1-bit output full
+      .RDCOUNT(RDCOUNT),         // Output read count, width determined by FIFO depth
+      .RDERR(RDERR),             // 1-bit output read error
+      .WRCOUNT(WRCOUNT),         // Output write count, width determined by FIFO depth
+      .WRERR(WRERR),             // 1-bit output write error
+      .DI(DI),                   // Input data, width defined by DATA_WIDTH parameter
+      .RDCLK(RDCLK),             // 1-bit input read clock
+      .RDEN(RDEN),               // 1-bit input read enable
+      .RST(RST),                 // 1-bit input reset
+      .WRCLK(WRCLK),             // 1-bit input write clock
+      .WREN(WREN)                // 1-bit input write enable
+   );
+   */
+	
 
 
 	vector_multiply
@@ -509,9 +727,9 @@ module cnn_layer_accel_FAS #(
 
 
 	adder_tree #(
-        .C_NUINPUTS         ( ),
-        .C_INPUT_WIDTH      ( ),
-        .C_OUTPUT_WIDTH     ( )
+        .C_NUINPUTS         ( `KRNL_1X1_DEPTH_SIMD 	),
+        .C_INPUT_WIDTH      ( `PIXEL_WIDTH 			),
+        .C_OUTPUT_WIDTH     ( `PIXEL_WIDTH 			)
     )
     i0_adder_tree
     (
