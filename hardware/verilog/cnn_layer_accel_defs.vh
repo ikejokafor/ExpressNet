@@ -58,12 +58,13 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 //	[] AXI DEFS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define RD_LEN_WIDTH                    32
-`define WR_LEN_WIDTH                    32
+`define AXI_RD_LEN_WIDTH                32
+`define AXI_WR_LEN_WIDTH                32
 `define AXI_RD_ADDR_WIDTH               32
 `define AXI_WR_ADDR_WIDTH               32
 `define AXI_RD_DATA_WIDTH               256
 `define AXI_WR_DATA_WIDTH               256
+`define AXI_INTC_RD_WIDTH				1024
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -475,6 +476,10 @@
 `define OPCODE_LOW	                        (`KRNL1X1_PAD_END_HIGH + 1)
 `define OPCODE_HIGH							(`OPCODE_LOW + (`OPCODE_WIDTH - 1))
 `define OPCODE_FIELD						(`OPCODE_HIGH):(`OPCODE_LOW)
+`define INMAP_FETCH_AMOUNT_WIDTH			16
+`define INMAP_FETCH_AMOUNT_LOW	            (`OPCODE_HIGH + 1)
+`define INMAP_FETCH_AMOUNT_HIGH				(`INMAP_FETCH_AMOUNT_LOW + (`INMAP_FETCH_AMOUNT_WIDTH - 1))
+`define INMAP_FETCH_AMOUNT_FIELD			(`INMAP_FETCH_AMOUNT_HIGH):(`INMAP_FETCH_AMOUNT_LOW)
 `define CFG_DATA_WIDTH						(`KRNL1X1_DEPTH_WIDTH			    	\
 											+ `KRNL1X1_ADDR_WIDTH				    \
 											+ `KRNL1X1_BIAS_ADDR_WIDTH		    	\
