@@ -322,6 +322,7 @@
 `define OUTBUF_WR_WIDTH						(`KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH)
 `define OUTBUF_RD_WIDTH						`AXI_RD_DATA_WIDTH
 `define OUTBUF_FIFO_DEPTH					256
+`define OUTBUF_FIFO_DIN_FACTOR				floor(`AXI_WR_DATA_WIDTH / `PIXEL_WIDTH)
 `define MAX_AWP_PER_FAS						1
 `define MAX_FAS_RD_ID						4
 `define FAS_JOB_FETCH_ID                    0
@@ -526,7 +527,7 @@
 `define TRANS_OP_LOW			            0
 `define TRANS_OP_HIGH				        (`TRANS_OP_LOW + (`TRANS_OP_WIDTH  - 1))
 `define TRANS_OP_FIELD			            (`TRANS_OP_HIGH:`TRANS_OP_LOW)
-`define TRANS_DATA_WIDTH			        (`PIXEL_WIDTH * 7)
+`define TRANS_DATA_WIDTH			        (`PIXEL_WIDTH * 8)
 `define TRANS_DATA_LOW			            (`TRANS_OP_HIGH + 1)
 `define TRANS_DATA_HIGH				        (`TRANS_DATA_LOW + (`TRANS_DATA_WIDTH - 1))
 `define TRANS_DATA_FIELD			        (`TRANS_DATA_HIGH):(`TRANS_DATA_LOW)

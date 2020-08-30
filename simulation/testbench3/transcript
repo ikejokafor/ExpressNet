@@ -549,3 +549,56 @@ do sim_compile.do
 # 	testbench
 # End time: 14:01:35 on Aug 27,2020, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 1
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:28:36 on Aug 27,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:28:36 on Aug 27,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:28:36 on Aug 27,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(460): (vlog-2623) Undefined variable: prevMap_dwc_fifo_wren.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(462): (vlog-2623) Undefined variable: prevMap_dwc_fifo_din.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(470): near "=": syntax error, unexpected '=', expecting '('.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(510): near ")": syntax error, unexpected ')', expecting '.'.
+# End time: 16:28:37 on Aug 27,2020, Elapsed time: 0:00:01
+# Errors: 2, Warnings: 2
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:32:28 on Aug 30,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 15:32:28 on Aug 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 15:32:28 on Aug 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(472): near "=": syntax error, unexpected '=', expecting '('.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(512): near ")": syntax error, unexpected ')', expecting '.'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(841): near ":": syntax error, unexpected ':'.
+# End time: 15:32:29 on Aug 30,2020, Elapsed time: 0:00:01
+# Errors: 3, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
