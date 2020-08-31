@@ -59,9 +59,11 @@ module outbuf_fifo (
   din,
   wr_en,
   rd_en,
+  prog_full_thresh,
   dout,
   full,
   empty,
+  prog_full,
   wr_rst_busy,
   rd_rst_busy
 );
@@ -76,12 +78,14 @@ input wire [1023 : 0] din;
 input wire wr_en;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN" *)
 input wire rd_en;
+input wire [13 : 0] prog_full_thresh;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_DATA" *)
 output wire [1023 : 0] dout;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE FULL" *)
 output wire full;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *)
 output wire empty;
+output wire prog_full;
 output wire wr_rst_busy;
 output wire rd_rst_busy;
 
@@ -113,21 +117,21 @@ output wire rd_rst_busy;
     .C_HAS_WR_ACK(0),
     .C_HAS_WR_DATA_COUNT(0),
     .C_HAS_WR_RST(0),
-    .C_IMPLEMENTATION_TYPE(6),
+    .C_IMPLEMENTATION_TYPE(0),
     .C_INIT_WR_PNTR_VAL(0),
-    .C_MEMORY_TYPE(4),
+    .C_MEMORY_TYPE(2),
     .C_MIF_FILE_NAME("BlankString"),
     .C_OPTIMIZATION_MODE(0),
     .C_OVERFLOW_LOW(0),
-    .C_PRELOAD_LATENCY(2),
-    .C_PRELOAD_REGS(1),
+    .C_PRELOAD_LATENCY(1),
+    .C_PRELOAD_REGS(0),
     .C_PRIM_FIFO_TYPE("2kx18"),
     .C_PROG_EMPTY_THRESH_ASSERT_VAL(2),
     .C_PROG_EMPTY_THRESH_NEGATE_VAL(3),
     .C_PROG_EMPTY_TYPE(0),
-    .C_PROG_FULL_THRESH_ASSERT_VAL(16376),
-    .C_PROG_FULL_THRESH_NEGATE_VAL(16375),
-    .C_PROG_FULL_TYPE(0),
+    .C_PROG_FULL_THRESH_ASSERT_VAL(16382),
+    .C_PROG_FULL_THRESH_NEGATE_VAL(16381),
+    .C_PROG_FULL_TYPE(3),
     .C_RD_DATA_COUNT_WIDTH(14),
     .C_RD_DEPTH(16384),
     .C_RD_FREQ(1),
@@ -135,7 +139,7 @@ output wire rd_rst_busy;
     .C_UNDERFLOW_LOW(0),
     .C_USE_DOUT_RST(1),
     .C_USE_ECC(0),
-    .C_USE_EMBEDDED_REG(1),
+    .C_USE_EMBEDDED_REG(0),
     .C_USE_PIPELINE_REG(0),
     .C_POWER_SAVING_MODE(0),
     .C_USE_FIFO16_FLAGS(0),
@@ -304,7 +308,7 @@ output wire rd_rst_busy;
     .prog_empty_thresh(14'B0),
     .prog_empty_thresh_assert(14'B0),
     .prog_empty_thresh_negate(14'B0),
-    .prog_full_thresh(14'B0),
+    .prog_full_thresh(prog_full_thresh),
     .prog_full_thresh_assert(14'B0),
     .prog_full_thresh_negate(14'B0),
     .int_clk(1'D0),
@@ -323,7 +327,7 @@ output wire rd_rst_busy;
     .data_count(),
     .rd_data_count(),
     .wr_data_count(),
-    .prog_full(),
+    .prog_full(prog_full),
     .prog_empty(),
     .sbiterr(),
     .dbiterr(),

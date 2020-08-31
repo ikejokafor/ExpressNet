@@ -34,25 +34,8 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // [1] Includes
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`include "math.vh"
+`include "utilities.svh"
 
-
-//-----------------------------------------------------------------------------------------------------------------------------------------------
-// [2] Utilities
-//-----------------------------------------------------------------------------------------------------------------------------------------------
-`define UNPACK_ARRAY_1D(PK_WIDTH, PK_LEN, PK_SRC, PK_DEST, g)                        \
-    generate                                                                         \
-        for(g = 0; g < (PK_LEN); g = g + 1) begin                                    \
-            assign PK_DEST[g][PK_WIDTH - 1:0] = PK_SRC[(PK_WIDTH * g) +: PK_WIDTH];  \
-        end                                                                          \
-    endgenerate                                                                      \
-
-`define PACK_ARRAY_1D(PK_WIDTH, PK_LEN, PK_SRC, PK_DEST, g)                             \
-    generate                                                                            \
-        for(g = 0; g < (PK_LEN); g = g + 1) begin                                       \
-            assign PK_DEST[(PK_WIDTH * g) +: PK_WIDTH] = PK_SRC[g][PK_WIDTH - 1:0];     \
-        end                                                                             \
-    endgenerate                                                                         \
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -345,142 +328,177 @@
 `define KRNL1X1_DEPTH_LOW					0
 `define KRNL1X1_DEPTH_HIGH					(`KRNL1X1_DEPTH_LOW + (`KRNL1X1_DEPTH_WIDTH - 1))
 `define KRNL1X1_DEPTH_FIELD  				(`KRNL1X1_DEPTH_HIGH):(`KRNL1X1_DEPTH_LOW)
+
 `define KRNL1X1_ADDR_WIDTH					16
 `define KRNL1X1_ADDR_LOW					(`KRNL1X1_DEPTH_HIGH + 1)
 `define KRNL1X1_ADDR_HIGH					(`KRNL1X1_ADDR_LOW + (`KRNL1X1_ADDR_WIDTH - 1))
 `define KRNL1X1_ADDR_FIELD					(`KRNL1X1_ADDR_HIGH):(`KRNL1X1_ADDR_LOW)
+
 `define KRNL1X1_BIAS_ADDR_WIDTH				16
 `define KRNL1X1_BIAS_ADDR_LOW				(`KRNL1X1_ADDR_HIGH + 1)
 `define KRNL1X1_BIAS_ADDR_HIGH				(`KRNL1X1_BIAS_ADDR_LOW + (`KRNL1X1_BIAS_ADDR_WIDTH - 1))
 `define KRNL1X1_BIAS_ADDR_FIELD				(`KRNL1X1_BIAS_ADDR_HIGH):(`KRNL1X1_BIAS_ADDR_LOW)
+
 `define KRNL1X1_FETCHTOTAL_WIDTH			16
 `define KRNL1X1_FETCHTOTAL_LOW	            (`KRNL1X1_BIAS_ADDR_HIGH + 1)
 `define KRNL1X1_FETCHTOTAL_HIGH				(`KRNL1X1_FETCHTOTAL_LOW + (`KRNL1X1_FETCHTOTAL_WIDTH - 1))
 `define KRNL1X1_FETCHTOTAL_FIELD			(`KRNL1X1_FETCHTOTAL_HIGH):(`KRNL1X1_FETCHTOTAL_LOW)
+
 `define KRNL1X1_BIAS_FETCHTOTAL_WIDTH		16
 `define KRNL1X1_BIAS_FETCHTOTAL_LOW	 		(`KRNL1X1_FETCHTOTAL_HIGH + 1)
 `define KRNL1X1_BIAS_FETCHTOTAL_HIGH		(`KRNL1X1_BIAS_FETCHTOTAL_LOW + (`KRNL1X1_BIAS_FETCHTOTAL_WIDTH - 1))
 `define KRNL1X1_BIAS_FETCHTOTAL_FIELD		(`KRNL1X1_BIAS_FETCHTOTAL_HIGH):(`KRNL1X1_BIAS_FETCHTOTAL_LOW)
+
 `define PIXEL_SEQ_ADDR_WIDTH				16
 `define PIXEL_SEQ_ADDR_LOW					(`KRNL1X1_BIAS_FETCHTOTAL_HIGH + 1)
 `define PIXEL_SEQ_ADDR_HIGH					(`PIXEL_SEQ_ADDR_LOW + (`PIXEL_SEQ_ADDR_WIDTH - 1))
 `define PIXEL_SEQ_ADDR_FIELD				(`PIXEL_SEQ_ADDR_HIGH):(`PIXEL_SEQ_ADDR_LOW)
+
 `define PARTMAP_ADDR_WIDTH					16
 `define PARTMAP_ADDR_LOW					(`PIXEL_SEQ_ADDR_HIGH + 1)		
 `define PARTMAP_ADDR_HIGH					(`PARTMAP_ADDR_LOW + (`PARTMAP_ADDR_WIDTH - 1))
 `define PARTMAP_ADDR_FIELD					(`PARTMAP_ADDR_HIGH):(`PARTMAP_ADDR_LOW)
+
 `define RESDMAP_ADDR_WIDTH					16
 `define RESDMAP_ADDR_LOW	                (`PARTMAP_ADDR_HIGH + 1)
 `define RESDMAP_ADDR_HIGH					(`RESDMAP_ADDR_LOW + (`RESDMAP_ADDR_WIDTH - 1))
 `define RESDMAP_ADDR_FIELD					(`RESDMAP_ADDR_HIGH):(`RESDMAP_ADDR_LOW)
+
 `define OUTMAP_ADDR_WIDTH					16
 `define OUTMAP_ADDR_LOW	                    (`RESDMAP_ADDR_HIGH + 1)
 `define OUTMAP_ADDR_HIGH					(`OUTMAP_ADDR_LOW + (`OUTMAP_ADDR_WIDTH - 1))
 `define OUTMAP_ADDR_FIELD					(`OUTMAP_ADDR_HIGH):(`OUTMAP_ADDR_LOW)
+
 `define INMAP_ADDR_WIDTH					16
 `define INMAP_ADDR_LOW	                    (`OUTMAP_ADDR_HIGH + 1)
 `define INMAP_ADDR_HIGH						(`INMAP_ADDR_LOW + (`INMAP_ADDR_WIDTH - 1))
 `define INMAP_ADDR_FIELD					(`INMAP_ADDR_HIGH):(`INMAP_ADDR_LOW)
+
 `define PREVMAP_ADDR_WIDTH					16
 `define PREVMAP_ADDR_LOW	                (`INMAP_ADDR_HIGH + 1)
 `define PREVMAP_ADDR_HIGH					(`PREVMAP_ADDR_LOW + (`PREVMAP_ADDR_WIDTH - 1))
 `define PREVMAP_ADDR_FIELD					(`PREVMAP_ADDR_HIGH):(`PREVMAP_ADDR_LOW)
+
 `define INMAP_FETCHFACTOR_WIDTH				16
 `define INMAP_FETCHFACTOR_LOW	            (`PREVMAP_ADDR_HIGH + 1)
 `define INMAP_FETCHFACTOR_HIGH				(`INMAP_FETCHFACTOR_LOW + (`INMAP_FETCHFACTOR_WIDTH - 1))
 `define INMAP_FETCHFACTOR_FIELD				(`INMAP_FETCHFACTOR_HIGH):(`INMAP_FETCHFACTOR_LOW)
+
 `define INMAP_FETCHTOTAL_WIDTH				16
 `define INMAP_FETCHTOTAL_LOW	            (`INMAP_FETCHFACTOR_HIGH + 1)
 `define INMAP_FETCHTOTAL_HIGH				(`INMAP_FETCHTOTAL_LOW + (`INMAP_FETCHTOTAL_WIDTH - 1))
 `define INMAP_FETCHTOTAL_FIELD				(`INMAP_FETCHTOTAL_HIGH):(`INMAP_FETCHTOTAL_LOW)
+
 `define KRNL3X3_ADDR_WIDTH					16
 `define KRNL3X3_ADDR_LOW	                (`INMAP_FETCHTOTAL_HIGH + 1)
 `define KRNL3X3_ADDR_HIGH					(`KRNL3X3_ADDR_LOW + (`KRNL3X3_ADDR_WIDTH - 1))
 `define KRNL3X3_ADDR_FIELD					(`KRNL3X3_ADDR_HIGH):(`KRNL3X3_ADDR_LOW)
+
 `define KRNL3X3_BIAS_ADDR_WIDTH				16
 `define KRNL3X3_BIAS_ADDR_LOW	            (`KRNL3X3_ADDR_HIGH + 1)
 `define KRNL3X3_BIAS_ADDR_HIGH				(`KRNL3X3_BIAS_ADDR_LOW + (`KRNL3X3_BIAS_ADDR_WIDTH - 1))
 `define KRNL3X3_BIAS_ADDR_FIELD				(`KRNL3X3_BIAS_ADDR_HIGH):(`KRNL3X3_BIAS_ADDR_LOW)
+
 `define KRNL3X3_FETCHTOTAL_WIDTH			16
 `define KRNL3X3_FETCHTOTAL_LOW	            (`KRNL3X3_BIAS_ADDR_HIGH + 1)
 `define KRNL3X3_FETCHTOTAL_HIGH				(`KRNL3X3_FETCHTOTAL_LOW + (`KRNL3X3_FETCHTOTAL_WIDTH - 1))
 `define KRNL3X3_FETCHTOTAL_FIELD			(`KRNL3X3_FETCHTOTAL_HIGH):(`KRNL3X3_FETCHTOTAL_LOW)
+
 `define KRNL3X3_BIAS_FETCHTOTAL_WIDTH		16
 `define KRNL3X3_BIAS_FETCHTOTAL_LOW	        (`KRNL3X3_FETCHTOTAL_HIGH + 1)
 `define KRNL3X3_BIAS_FETCHTOTAL_HIGH		(`KRNL3X3_BIAS_FETCHTOTAL_LOW + (`KRNL3X3_BIAS_FETCHTOTAL_WIDTH - 1))
 `define KRNL3X3_BIAS_FETCHTOTAL_FIELD		(`KRNL3X3_BIAS_FETCHTOTAL_HIGH):(`KRNL3X3_BIAS_FETCHTOTAL_LOW)
+
 `define PARTMAP_FETCHTOTAL_WIDTH			16
 `define PARTMAP_FETCHTOTAL_LOW              (`KRNL3X3_BIAS_FETCHTOTAL_HIGH + 1)
 `define PARTMAP_FETCHTOTAL_HIGH				(`PARTMAP_FETCHTOTAL_LOW + (`PARTMAP_FETCHTOTAL_WIDTH - 1))
 `define PARTMAP_FETCHTOTAL_FIELD			(`PARTMAP_FETCHTOTAL_HIGH):(`PARTMAP_FETCHTOTAL_LOW)
+
 `define RESDMAP_FETCHTOTAL_WIDTH			16
 `define RESDMAP_FETCHTOTAL_LOW	            (`PARTMAP_FETCHTOTAL_HIGH + 1)
 `define RESDMAP_FETCHTOTAL_HIGH				(`RESDMAP_FETCHTOTAL_LOW + (`RESDMAP_FETCHTOTAL_WIDTH - 1))
-`define RESDMAP_FETCHTOTAL_FIELD			(`RESDMAP_FETCHTOTAL_HIGH):(`RESDMAP_FETCHTOTAL_LOW)		
+`define RESDMAP_FETCHTOTAL_FIELD			(`RESDMAP_FETCHTOTAL_HIGH):(`RESDMAP_FETCHTOTAL_LOW)
+	
 `define OUTMAP_STORETOTAL_WIDTH				16
 `define OUTMAP_STORETOTAL_LOW				(`RESDMAP_FETCHTOTAL_HIGH + 1)
 `define OUTMAP_STORETOTAL_HIGH				(`OUTMAP_STORETOTAL_LOW + (`OUTMAP_STORETOTAL_WIDTH - 1))
 `define OUTMAP_STORETOTAL_FIELD				(`OUTMAP_STORETOTAL_HIGH):(`OUTMAP_STORETOTAL_LOW)
+
 `define OUTMAP_STOREFACTOR_WIDTH			16
 `define OUTMAP_STOREFACTOR_LOW	            (`OUTMAP_STORETOTAL_HIGH + 1)
 `define OUTMAP_STOREFACTOR_HIGH				(`OUTMAP_STOREFACTOR_LOW + (`OUTMAP_STOREFACTOR_WIDTH - 1))
 `define OUTMAP_STOREFACTOR_FIELD			(`OUTMAP_STOREFACTOR_HIGH):(`OUTMAP_STOREFACTOR_LOW)
+
 `define PREVMAP_FETCHTOTAL_WIDTH			16
 `define PREVMAP_FETCHTOTAL_LOW	            (`OUTMAP_STOREFACTOR_HIGH + 1)
 `define PREVMAP_FETCHTOTAL_HIGH				(`PREVMAP_FETCHTOTAL_LOW + (`PREVMAP_FETCHTOTAL_WIDTH - 1))
 `define PREVMAP_FETCHTOTAL_FIELD			(`PREVMAP_FETCHTOTAL_HIGH):(`PREVMAP_FETCHTOTAL_LOW)
+
 `define NUM_1X1_KERNELS_WIDTH				16
 `define NUM_1X1_KERNELS_LOW	                (`PREVMAP_FETCHTOTAL_HIGH + 1)
 `define NUM_1X1_KERNELS_HIGH				(`NUM_1X1_KERNELS_LOW + (`NUM_1X1_KERNELS_WIDTH - 1))
 `define NUM_1X1_KERNELS_FIELD				(`NUM_1X1_KERNELS_HIGH):(`NUM_1X1_KERNELS_LOW)
+
 `define CM_HIGH_WATERMARK_WIDTH				16
 `define CM_HIGH_WATERMARK_LOW	            (`NUM_1X1_KERNELS_HIGH + 1)
 `define CM_HIGH_WATERMARK_HIGH				(`CM_HIGH_WATERMARK_LOW + (`CM_HIGH_WATERMARK_WIDTH - 1))
 `define CM_HIGH_WATERMARK_FIELD				(`CM_HIGH_WATERMARK_HIGH):(`CM_HIGH_WATERMARK_LOW)
+
 `define RM_LOW_WATERMARK_WIDTH				16
 `define RM_LOW_WATERMARK_LOW	            (`CM_HIGH_WATERMARK_HIGH + 1)
 `define RM_LOW_WATERMARK_HIGH				(`RM_LOW_WATERMARK_LOW + (`RM_LOW_WATERMARK_WIDTH - 1))
 `define RM_LOW_WATERMARK_FIELD				(`RM_LOW_WATERMARK_HIGH):(`RM_LOW_WATERMARK_LOW)
+
 `define PM_LOW_WATERMARK_WIDTH				16
 `define PM_LOW_WATERMARK_LOW	            (`RM_LOW_WATERMARK_HIGH + 1)
 `define PM_LOW_WATERMARK_HIGH				(`PM_LOW_WATERMARK_LOW + (`PM_LOW_WATERMARK_WIDTH - 1))
 `define PM_LOW_WATERMARK_FIELD				(`PM_LOW_WATERMARK_HIGH):(`PM_LOW_WATERMARK_LOW)
+
 `define PV_LOW_WATERMARK_WIDTH				16
 `define PV_LOW_WATERMARK_LOW	            (`PM_LOW_WATERMARK_HIGH + 1)
 `define PV_LOW_WATERMARK_HIGH				(`PV_LOW_WATERMARK_LOW + (`PV_LOW_WATERMARK_WIDTH - 1))
 `define PV_LOW_WATERMARK_FIELD				(`PV_LOW_WATERMARK_HIGH):(`PV_LOW_WATERMARK_LOW)
+
 `define RM_FETCH_AMOUNT_WIDTH				16
 `define RM_FETCH_AMOUNT_LOW	                (`PV_LOW_WATERMARK_HIGH + 1)
 `define RM_FETCH_AMOUNT_HIGH				(`RM_FETCH_AMOUNT_LOW + (`RM_FETCH_AMOUNT_WIDTH - 1))
 `define RM_FETCH_AMOUNT_FIELD				(`RM_FETCH_AMOUNT_HIGH):(`RM_FETCH_AMOUNT_LOW)
+
 `define PM_FETCH_AMOUNT_WIDTH				16
 `define PM_FETCH_AMOUNT_LOW	                (`RM_FETCH_AMOUNT_HIGH + 1)
 `define PM_FETCH_AMOUNT_HIGH				(`PM_FETCH_AMOUNT_LOW + (`PM_FETCH_AMOUNT_WIDTH - 1))
 `define PM_FETCH_AMOUNT_FIELD				(`PM_FETCH_AMOUNT_HIGH):(`PM_FETCH_AMOUNT_LOW)
+
 `define PV_FETCH_AMOUNT_WIDTH				16
 `define PV_FETCH_AMOUNT_LOW	                (`PM_FETCH_AMOUNT_HIGH + 1)
 `define PV_FETCH_AMOUNT_HIGH				(`PV_FETCH_AMOUNT_LOW + (`PV_FETCH_AMOUNT_WIDTH - 1))
 `define PV_FETCH_AMOUNT_FIELD				(`PV_FETCH_AMOUNT_HIGH):(`PV_FETCH_AMOUNT_LOW)
+
 `define KRNL1X1_PDING_WIDTH					16
 `define KRNL1X1_PDING_LOW	                (`PV_FETCH_AMOUNT_HIGH + 1)
 `define KRNL1X1_PDING_HIGH					(`KRNL1X1_PDING_LOW + (`KRNL1X1_PDING_WIDTH - 1))
 `define KRNL1X1_PDING_FIELD					(`KRNL1X1_PDING_HIGH):(`KRNL1X1_PDING_LOW)
+
 `define KRNL1X1_PAD_BGN_WIDTH				16
 `define KRNL1X1_PAD_BGN_LOW	                (`KRNL1X1_PDING_HIGH + 1)
 `define KRNL1X1_PAD_BGN_HIGH				(`KRNL1X1_PAD_BGN_LOW + (`KRNL1X1_PAD_BGN_WIDTH - 1))
 `define KRNL1X1_PAD_BGN_FIELD				(`KRNL1X1_PAD_BGN_HIGH):(`KRNL1X1_PAD_BGN_LOW)
+
 `define KRNL1X1_PAD_END_WIDTH				16
 `define KRNL1X1_PAD_END_LOW					(`KRNL1X1_PAD_BGN_HIGH + 1)
 `define KRNL1X1_PAD_END_HIGH				(`KRNL1X1_PAD_END_LOW + (`KRNL1X1_PAD_END_WIDTH - 1))
 `define KRNL1X1_PAD_END_FIELD				(`KRNL1X1_PAD_END_HIGH):(`KRNL1X1_PAD_END_LOW)
+
 `define OPCODE_WIDTH						16
 `define OPCODE_LOW	                        (`KRNL1X1_PAD_END_HIGH + 1)
 `define OPCODE_HIGH							(`OPCODE_LOW + (`OPCODE_WIDTH - 1))
 `define OPCODE_FIELD						(`OPCODE_HIGH):(`OPCODE_LOW)
+
 `define INMAP_FETCH_AMOUNT_WIDTH			16
 `define INMAP_FETCH_AMOUNT_LOW	            (`OPCODE_HIGH + 1)
 `define INMAP_FETCH_AMOUNT_HIGH				(`INMAP_FETCH_AMOUNT_LOW + (`INMAP_FETCH_AMOUNT_WIDTH - 1))
 `define INMAP_FETCH_AMOUNT_FIELD			(`INMAP_FETCH_AMOUNT_HIGH):(`INMAP_FETCH_AMOUNT_LOW)
+
 `define CFG_DATA_WIDTH						(`KRNL1X1_DEPTH_WIDTH			    	\
 											+ `KRNL1X1_ADDR_WIDTH				    \
 											+ `KRNL1X1_BIAS_ADDR_WIDTH		    	\
@@ -520,18 +538,9 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // [9] FAS TRANS FIELDS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define TRANS_JOB_FETCH                     0
-`define TRANS_RESULT_WRITE                  1
-`define TRANS_JOB_CMPL                      2
-`define TRANS_OP_WIDTH			            2
-`define TRANS_OP_LOW			            0
-`define TRANS_OP_HIGH				        (`TRANS_OP_LOW + (`TRANS_OP_WIDTH  - 1))
-`define TRANS_OP_FIELD			            (`TRANS_OP_HIGH:`TRANS_OP_LOW)
-`define TRANS_DATA_WIDTH			        (`PIXEL_WIDTH * 8)
-`define TRANS_DATA_LOW			            (`TRANS_OP_HIGH + 1)
-`define TRANS_DATA_HIGH				        (`TRANS_DATA_LOW + (`TRANS_DATA_WIDTH - 1))
-`define TRANS_DATA_FIELD			        (`TRANS_DATA_HIGH):(`TRANS_DATA_LOW)
-`define TRANS_FIFO_DT_WIH               	(`TRANS_OP_WIDTH + `TRANS_DATA_WIDTH)
+
+
+`define JOB_FETCH_FIFO_DT_WTH 				1
 
 
 `endif

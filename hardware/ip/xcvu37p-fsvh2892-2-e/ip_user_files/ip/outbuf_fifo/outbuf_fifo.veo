@@ -55,16 +55,18 @@
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
 outbuf_fifo your_instance_name (
-  .clk(clk),                  // input wire clk
-  .srst(srst),                // input wire srst
-  .din(din),                  // input wire [1023 : 0] din
-  .wr_en(wr_en),              // input wire wr_en
-  .rd_en(rd_en),              // input wire rd_en
-  .dout(dout),                // output wire [1023 : 0] dout
-  .full(full),                // output wire full
-  .empty(empty),              // output wire empty
-  .wr_rst_busy(wr_rst_busy),  // output wire wr_rst_busy
-  .rd_rst_busy(rd_rst_busy)  // output wire rd_rst_busy
+  .clk(clk),                            // input wire clk
+  .srst(srst),                          // input wire srst
+  .din(din),                            // input wire [1023 : 0] din
+  .wr_en(wr_en),                        // input wire wr_en
+  .rd_en(rd_en),                        // input wire rd_en
+  .prog_full_thresh(prog_full_thresh),  // input wire [13 : 0] prog_full_thresh
+  .dout(dout),                          // output wire [1023 : 0] dout
+  .full(full),                          // output wire full
+  .empty(empty),                        // output wire empty
+  .prog_full(prog_full),                // output wire prog_full
+  .wr_rst_busy(wr_rst_busy),            // output wire wr_rst_busy
+  .rd_rst_busy(rd_rst_busy)            // output wire rd_rst_busy
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 

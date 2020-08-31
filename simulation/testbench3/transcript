@@ -12,505 +12,428 @@
 # //  is prohibited from disclosure under the Trade Secrets Act,
 # //  18 U.S.C. Section 1905.
 # //
+pwd
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:04:03 on Aug 27,2020
+# Start time: 15:28:08 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:04:04 on Aug 27,2020, Elapsed time: 0:00:01
+# End time: 15:28:09 on Aug 31,2020, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:04:04 on Aug 27,2020
+# Start time: 15:28:09 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1160): (vlog-2730) Undefined variable: 'outMapStoreCount'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1192): (vlog-2163) Macro `IN is undefined.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1192): near "]": syntax error, unexpected ']'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1238): (vlog-2730) Undefined variable: 'prevMap_fifo_sz'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1238): (vlog-2730) Undefined variable: 'resfMap_bram_prog_full'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1251): (vlog-2730) Undefined variable: 'dpth_count'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1252): (vlog-2730) Undefined variable: 'krnl_count'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1253): (vlog-2730) Undefined variable: 'buffer_update'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1254): (vlog-2730) Undefined variable: 'buffer_update_in_prog'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1259): (vlog-2730) Undefined variable: 'adder_tree_datain_valid'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1265): (vlog-2730) Undefined variable: 'buffer_update'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1266): (vlog-2730) Undefined variable: 'buffer_update_in_prog'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1267): (vlog-2730) Undefined variable: 'adder_tree_datain_valid'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1271): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1273): (vlog-2730) Undefined variable: 'dpth_count'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1275): (vlog-2730) Undefined variable: 'krnl_count'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1343): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rdAddr'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1344): (vlog-2730) Undefined variable: 'convMap_bram_rd_ofst'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1345): (vlog-2730) Undefined variable: 'partMap_bram_rd_ofst'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1346): (vlog-2730) Undefined variable: 'resdMap_bram_rd_ofst'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1347): (vlog-2730) Undefined variable: 'buffer_update'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1348): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rdAddr'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1349): near ";": syntax error, unexpected ';'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1358): (vlog-2730) Undefined variable: 'convMap_bram_rd_ofst'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1359): (vlog-2730) Undefined variable: 'partMap_bram_rd_ofst'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1360): (vlog-2730) Undefined variable: 'dpth_count'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1361): (vlog-2730) Undefined variable: 'convMap_bram_rd_ofst'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1362): (vlog-2730) Undefined variable: 'partMap_bram_rd_ofst'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1367): near "else": syntax error, unexpected else.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1373): (vlog-13205) Syntax error found in the scope following 'partMap_bram_rdAddr'. Is there a missing '::'?
-# End time: 13:04:05 on Aug 27,2020, Elapsed time: 0:00:01
-# Errors: 30, Warnings: 0
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(126): near "localparam": syntax error, unexpected localparam, expecting ';' or ','.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(128): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(128): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(129): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(129): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175): (vlog-2730) Undefined variable: 'C_KRNL1X1_BRAM_DIN_WTH'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(176): (vlog-2730) Undefined variable: 'C_KRNL1X1BIAS_BRAM_DIN_WTH'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(190): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): near ")": syntax error, unexpected ')'.
+# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): (vlog-13205) Syntax error found in the scope following 'g2'. Is there a missing '::'?
+# End time: 15:28:09 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 11, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:19:43 on Aug 27,2020
+# Start time: 15:30:13 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:19:44 on Aug 27,2020, Elapsed time: 0:00:01
+# End time: 15:30:13 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:19:44 on Aug 27,2020
+# Start time: 15:30:13 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1281): (vlog-2730) Undefined variable: 'krnl1X1_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1353): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rdAddr'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1358): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rdAddr'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1359): near ";": syntax error, unexpected ';'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1377): near "else": syntax error, unexpected else.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1383): (vlog-13205) Syntax error found in the scope following 'partMap_bram_rdAddr'. Is there a missing '::'?
-# End time: 13:19:44 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 6, Warnings: 0
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(128): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(128): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(129): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(129): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175): (vlog-2730) Undefined variable: 'C_KRNL1X1_BRAM_DIN_WTH'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(176): (vlog-2730) Undefined variable: 'C_KRNL1X1BIAS_BRAM_DIN_WTH'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(190): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): near ")": syntax error, unexpected ')'.
+# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): (vlog-13205) Syntax error found in the scope following 'g2'. Is there a missing '::'?
+# End time: 15:30:13 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 10, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:21:20 on Aug 27,2020
+# Start time: 15:31:30 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:21:21 on Aug 27,2020, Elapsed time: 0:00:01
+# End time: 15:31:30 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:21:21 on Aug 27,2020
+# Start time: 15:31:30 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1358): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rdAddr'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1359): near ";": syntax error, unexpected ';'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1377): near "else": syntax error, unexpected else.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1383): (vlog-13205) Syntax error found in the scope following 'partMap_bram_rdAddr'. Is there a missing '::'?
-# End time: 13:21:21 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 4, Warnings: 0
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(128): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(128): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(129): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(129): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175): (vlog-2730) Undefined variable: 'C_KRNL1X1_BRAM_DIN_WTH'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(176): (vlog-2730) Undefined variable: 'C_KRNL1X1BIAS_BRAM_DIN_WTH'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(190): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): near ")": syntax error, unexpected ')'.
+# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): (vlog-13205) Syntax error found in the scope following 'g2'. Is there a missing '::'?
+# End time: 15:31:30 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 10, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:21:37 on Aug 27,2020
+# Start time: 15:32:28 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:21:38 on Aug 27,2020, Elapsed time: 0:00:01
+# End time: 15:32:28 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:21:38 on Aug 27,2020
+# Start time: 15:32:28 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1359): near ";": syntax error, unexpected ';'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1377): near "else": syntax error, unexpected else.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1383): (vlog-13205) Syntax error found in the scope following 'partMap_bram_rdAddr'. Is there a missing '::'?
-# End time: 13:21:38 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 3, Warnings: 0
-# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
-# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-#     while executing
-# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
-# ** Warning: (vlib-34) Library already exists at "work".
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:22:03 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
-# -- Compiling module glbl
-# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
-# 
-# Top level modules:
-# 	glbl
-# End time: 13:22:03 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 1
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:22:04 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
-# -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1434): (vlog-2730) Undefined variable: 'krnl1x1_bias_bram_rdAddr'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1436): (vlog-2730) Undefined variable: 'krnl1x1_bias_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1437): (vlog-2730) Undefined variable: 'krnl1x1_bias_bram_rdAddr'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1439): (vlog-2730) Undefined variable: 'krnl1x1_bias_bram_rdAddr'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1440): near "end": syntax error, unexpected end, expecting ';'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1457): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w1'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1458): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w2'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1460): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1468): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w1'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1469): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w2'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1579): near "always": syntax error, unexpected always.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1598): (vlog-13205) Syntax error found in the scope following 'sys_mem_write_req_acked'. Is there a missing '::'?
-# End time: 13:22:04 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 12, Warnings: 0
-# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
-# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-#     while executing
-# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
-# ** Warning: (vlib-34) Library already exists at "work".
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:23:20 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
-# -- Compiling module glbl
-# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
-# 
-# Top level modules:
-# 	glbl
-# End time: 13:23:20 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 1
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:23:20 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
-# -- Compiling module cnn_layer_accel_FAS
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1440): near "end": syntax error, unexpected end, expecting ';'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1457): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w1'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1458): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w2'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1460): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1468): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w1'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1469): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w2'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1579): near "always": syntax error, unexpected always.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1598): (vlog-13205) Syntax error found in the scope following 'sys_mem_write_req_acked'. Is there a missing '::'?
-# End time: 13:23:20 on Aug 27,2020, Elapsed time: 0:00:00
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(190): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(192): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(330): (vlog-2388) 'outBuf_dwc_fifo_rd_vld' already declared in this scope (cnn_layer_accel_FAS) at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(328).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(342): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(343): (vlog-13169) Packed dimension must specify a range.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(391): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(391): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(391): (vlog-13205) Syntax error found in the scope following 'g4'. Is there a missing '::'?
+# End time: 15:32:28 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 8, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:24:37 on Aug 27,2020
+# Start time: 15:33:03 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:24:37 on Aug 27,2020, Elapsed time: 0:00:00
+# End time: 15:33:03 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:24:37 on Aug 27,2020
+# Start time: 15:33:03 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1449): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1460): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1468): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w1'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1469): (vlog-2730) Undefined variable: 'outBuffer_fifo_wren_w2'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1581): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1586): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1587): near ")": syntax error, unexpected ')'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1598): (vlog-13205) Syntax error found in the scope following 'sys_mem_write_req_acked'. Is there a missing '::'?
-# End time: 13:24:37 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 8, Warnings: 0
-# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
-# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-#     while executing
-# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
-# ** Warning: (vlib-34) Library already exists at "work".
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:24:54 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
-# -- Compiling module glbl
-# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
-# 
-# Top level modules:
-# 	glbl
-# End time: 13:24:54 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 1
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:24:54 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
-# -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1449): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1460): (vlog-2730) Undefined variable: 'krnl_1X1_bram_rden'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1581): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1586): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1587): near ")": syntax error, unexpected ')'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1598): (vlog-13205) Syntax error found in the scope following 'sys_mem_write_req_acked'. Is there a missing '::'?
-# End time: 13:24:54 on Aug 27,2020, Elapsed time: 0:00:00
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(330): (vlog-2388) 'outBuf_dwc_fifo_rd_vld' already declared in this scope (cnn_layer_accel_FAS) at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(328).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(342): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(343): (vlog-13169) Packed dimension must specify a range.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(391): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(391): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(391): (vlog-13205) Syntax error found in the scope following 'g4'. Is there a missing '::'?
+# End time: 15:33:03 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 6, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:39:14 on Aug 27,2020
+# Start time: 15:35:12 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:39:15 on Aug 27,2020, Elapsed time: 0:00:01
+# End time: 15:35:12 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:39:15 on Aug 27,2020
+# Start time: 15:35:12 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1599): (vlog-2730) Undefined variable: 'outBuf_fifo_prog_full'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1604): near "end": syntax error, unexpected end.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1612): (vlog-2730) Undefined variable: 'state_s'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(69): (vlog-2730) Undefined variable: 'convMap_bram_datain'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(69): (vlog-13294) Identifier must be declared with a port mode: convMap_bram_datain.
-# End time: 13:39:15 on Aug 27,2020, Elapsed time: 0:00:00
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(341): (vlog-13169) Packed dimension must specify a range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(342): (vlog-13169) Packed dimension must specify a range.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): (vlog-13205) Syntax error found in the scope following 'g4'. Is there a missing '::'?
+# End time: 15:35:12 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 5, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:39:51 on Aug 27,2020
+# Start time: 15:35:44 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:39:52 on Aug 27,2020, Elapsed time: 0:00:01
+# End time: 15:35:44 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:39:52 on Aug 27,2020
+# Start time: 15:35:44 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(69): (vlog-2730) Undefined variable: 'convMap_bram_datain'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(69): (vlog-13294) Identifier must be declared with a port mode: convMap_bram_datain.
-# End time: 13:39:52 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 2, Warnings: 0
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): (vlog-2163) Macro `KRNK_1X1_SIMD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): near ";": syntax error, unexpected ';'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): (vlog-13205) Syntax error found in the scope following 'g4'. Is there a missing '::'?
+# End time: 15:35:45 on Aug 31,2020, Elapsed time: 0:00:01
+# Errors: 3, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:42:34 on Aug 27,2020
+# Start time: 15:36:13 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:42:34 on Aug 27,2020, Elapsed time: 0:00:00
+# End time: 15:36:13 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:42:34 on Aug 27,2020
+# Start time: 15:36:13 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(98): (vlog-2163) Macro `RD_LEN_WIDTH is undefined.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(98): near ";": syntax error, unexpected ';'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(142): (vlog-2730) Undefined variable: 'C_SYS_MEM_RD_LEN_WTH'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(148): (vlog-2163) Macro `WR_LEN_WIDTH is undefined.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(179): (vlog-2163) Macro `RD_LEN_WIDTH is undefined.
-# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(180)
-# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(180): (vlog-2163) Macro `RD_LEN_WIDTH is undefined.
-# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(180)
-# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(180): (vlog-2163) Macro `RD_LEN_WIDTH is undefined.
-# ** Error: (vlog-13069) ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(180)
-# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(180): near "*": syntax error, unexpected '*'.
-# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(180)
-# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(180): (vlog-2163) Macro `RD_LEN_WIDTH is undefined.
-# End time: 13:42:34 on Aug 27,2020, Elapsed time: 0:00:00
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(390): near "=": syntax error, unexpected '=', expecting ++ or --.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(527): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_full'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(529): near "end": syntax error, unexpected end.
+# ** Error: (vlog-13060) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(534): near "generate": Cannot nest generate regions.  Try removing inner generate/endgenerate keyword pair.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(535): (vlog-13205) Syntax error found in the scope following 'g5'. Is there a missing '::'?
+# End time: 15:36:13 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 5, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:09:31 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:09:31 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:09:31 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(405): near "[": syntax error, unexpected '['.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(691): (vlog-2730) Undefined variable: 'clk'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(868): near ":": syntax error, unexpected ':'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(876): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1059): (vlog-2730) Undefined variable: 'partMap_bram_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1076): (vlog-2730) Undefined variable: 'prevMap_fifo_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1091): (vlog-2730) Undefined variable: 'resdMap_bram_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1424): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1429): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1431): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1433): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 16:09:32 on Aug 31,2020, Elapsed time: 0:00:01
+# Errors: 11, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:09:40 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:09:40 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:09:40 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(405): near "[": syntax error, unexpected '['.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(691): (vlog-2730) Undefined variable: 'clk'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(868): near ":": syntax error, unexpected ':'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(876): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1059): (vlog-2730) Undefined variable: 'partMap_bram_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1076): (vlog-2730) Undefined variable: 'prevMap_fifo_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1091): (vlog-2730) Undefined variable: 'resdMap_bram_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1424): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1429): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1431): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1433): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 16:09:40 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 11, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:11:09 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:11:09 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:11:10 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(868): near ":": syntax error, unexpected ':'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(876): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1059): (vlog-2730) Undefined variable: 'partMap_bram_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1076): (vlog-2730) Undefined variable: 'prevMap_fifo_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1091): (vlog-2730) Undefined variable: 'resdMap_bram_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1424): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1429): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1431): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1433): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 16:11:10 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 9, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:44:37 on Aug 27,2020
+# Start time: 16:12:54 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:44:37 on Aug 27,2020, Elapsed time: 0:00:00
+# End time: 16:12:54 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:44:37 on Aug 27,2020
+# Start time: 16:12:54 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(141): In, out, or inout does not appear in port list: sys_mem_read_addr.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(142): In, out, or inout does not appear in port list: sys_mem_read_len.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(147): In, out, or inout does not appear in port list: sys_mem_write_addr.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(148): In, out, or inout does not appear in port list: sys_mem_write_len.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1111): (vlog-2110) Illegal reference to net "send_FAS_complete".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1117): (vlog-2110) Illegal reference to net "start_FAS_ack".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1127): (vlog-2110) Illegal reference to net "start_FAS_ack".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1164): (vlog-2110) Illegal reference to net "send_FAS_complete".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1197): (vlog-2110) Illegal reference to net "sys_mem_read_req".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1201): (vlog-2110) Illegal reference to net "sys_mem_read_req".
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1205): (vlog-2697) MSB 559 of part-select into 'cfg_data' is out of bounds.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1205): (vlog-2697) LSB 544 of part-select into 'cfg_data' is out of bounds.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1215): (vlog-2110) Illegal reference to net "sys_mem_read_req".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1222): (vlog-2110) Illegal reference to net "sys_mem_read_req".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1233): (vlog-2110) Illegal reference to net "sys_mem_read_req".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1237): (vlog-2110) Illegal reference to net "sys_mem_read_req".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1248): (vlog-2110) Illegal reference to net "sys_mem_read_req".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1252): (vlog-2110) Illegal reference to net "sys_mem_read_req".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1254): (vlog-2110) Illegal reference to net "sys_mem_read_in_prog".
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1602): (vlog-2110) Illegal reference to net "sys_mem_write_req".
-# End time: 13:44:37 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 18, Warnings: 2
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(876): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1059): (vlog-2730) Undefined variable: 'partMap_bram_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1076): (vlog-2730) Undefined variable: 'prevMap_fifo_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1091): (vlog-2730) Undefined variable: 'resdMap_bram_prog_full'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1424): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1429): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1431): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1433): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 16:12:55 on Aug 31,2020, Elapsed time: 0:00:01
+# Errors: 8, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
+# Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:50:12 on Aug 27,2020
+# Start time: 17:19:37 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 13:50:12 on Aug 27,2020, Elapsed time: 0:00:00
+# End time: 17:19:37 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:50:12 on Aug 27,2020
+# Start time: 17:19:37 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(253): (vlog-2388) 'convMap_bram_wren' already declared in this scope (cnn_layer_accel_FAS) at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(158).
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(275): (vlog-2388) 'resdMap_bram_wren' already declared in this scope (cnn_layer_accel_FAS) at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(159).
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(305): (vlog-2388) 'prevMap_fifo_wren' already declared in this scope (cnn_layer_accel_FAS) at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(161).
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(327): (vlog-2388) 'trans_fifo_wren' already declared in this scope (cnn_layer_accel_FAS) at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(157).
-# End time: 13:50:12 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 4, Warnings: 0
-# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 8
-# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-#     while executing
-# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
-# ** Warning: (vlib-34) Library already exists at "work".
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:51:00 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
-# -- Compiling module glbl
-# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
-# 
-# Top level modules:
-# 	glbl
-# End time: 13:51:01 on Aug 27,2020, Elapsed time: 0:00:01
-# Errors: 0, Warnings: 1
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:51:01 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
-# -- Compiling module cnn_layer_accel_FAS
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1205): (vlog-2697) MSB 559 of part-select into 'cfg_data' is out of bounds.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1205): (vlog-2697) LSB 544 of part-select into 'cfg_data' is out of bounds.
-# 
-# Top level modules:
-# 	cnn_layer_accel_FAS
-# End time: 13:51:01 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 2
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 13:51:01 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
-# -- Compiling module testbench
-# ** Error: ./testbench.sv(33): Cannot find `include file "math.svh" in directories:
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(89): Cannot find `include file "utilies.svh" in directories:
 #     /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/, /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/, /home/software/mentor-2019/questasim/ovm-2.1.2/../verilog_src/ovm-2.1.2/src, /home/software/mentor-2019/questasim/uvm-1.1d/../verilog_src/uvm-1.1d/src
-# ** Error: ./testbench.sv(43): (vlog-2730) Undefined variable: 'VECTOR_ADD_SIMD'.
-# ** Error: ./testbench.sv(45): (vlog-2163) Macro `RD_LEN_WIDTH is undefined.
-# ** Error: (vlog-13069) ./testbench.sv(45): near ";": syntax error, unexpected ';'.
-# ** Error: ./testbench.sv(63): (vlog-2730) Undefined variable: 'C_SYS_MEM_RD_LEN_WTH'.
-# ** Error: ./testbench.sv(69): (vlog-2163) Macro `WR_LEN_WIDTH is undefined.
-# ** Warning: ./testbench.sv(100): (vlog-2623) Undefined variable: clk_core.
-# ** Warning: ./testbench.sv(127): (vlog-2623) Undefined variable: convMap_bram_datain.
-# End time: 13:51:01 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 6, Warnings: 2
-# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 9
-# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-#     while executing
-# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
-# ** Warning: (vlib-34) Library already exists at "work".
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 14:00:15 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
-# -- Compiling module glbl
-# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
-# 
-# Top level modules:
-# 	glbl
-# End time: 14:00:15 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 1
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 14:00:15 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
-# -- Compiling module cnn_layer_accel_FAS
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1205): (vlog-2697) MSB 559 of part-select into 'cfg_data' is out of bounds.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1205): (vlog-2697) LSB 544 of part-select into 'cfg_data' is out of bounds.
-# 
-# Top level modules:
-# 	cnn_layer_accel_FAS
-# End time: 14:00:16 on Aug 27,2020, Elapsed time: 0:00:01
-# Errors: 0, Warnings: 2
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 14:00:16 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
-# -- Compiling module testbench
-# ** Error: ./testbench.sv(33): Cannot find `include file "math.svh" in directories:
+# ** Error: ** while parsing file included at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(90)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh(37): Cannot find `include file "utilites.svh" in directories:
 #     /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/, /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/, /home/software/mentor-2019/questasim/ovm-2.1.2/../verilog_src/ovm-2.1.2/src, /home/software/mentor-2019/questasim/uvm-1.1d/../verilog_src/uvm-1.1d/src
-# ** Error: ./testbench.sv(43): (vlog-2730) Undefined variable: 'VECTOR_ADD_SIMD'.
-# ** Error: ./testbench.sv(45): (vlog-2163) Macro `RD_LEN_WIDTH is undefined.
-# ** Error: (vlog-13069) ./testbench.sv(45): near ";": syntax error, unexpected ';'.
-# ** Error: ./testbench.sv(66): (vlog-2730) Undefined variable: 'C_SYS_MEM_RD_LEN_WTH'.
-# ** Warning: ./testbench.sv(104): (vlog-2623) Undefined variable: clk_core.
-# End time: 14:00:16 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 5, Warnings: 1
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(172): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): (vlog-2163) Macro `UNPACK_ARRAY_1D is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(191): near "(": syntax error, unexpected '('.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(193): (vlog-2163) Macro `UNPACK_ARRAY_1D is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(193): near "(": syntax error, unexpected '('.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(195): (vlog-2163) Macro `UNPACK_ARRAY_1D is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(195): near "(": syntax error, unexpected '('.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(197): (vlog-2163) Macro `UNPACK_ARRAY_1D is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(197): near "(": syntax error, unexpected '('.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(354): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(886): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1444): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1449): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1451): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1453): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 17:19:37 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 17, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 # Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
@@ -519,58 +442,31 @@ do sim_compile.do
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 14:01:34 on Aug 27,2020
+# Start time: 17:20:23 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 14:01:34 on Aug 27,2020, Elapsed time: 0:00:00
+# End time: 17:20:23 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 14:01:34 on Aug 27,2020
+# Start time: 17:20:23 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1205): (vlog-2697) MSB 559 of part-select into 'cfg_data' is out of bounds.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1205): (vlog-2697) LSB 544 of part-select into 'cfg_data' is out of bounds.
-# 
-# Top level modules:
-# 	cnn_layer_accel_FAS
-# End time: 14:01:34 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 2
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 14:01:34 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
-# -- Compiling module testbench
-# ** Warning: ./testbench.sv(128): (vlog-2623) Undefined variable: clk_core.
-# 
-# Top level modules:
-# 	testbench
-# End time: 14:01:35 on Aug 27,2020, Elapsed time: 0:00:01
-# Errors: 0, Warnings: 1
-do sim_compile.do
-# ** Warning: (vlib-34) Library already exists at "work".
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 16:28:36 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
-# -- Compiling module glbl
-# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
-# 
-# Top level modules:
-# 	glbl
-# End time: 16:28:36 on Aug 27,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 1
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 16:28:36 on Aug 27,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
-# -- Compiling module cnn_layer_accel_FAS
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(460): (vlog-2623) Undefined variable: prevMap_dwc_fifo_wren.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(462): (vlog-2623) Undefined variable: prevMap_dwc_fifo_din.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(470): near "=": syntax error, unexpected '=', expecting '('.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(510): near ")": syntax error, unexpected ')', expecting '.'.
-# End time: 16:28:37 on Aug 27,2020, Elapsed time: 0:00:01
-# Errors: 2, Warnings: 2
+# ** Error: ** while parsing file included at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(90)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh(37): Cannot find `include file "utilites.svh" in directories:
+#     /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/, /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/, /home/software/mentor-2019/questasim/ovm-2.1.2/../verilog_src/ovm-2.1.2/src, /home/software/mentor-2019/questasim/uvm-1.1d/../verilog_src/uvm-1.1d/src
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(172): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(354): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(886): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1444): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1449): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1451): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1453): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 17:20:23 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 8, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 # Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
@@ -579,24 +475,198 @@ do sim_compile.do
 do sim_compile.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 15:32:28 on Aug 30,2020
+# Start time: 17:20:51 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 15:32:28 on Aug 30,2020, Elapsed time: 0:00:00
+# End time: 17:20:51 on Aug 31,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 15:32:28 on Aug 30,2020
+# Start time: 17:20:51 on Aug 31,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(472): near "=": syntax error, unexpected '=', expecting '('.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(512): near ")": syntax error, unexpected ')', expecting '.'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(841): near ":": syntax error, unexpected ':'.
-# End time: 15:32:29 on Aug 30,2020, Elapsed time: 0:00:01
-# Errors: 3, Warnings: 0
+# ** Error: ** while parsing file included at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(90)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog//cnn_layer_accel_defs.vh(37): Cannot find `include file "utilites.svh" in directories:
+#     /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/, /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/, /home/software/mentor-2019/questasim/ovm-2.1.2/../verilog_src/ovm-2.1.2/src, /home/software/mentor-2019/questasim/uvm-1.1d/../verilog_src/uvm-1.1d/src
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(172): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(354): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(886): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1444): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1449): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1451): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1453): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 17:20:52 on Aug 31,2020, Elapsed time: 0:00:01
+# Errors: 8, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:21:21 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:21:21 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:21:21 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(172): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(354): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(886): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1444): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1449): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1451): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1453): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 17:21:21 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 7, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:29:59 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:29:59 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:29:59 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(172): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(386): (vlog-2163) Macro `TRANS_DATA_FIELD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(386): near "]": syntax error, unexpected ']'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(386): (vlog-2730) Undefined variable: 'job_fetch_fifo_dataout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(886): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(997): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1051): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1054): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1445): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1450): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1452): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1454): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 17:30:00 on Aug 31,2020, Elapsed time: 0:00:01
+# Errors: 12, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:32:45 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:32:45 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:32:45 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(386): (vlog-2163) Macro `TRANS_DATA_FIELD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(386): near "]": syntax error, unexpected ']'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(386): (vlog-2730) Undefined variable: 'job_fetch_fifo_dataout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(886): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(997): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1051): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1054): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1445): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1450): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1452): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1454): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# End time: 17:32:46 on Aug 31,2020, Elapsed time: 0:00:01
+# Errors: 11, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:48:35 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:48:35 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:48:35 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(388): (vlog-2163) Macro `TRANS_DATA_FIELD is undefined.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(388): near "]": syntax error, unexpected ']'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(388): (vlog-2730) Undefined variable: 'job_fetch_fifo_dataout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(888): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(999): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1053): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1056): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1447): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1452): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1454): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1456): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(83): (vlog-13294) Identifier must be declared with a port mode: outBuf_fifo_wren.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(84): (vlog-13294) Identifier must be declared with a port mode: outBuf_fifo_datain.
+# End time: 18:48:35 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 13, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:55:52 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:55:52 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:55:52 on Aug 31,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(976): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1030): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1033): (vlog-2730) Undefined variable: 'inMapFetchCount'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1424): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1429): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1431): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1433): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(83): (vlog-13294) Identifier must be declared with a port mode: outBuf_fifo_wren.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(84): (vlog-13294) Identifier must be declared with a port mode: outBuf_fifo_datain.
+# End time: 18:55:52 on Aug 31,2020, Elapsed time: 0:00:00
+# Errors: 9, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 # Error in macro ./sim_compile.do line 9
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
