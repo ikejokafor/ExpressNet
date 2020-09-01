@@ -12,3 +12,365 @@
 # //  is prohibited from disclosure under the Trade Secrets Act,
 # //  18 U.S.C. Section 1905.
 # //
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:01:44 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:01:46 on Sep 01,2020, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:01:46 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(176): (vlog-2163) Macro `AXI_INTC_RD_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'UNPACK_ARRAY_1D' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(206)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(206): (vlog-2730) Undefined variable: 'prevMap_bram_datain'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(292): (vlog-2730) Undefined variable: 'TRANS_PYLD_WIDTH'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(367): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(374): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(374): (vlog-2388) 'trans_eg_fifo_dataout' already declared in this scope (cnn_layer_accel_FAS) at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(186).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(375): (vlog-2388) 'trans_eg_fifo_rd_valid' already declared in this scope (cnn_layer_accel_FAS) at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(185).
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(382): (vlog-2163) Macro `job_fetch_fifo_DT_WIH is undefined.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(414): (vlog-2623) Undefined variable: result_datain.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(639): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_count'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(641): (vlog-2730) Undefined variable: 'conv1x1_dwc_fifo_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(719): (vlog-2623) Undefined variable: g6.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(730): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(732): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(737): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(739): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(741): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(823): (vlog-2623) Undefined variable: trans_eg_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(824): (vlog-2623) Undefined variable: trans_eg_fifo_wren.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(841): (vlog-2623) Undefined variable: job_fetch_fifo_datain.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(942): (vlog-2730) Undefined variable: 'res_dwc_fifo_count'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(944): (vlog-2730) Undefined variable: 'res_dwc_fifo_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1160): (vlog-2623) Undefined variable: AWP_id.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'TRANS_OP_FIELD' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1160)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1160): near ")": syntax error, unexpected ')'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1168): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1171): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# End time: 18:01:46 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 20, Warnings: 6
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:10:34 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:10:35 on Sep 01,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:10:35 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: ** while parsing macro expansion: 'TRANS_FIFO_WIH' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_FIFO_WIH' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(186)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(186): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_PYLD_WIDTH' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(292)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(292): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_FIFO_WIH' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(369)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(369): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_PYLD_FIELD' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(415)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(415): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_PYLD_FIELD' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(433)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(433): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(731): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(733): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(738): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(740): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(742): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(824): (vlog-2623) Undefined variable: trans_eg_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(842): (vlog-2623) Undefined variable: job_fetch_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161): (vlog-2623) Undefined variable: AWP_id.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'TRANS_OP_FIELD' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161): near ")": syntax error, unexpected ')'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1169): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1172): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# End time: 18:10:35 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 14, Warnings: 3
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:11:24 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:11:24 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:11:24 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: ** while parsing macro expansion: 'TRANS_FIFO_WIH' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_FIFO_WIH' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(186)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(186): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_PYLD_WIDTH' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(292)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(292): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_FIFO_WIH' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(369)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(369): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_PYLD_FIELD' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(415)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(415): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: ** while parsing macro expansion: 'TRANS_PYLD_FIELD' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(433)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(433): (vlog-2163) Macro `AXI_INT_DT_WIDTH is undefined.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(731): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(733): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(738): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(740): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(742): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(824): (vlog-2623) Undefined variable: trans_eg_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(842): (vlog-2623) Undefined variable: job_fetch_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161): (vlog-2623) Undefined variable: AWP_id.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'TRANS_OP_FIELD' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161): near ")": syntax error, unexpected ')'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1169): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1172): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# End time: 18:11:25 on Sep 01,2020, Elapsed time: 0:00:01
+# Errors: 14, Warnings: 3
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:11:51 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:11:51 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:11:51 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(731): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(733): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(738): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(740): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(742): (vlog-2730) Undefined variable: 'outBuf_fifo_din'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(824): (vlog-2623) Undefined variable: trans_eg_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(842): (vlog-2623) Undefined variable: job_fetch_fifo_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161): (vlog-2623) Undefined variable: AWP_id.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'TRANS_OP_FIELD' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1161): near ")": syntax error, unexpected ')'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1169): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1172): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# End time: 18:11:51 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 8, Warnings: 3
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:14:47 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:14:47 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:14:47 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1169): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1172): (vlog-2730) Undefined variable: 'job_fetch_data_vld'.
+# End time: 18:14:47 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:15:21 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:15:21 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:15:21 on Sep 01,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(92): (vlog-13300) The task or function 'getIdx' with ref argument 'idx_out' must be automatic.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(92): (vlog-13300) The task or function 'getIdx' with ref argument 'idx_in' must be automatic.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(131): (vlog-13266) No actual value has been specified for a formal argument 'divr' that does not have a default value.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(149): In, out, or inout does not appear in port list: cfg_data.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(150): In, out, or inout does not appear in port list: cfg_grp.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175): (vlog-13266) No actual value has been specified for a formal argument 'divr' that does not have a default value.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(175): (vlog-13316) Invalid index in range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(186): (vlog-13266) No actual value has been specified for a formal argument 'divr' that does not have a default value.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(186): (vlog-13316) Invalid index in range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(292): (vlog-13266) No actual value has been specified for a formal argument 'divr' that does not have a default value.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(292): (vlog-13316) Invalid index in range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(295): (vlog-13316) Invalid index in range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(361): (vlog-13316) Invalid index in range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(369): (vlog-13266) No actual value has been specified for a formal argument 'divr' that does not have a default value.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(369): (vlog-13316) Invalid index in range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(376): (vlog-13266) No actual value has been specified for a formal argument 'divr' that does not have a default value.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(376): (vlog-13316) Invalid index in range.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(418): (vlog-13266) No actual value has been specified for a formal argument 'divr' that does not have a default value.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(418): (vlog-13316) Invalid index in range.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(418): (vlog-2697) LSB 3 of part-select into 'trans_in_fifo_datain' is out of bounds.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(436): (vlog-13266) No actual value has been specified for a formal argument 'divr' that does not have a default value.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(436): (vlog-13316) Invalid index in range.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(436): (vlog-2697) LSB 3 of part-select into 'trans_in_fifo_datain' is out of bounds.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(957): (vlog-2110) Illegal reference to memory "vector_add_0_d".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(957): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(960): (vlog-2997) Cannot assign a packed type 'reg[0:15]' to an unpacked type 'reg[127:0] $[0:15]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(963): (vlog-2110) Illegal reference to memory "vector_add_0_d".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(963): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(966): (vlog-2997) Cannot assign a packed type 'reg[0:15]' to an unpacked type 'reg[127:0] $[0:15]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(973): (vlog-2110) Illegal reference to memory "vector_add_1_d".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(973): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(976): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(983): (vlog-2110) Illegal reference to memory "vector_add_2_d".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(983): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(986): (vlog-2990) Illegal operation on unpacked type.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1010): (vlog-2576) [BSOB] - Bit-select into 'trans_in_fifo_dataout' is out of bounds.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2576) [BSOB] - Bit-select into 'trans_in_fifo_dataout' is out of bounds.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1014): (vlog-2576) [BSOB] - Bit-select into 'trans_in_fifo_dataout' is out of bounds.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1016): (vlog-2576) [BSOB] - Bit-select into 'trans_in_fifo_dataout' is out of bounds.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1103): (vlog-13198) Illegal bit-select into scalar variable "all_AWP_complete".
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1130): (vlog-2998) Case item comparison:  Cannot mix packed and unpacked types in this operation.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1151): (vlog-2997) Case item comparison:  Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg[15:0] $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1153): (vlog-2997) Case item comparison:  Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg[15:0] $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1218): (vlog-2110) Illegal reference to memory "prevMap_fifo_prog_empty".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1218): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1218): (vlog-2998) Cannot mix packed and unpacked types in this operation.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1223): (vlog-2110) Illegal reference to memory "prevMapFetchCount".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1223): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1255): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1261): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1268): (vlog-7080) Condition expression must be of singular type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1284): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1285): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1298): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1299): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1309): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1310): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1340): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg[7:0] $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1345): (vlog-2110) Illegal reference to memory "krnl1x1_bram_rdAddr".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1345): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1421): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg[7:0] $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1423): (vlog-2110) Illegal reference to memory "krnl1x1Bias_bram_rden".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1423): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1424): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg[7:0] $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1425): (vlog-7080) Condition expression must be of singular type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1426): (vlog-2110) Illegal reference to memory "krnl1x1Bias_bram_rdAddr".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1426): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1436): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1441): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1442): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1443): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1444): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1445): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1447): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1452): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1453): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1454): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1455): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1456): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1462): (vlog-2110) Illegal reference to memory "prevMap_fifo_empty".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1462): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1465): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1473): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1478): (vlog-2110) Illegal reference to memory "prevMap_fifo_empty".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1478): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1481): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1482): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1483): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1491): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1499): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1505): (vlog-2110) Illegal reference to memory "prevMap_fifo_empty".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1505): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1508): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1509): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1510): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1517): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1522): (vlog-2110) Illegal reference to memory "prevMap_fifo_empty".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1522): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1525): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1526): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1527): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1536): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1537): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1539): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1547): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1548): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1556): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1557): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1567): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg[15:0] $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1569): (vlog-2110) Illegal reference to memory "outBuf_fifo_prog_full".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1569): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(623): (vlog-13215) Cannot assign an unpacked type 'reg[127:0] $[0:0]' to a packed type 'reg[127:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(627): (vlog-13215) Cannot assign an unpacked type 'reg[127:0] $[0:0]' to a packed type 'reg[127:0]'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(667): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(669): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(670): (vlog-2110) Illegal reference to memory "adder_tree_out".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(670): (vlog-2110) Illegal reference to memory "krnl1x1Bias_bram_dout".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(670): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(670): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(713): (vlog-13198) Illegal bit-select into scalar variable "outBuf_fifo_rden".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(723): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(724): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(734): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(736): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(741): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(745): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(734): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(736): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(741): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(745): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(734): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(736): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(741): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(745): Invalid context for genvar g6. A genvar can be used only inside of the generate loop that it indexes.
+# End time: 18:15:21 on Sep 01,2020, Elapsed time: 0:00:00
+# Errors: 128, Warnings: 6
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
