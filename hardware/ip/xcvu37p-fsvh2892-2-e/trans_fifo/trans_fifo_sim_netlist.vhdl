@@ -1,10 +1,10 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Sun Aug 30 16:16:43 2020
+-- Date        : Mon Aug 31 15:17:35 2020
 -- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
--- Command     : write_vhdl -force -mode funcsim
---               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_fifo/trans_fifo_sim_netlist.vhdl
+-- Command     : write_vhdl -force -mode funcsim -rename_top trans_fifo -prefix
+--               trans_fifo_ trans_fifo_sim_netlist.vhdl
 -- Design      : trans_fifo
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -16,18 +16,38 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim is
   port (
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    RD_EN : out STD_LOGIC;
+    WR_EN : out STD_LOGIC;
+    rd_clk_0 : out STD_LOGIC;
+    rd_clk_1 : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
-    din : in STD_LOGIC_VECTOR ( 71 downto 0 )
+    wr_clk : in STD_LOGIC;
+    din : in STD_LOGIC_VECTOR ( 71 downto 0 );
+    \^wr_en\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_1\ : in STD_LOGIC;
+    FULL : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_2\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_3\ : in STD_LOGIC;
+    \^rd_en\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_1\ : in STD_LOGIC;
+    EMPTY : in STD_LOGIC;
+    \gv.gv3.VALID_reg_2\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_3\ : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of trans_fifo_builtin_prim : entity is "builtin_prim";
 end trans_fifo_builtin_prim;
 
 architecture STRUCTURE of trans_fifo_builtin_prim is
+  signal \^rd_en_1\ : STD_LOGIC;
+  signal \^wr_en_1\ : STD_LOGIC;
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 9 to 9 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -35,7 +55,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -60,7 +79,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -71,7 +89,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -82,7 +99,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -93,7 +109,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_47\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_48\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_49\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_5\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_50\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_51\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_52\ : STD_LOGIC;
@@ -104,7 +119,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -126,7 +140,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -137,7 +150,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -148,13 +160,46 @@ architecture STRUCTURE of trans_fifo_builtin_prim is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_58_out : STD_LOGIC;
+  signal p_59_out : STD_LOGIC;
+  signal p_60_out : STD_LOGIC;
+  signal p_61_out : STD_LOGIC;
+  signal \^rd_clk_0\ : STD_LOGIC;
+  signal \^rd_clk_1\ : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 9 to 9 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
+  RD_EN <= \^rd_en_1\;
+  WR_EN <= \^wr_en_1\;
+  rd_clk_0 <= \^rd_clk_0\;
+  rd_clk_1 <= \^rd_clk_1\;
+empty_INST_0_i_3: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"FFFE"
+    )
+        port map (
+      I0 => p_60_out,
+      I1 => EMPTY,
+      I2 => \gv.gv3.VALID_reg_2\,
+      I3 => \gv.gv3.VALID_reg_3\,
+      O => \^rd_clk_1\
+    );
+full_INST_0_i_3: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"FFFE"
+    )
+        port map (
+      I0 => p_61_out,
+      I1 => FULL,
+      I2 => \gwakn.WR_ACK_reg_2\,
+      I3 => \gwakn.WR_ACK_reg_3\,
+      O => \^rd_clk_0\
+    );
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -166,7 +211,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -260,7 +305,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(9),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -273,13 +318,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => p_60_out,
+      FULL => p_61_out,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGEMPTY => p_58_out,
+      PROGFULL => p_59_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -294,15 +339,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => \^rd_en_1\,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => \^rd_en_1\,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(9),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -317,9 +362,33 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => \^wr_en_1\,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
+    );
+\gf36e2_inst.sngfifo36e2_i_1\: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"00000002"
+    )
+        port map (
+      I0 => \^rd_en\,
+      I1 => \^rd_clk_1\,
+      I2 => \gv.gv3.VALID_reg\,
+      I3 => \gv.gv3.VALID_reg_0\,
+      I4 => \gv.gv3.VALID_reg_1\,
+      O => \^rd_en_1\
+    );
+\gf36e2_inst.sngfifo36e2_i_2\: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"00000002"
+    )
+        port map (
+      I0 => \^wr_en\,
+      I1 => \^rd_clk_0\,
+      I2 => \gwakn.WR_ACK_reg\,
+      I3 => \gwakn.WR_ACK_reg_0\,
+      I4 => \gwakn.WR_ACK_reg_1\,
+      O => \^wr_en_1\
     );
 end STRUCTURE;
 library IEEE;
@@ -328,11 +397,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_14 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -340,6 +414,7 @@ entity trans_fifo_builtin_prim_14 is
 end trans_fifo_builtin_prim_14;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_14 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 8 to 8 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -347,7 +422,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -372,7 +446,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -383,7 +456,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -394,7 +466,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -405,7 +476,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_47\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_48\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_49\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_5\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_50\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_51\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_52\ : STD_LOGIC;
@@ -416,7 +486,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -438,7 +507,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -449,7 +517,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -460,13 +527,16 @@ architecture STRUCTURE of trans_fifo_builtin_prim_14 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_67_out : STD_LOGIC;
+  signal p_68_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 8 to 8 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -478,7 +548,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -572,7 +642,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(8),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -585,13 +655,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGEMPTY => p_67_out,
+      PROGFULL => p_68_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -606,15 +676,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(8),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -629,9 +699,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -640,11 +710,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_15 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -652,6 +727,7 @@ entity trans_fifo_builtin_prim_15 is
 end trans_fifo_builtin_prim_15;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_15 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 7 to 7 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -659,7 +735,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_15 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -684,7 +759,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_15 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -695,7 +769,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_15 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -706,7 +779,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_15 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -728,7 +800,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_15 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -750,7 +821,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_15 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -761,7 +831,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_15 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -772,13 +841,15 @@ architecture STRUCTURE of trans_fifo_builtin_prim_15 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_77_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 7 to 7 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -790,7 +861,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -884,7 +955,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(7),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -897,13 +968,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGFULL => p_77_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -918,15 +989,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(7),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -941,9 +1012,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -952,11 +1023,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_16 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -964,6 +1040,7 @@ entity trans_fifo_builtin_prim_16 is
 end trans_fifo_builtin_prim_16;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_16 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 6 to 6 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -971,7 +1048,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_16 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -996,7 +1072,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_16 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -1007,7 +1082,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_16 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -1018,7 +1092,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_16 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -1040,7 +1113,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_16 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -1062,7 +1134,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_16 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -1073,7 +1144,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_16 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -1084,13 +1154,15 @@ architecture STRUCTURE of trans_fifo_builtin_prim_16 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_86_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 6 to 6 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -1102,7 +1174,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -1196,7 +1268,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(6),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -1209,13 +1281,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGFULL => p_86_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -1230,15 +1302,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(6),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -1253,9 +1325,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -1264,18 +1336,42 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_17 is
   port (
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    \^full\ : out STD_LOGIC;
+    rd_clk_0 : out STD_LOGIC;
+    \^empty\ : out STD_LOGIC;
+    rd_clk_1 : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
-    din : in STD_LOGIC_VECTOR ( 71 downto 0 )
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
+    din : in STD_LOGIC_VECTOR ( 71 downto 0 );
+    FULL : in STD_LOGIC;
+    full_0 : in STD_LOGIC;
+    full_1 : in STD_LOGIC;
+    full_2 : in STD_LOGIC;
+    full_3 : in STD_LOGIC;
+    full_4 : in STD_LOGIC;
+    full_5 : in STD_LOGIC;
+    full_6 : in STD_LOGIC;
+    EMPTY : in STD_LOGIC;
+    empty_0 : in STD_LOGIC;
+    empty_1 : in STD_LOGIC;
+    empty_2 : in STD_LOGIC;
+    empty_3 : in STD_LOGIC;
+    empty_4 : in STD_LOGIC;
+    empty_5 : in STD_LOGIC;
+    empty_6 : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of trans_fifo_builtin_prim_17 : entity is "builtin_prim";
 end trans_fifo_builtin_prim_17;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_17 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 5 to 5 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -1283,7 +1379,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_17 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -1308,7 +1403,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_17 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -1319,7 +1413,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_17 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -1330,7 +1423,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_17 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -1352,7 +1444,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_17 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -1374,7 +1465,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_17 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -1385,7 +1475,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_17 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -1396,13 +1485,69 @@ architecture STRUCTURE of trans_fifo_builtin_prim_17 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_95_out : STD_LOGIC;
+  signal p_96_out : STD_LOGIC;
+  signal p_97_out : STD_LOGIC;
+  signal \^rd_clk_0\ : STD_LOGIC;
+  signal \^rd_clk_1\ : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 5 to 5 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
+  rd_clk_0 <= \^rd_clk_0\;
+  rd_clk_1 <= \^rd_clk_1\;
+empty_INST_0: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FFFFFFFFFFFFFFFE"
+    )
+        port map (
+      I0 => \^rd_clk_1\,
+      I1 => EMPTY,
+      I2 => empty_0,
+      I3 => empty_1,
+      I4 => empty_2,
+      I5 => empty_3,
+      O => \^empty\
+    );
+empty_INST_0_i_1: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"FFFE"
+    )
+        port map (
+      I0 => p_96_out,
+      I1 => empty_4,
+      I2 => empty_5,
+      I3 => empty_6,
+      O => \^rd_clk_1\
+    );
+full_INST_0: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FFFFFFFFFFFFFFFE"
+    )
+        port map (
+      I0 => \^rd_clk_0\,
+      I1 => FULL,
+      I2 => full_0,
+      I3 => full_1,
+      I4 => full_2,
+      I5 => full_3,
+      O => \^full\
+    );
+full_INST_0_i_1: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"FFFE"
+    )
+        port map (
+      I0 => p_97_out,
+      I1 => full_4,
+      I2 => full_5,
+      I3 => full_6,
+      O => \^rd_clk_0\
+    );
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -1414,7 +1559,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -1508,7 +1653,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(5),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -1521,13 +1666,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => p_96_out,
+      FULL => p_97_out,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGFULL => p_95_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -1542,15 +1687,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(5),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -1565,9 +1710,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -1576,11 +1721,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_18 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -1588,6 +1738,7 @@ entity trans_fifo_builtin_prim_18 is
 end trans_fifo_builtin_prim_18;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_18 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 4 to 4 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -1595,7 +1746,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_18 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -1620,7 +1770,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_18 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -1631,7 +1780,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_18 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -1642,7 +1790,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_18 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -1664,7 +1811,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_18 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -1686,7 +1832,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_18 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -1697,7 +1842,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_18 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -1708,13 +1852,15 @@ architecture STRUCTURE of trans_fifo_builtin_prim_18 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_104_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 4 to 4 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -1726,7 +1872,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -1820,7 +1966,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(4),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -1833,13 +1979,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGFULL => p_104_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -1854,15 +2000,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(4),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -1877,9 +2023,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -1888,11 +2034,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_19 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -1900,6 +2051,7 @@ entity trans_fifo_builtin_prim_19 is
 end trans_fifo_builtin_prim_19;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_19 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 3 to 3 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -1907,7 +2059,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_19 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -1932,7 +2083,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_19 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -1943,7 +2093,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_19 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -1954,7 +2103,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_19 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -1976,7 +2124,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_19 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -1998,7 +2145,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_19 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -2009,7 +2155,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_19 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -2020,13 +2165,15 @@ architecture STRUCTURE of trans_fifo_builtin_prim_19 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_113_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 3 to 3 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -2038,7 +2185,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -2132,7 +2279,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(3),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -2145,13 +2292,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGFULL => p_113_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -2166,15 +2313,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(3),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -2189,9 +2336,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -2200,11 +2347,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_20 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -2212,6 +2364,7 @@ entity trans_fifo_builtin_prim_20 is
 end trans_fifo_builtin_prim_20;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_20 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 2 to 2 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -2219,7 +2372,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_20 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -2244,7 +2396,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_20 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -2255,7 +2406,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_20 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -2266,7 +2416,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_20 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -2288,7 +2437,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_20 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -2310,7 +2458,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_20 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -2321,7 +2468,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_20 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -2332,13 +2478,15 @@ architecture STRUCTURE of trans_fifo_builtin_prim_20 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_122_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 2 to 2 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -2350,7 +2498,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -2444,7 +2592,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(2),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -2457,13 +2605,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGFULL => p_122_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -2478,15 +2626,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(2),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -2501,9 +2649,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -2512,24 +2660,35 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_21 is
   port (
-    empty : out STD_LOGIC;
-    full : out STD_LOGIC;
-    rd_rst_busy : out STD_LOGIC;
-    wr_rst_busy : out STD_LOGIC;
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk_0 : out STD_LOGIC;
+    rd_clk_1 : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
-    din : in STD_LOGIC_VECTOR ( 71 downto 0 )
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
+    din : in STD_LOGIC_VECTOR ( 71 downto 0 );
+    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of trans_fifo_builtin_prim_21 : entity is "builtin_prim";
 end trans_fifo_builtin_prim_21;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_21 is
+  signal \^empty\ : STD_LOGIC;
+  signal \^full\ : STD_LOGIC;
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 1 to 1 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
+  signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_100\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
@@ -2599,7 +2758,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_21 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -2610,6 +2768,7 @@ architecture STRUCTURE of trans_fifo_builtin_prim_21 is
   signal \gf36e2_inst.sngfifo36e2_n_67\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_68\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_69\ : STD_LOGIC;
+  signal \gf36e2_inst.sngfifo36e2_n_7\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_70\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_71\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_72\ : STD_LOGIC;
@@ -2640,17 +2799,17 @@ architecture STRUCTURE of trans_fifo_builtin_prim_21 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
-  signal p_4_out : STD_LOGIC;
-  signal p_5_out : STD_LOGIC;
-  signal p_6_out : STD_LOGIC;
-  signal p_7_out : STD_LOGIC;
+  signal p_131_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 1 to 1 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
+  EMPTY <= \^empty\;
+  FULL <= \^full\;
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -2662,7 +2821,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -2756,7 +2915,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => p_4_out,
+      DBITERR => dbiterr_col(1),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -2769,13 +2928,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => empty,
-      FULL => full,
+      EMPTY => \^empty\,
+      FULL => \^full\,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGFULL => p_131_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -2790,15 +2949,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
-      RDERR => p_6_out,
-      RDRSTBUSY => rd_rst_busy,
-      REGCE => rd_en,
+      RDEN => RD_EN,
+      RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => p_5_out,
+      SBITERR => sbiterr_col(1),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -2813,9 +2972,29 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
-      WRERR => p_7_out,
-      WRRSTBUSY => wr_rst_busy
+      WREN => WR_EN,
+      WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
+      WRRSTBUSY => WRRSTBUSY
+    );
+\gf36e2_inst.sngfifo36e2_i_3\: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"FE"
+    )
+        port map (
+      I0 => \^empty\,
+      I1 => \gv.gv3.VALID_reg\,
+      I2 => \gv.gv3.VALID_reg_0\,
+      O => rd_clk_1
+    );
+\gf36e2_inst.sngfifo36e2_i_4\: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"FE"
+    )
+        port map (
+      I0 => \^full\,
+      I1 => \gwakn.WR_ACK_reg\,
+      I2 => \gwakn.WR_ACK_reg_0\,
+      O => rd_clk_0
     );
 end STRUCTURE;
 library IEEE;
@@ -2824,11 +3003,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_22 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 15 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 15 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -2836,6 +3020,7 @@ entity trans_fifo_builtin_prim_22 is
 end trans_fifo_builtin_prim_22;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_22 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 15 to 15 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -2849,7 +3034,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_107\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_108\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_109\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_110\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_111\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_112\ : STD_LOGIC;
@@ -2924,7 +3108,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -2935,7 +3118,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -2946,7 +3128,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -2957,7 +3138,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_47\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_48\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_49\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_5\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_50\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_51\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_52\ : STD_LOGIC;
@@ -2968,7 +3148,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -2990,7 +3169,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -3001,7 +3179,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -3012,13 +3189,16 @@ architecture STRUCTURE of trans_fifo_builtin_prim_22 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_4_out : STD_LOGIC;
+  signal p_5_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 15 to 15 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -3030,7 +3210,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -3124,7 +3304,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(15),
       DIN(63 downto 16) => B"000000000000000000000000000000000000000000000000",
       DIN(15 downto 0) => din(15 downto 0),
       DINP(7 downto 0) => B"00000000",
@@ -3193,13 +3373,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGEMPTY => p_4_out,
+      PROGFULL => p_5_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -3214,15 +3394,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(15),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -3237,9 +3417,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -3248,11 +3428,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_23 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -3260,6 +3445,7 @@ entity trans_fifo_builtin_prim_23 is
 end trans_fifo_builtin_prim_23;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_23 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 14 to 14 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -3267,7 +3453,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -3292,7 +3477,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -3303,7 +3487,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -3314,7 +3497,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -3325,7 +3507,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_47\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_48\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_49\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_5\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_50\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_51\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_52\ : STD_LOGIC;
@@ -3336,7 +3517,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -3358,7 +3538,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -3369,7 +3548,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -3380,13 +3558,16 @@ architecture STRUCTURE of trans_fifo_builtin_prim_23 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_13_out : STD_LOGIC;
+  signal p_14_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 14 to 14 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -3398,7 +3579,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -3492,7 +3673,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(14),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -3505,13 +3686,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGEMPTY => p_13_out,
+      PROGFULL => p_14_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -3526,15 +3707,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(14),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -3549,9 +3730,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -3560,18 +3741,30 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_24 is
   port (
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk_0 : out STD_LOGIC;
+    rd_clk_1 : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
-    din : in STD_LOGIC_VECTOR ( 71 downto 0 )
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
+    din : in STD_LOGIC_VECTOR ( 71 downto 0 );
+    FULL : in STD_LOGIC;
+    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    EMPTY : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of trans_fifo_builtin_prim_24 : entity is "builtin_prim";
 end trans_fifo_builtin_prim_24;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_24 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 13 to 13 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -3579,7 +3772,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -3604,7 +3796,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -3615,7 +3806,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -3626,7 +3816,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -3637,7 +3826,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_47\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_48\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_49\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_5\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_50\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_51\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_52\ : STD_LOGIC;
@@ -3648,7 +3836,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -3670,7 +3857,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -3681,7 +3867,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -3692,13 +3877,40 @@ architecture STRUCTURE of trans_fifo_builtin_prim_24 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_22_out : STD_LOGIC;
+  signal p_23_out : STD_LOGIC;
+  signal p_24_out : STD_LOGIC;
+  signal p_25_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 13 to 13 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
+empty_INST_0_i_2: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"FFFE"
+    )
+        port map (
+      I0 => p_24_out,
+      I1 => EMPTY,
+      I2 => \gv.gv3.VALID_reg\,
+      I3 => \gv.gv3.VALID_reg_0\,
+      O => rd_clk_1
+    );
+full_INST_0_i_2: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"FFFE"
+    )
+        port map (
+      I0 => p_25_out,
+      I1 => FULL,
+      I2 => \gwakn.WR_ACK_reg\,
+      I3 => \gwakn.WR_ACK_reg_0\,
+      O => rd_clk_0
+    );
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -3710,7 +3922,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -3804,7 +4016,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(13),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -3817,13 +4029,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => p_24_out,
+      FULL => p_25_out,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGEMPTY => p_22_out,
+      PROGFULL => p_23_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -3838,15 +4050,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(13),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -3861,9 +4073,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -3872,11 +4084,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_25 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -3884,6 +4101,7 @@ entity trans_fifo_builtin_prim_25 is
 end trans_fifo_builtin_prim_25;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_25 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 12 to 12 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -3891,7 +4109,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -3916,7 +4133,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -3927,7 +4143,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -3938,7 +4153,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -3949,7 +4163,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_47\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_48\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_49\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_5\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_50\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_51\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_52\ : STD_LOGIC;
@@ -3960,7 +4173,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -3982,7 +4194,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -3993,7 +4204,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -4004,13 +4214,16 @@ architecture STRUCTURE of trans_fifo_builtin_prim_25 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_31_out : STD_LOGIC;
+  signal p_32_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 12 to 12 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -4022,7 +4235,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -4116,7 +4329,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(12),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -4129,13 +4342,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGEMPTY => p_31_out,
+      PROGFULL => p_32_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -4150,15 +4363,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(12),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -4173,9 +4386,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -4184,11 +4397,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_26 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -4196,6 +4414,7 @@ entity trans_fifo_builtin_prim_26 is
 end trans_fifo_builtin_prim_26;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_26 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 11 to 11 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -4203,7 +4422,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -4228,7 +4446,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -4239,7 +4456,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -4250,7 +4466,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -4261,7 +4476,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_47\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_48\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_49\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_5\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_50\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_51\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_52\ : STD_LOGIC;
@@ -4272,7 +4486,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -4294,7 +4507,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -4305,7 +4517,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -4316,13 +4527,16 @@ architecture STRUCTURE of trans_fifo_builtin_prim_26 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_40_out : STD_LOGIC;
+  signal p_41_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 11 to 11 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -4334,7 +4548,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -4428,7 +4642,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(11),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -4441,13 +4655,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGEMPTY => p_40_out,
+      PROGFULL => p_41_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -4462,15 +4676,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(11),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -4485,9 +4699,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -4496,11 +4710,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_prim_27 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -4508,6 +4727,7 @@ entity trans_fifo_builtin_prim_27 is
 end trans_fifo_builtin_prim_27;
 
 architecture STRUCTURE of trans_fifo_builtin_prim_27 is
+  signal dbiterr_col : STD_LOGIC_VECTOR ( 10 to 10 );
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_10\ : STD_LOGIC;
@@ -4515,7 +4735,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_101\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_102\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_103\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_11\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_12\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_13\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_14\ : STD_LOGIC;
@@ -4540,7 +4759,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_19\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_190\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_191\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_2\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_20\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_21\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_22\ : STD_LOGIC;
@@ -4551,7 +4769,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_27\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_28\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_29\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_3\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_30\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_31\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_32\ : STD_LOGIC;
@@ -4562,7 +4779,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_37\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_38\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_39\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_4\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_40\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_41\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_42\ : STD_LOGIC;
@@ -4573,7 +4789,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_47\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_48\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_49\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_5\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_50\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_51\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_52\ : STD_LOGIC;
@@ -4584,7 +4799,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_57\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_58\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_59\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_6\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_60\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_61\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_62\ : STD_LOGIC;
@@ -4606,7 +4820,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_77\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_78\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_79\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_8\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_80\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_81\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_82\ : STD_LOGIC;
@@ -4617,7 +4830,6 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_87\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_88\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_89\ : STD_LOGIC;
-  signal \gf36e2_inst.sngfifo36e2_n_9\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_90\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_91\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_92\ : STD_LOGIC;
@@ -4628,13 +4840,16 @@ architecture STRUCTURE of trans_fifo_builtin_prim_27 is
   signal \gf36e2_inst.sngfifo36e2_n_97\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_98\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_99\ : STD_LOGIC;
+  signal p_49_out : STD_LOGIC;
+  signal p_50_out : STD_LOGIC;
+  signal sbiterr_col : STD_LOGIC_VECTOR ( 10 to 10 );
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
-      CLOCK_DOMAINS => "COMMON",
+      CLOCK_DOMAINS => "INDEPENDENT",
       EN_ECC_PIPE => "FALSE",
       EN_ECC_READ => "FALSE",
       EN_ECC_WRITE => "FALSE",
@@ -4646,7 +4861,7 @@ begin
       IS_RST_INVERTED => '0',
       IS_WRCLK_INVERTED => '0',
       IS_WREN_INVERTED => '0',
-      PROG_EMPTY_THRESH => 2,
+      PROG_EMPTY_THRESH => 5,
       PROG_FULL_THRESH => 511,
       RDCOUNT_TYPE => "EXTENDED_DATACOUNT",
       READ_WIDTH => 72,
@@ -4740,7 +4955,7 @@ begin
       CASOREGIMUXEN => '1',
       CASPRVEMPTY => '0',
       CASPRVRDEN => \gf36e2_inst.sngfifo36e2_n_1\,
-      DBITERR => \gf36e2_inst.sngfifo36e2_n_2\,
+      DBITERR => dbiterr_col(10),
       DIN(63 downto 0) => din(63 downto 0),
       DINP(7 downto 0) => din(71 downto 64),
       DOUT(63 downto 0) => dout(63 downto 0),
@@ -4753,13 +4968,13 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \gf36e2_inst.sngfifo36e2_n_3\,
-      FULL => \gf36e2_inst.sngfifo36e2_n_4\,
+      EMPTY => EMPTY,
+      FULL => FULL,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
-      PROGFULL => \gf36e2_inst.sngfifo36e2_n_6\,
-      RDCLK => clk,
+      PROGEMPTY => p_49_out,
+      PROGFULL => p_50_out,
+      RDCLK => rd_clk,
       RDCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_12\,
       RDCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_13\,
       RDCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_14\,
@@ -4774,15 +4989,15 @@ begin
       RDCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_23\,
       RDCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_24\,
       RDCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_25\,
-      RDEN => rd_en,
+      RDEN => RD_EN,
       RDERR => \gf36e2_inst.sngfifo36e2_n_7\,
-      RDRSTBUSY => \gf36e2_inst.sngfifo36e2_n_8\,
-      REGCE => rd_en,
+      RDRSTBUSY => RDRSTBUSY,
+      REGCE => RD_EN,
       RST => srst,
       RSTREG => srst,
-      SBITERR => \gf36e2_inst.sngfifo36e2_n_9\,
+      SBITERR => sbiterr_col(10),
       SLEEP => '0',
-      WRCLK => clk,
+      WRCLK => wr_clk,
       WRCOUNT(13) => \gf36e2_inst.sngfifo36e2_n_26\,
       WRCOUNT(12) => \gf36e2_inst.sngfifo36e2_n_27\,
       WRCOUNT(11) => \gf36e2_inst.sngfifo36e2_n_28\,
@@ -4797,9 +5012,9 @@ begin
       WRCOUNT(2) => \gf36e2_inst.sngfifo36e2_n_37\,
       WRCOUNT(1) => \gf36e2_inst.sngfifo36e2_n_38\,
       WRCOUNT(0) => \gf36e2_inst.sngfifo36e2_n_39\,
-      WREN => wr_en,
+      WREN => WR_EN,
       WRERR => \gf36e2_inst.sngfifo36e2_n_10\,
-      WRRSTBUSY => \gf36e2_inst.sngfifo36e2_n_11\
+      WRRSTBUSY => WRRSTBUSY
     );
 end STRUCTURE;
 library IEEE;
@@ -4808,15 +5023,18 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of trans_fifo_builtin_extdepth : entity is "builtin_extdepth";
 end trans_fifo_builtin_extdepth;
 
 architecture STRUCTURE of trans_fifo_builtin_extdepth is
@@ -4828,12 +5046,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_27
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[10].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -4858,11 +5081,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_0 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -4878,12 +5106,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_0 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_26
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[11].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -4908,11 +5141,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_1 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -4928,12 +5166,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_1 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_25
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[12].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -4958,11 +5201,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_10 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -4978,12 +5226,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_10 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_16
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[6].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -5008,11 +5261,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_11 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5028,12 +5286,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_11 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_15
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[7].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -5058,11 +5321,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_12 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5078,12 +5346,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_12 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_14
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[8].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -5108,11 +5381,30 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_13 is
   port (
+    WR_EN : out STD_LOGIC;
+    rd_clk_0 : out STD_LOGIC;
+    RD_EN : out STD_LOGIC;
+    rd_clk_1 : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    \^wr_en\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_1\ : in STD_LOGIC;
+    FULL : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_2\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_3\ : in STD_LOGIC;
+    \^rd_en\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_1\ : in STD_LOGIC;
+    EMPTY : in STD_LOGIC;
+    \gv.gv3.VALID_reg_2\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_3\ : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5128,14 +5420,33 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_13 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
+      \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
+      \gv.gv3.VALID_reg_1\ => \gv.gv3.VALID_reg_1\,
+      \gv.gv3.VALID_reg_2\ => \gv.gv3.VALID_reg_2\,
+      \gv.gv3.VALID_reg_3\ => \gv.gv3.VALID_reg_3\,
+      \gwakn.WR_ACK_reg\ => \gwakn.WR_ACK_reg\,
+      \gwakn.WR_ACK_reg_0\ => \gwakn.WR_ACK_reg_0\,
+      \gwakn.WR_ACK_reg_1\ => \gwakn.WR_ACK_reg_1\,
+      \gwakn.WR_ACK_reg_2\ => \gwakn.WR_ACK_reg_2\,
+      \gwakn.WR_ACK_reg_3\ => \gwakn.WR_ACK_reg_3\,
+      rd_clk => rd_clk,
+      rd_clk_0 => rd_clk_0,
+      rd_clk_1 => rd_clk_1,
+      \^rd_en\ => \^rd_en\,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk,
+      \^wr_en\ => \^wr_en\
     );
-\rst_val_sym.gextw_sym[9].inst_extdi_0\: unisim.vcomponents.LUT1
+i_0: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5143,7 +5454,7 @@ begin
       I0 => '1',
       O => srst_qr(1)
     );
-\rst_val_sym.gextw_sym[9].inst_extdi_1\: unisim.vcomponents.LUT1
+i_1: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5158,11 +5469,22 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_2 is
   port (
+    rd_clk_0 : out STD_LOGIC;
+    rd_clk_1 : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    FULL : in STD_LOGIC;
+    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    EMPTY : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5178,14 +5500,25 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_2 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_24
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
+      \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
+      \gwakn.WR_ACK_reg\ => \gwakn.WR_ACK_reg\,
+      \gwakn.WR_ACK_reg_0\ => \gwakn.WR_ACK_reg_0\,
+      rd_clk => rd_clk,
+      rd_clk_0 => rd_clk_0,
+      rd_clk_1 => rd_clk_1,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
-\rst_val_sym.gextw_sym[13].inst_extdi_0\: unisim.vcomponents.LUT1
+i_0: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5193,7 +5526,7 @@ begin
       I0 => '1',
       O => srst_qr(1)
     );
-\rst_val_sym.gextw_sym[13].inst_extdi_1\: unisim.vcomponents.LUT1
+i_1: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5208,11 +5541,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_3 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5228,12 +5566,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_3 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_23
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[14].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -5258,11 +5601,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_4 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 15 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 15 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5278,12 +5626,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_4 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_22
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(15 downto 0) => din(15 downto 0),
       dout(15 downto 0) => dout(15 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[15].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -5308,15 +5661,22 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_5 is
   port (
-    empty : out STD_LOGIC;
-    full : out STD_LOGIC;
-    rd_rst_busy : out STD_LOGIC;
-    wr_rst_busy : out STD_LOGIC;
+    rd_clk_0 : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    rd_clk_1 : out STD_LOGIC;
+    EMPTY : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
+    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5332,18 +5692,25 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_5 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_21
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      empty => empty,
-      full => full,
-      rd_en => rd_en,
-      rd_rst_busy => rd_rst_busy,
+      \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
+      \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
+      \gwakn.WR_ACK_reg\ => \gwakn.WR_ACK_reg\,
+      \gwakn.WR_ACK_reg_0\ => \gwakn.WR_ACK_reg_0\,
+      rd_clk => rd_clk,
+      rd_clk_0 => rd_clk_0,
+      rd_clk_1 => rd_clk_1,
       srst => srst,
-      wr_en => wr_en,
-      wr_rst_busy => wr_rst_busy
+      wr_clk => wr_clk
     );
-\rst_val_sym.gextw_sym[1].inst_extdi_0\: unisim.vcomponents.LUT1
+i_0: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5351,7 +5718,7 @@ begin
       I0 => '1',
       O => srst_qr(1)
     );
-\rst_val_sym.gextw_sym[1].inst_extdi_1\: unisim.vcomponents.LUT1
+i_1: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5366,11 +5733,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_6 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5386,12 +5758,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_6 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_20
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[2].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -5416,11 +5793,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_7 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5436,12 +5818,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_7 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_19
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[3].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -5466,11 +5853,16 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_8 is
   port (
+    EMPTY : out STD_LOGIC;
+    FULL : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5486,12 +5878,17 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_8 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_18
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[4].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
@@ -5516,11 +5913,34 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_extdepth_9 is
   port (
+    \^full\ : out STD_LOGIC;
+    rd_clk_0 : out STD_LOGIC;
+    \^empty\ : out STD_LOGIC;
+    rd_clk_1 : out STD_LOGIC;
+    RDRSTBUSY : out STD_LOGIC;
+    WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    FULL : in STD_LOGIC;
+    full_0 : in STD_LOGIC;
+    full_1 : in STD_LOGIC;
+    full_2 : in STD_LOGIC;
+    full_3 : in STD_LOGIC;
+    full_4 : in STD_LOGIC;
+    full_5 : in STD_LOGIC;
+    full_6 : in STD_LOGIC;
+    EMPTY : in STD_LOGIC;
+    empty_0 : in STD_LOGIC;
+    empty_1 : in STD_LOGIC;
+    empty_2 : in STD_LOGIC;
+    empty_3 : in STD_LOGIC;
+    empty_4 : in STD_LOGIC;
+    empty_5 : in STD_LOGIC;
+    empty_6 : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
+    RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
-    wr_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5536,14 +5956,37 @@ architecture STRUCTURE of trans_fifo_builtin_extdepth_9 is
 begin
 \gonep.inst_prim\: entity work.trans_fifo_builtin_prim_17
      port map (
-      clk => clk,
+      EMPTY => EMPTY,
+      FULL => FULL,
+      RDRSTBUSY => RDRSTBUSY,
+      RD_EN => RD_EN,
+      WRRSTBUSY => WRRSTBUSY,
+      WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      rd_en => rd_en,
+      \^empty\ => \^empty\,
+      empty_0 => empty_0,
+      empty_1 => empty_1,
+      empty_2 => empty_2,
+      empty_3 => empty_3,
+      empty_4 => empty_4,
+      empty_5 => empty_5,
+      empty_6 => empty_6,
+      \^full\ => \^full\,
+      full_0 => full_0,
+      full_1 => full_1,
+      full_2 => full_2,
+      full_3 => full_3,
+      full_4 => full_4,
+      full_5 => full_5,
+      full_6 => full_6,
+      rd_clk => rd_clk,
+      rd_clk_0 => rd_clk_0,
+      rd_clk_1 => rd_clk_1,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
-\rst_val_sym.gextw_sym[5].inst_extdi_0\: unisim.vcomponents.LUT1
+i_0: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5551,7 +5994,7 @@ begin
       I0 => '1',
       O => srst_qr(1)
     );
-\rst_val_sym.gextw_sym[5].inst_extdi_1\: unisim.vcomponents.LUT1
+i_1: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5566,161 +6009,415 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_builtin_top is
   port (
-    empty : out STD_LOGIC;
-    full : out STD_LOGIC;
-    rd_rst_busy : out STD_LOGIC;
-    wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    wr_ack : out STD_LOGIC;
+    valid : out STD_LOGIC;
+    wr_rst_busy : out STD_LOGIC;
+    rd_rst_busy : out STD_LOGIC;
+    full : out STD_LOGIC;
+    empty : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
     srst : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    din : in STD_LOGIC_VECTOR ( 1023 downto 0 );
     wr_en : in STD_LOGIC;
-    din : in STD_LOGIC_VECTOR ( 1023 downto 0 )
+    rd_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of trans_fifo_builtin_top : entity is "builtin_top";
 end trans_fifo_builtin_top;
 
 architecture STRUCTURE of trans_fifo_builtin_top is
+  signal p_105_out : STD_LOGIC;
+  signal p_106_out : STD_LOGIC;
+  signal p_114_out : STD_LOGIC;
+  signal p_115_out : STD_LOGIC;
+  signal p_123_out : STD_LOGIC;
+  signal p_124_out : STD_LOGIC;
+  signal p_132_out : STD_LOGIC;
+  signal p_133_out : STD_LOGIC;
+  signal p_15_out : STD_LOGIC;
+  signal p_16_out : STD_LOGIC;
+  signal p_33_out : STD_LOGIC;
+  signal p_34_out : STD_LOGIC;
+  signal p_42_out : STD_LOGIC;
+  signal p_43_out : STD_LOGIC;
+  signal p_51_out : STD_LOGIC;
+  signal p_52_out : STD_LOGIC;
+  signal p_69_out : STD_LOGIC;
+  signal p_6_out : STD_LOGIC;
+  signal p_70_out : STD_LOGIC;
+  signal p_78_out : STD_LOGIC;
+  signal p_79_out : STD_LOGIC;
+  signal p_7_out : STD_LOGIC;
+  signal p_87_out : STD_LOGIC;
+  signal p_88_out : STD_LOGIC;
+  signal rd_rst_busy_INST_0_i_1_n_0 : STD_LOGIC;
+  signal rd_rst_busy_INST_0_i_2_n_0 : STD_LOGIC;
+  signal rd_tmp : STD_LOGIC;
+  signal rrst_busy_i : STD_LOGIC_VECTOR ( 15 downto 1 );
+  signal \rst_val_sym.gextw_sym[13].inst_extd_n_0\ : STD_LOGIC;
+  signal \rst_val_sym.gextw_sym[13].inst_extd_n_1\ : STD_LOGIC;
+  signal \rst_val_sym.gextw_sym[1].inst_extd_n_0\ : STD_LOGIC;
+  signal \rst_val_sym.gextw_sym[1].inst_extd_n_2\ : STD_LOGIC;
+  signal \rst_val_sym.gextw_sym[5].inst_extd_n_1\ : STD_LOGIC;
+  signal \rst_val_sym.gextw_sym[5].inst_extd_n_3\ : STD_LOGIC;
+  signal \rst_val_sym.gextw_sym[9].inst_extd_n_1\ : STD_LOGIC;
+  signal \rst_val_sym.gextw_sym[9].inst_extd_n_3\ : STD_LOGIC;
+  signal wr_rst_busy_INST_0_i_1_n_0 : STD_LOGIC;
+  signal wr_rst_busy_INST_0_i_2_n_0 : STD_LOGIC;
+  signal wr_tmp : STD_LOGIC;
+  signal wrst_busy_i : STD_LOGIC_VECTOR ( 15 downto 1 );
 begin
+\gv.gv3.VALID_reg\: unisim.vcomponents.FDRE
+    generic map(
+      INIT => '0'
+    )
+        port map (
+      C => rd_clk,
+      CE => '1',
+      D => rd_tmp,
+      Q => valid,
+      R => '0'
+    );
+\gwakn.WR_ACK_reg\: unisim.vcomponents.FDCE
+    generic map(
+      INIT => '0'
+    )
+        port map (
+      C => wr_clk,
+      CE => '1',
+      CLR => srst,
+      D => wr_tmp,
+      Q => wr_ack
+    );
+rd_rst_busy_INST_0: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"FFFFFFFE"
+    )
+        port map (
+      I0 => rd_rst_busy_INST_0_i_1_n_0,
+      I1 => rd_rst_busy_INST_0_i_2_n_0,
+      I2 => rrst_busy_i(1),
+      I3 => rrst_busy_i(2),
+      I4 => rrst_busy_i(3),
+      O => rd_rst_busy
+    );
+rd_rst_busy_INST_0_i_1: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FFFFFFFFFFFFFFFE"
+    )
+        port map (
+      I0 => rrst_busy_i(14),
+      I1 => rrst_busy_i(15),
+      I2 => rrst_busy_i(12),
+      I3 => rrst_busy_i(13),
+      I4 => rrst_busy_i(11),
+      I5 => rrst_busy_i(10),
+      O => rd_rst_busy_INST_0_i_1_n_0
+    );
+rd_rst_busy_INST_0_i_2: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FFFFFFFFFFFFFFFE"
+    )
+        port map (
+      I0 => rrst_busy_i(8),
+      I1 => rrst_busy_i(9),
+      I2 => rrst_busy_i(6),
+      I3 => rrst_busy_i(7),
+      I4 => rrst_busy_i(5),
+      I5 => rrst_busy_i(4),
+      O => rd_rst_busy_INST_0_i_2_n_0
+    );
 \rst_val_sym.gextw_sym[10].inst_extd\: entity work.trans_fifo_builtin_extdepth
      port map (
-      clk => clk,
+      EMPTY => p_51_out,
+      FULL => p_52_out,
+      RDRSTBUSY => rrst_busy_i(10),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(10),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(719 downto 648),
       dout(71 downto 0) => dout(719 downto 648),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[11].inst_extd\: entity work.trans_fifo_builtin_extdepth_0
      port map (
-      clk => clk,
+      EMPTY => p_42_out,
+      FULL => p_43_out,
+      RDRSTBUSY => rrst_busy_i(11),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(11),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(791 downto 720),
       dout(71 downto 0) => dout(791 downto 720),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[12].inst_extd\: entity work.trans_fifo_builtin_extdepth_1
      port map (
-      clk => clk,
+      EMPTY => p_33_out,
+      FULL => p_34_out,
+      RDRSTBUSY => rrst_busy_i(12),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(12),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(863 downto 792),
       dout(71 downto 0) => dout(863 downto 792),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[13].inst_extd\: entity work.trans_fifo_builtin_extdepth_2
      port map (
-      clk => clk,
+      EMPTY => p_33_out,
+      FULL => p_34_out,
+      RDRSTBUSY => rrst_busy_i(13),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(13),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(935 downto 864),
       dout(71 downto 0) => dout(935 downto 864),
-      rd_en => rd_en,
+      \gv.gv3.VALID_reg\ => p_6_out,
+      \gv.gv3.VALID_reg_0\ => p_15_out,
+      \gwakn.WR_ACK_reg\ => p_7_out,
+      \gwakn.WR_ACK_reg_0\ => p_16_out,
+      rd_clk => rd_clk,
+      rd_clk_0 => \rst_val_sym.gextw_sym[13].inst_extd_n_0\,
+      rd_clk_1 => \rst_val_sym.gextw_sym[13].inst_extd_n_1\,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[14].inst_extd\: entity work.trans_fifo_builtin_extdepth_3
      port map (
-      clk => clk,
+      EMPTY => p_15_out,
+      FULL => p_16_out,
+      RDRSTBUSY => rrst_busy_i(14),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(14),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(1007 downto 936),
       dout(71 downto 0) => dout(1007 downto 936),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[15].inst_extd\: entity work.trans_fifo_builtin_extdepth_4
      port map (
-      clk => clk,
+      EMPTY => p_6_out,
+      FULL => p_7_out,
+      RDRSTBUSY => rrst_busy_i(15),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(15),
+      WR_EN => wr_tmp,
       din(15 downto 0) => din(1023 downto 1008),
       dout(15 downto 0) => dout(1023 downto 1008),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[1].inst_extd\: entity work.trans_fifo_builtin_extdepth_5
      port map (
-      clk => clk,
+      EMPTY => p_132_out,
+      FULL => p_133_out,
+      RDRSTBUSY => rrst_busy_i(1),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(1),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      empty => empty,
-      full => full,
-      rd_en => rd_en,
-      rd_rst_busy => rd_rst_busy,
+      \gv.gv3.VALID_reg\ => p_114_out,
+      \gv.gv3.VALID_reg_0\ => p_123_out,
+      \gwakn.WR_ACK_reg\ => p_115_out,
+      \gwakn.WR_ACK_reg_0\ => p_124_out,
+      rd_clk => rd_clk,
+      rd_clk_0 => \rst_val_sym.gextw_sym[1].inst_extd_n_0\,
+      rd_clk_1 => \rst_val_sym.gextw_sym[1].inst_extd_n_2\,
       srst => srst,
-      wr_en => wr_en,
-      wr_rst_busy => wr_rst_busy
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[2].inst_extd\: entity work.trans_fifo_builtin_extdepth_6
      port map (
-      clk => clk,
+      EMPTY => p_123_out,
+      FULL => p_124_out,
+      RDRSTBUSY => rrst_busy_i(2),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(2),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(143 downto 72),
       dout(71 downto 0) => dout(143 downto 72),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[3].inst_extd\: entity work.trans_fifo_builtin_extdepth_7
      port map (
-      clk => clk,
+      EMPTY => p_114_out,
+      FULL => p_115_out,
+      RDRSTBUSY => rrst_busy_i(3),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(3),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(215 downto 144),
       dout(71 downto 0) => dout(215 downto 144),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[4].inst_extd\: entity work.trans_fifo_builtin_extdepth_8
      port map (
-      clk => clk,
+      EMPTY => p_105_out,
+      FULL => p_106_out,
+      RDRSTBUSY => rrst_busy_i(4),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(4),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(287 downto 216),
       dout(71 downto 0) => dout(287 downto 216),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[5].inst_extd\: entity work.trans_fifo_builtin_extdepth_9
      port map (
-      clk => clk,
+      EMPTY => p_132_out,
+      FULL => p_133_out,
+      RDRSTBUSY => rrst_busy_i(5),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(5),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(359 downto 288),
       dout(71 downto 0) => dout(359 downto 288),
-      rd_en => rd_en,
+      \^empty\ => empty,
+      empty_0 => p_114_out,
+      empty_1 => p_123_out,
+      empty_2 => \rst_val_sym.gextw_sym[13].inst_extd_n_1\,
+      empty_3 => \rst_val_sym.gextw_sym[9].inst_extd_n_3\,
+      empty_4 => p_105_out,
+      empty_5 => p_78_out,
+      empty_6 => p_87_out,
+      \^full\ => full,
+      full_0 => p_115_out,
+      full_1 => p_124_out,
+      full_2 => \rst_val_sym.gextw_sym[13].inst_extd_n_0\,
+      full_3 => \rst_val_sym.gextw_sym[9].inst_extd_n_1\,
+      full_4 => p_106_out,
+      full_5 => p_79_out,
+      full_6 => p_88_out,
+      rd_clk => rd_clk,
+      rd_clk_0 => \rst_val_sym.gextw_sym[5].inst_extd_n_1\,
+      rd_clk_1 => \rst_val_sym.gextw_sym[5].inst_extd_n_3\,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[6].inst_extd\: entity work.trans_fifo_builtin_extdepth_10
      port map (
-      clk => clk,
+      EMPTY => p_87_out,
+      FULL => p_88_out,
+      RDRSTBUSY => rrst_busy_i(6),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(6),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(431 downto 360),
       dout(71 downto 0) => dout(431 downto 360),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[7].inst_extd\: entity work.trans_fifo_builtin_extdepth_11
      port map (
-      clk => clk,
+      EMPTY => p_78_out,
+      FULL => p_79_out,
+      RDRSTBUSY => rrst_busy_i(7),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(7),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(503 downto 432),
       dout(71 downto 0) => dout(503 downto 432),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[8].inst_extd\: entity work.trans_fifo_builtin_extdepth_12
      port map (
-      clk => clk,
+      EMPTY => p_69_out,
+      FULL => p_70_out,
+      RDRSTBUSY => rrst_busy_i(8),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(8),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(575 downto 504),
       dout(71 downto 0) => dout(575 downto 504),
-      rd_en => rd_en,
+      rd_clk => rd_clk,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk
     );
 \rst_val_sym.gextw_sym[9].inst_extd\: entity work.trans_fifo_builtin_extdepth_13
      port map (
-      clk => clk,
+      EMPTY => p_69_out,
+      FULL => p_70_out,
+      RDRSTBUSY => rrst_busy_i(9),
+      RD_EN => rd_tmp,
+      WRRSTBUSY => wrst_busy_i(9),
+      WR_EN => wr_tmp,
       din(71 downto 0) => din(647 downto 576),
       dout(71 downto 0) => dout(647 downto 576),
-      rd_en => rd_en,
+      \gv.gv3.VALID_reg\ => \rst_val_sym.gextw_sym[13].inst_extd_n_1\,
+      \gv.gv3.VALID_reg_0\ => \rst_val_sym.gextw_sym[1].inst_extd_n_2\,
+      \gv.gv3.VALID_reg_1\ => \rst_val_sym.gextw_sym[5].inst_extd_n_3\,
+      \gv.gv3.VALID_reg_2\ => p_42_out,
+      \gv.gv3.VALID_reg_3\ => p_51_out,
+      \gwakn.WR_ACK_reg\ => \rst_val_sym.gextw_sym[13].inst_extd_n_0\,
+      \gwakn.WR_ACK_reg_0\ => \rst_val_sym.gextw_sym[1].inst_extd_n_0\,
+      \gwakn.WR_ACK_reg_1\ => \rst_val_sym.gextw_sym[5].inst_extd_n_1\,
+      \gwakn.WR_ACK_reg_2\ => p_43_out,
+      \gwakn.WR_ACK_reg_3\ => p_52_out,
+      rd_clk => rd_clk,
+      rd_clk_0 => \rst_val_sym.gextw_sym[9].inst_extd_n_1\,
+      rd_clk_1 => \rst_val_sym.gextw_sym[9].inst_extd_n_3\,
+      \^rd_en\ => rd_en,
       srst => srst,
-      wr_en => wr_en
+      wr_clk => wr_clk,
+      \^wr_en\ => wr_en
+    );
+wr_rst_busy_INST_0: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"FFFFFFFE"
+    )
+        port map (
+      I0 => wr_rst_busy_INST_0_i_1_n_0,
+      I1 => wr_rst_busy_INST_0_i_2_n_0,
+      I2 => wrst_busy_i(1),
+      I3 => wrst_busy_i(2),
+      I4 => wrst_busy_i(3),
+      O => wr_rst_busy
+    );
+wr_rst_busy_INST_0_i_1: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FFFFFFFFFFFFFFFE"
+    )
+        port map (
+      I0 => wrst_busy_i(14),
+      I1 => wrst_busy_i(15),
+      I2 => wrst_busy_i(12),
+      I3 => wrst_busy_i(13),
+      I4 => wrst_busy_i(11),
+      I5 => wrst_busy_i(10),
+      O => wr_rst_busy_INST_0_i_1_n_0
+    );
+wr_rst_busy_INST_0_i_2: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FFFFFFFFFFFFFFFE"
+    )
+        port map (
+      I0 => wrst_busy_i(8),
+      I1 => wrst_busy_i(9),
+      I2 => wrst_busy_i(6),
+      I3 => wrst_busy_i(7),
+      I4 => wrst_busy_i(5),
+      I5 => wrst_busy_i(4),
+      O => wr_rst_busy_INST_0_i_2_n_0
     );
 end STRUCTURE;
 library IEEE;
@@ -5729,33 +6426,37 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_fifo_generator_v13_2_3_builtin is
   port (
-    empty : out STD_LOGIC;
-    full : out STD_LOGIC;
-    rd_rst_busy : out STD_LOGIC;
-    wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    wr_ack : out STD_LOGIC;
+    valid : out STD_LOGIC;
+    wr_rst_busy : out STD_LOGIC;
+    rd_rst_busy : out STD_LOGIC;
+    full : out STD_LOGIC;
+    empty : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
     srst : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    din : in STD_LOGIC_VECTOR ( 1023 downto 0 );
     wr_en : in STD_LOGIC;
-    din : in STD_LOGIC_VECTOR ( 1023 downto 0 )
+    rd_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of trans_fifo_fifo_generator_v13_2_3_builtin : entity is "fifo_generator_v13_2_3_builtin";
 end trans_fifo_fifo_generator_v13_2_3_builtin;
 
 architecture STRUCTURE of trans_fifo_fifo_generator_v13_2_3_builtin is
 begin
 \v8_fifo.fblk\: entity work.trans_fifo_builtin_top
      port map (
-      clk => clk,
       din(1023 downto 0) => din(1023 downto 0),
       dout(1023 downto 0) => dout(1023 downto 0),
       empty => empty,
       full => full,
+      rd_clk => rd_clk,
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
+      valid => valid,
+      wr_ack => wr_ack,
+      wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -5766,33 +6467,37 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_fifo_generator_top is
   port (
-    empty : out STD_LOGIC;
-    full : out STD_LOGIC;
-    rd_rst_busy : out STD_LOGIC;
-    wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    wr_ack : out STD_LOGIC;
+    valid : out STD_LOGIC;
+    wr_rst_busy : out STD_LOGIC;
+    rd_rst_busy : out STD_LOGIC;
+    full : out STD_LOGIC;
+    empty : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
     srst : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    din : in STD_LOGIC_VECTOR ( 1023 downto 0 );
     wr_en : in STD_LOGIC;
-    din : in STD_LOGIC_VECTOR ( 1023 downto 0 )
+    rd_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of trans_fifo_fifo_generator_top : entity is "fifo_generator_top";
 end trans_fifo_fifo_generator_top;
 
 architecture STRUCTURE of trans_fifo_fifo_generator_top is
 begin
 \gbi.bi\: entity work.trans_fifo_fifo_generator_v13_2_3_builtin
      port map (
-      clk => clk,
       din(1023 downto 0) => din(1023 downto 0),
       dout(1023 downto 0) => dout(1023 downto 0),
       empty => empty,
       full => full,
+      rd_clk => rd_clk,
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
+      valid => valid,
+      wr_ack => wr_ack,
+      wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -5803,33 +6508,37 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo_fifo_generator_v13_2_3_synth is
   port (
-    empty : out STD_LOGIC;
-    full : out STD_LOGIC;
-    rd_rst_busy : out STD_LOGIC;
-    wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
+    wr_ack : out STD_LOGIC;
+    valid : out STD_LOGIC;
+    wr_rst_busy : out STD_LOGIC;
+    rd_rst_busy : out STD_LOGIC;
+    full : out STD_LOGIC;
+    empty : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
     srst : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    din : in STD_LOGIC_VECTOR ( 1023 downto 0 );
     wr_en : in STD_LOGIC;
-    din : in STD_LOGIC_VECTOR ( 1023 downto 0 )
+    rd_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of trans_fifo_fifo_generator_v13_2_3_synth : entity is "fifo_generator_v13_2_3_synth";
 end trans_fifo_fifo_generator_v13_2_3_synth;
 
 architecture STRUCTURE of trans_fifo_fifo_generator_v13_2_3_synth is
 begin
 \gconvfifo.rf\: entity work.trans_fifo_fifo_generator_top
      port map (
-      clk => clk,
       din(1023 downto 0) => din(1023 downto 0),
       dout(1023 downto 0) => dout(1023 downto 0),
       empty => empty,
       full => full,
+      rd_clk => rd_clk,
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
+      valid => valid,
+      wr_ack => wr_ack,
+      wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -6123,7 +6832,7 @@ entity trans_fifo_fifo_generator_v13_2_3 is
   attribute C_AXI_WUSER_WIDTH : integer;
   attribute C_AXI_WUSER_WIDTH of trans_fifo_fifo_generator_v13_2_3 : entity is 1;
   attribute C_COMMON_CLOCK : integer;
-  attribute C_COMMON_CLOCK of trans_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_COMMON_CLOCK of trans_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_COUNT_TYPE : integer;
   attribute C_COUNT_TYPE of trans_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_DATA_COUNT_WIDTH : integer;
@@ -6257,9 +6966,9 @@ entity trans_fifo_fifo_generator_v13_2_3 is
   attribute C_HAS_UNDERFLOW : integer;
   attribute C_HAS_UNDERFLOW of trans_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_VALID : integer;
-  attribute C_HAS_VALID of trans_fifo_fifo_generator_v13_2_3 : entity is 0;
+  attribute C_HAS_VALID of trans_fifo_fifo_generator_v13_2_3 : entity is 1;
   attribute C_HAS_WR_ACK : integer;
-  attribute C_HAS_WR_ACK of trans_fifo_fifo_generator_v13_2_3 : entity is 0;
+  attribute C_HAS_WR_ACK of trans_fifo_fifo_generator_v13_2_3 : entity is 1;
   attribute C_HAS_WR_DATA_COUNT : integer;
   attribute C_HAS_WR_DATA_COUNT of trans_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_WR_RST : integer;
@@ -6313,7 +7022,7 @@ entity trans_fifo_fifo_generator_v13_2_3 is
   attribute C_PRIM_FIFO_TYPE_WRCH : string;
   attribute C_PRIM_FIFO_TYPE_WRCH of trans_fifo_fifo_generator_v13_2_3 : entity is "512x36";
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL of trans_fifo_fifo_generator_v13_2_3 : entity is 2;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL of trans_fifo_fifo_generator_v13_2_3 : entity is 5;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_AXIS : integer;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_AXIS of trans_fifo_fifo_generator_v13_2_3 : entity is 1022;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_RACH : integer;
@@ -6327,7 +7036,7 @@ entity trans_fifo_fifo_generator_v13_2_3 is
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH : integer;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH of trans_fifo_fifo_generator_v13_2_3 : entity is 1022;
   attribute C_PROG_EMPTY_THRESH_NEGATE_VAL : integer;
-  attribute C_PROG_EMPTY_THRESH_NEGATE_VAL of trans_fifo_fifo_generator_v13_2_3 : entity is 3;
+  attribute C_PROG_EMPTY_THRESH_NEGATE_VAL of trans_fifo_fifo_generator_v13_2_3 : entity is 6;
   attribute C_PROG_EMPTY_TYPE : integer;
   attribute C_PROG_EMPTY_TYPE of trans_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_PROG_EMPTY_TYPE_AXIS : integer;
@@ -6381,7 +7090,7 @@ entity trans_fifo_fifo_generator_v13_2_3 is
   attribute C_RD_DEPTH : integer;
   attribute C_RD_DEPTH of trans_fifo_fifo_generator_v13_2_3 : entity is 512;
   attribute C_RD_FREQ : integer;
-  attribute C_RD_FREQ of trans_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_RD_FREQ of trans_fifo_fifo_generator_v13_2_3 : entity is 500;
   attribute C_RD_PNTR_WIDTH : integer;
   attribute C_RD_PNTR_WIDTH of trans_fifo_fifo_generator_v13_2_3 : entity is 9;
   attribute C_REG_SLICE_MODE_AXIS : integer;
@@ -6459,7 +7168,7 @@ entity trans_fifo_fifo_generator_v13_2_3 is
   attribute C_WR_DEPTH_WRCH : integer;
   attribute C_WR_DEPTH_WRCH of trans_fifo_fifo_generator_v13_2_3 : entity is 16;
   attribute C_WR_FREQ : integer;
-  attribute C_WR_FREQ of trans_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_WR_FREQ of trans_fifo_fifo_generator_v13_2_3 : entity is 100;
   attribute C_WR_PNTR_WIDTH : integer;
   attribute C_WR_PNTR_WIDTH of trans_fifo_fifo_generator_v13_2_3 : entity is 9;
   attribute C_WR_PNTR_WIDTH_AXIS : integer;
@@ -6476,8 +7185,6 @@ entity trans_fifo_fifo_generator_v13_2_3 is
   attribute C_WR_PNTR_WIDTH_WRCH of trans_fifo_fifo_generator_v13_2_3 : entity is 4;
   attribute C_WR_RESPONSE_LATENCY : integer;
   attribute C_WR_RESPONSE_LATENCY of trans_fifo_fifo_generator_v13_2_3 : entity is 1;
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of trans_fifo_fifo_generator_v13_2_3 : entity is "fifo_generator_v13_2_3";
 end trans_fifo_fifo_generator_v13_2_3;
 
 architecture STRUCTURE of trans_fifo_fifo_generator_v13_2_3 is
@@ -6993,8 +7700,6 @@ begin
   s_axis_tready <= \<const0>\;
   sbiterr <= \<const0>\;
   underflow <= \<const0>\;
-  valid <= \<const0>\;
-  wr_ack <= \<const0>\;
   wr_data_count(8) <= \<const0>\;
   wr_data_count(7) <= \<const0>\;
   wr_data_count(6) <= \<const0>\;
@@ -7014,14 +7719,17 @@ VCC: unisim.vcomponents.VCC
     );
 inst_fifo_gen: entity work.trans_fifo_fifo_generator_v13_2_3_synth
      port map (
-      clk => clk,
       din(1023 downto 0) => din(1023 downto 0),
       dout(1023 downto 0) => dout(1023 downto 0),
       empty => empty,
       full => full,
+      rd_clk => rd_clk,
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
+      valid => valid,
+      wr_ack => wr_ack,
+      wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -7032,14 +7740,17 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity trans_fifo is
   port (
-    clk : in STD_LOGIC;
     srst : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_clk : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 1023 downto 0 );
     wr_en : in STD_LOGIC;
     rd_en : in STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
     full : out STD_LOGIC;
+    wr_ack : out STD_LOGIC;
     empty : out STD_LOGIC;
+    valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC
   );
@@ -7113,8 +7824,6 @@ architecture STRUCTURE of trans_fifo is
   signal NLW_U0_s_axis_tready_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_sbiterr_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_underflow_UNCONNECTED : STD_LOGIC;
-  signal NLW_U0_valid_UNCONNECTED : STD_LOGIC;
-  signal NLW_U0_wr_ack_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_axi_ar_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal NLW_U0_axi_ar_rd_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal NLW_U0_axi_ar_wr_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
@@ -7226,7 +7935,7 @@ architecture STRUCTURE of trans_fifo is
   attribute C_AXI_WUSER_WIDTH : integer;
   attribute C_AXI_WUSER_WIDTH of U0 : label is 1;
   attribute C_COMMON_CLOCK : integer;
-  attribute C_COMMON_CLOCK of U0 : label is 1;
+  attribute C_COMMON_CLOCK of U0 : label is 0;
   attribute C_COUNT_TYPE : integer;
   attribute C_COUNT_TYPE of U0 : label is 0;
   attribute C_DATA_COUNT_WIDTH : integer;
@@ -7360,9 +8069,9 @@ architecture STRUCTURE of trans_fifo is
   attribute C_HAS_UNDERFLOW : integer;
   attribute C_HAS_UNDERFLOW of U0 : label is 0;
   attribute C_HAS_VALID : integer;
-  attribute C_HAS_VALID of U0 : label is 0;
+  attribute C_HAS_VALID of U0 : label is 1;
   attribute C_HAS_WR_ACK : integer;
-  attribute C_HAS_WR_ACK of U0 : label is 0;
+  attribute C_HAS_WR_ACK of U0 : label is 1;
   attribute C_HAS_WR_DATA_COUNT : integer;
   attribute C_HAS_WR_DATA_COUNT of U0 : label is 0;
   attribute C_HAS_WR_RST : integer;
@@ -7416,7 +8125,7 @@ architecture STRUCTURE of trans_fifo is
   attribute C_PRIM_FIFO_TYPE_WRCH : string;
   attribute C_PRIM_FIFO_TYPE_WRCH of U0 : label is "512x36";
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL of U0 : label is 2;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL of U0 : label is 5;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_AXIS : integer;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_AXIS of U0 : label is 1022;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_RACH : integer;
@@ -7430,7 +8139,7 @@ architecture STRUCTURE of trans_fifo is
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH : integer;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH of U0 : label is 1022;
   attribute C_PROG_EMPTY_THRESH_NEGATE_VAL : integer;
-  attribute C_PROG_EMPTY_THRESH_NEGATE_VAL of U0 : label is 3;
+  attribute C_PROG_EMPTY_THRESH_NEGATE_VAL of U0 : label is 6;
   attribute C_PROG_EMPTY_TYPE : integer;
   attribute C_PROG_EMPTY_TYPE of U0 : label is 0;
   attribute C_PROG_EMPTY_TYPE_AXIS : integer;
@@ -7484,7 +8193,7 @@ architecture STRUCTURE of trans_fifo is
   attribute C_RD_DEPTH : integer;
   attribute C_RD_DEPTH of U0 : label is 512;
   attribute C_RD_FREQ : integer;
-  attribute C_RD_FREQ of U0 : label is 1;
+  attribute C_RD_FREQ of U0 : label is 500;
   attribute C_RD_PNTR_WIDTH : integer;
   attribute C_RD_PNTR_WIDTH of U0 : label is 9;
   attribute C_REG_SLICE_MODE_AXIS : integer;
@@ -7562,7 +8271,7 @@ architecture STRUCTURE of trans_fifo is
   attribute C_WR_DEPTH_WRCH : integer;
   attribute C_WR_DEPTH_WRCH of U0 : label is 16;
   attribute C_WR_FREQ : integer;
-  attribute C_WR_FREQ of U0 : label is 1;
+  attribute C_WR_FREQ of U0 : label is 100;
   attribute C_WR_PNTR_WIDTH : integer;
   attribute C_WR_PNTR_WIDTH of U0 : label is 9;
   attribute C_WR_PNTR_WIDTH_AXIS : integer;
@@ -7580,12 +8289,14 @@ architecture STRUCTURE of trans_fifo is
   attribute C_WR_RESPONSE_LATENCY : integer;
   attribute C_WR_RESPONSE_LATENCY of U0 : label is 1;
   attribute x_interface_info : string;
-  attribute x_interface_info of clk : signal is "xilinx.com:signal:clock:1.0 core_clk CLK";
-  attribute x_interface_parameter : string;
-  attribute x_interface_parameter of clk : signal is "XIL_INTERFACENAME core_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0";
   attribute x_interface_info of empty : signal is "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY";
   attribute x_interface_info of full : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE FULL";
+  attribute x_interface_info of rd_clk : signal is "xilinx.com:signal:clock:1.0 read_clk CLK";
+  attribute x_interface_parameter : string;
+  attribute x_interface_parameter of rd_clk : signal is "XIL_INTERFACENAME read_clk, FREQ_HZ 500000000, PHASE 0.000, INSERT_VIP 0";
   attribute x_interface_info of rd_en : signal is "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN";
+  attribute x_interface_info of wr_clk : signal is "xilinx.com:signal:clock:1.0 write_clk CLK";
+  attribute x_interface_parameter of wr_clk : signal is "XIL_INTERFACENAME write_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0";
   attribute x_interface_info of wr_en : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN";
   attribute x_interface_info of din : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA";
   attribute x_interface_info of dout : signal is "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_DATA";
@@ -7674,7 +8385,7 @@ U0: entity work.trans_fifo_fifo_generator_v13_2_3
       axis_wr_data_count(10 downto 0) => NLW_U0_axis_wr_data_count_UNCONNECTED(10 downto 0),
       backup => '0',
       backup_marker => '0',
-      clk => clk,
+      clk => '0',
       data_count(8 downto 0) => NLW_U0_data_count_UNCONNECTED(8 downto 0),
       dbiterr => NLW_U0_dbiterr_UNCONNECTED,
       din(1023 downto 0) => din(1023 downto 0),
@@ -7749,7 +8460,7 @@ U0: entity work.trans_fifo_fifo_generator_v13_2_3
       prog_full_thresh(8 downto 0) => B"000000000",
       prog_full_thresh_assert(8 downto 0) => B"000000000",
       prog_full_thresh_negate(8 downto 0) => B"000000000",
-      rd_clk => '0',
+      rd_clk => rd_clk,
       rd_data_count(8 downto 0) => NLW_U0_rd_data_count_UNCONNECTED(8 downto 0),
       rd_en => rd_en,
       rd_rst => '0',
@@ -7816,9 +8527,9 @@ U0: entity work.trans_fifo_fifo_generator_v13_2_3
       sleep => '0',
       srst => srst,
       underflow => NLW_U0_underflow_UNCONNECTED,
-      valid => NLW_U0_valid_UNCONNECTED,
-      wr_ack => NLW_U0_wr_ack_UNCONNECTED,
-      wr_clk => '0',
+      valid => valid,
+      wr_ack => wr_ack,
+      wr_clk => wr_clk,
       wr_data_count(8 downto 0) => NLW_U0_wr_data_count_UNCONNECTED(8 downto 0),
       wr_en => wr_en,
       wr_rst => '0',

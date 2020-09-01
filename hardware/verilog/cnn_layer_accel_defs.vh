@@ -45,9 +45,9 @@
 `define AXI_WR_LEN_WIDTH                32
 `define AXI_RD_ADDR_WIDTH               32
 `define AXI_WR_ADDR_WIDTH               32
-`define AXI_RD_DATA_WIDTH               256
-`define AXI_WR_DATA_WIDTH               256
-`define AXI_INTC_RD_WIDTH				1024
+`define AXI_RD_DATA_WIDTH               1024
+`define AXI_WR_DATA_WIDTH               1024
+`define AXI_INT_DT_WIDTH                1024
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -538,9 +538,36 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // [9] FAS TRANS FIELDS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
+`define TRANS_AWP_CFG                   0
+`define TRANS_AWP_CFG_ACK               1
+`define TRANS_JOB_FETCH                 2
+`define TRANS_AWP_START                 3
+`define TRANS_AWP_START_ACK             4
+`define TRANS_RESULT_WRITE              5
+`define TRANS_JOB_CMPL                  6
+`define TRANS_JOB_CMPL_ACK              7
 
+`define TRANS_OP_WIDTH			        3
+`define TRANS_OP_LOW			        0
+`define TRANS_OP_HIGH				    (`TRANS_OP_LOW + (`TRANS_OP_WIDTH  - 1))
+`define TRANS_OP_FIELD			        (`TRANS_OP_HIGH:`TRANS_OP_LOW)
 
-`define JOB_FETCH_FIFO_DT_WTH 				1
+`define TRANS_PYLD_WIDTH			    floor((`AXI_INT_DT_WIDTH - `TRANS_OP_WIDTH) / `PIXEL_WIDTH)
+`define TRANS_PYLD_LOW			        (`TRANS_OP_HIGH + 1)
+`define TRANS_PYLD_HIGH				    (`TRANS_PYLD_LOW + (`TRANS_PYLD_WIDTH - 1))
+`define TRANS_PYLD_FIELD			    (`TRANS_PYLD_HIGH):(`TRANS_PYLD_LOW)
+
+`define TRANS_FIFO_WIH                  (`TRANS_OP_WIDTH + `TRANS_PYLD_WIDTH)
+
+`define JOB_FTCH_AWP_ID_WIDTH			16
+`define JOB_FTCH_AWP_ID_LOW	            0
+`define JOB_FTCH_AWP_ID_HIGH			(`JOB_FTCH_AWP_ID_LOW + (`JOB_FTCH_AWP_ID_WIDTH - 1))
+`define JOB_FTCH_AWP_ID_FIELD			(`JOB_FTCH_AWP_ID_HIGH):(`JOB_FTCH_AWP_ID_LOW)
+
+`define JOB_FTCH_AWP_ID_WIDTH			16
+`define JOB_FTCH_AWP_ID_LOW	            0
+`define JOB_FTCH_AWP_ID_HIGH			(`JOB_FTCH_AWP_ID_LOW + (`JOB_FTCH_AWP_ID_WIDTH - 1))
+`define JOB_FTCH_AWP_ID_FIELD			(`JOB_FTCH_AWP_ID_HIGH):(`JOB_FTCH_AWP_ID_LOW)
 
 
 `endif
