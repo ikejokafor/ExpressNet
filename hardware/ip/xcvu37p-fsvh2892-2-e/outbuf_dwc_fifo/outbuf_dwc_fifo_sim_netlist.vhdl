@@ -1,11 +1,11 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Sun Aug 30 17:57:55 2020
+-- Date        : Mon Aug 31 15:46:45 2020
 -- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 -- Command     : write_vhdl -force -mode funcsim -rename_top outbuf_dwc_fifo -prefix
---               outbuf_dwc_fifo_ out_buf_dwc_fifo_sim_netlist.vhdl
--- Design      : out_buf_dwc_fifo
+--               outbuf_dwc_fifo_ conv1x1_dwc_fifo_sim_netlist.vhdl
+-- Design      : conv1x1_dwc_fifo
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
 -- Device      : xcvu37p-fsvh2892-2-e
@@ -6582,15 +6582,15 @@ entity outbuf_dwc_fifo_fifo_generator_v13_2_3 is
   attribute C_IMPLEMENTATION_TYPE_AXIS : integer;
   attribute C_IMPLEMENTATION_TYPE_AXIS of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 1;
   attribute C_IMPLEMENTATION_TYPE_RACH : integer;
-  attribute C_IMPLEMENTATION_TYPE_RACH of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_RACH of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 2;
   attribute C_IMPLEMENTATION_TYPE_RDCH : integer;
   attribute C_IMPLEMENTATION_TYPE_RDCH of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 1;
   attribute C_IMPLEMENTATION_TYPE_WACH : integer;
-  attribute C_IMPLEMENTATION_TYPE_WACH of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_WACH of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 2;
   attribute C_IMPLEMENTATION_TYPE_WDCH : integer;
   attribute C_IMPLEMENTATION_TYPE_WDCH of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 1;
   attribute C_IMPLEMENTATION_TYPE_WRCH : integer;
-  attribute C_IMPLEMENTATION_TYPE_WRCH of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_WRCH of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 2;
   attribute C_INIT_WR_PNTR_VAL : integer;
   attribute C_INIT_WR_PNTR_VAL of outbuf_dwc_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_INTERFACE_TYPE : integer;
@@ -7364,7 +7364,7 @@ entity outbuf_dwc_fifo is
   attribute NotValidForBitStream : boolean;
   attribute NotValidForBitStream of outbuf_dwc_fifo : entity is true;
   attribute CHECK_LICENSE_TYPE : string;
-  attribute CHECK_LICENSE_TYPE of outbuf_dwc_fifo : entity is "out_buf_dwc_fifo,fifo_generator_v13_2_3,{}";
+  attribute CHECK_LICENSE_TYPE of outbuf_dwc_fifo : entity is "conv1x1_dwc_fifo,fifo_generator_v13_2_3,{}";
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of outbuf_dwc_fifo : entity is "yes";
   attribute x_core_info : string;
@@ -7689,15 +7689,15 @@ architecture STRUCTURE of outbuf_dwc_fifo is
   attribute C_IMPLEMENTATION_TYPE_AXIS : integer;
   attribute C_IMPLEMENTATION_TYPE_AXIS of U0 : label is 1;
   attribute C_IMPLEMENTATION_TYPE_RACH : integer;
-  attribute C_IMPLEMENTATION_TYPE_RACH of U0 : label is 1;
+  attribute C_IMPLEMENTATION_TYPE_RACH of U0 : label is 2;
   attribute C_IMPLEMENTATION_TYPE_RDCH : integer;
   attribute C_IMPLEMENTATION_TYPE_RDCH of U0 : label is 1;
   attribute C_IMPLEMENTATION_TYPE_WACH : integer;
-  attribute C_IMPLEMENTATION_TYPE_WACH of U0 : label is 1;
+  attribute C_IMPLEMENTATION_TYPE_WACH of U0 : label is 2;
   attribute C_IMPLEMENTATION_TYPE_WDCH : integer;
   attribute C_IMPLEMENTATION_TYPE_WDCH of U0 : label is 1;
   attribute C_IMPLEMENTATION_TYPE_WRCH : integer;
-  attribute C_IMPLEMENTATION_TYPE_WRCH of U0 : label is 1;
+  attribute C_IMPLEMENTATION_TYPE_WRCH of U0 : label is 2;
   attribute C_INIT_WR_PNTR_VAL : integer;
   attribute C_INIT_WR_PNTR_VAL of U0 : label is 0;
   attribute C_INTERFACE_TYPE : integer;

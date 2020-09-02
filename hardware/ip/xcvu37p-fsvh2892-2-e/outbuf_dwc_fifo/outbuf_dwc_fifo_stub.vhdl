@@ -1,11 +1,11 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Sun Aug 30 17:57:54 2020
+-- Date        : Mon Aug 31 15:46:44 2020
 -- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 -- Command     : write_vhdl -force -mode synth_stub -rename_top outbuf_dwc_fifo -prefix
---               outbuf_dwc_fifo_ out_buf_dwc_fifo_stub.vhdl
--- Design      : out_buf_dwc_fifo
+--               outbuf_dwc_fifo_ conv1x1_dwc_fifo_stub.vhdl
+-- Design      : conv1x1_dwc_fifo
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xcvu37p-fsvh2892-2-e
 -- --------------------------------------------------------------------------------
