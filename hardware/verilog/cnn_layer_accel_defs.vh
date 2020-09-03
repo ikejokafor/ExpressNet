@@ -37,7 +37,6 @@
 `include "utilities.svh"
 
 
-
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 //	[] AXI DEFS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -307,7 +306,7 @@
 `define OUTBUF_FIFO_DEPTH					256
 `define OUTBUF_FIFO_DIN_FACTOR				floor(`AXI_WR_DATA_WIDTH, `PIXEL_WIDTH)
 `define MAX_AWP_PER_FAS						1
-`define MAX_FAS_RD_ID						4
+`define MAX_FAS_RD_ID						5
 `define FAS_JOB_FETCH_ID                    0
 `define FAS_RES_MAP_FETCH_ID                1
 `define FAS_PART_MAP_FETCH_ID               2
