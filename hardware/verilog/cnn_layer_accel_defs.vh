@@ -544,7 +544,7 @@
 `define TRANS_AWP_START_ACK             4
 `define TRANS_RESULT_WRITE              5
 `define TRANS_JOB_CMPL                  6
-`define TRANS_JOB_CMPL_ACK              7
+
 
 `define TRANS_OP_WIDTH			        3
 `define TRANS_OP_LOW			        0

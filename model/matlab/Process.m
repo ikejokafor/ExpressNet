@@ -43,7 +43,7 @@ function [li_outMaps] = Process( ...
     elseif(do_1x1_res && dpth_iter == num_depth_iter && krnl_iter == 1)
         % 2
         li_outMaps = Convolution(kernels1x1, bias1x1, li_outMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth);
-        li_outMaps = li_outMaps + li_resMaps;       
+        li_outMaps = li_outMaps + li_resMaps;
     elseif(do_1x1_res && dpth_iter == num_depth_iter && krnl_iter ~= 1)
         % 3
         li_outMaps = Convolution(kernels1x1, [], li_outMaps, nOut1x1Cols, nOut1x1Rows, out1x1Dpth);
@@ -98,7 +98,7 @@ function [li_outMaps] = Process( ...
         % 15
         li_outMaps = li_outMaps + li_partMaps;
     else
-        % 16
+        % 16 first depth iteration, no 1x1, res, or pm accum needed
         return
     end
     % 17 is residual only
