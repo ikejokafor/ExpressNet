@@ -12,3 +12,1226 @@
 # //  is prohibited from disclosure under the Trade Secrets Act,
 # //  18 U.S.C. Section 1905.
 # //
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:38:46 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:38:47 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:38:47 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(610): (vlog-2730) Undefined variable: 'conv1x1_'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(612): near "always": syntax error, unexpected always, expecting ';' or ','.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(633): near "[": syntax error, unexpected '['.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(633): (vlog-13205) Syntax error found in the scope following 'conv_1x1_vld'. Is there a missing '::'?
+# End time: 16:38:47 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 4, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:48:18 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:48:18 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:48:19 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(527): (vlog-2730) Undefined variable: 'conv1x1_vld_r'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(528): (vlog-2730) Undefined variable: 'conv1x1_vld_d'.
+# End time: 16:48:19 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:49:22 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:49:23 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:49:23 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(973): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2110) Illegal reference to memory "adder_tree_out_vld".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1018): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1020): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2110) Illegal reference to memory "adder_tree_out".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2110) Illegal reference to memory "krnl1x1Bias_bram_dout".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1460): (vlog-7045) 'conv1x1_dwc_fifo_rden' is driven by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(992).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 16:49:23 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 11, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:51:32 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:51:32 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:51:33 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(973): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2110) Illegal reference to memory "adder_tree_out_vld".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1018): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1020): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2110) Illegal reference to memory "adder_tree_out".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2110) Illegal reference to memory "krnl1x1Bias_bram_dout".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1460): (vlog-7045) 'conv1x1_dwc_fifo_rden' is driven by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(992).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 16:51:33 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 11, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:52:52 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:52:52 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:52:53 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(973): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2110) Illegal reference to memory "adder_tree_out_vld".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1018): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1020): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2110) Illegal reference to memory "adder_tree_out".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2110) Illegal reference to memory "krnl1x1Bias_bram_dout".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1460): (vlog-7045) 'conv1x1_dwc_fifo_rden' is driven by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(992).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 16:52:53 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 11, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:53:28 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 16:53:28 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 16:53:29 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(973): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2110) Illegal reference to memory "adder_tree_out_vld".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1012): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1018): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1020): (vlog-2997) Cannot assign a packed type 'bit signed[31:0]' to an unpacked type 'reg $[0:0]'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2110) Illegal reference to memory "adder_tree_out".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2110) Illegal reference to memory "krnl1x1Bias_bram_dout".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-13215) Cannot assign an unpacked type 'reg[15:0] $[0:0]' to a packed type 'reg'.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1460): (vlog-7045) 'conv1x1_dwc_fifo_rden' is driven by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(992).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 16:53:29 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 11, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:10:46 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:10:46 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:10:46 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1026): near ")": syntax error, unexpected ')'.
+# End time: 17:10:46 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:11:13 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:11:13 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:11:13 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2110) Illegal reference to memory "conv1x1_vld".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2110) Illegal reference to memory "conv1x1_bias_vld_d".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1462): (vlog-7045) 'conv1x1_dwc_fifo_rden' is driven by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1014).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:11:13 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 7, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:13:43 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:13:43 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:13:43 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2110) Illegal reference to memory "conv1x1_vld".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2110) Illegal reference to memory "conv1x1_bias_vld_d".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1462): (vlog-7045) 'conv1x1_dwc_fifo_rden' is driven by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1014).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:13:44 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 7, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:15:43 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:15:43 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:15:44 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2110) Illegal reference to memory "conv1x1_bias_vld_d".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1462): (vlog-7045) 'conv1x1_dwc_fifo_rden' is driven by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1014).
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:15:44 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 5, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:18:41 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:18:41 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:18:41 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2110) Illegal reference to memory "conv1x1_bias_vld_d".
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1013): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:18:41 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 4, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:19:39 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:19:39 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:19:39 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:19:39 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:21:17 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:21:17 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:21:17 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:21:17 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:22:27 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:22:27 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:22:27 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:22:27 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:23:04 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:23:04 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:23:05 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:23:05 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:23:42 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:23:42 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:23:42 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(994): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:23:43 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:23:54 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:23:54 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:23:55 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(994): (vlog-2990) Illegal operation on unpacked type.
+# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(589): (vlog-7080) Condition expression must be of singular type.
+# End time: 17:23:55 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:24:12 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:24:12 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:24:13 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(994): (vlog-2990) Illegal operation on unpacked type.
+# End time: 17:24:13 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:24:58 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:24:58 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:24:58 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(994): (vlog-2990) Illegal operation on unpacked type.
+# End time: 17:24:58 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:26:32 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 17:26:33 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 17:26:33 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(995): (vlog-2990) Illegal operation on unpacked type.
+# End time: 17:26:33 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:04:05 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:04:05 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:04:06 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(731): (vlog-2623) Undefined variable: resdMap_dpth_bram_wren.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(732): (vlog-2623) Undefined variable: resdMap_dpth_bram_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(751): (vlog-2623) Undefined variable: resdMap_conv_bram_wren.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(752): (vlog-2623) Undefined variable: resdMap_conv_bram_datain.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1017): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1033): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1294): (vlog-2730) Undefined variable: 'resdMap_bram_prog_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1357): (vlog-2730) Undefined variable: 'resdMap_bram_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1557): (vlog-2730) Undefined variable: 'resdMap_bram_rdAddr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1596): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1646): (vlog-2623) Undefined variable: resdMap_bram_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1646): (vlog-2730) Undefined variable: 'resdMap_bram_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1647): (vlog-2623) Undefined variable: resdMap_bram_prog_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1653): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(70): (vlog-13294) Identifier must be declared with a port mode: resdMap_dpth_bram_wren.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(71): (vlog-13294) Identifier must be declared with a port mode: resdMap_conv_bram_wren.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(79): (vlog-13294) Identifier must be declared with a port mode: resdMap_dpth_bram_datain.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(80): (vlog-13294) Identifier must be declared with a port mode: resdMap_conv_bram_datain.
+# End time: 18:04:06 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 12, Warnings: 6
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:05:56 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:05:56 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:05:56 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(734): (vlog-2623) Undefined variable: resdMap_dpth_bram_datain.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(754): (vlog-2623) Undefined variable: resdMap_conv_bram_datain.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1019): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1035): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1296): (vlog-2730) Undefined variable: 'resdMap_bram_prog_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1359): (vlog-2730) Undefined variable: 'resdMap_bram_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1559): (vlog-2730) Undefined variable: 'resdMap_bram_rdAddr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1598): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1648): (vlog-2623) Undefined variable: resdMap_bram_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1648): (vlog-2730) Undefined variable: 'resdMap_bram_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1649): (vlog-2623) Undefined variable: resdMap_bram_prog_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1655): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(79): (vlog-13294) Identifier must be declared with a port mode: resdMap_dpth_bram_datain.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(80): (vlog-13294) Identifier must be declared with a port mode: resdMap_conv_bram_datain.
+# End time: 18:05:56 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 10, Warnings: 4
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:07:09 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:07:10 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:07:10 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1021): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1037): (vlog-2730) Undefined variable: 'resdMap_bram_dout'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1298): (vlog-2730) Undefined variable: 'resdMap_bram_prog_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1361): (vlog-2730) Undefined variable: 'resdMap_bram_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1561): (vlog-2730) Undefined variable: 'resdMap_bram_rdAddr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1600): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1650): (vlog-2623) Undefined variable: resdMap_bram_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1650): (vlog-2730) Undefined variable: 'resdMap_bram_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1651): (vlog-2623) Undefined variable: resdMap_bram_prog_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1657): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# End time: 18:07:10 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 8, Warnings: 2
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:08:17 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:08:17 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:08:17 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1290): (vlog-2730) Undefined variable: 'resdMap_bram_prog_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1353): (vlog-2730) Undefined variable: 'resdMap_bram_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1553): (vlog-2730) Undefined variable: 'resdMap_bram_rdAddr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1592): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1642): (vlog-2623) Undefined variable: resdMap_bram_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1642): (vlog-2730) Undefined variable: 'resdMap_bram_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1643): (vlog-2623) Undefined variable: resdMap_bram_prog_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1649): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# End time: 18:08:17 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 6, Warnings: 2
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:09:26 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:09:26 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:09:26 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1353): (vlog-2730) Undefined variable: 'resdMap_bram_empty'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1553): (vlog-2730) Undefined variable: 'resdMap_bram_rdAddr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1592): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1642): (vlog-2623) Undefined variable: resdMap_bram_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1642): (vlog-2730) Undefined variable: 'resdMap_bram_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1643): (vlog-2623) Undefined variable: resdMap_bram_prog_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1649): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# End time: 18:09:26 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 5, Warnings: 2
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:11:25 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:11:25 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:11:25 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1556): (vlog-2730) Undefined variable: 'resdMap_bram_rdAddr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1595): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1645): (vlog-2730) Undefined variable: 'resdMap_bram_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1646): (vlog-2623) Undefined variable: resdMap_bram_prog_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1652): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# End time: 18:11:26 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 4, Warnings: 1
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:12:01 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:12:01 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:12:02 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1596): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1646): (vlog-2730) Undefined variable: 'resdMap_bram_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1647): (vlog-2623) Undefined variable: resdMap_bram_prog_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1653): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# End time: 18:12:02 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 3, Warnings: 1
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:12:21 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:12:21 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:12:22 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1646): (vlog-2730) Undefined variable: 'resdMap_bram_count'.
+# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1647): (vlog-2623) Undefined variable: resdMap_bram_prog_empty.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1653): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# End time: 18:12:22 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 1
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:14:15 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:14:15 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:14:16 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1657): (vlog-2730) Undefined variable: 'resdMap_bram_rden'.
+# End time: 18:14:16 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:14:36 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:14:36 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:14:37 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(172): In, out, or inout does not appear in port list: resdMap_bram_wren.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(182): In, out, or inout does not appear in port list: resdMap_bram_datain.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1022): (vlog-2990) Illegal operation on unpacked type.
+# End time: 18:14:37 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 3, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:15:03 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:15:03 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:15:03 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(181): In, out, or inout does not appear in port list: resdMap_bram_datain.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1021): (vlog-2990) Illegal operation on unpacked type.
+# End time: 18:15:03 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:17:00 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:17:00 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:17:01 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1020): (vlog-2990) Illegal operation on unpacked type.
+# End time: 18:17:01 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 9
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:17:18 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:17:19 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:17:19 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# 
+# Top level modules:
+# 	cnn_layer_accel_FAS
+# End time: 18:17:19 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:17:19 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
+# -- Compiling module testbench
+# ** Error: ./testbench.sv(43): (vlog-2163) Macro `AXI_RD_ADDR_WIDTH is undefined.
+# ** Error: (vlog-13069) ./testbench.sv(43): near ";": syntax error, unexpected ';'.
+# ** Error: ./testbench.sv(44): (vlog-2163) Macro `AXI_RD_LEN_WIDTH is undefined.
+# ** Error: (vlog-13069) ./testbench.sv(44): near ";": syntax error, unexpected ';'.
+# ** Error: ./testbench.sv(80): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(86): (vlog-2730) Undefined variable: 'C_SYS_MEM_RD_ADDR_WTH'.
+# ** Error: ./testbench.sv(87): (vlog-2730) Undefined variable: 'C_SYS_MEM_RD_LEN_WTH'.
+# ** Error: ./testbench.sv(92): (vlog-2163) Macro `AXI_WR_ADDR_WIDTH is undefined.
+# ** Error: ./testbench.sv(93): (vlog-2163) Macro `AXI_WR_LEN_WIDTH is undefined.
+# ** Error: ./testbench.sv(107): (vlog-2163) Macro `AXI_INTC_DT_WIDTH is undefined.
+# ** Error: ./testbench.sv(108): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(109): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(110): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(111): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(112): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(115): (vlog-2163) Macro `AXI_WR_DATA_WIDTH is undefined.
+# End time: 18:17:19 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 16, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 10
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:20:26 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:20:26 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:20:26 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# 
+# Top level modules:
+# 	cnn_layer_accel_FAS
+# End time: 18:20:26 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:20:27 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
+# -- Compiling module testbench
+# ** Error: ./testbench.sv(43): (vlog-2163) Macro `AXI_RD_ADDR_WIDTH is undefined.
+# ** Error: (vlog-13069) ./testbench.sv(43): near ";": syntax error, unexpected ';'.
+# ** Error: ./testbench.sv(44): (vlog-2163) Macro `AXI_RD_LEN_WIDTH is undefined.
+# ** Error: (vlog-13069) ./testbench.sv(44): near ";": syntax error, unexpected ';'.
+# ** Error: ./testbench.sv(80): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(86): (vlog-2730) Undefined variable: 'C_SYS_MEM_RD_ADDR_WTH'.
+# ** Error: ./testbench.sv(87): (vlog-2730) Undefined variable: 'C_SYS_MEM_RD_LEN_WTH'.
+# ** Error: ./testbench.sv(92): (vlog-2163) Macro `AXI_WR_ADDR_WIDTH is undefined.
+# ** Error: ./testbench.sv(93): (vlog-2163) Macro `AXI_WR_LEN_WIDTH is undefined.
+# ** Error: ./testbench.sv(107): (vlog-2163) Macro `AXI_INTC_DT_WIDTH is undefined.
+# ** Error: ./testbench.sv(108): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(109): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(110): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(111): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(112): (vlog-2163) Macro `AXI_RD_DATA_WIDTH is undefined.
+# ** Error: ./testbench.sv(115): (vlog-2163) Macro `AXI_WR_DATA_WIDTH is undefined.
+# End time: 18:20:27 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 16, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 10
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:53 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:26:53 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:53 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# 
+# Top level modules:
+# 	cnn_layer_accel_FAS
+# End time: 18:26:53 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:54 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
+# -- Compiling module testbench
+# ** Warning: ./testbench.sv(154): (vlog-2623) Undefined variable: cfg_data.
+# ** Warning: ./testbench.sv(155): (vlog-2623) Undefined variable: cfg_grp.
+# ** Warning: ./testbench.sv(174): (vlog-2623) Undefined variable: resdMap_bram_wren.
+# ** Warning: ./testbench.sv(182): (vlog-2623) Undefined variable: resdMap_bram_datain.
+# 
+# Top level modules:
+# 	testbench
+# End time: 18:26:54 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 4
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:54 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v 
+# -- Compiling module conv1x1_dwc_fifo
+# 
+# Top level modules:
+# 	conv1x1_dwc_fifo
+# End time: 18:26:54 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:55 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_dwc_fifo/sim/outbuf_dwc_fifo.v 
+# -- Compiling module outbuf_dwc_fifo
+# 
+# Top level modules:
+# 	outbuf_dwc_fifo
+# End time: 18:26:55 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:55 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/sim/outbuf_fifo.v 
+# -- Compiling module outbuf_fifo
+# 
+# Top level modules:
+# 	outbuf_fifo
+# End time: 18:26:55 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:55 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
+# -- Compiling module prevMap_fifo
+# 
+# Top level modules:
+# 	prevMap_fifo
+# End time: 18:26:55 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:56 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_fifo/sim/trans_fifo.v 
+# -- Compiling module trans_fifo
+# 
+# Top level modules:
+# 	trans_fifo
+# End time: 18:26:56 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:56 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
+# -- Compiling module prevMap_fifo
+# 
+# Top level modules:
+# 	prevMap_fifo
+# End time: 18:26:56 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:56 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/job_fetch_fifo/sim/job_fetch_fifo.v 
+# -- Compiling module job_fetch_fifo
+# 
+# Top level modules:
+# 	job_fetch_fifo
+# End time: 18:26:57 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:57 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/res_dwc_fifo/sim/res_dwc_fifo.v 
+# -- Compiling module res_dwc_fifo
+# 
+# Top level modules:
+# 	res_dwc_fifo
+# End time: 18:26:57 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:26:57 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_fifo/sim/trans_fifo.v 
+# -- Compiling module trans_fifo
+# 
+# Top level modules:
+# 	trans_fifo
+# End time: 18:26:57 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+do sim_compile.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:27 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 18:33:28 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:28 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# 
+# Top level modules:
+# 	cnn_layer_accel_FAS
+# End time: 18:33:28 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:29 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 18:33:29 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:29 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v 
+# -- Compiling module conv1x1_dwc_fifo
+# 
+# Top level modules:
+# 	conv1x1_dwc_fifo
+# End time: 18:33:29 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:30 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_dwc_fifo/sim/outbuf_dwc_fifo.v 
+# -- Compiling module outbuf_dwc_fifo
+# 
+# Top level modules:
+# 	outbuf_dwc_fifo
+# End time: 18:33:30 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:30 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/sim/outbuf_fifo.v 
+# -- Compiling module outbuf_fifo
+# 
+# Top level modules:
+# 	outbuf_fifo
+# End time: 18:33:30 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:30 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
+# -- Compiling module prevMap_fifo
+# 
+# Top level modules:
+# 	prevMap_fifo
+# End time: 18:33:31 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:31 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_fifo/sim/trans_fifo.v 
+# -- Compiling module trans_fifo
+# 
+# Top level modules:
+# 	trans_fifo
+# End time: 18:33:31 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:31 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
+# -- Compiling module prevMap_fifo
+# 
+# Top level modules:
+# 	prevMap_fifo
+# End time: 18:33:31 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:32 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/job_fetch_fifo/sim/job_fetch_fifo.v 
+# -- Compiling module job_fetch_fifo
+# 
+# Top level modules:
+# 	job_fetch_fifo
+# End time: 18:33:32 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:32 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/res_dwc_fifo/sim/res_dwc_fifo.v 
+# -- Compiling module res_dwc_fifo
+# 
+# Top level modules:
+# 	res_dwc_fifo
+# End time: 18:33:32 on Sep 15,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 18:33:32 on Sep 15,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_fifo/sim/trans_fifo.v 
+# -- Compiling module trans_fifo
+# 
+# Top level modules:
+# 	trans_fifo
+# End time: 18:33:33 on Sep 15,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

@@ -38,15 +38,15 @@
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-//	[] AXI DEFS
+//	[] SYS DEFS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define AXI_RD_LEN_WIDTH                32
-`define AXI_WR_LEN_WIDTH                32
-`define AXI_RD_ADDR_WIDTH               32
-`define AXI_WR_ADDR_WIDTH               32
-`define AXI_RD_DATA_WIDTH               1024
-`define AXI_WR_DATA_WIDTH               1024
-`define AXI_INTC_DT_WIDTH               1024
+`define SYS_RD_LEN_WIDTH                32
+`define SYS_WR_LEN_WIDTH                32
+`define SYS_RD_ADDR_WIDTH               32
+`define SYS_WR_ADDR_WIDTH               32
+`define SYS_RD_DATA_WIDTH               1024
+`define SYS_WR_DATA_WIDTH               1024
+`define SYS_INTC_DT_WIDTH               1024
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -302,9 +302,9 @@
 `define OUTBUF_DWC_RD_WIDTH					(`KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH)
 `define OUTBUF_DWC_FIFO_DEPTH				256
 `define OUTBUF_WR_WIDTH						(`KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH)
-`define OUTBUF_RD_WIDTH						`AXI_RD_DATA_WIDTH
+`define OUTBUF_RD_WIDTH						`SYS_RD_DATA_WIDTH
 `define OUTBUF_FIFO_DEPTH					256
-`define OUTBUF_FIFO_DIN_FACTOR				floor(`AXI_WR_DATA_WIDTH, `PIXEL_WIDTH)
+`define OUTBUF_FIFO_DIN_FACTOR				floor(`SYS_WR_DATA_WIDTH, `PIXEL_WIDTH)
 `define MAX_AWP_PER_FAS						1
 `define MAX_FAS_RD_ID						5
 `define FAS_JOB_FETCH_ID                    0
@@ -551,7 +551,7 @@
 `define TRANS_OP_HIGH				    (`TRANS_OP_LOW + (`TRANS_OP_WIDTH  - 1))
 `define TRANS_OP_FIELD			        (`TRANS_OP_HIGH:`TRANS_OP_LOW)
 
-`define TRANS_PYLD_WIDTH			    floor((`AXI_INTC_DT_WIDTH - `TRANS_OP_WIDTH),  `PIXEL_WIDTH)
+`define TRANS_PYLD_WIDTH			    floor((`SYS_INTC_DT_WIDTH - `TRANS_OP_WIDTH),  `PIXEL_WIDTH)
 `define TRANS_PYLD_LOW			        (`TRANS_OP_HIGH + 1)
 `define TRANS_PYLD_HIGH				    (`TRANS_PYLD_LOW + (`TRANS_PYLD_WIDTH - 1))
 `define TRANS_PYLD_FIELD			    (`TRANS_PYLD_HIGH):(`TRANS_PYLD_LOW)
