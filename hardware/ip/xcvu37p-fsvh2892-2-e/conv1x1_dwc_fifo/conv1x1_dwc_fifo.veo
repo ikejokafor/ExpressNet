@@ -57,7 +57,7 @@
 conv1x1_dwc_fifo your_instance_name (
   .clk(clk),                  // input wire clk
   .srst(srst),                // input wire srst
-  .din(din),                  // input wire [127 : 0] din
+  .din(din),                  // input wire [1023 : 0] din
   .wr_en(wr_en),              // input wire wr_en
   .rd_en(rd_en),              // input wire rd_en
   .dout(dout),                // output wire [1023 : 0] dout

@@ -59,11 +59,9 @@ COMPONENT outbuf_fifo
     din : IN STD_LOGIC_VECTOR(1023 DOWNTO 0);
     wr_en : IN STD_LOGIC;
     rd_en : IN STD_LOGIC;
-    prog_full_thresh : IN STD_LOGIC_VECTOR(13 DOWNTO 0);
     dout : OUT STD_LOGIC_VECTOR(1023 DOWNTO 0);
     full : OUT STD_LOGIC;
     empty : OUT STD_LOGIC;
-    prog_full : OUT STD_LOGIC;
     wr_rst_busy : OUT STD_LOGIC;
     rd_rst_busy : OUT STD_LOGIC
   );
@@ -81,11 +79,9 @@ your_instance_name : outbuf_fifo
     din => din,
     wr_en => wr_en,
     rd_en => rd_en,
-    prog_full_thresh => prog_full_thresh,
     dout => dout,
     full => full,
     empty => empty,
-    prog_full => prog_full,
     wr_rst_busy => wr_rst_busy,
     rd_rst_busy => rd_rst_busy
   );

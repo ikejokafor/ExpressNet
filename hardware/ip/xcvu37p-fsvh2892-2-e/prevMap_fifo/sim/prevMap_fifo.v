@@ -54,33 +54,34 @@
 
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module prevMap_fifo (
-  clk,
   srst,
+  wr_clk,
+  rd_clk,
   din,
   wr_en,
   rd_en,
-  prog_empty_thresh,
   dout,
   full,
   wr_ack,
   empty,
   valid,
-  prog_empty,
   wr_rst_busy,
   rd_rst_busy
 );
 
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME core_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *)
-(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 core_clk CLK" *)
-input wire clk;
 input wire srst;
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME write_clk, FREQ_HZ 1000000, PHASE 0.000, INSERT_VIP 0" *)
+(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 write_clk CLK" *)
+input wire wr_clk;
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME read_clk, FREQ_HZ 1000000, PHASE 0.000, INSERT_VIP 0" *)
+(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 read_clk CLK" *)
+input wire rd_clk;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA" *)
 input wire [1023 : 0] din;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN" *)
 input wire wr_en;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN" *)
 input wire rd_en;
-input wire [13 : 0] prog_empty_thresh;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_DATA" *)
 output wire [1023 : 0] dout;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE FULL" *)
@@ -89,15 +90,14 @@ output wire wr_ack;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *)
 output wire empty;
 output wire valid;
-output wire prog_empty;
 output wire wr_rst_busy;
 output wire rd_rst_busy;
 
   fifo_generator_v13_2_3 #(
-    .C_COMMON_CLOCK(1),
+    .C_COMMON_CLOCK(0),
     .C_SELECT_XPM(0),
     .C_COUNT_TYPE(0),
-    .C_DATA_COUNT_WIDTH(14),
+    .C_DATA_COUNT_WIDTH(9),
     .C_DEFAULT_VALUE("BlankString"),
     .C_DIN_WIDTH(1024),
     .C_DOUT_RST_VAL("0"),
@@ -121,25 +121,25 @@ output wire rd_rst_busy;
     .C_HAS_WR_ACK(1),
     .C_HAS_WR_DATA_COUNT(0),
     .C_HAS_WR_RST(0),
-    .C_IMPLEMENTATION_TYPE(0),
+    .C_IMPLEMENTATION_TYPE(6),
     .C_INIT_WR_PNTR_VAL(0),
-    .C_MEMORY_TYPE(1),
+    .C_MEMORY_TYPE(4),
     .C_MIF_FILE_NAME("BlankString"),
     .C_OPTIMIZATION_MODE(0),
     .C_OVERFLOW_LOW(0),
     .C_PRELOAD_LATENCY(2),
     .C_PRELOAD_REGS(1),
-    .C_PRIM_FIFO_TYPE("2kx18"),
-    .C_PROG_EMPTY_THRESH_ASSERT_VAL(2),
-    .C_PROG_EMPTY_THRESH_NEGATE_VAL(3),
-    .C_PROG_EMPTY_TYPE(3),
-    .C_PROG_FULL_THRESH_ASSERT_VAL(16382),
-    .C_PROG_FULL_THRESH_NEGATE_VAL(16381),
+    .C_PRIM_FIFO_TYPE("512x72"),
+    .C_PROG_EMPTY_THRESH_ASSERT_VAL(5),
+    .C_PROG_EMPTY_THRESH_NEGATE_VAL(6),
+    .C_PROG_EMPTY_TYPE(0),
+    .C_PROG_FULL_THRESH_ASSERT_VAL(511),
+    .C_PROG_FULL_THRESH_NEGATE_VAL(510),
     .C_PROG_FULL_TYPE(0),
-    .C_RD_DATA_COUNT_WIDTH(14),
-    .C_RD_DEPTH(16384),
+    .C_RD_DATA_COUNT_WIDTH(9),
+    .C_RD_DEPTH(512),
     .C_RD_FREQ(1),
-    .C_RD_PNTR_WIDTH(14),
+    .C_RD_PNTR_WIDTH(9),
     .C_UNDERFLOW_LOW(0),
     .C_USE_DOUT_RST(1),
     .C_USE_ECC(0),
@@ -150,10 +150,10 @@ output wire rd_rst_busy;
     .C_USE_FWFT_DATA_COUNT(0),
     .C_VALID_LOW(0),
     .C_WR_ACK_LOW(0),
-    .C_WR_DATA_COUNT_WIDTH(14),
-    .C_WR_DEPTH(16384),
+    .C_WR_DATA_COUNT_WIDTH(9),
+    .C_WR_DEPTH(512),
     .C_WR_FREQ(1),
-    .C_WR_PNTR_WIDTH(14),
+    .C_WR_PNTR_WIDTH(9),
     .C_WR_RESPONSE_LATENCY(1),
     .C_MSGON_VAL(1),
     .C_ENABLE_RST_SYNC(1),
@@ -299,22 +299,22 @@ output wire rd_rst_busy;
   ) inst (
     .backup(1'D0),
     .backup_marker(1'D0),
-    .clk(clk),
+    .clk(1'D0),
     .rst(1'D0),
     .srst(srst),
-    .wr_clk(1'D0),
+    .wr_clk(wr_clk),
     .wr_rst(1'D0),
-    .rd_clk(1'D0),
+    .rd_clk(rd_clk),
     .rd_rst(1'D0),
     .din(din),
     .wr_en(wr_en),
     .rd_en(rd_en),
-    .prog_empty_thresh(prog_empty_thresh),
-    .prog_empty_thresh_assert(14'B0),
-    .prog_empty_thresh_negate(14'B0),
-    .prog_full_thresh(14'B0),
-    .prog_full_thresh_assert(14'B0),
-    .prog_full_thresh_negate(14'B0),
+    .prog_empty_thresh(9'B0),
+    .prog_empty_thresh_assert(9'B0),
+    .prog_empty_thresh_negate(9'B0),
+    .prog_full_thresh(9'B0),
+    .prog_full_thresh_assert(9'B0),
+    .prog_full_thresh_negate(9'B0),
     .int_clk(1'D0),
     .injectdbiterr(1'D0),
     .injectsbiterr(1'D0),
@@ -332,7 +332,7 @@ output wire rd_rst_busy;
     .rd_data_count(),
     .wr_data_count(),
     .prog_full(),
-    .prog_empty(prog_empty),
+    .prog_empty(),
     .sbiterr(),
     .dbiterr(),
     .wr_rst_busy(wr_rst_busy),

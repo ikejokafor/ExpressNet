@@ -56,7 +56,7 @@ COMPONENT res_dwc_fifo
   PORT (
     clk : IN STD_LOGIC;
     srst : IN STD_LOGIC;
-    din : IN STD_LOGIC_VECTOR(255 DOWNTO 0);
+    din : IN STD_LOGIC_VECTOR(1023 DOWNTO 0);
     wr_en : IN STD_LOGIC;
     rd_en : IN STD_LOGIC;
     dout : OUT STD_LOGIC_VECTOR(1023 DOWNTO 0);
@@ -64,7 +64,6 @@ COMPONENT res_dwc_fifo
     wr_ack : OUT STD_LOGIC;
     empty : OUT STD_LOGIC;
     valid : OUT STD_LOGIC;
-    rd_data_count : OUT STD_LOGIC_VECTOR(9 DOWNTO 0);
     wr_rst_busy : OUT STD_LOGIC;
     rd_rst_busy : OUT STD_LOGIC
   );
@@ -87,7 +86,6 @@ your_instance_name : res_dwc_fifo
     wr_ack => wr_ack,
     empty => empty,
     valid => valid,
-    rd_data_count => rd_data_count,
     wr_rst_busy => wr_rst_busy,
     rd_rst_busy => rd_rst_busy
   );

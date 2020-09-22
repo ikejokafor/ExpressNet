@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="prevMap_fifo_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1598900191">
+<GenRun Id="prevMap_fifo_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1600812976">
+  <File Type="VDS-TIMING-PB" Name="prevMap_fifo_timing_summary_synth.pb"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="prevMap_fifo_timing_summary_synth.rpt"/>
   <File Type="RDS-DCP" Name="prevMap_fifo.dcp"/>
-  <File Type="PA-TCL" Name="prevMap_fifo.tcl"/>
-  <File Type="REPORTS-TCL" Name="prevMap_fifo_reports.tcl"/>
-  <File Type="RDS-RDS" Name="prevMap_fifo.vds"/>
   <File Type="RDS-UTIL-PB" Name="prevMap_fifo_utilization_synth.pb"/>
   <File Type="RDS-UTIL" Name="prevMap_fifo_utilization_synth.rpt"/>
+  <File Type="RDS-PROPCONSTRS" Name="prevMap_fifo_drc_synth.rpt"/>
+  <File Type="RDS-RDS" Name="prevMap_fifo.vds"/>
+  <File Type="REPORTS-TCL" Name="prevMap_fifo_reports.tcl"/>
+  <File Type="PA-TCL" Name="prevMap_fifo.tcl"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/prevMap_fifo">
     <File Path="$PPRDIR/../prevMap_fifo/prevMap_fifo.xci">
       <FileInfo>
