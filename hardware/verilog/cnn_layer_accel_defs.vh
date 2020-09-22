@@ -268,16 +268,16 @@
 `define FAS_DSP_LATENCY                     5    
 `define FAS_BRAM_LATENCY                    3
 `define FAS_FIFO_LATENCY                    3
-`define CONVMAP_BRAM_WR_DEPTH				256
-`define CONVMAP_BRAM_RD_DEPTH				256
+`define CONVMAP_FIFO_WR_DEPTH				256
+`define CONVMAP_FIFO_RD_DEPTH				256
 `define KRNL_1X1_BRAM_WR_DEPTH				256
 `define KRNL_1X1_BRAM_RD_DEPTH              256
 `define KRNL_1X1_BIAS_BRAM_WR_DEPTH         256
 `define KRNL_1X1_BIAS_BRAM_RD_DEPTH         256
-`define	RESDMAP_BRAM_WR_DEPTH               256
-`define	RESDMAP_BRAM_RD_DEPTH               256
-`define	PARTMAP_BRAM_WR_DEPTH               256
-`define	PARTMAP_BRAM_RD_DEPTH               256
+`define	RESDMAP_FIFO_WR_DEPTH               256
+`define	RESDMAP_FIFO_RD_DEPTH               256
+`define	PARTMAP_FIFO_WR_DEPTH               256
+`define	PARTMAP_FIFO_RD_DEPTH               256
 `define OUTBUF_DWC_RD_WIDTH					(`KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH)
 `define OUTBUF_DWC_FIFO_DEPTH				256
 `define OUTBUF_WR_WIDTH						(`KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH)
@@ -301,6 +301,7 @@
 `define VEC_ADD_LATENCY                     1
 `define ADDER_TREE_LATENCY                  clog2(`KRNL_1X1_DEPTH_SIMD)
 `define ADD_BIAS_LATENCY                    1
+`define MAX_1X1_KRNL_DEPTH                  1024                        
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -481,6 +482,7 @@
 `define INMAP_FETCH_AMOUNT_HIGH				(`INMAP_FETCH_AMOUNT_LOW + (`INMAP_FETCH_AMOUNT_WIDTH - 1))
 `define INMAP_FETCH_AMOUNT_FIELD			(`INMAP_FETCH_AMOUNT_HIGH):(`INMAP_FETCH_AMOUNT_LOW)
 
+
 `define CFG_DATA_WIDTH						(`KRNL1X1_DEPTH_WIDTH			    	\
 											+ `KRNL1X1_ADDR_WIDTH				    \
 											+ `KRNL1X1_BIAS_ADDR_WIDTH		    	\
@@ -520,25 +522,25 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // [7] FAS OPCODE
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define OPCODE_0                            0 
-`define OPCODE_1                            1 
-`define OPCODE_2                            2 
-`define OPCODE_3                            3 
-`define OPCODE_4                            4 
-`define OPCODE_5                            5 
-`define OPCODE_6                            6 
-`define OPCODE_7                            7 
-`define OPCODE_8                            8 
-`define OPCODE_9                            9 
-`define OPCODE_10                           10
-`define OPCODE_11                           11
-`define OPCODE_12                           12
-`define OPCODE_13                           13
-`define OPCODE_14                           14
-`define OPCODE_15                           15
-`define OPCODE_16                           16
-`define OPCODE_17                           17
-`define OPCODE_NULL                         -1
+`define OPCODE_0_FIELD                      0 
+`define OPCODE_1_FIELD                      1 
+`define OPCODE_2_FIELD                      2 
+`define OPCODE_3_FIELD                      3 
+`define OPCODE_4_FIELD                      4 
+`define OPCODE_5_FIELD                      5 
+`define OPCODE_6_FIELD                      6 
+`define OPCODE_7_FIELD                      7 
+`define OPCODE_8_FIELD                      8 
+`define OPCODE_9_FIELD                      9 
+`define OPCODE_10_FIELD                     10
+`define OPCODE_11_FIELD                     11
+`define OPCODE_12_FIELD                     12
+`define OPCODE_13_FIELD                     13
+`define OPCODE_14_FIELD                     14
+`define OPCODE_15_FIELD                     15
+`define OPCODE_16_FIELD                     16
+`define OPCODE_17_FIELD                     17
+`define OPCODE_NULL_FIELD                   17'HFFFFF
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -551,7 +553,6 @@
 `define TRANS_AWP_START_ACK             4
 `define TRANS_RESULT_WRITE              5
 `define TRANS_JOB_CMPL                  6
-
 
 `define TRANS_OP_WIDTH			        3
 `define TRANS_OP_LOW			        0
