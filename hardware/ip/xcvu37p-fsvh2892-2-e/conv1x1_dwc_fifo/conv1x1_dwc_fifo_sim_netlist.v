@@ -1,7 +1,7 @@
 // Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
-// Date        : Tue Sep 22 18:28:11 2020
+// Date        : Wed Sep 23 13:55:05 2020
 // Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 // Command     : write_verilog -force -mode funcsim
 //               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/conv1x1_dwc_fifo_sim_netlist.v
@@ -23,30 +23,27 @@ module conv1x1_dwc_fifo
     dout,
     full,
     empty,
-    valid,
     wr_rst_busy,
     rd_rst_busy);
   (* x_interface_info = "xilinx.com:signal:clock:1.0 core_clk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME core_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *) input clk;
   input srst;
-  (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA" *) input [1023:0]din;
+  (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA" *) input [127:0]din;
   (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN" *) input wr_en;
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN" *) input rd_en;
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_DATA" *) output [1023:0]dout;
   (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE FULL" *) output full;
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *) output empty;
-  output valid;
   output wr_rst_busy;
   output rd_rst_busy;
 
   wire clk;
-  wire [1023:0]din;
+  wire [127:0]din;
   wire [1023:0]dout;
   wire empty;
   wire full;
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
   wire wr_en;
   wire wr_rst_busy;
   wire NLW_U0_almost_empty_UNCONNECTED;
@@ -108,6 +105,7 @@ module conv1x1_dwc_fifo
   wire NLW_U0_s_axis_tready_UNCONNECTED;
   wire NLW_U0_sbiterr_UNCONNECTED;
   wire NLW_U0_underflow_UNCONNECTED;
+  wire NLW_U0_valid_UNCONNECTED;
   wire NLW_U0_wr_ack_UNCONNECTED;
   wire [4:0]NLW_U0_axi_ar_data_count_UNCONNECTED;
   wire [4:0]NLW_U0_axi_ar_rd_data_count_UNCONNECTED;
@@ -127,7 +125,7 @@ module conv1x1_dwc_fifo
   wire [10:0]NLW_U0_axis_data_count_UNCONNECTED;
   wire [10:0]NLW_U0_axis_rd_data_count_UNCONNECTED;
   wire [10:0]NLW_U0_axis_wr_data_count_UNCONNECTED;
-  wire [9:0]NLW_U0_data_count_UNCONNECTED;
+  wire [12:0]NLW_U0_data_count_UNCONNECTED;
   wire [31:0]NLW_U0_m_axi_araddr_UNCONNECTED;
   wire [1:0]NLW_U0_m_axi_arburst_UNCONNECTED;
   wire [3:0]NLW_U0_m_axi_arcache_UNCONNECTED;
@@ -168,7 +166,7 @@ module conv1x1_dwc_fifo
   wire [0:0]NLW_U0_s_axi_rid_UNCONNECTED;
   wire [1:0]NLW_U0_s_axi_rresp_UNCONNECTED;
   wire [0:0]NLW_U0_s_axi_ruser_UNCONNECTED;
-  wire [9:0]NLW_U0_wr_data_count_UNCONNECTED;
+  wire [12:0]NLW_U0_wr_data_count_UNCONNECTED;
 
   (* C_ADD_NGC_CONSTRAINT = "0" *) 
   (* C_APPLICATION_TYPE_AXIS = "0" *) 
@@ -197,9 +195,9 @@ module conv1x1_dwc_fifo
   (* C_AXI_WUSER_WIDTH = "1" *) 
   (* C_COMMON_CLOCK = "1" *) 
   (* C_COUNT_TYPE = "0" *) 
-  (* C_DATA_COUNT_WIDTH = "10" *) 
+  (* C_DATA_COUNT_WIDTH = "13" *) 
   (* C_DEFAULT_VALUE = "BlankString" *) 
-  (* C_DIN_WIDTH = "1024" *) 
+  (* C_DIN_WIDTH = "128" *) 
   (* C_DIN_WIDTH_AXIS = "1" *) 
   (* C_DIN_WIDTH_RACH = "32" *) 
   (* C_DIN_WIDTH_RDCH = "64" *) 
@@ -262,7 +260,7 @@ module conv1x1_dwc_fifo
   (* C_HAS_SLAVE_CE = "0" *) 
   (* C_HAS_SRST = "1" *) 
   (* C_HAS_UNDERFLOW = "0" *) 
-  (* C_HAS_VALID = "1" *) 
+  (* C_HAS_VALID = "0" *) 
   (* C_HAS_WR_ACK = "0" *) 
   (* C_HAS_WR_DATA_COUNT = "0" *) 
   (* C_HAS_WR_RST = "0" *) 
@@ -283,7 +281,7 @@ module conv1x1_dwc_fifo
   (* C_POWER_SAVING_MODE = "0" *) 
   (* C_PRELOAD_LATENCY = "2" *) 
   (* C_PRELOAD_REGS = "1" *) 
-  (* C_PRIM_FIFO_TYPE = "512x72" *) 
+  (* C_PRIM_FIFO_TYPE = "8kx4" *) 
   (* C_PRIM_FIFO_TYPE_AXIS = "1kx18" *) 
   (* C_PRIM_FIFO_TYPE_RACH = "512x36" *) 
   (* C_PRIM_FIFO_TYPE_RDCH = "512x72" *) 
@@ -305,14 +303,14 @@ module conv1x1_dwc_fifo
   (* C_PROG_EMPTY_TYPE_WACH = "0" *) 
   (* C_PROG_EMPTY_TYPE_WDCH = "0" *) 
   (* C_PROG_EMPTY_TYPE_WRCH = "0" *) 
-  (* C_PROG_FULL_THRESH_ASSERT_VAL = "1022" *) 
+  (* C_PROG_FULL_THRESH_ASSERT_VAL = "8190" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_RDCH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WACH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WDCH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) 
-  (* C_PROG_FULL_THRESH_NEGATE_VAL = "1021" *) 
+  (* C_PROG_FULL_THRESH_NEGATE_VAL = "8189" *) 
   (* C_PROG_FULL_TYPE = "0" *) 
   (* C_PROG_FULL_TYPE_AXIS = "0" *) 
   (* C_PROG_FULL_TYPE_RACH = "0" *) 
@@ -355,8 +353,8 @@ module conv1x1_dwc_fifo
   (* C_WDCH_TYPE = "0" *) 
   (* C_WRCH_TYPE = "0" *) 
   (* C_WR_ACK_LOW = "0" *) 
-  (* C_WR_DATA_COUNT_WIDTH = "10" *) 
-  (* C_WR_DEPTH = "1024" *) 
+  (* C_WR_DATA_COUNT_WIDTH = "13" *) 
+  (* C_WR_DEPTH = "8192" *) 
   (* C_WR_DEPTH_AXIS = "1024" *) 
   (* C_WR_DEPTH_RACH = "16" *) 
   (* C_WR_DEPTH_RDCH = "1024" *) 
@@ -364,7 +362,7 @@ module conv1x1_dwc_fifo
   (* C_WR_DEPTH_WDCH = "1024" *) 
   (* C_WR_DEPTH_WRCH = "16" *) 
   (* C_WR_FREQ = "1" *) 
-  (* C_WR_PNTR_WIDTH = "10" *) 
+  (* C_WR_PNTR_WIDTH = "13" *) 
   (* C_WR_PNTR_WIDTH_AXIS = "10" *) 
   (* C_WR_PNTR_WIDTH_RACH = "4" *) 
   (* C_WR_PNTR_WIDTH_RDCH = "10" *) 
@@ -456,7 +454,7 @@ module conv1x1_dwc_fifo
         .backup(1'b0),
         .backup_marker(1'b0),
         .clk(clk),
-        .data_count(NLW_U0_data_count_UNCONNECTED[9:0]),
+        .data_count(NLW_U0_data_count_UNCONNECTED[12:0]),
         .dbiterr(NLW_U0_dbiterr_UNCONNECTED),
         .din(din),
         .dout(dout),
@@ -527,9 +525,9 @@ module conv1x1_dwc_fifo
         .prog_empty_thresh_assert({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .prog_empty_thresh_negate({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .prog_full(NLW_U0_prog_full_UNCONNECTED),
-        .prog_full_thresh({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .prog_full_thresh_assert({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .prog_full_thresh_negate({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .prog_full_thresh({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .prog_full_thresh_assert({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .prog_full_thresh_negate({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .rd_clk(1'b0),
         .rd_data_count(NLW_U0_rd_data_count_UNCONNECTED[9:0]),
         .rd_en(rd_en),
@@ -597,10 +595,10 @@ module conv1x1_dwc_fifo
         .sleep(1'b0),
         .srst(srst),
         .underflow(NLW_U0_underflow_UNCONNECTED),
-        .valid(valid),
+        .valid(NLW_U0_valid_UNCONNECTED),
         .wr_ack(NLW_U0_wr_ack_UNCONNECTED),
         .wr_clk(1'b0),
-        .wr_data_count(NLW_U0_wr_data_count_UNCONNECTED[9:0]),
+        .wr_data_count(NLW_U0_wr_data_count_UNCONNECTED[12:0]),
         .wr_en(wr_en),
         .wr_rst(1'b0),
         .wr_rst_busy(wr_rst_busy));
@@ -610,52 +608,40 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_40 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_61 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_41 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[10].inst_extdi_0 
+    \rst_val_asym.gextw_asym[10].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[10].inst_extdi_1 
+    \rst_val_asym.gextw_asym[10].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -664,52 +650,40 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_0
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_38 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_60 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_39 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[11].inst_extdi_0 
+    \rst_val_asym.gextw_asym[11].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[11].inst_extdi_1 
+    \rst_val_asym.gextw_asym[11].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -718,52 +692,40 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_1
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_36 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_59 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_37 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[12].inst_extdi_0 
+    \rst_val_asym.gextw_asym[12].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[12].inst_extdi_1 
+    \rst_val_asym.gextw_asym[12].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -772,52 +734,40 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_10
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_18 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_50 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_19 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[6].inst_extdi_0 
+    \rst_val_asym.gextw_asym[20].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[6].inst_extdi_1 
+    \rst_val_asym.gextw_asym[20].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -826,52 +776,40 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_11
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_16 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_49 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_17 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[7].inst_extdi_0 
+    \rst_val_asym.gextw_asym[21].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[7].inst_extdi_1 
+    \rst_val_asym.gextw_asym[21].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -880,52 +818,40 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_12
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_14 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_48 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_15 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[8].inst_extdi_0 
+    \rst_val_asym.gextw_asym[22].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[8].inst_extdi_1 
+    \rst_val_asym.gextw_asym[22].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -934,52 +860,292 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_13
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_47 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[9].inst_extdi_0 
+    \rst_val_asym.gextw_asym[23].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[9].inst_extdi_1 
+    \rst_val_asym.gextw_asym[23].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_14
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_46 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[24].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[24].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_15
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_45 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[25].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[25].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_16
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_44 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[26].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[26].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_17
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_43 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[27].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[27].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_18
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_42 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[28].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[28].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_19
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_41 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[29].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[29].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -988,52 +1154,460 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_2
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_34 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_58 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_35 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[13].inst_extdi_0 
+    \rst_val_asym.gextw_asym[13].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[13].inst_extdi_1 
+    \rst_val_asym.gextw_asym[13].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_20
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_40 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[2].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[2].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_21
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_39 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[30].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[30].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_22
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_38 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[31].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[31].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_23
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_37 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[32].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[32].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_24
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_36 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[3].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[3].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_25
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_35 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[4].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[4].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_26
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_34 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[5].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[5].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_27
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_33 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[6].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[6].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_28
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_32 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[7].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[7].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_29
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim_31 \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[8].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[8].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -1042,52 +1616,82 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_3
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_32 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_57 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_33 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[14].inst_extdi_0 
+    \rst_val_asym.gextw_asym[14].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[14].inst_extdi_1 
+    \rst_val_asym.gextw_asym[14].inst_extdi_1 
+       (.I0(1'b1),
+        .O(srst_qr[0]));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_extdepth" *) 
+module conv1x1_dwc_fifo_builtin_extdepth_30
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire rd_en;
+  wire srst;
+  (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
+  wire wr_en;
+
+  conv1x1_dwc_fifo_builtin_prim \gonep.inst_prim 
+       (.clk(clk),
+        .din(din),
+        .dout(dout),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[9].inst_extdi_0 
+       (.I0(1'b1),
+        .O(srst_qr[1]));
+  LUT1 #(
+    .INIT(2'h2)) 
+    \rst_val_asym.gextw_asym[9].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -1096,126 +1700,82 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_4
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [15:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [15:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [15:0]din;
-  wire [15:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_30 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_56 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_31 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[15].inst_extdi_0 
+    \rst_val_asym.gextw_asym[15].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[15].inst_extdi_1 
+    \rst_val_asym.gextw_asym[15].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_extdepth" *) 
 module conv1x1_dwc_fifo_builtin_extdepth_5
-   (valid_i,
-    empty,
-    full,
-    rd_rst_busy,
-    wr_rst_busy,
-    dout,
-    rd_en,
+   (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
     din);
-  output valid_i;
-  output empty;
-  output full;
-  output rd_rst_busy;
-  output wr_rst_busy;
-  output [71:0]dout;
-  input rd_en;
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire empty;
-  wire full;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire rd_rst_busy;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
-  wire valid_i;
   wire wr_en;
-  wire wr_rst_busy;
 
-  conv1x1_dwc_fifo_builtin_prim_28 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_55 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .full(full),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_rst_busy(rd_rst_busy),
-        .re(re),
-        .srst(srst),
-        .wr_en(wr_en),
-        .wr_rst_busy(wr_rst_busy));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_29 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
         .dout(dout),
-        .empty(empty),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
         .rd_en(rd_en),
-        .re(re),
         .srst(srst),
-        .valid_i(valid_i));
+        .wr_en(wr_en));
   LUT1 #(
     .INIT(2'h2)) 
-    i_0
+    \rst_val_asym.gextw_asym[16].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    i_1
+    \rst_val_asym.gextw_asym[16].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -1224,52 +1784,40 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_6
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_26 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_54 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_27 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[2].inst_extdi_0 
+    \rst_val_asym.gextw_asym[17].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[2].inst_extdi_1 
+    \rst_val_asym.gextw_asym[17].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -1278,52 +1826,40 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_7
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_24 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_53 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_25 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[3].inst_extdi_0 
+    \rst_val_asym.gextw_asym[18].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[3].inst_extdi_1 
+    \rst_val_asym.gextw_asym[18].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -1332,211 +1868,135 @@ endmodule
 module conv1x1_dwc_fifo_builtin_extdepth_8
    (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire rd_en;
-  wire [1:1]re;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
 
-  conv1x1_dwc_fifo_builtin_prim_22 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_52 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
+        .dout(dout),
+        .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_23 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
-        .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[4].inst_extdi_0 
+    \rst_val_asym.gextw_asym[19].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[4].inst_extdi_1 
+    \rst_val_asym.gextw_asym[19].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_extdepth" *) 
 module conv1x1_dwc_fifo_builtin_extdepth_9
-   (dout,
+   (empty,
+    full,
+    rd_rst_busy,
+    wr_rst_busy,
+    dout,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
-  output [71:0]dout;
+    din);
+  output empty;
+  output full;
+  output rd_rst_busy;
+  output wr_rst_busy;
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
-  input rd_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
-  wire [71:0]dout;
-  wire [71:0]p_14_out;
-  wire p_15_out;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire empty;
+  wire full;
   wire rd_en;
-  wire [1:1]re;
+  wire rd_rst_busy;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
   wire wr_en;
+  wire wr_rst_busy;
 
-  conv1x1_dwc_fifo_builtin_prim_20 \gmult_prim.gbi_chain.gp1[1].gbi_top.top_inst_prim 
+  conv1x1_dwc_fifo_builtin_prim_51 \gonep.inst_prim 
        (.clk(clk),
         .din(din),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
-        .re(re),
-        .srst(srst),
-        .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_prim__parameterized0_21 \gmult_prim.gbi_chain.gp1[2].gbi_last.inst_prim 
-       (.clk(clk),
         .dout(dout),
-        .p_14_out(p_14_out),
-        .p_15_out(p_15_out),
+        .empty(empty),
+        .full(full),
         .rd_en(rd_en),
-        .re(re),
-        .srst(srst));
+        .rd_rst_busy(rd_rst_busy),
+        .srst(srst),
+        .wr_en(wr_en),
+        .wr_rst_busy(wr_rst_busy));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[5].inst_extdi_0 
+    \rst_val_asym.gextw_asym[1].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    \rst_val_sym.gextw_sym[5].inst_extdi_1 
+    \rst_val_asym.gextw_asym[1].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
 module conv1x1_dwc_fifo_builtin_prim
-   (p_15_out,
-    p_14_out,
-    re,
+   (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
     din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
   wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
   wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
   wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
   wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
   wire \gf36e2_inst.sngfifo36e2_n_186 ;
@@ -1572,22 +2032,52 @@ module conv1x1_dwc_fifo_builtin_prim
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
   wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
   wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
   wire srst;
   wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
     .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
     .INIT(72'h000000000000000000),
     .IS_RDCLK_INVERTED(1'b0),
     .IS_RDEN_INVERTED(1'b0),
@@ -1595,1939 +2085,34 @@ module conv1x1_dwc_fifo_builtin_prim
     .IS_RST_INVERTED(1'b0),
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
        (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
         .CASPRVEMPTY(1'b0),
         .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_14
-   (p_15_out,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [71:0]din;
-
-  wire clk;
-  wire [71:0]din;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_16
-   (p_15_out,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [71:0]din;
-
-  wire clk;
-  wire [71:0]din;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_18
-   (p_15_out,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [71:0]din;
-
-  wire clk;
-  wire [71:0]din;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_20
-   (p_15_out,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [71:0]din;
-
-  wire clk;
-  wire [71:0]din;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_22
-   (p_15_out,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [71:0]din;
-
-  wire clk;
-  wire [71:0]din;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_24
-   (p_15_out,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [71:0]din;
-
-  wire clk;
-  wire [71:0]din;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_26
-   (p_15_out,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [71:0]din;
-
-  wire clk;
-  wire [71:0]din;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_28
-   (p_15_out,
-    full,
-    rd_rst_busy,
-    wr_rst_busy,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output full;
-  output rd_rst_busy;
-  output wr_rst_busy;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [71:0]din;
-
-  wire clk;
-  wire [71:0]din;
-  wire full;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire p_7_out;
-  wire rd_rst_busy;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-  wire wr_rst_busy;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(full),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(rd_rst_busy),
-        .REGCE(1'b0),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(wr_en),
-        .WRERR(p_7_out),
-        .WRRSTBUSY(wr_rst_busy));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim_30
-   (p_15_out,
-    p_14_out,
-    re,
-    clk,
-    srst,
-    wr_en,
-    din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
-  input clk;
-  input srst;
-  input wr_en;
-  input [15:0]din;
-
-  wire clk;
-  wire [15:0]din;
-  wire \gf36e2_inst.sngfifo36e2_n_1 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
-  wire srst;
-  wire wr_en;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(1'b0),
-        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -3537,10 +2122,183 @@ module conv1x1_dwc_fifo_builtin_prim_30
         .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
         .RDCLK(clk),
         .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
+        .RDEN(rd_en),
         .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
         .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_31
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
         .RST(srst),
         .RSTREG(srst),
         .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
@@ -3554,105 +2312,37 @@ endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
 module conv1x1_dwc_fifo_builtin_prim_32
-   (p_15_out,
-    p_14_out,
-    re,
+   (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
     din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
   wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
   wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
   wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
   wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
   wire \gf36e2_inst.sngfifo36e2_n_186 ;
@@ -3688,22 +2378,52 @@ module conv1x1_dwc_fifo_builtin_prim_32
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
   wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
   wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
   wire srst;
   wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
     .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
     .INIT(72'h000000000000000000),
     .IS_RDCLK_INVERTED(1'b0),
     .IS_RDEN_INVERTED(1'b0),
@@ -3711,34 +2431,34 @@ module conv1x1_dwc_fifo_builtin_prim_32
     .IS_RST_INVERTED(1'b0),
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
        (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
         .CASPRVEMPTY(1'b0),
         .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -3748,10 +2468,183 @@ module conv1x1_dwc_fifo_builtin_prim_32
         .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
         .RDCLK(clk),
         .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
+        .RDEN(rd_en),
         .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
         .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_33
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
         .RST(srst),
         .RSTREG(srst),
         .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
@@ -3765,105 +2658,37 @@ endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
 module conv1x1_dwc_fifo_builtin_prim_34
-   (p_15_out,
-    p_14_out,
-    re,
+   (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
     din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
   wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
   wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
   wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
   wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
   wire \gf36e2_inst.sngfifo36e2_n_186 ;
@@ -3899,22 +2724,52 @@ module conv1x1_dwc_fifo_builtin_prim_34
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
   wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
   wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
   wire srst;
   wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
     .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
     .INIT(72'h000000000000000000),
     .IS_RDCLK_INVERTED(1'b0),
     .IS_RDEN_INVERTED(1'b0),
@@ -3922,34 +2777,34 @@ module conv1x1_dwc_fifo_builtin_prim_34
     .IS_RST_INVERTED(1'b0),
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
        (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
         .CASPRVEMPTY(1'b0),
         .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -3959,10 +2814,183 @@ module conv1x1_dwc_fifo_builtin_prim_34
         .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
         .RDCLK(clk),
         .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
+        .RDEN(rd_en),
         .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
         .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_35
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
         .RST(srst),
         .RSTREG(srst),
         .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
@@ -3976,105 +3004,37 @@ endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
 module conv1x1_dwc_fifo_builtin_prim_36
-   (p_15_out,
-    p_14_out,
-    re,
+   (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
     din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
   wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
   wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
   wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
   wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
   wire \gf36e2_inst.sngfifo36e2_n_186 ;
@@ -4110,22 +3070,52 @@ module conv1x1_dwc_fifo_builtin_prim_36
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
   wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
   wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
   wire srst;
   wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
     .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
     .INIT(72'h000000000000000000),
     .IS_RDCLK_INVERTED(1'b0),
     .IS_RDEN_INVERTED(1'b0),
@@ -4133,34 +3123,34 @@ module conv1x1_dwc_fifo_builtin_prim_36
     .IS_RST_INVERTED(1'b0),
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
        (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
         .CASPRVEMPTY(1'b0),
         .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -4170,10 +3160,183 @@ module conv1x1_dwc_fifo_builtin_prim_36
         .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
         .RDCLK(clk),
         .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
+        .RDEN(rd_en),
         .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
         .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_37
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
         .RST(srst),
         .RSTREG(srst),
         .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
@@ -4187,105 +3350,37 @@ endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
 module conv1x1_dwc_fifo_builtin_prim_38
-   (p_15_out,
-    p_14_out,
-    re,
+   (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
     din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
   wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
   wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
   wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
   wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
   wire \gf36e2_inst.sngfifo36e2_n_186 ;
@@ -4321,22 +3416,52 @@ module conv1x1_dwc_fifo_builtin_prim_38
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
   wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
   wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
   wire srst;
   wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
     .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
     .INIT(72'h000000000000000000),
     .IS_RDCLK_INVERTED(1'b0),
     .IS_RDEN_INVERTED(1'b0),
@@ -4344,34 +3469,34 @@ module conv1x1_dwc_fifo_builtin_prim_38
     .IS_RST_INVERTED(1'b0),
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
        (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
         .CASPRVEMPTY(1'b0),
         .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -4381,10 +3506,183 @@ module conv1x1_dwc_fifo_builtin_prim_38
         .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
         .RDCLK(clk),
         .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
+        .RDEN(rd_en),
         .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
         .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_39
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
         .RST(srst),
         .RSTREG(srst),
         .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
@@ -4398,105 +3696,37 @@ endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
 module conv1x1_dwc_fifo_builtin_prim_40
-   (p_15_out,
-    p_14_out,
-    re,
+   (dout,
     clk,
+    rd_en,
     srst,
     wr_en,
     din);
-  output p_15_out;
-  output [71:0]p_14_out;
-  input [0:0]re;
+  output [31:0]dout;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [71:0]din;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]din;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
   wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
   wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
   wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
   wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_152 ;
-  wire \gf36e2_inst.sngfifo36e2_n_153 ;
-  wire \gf36e2_inst.sngfifo36e2_n_154 ;
-  wire \gf36e2_inst.sngfifo36e2_n_155 ;
-  wire \gf36e2_inst.sngfifo36e2_n_156 ;
-  wire \gf36e2_inst.sngfifo36e2_n_157 ;
-  wire \gf36e2_inst.sngfifo36e2_n_158 ;
-  wire \gf36e2_inst.sngfifo36e2_n_159 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_160 ;
-  wire \gf36e2_inst.sngfifo36e2_n_161 ;
-  wire \gf36e2_inst.sngfifo36e2_n_162 ;
-  wire \gf36e2_inst.sngfifo36e2_n_163 ;
-  wire \gf36e2_inst.sngfifo36e2_n_164 ;
-  wire \gf36e2_inst.sngfifo36e2_n_165 ;
-  wire \gf36e2_inst.sngfifo36e2_n_166 ;
-  wire \gf36e2_inst.sngfifo36e2_n_167 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
   wire \gf36e2_inst.sngfifo36e2_n_186 ;
@@ -4532,22 +3762,52 @@ module conv1x1_dwc_fifo_builtin_prim_40
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
   wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
   wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire [0:0]re;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
   wire srst;
   wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("FIRST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
     .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("TRUE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
     .INIT(72'h000000000000000000),
     .IS_RDCLK_INVERTED(1'b0),
     .IS_RDEN_INVERTED(1'b0),
@@ -4555,34 +3815,34 @@ module conv1x1_dwc_fifo_builtin_prim_40
     .IS_RST_INVERTED(1'b0),
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(10),
-    .PROG_FULL_THRESH(510),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
        (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT(p_14_out[63:0]),
-        .CASDOUTP(p_14_out[71:64]),
-        .CASNXTEMPTY(p_15_out),
-        .CASNXTRDEN(re),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
         .CASPRVEMPTY(1'b0),
         .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN(din[63:0]),
-        .DINP(din[71:64]),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,\gf36e2_inst.sngfifo36e2_n_152 ,\gf36e2_inst.sngfifo36e2_n_153 ,\gf36e2_inst.sngfifo36e2_n_154 ,\gf36e2_inst.sngfifo36e2_n_155 ,\gf36e2_inst.sngfifo36e2_n_156 ,\gf36e2_inst.sngfifo36e2_n_157 ,\gf36e2_inst.sngfifo36e2_n_158 ,\gf36e2_inst.sngfifo36e2_n_159 ,\gf36e2_inst.sngfifo36e2_n_160 ,\gf36e2_inst.sngfifo36e2_n_161 ,\gf36e2_inst.sngfifo36e2_n_162 ,\gf36e2_inst.sngfifo36e2_n_163 ,\gf36e2_inst.sngfifo36e2_n_164 ,\gf36e2_inst.sngfifo36e2_n_165 ,\gf36e2_inst.sngfifo36e2_n_166 ,\gf36e2_inst.sngfifo36e2_n_167 }),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -4592,10 +3852,10 @@ module conv1x1_dwc_fifo_builtin_prim_40
         .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
         .RDCLK(clk),
         .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(1'b0),
+        .RDEN(rd_en),
         .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
         .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(1'b0),
+        .REGCE(rd_en),
         .RST(srst),
         .RSTREG(srst),
         .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
@@ -4608,25 +3868,25 @@ module conv1x1_dwc_fifo_builtin_prim_40
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_41
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -4638,15 +3898,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -4680,41 +3932,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -4745,15 +3965,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -4767,33 +3989,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -4813,31 +4035,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_15
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_42
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -4849,15 +4071,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_15
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -4891,41 +4105,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_15
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -4956,15 +4138,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_15
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -4978,33 +4162,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_15
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -5024,31 +4208,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_15
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_17
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_43
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -5060,15 +4244,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_17
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -5102,41 +4278,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_17
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -5167,15 +4311,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_17
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -5189,33 +4335,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_17
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -5235,31 +4381,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_17
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_19
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_44
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -5271,15 +4417,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_19
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -5313,41 +4451,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_19
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -5378,15 +4484,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_19
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -5400,33 +4508,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_19
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -5446,31 +4554,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_19
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_21
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_45
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -5482,15 +4590,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_21
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -5524,41 +4624,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_21
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -5589,15 +4657,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_21
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -5611,33 +4681,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_21
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -5657,31 +4727,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_21
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_23
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_46
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -5693,15 +4763,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_23
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -5735,41 +4797,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_23
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -5800,15 +4830,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_23
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -5822,33 +4854,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_23
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -5868,31 +4900,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_23
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_25
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_47
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -5904,15 +4936,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_25
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -5946,41 +4970,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_25
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -6011,15 +5003,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_25
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -6033,33 +5027,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_25
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -6079,31 +5073,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_25
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_27
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_48
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -6115,15 +5109,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_27
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -6157,41 +5143,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_27
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -6222,15 +5176,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_27
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -6244,33 +5200,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_27
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -6290,56 +5246,397 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_27
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_29
-   (re,
-    empty,
-    dout,
-    valid_i,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_49
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_50
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_51
+   (empty,
+    full,
+    rd_rst_busy,
+    wr_rst_busy,
+    dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
   output empty;
-  output [71:0]dout;
-  output valid_i;
-  input p_15_out;
+  output full;
+  output rd_rst_busy;
+  output wr_rst_busy;
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire empty;
+  wire full;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
   wire \gf36e2_inst.sngfifo36e2_n_102 ;
   wire \gf36e2_inst.sngfifo36e2_n_103 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
   wire \gf36e2_inst.sngfifo36e2_n_12 ;
   wire \gf36e2_inst.sngfifo36e2_n_13 ;
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -6370,41 +5667,8 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_29
   wire \gf36e2_inst.sngfifo36e2_n_37 ;
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -6413,7 +5677,6 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_29
   wire \gf36e2_inst.sngfifo36e2_n_77 ;
   wire \gf36e2_inst.sngfifo36e2_n_78 ;
   wire \gf36e2_inst.sngfifo36e2_n_79 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
   wire \gf36e2_inst.sngfifo36e2_n_80 ;
   wire \gf36e2_inst.sngfifo36e2_n_81 ;
   wire \gf36e2_inst.sngfifo36e2_n_82 ;
@@ -6434,19 +5697,23 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_29
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire p_4_out;
   wire p_5_out;
   wire p_6_out;
+  wire p_7_out;
   wire rd_en;
-  wire [0:0]re;
+  wire rd_rst_busy;
   wire srst;
-  wire valid_i;
+  wire wr_en;
+  wire wr_rst_busy;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -6460,36 +5727,36 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_29
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(p_4_out),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(empty),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .FULL(full),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
         .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
@@ -6498,7 +5765,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_29
         .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
         .RDEN(rd_en),
         .RDERR(p_6_out),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .RDRSTBUSY(rd_rst_busy),
         .REGCE(rd_en),
         .RST(srst),
         .RSTREG(srst),
@@ -6506,304 +5773,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_29
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-  LUT2 #(
-    .INIT(4'h2)) 
-    \gv.gv3.VALID_i_1 
-       (.I0(rd_en),
-        .I1(empty),
-        .O(valid_i));
+        .WREN(wr_en),
+        .WRERR(p_7_out),
+        .WRRSTBUSY(wr_rst_busy));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_31
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_52
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [15:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [15:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
-  wire \gf36e2_inst.sngfifo36e2_n_10 ;
-  wire \gf36e2_inst.sngfifo36e2_n_100 ;
-  wire \gf36e2_inst.sngfifo36e2_n_101 ;
-  wire \gf36e2_inst.sngfifo36e2_n_102 ;
-  wire \gf36e2_inst.sngfifo36e2_n_103 ;
-  wire \gf36e2_inst.sngfifo36e2_n_104 ;
-  wire \gf36e2_inst.sngfifo36e2_n_105 ;
-  wire \gf36e2_inst.sngfifo36e2_n_106 ;
-  wire \gf36e2_inst.sngfifo36e2_n_107 ;
-  wire \gf36e2_inst.sngfifo36e2_n_108 ;
-  wire \gf36e2_inst.sngfifo36e2_n_109 ;
-  wire \gf36e2_inst.sngfifo36e2_n_11 ;
-  wire \gf36e2_inst.sngfifo36e2_n_110 ;
-  wire \gf36e2_inst.sngfifo36e2_n_111 ;
-  wire \gf36e2_inst.sngfifo36e2_n_112 ;
-  wire \gf36e2_inst.sngfifo36e2_n_113 ;
-  wire \gf36e2_inst.sngfifo36e2_n_114 ;
-  wire \gf36e2_inst.sngfifo36e2_n_115 ;
-  wire \gf36e2_inst.sngfifo36e2_n_116 ;
-  wire \gf36e2_inst.sngfifo36e2_n_117 ;
-  wire \gf36e2_inst.sngfifo36e2_n_118 ;
-  wire \gf36e2_inst.sngfifo36e2_n_119 ;
-  wire \gf36e2_inst.sngfifo36e2_n_12 ;
-  wire \gf36e2_inst.sngfifo36e2_n_120 ;
-  wire \gf36e2_inst.sngfifo36e2_n_121 ;
-  wire \gf36e2_inst.sngfifo36e2_n_122 ;
-  wire \gf36e2_inst.sngfifo36e2_n_123 ;
-  wire \gf36e2_inst.sngfifo36e2_n_124 ;
-  wire \gf36e2_inst.sngfifo36e2_n_125 ;
-  wire \gf36e2_inst.sngfifo36e2_n_126 ;
-  wire \gf36e2_inst.sngfifo36e2_n_127 ;
-  wire \gf36e2_inst.sngfifo36e2_n_128 ;
-  wire \gf36e2_inst.sngfifo36e2_n_129 ;
-  wire \gf36e2_inst.sngfifo36e2_n_13 ;
-  wire \gf36e2_inst.sngfifo36e2_n_130 ;
-  wire \gf36e2_inst.sngfifo36e2_n_131 ;
-  wire \gf36e2_inst.sngfifo36e2_n_132 ;
-  wire \gf36e2_inst.sngfifo36e2_n_133 ;
-  wire \gf36e2_inst.sngfifo36e2_n_134 ;
-  wire \gf36e2_inst.sngfifo36e2_n_135 ;
-  wire \gf36e2_inst.sngfifo36e2_n_136 ;
-  wire \gf36e2_inst.sngfifo36e2_n_137 ;
-  wire \gf36e2_inst.sngfifo36e2_n_138 ;
-  wire \gf36e2_inst.sngfifo36e2_n_139 ;
-  wire \gf36e2_inst.sngfifo36e2_n_14 ;
-  wire \gf36e2_inst.sngfifo36e2_n_140 ;
-  wire \gf36e2_inst.sngfifo36e2_n_141 ;
-  wire \gf36e2_inst.sngfifo36e2_n_142 ;
-  wire \gf36e2_inst.sngfifo36e2_n_143 ;
-  wire \gf36e2_inst.sngfifo36e2_n_144 ;
-  wire \gf36e2_inst.sngfifo36e2_n_145 ;
-  wire \gf36e2_inst.sngfifo36e2_n_146 ;
-  wire \gf36e2_inst.sngfifo36e2_n_147 ;
-  wire \gf36e2_inst.sngfifo36e2_n_148 ;
-  wire \gf36e2_inst.sngfifo36e2_n_149 ;
-  wire \gf36e2_inst.sngfifo36e2_n_15 ;
-  wire \gf36e2_inst.sngfifo36e2_n_150 ;
-  wire \gf36e2_inst.sngfifo36e2_n_151 ;
-  wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
-  wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
-  wire \gf36e2_inst.sngfifo36e2_n_176 ;
-  wire \gf36e2_inst.sngfifo36e2_n_177 ;
-  wire \gf36e2_inst.sngfifo36e2_n_178 ;
-  wire \gf36e2_inst.sngfifo36e2_n_179 ;
-  wire \gf36e2_inst.sngfifo36e2_n_18 ;
-  wire \gf36e2_inst.sngfifo36e2_n_180 ;
-  wire \gf36e2_inst.sngfifo36e2_n_181 ;
-  wire \gf36e2_inst.sngfifo36e2_n_182 ;
-  wire \gf36e2_inst.sngfifo36e2_n_183 ;
-  wire \gf36e2_inst.sngfifo36e2_n_184 ;
-  wire \gf36e2_inst.sngfifo36e2_n_185 ;
-  wire \gf36e2_inst.sngfifo36e2_n_186 ;
-  wire \gf36e2_inst.sngfifo36e2_n_187 ;
-  wire \gf36e2_inst.sngfifo36e2_n_188 ;
-  wire \gf36e2_inst.sngfifo36e2_n_189 ;
-  wire \gf36e2_inst.sngfifo36e2_n_19 ;
-  wire \gf36e2_inst.sngfifo36e2_n_190 ;
-  wire \gf36e2_inst.sngfifo36e2_n_191 ;
-  wire \gf36e2_inst.sngfifo36e2_n_2 ;
-  wire \gf36e2_inst.sngfifo36e2_n_20 ;
-  wire \gf36e2_inst.sngfifo36e2_n_21 ;
-  wire \gf36e2_inst.sngfifo36e2_n_22 ;
-  wire \gf36e2_inst.sngfifo36e2_n_23 ;
-  wire \gf36e2_inst.sngfifo36e2_n_24 ;
-  wire \gf36e2_inst.sngfifo36e2_n_25 ;
-  wire \gf36e2_inst.sngfifo36e2_n_26 ;
-  wire \gf36e2_inst.sngfifo36e2_n_27 ;
-  wire \gf36e2_inst.sngfifo36e2_n_28 ;
-  wire \gf36e2_inst.sngfifo36e2_n_29 ;
-  wire \gf36e2_inst.sngfifo36e2_n_3 ;
-  wire \gf36e2_inst.sngfifo36e2_n_30 ;
-  wire \gf36e2_inst.sngfifo36e2_n_31 ;
-  wire \gf36e2_inst.sngfifo36e2_n_32 ;
-  wire \gf36e2_inst.sngfifo36e2_n_33 ;
-  wire \gf36e2_inst.sngfifo36e2_n_34 ;
-  wire \gf36e2_inst.sngfifo36e2_n_35 ;
-  wire \gf36e2_inst.sngfifo36e2_n_36 ;
-  wire \gf36e2_inst.sngfifo36e2_n_37 ;
-  wire \gf36e2_inst.sngfifo36e2_n_38 ;
-  wire \gf36e2_inst.sngfifo36e2_n_39 ;
-  wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
-  wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
-  wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
-  wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
-  wire \gf36e2_inst.sngfifo36e2_n_72 ;
-  wire \gf36e2_inst.sngfifo36e2_n_73 ;
-  wire \gf36e2_inst.sngfifo36e2_n_74 ;
-  wire \gf36e2_inst.sngfifo36e2_n_75 ;
-  wire \gf36e2_inst.sngfifo36e2_n_76 ;
-  wire \gf36e2_inst.sngfifo36e2_n_77 ;
-  wire \gf36e2_inst.sngfifo36e2_n_78 ;
-  wire \gf36e2_inst.sngfifo36e2_n_79 ;
-  wire \gf36e2_inst.sngfifo36e2_n_8 ;
-  wire \gf36e2_inst.sngfifo36e2_n_80 ;
-  wire \gf36e2_inst.sngfifo36e2_n_81 ;
-  wire \gf36e2_inst.sngfifo36e2_n_82 ;
-  wire \gf36e2_inst.sngfifo36e2_n_83 ;
-  wire \gf36e2_inst.sngfifo36e2_n_84 ;
-  wire \gf36e2_inst.sngfifo36e2_n_85 ;
-  wire \gf36e2_inst.sngfifo36e2_n_86 ;
-  wire \gf36e2_inst.sngfifo36e2_n_87 ;
-  wire \gf36e2_inst.sngfifo36e2_n_88 ;
-  wire \gf36e2_inst.sngfifo36e2_n_89 ;
-  wire \gf36e2_inst.sngfifo36e2_n_9 ;
-  wire \gf36e2_inst.sngfifo36e2_n_90 ;
-  wire \gf36e2_inst.sngfifo36e2_n_91 ;
-  wire \gf36e2_inst.sngfifo36e2_n_92 ;
-  wire \gf36e2_inst.sngfifo36e2_n_93 ;
-  wire \gf36e2_inst.sngfifo36e2_n_94 ;
-  wire \gf36e2_inst.sngfifo36e2_n_95 ;
-  wire \gf36e2_inst.sngfifo36e2_n_96 ;
-  wire \gf36e2_inst.sngfifo36e2_n_97 ;
-  wire \gf36e2_inst.sngfifo36e2_n_98 ;
-  wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
-  wire rd_en;
-  wire [0:0]re;
-  wire srst;
-
-  (* box_type = "PRIMITIVE" *) 
-  FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
-    .CLOCK_DOMAINS("COMMON"),
-    .EN_ECC_PIPE("FALSE"),
-    .EN_ECC_READ("FALSE"),
-    .EN_ECC_WRITE("FALSE"),
-    .FIRST_WORD_FALL_THROUGH("FALSE"),
-    .INIT(72'h000000000000000000),
-    .IS_RDCLK_INVERTED(1'b0),
-    .IS_RDEN_INVERTED(1'b0),
-    .IS_RSTREG_INVERTED(1'b0),
-    .IS_RST_INVERTED(1'b0),
-    .IS_WRCLK_INVERTED(1'b0),
-    .IS_WREN_INVERTED(1'b0),
-    .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
-    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
-    .REGISTER_MODE("REGISTERED"),
-    .RSTREG_PRIORITY("REGCE"),
-    .SLEEP_ASYNC("FALSE"),
-    .SRVAL(72'h000000000000000000),
-    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
-    \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
-        .CASDOMUX(1'b0),
-        .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
-        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
-        .CASNXTRDEN(1'b0),
-        .CASOREGIMUX(1'b0),
-        .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
-        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT({\gf36e2_inst.sngfifo36e2_n_104 ,\gf36e2_inst.sngfifo36e2_n_105 ,\gf36e2_inst.sngfifo36e2_n_106 ,\gf36e2_inst.sngfifo36e2_n_107 ,\gf36e2_inst.sngfifo36e2_n_108 ,\gf36e2_inst.sngfifo36e2_n_109 ,\gf36e2_inst.sngfifo36e2_n_110 ,\gf36e2_inst.sngfifo36e2_n_111 ,\gf36e2_inst.sngfifo36e2_n_112 ,\gf36e2_inst.sngfifo36e2_n_113 ,\gf36e2_inst.sngfifo36e2_n_114 ,\gf36e2_inst.sngfifo36e2_n_115 ,\gf36e2_inst.sngfifo36e2_n_116 ,\gf36e2_inst.sngfifo36e2_n_117 ,\gf36e2_inst.sngfifo36e2_n_118 ,\gf36e2_inst.sngfifo36e2_n_119 ,\gf36e2_inst.sngfifo36e2_n_120 ,\gf36e2_inst.sngfifo36e2_n_121 ,\gf36e2_inst.sngfifo36e2_n_122 ,\gf36e2_inst.sngfifo36e2_n_123 ,\gf36e2_inst.sngfifo36e2_n_124 ,\gf36e2_inst.sngfifo36e2_n_125 ,\gf36e2_inst.sngfifo36e2_n_126 ,\gf36e2_inst.sngfifo36e2_n_127 ,\gf36e2_inst.sngfifo36e2_n_128 ,\gf36e2_inst.sngfifo36e2_n_129 ,\gf36e2_inst.sngfifo36e2_n_130 ,\gf36e2_inst.sngfifo36e2_n_131 ,\gf36e2_inst.sngfifo36e2_n_132 ,\gf36e2_inst.sngfifo36e2_n_133 ,\gf36e2_inst.sngfifo36e2_n_134 ,\gf36e2_inst.sngfifo36e2_n_135 ,\gf36e2_inst.sngfifo36e2_n_136 ,\gf36e2_inst.sngfifo36e2_n_137 ,\gf36e2_inst.sngfifo36e2_n_138 ,\gf36e2_inst.sngfifo36e2_n_139 ,\gf36e2_inst.sngfifo36e2_n_140 ,\gf36e2_inst.sngfifo36e2_n_141 ,\gf36e2_inst.sngfifo36e2_n_142 ,\gf36e2_inst.sngfifo36e2_n_143 ,\gf36e2_inst.sngfifo36e2_n_144 ,\gf36e2_inst.sngfifo36e2_n_145 ,\gf36e2_inst.sngfifo36e2_n_146 ,\gf36e2_inst.sngfifo36e2_n_147 ,\gf36e2_inst.sngfifo36e2_n_148 ,\gf36e2_inst.sngfifo36e2_n_149 ,\gf36e2_inst.sngfifo36e2_n_150 ,\gf36e2_inst.sngfifo36e2_n_151 ,dout}),
-        .DOUTP({\gf36e2_inst.sngfifo36e2_n_176 ,\gf36e2_inst.sngfifo36e2_n_177 ,\gf36e2_inst.sngfifo36e2_n_178 ,\gf36e2_inst.sngfifo36e2_n_179 ,\gf36e2_inst.sngfifo36e2_n_180 ,\gf36e2_inst.sngfifo36e2_n_181 ,\gf36e2_inst.sngfifo36e2_n_182 ,\gf36e2_inst.sngfifo36e2_n_183 }),
-        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
-        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
-        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
-        .INJECTDBITERR(1'b0),
-        .INJECTSBITERR(1'b0),
-        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
-        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
-        .RDCLK(clk),
-        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
-        .RDEN(rd_en),
-        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
-        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
-        .REGCE(rd_en),
-        .RST(srst),
-        .RSTREG(srst),
-        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
-        .SLEEP(1'b0),
-        .WRCLK(clk),
-        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
-        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
-        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
-endmodule
-
-(* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_33
-   (re,
-    dout,
-    p_15_out,
-    clk,
-    rd_en,
-    srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
-  input clk;
-  input rd_en;
-  input srst;
-  input [71:0]p_14_out;
-
-  wire clk;
-  wire [71:0]dout;
-  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -6815,15 +5809,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_33
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -6857,41 +5843,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_33
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -6922,15 +5876,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_33
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -6944,33 +5900,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_33
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -6990,31 +5946,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_33
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_35
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_53
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -7026,15 +5982,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_35
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -7068,41 +6016,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_35
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -7133,15 +6049,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_35
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -7155,33 +6073,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_35
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -7201,31 +6119,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_35
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_37
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_54
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -7237,15 +6155,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_37
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -7279,41 +6189,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_37
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -7344,15 +6222,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_37
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -7366,33 +6246,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_37
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -7412,31 +6292,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_37
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_39
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_55
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -7448,15 +6328,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_39
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -7490,41 +6362,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_39
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -7555,15 +6395,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_39
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -7577,33 +6419,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_39
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -7623,31 +6465,31 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_39
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
-module conv1x1_dwc_fifo_builtin_prim__parameterized0_41
-   (re,
-    dout,
-    p_15_out,
+module conv1x1_dwc_fifo_builtin_prim_56
+   (dout,
     clk,
     rd_en,
     srst,
-    p_14_out);
-  output [0:0]re;
-  output [71:0]dout;
-  input p_15_out;
+    wr_en,
+    din);
+  output [31:0]dout;
   input clk;
   input rd_en;
   input srst;
-  input [71:0]p_14_out;
+  input wr_en;
+  input [3:0]din;
 
   wire clk;
-  wire [71:0]dout;
+  wire [3:0]din;
+  wire [31:0]dout;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
   wire \gf36e2_inst.sngfifo36e2_n_10 ;
   wire \gf36e2_inst.sngfifo36e2_n_100 ;
   wire \gf36e2_inst.sngfifo36e2_n_101 ;
@@ -7659,15 +6501,7 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_41
   wire \gf36e2_inst.sngfifo36e2_n_14 ;
   wire \gf36e2_inst.sngfifo36e2_n_15 ;
   wire \gf36e2_inst.sngfifo36e2_n_16 ;
-  wire \gf36e2_inst.sngfifo36e2_n_168 ;
-  wire \gf36e2_inst.sngfifo36e2_n_169 ;
   wire \gf36e2_inst.sngfifo36e2_n_17 ;
-  wire \gf36e2_inst.sngfifo36e2_n_170 ;
-  wire \gf36e2_inst.sngfifo36e2_n_171 ;
-  wire \gf36e2_inst.sngfifo36e2_n_172 ;
-  wire \gf36e2_inst.sngfifo36e2_n_173 ;
-  wire \gf36e2_inst.sngfifo36e2_n_174 ;
-  wire \gf36e2_inst.sngfifo36e2_n_175 ;
   wire \gf36e2_inst.sngfifo36e2_n_18 ;
   wire \gf36e2_inst.sngfifo36e2_n_184 ;
   wire \gf36e2_inst.sngfifo36e2_n_185 ;
@@ -7701,41 +6535,9 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_41
   wire \gf36e2_inst.sngfifo36e2_n_38 ;
   wire \gf36e2_inst.sngfifo36e2_n_39 ;
   wire \gf36e2_inst.sngfifo36e2_n_4 ;
-  wire \gf36e2_inst.sngfifo36e2_n_40 ;
-  wire \gf36e2_inst.sngfifo36e2_n_41 ;
-  wire \gf36e2_inst.sngfifo36e2_n_42 ;
-  wire \gf36e2_inst.sngfifo36e2_n_43 ;
-  wire \gf36e2_inst.sngfifo36e2_n_44 ;
-  wire \gf36e2_inst.sngfifo36e2_n_45 ;
-  wire \gf36e2_inst.sngfifo36e2_n_46 ;
-  wire \gf36e2_inst.sngfifo36e2_n_47 ;
-  wire \gf36e2_inst.sngfifo36e2_n_48 ;
-  wire \gf36e2_inst.sngfifo36e2_n_49 ;
   wire \gf36e2_inst.sngfifo36e2_n_5 ;
-  wire \gf36e2_inst.sngfifo36e2_n_50 ;
-  wire \gf36e2_inst.sngfifo36e2_n_51 ;
-  wire \gf36e2_inst.sngfifo36e2_n_52 ;
-  wire \gf36e2_inst.sngfifo36e2_n_53 ;
-  wire \gf36e2_inst.sngfifo36e2_n_54 ;
-  wire \gf36e2_inst.sngfifo36e2_n_55 ;
-  wire \gf36e2_inst.sngfifo36e2_n_56 ;
-  wire \gf36e2_inst.sngfifo36e2_n_57 ;
-  wire \gf36e2_inst.sngfifo36e2_n_58 ;
-  wire \gf36e2_inst.sngfifo36e2_n_59 ;
   wire \gf36e2_inst.sngfifo36e2_n_6 ;
-  wire \gf36e2_inst.sngfifo36e2_n_60 ;
-  wire \gf36e2_inst.sngfifo36e2_n_61 ;
-  wire \gf36e2_inst.sngfifo36e2_n_62 ;
-  wire \gf36e2_inst.sngfifo36e2_n_63 ;
-  wire \gf36e2_inst.sngfifo36e2_n_64 ;
-  wire \gf36e2_inst.sngfifo36e2_n_65 ;
-  wire \gf36e2_inst.sngfifo36e2_n_66 ;
-  wire \gf36e2_inst.sngfifo36e2_n_67 ;
-  wire \gf36e2_inst.sngfifo36e2_n_68 ;
-  wire \gf36e2_inst.sngfifo36e2_n_69 ;
   wire \gf36e2_inst.sngfifo36e2_n_7 ;
-  wire \gf36e2_inst.sngfifo36e2_n_70 ;
-  wire \gf36e2_inst.sngfifo36e2_n_71 ;
   wire \gf36e2_inst.sngfifo36e2_n_72 ;
   wire \gf36e2_inst.sngfifo36e2_n_73 ;
   wire \gf36e2_inst.sngfifo36e2_n_74 ;
@@ -7766,15 +6568,17 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_41
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
-  wire [71:0]p_14_out;
-  wire p_15_out;
   wire rd_en;
-  wire [0:0]re;
   wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E2 #(
-    .CASCADE_ORDER("LAST"),
+    .CASCADE_ORDER("NONE"),
     .CLOCK_DOMAINS("COMMON"),
     .EN_ECC_PIPE("FALSE"),
     .EN_ECC_READ("FALSE"),
@@ -7788,33 +6592,33 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_41
     .IS_WRCLK_INVERTED(1'b0),
     .IS_WREN_INVERTED(1'b0),
     .PROG_EMPTY_THRESH(2),
-    .PROG_FULL_THRESH(10),
+    .PROG_FULL_THRESH(8190),
     .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .READ_WIDTH(72),
+    .READ_WIDTH(36),
     .REGISTER_MODE("REGISTERED"),
     .RSTREG_PRIORITY("REGCE"),
     .SLEEP_ASYNC("FALSE"),
     .SRVAL(72'h000000000000000000),
     .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
-    .WRITE_WIDTH(72)) 
+    .WRITE_WIDTH(4)) 
     \gf36e2_inst.sngfifo36e2 
-       (.CASDIN(p_14_out[63:0]),
-        .CASDINP(p_14_out[71:64]),
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .CASDOMUX(1'b0),
         .CASDOMUXEN(1'b1),
-        .CASDOUT({\gf36e2_inst.sngfifo36e2_n_40 ,\gf36e2_inst.sngfifo36e2_n_41 ,\gf36e2_inst.sngfifo36e2_n_42 ,\gf36e2_inst.sngfifo36e2_n_43 ,\gf36e2_inst.sngfifo36e2_n_44 ,\gf36e2_inst.sngfifo36e2_n_45 ,\gf36e2_inst.sngfifo36e2_n_46 ,\gf36e2_inst.sngfifo36e2_n_47 ,\gf36e2_inst.sngfifo36e2_n_48 ,\gf36e2_inst.sngfifo36e2_n_49 ,\gf36e2_inst.sngfifo36e2_n_50 ,\gf36e2_inst.sngfifo36e2_n_51 ,\gf36e2_inst.sngfifo36e2_n_52 ,\gf36e2_inst.sngfifo36e2_n_53 ,\gf36e2_inst.sngfifo36e2_n_54 ,\gf36e2_inst.sngfifo36e2_n_55 ,\gf36e2_inst.sngfifo36e2_n_56 ,\gf36e2_inst.sngfifo36e2_n_57 ,\gf36e2_inst.sngfifo36e2_n_58 ,\gf36e2_inst.sngfifo36e2_n_59 ,\gf36e2_inst.sngfifo36e2_n_60 ,\gf36e2_inst.sngfifo36e2_n_61 ,\gf36e2_inst.sngfifo36e2_n_62 ,\gf36e2_inst.sngfifo36e2_n_63 ,\gf36e2_inst.sngfifo36e2_n_64 ,\gf36e2_inst.sngfifo36e2_n_65 ,\gf36e2_inst.sngfifo36e2_n_66 ,\gf36e2_inst.sngfifo36e2_n_67 ,\gf36e2_inst.sngfifo36e2_n_68 ,\gf36e2_inst.sngfifo36e2_n_69 ,\gf36e2_inst.sngfifo36e2_n_70 ,\gf36e2_inst.sngfifo36e2_n_71 ,\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
-        .CASDOUTP({\gf36e2_inst.sngfifo36e2_n_168 ,\gf36e2_inst.sngfifo36e2_n_169 ,\gf36e2_inst.sngfifo36e2_n_170 ,\gf36e2_inst.sngfifo36e2_n_171 ,\gf36e2_inst.sngfifo36e2_n_172 ,\gf36e2_inst.sngfifo36e2_n_173 ,\gf36e2_inst.sngfifo36e2_n_174 ,\gf36e2_inst.sngfifo36e2_n_175 }),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
         .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
         .CASNXTRDEN(1'b0),
         .CASOREGIMUX(1'b0),
         .CASOREGIMUXEN(1'b1),
-        .CASPRVEMPTY(p_15_out),
-        .CASPRVRDEN(re),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
         .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
-        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
         .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .DOUT(dout[63:0]),
-        .DOUTP(dout[71:64]),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
         .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
         .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
         .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
@@ -7834,164 +6638,1135 @@ module conv1x1_dwc_fifo_builtin_prim__parameterized0_41
         .SLEEP(1'b0),
         .WRCLK(clk),
         .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
-        .WREN(1'b0),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_57
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_58
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_59
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_60
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
+        .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
+        .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
+endmodule
+
+(* ORIG_REF_NAME = "builtin_prim" *) 
+module conv1x1_dwc_fifo_builtin_prim_61
+   (dout,
+    clk,
+    rd_en,
+    srst,
+    wr_en,
+    din);
+  output [31:0]dout;
+  input clk;
+  input rd_en;
+  input srst;
+  input wr_en;
+  input [3:0]din;
+
+  wire clk;
+  wire [3:0]din;
+  wire [31:0]dout;
+  wire \gf36e2_inst.sngfifo36e2_n_0 ;
+  wire \gf36e2_inst.sngfifo36e2_n_1 ;
+  wire \gf36e2_inst.sngfifo36e2_n_10 ;
+  wire \gf36e2_inst.sngfifo36e2_n_100 ;
+  wire \gf36e2_inst.sngfifo36e2_n_101 ;
+  wire \gf36e2_inst.sngfifo36e2_n_102 ;
+  wire \gf36e2_inst.sngfifo36e2_n_103 ;
+  wire \gf36e2_inst.sngfifo36e2_n_11 ;
+  wire \gf36e2_inst.sngfifo36e2_n_12 ;
+  wire \gf36e2_inst.sngfifo36e2_n_13 ;
+  wire \gf36e2_inst.sngfifo36e2_n_14 ;
+  wire \gf36e2_inst.sngfifo36e2_n_15 ;
+  wire \gf36e2_inst.sngfifo36e2_n_16 ;
+  wire \gf36e2_inst.sngfifo36e2_n_17 ;
+  wire \gf36e2_inst.sngfifo36e2_n_18 ;
+  wire \gf36e2_inst.sngfifo36e2_n_184 ;
+  wire \gf36e2_inst.sngfifo36e2_n_185 ;
+  wire \gf36e2_inst.sngfifo36e2_n_186 ;
+  wire \gf36e2_inst.sngfifo36e2_n_187 ;
+  wire \gf36e2_inst.sngfifo36e2_n_188 ;
+  wire \gf36e2_inst.sngfifo36e2_n_189 ;
+  wire \gf36e2_inst.sngfifo36e2_n_19 ;
+  wire \gf36e2_inst.sngfifo36e2_n_190 ;
+  wire \gf36e2_inst.sngfifo36e2_n_191 ;
+  wire \gf36e2_inst.sngfifo36e2_n_2 ;
+  wire \gf36e2_inst.sngfifo36e2_n_20 ;
+  wire \gf36e2_inst.sngfifo36e2_n_21 ;
+  wire \gf36e2_inst.sngfifo36e2_n_22 ;
+  wire \gf36e2_inst.sngfifo36e2_n_23 ;
+  wire \gf36e2_inst.sngfifo36e2_n_24 ;
+  wire \gf36e2_inst.sngfifo36e2_n_25 ;
+  wire \gf36e2_inst.sngfifo36e2_n_26 ;
+  wire \gf36e2_inst.sngfifo36e2_n_27 ;
+  wire \gf36e2_inst.sngfifo36e2_n_28 ;
+  wire \gf36e2_inst.sngfifo36e2_n_29 ;
+  wire \gf36e2_inst.sngfifo36e2_n_3 ;
+  wire \gf36e2_inst.sngfifo36e2_n_30 ;
+  wire \gf36e2_inst.sngfifo36e2_n_31 ;
+  wire \gf36e2_inst.sngfifo36e2_n_32 ;
+  wire \gf36e2_inst.sngfifo36e2_n_33 ;
+  wire \gf36e2_inst.sngfifo36e2_n_34 ;
+  wire \gf36e2_inst.sngfifo36e2_n_35 ;
+  wire \gf36e2_inst.sngfifo36e2_n_36 ;
+  wire \gf36e2_inst.sngfifo36e2_n_37 ;
+  wire \gf36e2_inst.sngfifo36e2_n_38 ;
+  wire \gf36e2_inst.sngfifo36e2_n_39 ;
+  wire \gf36e2_inst.sngfifo36e2_n_4 ;
+  wire \gf36e2_inst.sngfifo36e2_n_5 ;
+  wire \gf36e2_inst.sngfifo36e2_n_6 ;
+  wire \gf36e2_inst.sngfifo36e2_n_7 ;
+  wire \gf36e2_inst.sngfifo36e2_n_72 ;
+  wire \gf36e2_inst.sngfifo36e2_n_73 ;
+  wire \gf36e2_inst.sngfifo36e2_n_74 ;
+  wire \gf36e2_inst.sngfifo36e2_n_75 ;
+  wire \gf36e2_inst.sngfifo36e2_n_76 ;
+  wire \gf36e2_inst.sngfifo36e2_n_77 ;
+  wire \gf36e2_inst.sngfifo36e2_n_78 ;
+  wire \gf36e2_inst.sngfifo36e2_n_79 ;
+  wire \gf36e2_inst.sngfifo36e2_n_8 ;
+  wire \gf36e2_inst.sngfifo36e2_n_80 ;
+  wire \gf36e2_inst.sngfifo36e2_n_81 ;
+  wire \gf36e2_inst.sngfifo36e2_n_82 ;
+  wire \gf36e2_inst.sngfifo36e2_n_83 ;
+  wire \gf36e2_inst.sngfifo36e2_n_84 ;
+  wire \gf36e2_inst.sngfifo36e2_n_85 ;
+  wire \gf36e2_inst.sngfifo36e2_n_86 ;
+  wire \gf36e2_inst.sngfifo36e2_n_87 ;
+  wire \gf36e2_inst.sngfifo36e2_n_88 ;
+  wire \gf36e2_inst.sngfifo36e2_n_89 ;
+  wire \gf36e2_inst.sngfifo36e2_n_9 ;
+  wire \gf36e2_inst.sngfifo36e2_n_90 ;
+  wire \gf36e2_inst.sngfifo36e2_n_91 ;
+  wire \gf36e2_inst.sngfifo36e2_n_92 ;
+  wire \gf36e2_inst.sngfifo36e2_n_93 ;
+  wire \gf36e2_inst.sngfifo36e2_n_94 ;
+  wire \gf36e2_inst.sngfifo36e2_n_95 ;
+  wire \gf36e2_inst.sngfifo36e2_n_96 ;
+  wire \gf36e2_inst.sngfifo36e2_n_97 ;
+  wire \gf36e2_inst.sngfifo36e2_n_98 ;
+  wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire rd_en;
+  wire srst;
+  wire wr_en;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED ;
+  wire [63:32]\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED ;
+  wire [7:0]\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED ;
+
+  (* box_type = "PRIMITIVE" *) 
+  FIFO36E2 #(
+    .CASCADE_ORDER("NONE"),
+    .CLOCK_DOMAINS("COMMON"),
+    .EN_ECC_PIPE("FALSE"),
+    .EN_ECC_READ("FALSE"),
+    .EN_ECC_WRITE("FALSE"),
+    .FIRST_WORD_FALL_THROUGH("FALSE"),
+    .INIT(72'h000000000000000000),
+    .IS_RDCLK_INVERTED(1'b0),
+    .IS_RDEN_INVERTED(1'b0),
+    .IS_RSTREG_INVERTED(1'b0),
+    .IS_RST_INVERTED(1'b0),
+    .IS_WRCLK_INVERTED(1'b0),
+    .IS_WREN_INVERTED(1'b0),
+    .PROG_EMPTY_THRESH(2),
+    .PROG_FULL_THRESH(8190),
+    .RDCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .READ_WIDTH(36),
+    .REGISTER_MODE("REGISTERED"),
+    .RSTREG_PRIORITY("REGCE"),
+    .SLEEP_ASYNC("FALSE"),
+    .SRVAL(72'h000000000000000000),
+    .WRCOUNT_TYPE("EXTENDED_DATACOUNT"),
+    .WRITE_WIDTH(4)) 
+    \gf36e2_inst.sngfifo36e2 
+       (.CASDIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .CASDOMUX(1'b0),
+        .CASDOMUXEN(1'b1),
+        .CASDOUT({\NLW_gf36e2_inst.sngfifo36e2_CASDOUT_UNCONNECTED [63:32],\gf36e2_inst.sngfifo36e2_n_72 ,\gf36e2_inst.sngfifo36e2_n_73 ,\gf36e2_inst.sngfifo36e2_n_74 ,\gf36e2_inst.sngfifo36e2_n_75 ,\gf36e2_inst.sngfifo36e2_n_76 ,\gf36e2_inst.sngfifo36e2_n_77 ,\gf36e2_inst.sngfifo36e2_n_78 ,\gf36e2_inst.sngfifo36e2_n_79 ,\gf36e2_inst.sngfifo36e2_n_80 ,\gf36e2_inst.sngfifo36e2_n_81 ,\gf36e2_inst.sngfifo36e2_n_82 ,\gf36e2_inst.sngfifo36e2_n_83 ,\gf36e2_inst.sngfifo36e2_n_84 ,\gf36e2_inst.sngfifo36e2_n_85 ,\gf36e2_inst.sngfifo36e2_n_86 ,\gf36e2_inst.sngfifo36e2_n_87 ,\gf36e2_inst.sngfifo36e2_n_88 ,\gf36e2_inst.sngfifo36e2_n_89 ,\gf36e2_inst.sngfifo36e2_n_90 ,\gf36e2_inst.sngfifo36e2_n_91 ,\gf36e2_inst.sngfifo36e2_n_92 ,\gf36e2_inst.sngfifo36e2_n_93 ,\gf36e2_inst.sngfifo36e2_n_94 ,\gf36e2_inst.sngfifo36e2_n_95 ,\gf36e2_inst.sngfifo36e2_n_96 ,\gf36e2_inst.sngfifo36e2_n_97 ,\gf36e2_inst.sngfifo36e2_n_98 ,\gf36e2_inst.sngfifo36e2_n_99 ,\gf36e2_inst.sngfifo36e2_n_100 ,\gf36e2_inst.sngfifo36e2_n_101 ,\gf36e2_inst.sngfifo36e2_n_102 ,\gf36e2_inst.sngfifo36e2_n_103 }),
+        .CASDOUTP(\NLW_gf36e2_inst.sngfifo36e2_CASDOUTP_UNCONNECTED [7:0]),
+        .CASNXTEMPTY(\gf36e2_inst.sngfifo36e2_n_0 ),
+        .CASNXTRDEN(1'b0),
+        .CASOREGIMUX(1'b0),
+        .CASOREGIMUXEN(1'b1),
+        .CASPRVEMPTY(1'b0),
+        .CASPRVRDEN(\gf36e2_inst.sngfifo36e2_n_1 ),
+        .DBITERR(\gf36e2_inst.sngfifo36e2_n_2 ),
+        .DIN({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,din}),
+        .DINP({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .DOUT({\NLW_gf36e2_inst.sngfifo36e2_DOUT_UNCONNECTED [63:32],dout[3:0],dout[7:4],dout[11:8],dout[15:12],dout[19:16],dout[23:20],dout[27:24],dout[31:28]}),
+        .DOUTP(\NLW_gf36e2_inst.sngfifo36e2_DOUTP_UNCONNECTED [7:0]),
+        .ECCPARITY({\gf36e2_inst.sngfifo36e2_n_184 ,\gf36e2_inst.sngfifo36e2_n_185 ,\gf36e2_inst.sngfifo36e2_n_186 ,\gf36e2_inst.sngfifo36e2_n_187 ,\gf36e2_inst.sngfifo36e2_n_188 ,\gf36e2_inst.sngfifo36e2_n_189 ,\gf36e2_inst.sngfifo36e2_n_190 ,\gf36e2_inst.sngfifo36e2_n_191 }),
+        .EMPTY(\gf36e2_inst.sngfifo36e2_n_3 ),
+        .FULL(\gf36e2_inst.sngfifo36e2_n_4 ),
+        .INJECTDBITERR(1'b0),
+        .INJECTSBITERR(1'b0),
+        .PROGEMPTY(\gf36e2_inst.sngfifo36e2_n_5 ),
+        .PROGFULL(\gf36e2_inst.sngfifo36e2_n_6 ),
+        .RDCLK(clk),
+        .RDCOUNT({\gf36e2_inst.sngfifo36e2_n_12 ,\gf36e2_inst.sngfifo36e2_n_13 ,\gf36e2_inst.sngfifo36e2_n_14 ,\gf36e2_inst.sngfifo36e2_n_15 ,\gf36e2_inst.sngfifo36e2_n_16 ,\gf36e2_inst.sngfifo36e2_n_17 ,\gf36e2_inst.sngfifo36e2_n_18 ,\gf36e2_inst.sngfifo36e2_n_19 ,\gf36e2_inst.sngfifo36e2_n_20 ,\gf36e2_inst.sngfifo36e2_n_21 ,\gf36e2_inst.sngfifo36e2_n_22 ,\gf36e2_inst.sngfifo36e2_n_23 ,\gf36e2_inst.sngfifo36e2_n_24 ,\gf36e2_inst.sngfifo36e2_n_25 }),
+        .RDEN(rd_en),
+        .RDERR(\gf36e2_inst.sngfifo36e2_n_7 ),
+        .RDRSTBUSY(\gf36e2_inst.sngfifo36e2_n_8 ),
+        .REGCE(rd_en),
+        .RST(srst),
+        .RSTREG(srst),
+        .SBITERR(\gf36e2_inst.sngfifo36e2_n_9 ),
+        .SLEEP(1'b0),
+        .WRCLK(clk),
+        .WRCOUNT({\gf36e2_inst.sngfifo36e2_n_26 ,\gf36e2_inst.sngfifo36e2_n_27 ,\gf36e2_inst.sngfifo36e2_n_28 ,\gf36e2_inst.sngfifo36e2_n_29 ,\gf36e2_inst.sngfifo36e2_n_30 ,\gf36e2_inst.sngfifo36e2_n_31 ,\gf36e2_inst.sngfifo36e2_n_32 ,\gf36e2_inst.sngfifo36e2_n_33 ,\gf36e2_inst.sngfifo36e2_n_34 ,\gf36e2_inst.sngfifo36e2_n_35 ,\gf36e2_inst.sngfifo36e2_n_36 ,\gf36e2_inst.sngfifo36e2_n_37 ,\gf36e2_inst.sngfifo36e2_n_38 ,\gf36e2_inst.sngfifo36e2_n_39 }),
+        .WREN(wr_en),
         .WRERR(\gf36e2_inst.sngfifo36e2_n_10 ),
         .WRRSTBUSY(\gf36e2_inst.sngfifo36e2_n_11 ));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_top" *) 
 module conv1x1_dwc_fifo_builtin_top
-   (full,
+   (empty,
+    full,
     rd_rst_busy,
     wr_rst_busy,
-    empty,
     dout,
-    valid,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
+    din);
+  output empty;
   output full;
   output rd_rst_busy;
   output wr_rst_busy;
-  output empty;
   output [1023:0]dout;
-  output valid;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [1023:0]din;
-  input rd_en;
+  input [127:0]din;
 
   wire clk;
-  wire [1023:0]din;
+  wire [127:0]din;
   wire [1023:0]dout;
   wire empty;
   wire full;
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
-  wire valid_i;
   wire wr_en;
   wire wr_rst_busy;
 
-  FDRE #(
-    .INIT(1'b0)) 
-    \gv.gv3.VALID_reg 
-       (.C(clk),
-        .CE(1'b1),
-        .D(valid_i),
-        .Q(valid),
-        .R(1'b0));
-  conv1x1_dwc_fifo_builtin_extdepth \rst_val_sym.gextw_sym[10].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth \rst_val_asym.gextw_asym[10].inst_extd 
        (.clk(clk),
-        .din(din[719:648]),
-        .dout(dout[719:648]),
+        .din(din[39:36]),
+        .dout({dout[935:932],dout[807:804],dout[679:676],dout[551:548],dout[423:420],dout[295:292],dout[167:164],dout[39:36]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_0 \rst_val_sym.gextw_sym[11].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_0 \rst_val_asym.gextw_asym[11].inst_extd 
        (.clk(clk),
-        .din(din[791:720]),
-        .dout(dout[791:720]),
+        .din(din[43:40]),
+        .dout({dout[939:936],dout[811:808],dout[683:680],dout[555:552],dout[427:424],dout[299:296],dout[171:168],dout[43:40]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_1 \rst_val_sym.gextw_sym[12].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_1 \rst_val_asym.gextw_asym[12].inst_extd 
        (.clk(clk),
-        .din(din[863:792]),
-        .dout(dout[863:792]),
+        .din(din[47:44]),
+        .dout({dout[943:940],dout[815:812],dout[687:684],dout[559:556],dout[431:428],dout[303:300],dout[175:172],dout[47:44]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_2 \rst_val_sym.gextw_sym[13].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_2 \rst_val_asym.gextw_asym[13].inst_extd 
        (.clk(clk),
-        .din(din[935:864]),
-        .dout(dout[935:864]),
+        .din(din[51:48]),
+        .dout({dout[947:944],dout[819:816],dout[691:688],dout[563:560],dout[435:432],dout[307:304],dout[179:176],dout[51:48]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_3 \rst_val_sym.gextw_sym[14].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_3 \rst_val_asym.gextw_asym[14].inst_extd 
        (.clk(clk),
-        .din(din[1007:936]),
-        .dout(dout[1007:936]),
+        .din(din[55:52]),
+        .dout({dout[951:948],dout[823:820],dout[695:692],dout[567:564],dout[439:436],dout[311:308],dout[183:180],dout[55:52]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_4 \rst_val_sym.gextw_sym[15].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_4 \rst_val_asym.gextw_asym[15].inst_extd 
        (.clk(clk),
-        .din(din[1023:1008]),
-        .dout(dout[1023:1008]),
+        .din(din[59:56]),
+        .dout({dout[955:952],dout[827:824],dout[699:696],dout[571:568],dout[443:440],dout[315:312],dout[187:184],dout[59:56]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_5 \rst_val_sym.gextw_sym[1].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_5 \rst_val_asym.gextw_asym[16].inst_extd 
        (.clk(clk),
-        .din(din[71:0]),
-        .dout(dout[71:0]),
+        .din(din[63:60]),
+        .dout({dout[959:956],dout[831:828],dout[703:700],dout[575:572],dout[447:444],dout[319:316],dout[191:188],dout[63:60]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_6 \rst_val_asym.gextw_asym[17].inst_extd 
+       (.clk(clk),
+        .din(din[67:64]),
+        .dout({dout[963:960],dout[835:832],dout[707:704],dout[579:576],dout[451:448],dout[323:320],dout[195:192],dout[67:64]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_7 \rst_val_asym.gextw_asym[18].inst_extd 
+       (.clk(clk),
+        .din(din[71:68]),
+        .dout({dout[967:964],dout[839:836],dout[711:708],dout[583:580],dout[455:452],dout[327:324],dout[199:196],dout[71:68]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_8 \rst_val_asym.gextw_asym[19].inst_extd 
+       (.clk(clk),
+        .din(din[75:72]),
+        .dout({dout[971:968],dout[843:840],dout[715:712],dout[587:584],dout[459:456],dout[331:328],dout[203:200],dout[75:72]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_9 \rst_val_asym.gextw_asym[1].inst_extd 
+       (.clk(clk),
+        .din(din[3:0]),
+        .dout({dout[899:896],dout[771:768],dout[643:640],dout[515:512],dout[387:384],dout[259:256],dout[131:128],dout[3:0]}),
         .empty(empty),
         .full(full),
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid_i(valid_i),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
-  conv1x1_dwc_fifo_builtin_extdepth_6 \rst_val_sym.gextw_sym[2].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_10 \rst_val_asym.gextw_asym[20].inst_extd 
        (.clk(clk),
-        .din(din[143:72]),
-        .dout(dout[143:72]),
+        .din(din[79:76]),
+        .dout({dout[975:972],dout[847:844],dout[719:716],dout[591:588],dout[463:460],dout[335:332],dout[207:204],dout[79:76]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_7 \rst_val_sym.gextw_sym[3].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_11 \rst_val_asym.gextw_asym[21].inst_extd 
        (.clk(clk),
-        .din(din[215:144]),
-        .dout(dout[215:144]),
+        .din(din[83:80]),
+        .dout({dout[979:976],dout[851:848],dout[723:720],dout[595:592],dout[467:464],dout[339:336],dout[211:208],dout[83:80]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_8 \rst_val_sym.gextw_sym[4].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_12 \rst_val_asym.gextw_asym[22].inst_extd 
        (.clk(clk),
-        .din(din[287:216]),
-        .dout(dout[287:216]),
+        .din(din[87:84]),
+        .dout({dout[983:980],dout[855:852],dout[727:724],dout[599:596],dout[471:468],dout[343:340],dout[215:212],dout[87:84]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_9 \rst_val_sym.gextw_sym[5].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_13 \rst_val_asym.gextw_asym[23].inst_extd 
        (.clk(clk),
-        .din(din[359:288]),
-        .dout(dout[359:288]),
+        .din(din[91:88]),
+        .dout({dout[987:984],dout[859:856],dout[731:728],dout[603:600],dout[475:472],dout[347:344],dout[219:216],dout[91:88]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_10 \rst_val_sym.gextw_sym[6].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_14 \rst_val_asym.gextw_asym[24].inst_extd 
        (.clk(clk),
-        .din(din[431:360]),
-        .dout(dout[431:360]),
+        .din(din[95:92]),
+        .dout({dout[991:988],dout[863:860],dout[735:732],dout[607:604],dout[479:476],dout[351:348],dout[223:220],dout[95:92]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_11 \rst_val_sym.gextw_sym[7].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_15 \rst_val_asym.gextw_asym[25].inst_extd 
        (.clk(clk),
-        .din(din[503:432]),
-        .dout(dout[503:432]),
+        .din(din[99:96]),
+        .dout({dout[995:992],dout[867:864],dout[739:736],dout[611:608],dout[483:480],dout[355:352],dout[227:224],dout[99:96]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_12 \rst_val_sym.gextw_sym[8].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_16 \rst_val_asym.gextw_asym[26].inst_extd 
        (.clk(clk),
-        .din(din[575:504]),
-        .dout(dout[575:504]),
+        .din(din[103:100]),
+        .dout({dout[999:996],dout[871:868],dout[743:740],dout[615:612],dout[487:484],dout[359:356],dout[231:228],dout[103:100]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
-  conv1x1_dwc_fifo_builtin_extdepth_13 \rst_val_sym.gextw_sym[9].inst_extd 
+  conv1x1_dwc_fifo_builtin_extdepth_17 \rst_val_asym.gextw_asym[27].inst_extd 
        (.clk(clk),
-        .din(din[647:576]),
-        .dout(dout[647:576]),
+        .din(din[107:104]),
+        .dout({dout[1003:1000],dout[875:872],dout[747:744],dout[619:616],dout[491:488],dout[363:360],dout[235:232],dout[107:104]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_18 \rst_val_asym.gextw_asym[28].inst_extd 
+       (.clk(clk),
+        .din(din[111:108]),
+        .dout({dout[1007:1004],dout[879:876],dout[751:748],dout[623:620],dout[495:492],dout[367:364],dout[239:236],dout[111:108]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_19 \rst_val_asym.gextw_asym[29].inst_extd 
+       (.clk(clk),
+        .din(din[115:112]),
+        .dout({dout[1011:1008],dout[883:880],dout[755:752],dout[627:624],dout[499:496],dout[371:368],dout[243:240],dout[115:112]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_20 \rst_val_asym.gextw_asym[2].inst_extd 
+       (.clk(clk),
+        .din(din[7:4]),
+        .dout({dout[903:900],dout[775:772],dout[647:644],dout[519:516],dout[391:388],dout[263:260],dout[135:132],dout[7:4]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_21 \rst_val_asym.gextw_asym[30].inst_extd 
+       (.clk(clk),
+        .din(din[119:116]),
+        .dout({dout[1015:1012],dout[887:884],dout[759:756],dout[631:628],dout[503:500],dout[375:372],dout[247:244],dout[119:116]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_22 \rst_val_asym.gextw_asym[31].inst_extd 
+       (.clk(clk),
+        .din(din[123:120]),
+        .dout({dout[1019:1016],dout[891:888],dout[763:760],dout[635:632],dout[507:504],dout[379:376],dout[251:248],dout[123:120]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_23 \rst_val_asym.gextw_asym[32].inst_extd 
+       (.clk(clk),
+        .din(din[127:124]),
+        .dout({dout[1023:1020],dout[895:892],dout[767:764],dout[639:636],dout[511:508],dout[383:380],dout[255:252],dout[127:124]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_24 \rst_val_asym.gextw_asym[3].inst_extd 
+       (.clk(clk),
+        .din(din[11:8]),
+        .dout({dout[907:904],dout[779:776],dout[651:648],dout[523:520],dout[395:392],dout[267:264],dout[139:136],dout[11:8]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_25 \rst_val_asym.gextw_asym[4].inst_extd 
+       (.clk(clk),
+        .din(din[15:12]),
+        .dout({dout[911:908],dout[783:780],dout[655:652],dout[527:524],dout[399:396],dout[271:268],dout[143:140],dout[15:12]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_26 \rst_val_asym.gextw_asym[5].inst_extd 
+       (.clk(clk),
+        .din(din[19:16]),
+        .dout({dout[915:912],dout[787:784],dout[659:656],dout[531:528],dout[403:400],dout[275:272],dout[147:144],dout[19:16]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_27 \rst_val_asym.gextw_asym[6].inst_extd 
+       (.clk(clk),
+        .din(din[23:20]),
+        .dout({dout[919:916],dout[791:788],dout[663:660],dout[535:532],dout[407:404],dout[279:276],dout[151:148],dout[23:20]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_28 \rst_val_asym.gextw_asym[7].inst_extd 
+       (.clk(clk),
+        .din(din[27:24]),
+        .dout({dout[923:920],dout[795:792],dout[667:664],dout[539:536],dout[411:408],dout[283:280],dout[155:152],dout[27:24]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_29 \rst_val_asym.gextw_asym[8].inst_extd 
+       (.clk(clk),
+        .din(din[31:28]),
+        .dout({dout[927:924],dout[799:796],dout[671:668],dout[543:540],dout[415:412],dout[287:284],dout[159:156],dout[31:28]}),
+        .rd_en(rd_en),
+        .srst(srst),
+        .wr_en(wr_en));
+  conv1x1_dwc_fifo_builtin_extdepth_30 \rst_val_asym.gextw_asym[9].inst_extd 
+       (.clk(clk),
+        .din(din[35:32]),
+        .dout({dout[931:928],dout[803:800],dout[675:672],dout[547:544],dout[419:416],dout[291:288],dout[163:160],dout[35:32]}),
         .rd_en(rd_en),
         .srst(srst),
         .wr_en(wr_en));
@@ -7999,38 +7774,35 @@ endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_top" *) 
 module conv1x1_dwc_fifo_fifo_generator_top
-   (full,
+   (empty,
+    full,
     rd_rst_busy,
     wr_rst_busy,
-    empty,
     dout,
-    valid,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
+    din);
+  output empty;
   output full;
   output rd_rst_busy;
   output wr_rst_busy;
-  output empty;
   output [1023:0]dout;
-  output valid;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [1023:0]din;
-  input rd_en;
+  input [127:0]din;
 
   wire clk;
-  wire [1023:0]din;
+  wire [127:0]din;
   wire [1023:0]dout;
   wire empty;
   wire full;
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -8043,7 +7815,6 @@ module conv1x1_dwc_fifo_fifo_generator_top
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid(valid),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
 endmodule
@@ -8057,7 +7828,7 @@ endmodule
 (* C_AXI_DATA_WIDTH = "64" *) (* C_AXI_ID_WIDTH = "1" *) (* C_AXI_LEN_WIDTH = "8" *) 
 (* C_AXI_LOCK_WIDTH = "1" *) (* C_AXI_RUSER_WIDTH = "1" *) (* C_AXI_TYPE = "1" *) 
 (* C_AXI_WUSER_WIDTH = "1" *) (* C_COMMON_CLOCK = "1" *) (* C_COUNT_TYPE = "0" *) 
-(* C_DATA_COUNT_WIDTH = "10" *) (* C_DEFAULT_VALUE = "BlankString" *) (* C_DIN_WIDTH = "1024" *) 
+(* C_DATA_COUNT_WIDTH = "13" *) (* C_DEFAULT_VALUE = "BlankString" *) (* C_DIN_WIDTH = "128" *) 
 (* C_DIN_WIDTH_AXIS = "1" *) (* C_DIN_WIDTH_RACH = "32" *) (* C_DIN_WIDTH_RDCH = "64" *) 
 (* C_DIN_WIDTH_WACH = "1" *) (* C_DIN_WIDTH_WDCH = "64" *) (* C_DIN_WIDTH_WRCH = "2" *) 
 (* C_DOUT_RST_VAL = "0" *) (* C_DOUT_WIDTH = "1024" *) (* C_ENABLE_RLOCS = "0" *) 
@@ -8078,14 +7849,14 @@ endmodule
 (* C_HAS_PROG_FLAGS_RACH = "0" *) (* C_HAS_PROG_FLAGS_RDCH = "0" *) (* C_HAS_PROG_FLAGS_WACH = "0" *) 
 (* C_HAS_PROG_FLAGS_WDCH = "0" *) (* C_HAS_PROG_FLAGS_WRCH = "0" *) (* C_HAS_RD_DATA_COUNT = "0" *) 
 (* C_HAS_RD_RST = "0" *) (* C_HAS_RST = "0" *) (* C_HAS_SLAVE_CE = "0" *) 
-(* C_HAS_SRST = "1" *) (* C_HAS_UNDERFLOW = "0" *) (* C_HAS_VALID = "1" *) 
+(* C_HAS_SRST = "1" *) (* C_HAS_UNDERFLOW = "0" *) (* C_HAS_VALID = "0" *) 
 (* C_HAS_WR_ACK = "0" *) (* C_HAS_WR_DATA_COUNT = "0" *) (* C_HAS_WR_RST = "0" *) 
 (* C_IMPLEMENTATION_TYPE = "6" *) (* C_IMPLEMENTATION_TYPE_AXIS = "1" *) (* C_IMPLEMENTATION_TYPE_RACH = "2" *) 
 (* C_IMPLEMENTATION_TYPE_RDCH = "1" *) (* C_IMPLEMENTATION_TYPE_WACH = "2" *) (* C_IMPLEMENTATION_TYPE_WDCH = "1" *) 
 (* C_IMPLEMENTATION_TYPE_WRCH = "2" *) (* C_INIT_WR_PNTR_VAL = "0" *) (* C_INTERFACE_TYPE = "0" *) 
 (* C_MEMORY_TYPE = "4" *) (* C_MIF_FILE_NAME = "BlankString" *) (* C_MSGON_VAL = "1" *) 
 (* C_OPTIMIZATION_MODE = "0" *) (* C_OVERFLOW_LOW = "0" *) (* C_POWER_SAVING_MODE = "0" *) 
-(* C_PRELOAD_LATENCY = "2" *) (* C_PRELOAD_REGS = "1" *) (* C_PRIM_FIFO_TYPE = "512x72" *) 
+(* C_PRELOAD_LATENCY = "2" *) (* C_PRELOAD_REGS = "1" *) (* C_PRIM_FIFO_TYPE = "8kx4" *) 
 (* C_PRIM_FIFO_TYPE_AXIS = "1kx18" *) (* C_PRIM_FIFO_TYPE_RACH = "512x36" *) (* C_PRIM_FIFO_TYPE_RDCH = "512x72" *) 
 (* C_PRIM_FIFO_TYPE_WACH = "512x36" *) (* C_PRIM_FIFO_TYPE_WDCH = "512x72" *) (* C_PRIM_FIFO_TYPE_WRCH = "512x36" *) 
 (* C_PROG_EMPTY_THRESH_ASSERT_VAL = "2" *) (* C_PROG_EMPTY_THRESH_ASSERT_VAL_AXIS = "1022" *) (* C_PROG_EMPTY_THRESH_ASSERT_VAL_RACH = "1022" *) 
@@ -8093,9 +7864,9 @@ endmodule
 (* C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH = "1022" *) (* C_PROG_EMPTY_THRESH_NEGATE_VAL = "3" *) (* C_PROG_EMPTY_TYPE = "0" *) 
 (* C_PROG_EMPTY_TYPE_AXIS = "0" *) (* C_PROG_EMPTY_TYPE_RACH = "0" *) (* C_PROG_EMPTY_TYPE_RDCH = "0" *) 
 (* C_PROG_EMPTY_TYPE_WACH = "0" *) (* C_PROG_EMPTY_TYPE_WDCH = "0" *) (* C_PROG_EMPTY_TYPE_WRCH = "0" *) 
-(* C_PROG_FULL_THRESH_ASSERT_VAL = "1022" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
+(* C_PROG_FULL_THRESH_ASSERT_VAL = "8190" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
 (* C_PROG_FULL_THRESH_ASSERT_VAL_RDCH = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_WACH = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_WDCH = "1023" *) 
-(* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) (* C_PROG_FULL_THRESH_NEGATE_VAL = "1021" *) (* C_PROG_FULL_TYPE = "0" *) 
+(* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) (* C_PROG_FULL_THRESH_NEGATE_VAL = "8189" *) (* C_PROG_FULL_TYPE = "0" *) 
 (* C_PROG_FULL_TYPE_AXIS = "0" *) (* C_PROG_FULL_TYPE_RACH = "0" *) (* C_PROG_FULL_TYPE_RDCH = "0" *) 
 (* C_PROG_FULL_TYPE_WACH = "0" *) (* C_PROG_FULL_TYPE_WDCH = "0" *) (* C_PROG_FULL_TYPE_WRCH = "0" *) 
 (* C_RACH_TYPE = "0" *) (* C_RDCH_TYPE = "0" *) (* C_RD_DATA_COUNT_WIDTH = "10" *) 
@@ -8109,10 +7880,10 @@ endmodule
 (* C_USE_ECC_WDCH = "0" *) (* C_USE_ECC_WRCH = "0" *) (* C_USE_EMBEDDED_REG = "1" *) 
 (* C_USE_FIFO16_FLAGS = "0" *) (* C_USE_FWFT_DATA_COUNT = "0" *) (* C_USE_PIPELINE_REG = "0" *) 
 (* C_VALID_LOW = "0" *) (* C_WACH_TYPE = "0" *) (* C_WDCH_TYPE = "0" *) 
-(* C_WRCH_TYPE = "0" *) (* C_WR_ACK_LOW = "0" *) (* C_WR_DATA_COUNT_WIDTH = "10" *) 
-(* C_WR_DEPTH = "1024" *) (* C_WR_DEPTH_AXIS = "1024" *) (* C_WR_DEPTH_RACH = "16" *) 
+(* C_WRCH_TYPE = "0" *) (* C_WR_ACK_LOW = "0" *) (* C_WR_DATA_COUNT_WIDTH = "13" *) 
+(* C_WR_DEPTH = "8192" *) (* C_WR_DEPTH_AXIS = "1024" *) (* C_WR_DEPTH_RACH = "16" *) 
 (* C_WR_DEPTH_RDCH = "1024" *) (* C_WR_DEPTH_WACH = "16" *) (* C_WR_DEPTH_WDCH = "1024" *) 
-(* C_WR_DEPTH_WRCH = "16" *) (* C_WR_FREQ = "1" *) (* C_WR_PNTR_WIDTH = "10" *) 
+(* C_WR_DEPTH_WRCH = "16" *) (* C_WR_FREQ = "1" *) (* C_WR_PNTR_WIDTH = "13" *) 
 (* C_WR_PNTR_WIDTH_AXIS = "10" *) (* C_WR_PNTR_WIDTH_RACH = "4" *) (* C_WR_PNTR_WIDTH_RDCH = "10" *) 
 (* C_WR_PNTR_WIDTH_WACH = "4" *) (* C_WR_PNTR_WIDTH_WDCH = "10" *) (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
 (* C_WR_RESPONSE_LATENCY = "1" *) (* ORIG_REF_NAME = "fifo_generator_v13_2_3" *) 
@@ -8357,15 +8128,15 @@ module conv1x1_dwc_fifo_fifo_generator_v13_2_3
   input wr_rst;
   input rd_clk;
   input rd_rst;
-  input [1023:0]din;
+  input [127:0]din;
   input wr_en;
   input rd_en;
   input [9:0]prog_empty_thresh;
   input [9:0]prog_empty_thresh_assert;
   input [9:0]prog_empty_thresh_negate;
-  input [9:0]prog_full_thresh;
-  input [9:0]prog_full_thresh_assert;
-  input [9:0]prog_full_thresh_negate;
+  input [12:0]prog_full_thresh;
+  input [12:0]prog_full_thresh_assert;
+  input [12:0]prog_full_thresh_negate;
   input int_clk;
   input injectdbiterr;
   input injectsbiterr;
@@ -8379,9 +8150,9 @@ module conv1x1_dwc_fifo_fifo_generator_v13_2_3
   output almost_empty;
   output valid;
   output underflow;
-  output [9:0]data_count;
+  output [12:0]data_count;
   output [9:0]rd_data_count;
-  output [9:0]wr_data_count;
+  output [12:0]wr_data_count;
   output prog_full;
   output prog_empty;
   output sbiterr;
@@ -8583,14 +8354,13 @@ module conv1x1_dwc_fifo_fifo_generator_v13_2_3
   wire \<const0> ;
   wire \<const1> ;
   wire clk;
-  wire [1023:0]din;
+  wire [127:0]din;
   wire [1023:0]dout;
   wire empty;
   wire full;
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -8776,6 +8546,9 @@ module conv1x1_dwc_fifo_fifo_generator_v13_2_3
   assign axis_wr_data_count[2] = \<const0> ;
   assign axis_wr_data_count[1] = \<const0> ;
   assign axis_wr_data_count[0] = \<const0> ;
+  assign data_count[12] = \<const0> ;
+  assign data_count[11] = \<const0> ;
+  assign data_count[10] = \<const0> ;
   assign data_count[9] = \<const0> ;
   assign data_count[8] = \<const0> ;
   assign data_count[7] = \<const0> ;
@@ -9105,7 +8878,11 @@ module conv1x1_dwc_fifo_fifo_generator_v13_2_3
   assign s_axis_tready = \<const0> ;
   assign sbiterr = \<const0> ;
   assign underflow = \<const0> ;
+  assign valid = \<const0> ;
   assign wr_ack = \<const0> ;
+  assign wr_data_count[12] = \<const0> ;
+  assign wr_data_count[11] = \<const0> ;
+  assign wr_data_count[10] = \<const0> ;
   assign wr_data_count[9] = \<const0> ;
   assign wr_data_count[8] = \<const0> ;
   assign wr_data_count[7] = \<const0> ;
@@ -9129,45 +8906,41 @@ module conv1x1_dwc_fifo_fifo_generator_v13_2_3
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid(valid),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_v13_2_3_builtin" *) 
 module conv1x1_dwc_fifo_fifo_generator_v13_2_3_builtin
-   (full,
+   (empty,
+    full,
     rd_rst_busy,
     wr_rst_busy,
-    empty,
     dout,
-    valid,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
+    din);
+  output empty;
   output full;
   output rd_rst_busy;
   output wr_rst_busy;
-  output empty;
   output [1023:0]dout;
-  output valid;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [1023:0]din;
-  input rd_en;
+  input [127:0]din;
 
   wire clk;
-  wire [1023:0]din;
+  wire [127:0]din;
   wire [1023:0]dout;
   wire empty;
   wire full;
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -9180,45 +8953,41 @@ module conv1x1_dwc_fifo_fifo_generator_v13_2_3_builtin
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid(valid),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_v13_2_3_synth" *) 
 module conv1x1_dwc_fifo_fifo_generator_v13_2_3_synth
-   (full,
+   (empty,
+    full,
     rd_rst_busy,
     wr_rst_busy,
-    empty,
     dout,
-    valid,
     clk,
+    rd_en,
     srst,
     wr_en,
-    din,
-    rd_en);
+    din);
+  output empty;
   output full;
   output rd_rst_busy;
   output wr_rst_busy;
-  output empty;
   output [1023:0]dout;
-  output valid;
   input clk;
+  input rd_en;
   input srst;
   input wr_en;
-  input [1023:0]din;
-  input rd_en;
+  input [127:0]din;
 
   wire clk;
-  wire [1023:0]din;
+  wire [127:0]din;
   wire [1023:0]dout;
   wire empty;
   wire full;
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -9231,7 +9000,6 @@ module conv1x1_dwc_fifo_fifo_generator_v13_2_3_synth
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid(valid),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
 endmodule

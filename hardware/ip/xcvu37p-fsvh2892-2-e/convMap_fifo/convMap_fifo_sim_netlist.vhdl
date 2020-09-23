@@ -1,7 +1,7 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Tue Sep 22 17:46:58 2020
+-- Date        : Wed Sep 23 13:49:42 2020
 -- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 -- Command     : write_vhdl -force -mode funcsim
 --               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/convMap_fifo/convMap_fifo_sim_netlist.vhdl
@@ -35,12 +35,12 @@ entity convMap_fifo_builtin_prim is
     \^full\ : in STD_LOGIC;
     full_0 : in STD_LOGIC;
     \^rd_en\ : in STD_LOGIC;
-    \dout[639]_2\ : in STD_LOGIC;
-    \dout[639]_3\ : in STD_LOGIC;
-    \dout[639]_4\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_1\ : in STD_LOGIC;
     EMPTY : in STD_LOGIC;
-    \^empty\ : in STD_LOGIC;
-    empty_0 : in STD_LOGIC
+    \gv.gv3.VALID_reg_2\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_3\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of convMap_fifo_builtin_prim : entity is "builtin_prim";
@@ -183,8 +183,8 @@ empty_INST_0_i_3: unisim.vcomponents.LUT4
         port map (
       I0 => p_60_out,
       I1 => EMPTY,
-      I2 => \^empty\,
-      I3 => empty_0,
+      I2 => \gv.gv3.VALID_reg_2\,
+      I3 => \gv.gv3.VALID_reg_3\,
       O => \^rd_clk_1\
     );
 full_INST_0_i_3: unisim.vcomponents.LUT4
@@ -375,9 +375,9 @@ full_INST_0_i_3: unisim.vcomponents.LUT4
         port map (
       I0 => \^rd_en\,
       I1 => \^rd_clk_1\,
-      I2 => \dout[639]_2\,
-      I3 => \dout[639]_3\,
-      I4 => \dout[639]_4\,
+      I2 => \gv.gv3.VALID_reg\,
+      I3 => \gv.gv3.VALID_reg_0\,
+      I4 => \gv.gv3.VALID_reg_1\,
       O => \^rd_en_1\
     );
 \gf36e2_inst.sngfifo36e2_i_2\: unisim.vcomponents.LUT5
@@ -2677,8 +2677,8 @@ entity convMap_fifo_builtin_prim_21 is
     din : in STD_LOGIC_VECTOR ( 71 downto 0 );
     \gf36e2_inst.sngfifo36e2_i_2\ : in STD_LOGIC;
     \gf36e2_inst.sngfifo36e2_i_2_0\ : in STD_LOGIC;
-    \gf36e2_inst.sngfifo36e2_i_1\ : in STD_LOGIC;
-    \gf36e2_inst.sngfifo36e2_i_1_0\ : in STD_LOGIC
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of convMap_fifo_builtin_prim_21 : entity is "builtin_prim";
@@ -2984,8 +2984,8 @@ begin
     )
         port map (
       I0 => \^empty\,
-      I1 => \gf36e2_inst.sngfifo36e2_i_1\,
-      I2 => \gf36e2_inst.sngfifo36e2_i_1_0\,
+      I1 => \gv.gv3.VALID_reg\,
+      I2 => \gv.gv3.VALID_reg_0\,
       O => rd_clk_1
     );
 \gf36e2_inst.sngfifo36e2_i_4\: unisim.vcomponents.LUT3
@@ -3758,8 +3758,8 @@ entity convMap_fifo_builtin_prim_24 is
     \^full\ : in STD_LOGIC;
     full_0 : in STD_LOGIC;
     EMPTY : in STD_LOGIC;
-    \^empty\ : in STD_LOGIC;
-    empty_0 : in STD_LOGIC
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of convMap_fifo_builtin_prim_24 : entity is "builtin_prim";
@@ -3894,8 +3894,8 @@ empty_INST_0_i_2: unisim.vcomponents.LUT4
         port map (
       I0 => p_24_out,
       I1 => EMPTY,
-      I2 => \^empty\,
-      I3 => empty_0,
+      I2 => \gv.gv3.VALID_reg\,
+      I3 => \gv.gv3.VALID_reg_0\,
       O => rd_clk_1
     );
 full_INST_0_i_2: unisim.vcomponents.LUT4
@@ -5400,12 +5400,12 @@ entity convMap_fifo_builtin_extdepth_13 is
     \^full\ : in STD_LOGIC;
     full_0 : in STD_LOGIC;
     \^rd_en\ : in STD_LOGIC;
-    \dout[639]_2\ : in STD_LOGIC;
-    \dout[639]_3\ : in STD_LOGIC;
-    \dout[639]_4\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_1\ : in STD_LOGIC;
     EMPTY : in STD_LOGIC;
-    \^empty\ : in STD_LOGIC;
-    empty_0 : in STD_LOGIC;
+    \gv.gv3.VALID_reg_2\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_3\ : in STD_LOGIC;
     rd_clk : in STD_LOGIC;
     srst : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
@@ -5435,13 +5435,13 @@ begin
       \dout[639]\ => \dout[639]\,
       \dout[639]_0\ => \dout[639]_0\,
       \dout[639]_1\ => \dout[639]_1\,
-      \dout[639]_2\ => \dout[639]_2\,
-      \dout[639]_3\ => \dout[639]_3\,
-      \dout[639]_4\ => \dout[639]_4\,
-      \^empty\ => \^empty\,
-      empty_0 => empty_0,
       \^full\ => \^full\,
       full_0 => full_0,
+      \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
+      \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
+      \gv.gv3.VALID_reg_1\ => \gv.gv3.VALID_reg_1\,
+      \gv.gv3.VALID_reg_2\ => \gv.gv3.VALID_reg_2\,
+      \gv.gv3.VALID_reg_3\ => \gv.gv3.VALID_reg_3\,
       rd_clk => rd_clk,
       rd_clk_0 => rd_clk_0,
       rd_clk_1 => rd_clk_1,
@@ -5482,8 +5482,8 @@ entity convMap_fifo_builtin_extdepth_2 is
     \^full\ : in STD_LOGIC;
     full_0 : in STD_LOGIC;
     EMPTY : in STD_LOGIC;
-    \^empty\ : in STD_LOGIC;
-    empty_0 : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
     rd_clk : in STD_LOGIC;
     RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
@@ -5512,10 +5512,10 @@ begin
       WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      \^empty\ => \^empty\,
-      empty_0 => empty_0,
       \^full\ => \^full\,
       full_0 => full_0,
+      \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
+      \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
       rd_clk => rd_clk,
       rd_clk_0 => rd_clk_0,
       rd_clk_1 => rd_clk_1,
@@ -5674,8 +5674,8 @@ entity convMap_fifo_builtin_extdepth_5 is
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
     \gf36e2_inst.sngfifo36e2_i_2\ : in STD_LOGIC;
     \gf36e2_inst.sngfifo36e2_i_2_0\ : in STD_LOGIC;
-    \gf36e2_inst.sngfifo36e2_i_1\ : in STD_LOGIC;
-    \gf36e2_inst.sngfifo36e2_i_1_0\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg\ : in STD_LOGIC;
+    \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
     rd_clk : in STD_LOGIC;
     RD_EN : in STD_LOGIC;
     srst : in STD_LOGIC;
@@ -5704,10 +5704,10 @@ begin
       WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      \gf36e2_inst.sngfifo36e2_i_1\ => \gf36e2_inst.sngfifo36e2_i_1\,
-      \gf36e2_inst.sngfifo36e2_i_1_0\ => \gf36e2_inst.sngfifo36e2_i_1_0\,
       \gf36e2_inst.sngfifo36e2_i_2\ => \gf36e2_inst.sngfifo36e2_i_2\,
       \gf36e2_inst.sngfifo36e2_i_2_0\ => \gf36e2_inst.sngfifo36e2_i_2_0\,
+      \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
+      \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
       rd_clk => rd_clk,
       rd_clk_0 => rd_clk_0,
       rd_clk_1 => rd_clk_1,
@@ -6014,6 +6014,7 @@ use UNISIM.VCOMPONENTS.ALL;
 entity convMap_fifo_builtin_top is
   port (
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
+    valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
     full : out STD_LOGIC;
@@ -6071,6 +6072,17 @@ architecture STRUCTURE of convMap_fifo_builtin_top is
   signal wr_tmp : STD_LOGIC;
   signal wrst_busy_i : STD_LOGIC_VECTOR ( 15 downto 1 );
 begin
+\gv.gv3.VALID_reg\: unisim.vcomponents.FDRE
+    generic map(
+      INIT => '0'
+    )
+        port map (
+      C => rd_clk,
+      CE => '1',
+      D => rd_tmp,
+      Q => valid,
+      R => '0'
+    );
 rd_rst_busy_INST_0: unisim.vcomponents.LUT5
     generic map(
       INIT => X"FFFFFFFE"
@@ -6161,10 +6173,10 @@ rd_rst_busy_INST_0_i_2: unisim.vcomponents.LUT6
       WR_EN => wr_tmp,
       din(71 downto 0) => din(935 downto 864),
       dout(71 downto 0) => dout(935 downto 864),
-      \^empty\ => p_6_out,
-      empty_0 => p_15_out,
       \^full\ => p_7_out,
       full_0 => p_16_out,
+      \gv.gv3.VALID_reg\ => p_6_out,
+      \gv.gv3.VALID_reg_0\ => p_15_out,
       rd_clk => rd_clk,
       rd_clk_0 => \rst_val_sym.gextw_sym[13].inst_extd_n_0\,
       rd_clk_1 => \rst_val_sym.gextw_sym[13].inst_extd_n_1\,
@@ -6209,10 +6221,10 @@ rd_rst_busy_INST_0_i_2: unisim.vcomponents.LUT6
       WR_EN => wr_tmp,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
-      \gf36e2_inst.sngfifo36e2_i_1\ => p_114_out,
-      \gf36e2_inst.sngfifo36e2_i_1_0\ => p_123_out,
       \gf36e2_inst.sngfifo36e2_i_2\ => p_115_out,
       \gf36e2_inst.sngfifo36e2_i_2_0\ => p_124_out,
+      \gv.gv3.VALID_reg\ => p_114_out,
+      \gv.gv3.VALID_reg_0\ => p_123_out,
       rd_clk => rd_clk,
       rd_clk_0 => \rst_val_sym.gextw_sym[1].inst_extd_n_0\,
       rd_clk_1 => \rst_val_sym.gextw_sym[1].inst_extd_n_2\,
@@ -6348,13 +6360,13 @@ rd_rst_busy_INST_0_i_2: unisim.vcomponents.LUT6
       \dout[639]\ => \rst_val_sym.gextw_sym[13].inst_extd_n_0\,
       \dout[639]_0\ => \rst_val_sym.gextw_sym[1].inst_extd_n_0\,
       \dout[639]_1\ => \rst_val_sym.gextw_sym[5].inst_extd_n_1\,
-      \dout[639]_2\ => \rst_val_sym.gextw_sym[13].inst_extd_n_1\,
-      \dout[639]_3\ => \rst_val_sym.gextw_sym[1].inst_extd_n_2\,
-      \dout[639]_4\ => \rst_val_sym.gextw_sym[5].inst_extd_n_3\,
-      \^empty\ => p_42_out,
-      empty_0 => p_51_out,
       \^full\ => p_43_out,
       full_0 => p_52_out,
+      \gv.gv3.VALID_reg\ => \rst_val_sym.gextw_sym[13].inst_extd_n_1\,
+      \gv.gv3.VALID_reg_0\ => \rst_val_sym.gextw_sym[1].inst_extd_n_2\,
+      \gv.gv3.VALID_reg_1\ => \rst_val_sym.gextw_sym[5].inst_extd_n_3\,
+      \gv.gv3.VALID_reg_2\ => p_42_out,
+      \gv.gv3.VALID_reg_3\ => p_51_out,
       rd_clk => rd_clk,
       rd_clk_0 => \rst_val_sym.gextw_sym[9].inst_extd_n_1\,
       rd_clk_1 => \rst_val_sym.gextw_sym[9].inst_extd_n_3\,
@@ -6409,6 +6421,7 @@ use UNISIM.VCOMPONENTS.ALL;
 entity convMap_fifo_fifo_generator_v13_2_3_builtin is
   port (
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
+    valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
     full : out STD_LOGIC;
@@ -6436,6 +6449,7 @@ begin
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
+      valid => valid,
       wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
@@ -6448,6 +6462,7 @@ use UNISIM.VCOMPONENTS.ALL;
 entity convMap_fifo_fifo_generator_top is
   port (
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
+    valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
     full : out STD_LOGIC;
@@ -6475,6 +6490,7 @@ begin
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
+      valid => valid,
       wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
@@ -6487,6 +6503,7 @@ use UNISIM.VCOMPONENTS.ALL;
 entity convMap_fifo_fifo_generator_v13_2_3_synth is
   port (
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
+    valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
     full : out STD_LOGIC;
@@ -6514,6 +6531,7 @@ begin
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
+      valid => valid,
       wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
@@ -6942,7 +6960,7 @@ entity convMap_fifo_fifo_generator_v13_2_3 is
   attribute C_HAS_UNDERFLOW : integer;
   attribute C_HAS_UNDERFLOW of convMap_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_VALID : integer;
-  attribute C_HAS_VALID of convMap_fifo_fifo_generator_v13_2_3 : entity is 0;
+  attribute C_HAS_VALID of convMap_fifo_fifo_generator_v13_2_3 : entity is 1;
   attribute C_HAS_WR_ACK : integer;
   attribute C_HAS_WR_ACK of convMap_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_WR_DATA_COUNT : integer;
@@ -7066,7 +7084,7 @@ entity convMap_fifo_fifo_generator_v13_2_3 is
   attribute C_RD_DEPTH : integer;
   attribute C_RD_DEPTH of convMap_fifo_fifo_generator_v13_2_3 : entity is 512;
   attribute C_RD_FREQ : integer;
-  attribute C_RD_FREQ of convMap_fifo_fifo_generator_v13_2_3 : entity is 500;
+  attribute C_RD_FREQ of convMap_fifo_fifo_generator_v13_2_3 : entity is 400;
   attribute C_RD_PNTR_WIDTH : integer;
   attribute C_RD_PNTR_WIDTH of convMap_fifo_fifo_generator_v13_2_3 : entity is 9;
   attribute C_REG_SLICE_MODE_AXIS : integer;
@@ -7678,7 +7696,6 @@ begin
   s_axis_tready <= \<const0>\;
   sbiterr <= \<const0>\;
   underflow <= \<const0>\;
-  valid <= \<const0>\;
   wr_ack <= \<const0>\;
   wr_data_count(8) <= \<const0>\;
   wr_data_count(7) <= \<const0>\;
@@ -7707,6 +7724,7 @@ inst_fifo_gen: entity work.convMap_fifo_fifo_generator_v13_2_3_synth
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
+      valid => valid,
       wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
@@ -7727,6 +7745,7 @@ entity convMap_fifo is
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
     full : out STD_LOGIC;
     empty : out STD_LOGIC;
+    valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC
   );
@@ -7800,7 +7819,6 @@ architecture STRUCTURE of convMap_fifo is
   signal NLW_U0_s_axis_tready_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_sbiterr_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_underflow_UNCONNECTED : STD_LOGIC;
-  signal NLW_U0_valid_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_wr_ack_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_axi_ar_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal NLW_U0_axi_ar_rd_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
@@ -8047,7 +8065,7 @@ architecture STRUCTURE of convMap_fifo is
   attribute C_HAS_UNDERFLOW : integer;
   attribute C_HAS_UNDERFLOW of U0 : label is 0;
   attribute C_HAS_VALID : integer;
-  attribute C_HAS_VALID of U0 : label is 0;
+  attribute C_HAS_VALID of U0 : label is 1;
   attribute C_HAS_WR_ACK : integer;
   attribute C_HAS_WR_ACK of U0 : label is 0;
   attribute C_HAS_WR_DATA_COUNT : integer;
@@ -8171,7 +8189,7 @@ architecture STRUCTURE of convMap_fifo is
   attribute C_RD_DEPTH : integer;
   attribute C_RD_DEPTH of U0 : label is 512;
   attribute C_RD_FREQ : integer;
-  attribute C_RD_FREQ of U0 : label is 500;
+  attribute C_RD_FREQ of U0 : label is 400;
   attribute C_RD_PNTR_WIDTH : integer;
   attribute C_RD_PNTR_WIDTH of U0 : label is 9;
   attribute C_REG_SLICE_MODE_AXIS : integer;
@@ -8271,7 +8289,7 @@ architecture STRUCTURE of convMap_fifo is
   attribute x_interface_info of full : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE FULL";
   attribute x_interface_info of rd_clk : signal is "xilinx.com:signal:clock:1.0 read_clk CLK";
   attribute x_interface_parameter : string;
-  attribute x_interface_parameter of rd_clk : signal is "XIL_INTERFACENAME read_clk, FREQ_HZ 500000000, PHASE 0.000, INSERT_VIP 0";
+  attribute x_interface_parameter of rd_clk : signal is "XIL_INTERFACENAME read_clk, FREQ_HZ 400000000, PHASE 0.000, INSERT_VIP 0";
   attribute x_interface_info of rd_en : signal is "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN";
   attribute x_interface_info of wr_clk : signal is "xilinx.com:signal:clock:1.0 write_clk CLK";
   attribute x_interface_parameter of wr_clk : signal is "XIL_INTERFACENAME write_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0";
@@ -8505,7 +8523,7 @@ U0: entity work.convMap_fifo_fifo_generator_v13_2_3
       sleep => '0',
       srst => srst,
       underflow => NLW_U0_underflow_UNCONNECTED,
-      valid => NLW_U0_valid_UNCONNECTED,
+      valid => valid,
       wr_ack => NLW_U0_wr_ack_UNCONNECTED,
       wr_clk => wr_clk,
       wr_data_count(8 downto 0) => NLW_U0_wr_data_count_UNCONNECTED(8 downto 0),

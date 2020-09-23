@@ -12,6 +12,10 @@ set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 # XDC: The top module name and the constraint reference have the same name: 'outbuf_fifo'. Do not add the DONT_TOUCH constraint.
 #dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo_clocks.xdc
+# XDC: The top module name and the constraint reference have the same name: 'outbuf_fifo'. Do not add the DONT_TOUCH constraint.
+#dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
+
 # IP: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo.xci
 # IP: The module: 'outbuf_fifo' is the root of the design. Do not add the DONT_TOUCH constraint.
 
@@ -20,5 +24,9 @@ set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 #dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 
 # XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo_ooc.xdc
+# XDC: The top module name and the constraint reference have the same name: 'outbuf_fifo'. Do not add the DONT_TOUCH constraint.
+#dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
+
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo_clocks.xdc
 # XDC: The top module name and the constraint reference have the same name: 'outbuf_fifo'. Do not add the DONT_TOUCH constraint.
 #dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet

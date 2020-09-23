@@ -54,9 +54,8 @@
 
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module job_fetch_fifo (
+  clk,
   srst,
-  wr_clk,
-  rd_clk,
   din,
   wr_en,
   rd_en,
@@ -69,13 +68,10 @@ module job_fetch_fifo (
   rd_rst_busy
 );
 
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME core_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *)
+(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 core_clk CLK" *)
+input wire clk;
 input wire srst;
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME write_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *)
-(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 write_clk CLK" *)
-input wire wr_clk;
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME read_clk, FREQ_HZ 500000000, PHASE 0.000, INSERT_VIP 0" *)
-(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 read_clk CLK" *)
-input wire rd_clk;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA" *)
 input wire [1023 : 0] din;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN" *)
@@ -94,7 +90,7 @@ output wire wr_rst_busy;
 output wire rd_rst_busy;
 
   fifo_generator_v13_2_3 #(
-    .C_COMMON_CLOCK(0),
+    .C_COMMON_CLOCK(1),
     .C_SELECT_XPM(0),
     .C_COUNT_TYPE(0),
     .C_DATA_COUNT_WIDTH(9),
@@ -130,15 +126,15 @@ output wire rd_rst_busy;
     .C_PRELOAD_LATENCY(2),
     .C_PRELOAD_REGS(1),
     .C_PRIM_FIFO_TYPE("512x72"),
-    .C_PROG_EMPTY_THRESH_ASSERT_VAL(5),
-    .C_PROG_EMPTY_THRESH_NEGATE_VAL(6),
+    .C_PROG_EMPTY_THRESH_ASSERT_VAL(2),
+    .C_PROG_EMPTY_THRESH_NEGATE_VAL(3),
     .C_PROG_EMPTY_TYPE(0),
     .C_PROG_FULL_THRESH_ASSERT_VAL(511),
     .C_PROG_FULL_THRESH_NEGATE_VAL(510),
     .C_PROG_FULL_TYPE(0),
     .C_RD_DATA_COUNT_WIDTH(9),
     .C_RD_DEPTH(512),
-    .C_RD_FREQ(500),
+    .C_RD_FREQ(1),
     .C_RD_PNTR_WIDTH(9),
     .C_UNDERFLOW_LOW(0),
     .C_USE_DOUT_RST(1),
@@ -152,7 +148,7 @@ output wire rd_rst_busy;
     .C_WR_ACK_LOW(0),
     .C_WR_DATA_COUNT_WIDTH(9),
     .C_WR_DEPTH(512),
-    .C_WR_FREQ(100),
+    .C_WR_FREQ(1),
     .C_WR_PNTR_WIDTH(9),
     .C_WR_RESPONSE_LATENCY(1),
     .C_MSGON_VAL(1),
@@ -299,12 +295,12 @@ output wire rd_rst_busy;
   ) inst (
     .backup(1'D0),
     .backup_marker(1'D0),
-    .clk(1'D0),
+    .clk(clk),
     .rst(1'D0),
     .srst(srst),
-    .wr_clk(wr_clk),
+    .wr_clk(1'D0),
     .wr_rst(1'D0),
-    .rd_clk(rd_clk),
+    .rd_clk(1'D0),
     .rd_rst(1'D0),
     .din(din),
     .wr_en(wr_en),

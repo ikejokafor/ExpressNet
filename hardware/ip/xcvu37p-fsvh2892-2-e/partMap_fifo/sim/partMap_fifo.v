@@ -63,15 +63,16 @@ module partMap_fifo (
   dout,
   full,
   empty,
+  valid,
   wr_rst_busy,
   rd_rst_busy
 );
 
 input wire srst;
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME write_clk, FREQ_HZ 1000000, PHASE 0.000, INSERT_VIP 0" *)
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME write_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *)
 (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 write_clk CLK" *)
 input wire wr_clk;
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME read_clk, FREQ_HZ 1000000, PHASE 0.000, INSERT_VIP 0" *)
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME read_clk, FREQ_HZ 400000000, PHASE 0.000, INSERT_VIP 0" *)
 (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 read_clk CLK" *)
 input wire rd_clk;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA" *)
@@ -86,6 +87,7 @@ output wire [1023 : 0] dout;
 output wire full;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *)
 output wire empty;
+output wire valid;
 output wire wr_rst_busy;
 output wire rd_rst_busy;
 
@@ -113,7 +115,7 @@ output wire rd_rst_busy;
     .C_HAS_RST(0),
     .C_HAS_SRST(1),
     .C_HAS_UNDERFLOW(0),
-    .C_HAS_VALID(0),
+    .C_HAS_VALID(1),
     .C_HAS_WR_ACK(0),
     .C_HAS_WR_DATA_COUNT(0),
     .C_HAS_WR_RST(0),
@@ -134,7 +136,7 @@ output wire rd_rst_busy;
     .C_PROG_FULL_TYPE(0),
     .C_RD_DATA_COUNT_WIDTH(9),
     .C_RD_DEPTH(512),
-    .C_RD_FREQ(1),
+    .C_RD_FREQ(400),
     .C_RD_PNTR_WIDTH(9),
     .C_UNDERFLOW_LOW(0),
     .C_USE_DOUT_RST(1),
@@ -148,7 +150,7 @@ output wire rd_rst_busy;
     .C_WR_ACK_LOW(0),
     .C_WR_DATA_COUNT_WIDTH(9),
     .C_WR_DEPTH(512),
-    .C_WR_FREQ(1),
+    .C_WR_FREQ(100),
     .C_WR_PNTR_WIDTH(9),
     .C_WR_RESPONSE_LATENCY(1),
     .C_MSGON_VAL(1),
@@ -322,7 +324,7 @@ output wire rd_rst_busy;
     .overflow(),
     .empty(empty),
     .almost_empty(),
-    .valid(),
+    .valid(valid),
     .underflow(),
     .data_count(),
     .rd_data_count(),

@@ -64,6 +64,7 @@ convMap_fifo your_instance_name (
   .dout(dout),                // output wire [1023 : 0] dout
   .full(full),                // output wire full
   .empty(empty),              // output wire empty
+  .valid(valid),              // output wire valid
   .wr_rst_busy(wr_rst_busy),  // output wire wr_rst_busy
   .rd_rst_busy(rd_rst_busy)  // output wire rd_rst_busy
 );

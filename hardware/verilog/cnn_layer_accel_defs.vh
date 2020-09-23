@@ -268,22 +268,10 @@
 `define FAS_DSP_LATENCY                     5    
 `define FAS_BRAM_LATENCY                    3
 `define FAS_FIFO_LATENCY                    3
-`define CONVMAP_FIFO_WR_DEPTH				256
-`define CONVMAP_FIFO_RD_DEPTH				256
 `define KRNL_1X1_BRAM_WR_DEPTH				256
 `define KRNL_1X1_BRAM_RD_DEPTH              256
 `define KRNL_1X1_BIAS_BRAM_WR_DEPTH         256
 `define KRNL_1X1_BIAS_BRAM_RD_DEPTH         256
-`define	RESDMAP_FIFO_WR_DEPTH               256
-`define	RESDMAP_FIFO_RD_DEPTH               256
-`define	PARTMAP_FIFO_WR_DEPTH               256
-`define	PARTMAP_FIFO_RD_DEPTH               256
-`define OUTBUF_DWC_RD_WIDTH					(`KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH)
-`define OUTBUF_DWC_FIFO_DEPTH				256
-`define OUTBUF_WR_WIDTH						(`KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH)
-`define OUTBUF_RD_WIDTH						`SYS_RD_DATA_WIDTH
-`define OUTBUF_FIFO_DEPTH					256
-`define OUTBUF_FIFO_DIN_FACTOR				floor(`SYS_WR_DATA_WIDTH, `PIXEL_WIDTH)
 `define MAX_AWP_PER_FAS						1
 `define MAX_FAS_RD_ID						5
 `define FAS_JOB_FETCH_ID                    0

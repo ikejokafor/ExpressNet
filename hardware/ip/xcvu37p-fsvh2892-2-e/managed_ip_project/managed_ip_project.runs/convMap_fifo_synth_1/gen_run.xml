@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="convMap_fifo_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1600810969">
+<GenRun Id="convMap_fifo_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1600883144">
   <File Type="VDS-TIMING-PB" Name="convMap_fifo_timing_summary_synth.pb"/>
   <File Type="VDS-TIMINGSUMMARY" Name="convMap_fifo_timing_summary_synth.rpt"/>
   <File Type="RDS-DCP" Name="convMap_fifo.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="convMap_fifo_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="convMap_fifo_utilization_synth.rpt"/>
+  <File Type="RDS-PROPCONSTRS" Name="convMap_fifo_drc_synth.rpt"/>
+  <File Type="RDS-RDS" Name="convMap_fifo.vds"/>
   <File Type="REPORTS-TCL" Name="convMap_fifo_reports.tcl"/>
   <File Type="PA-TCL" Name="convMap_fifo.tcl"/>
-  <File Type="RDS-RDS" Name="convMap_fifo.vds"/>
-  <File Type="RDS-PROPCONSTRS" Name="convMap_fifo_drc_synth.rpt"/>
-  <File Type="RDS-UTIL" Name="convMap_fifo_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="convMap_fifo_utilization_synth.pb"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/convMap_fifo">
     <File Path="$PPRDIR/../convMap_fifo/convMap_fifo.xci">
       <FileInfo>
@@ -42,9 +42,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2018">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2018"/>
     <Step Id="synth_design"/>
   </Strategy>
 </GenRun>

@@ -1,0 +1,2 @@
+resdMap_fifo.v,verilog,xil_defaultlib,../../../../resdMap_fifo/sim/resdMap_fifo.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

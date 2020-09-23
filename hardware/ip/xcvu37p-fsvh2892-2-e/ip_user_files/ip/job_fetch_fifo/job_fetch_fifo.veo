@@ -55,9 +55,8 @@
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
 job_fetch_fifo your_instance_name (
+  .clk(clk),                  // input wire clk
   .srst(srst),                // input wire srst
-  .wr_clk(wr_clk),            // input wire wr_clk
-  .rd_clk(rd_clk),            // input wire rd_clk
   .din(din),                  // input wire [1023 : 0] din
   .wr_en(wr_en),              // input wire wr_en
   .rd_en(rd_en),              // input wire rd_en

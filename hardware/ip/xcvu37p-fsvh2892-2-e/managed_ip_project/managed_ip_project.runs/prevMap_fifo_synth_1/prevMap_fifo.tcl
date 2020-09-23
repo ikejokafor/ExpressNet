@@ -36,8 +36,8 @@ set_property ip_output_repo /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/ha
 set_property ip_cache_permissions {read write} [current_project]
 read_ip -quiet /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo.xci
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo.xdc]
-set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_ooc.xdc]
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_clocks.xdc]
+set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_ooc.xdc]
 
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the

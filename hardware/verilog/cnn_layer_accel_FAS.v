@@ -67,8 +67,7 @@ module cnn_layer_accel_FAS #(
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     trans_in_fifo_wren          ,
     convMap_fifo_wren           ,
-    resdMap_dpth_fifo_wren      ,
-    resdMap_conv_fifo_wren      ,
+    resdMap_fifo_wren           ,
     partMap_fifo_wren           ,
     prevMap_fifo_wren           ,
     krnl1x1_bram_wren           ,
@@ -76,8 +75,7 @@ module cnn_layer_accel_FAS #(
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     trans_in_fifo_datain        ,
     convMap_fifo_datain         ,
-    resdMap_dpth_fifo_datain    ,
-    resdMap_conv_fifo_datain    ,
+    resdMap_fifo_datain         ,
     partMap_fifo_datain         ,
     prevMap_fifo_datain         ,
     krnl1x1_bram_datain         ,
@@ -110,27 +108,56 @@ module cnn_layer_accel_FAS #(
     localparam C_VEC_MULT_WIDTH                     = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_SYS_MEM_RD_ADDR_WTH                = `MAX_FAS_RD_ID * `SYS_RD_ADDR_WIDTH;
     localparam C_SYS_MEM_RD_LEN_WTH                 = `MAX_FAS_RD_ID * `SYS_RD_LEN_WIDTH;
-    localparam C_CONVMAP_FIFO_RD_WTH                = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
-    localparam C_CONVMAP_WR_ADDR_WTH                = clog2(`CONVMAP_FIFO_WR_DEPTH);
-    localparam C_CONVMAP_RD_ADDR_WTH                = clog2(`CONVMAP_FIFO_RD_DEPTH);
     localparam C_KRNL_1X1_BRAM_WR_ADDR_WTH          = clog2(`KRNL_1X1_BRAM_WR_DEPTH);
     localparam C_KRNL_1X1_BRAM_RD_ADDR_WTH          = clog2(`KRNL_1X1_BRAM_RD_DEPTH);
     localparam C_KRNL_1X1_BRAM_RD_WTH               = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
     localparam C_KRNL_1X1_BIAS_BRAM_WR_ADDR_WTH     = clog2(`KRNL_1X1_BIAS_BRAM_WR_DEPTH);
     localparam C_KRNL_1X1_BIAS_BRAM_RD_ADDR_WTH     = clog2(`KRNL_1X1_BIAS_BRAM_RD_DEPTH);
     localparam C_KRNL_1X1_BIAS_BRAM_RD_WTH          = `PIXEL_WIDTH;
-    localparam C_RESDMAP_FIFO_WR_ADDR_WTH           = clog2(`RESDMAP_FIFO_WR_DEPTH);
-    localparam C_RESDMAP_FIFO_RD_ADDR_WTH           = clog2(`RESDMAP_FIFO_RD_DEPTH);
-    localparam C_RESDMAP_FIFO_RD_WTH                = `KRNL_1X1_SIMD * `PIXEL_WIDTH;
-    localparam C_PARTMAP_FIFO_WR_ADDR               = clog2(`PARTMAP_FIFO_WR_DEPTH);
-    localparam C_PARTMAP_FIFO_RD_ADDR               = clog2(`PARTMAP_FIFO_RD_DEPTH);
-    localparam C_PARTMAP_FIFO_RD_WTH                = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
-    localparam C_PREVMAP_FIFO_RD_WTH                = `KRNL_1X1_SIMD * `PIXEL_WIDTH;
-    localparam C_CONV1X1_DWC_FIFO_RD_WTH            = `KRNL_1X1_SIMD * `PIXEL_WIDTH;
-    localparam C_OUTBUF_DWC_FIFO_DIN                = `KRNL_1X1_SIMD * `PIXEL_WIDTH;
-    localparam C_OUTBUF_DWC_FIFO_DOUT               = `PIXEL_WIDTH;
-    localparam C_OUTBUF_FIFO_DIN_WTH                = `PIXEL_WIDTH * `OUTBUF_FIFO_DIN_FACTOR;
-    localparam C_OUTBUF_FIFO_COUNT                  = clog2(`OUTBUF_FIFO_DEPTH);
+    localparam C_CONVMAP_FIFO_WR_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_CONVMAP_FIFO_WR_DTH                = 512; // TODO: Remove hard coding
+    localparam C_CONVMAP_FIFO_RD_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_CONVMAP_FIFO_RD_DTH                = 512; // TODO: Remove hard coding
+    localparam C_CONVMAP_FIFO_CT_WTH                = clog2(C_CONVMAP_FIFO_RD_DTH) + 1; 
+    localparam C_PARTMAP_FIFO_WR_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_PARTMAP_FIFO_WR_DTH                = 512; // TODO: Remove hard coding
+    localparam C_PARTMAP_FIFO_RD_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_PARTMAP_FIFO_RD_DTH                = 512; // TODO: Remove hard coding
+    localparam C_PARTMAP_FIFO_CT_WTH                = clog2(C_CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_PREVMAP_FIFO_WR_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_PREVMAP_FIFO_WR_DTH                = 512; // TODO: Remove hard coding
+    localparam C_PREVMAP_FIFO_RD_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_PREVMAP_FIFO_RD_DTH                = 512; // TODO: Remove hard coding
+    localparam C_PREVMAP_FIFO_CT_WTH                = clog2(C_CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_RESDMAP_FIFO_WR_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_RESDMAP_FIFO_WR_DTH                = 512; // TODO: Remove hard coding
+    localparam C_RESDMAP_FIFO_RD_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_RESDMAP_FIFO_RD_DTH                = 512; // TODO: Remove hard coding
+    localparam C_RESDMAP_FIFO_CT_WTH                = clog2(C_CONVMAP_FIFO_RD_DTH) + 1;  
+    localparam C_OUTBUF_FIFO_WR_WTH                 = 1024; // TODO: Remove hard coding
+    localparam C_OUTBUF_FIFO_WR_DTH                 = 512; // TODO: Remove hard coding
+    localparam C_OUTBUF_FIFO_RD_WTH                 = 1024; // TODO: Remove hard coding
+    localparam C_OUTBUF_FIFO_RD_DTH                 = 512; // TODO: Remove hard coding
+    localparam C_OUTBUF_FIFO_CT_WTH                 = clog2(C_CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_OUTBUF_FIFO_DIN_FACTOR             = floor(`SYS_WR_DATA_WIDTH, `PIXEL_WIDTH);
+    localparam C_CONV1X1_DWC_FIFO_WR_WTH            = 128; // TODO: Remove hard coding
+    localparam C_CONV1X1_DWC_FIFO_WR_DTH            = 8192; // TODO: Remove hard coding
+    localparam C_CONV1X1_DWC_FIFO_RD_WTH            = 1024; // TODO: Remove hard coding
+    localparam C_CONV1X1_DWC_FIFO_RD_DTH            = 1024; // TODO: Remove hard coding
+    localparam C_CONV1X1_DWC_CT_WTH                 = clog2(C_CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_RES_DWC_FIFO_WR_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_RES_DWC_FIFO_WR_DTH                = 512; // TODO: Remove hard coding
+    localparam C_RES_DWC_FIFO_RD_WTH                = 1024; // TODO: Remove hard coding
+    localparam C_RES_DWC_FIFO_RD_DTH                = 512; // TODO: Remove hard coding
+    localparam C_RES_DWC_FIFO_CT_WTH                = clog2(C_CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_TRANS_FIFO_WR_WTH                  = 1024; // TODO: Remove hard coding
+    localparam C_TRANS_FIFO_WR_DTH                  = 512; // TODO: Remove hard coding
+    localparam C_TRANS_FIFO_RD_WTH                  = 1024; // TODO: Remove hard coding
+    localparam C_TRANS_FIFO_RD_DTH                  = 512; // TODO: Remove hard coding
+    localparam C_JB_FTH_FIFO_WR_WTH                 = 1024; // TODO: Remove hard coding
+    localparam C_JB_FTH_FIFO_WR_DTH                 = 512; // TODO: Remove hard coding
+    localparam C_JB_FTH_FIFO_RD_WTH                 = 1024; // TODO: Remove hard coding
+    localparam C_JB_FTH_FIFO_RD_DTH                 = 512; // TODO: Remove hard coding
     localparam C_VEC_SUM_ARR_SZ                     = `MAX_1X1_KRNL_DEPTH / `KRNL_1X1_DEPTH_SIMD;
     localparam C_VEC_SUM_ARR_ADDR_WTH               = clog2(`MAX_1X1_KRNL_DEPTH / `KRNL_1X1_DEPTH_SIMD);
 
@@ -298,6 +325,7 @@ module cnn_layer_accel_FAS #(
     logic [               C_CONVMAP_FIFO_RD_WTH - 1:0]  convMap_fifo_dout                                               ;
     logic                                               convMap_fifo_empty                                              ;
     logic                                               convMap_fifo_prog_full                                          ;
+    logic [               C_CONVMAP_FIFO_CT_WTH - 1:0]  convMap_fifo_count                                              ;
     logic                                               convMap_fifo_wr_rst_busy                                        ;
     logic                                               convMap_fifo_rd_rst_busy                                        ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
@@ -308,7 +336,7 @@ module cnn_layer_accel_FAS #(
     logic                                               res_dwc_fifo_rd_vld                                             ;
     logic                                               res_dwc_fifo_wr_rst_busy                                        ;
     logic                                               res_dwc_fifo_rd_rst_busy                                        ;
-    logic  [                                     15:0]  res_dwc_fifo_count                                              ;
+    logic  [              C_RES_DWC_FIFO_CT_WTH - 1:0]  res_dwc_fifo_count                                              ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [         C_KRNL_1X1_BRAM_WR_ADDR_WTH - 1:0]  krnl1x1_bram_wrAddr             [`KRNL_1X1_SIMD - 1:0]          ;
     logic [         C_KRNL_1X1_BRAM_RD_ADDR_WTH - 1:0]  krnl1x1_bram_rdAddr             [`KRNL_1X1_SIMD - 1:0]          ;
@@ -328,22 +356,14 @@ module cnn_layer_accel_FAS #(
     logic [                        `PIXEL_WIDTH - 1:0]  krnl1x1Bias_bram_dout           [`KRNL_1X1_SIMD - 1:0]          ;
     logic                                               conv1x1_pip_start_d             [`KRNL_1X1_SIMD - 1:0]          ;
     // BEGIN -----------------------------------------------------------------------------------------------------------------------------------------
-    logic                                               resdMap_fifo_empty                                              ;  
-    logic [                                      15:0]  resdMapFetchCount                                               ;  
-    // BEGIN -----------------------------------------------------------------------------------------------------------------------------------------
-    logic                                               resdMap_dpth_fifo_rden                                          ;
-    logic [               C_RESDMAP_FIFO_RD_WTH - 1:0]  resdMap_dpth_fifo_dout                                          ;
-    logic                                               resdMap_dpth_fifo_empty                                         ;
-    logic                                               resdMap_dpth_fifo_prog_empty                                    ;
-    logic                                               resdMap_dpth_fifo_wr_rst_busy                                   ;
-    logic                                               resdMap_dpth_fifo_rd_rst_busy                                   ;  
-    // BEGIN -----------------------------------------------------------------------------------------------------------------------------------------
-    logic                                               resdMap_conv_fifo_rden                                          ;
-    logic [              C_RESDMAP_FIFO_RD_WTH - 1:0]   resdMap_conv_fifo_dout                                          ;
-    logic                                               resdMap_conv_fifo_empty                                         ;
-    logic                                               resdMap_conv_fifo_wr_rst_busy                                   ;
-    logic                                               resdMap_conv_fifo_rd_rst_busy                                   ;
-    logic                                               resdMap_conv_fifo_prog_empty                                    ;
+    logic                                               resdMap_fifo_rden                                               ;
+    logic [               C_RESDMAP_FIFO_RD_WTH - 1:0]  resdMap_fifo_dout                                               ;
+    logic                                               resdMap_fifo_empty                                              ;
+    logic                                               resdMap_fifo_prog_empty                                         ;
+    logic                                               resdMap_fifo_wr_rst_busy                                        ;
+    logic                                               resdMap_fifo_rd_rst_busy                                        ;
+    logic [               C_RESDMAP_FIFO_CT_WTH - 1:0]  resdMap_fifo_count                                              ;
+    logic [               C_RESDMAP_FIFO_CT_WTH - 1:0]  resdMapFetchCount                                               ;    
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                               partMap_fifo_rden                                               ;
     logic                                               partMap_fifo_rden_w1                                            ;
@@ -354,6 +374,7 @@ module cnn_layer_accel_FAS #(
     logic                                               partMap_fifo_rd_rst_busy                                        ;
     logic                                               partMap_fifo_rd_valid                                           ;
     logic [                                     15:0]   partMapFetchCount                                               ;
+    logic [              C_PARTMAP_FIFO_CT_WTH - 1:0]   partMap_fifo_count                                              ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                               conv1x1_dwc_fifo_wren                                           ;
     logic                                               conv1x1_dwc_fifo_rden                                           ;
@@ -362,7 +383,7 @@ module cnn_layer_accel_FAS #(
     logic                                               conv1x1_dwc_fifo_rd_vld                                         ;
     logic                                               conv1x1_dwc_fifo_wr_rst_busy                                    ;
     logic                                               conv1x1_dwc_fifo_rd_rst_busy                                    ;
-    logic [                                     15:0]   conv1x1_dwc_fifo_count                                          ;
+    logic [               C_CONV1X1_DWC_CT_WTH - 1:0]   conv1x1_dwc_fifo_count                                          ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [                     `KRNL_1X1_SIMD - 1:0]   prevMap_fifo_rden                                               ;
     logic                                               prevMap_fifo_rden_r                                             ;
@@ -374,6 +395,7 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   prevMapFetchCount                                               ;
     logic                                               prevMap_fifo_wr_rst_busy        [`KRNL_1X1_SIMD - 1:0]          ;
     logic                                               prevMap_fifo_rd_rst_busy        [`KRNL_1X1_SIMD - 1:0]          ;
+    logic [              C_PREVMAP_FIFO_CT_WTH - 1:0]   prevMap_fifo_count                                              ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                               outBuf_fifo_wren                                                ;
     logic                                               outBuf_fifo_wren1                                               ;
@@ -387,18 +409,19 @@ module cnn_layer_accel_FAS #(
     logic                                               outBuf_fifo_prog_full                                           ;
     logic                                               outBuf_fifo_wr_rst_busy                                         ;
     logic                                               outBuf_fifo_rd_rst_busy                                         ;
+    logic [               C_OUTBUF_FIFO_CT_WTH - 1:0]   outBuf_fifo_count                                               ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                               trans_in_fifo_rden                                              ;
     logic                                               trans_in_fifo_empty                                             ;
-    logic [                    `TRANS_FIFO_WIH - 1:0]   trans_in_fifo_dataout                                           ;
+    logic [                C_TRANS_FIFO_WR_WTH - 1:0]   trans_in_fifo_dataout                                           ;
     logic                                               trans_in_fifo_rd_valid                                          ;
     logic                                               trans_in_fifo_wr_rst_busy                                       ;
     logic                                               trans_in_fifo_rd_rst_busy                                       ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                               trans_eg_fifo_wren                                              ;
     logic                                               trans_eg_fifo_rden                                              ;
-    logic [                    `TRANS_FIFO_WIH - 1:0]   trans_eg_fifo_datain                                            ;
-    logic [                    `TRANS_FIFO_WIH - 1:0]   trans_eg_fifo_data                                              ;
+    logic [                C_TRANS_FIFO_WR_WTH - 1:0]   trans_eg_fifo_datain                                            ;
+    logic [                C_TRANS_FIFO_RD_WTH - 1:0]   trans_eg_fifo_data                                              ;
     logic                                               trans_eg_fifo_empty                                             ;
     logic                                               trans_eg_fifo_wr_rst_busy                                       ;
     logic                                               trans_eg_fifo_rd_rst_busy                                       ;
@@ -406,8 +429,8 @@ module cnn_layer_accel_FAS #(
     logic                                               job_fetch_fifo_wren                                             ;
     logic                                               job_fetch_fifo_rden                                             ;
     logic                                               job_fetch_fifo_empty                                            ;
-    logic [             `JOB_FTCH_AWP_ID_WIDTH - 1:0]   job_fetch_fifo_datain                                           ;
-    logic [             `JOB_FTCH_AWP_ID_WIDTH - 1:0]   job_fetch_fifo_dataout                                          ;
+    logic [               C_JB_FTH_FIFO_WR_WTH - 1:0]   job_fetch_fifo_datain                                           ;
+    logic [               C_JB_FTH_FIFO_RD_WTH - 1:0]   job_fetch_fifo_dataout                                          ;
     logic                                               job_fetch_fifo_rd_valid                                         ;
     logic                                               job_fetch_fifo_wr_rst_busy                                      ;
     logic                                               job_fetch_fifo_rd_rst_busy                                      ;
@@ -552,186 +575,31 @@ module cnn_layer_accel_FAS #(
         .data_out   ( outBuf_fifo_wren2_d            )
     );
 
-
-    convMap_fifo
-    i0_convMap_fifo (
-        .wr_clk      ( clk_intf                                 ),
-        .wrAddr      ( convMap_fifo_wrAddr                      ),
-        .wren        ( convMap_fifo_wren                        ),
-        .din         ( trans_in_fifo_datain[`TRANS_PYLD_FIELD]  ),
-        .rd_clk      ( clk_FAS                                  ),
-        .rdAddr      ( convMap_fifo_rdAddr                      ),
-        .rden        ( convMap_fifo_rden                        ),
-        .rd_mode     ( 1'b1                                     ),
-        .fifo_fwft   ( 1'b1                                     ),
-        .dout        ( convMap_fifo_dout                        )
-    );
-
-
-    res_dwc_fifo #(
-        .C_DATA_WIDTH  ( ),
-        .C_FIFO_DEPTH  ( )
-    )
-    i0_res_dwc_fifo (
-        .clk                ( clk_FAS                                   ),
-        .srst               ( rst                                       ),
-        .din                ( trans_in_fifo_datain[`TRANS_PYLD_FIELD]   ),
-        .wr_en              ( res_dwc_fifo_wren                         ),
-        .rd_en              ( res_dwc_fifo_rden                         ),
-        .dout               ( res_dwc_fifo_dout                         ),
-        .full               (                                           ),
-        .empty              (                                           ),
-        .valid              ( res_dwc_fifo_rd_vld                       ),
-        .wr_rst_busy        ( res_dwc_fifo_wr_rst_busy                  ),
-        .rd_rst_busy        ( res_dwc_fifo_rd_rst_busy                  )
-    );
-    
-    
-    partMap_fifo
-    i0_partMap_fifo (
-        .srst                ( rst                          ),
-        .wr_clk              ( clk_intf                     ),
-        .rd_clk              ( clk_FAS                      ),
-        .din                 ( partMap_fifo_datain          ),
-        .wr_en               ( partMap_fifo_wren            ),
-        .rd_en               ( partMap_fifo_rden            ),
-        .prog_empty_thresh   ( pm_low_watermark_cfg         ),
-        .dout                ( partMap_fifo_dout            ),
-        .full                (                              ),
-        .wr_ack              (                              ),
-        .empty               ( partMap_fifo_empty           ),
-        .valid               ( partMap_fifo_rd_valid        ),
-        .prog_empty          ( partMap_fifo_prog_empty      ),
-        .wr_rst_busy         ( partMap_fifo_wr_rst_busy     ),
-        .rd_rst_busy         ( partMap_fifo_rd_rst_busy     )
-    );
-    
-
-    conv1x1_dwc_fifo
-    i0_conv1x1_dwc_fifo (
-        .clk                ( clk_FAS                       ),
-        .srst               ( rst                           ),
-        .din                ( conv1x1_dwc_fifo_din          ),
-        .wr_en              ( conv1x1_dwc_fifo_wren         ),
-        .rd_en              ( conv1x1_dwc_fifo_rden         ),
-        .dout               ( conv1x1_dwc_fifo_dout         ),
-        .full               (                               ),
-        .empty              (                               ),
-        .valid              ( conv1x1_dwc_fifo_rd_vld       ),
-        .wr_rst_busy        ( conv1x1_dwc_fifo_wr_rst_busy  ),
-        .rd_rst_busy        ( conv1x1_dwc_fifo_rd_rst_busy  )
-    );
-
-
-    prevMap_fifo
-    i0_prevMap_fifo (
-        .srst                ( rst                          ),
-        .wr_clk              ( clk_intf                     ),
-        .rd_clk              ( clk_FAS                      ),
-        .din                 ( prevMap_fifo_datain          ),
-        .wr_en               ( prevMap_fifo_wren            ),
-        .rd_en               ( prevMap_fifo_rden            ),
-        .prog_empty_thresh   ( pv_low_watermark_cfg         ),
-        .dout                ( prevMap_fifo_dout            ),
-        .full                (                              ),
-        .wr_ack              (                              ),
-        .empty               ( prevMap_fifo_empty           ),
-        .valid               ( prevMap_fifo_rd_valid        ),
-        .prog_empty          ( prevMap_fifo_prog_empty      ),
-        .wr_rst_busy         ( prevMap_fifo_wr_rst_busy     ),
-        .rd_rst_busy         ( prevMap_fifo_rd_rst_busy     )
-    );
-
-
-    resdMap_dpth_fifo
-    i0_resdMap_dpth_fifo (
-        .srst                ( rst                              ),
-        .wr_clk              ( clk_intf                         ),
-        .rd_clk              ( clk_FAS                          ),
-        .din                 ( resdMap_dpth_fifo_datain         ),
-        .wr_en               ( resdMap_dpth_fifo_wren           ),
-        .rd_en               ( resdMap_dpth_fifo_rden           ),
-        .prog_empty_thresh   ( rm_low_watermark_cfg             ),
-        .dout                ( resdMap_dpth_fifo_dout           ),
-        .full                (                                  ),
-        .empty               ( resdMap_dpth_fifo_empty          ),
-        .prog_empty          ( resdMap_dpth_fifo_prog_empty     ),
-        .wr_rst_busy         ( resdMap_dpth_fifo_wr_rst_busy    ),
-        .rd_rst_busy         ( resdMap_dpth_fifo_rd_rst_busy    )
-    );
-    
-    
-    resdMap_conv_fifo
-    i0_resdMap_conv_fifo (
-        .srst                ( rst                              ),
-        .wr_clk              ( clk_intf                         ),
-        .rd_clk              ( clk_FAS                          ),
-        .din                 ( resdMap_conv_fifo_datain         ),
-        .wr_en               ( resdMap_conv_fifo_wren           ),
-        .rd_en               ( resdMap_conv_fifo_rden           ),
-        .prog_empty_thresh   ( rm_low_watermark_cfg             ),
-        .dout                ( resdMap_conv_fifo_dout           ),
-        .full                (                                  ),
-        .empty               ( resdMap_conv_fifo_empty          ),
-        .prog_empty          ( resdMap_conv_fifo_prog_empty     ),
-        .wr_rst_busy         ( resdMap_conv_fifo_wr_rst_busy    ),
-        .rd_rst_busy         ( resdMap_conv_fifo_rd_rst_busy    )
-    );
-    
-
-    outBuf_fifo
-    i0_outBuf_fifo (
-        .clk                ( clk_FAS                       ),
-        .srst               ( rst                           ),
-        .din                ( outBuf_fifo_datain            ),
-        .wr_en              ( outBuf_fifo_wren              ),
-        .rd_en              ( outBuf_fifo_rden              ),
-        .prog_full_thresh   ( outMapStoreFactor_cfg         ),
-        .dout               ( outBuf_fifo_dout              ),
-        .full               (                               ),
-        .empty              (                               ),
-        .prog_full          ( outBuf_fifo_prog_full         ),
-        .wr_rst_busy        ( outBuf_fifo_wr_rst_busy       ),
-        .rd_rst_busy        ( outBuf_fifo_rd_rst_busy       )
-    );
-
-
-    trans_fifo
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512 
+    trans_in_fifo
     i0_trans_in_fifo (
-        .srst           ( rst                           ),
-        .wr_clk         ( clk_intf                      ),
-        .rd_clk         ( clk_FAS                       ),
-        .din            ( trans_in_fifo_datain          ),
-        .wr_en          ( trans_in_fifo_wren            ),
-        .rd_en          ( trans_in_fifo_rden            ),
-        .dout           ( trans_in_fifo_dataout         ),
-        .full           (                               ),
-        .wr_ack         (                               ),
-        .empty          ( trans_in_fifo_empty           ),
-        .valid          ( trans_in_fifo_rd_valid        ),
-        .wr_rst_busy    ( trans_in_fifo_wr_rst_busy     ),
-        .rd_rst_busy    ( trans_in_fifo_rd_rst_busy     )
+        .srst           ( rst                                           ),
+        .wr_clk         ( clk_intf                                      ),
+        .rd_clk         ( clk_FAS                                       ),
+        .din            ( trans_in_fifo_datain                          ),
+        .wr_en          ( trans_in_fifo_wren                            ),
+        .rd_en          ( trans_in_fifo_rden                            ),
+        .dout           ( trans_in_fifo_dout                            ),
+        .full           (                                               ),
+        .empty          (                                               ),
+        .valid          ( trans_in_fifo_vld                             ),
+        .wr_rst_busy    ( trans_in_fifo_wr_rst_busy                     ),
+        .rd_rst_busy    ( trans_in_fifo_rd_rst_busy                     )
     );
+    
 
-
-    trans_fifo
-    i0_trans_eg_fifo (
-        .srst               ( rst                           ),
-        .wr_clk             ( clk_FAS                       ),
-        .rd_clk             ( clk_intf                      ),
-        .din                ( trans_eg_fifo_datain          ),
-        .wr_en              ( trans_eg_fifo_wren            ),
-        .rd_en              ( trans_eg_fifo_rden            ),
-        .dout               ( trans_eg_fifo_dataout         ),
-        .full               (                               ),
-        .wr_ack             (                               ),
-        .empty              ( trans_eg_fifo_empty           ),
-        .valid              ( trans_eg_fifo_dout_vld        ),
-        .wr_rst_busy        ( trans_eg_fifo_wr_rst_busy     ),
-        .rd_rst_busy        ( trans_eg_fifo_rd_rst_busy     )
-    );
-
-
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512
     job_fetch_fifo
     i0_job_fetch_fifo (
         .srst               ( rst                           ),
@@ -747,6 +615,172 @@ module cnn_layer_accel_FAS #(
         .valid              ( job_fetch_fifo_rd_valid       ),
         .wr_rst_busy        ( job_fetch_fifo_wr_rst_busy    ),
         .rd_rst_busy        ( job_fetch_fifo_rd_rst_busy    )
+    );
+
+
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512
+    convMap_fifo
+    i0_convMap_fifo (
+        .srst         ( rst                                             ),
+        .wr_clk       ( clk_intf                                        ),
+        .rd_clk       ( clk_FAS                                         ),
+        .din          ( trans_in_fifo_datain[`TRANS_PYLD_FIELD]         ),
+        .wr_en        ( convMap_fifo_wren                               ),
+        .rd_en        ( convMap_fifo_rden                               ),
+        .dout         ( convMap_fifo_dout                               ),
+        .full         (                                                 ),
+        .empty        (                                                 ),
+        .valid        ( convMap_fifo_vld                                ),
+        .wr_rst_busy  ( convMap_fifo_wr_rst_busy                        ),
+        .rd_rst_busy  ( convMap_fifo_rd_rst_busy                        ) 
+    );
+
+
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512
+    res_dwc_fifo #(
+        .C_DATA_WIDTH  ( ),
+        .C_FIFO_DEPTH  ( )
+    )
+    i0_res_dwc_fifo (
+        .clk            ( clk_FAS                                       ),
+        .srst           ( rst                                           ),
+        .din            ( trans_in_fifo_datain[`TRANS_PYLD_FIELD]       ),
+        .wr_en          ( res_dwc_fifo_wr_en                            ),
+        .rd_en          ( res_dwc_fifo_rd_en                            ),
+        .dout           ( res_dwc_fifo_dout                             ),
+        .full           (                                               ),
+        .empty          (                                               ),
+        .wr_rst_busy    ( res_dwc_fifo_wr_rst_busy                      ),
+        .rd_rst_busy    ( res_dwc_fifo_rd_rst_busy                      )
+    );
+    
+    
+    // WR_WIDTH: 128
+    // WR_DPETH: 8192
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 1024
+    conv1x1_dwc_fifo
+    i0_conv1x1_dwc_fifo (        
+        .clk            ( clk_FAS                                      ),
+        .srst           ( rst                                          ),
+        .din            ( conv1x1_dwc_fifo_din                         ),
+        .wr_en          ( conv1x1_dwc_fifo_wr_en                       ),
+        .rd_en          ( conv1x1_dwc_fifo_rd_en                       ),
+        .dout           ( conv1x1_dwc_fifo_dout                        ),
+        .full           (                                              ),
+        .empty          (                                              ),
+        .wr_rst_busy    ( conv1x1_dwc_fifo_wr_rst_busy                 ),
+        .rd_rst_busy    ( conv1x1_dwc_fifo_rd_rst_busy                 )
+    );
+
+
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512    
+    partMap_fifo
+    i0_partMap_fifo (
+        .srst           ( rst                                             ),
+        .wr_clk         ( clk_intf                                        ),
+        .rd_clk         ( clk_FAS                                         ),
+        .din            ( partMap_fifo_datain                             ),
+        .wr_en          ( partMap_fifo_wren                               ),
+        .rd_en          ( partMap_fifo_rden                               ),
+        .dout           ( partMap_fifo_dout                               ),
+        .full           (                                                 ),
+        .empty          (                                                 ),
+        .valid          ( partMap_fifo_vld                                ),
+        .wr_rst_busy    ( partMap_fifo_wr_rst_busy                        ),
+        .rd_rst_busy    ( partMap_fifo_rd_rst_busy                        ) 
+    );
+
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512 
+    prevMap_fifo
+    i0_prevMap_fifo (
+        .srst           ( rst                                           ),
+        .wr_clk         ( clk_intf                                      ),
+        .rd_clk         ( clk_FAS                                       ),
+        .din            ( prevMap_fifo_datain                           ),
+        .wr_en          ( prevMap_fifo_wren                             ),
+        .rd_en          ( prevMap_fifo_rden                             ),
+        .dout           ( prevMap_fifo_dout                             ),
+        .full           (                                               ),
+        .empty          (                                               ),
+        .valid          ( prevMap_fifo_rd_valid                         ),
+        .wr_rst_busy    ( prevMap_fifo_wr_rst_busy                      ),
+        .rd_rst_busy    ( prevMap_fifo_rd_rst_busy                      )
+    );
+
+
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512 
+    resdMap_fifo
+    i0_resdMap_fifo (
+        .srst           ( rst                                           ),
+        .wr_clk         ( clk_intf                                      ),
+        .rd_clk         ( clk_FAS                                       ),
+        .din            ( resdMap_fifo_datain                           ),
+        .wr_en          ( resdMap_fifo_wren                             ),
+        .rd_en          ( resdMap_fifo_rden                             ),
+        .dout           ( resdMap_fifo_dout                             ),
+        .full           (                                               ),
+        .empty          (                                               ),
+        .valid          ( resdMap_fifo_vld                              ),
+        .wr_rst_busy    ( resdMap_fifo_wr_rst_busy                      ),
+        .rd_rst_busy    ( resdMap_fifo_rd_rst_busy                      ) 
+    );
+
+
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512 
+    outbuf_fifo
+    i0_outBuf_fifo (
+        .srst           ( rst                                           ),
+        .wr_clk         ( clk_intf                                      ),
+        .rd_clk         ( clk_FAS                                       ),
+        .din            ( outBuf_fifo_datain                            ),
+        .wr_en          ( outBuf_fifo_wren                              ),
+        .rd_en          ( outBuf_fifo_rden                              ),
+        .dout           ( outBuf_fifo_dout                              ),
+        .full           (                                               ),
+        .empty          (                                               ),
+        .valid          ( outBuf_fifo_vld                               ),
+        .wr_rst_busy    ( outBuf_fifo_wr_rst_busy                       ),
+        .rd_rst_busy    ( outBuf_fifo_rd_rst_busy                       )
+    );
+
+
+    // WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512 
+    trans_eg_fifo
+    i0_trans_eg_fifo (
+        .srst           ( rst                                           ),
+        .wr_clk         ( clk_intf                                      ),
+        .rd_clk         ( clk_FAS                                       ),
+        .din            ( trans_eg_fifo_datain                          ),
+        .wr_en          ( trans_eg_fifo_wren                            ),
+        .rd_en          ( trans_eg_fifo_rden                            ),
+        .dout           ( trans_eg_fifo_dout                            ),
+        .full           (                                               ),
+        .empty          (                                               ),
+        .valid          ( trans_eg_fifo_vld                             ),
+        .wr_rst_busy    ( trans_eg_fifo_wr_rst_busy                     ),
+        .rd_rst_busy    ( trans_eg_fifo_rd_rst_busy                     )
     );
 
 
@@ -916,6 +950,81 @@ module cnn_layer_accel_FAS #(
                 .dataout_valid      ( adder_tree_out_vld[g4]        ),
                 .dataout            ( adder_tree_out[g4]            )
             );
+            
+            // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
+            assign convMap_fifo_prog_full = (convMap_fifo_count > cm_high_watermark_cfg);
+
+            always@(posedge clk_FAS) begin
+                if(rst) begin
+                    convMap_fifo_count <= 0;
+                end else begin
+                    if(convMap_fifo_wren && convMap_fifo_rden) begin
+                        convMap_fifo_count <= convMap_fifo_count;
+                    end else if(convMap_fifo_wren) begin
+                        convMap_fifo_count <= convMap_fifo_count + 1;
+                    end else if(convMap_fifo_rden) begin
+                        convMap_fifo_count <= convMap_fifo_count - 1;
+                    end
+                end
+            end
+            // END logic ----------------------------------------------------------------------------------------------------------------------------
+
+
+            // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
+            assign partMap_fifo_prog_empty = (partMap_fifo_count > cm_high_watermark_cfg);
+
+            always@(posedge clk_FAS) begin
+                if(rst) begin
+                    partMap_fifo_count <= 0;
+                end else begin
+                    if(partMap_fifo_wren && partMap_fifo_rden) begin
+                        partMap_fifo_count <= partMap_fifo_count;
+                    end else if(partMap_fifo_wren) begin
+                        partMap_fifo_count <= partMap_fifo_count + 1;
+                    end else if(partMap_fifo_rden) begin
+                        partMap_fifo_count <= partMap_fifo_count - 1;
+                    end
+                end
+            end
+            // END logic ----------------------------------------------------------------------------------------------------------------------------
+
+
+            // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
+            assign prevMap_fifo_prog_empty = (prevMap_fifo_count > pv_high_watermark_cfg);
+
+            always@(posedge clk_FAS) begin
+                if(rst) begin
+                    prevMap_fifo_count <= 0;
+                end else begin
+                    if(prevMap_fifo_wren && prevMap_fifo_rden) begin
+                        prevMap_fifo_count <= prevMap_fifo_count;
+                    end else if(prevMap_fifo_wren) begin
+                        prevMap_fifo_count <= prevMap_fifo_count + 1;
+                    end else if(prevMap_fifo_rden) begin
+                        prevMap_fifo_count <= prevMap_fifo_count - 1;
+                    end
+                end
+            end
+            // END logic ----------------------------------------------------------------------------------------------------------------------------
+
+
+            // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
+            assign resdMap_fifo_prog_empty = (resdMap_fifo_count > rm_high_watermark_cfg);
+
+            always@(posedge clk_FAS) begin
+                if(rst) begin
+                    resdMap_fifo_count <= 0;
+                end else begin
+                    if(resdMap_fifo_wren && resdMap_fifo_rden) begin
+                        resdMap_h_fifo_count <= resdMap_fifo_count;
+                    end else if(resdMap_fifo_wren) begin
+                        resdMap_fifo_count <= resdMap_fifo_count + 1;
+                    end else if(resdMap_fifo_rden) begin
+                        resdMap_fifo_count <= resdMap_fifo_count - 1;
+                    end
+                end
+            end
+            // END logic ----------------------------------------------------------------------------------------------------------------------------
 
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
@@ -1102,7 +1211,7 @@ module cnn_layer_accel_FAS #(
             partMapFetchTotal_cfg           <= 0;
             resdMapFetchTotal_cfg           <= 0;
             outMapStoreTotal_cfg            <= 0;
-            outMapStoreFactor_cfg           <= 0;
+            ob_store_amount_cfg             <= 0;
             prevMapFetchTotal_cfg           <= 0;
             num_1x1_kernels_cfg             <= 0;
             cm_high_watermark_cfg           <= 0;
@@ -1128,7 +1237,7 @@ module cnn_layer_accel_FAS #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    assign res_dwc_fifo_rden = res_dwc_fifo_count == `OUTBUF_FIFO_DIN_FACTOR;
+    assign res_dwc_fifo_rden = res_dwc_fifo_count == C_OUTBUF_FIFO_DIN_FACTOR;
 
     always@(posedge clk_FAS) begin
         if(rst) begin
@@ -1747,18 +1856,41 @@ module cnn_layer_accel_FAS #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+    assign outBuf_fifo_prog_full = (outBuf_fifo_count > outMapStoreFactor_cfg);
+
+    always@(posedge clk_FAS) begin
+        if(rst) begin
+            outBuf_fifo_count <= 0;
+        end else begin
+            if(outBuf_fifo_wren && outBuf_fifo_rden) begin
+                outBuf_fifo_count <= outBuf_fifo_count;
+            end else if(outBuf_fifo_wren) begin
+                outBuf_fifo_count <= outBuf_fifo_count + 1;
+            end else if(outBuf_fifo_rden) begin
+                outBuf_fifo_count <= outBuf_fifo_count - 1;
+            end
+        end
+    end
+    
     always@(posedge clk_FAS) begin
         if(rst || process_cmpl) begin
             outMapStoreCount <= 0;
         end else begin
-            if(outBuf_fifo_prog_full && (state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE)) begin
-                sys_mem_write_req          <= sys_mem_write_req_ack  ? 1'b0 : (~sys_mem_write_req_acked ? 1'b1 : sys_mem_write_req);
-                sys_mem_write_req_acked    <= sys_mem_write_req_ack  ? 1'b1 :  sys_mem_write_req_acked;
+            if(outBuf_fifo_prog_full && (state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && outMapStoreCount !=  outMapStoreTotal_cfg) begin
+                sys_mem_read_addr           <= outMapAddr_cfg;
+                sys_mem_read_len            <= ob_store_amount_cfg;
+                sys_mem_write_req           <= sys_mem_write_req_ack  ? 1'b0 : (~sys_mem_write_req_acked ? 1'b1 : sys_mem_write_req);
+                sys_mem_write_req_acked     <= sys_mem_write_req_ack  ? 1'b1 :  sys_mem_write_req_acked;
+            end
+            if(sys_mem_write_cmpl) begin
+                outMapStoreCount <= outMapStoreCount + ob_store_amount_cfg;
             end
         end
     end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(*) begin
         if(conv1x1_dwc_fifo_rden && (opcode_cfg[`OPCODE_4_FIELD] || opcode_cfg[`OPCODE_6_FIELD]
                                     || opcode_cfg[`OPCODE_10_FIELD] || opcode_cfg[`OPCODE_12_FIELD]))

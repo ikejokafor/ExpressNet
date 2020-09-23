@@ -8,11 +8,11 @@
 # XDC: The top module name and the constraint reference have the same name: 'prevMap_fifo'. Do not add the DONT_TOUCH constraint.
 set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 
-# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_ooc.xdc
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_clocks.xdc
 # XDC: The top module name and the constraint reference have the same name: 'prevMap_fifo'. Do not add the DONT_TOUCH constraint.
 #dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 
-# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_clocks.xdc
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_ooc.xdc
 # XDC: The top module name and the constraint reference have the same name: 'prevMap_fifo'. Do not add the DONT_TOUCH constraint.
 #dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 
@@ -23,10 +23,10 @@ set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 # XDC: The top module name and the constraint reference have the same name: 'prevMap_fifo'. Do not add the DONT_TOUCH constraint.
 #dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 
-# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_ooc.xdc
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_clocks.xdc
 # XDC: The top module name and the constraint reference have the same name: 'prevMap_fifo'. Do not add the DONT_TOUCH constraint.
 #dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet
 
-# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_clocks.xdc
+# XDC: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_ooc.xdc
 # XDC: The top module name and the constraint reference have the same name: 'prevMap_fifo'. Do not add the DONT_TOUCH constraint.
 #dup# set_property DONT_TOUCH TRUE [get_cells U0 -quiet] -quiet

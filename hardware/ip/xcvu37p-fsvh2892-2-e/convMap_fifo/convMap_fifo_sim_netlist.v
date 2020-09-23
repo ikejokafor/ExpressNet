@@ -1,7 +1,7 @@
 // Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
-// Date        : Tue Sep 22 17:46:58 2020
+// Date        : Wed Sep 23 13:49:42 2020
 // Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 // Command     : write_verilog -force -mode funcsim
 //               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/convMap_fifo/convMap_fifo_sim_netlist.v
@@ -24,17 +24,19 @@ module convMap_fifo
     dout,
     full,
     empty,
+    valid,
     wr_rst_busy,
     rd_rst_busy);
   input srst;
   (* x_interface_info = "xilinx.com:signal:clock:1.0 write_clk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME write_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *) input wr_clk;
-  (* x_interface_info = "xilinx.com:signal:clock:1.0 read_clk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME read_clk, FREQ_HZ 500000000, PHASE 0.000, INSERT_VIP 0" *) input rd_clk;
+  (* x_interface_info = "xilinx.com:signal:clock:1.0 read_clk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME read_clk, FREQ_HZ 400000000, PHASE 0.000, INSERT_VIP 0" *) input rd_clk;
   (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA" *) input [1023:0]din;
   (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN" *) input wr_en;
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN" *) input rd_en;
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_DATA" *) output [1023:0]dout;
   (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE FULL" *) output full;
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *) output empty;
+  output valid;
   output wr_rst_busy;
   output rd_rst_busy;
 
@@ -46,6 +48,7 @@ module convMap_fifo
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
+  wire valid;
   wire wr_clk;
   wire wr_en;
   wire wr_rst_busy;
@@ -108,7 +111,6 @@ module convMap_fifo
   wire NLW_U0_s_axis_tready_UNCONNECTED;
   wire NLW_U0_sbiterr_UNCONNECTED;
   wire NLW_U0_underflow_UNCONNECTED;
-  wire NLW_U0_valid_UNCONNECTED;
   wire NLW_U0_wr_ack_UNCONNECTED;
   wire [4:0]NLW_U0_axi_ar_data_count_UNCONNECTED;
   wire [4:0]NLW_U0_axi_ar_rd_data_count_UNCONNECTED;
@@ -263,7 +265,7 @@ module convMap_fifo
   (* C_HAS_SLAVE_CE = "0" *) 
   (* C_HAS_SRST = "1" *) 
   (* C_HAS_UNDERFLOW = "0" *) 
-  (* C_HAS_VALID = "0" *) 
+  (* C_HAS_VALID = "1" *) 
   (* C_HAS_WR_ACK = "0" *) 
   (* C_HAS_WR_DATA_COUNT = "0" *) 
   (* C_HAS_WR_RST = "0" *) 
@@ -325,7 +327,7 @@ module convMap_fifo
   (* C_RDCH_TYPE = "0" *) 
   (* C_RD_DATA_COUNT_WIDTH = "9" *) 
   (* C_RD_DEPTH = "512" *) 
-  (* C_RD_FREQ = "500" *) 
+  (* C_RD_FREQ = "400" *) 
   (* C_RD_PNTR_WIDTH = "9" *) 
   (* C_REG_SLICE_MODE_AXIS = "0" *) 
   (* C_REG_SLICE_MODE_RACH = "0" *) 
@@ -598,7 +600,7 @@ module convMap_fifo
         .sleep(1'b0),
         .srst(srst),
         .underflow(NLW_U0_underflow_UNCONNECTED),
-        .valid(NLW_U0_valid_UNCONNECTED),
+        .valid(valid),
         .wr_ack(NLW_U0_wr_ack_UNCONNECTED),
         .wr_clk(wr_clk),
         .wr_data_count(NLW_U0_wr_data_count_UNCONNECTED[8:0]),
@@ -996,12 +998,12 @@ module convMap_fifo_builtin_extdepth_13
     full,
     full_0,
     rd_en,
-    \dout[639]_2 ,
-    \dout[639]_3 ,
-    \dout[639]_4 ,
+    \gv.gv3.VALID_reg ,
+    \gv.gv3.VALID_reg_0 ,
+    \gv.gv3.VALID_reg_1 ,
     EMPTY,
-    empty,
-    empty_0,
+    \gv.gv3.VALID_reg_2 ,
+    \gv.gv3.VALID_reg_3 ,
     rd_clk,
     srst,
     wr_clk,
@@ -1021,12 +1023,12 @@ module convMap_fifo_builtin_extdepth_13
   input full;
   input full_0;
   input rd_en;
-  input \dout[639]_2 ;
-  input \dout[639]_3 ;
-  input \dout[639]_4 ;
+  input \gv.gv3.VALID_reg ;
+  input \gv.gv3.VALID_reg_0 ;
+  input \gv.gv3.VALID_reg_1 ;
   input EMPTY;
-  input empty;
-  input empty_0;
+  input \gv.gv3.VALID_reg_2 ;
+  input \gv.gv3.VALID_reg_3 ;
   input rd_clk;
   input srst;
   input wr_clk;
@@ -1043,13 +1045,13 @@ module convMap_fifo_builtin_extdepth_13
   wire \dout[639] ;
   wire \dout[639]_0 ;
   wire \dout[639]_1 ;
-  wire \dout[639]_2 ;
-  wire \dout[639]_3 ;
-  wire \dout[639]_4 ;
-  wire empty;
-  wire empty_0;
   wire full;
   wire full_0;
+  wire \gv.gv3.VALID_reg ;
+  wire \gv.gv3.VALID_reg_0 ;
+  wire \gv.gv3.VALID_reg_1 ;
+  wire \gv.gv3.VALID_reg_2 ;
+  wire \gv.gv3.VALID_reg_3 ;
   wire rd_clk;
   wire rd_clk_0;
   wire rd_clk_1;
@@ -1071,13 +1073,13 @@ module convMap_fifo_builtin_extdepth_13
         .\dout[639] (\dout[639] ),
         .\dout[639]_0 (\dout[639]_0 ),
         .\dout[639]_1 (\dout[639]_1 ),
-        .\dout[639]_2 (\dout[639]_2 ),
-        .\dout[639]_3 (\dout[639]_3 ),
-        .\dout[639]_4 (\dout[639]_4 ),
-        .empty(empty),
-        .empty_0(empty_0),
         .full(full),
         .full_0(full_0),
+        .\gv.gv3.VALID_reg (\gv.gv3.VALID_reg ),
+        .\gv.gv3.VALID_reg_0 (\gv.gv3.VALID_reg_0 ),
+        .\gv.gv3.VALID_reg_1 (\gv.gv3.VALID_reg_1 ),
+        .\gv.gv3.VALID_reg_2 (\gv.gv3.VALID_reg_2 ),
+        .\gv.gv3.VALID_reg_3 (\gv.gv3.VALID_reg_3 ),
         .rd_clk(rd_clk),
         .rd_clk_0(rd_clk_0),
         .rd_clk_1(rd_clk_1),
@@ -1108,8 +1110,8 @@ module convMap_fifo_builtin_extdepth_2
     full,
     full_0,
     EMPTY,
-    empty,
-    empty_0,
+    \gv.gv3.VALID_reg ,
+    \gv.gv3.VALID_reg_0 ,
     rd_clk,
     RD_EN,
     srst,
@@ -1125,8 +1127,8 @@ module convMap_fifo_builtin_extdepth_2
   input full;
   input full_0;
   input EMPTY;
-  input empty;
-  input empty_0;
+  input \gv.gv3.VALID_reg ;
+  input \gv.gv3.VALID_reg_0 ;
   input rd_clk;
   input RD_EN;
   input srst;
@@ -1142,10 +1144,10 @@ module convMap_fifo_builtin_extdepth_2
   wire WR_EN;
   wire [71:0]din;
   wire [71:0]dout;
-  wire empty;
-  wire empty_0;
   wire full;
   wire full_0;
+  wire \gv.gv3.VALID_reg ;
+  wire \gv.gv3.VALID_reg_0 ;
   wire rd_clk;
   wire rd_clk_0;
   wire rd_clk_1;
@@ -1162,10 +1164,10 @@ module convMap_fifo_builtin_extdepth_2
         .WR_EN(WR_EN),
         .din(din),
         .dout(dout),
-        .empty(empty),
-        .empty_0(empty_0),
         .full(full),
         .full_0(full_0),
+        .\gv.gv3.VALID_reg (\gv.gv3.VALID_reg ),
+        .\gv.gv3.VALID_reg_0 (\gv.gv3.VALID_reg_0 ),
         .rd_clk(rd_clk),
         .rd_clk_0(rd_clk_0),
         .rd_clk_1(rd_clk_1),
@@ -1318,8 +1320,8 @@ module convMap_fifo_builtin_extdepth_5
     dout,
     \gf36e2_inst.sngfifo36e2_i_2 ,
     \gf36e2_inst.sngfifo36e2_i_2_0 ,
-    \gf36e2_inst.sngfifo36e2_i_1 ,
-    \gf36e2_inst.sngfifo36e2_i_1_0 ,
+    \gv.gv3.VALID_reg ,
+    \gv.gv3.VALID_reg_0 ,
     rd_clk,
     RD_EN,
     srst,
@@ -1335,8 +1337,8 @@ module convMap_fifo_builtin_extdepth_5
   output [71:0]dout;
   input \gf36e2_inst.sngfifo36e2_i_2 ;
   input \gf36e2_inst.sngfifo36e2_i_2_0 ;
-  input \gf36e2_inst.sngfifo36e2_i_1 ;
-  input \gf36e2_inst.sngfifo36e2_i_1_0 ;
+  input \gv.gv3.VALID_reg ;
+  input \gv.gv3.VALID_reg_0 ;
   input rd_clk;
   input RD_EN;
   input srst;
@@ -1352,10 +1354,10 @@ module convMap_fifo_builtin_extdepth_5
   wire WR_EN;
   wire [71:0]din;
   wire [71:0]dout;
-  wire \gf36e2_inst.sngfifo36e2_i_1 ;
-  wire \gf36e2_inst.sngfifo36e2_i_1_0 ;
   wire \gf36e2_inst.sngfifo36e2_i_2 ;
   wire \gf36e2_inst.sngfifo36e2_i_2_0 ;
+  wire \gv.gv3.VALID_reg ;
+  wire \gv.gv3.VALID_reg_0 ;
   wire rd_clk;
   wire rd_clk_0;
   wire rd_clk_1;
@@ -1372,10 +1374,10 @@ module convMap_fifo_builtin_extdepth_5
         .WR_EN(WR_EN),
         .din(din),
         .dout(dout),
-        .\gf36e2_inst.sngfifo36e2_i_1 (\gf36e2_inst.sngfifo36e2_i_1 ),
-        .\gf36e2_inst.sngfifo36e2_i_1_0 (\gf36e2_inst.sngfifo36e2_i_1_0 ),
         .\gf36e2_inst.sngfifo36e2_i_2 (\gf36e2_inst.sngfifo36e2_i_2 ),
         .\gf36e2_inst.sngfifo36e2_i_2_0 (\gf36e2_inst.sngfifo36e2_i_2_0 ),
+        .\gv.gv3.VALID_reg (\gv.gv3.VALID_reg ),
+        .\gv.gv3.VALID_reg_0 (\gv.gv3.VALID_reg_0 ),
         .rd_clk(rd_clk),
         .rd_clk_0(rd_clk_0),
         .rd_clk_1(rd_clk_1),
@@ -1734,12 +1736,12 @@ module convMap_fifo_builtin_prim
     full,
     full_0,
     rd_en,
-    \dout[639]_2 ,
-    \dout[639]_3 ,
-    \dout[639]_4 ,
+    \gv.gv3.VALID_reg ,
+    \gv.gv3.VALID_reg_0 ,
+    \gv.gv3.VALID_reg_1 ,
     EMPTY,
-    empty,
-    empty_0);
+    \gv.gv3.VALID_reg_2 ,
+    \gv.gv3.VALID_reg_3 );
   output RDRSTBUSY;
   output WRRSTBUSY;
   output [71:0]dout;
@@ -1759,12 +1761,12 @@ module convMap_fifo_builtin_prim
   input full;
   input full_0;
   input rd_en;
-  input \dout[639]_2 ;
-  input \dout[639]_3 ;
-  input \dout[639]_4 ;
+  input \gv.gv3.VALID_reg ;
+  input \gv.gv3.VALID_reg_0 ;
+  input \gv.gv3.VALID_reg_1 ;
   input EMPTY;
-  input empty;
-  input empty_0;
+  input \gv.gv3.VALID_reg_2 ;
+  input \gv.gv3.VALID_reg_3 ;
 
   wire EMPTY;
   wire FULL;
@@ -1778,11 +1780,6 @@ module convMap_fifo_builtin_prim
   wire \dout[639] ;
   wire \dout[639]_0 ;
   wire \dout[639]_1 ;
-  wire \dout[639]_2 ;
-  wire \dout[639]_3 ;
-  wire \dout[639]_4 ;
-  wire empty;
-  wire empty_0;
   wire full;
   wire full_0;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
@@ -1897,6 +1894,11 @@ module convMap_fifo_builtin_prim
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire \gv.gv3.VALID_reg ;
+  wire \gv.gv3.VALID_reg_0 ;
+  wire \gv.gv3.VALID_reg_1 ;
+  wire \gv.gv3.VALID_reg_2 ;
+  wire \gv.gv3.VALID_reg_3 ;
   wire p_58_out;
   wire p_59_out;
   wire p_60_out;
@@ -1915,8 +1917,8 @@ module convMap_fifo_builtin_prim
     empty_INST_0_i_3
        (.I0(p_60_out),
         .I1(EMPTY),
-        .I2(empty),
-        .I3(empty_0),
+        .I2(\gv.gv3.VALID_reg_2 ),
+        .I3(\gv.gv3.VALID_reg_3 ),
         .O(rd_clk_1));
   LUT4 #(
     .INIT(16'hFFFE)) 
@@ -1996,9 +1998,9 @@ module convMap_fifo_builtin_prim
     \gf36e2_inst.sngfifo36e2_i_1 
        (.I0(rd_en),
         .I1(rd_clk_1),
-        .I2(\dout[639]_2 ),
-        .I3(\dout[639]_3 ),
-        .I4(\dout[639]_4 ),
+        .I2(\gv.gv3.VALID_reg ),
+        .I3(\gv.gv3.VALID_reg_0 ),
+        .I4(\gv.gv3.VALID_reg_1 ),
         .O(RD_EN));
   LUT5 #(
     .INIT(32'h00000002)) 
@@ -3660,8 +3662,8 @@ module convMap_fifo_builtin_prim_21
     din,
     \gf36e2_inst.sngfifo36e2_i_2 ,
     \gf36e2_inst.sngfifo36e2_i_2_0 ,
-    \gf36e2_inst.sngfifo36e2_i_1 ,
-    \gf36e2_inst.sngfifo36e2_i_1_0 );
+    \gv.gv3.VALID_reg ,
+    \gv.gv3.VALID_reg_0 );
   output EMPTY;
   output FULL;
   output RDRSTBUSY;
@@ -3677,8 +3679,8 @@ module convMap_fifo_builtin_prim_21
   input [71:0]din;
   input \gf36e2_inst.sngfifo36e2_i_2 ;
   input \gf36e2_inst.sngfifo36e2_i_2_0 ;
-  input \gf36e2_inst.sngfifo36e2_i_1 ;
-  input \gf36e2_inst.sngfifo36e2_i_1_0 ;
+  input \gv.gv3.VALID_reg ;
+  input \gv.gv3.VALID_reg_0 ;
 
   wire EMPTY;
   wire FULL;
@@ -3689,8 +3691,6 @@ module convMap_fifo_builtin_prim_21
   wire [1:1]dbiterr_col;
   wire [71:0]din;
   wire [71:0]dout;
-  wire \gf36e2_inst.sngfifo36e2_i_1 ;
-  wire \gf36e2_inst.sngfifo36e2_i_1_0 ;
   wire \gf36e2_inst.sngfifo36e2_i_2 ;
   wire \gf36e2_inst.sngfifo36e2_i_2_0 ;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
@@ -3806,6 +3806,8 @@ module convMap_fifo_builtin_prim_21
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire \gv.gv3.VALID_reg ;
+  wire \gv.gv3.VALID_reg_0 ;
   wire p_131_out;
   wire rd_clk;
   wire rd_clk_0;
@@ -3883,8 +3885,8 @@ module convMap_fifo_builtin_prim_21
     .INIT(8'hFE)) 
     \gf36e2_inst.sngfifo36e2_i_3 
        (.I0(EMPTY),
-        .I1(\gf36e2_inst.sngfifo36e2_i_1 ),
-        .I2(\gf36e2_inst.sngfifo36e2_i_1_0 ),
+        .I1(\gv.gv3.VALID_reg ),
+        .I2(\gv.gv3.VALID_reg_0 ),
         .O(rd_clk_1));
   LUT3 #(
     .INIT(8'hFE)) 
@@ -4408,8 +4410,8 @@ module convMap_fifo_builtin_prim_24
     full,
     full_0,
     EMPTY,
-    empty,
-    empty_0);
+    \gv.gv3.VALID_reg ,
+    \gv.gv3.VALID_reg_0 );
   output RDRSTBUSY;
   output WRRSTBUSY;
   output [71:0]dout;
@@ -4425,8 +4427,8 @@ module convMap_fifo_builtin_prim_24
   input full;
   input full_0;
   input EMPTY;
-  input empty;
-  input empty_0;
+  input \gv.gv3.VALID_reg ;
+  input \gv.gv3.VALID_reg_0 ;
 
   wire EMPTY;
   wire FULL;
@@ -4437,8 +4439,6 @@ module convMap_fifo_builtin_prim_24
   wire [13:13]dbiterr_col;
   wire [71:0]din;
   wire [71:0]dout;
-  wire empty;
-  wire empty_0;
   wire full;
   wire full_0;
   wire \gf36e2_inst.sngfifo36e2_n_0 ;
@@ -4553,6 +4553,8 @@ module convMap_fifo_builtin_prim_24
   wire \gf36e2_inst.sngfifo36e2_n_97 ;
   wire \gf36e2_inst.sngfifo36e2_n_98 ;
   wire \gf36e2_inst.sngfifo36e2_n_99 ;
+  wire \gv.gv3.VALID_reg ;
+  wire \gv.gv3.VALID_reg_0 ;
   wire p_22_out;
   wire p_23_out;
   wire p_24_out;
@@ -4569,8 +4571,8 @@ module convMap_fifo_builtin_prim_24
     empty_INST_0_i_2
        (.I0(p_24_out),
         .I1(EMPTY),
-        .I2(empty),
-        .I3(empty_0),
+        .I2(\gv.gv3.VALID_reg ),
+        .I3(\gv.gv3.VALID_reg_0 ),
         .O(rd_clk_1));
   LUT4 #(
     .INIT(16'hFFFE)) 
@@ -5310,6 +5312,7 @@ endmodule
 (* ORIG_REF_NAME = "builtin_top" *) 
 module convMap_fifo_builtin_top
    (dout,
+    valid,
     wr_rst_busy,
     rd_rst_busy,
     full,
@@ -5321,6 +5324,7 @@ module convMap_fifo_builtin_top
     wr_en,
     rd_en);
   output [1023:0]dout;
+  output valid;
   output wr_rst_busy;
   output rd_rst_busy;
   output full;
@@ -5376,6 +5380,7 @@ module convMap_fifo_builtin_top
   wire \rst_val_sym.gextw_sym[9].inst_extd_n_1 ;
   wire \rst_val_sym.gextw_sym[9].inst_extd_n_3 ;
   wire srst;
+  wire valid;
   wire wr_clk;
   wire wr_en;
   wire wr_rst_busy;
@@ -5384,6 +5389,14 @@ module convMap_fifo_builtin_top
   wire wr_tmp;
   wire [15:1]wrst_busy_i;
 
+  FDRE #(
+    .INIT(1'b0)) 
+    \gv.gv3.VALID_reg 
+       (.C(rd_clk),
+        .CE(1'b1),
+        .D(rd_tmp),
+        .Q(valid),
+        .R(1'b0));
   LUT5 #(
     .INIT(32'hFFFFFFFE)) 
     rd_rst_busy_INST_0
@@ -5458,10 +5471,10 @@ module convMap_fifo_builtin_top
         .WR_EN(wr_tmp),
         .din(din[935:864]),
         .dout(dout[935:864]),
-        .empty(p_6_out),
-        .empty_0(p_15_out),
         .full(p_7_out),
         .full_0(p_16_out),
+        .\gv.gv3.VALID_reg (p_6_out),
+        .\gv.gv3.VALID_reg_0 (p_15_out),
         .rd_clk(rd_clk),
         .rd_clk_0(\rst_val_sym.gextw_sym[13].inst_extd_n_0 ),
         .rd_clk_1(\rst_val_sym.gextw_sym[13].inst_extd_n_1 ),
@@ -5500,10 +5513,10 @@ module convMap_fifo_builtin_top
         .WR_EN(wr_tmp),
         .din(din[71:0]),
         .dout(dout[71:0]),
-        .\gf36e2_inst.sngfifo36e2_i_1 (p_114_out),
-        .\gf36e2_inst.sngfifo36e2_i_1_0 (p_123_out),
         .\gf36e2_inst.sngfifo36e2_i_2 (p_115_out),
         .\gf36e2_inst.sngfifo36e2_i_2_0 (p_124_out),
+        .\gv.gv3.VALID_reg (p_114_out),
+        .\gv.gv3.VALID_reg_0 (p_123_out),
         .rd_clk(rd_clk),
         .rd_clk_0(\rst_val_sym.gextw_sym[1].inst_extd_n_0 ),
         .rd_clk_1(\rst_val_sym.gextw_sym[1].inst_extd_n_2 ),
@@ -5623,13 +5636,13 @@ module convMap_fifo_builtin_top
         .\dout[639] (\rst_val_sym.gextw_sym[13].inst_extd_n_0 ),
         .\dout[639]_0 (\rst_val_sym.gextw_sym[1].inst_extd_n_0 ),
         .\dout[639]_1 (\rst_val_sym.gextw_sym[5].inst_extd_n_1 ),
-        .\dout[639]_2 (\rst_val_sym.gextw_sym[13].inst_extd_n_1 ),
-        .\dout[639]_3 (\rst_val_sym.gextw_sym[1].inst_extd_n_2 ),
-        .\dout[639]_4 (\rst_val_sym.gextw_sym[5].inst_extd_n_3 ),
-        .empty(p_42_out),
-        .empty_0(p_51_out),
         .full(p_43_out),
         .full_0(p_52_out),
+        .\gv.gv3.VALID_reg (\rst_val_sym.gextw_sym[13].inst_extd_n_1 ),
+        .\gv.gv3.VALID_reg_0 (\rst_val_sym.gextw_sym[1].inst_extd_n_2 ),
+        .\gv.gv3.VALID_reg_1 (\rst_val_sym.gextw_sym[5].inst_extd_n_3 ),
+        .\gv.gv3.VALID_reg_2 (p_42_out),
+        .\gv.gv3.VALID_reg_3 (p_51_out),
         .rd_clk(rd_clk),
         .rd_clk_0(\rst_val_sym.gextw_sym[9].inst_extd_n_1 ),
         .rd_clk_1(\rst_val_sym.gextw_sym[9].inst_extd_n_3 ),
@@ -5671,6 +5684,7 @@ endmodule
 (* ORIG_REF_NAME = "fifo_generator_top" *) 
 module convMap_fifo_fifo_generator_top
    (dout,
+    valid,
     wr_rst_busy,
     rd_rst_busy,
     full,
@@ -5682,6 +5696,7 @@ module convMap_fifo_fifo_generator_top
     wr_en,
     rd_en);
   output [1023:0]dout;
+  output valid;
   output wr_rst_busy;
   output rd_rst_busy;
   output full;
@@ -5701,6 +5716,7 @@ module convMap_fifo_fifo_generator_top
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
+  wire valid;
   wire wr_clk;
   wire wr_en;
   wire wr_rst_busy;
@@ -5714,6 +5730,7 @@ module convMap_fifo_fifo_generator_top
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
+        .valid(valid),
         .wr_clk(wr_clk),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
@@ -5749,7 +5766,7 @@ endmodule
 (* C_HAS_PROG_FLAGS_RACH = "0" *) (* C_HAS_PROG_FLAGS_RDCH = "0" *) (* C_HAS_PROG_FLAGS_WACH = "0" *) 
 (* C_HAS_PROG_FLAGS_WDCH = "0" *) (* C_HAS_PROG_FLAGS_WRCH = "0" *) (* C_HAS_RD_DATA_COUNT = "0" *) 
 (* C_HAS_RD_RST = "0" *) (* C_HAS_RST = "0" *) (* C_HAS_SLAVE_CE = "0" *) 
-(* C_HAS_SRST = "1" *) (* C_HAS_UNDERFLOW = "0" *) (* C_HAS_VALID = "0" *) 
+(* C_HAS_SRST = "1" *) (* C_HAS_UNDERFLOW = "0" *) (* C_HAS_VALID = "1" *) 
 (* C_HAS_WR_ACK = "0" *) (* C_HAS_WR_DATA_COUNT = "0" *) (* C_HAS_WR_RST = "0" *) 
 (* C_IMPLEMENTATION_TYPE = "6" *) (* C_IMPLEMENTATION_TYPE_AXIS = "1" *) (* C_IMPLEMENTATION_TYPE_RACH = "1" *) 
 (* C_IMPLEMENTATION_TYPE_RDCH = "1" *) (* C_IMPLEMENTATION_TYPE_WACH = "1" *) (* C_IMPLEMENTATION_TYPE_WDCH = "1" *) 
@@ -5770,7 +5787,7 @@ endmodule
 (* C_PROG_FULL_TYPE_AXIS = "0" *) (* C_PROG_FULL_TYPE_RACH = "0" *) (* C_PROG_FULL_TYPE_RDCH = "0" *) 
 (* C_PROG_FULL_TYPE_WACH = "0" *) (* C_PROG_FULL_TYPE_WDCH = "0" *) (* C_PROG_FULL_TYPE_WRCH = "0" *) 
 (* C_RACH_TYPE = "0" *) (* C_RDCH_TYPE = "0" *) (* C_RD_DATA_COUNT_WIDTH = "9" *) 
-(* C_RD_DEPTH = "512" *) (* C_RD_FREQ = "500" *) (* C_RD_PNTR_WIDTH = "9" *) 
+(* C_RD_DEPTH = "512" *) (* C_RD_FREQ = "400" *) (* C_RD_PNTR_WIDTH = "9" *) 
 (* C_REG_SLICE_MODE_AXIS = "0" *) (* C_REG_SLICE_MODE_RACH = "0" *) (* C_REG_SLICE_MODE_RDCH = "0" *) 
 (* C_REG_SLICE_MODE_WACH = "0" *) (* C_REG_SLICE_MODE_WDCH = "0" *) (* C_REG_SLICE_MODE_WRCH = "0" *) 
 (* C_SELECT_XPM = "0" *) (* C_SYNCHRONIZER_STAGE = "2" *) (* C_UNDERFLOW_LOW = "0" *) 
@@ -6261,6 +6278,7 @@ module convMap_fifo_fifo_generator_v13_2_3
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
+  wire valid;
   wire wr_clk;
   wire wr_en;
   wire wr_rst_busy;
@@ -6774,7 +6792,6 @@ module convMap_fifo_fifo_generator_v13_2_3
   assign s_axis_tready = \<const0> ;
   assign sbiterr = \<const0> ;
   assign underflow = \<const0> ;
-  assign valid = \<const0> ;
   assign wr_ack = \<const0> ;
   assign wr_data_count[8] = \<const0> ;
   assign wr_data_count[7] = \<const0> ;
@@ -6798,6 +6815,7 @@ module convMap_fifo_fifo_generator_v13_2_3
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
+        .valid(valid),
         .wr_clk(wr_clk),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
@@ -6806,6 +6824,7 @@ endmodule
 (* ORIG_REF_NAME = "fifo_generator_v13_2_3_builtin" *) 
 module convMap_fifo_fifo_generator_v13_2_3_builtin
    (dout,
+    valid,
     wr_rst_busy,
     rd_rst_busy,
     full,
@@ -6817,6 +6836,7 @@ module convMap_fifo_fifo_generator_v13_2_3_builtin
     wr_en,
     rd_en);
   output [1023:0]dout;
+  output valid;
   output wr_rst_busy;
   output rd_rst_busy;
   output full;
@@ -6836,6 +6856,7 @@ module convMap_fifo_fifo_generator_v13_2_3_builtin
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
+  wire valid;
   wire wr_clk;
   wire wr_en;
   wire wr_rst_busy;
@@ -6849,6 +6870,7 @@ module convMap_fifo_fifo_generator_v13_2_3_builtin
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
+        .valid(valid),
         .wr_clk(wr_clk),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
@@ -6857,6 +6879,7 @@ endmodule
 (* ORIG_REF_NAME = "fifo_generator_v13_2_3_synth" *) 
 module convMap_fifo_fifo_generator_v13_2_3_synth
    (dout,
+    valid,
     wr_rst_busy,
     rd_rst_busy,
     full,
@@ -6868,6 +6891,7 @@ module convMap_fifo_fifo_generator_v13_2_3_synth
     wr_en,
     rd_en);
   output [1023:0]dout;
+  output valid;
   output wr_rst_busy;
   output rd_rst_busy;
   output full;
@@ -6887,6 +6911,7 @@ module convMap_fifo_fifo_generator_v13_2_3_synth
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
+  wire valid;
   wire wr_clk;
   wire wr_en;
   wire wr_rst_busy;
@@ -6900,6 +6925,7 @@ module convMap_fifo_fifo_generator_v13_2_3_synth
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
+        .valid(valid),
         .wr_clk(wr_clk),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));

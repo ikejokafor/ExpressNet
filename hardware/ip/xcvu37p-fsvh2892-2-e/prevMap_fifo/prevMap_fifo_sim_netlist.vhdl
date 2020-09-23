@@ -1,7 +1,7 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Tue Sep 22 18:20:11 2020
+-- Date        : Wed Sep 23 13:53:33 2020
 -- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 -- Command     : write_vhdl -force -mode funcsim
 --               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_sim_netlist.vhdl
@@ -7102,7 +7102,7 @@ entity prevMap_fifo_fifo_generator_v13_2_3 is
   attribute C_RD_DEPTH : integer;
   attribute C_RD_DEPTH of prevMap_fifo_fifo_generator_v13_2_3 : entity is 512;
   attribute C_RD_FREQ : integer;
-  attribute C_RD_FREQ of prevMap_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_RD_FREQ of prevMap_fifo_fifo_generator_v13_2_3 : entity is 400;
   attribute C_RD_PNTR_WIDTH : integer;
   attribute C_RD_PNTR_WIDTH of prevMap_fifo_fifo_generator_v13_2_3 : entity is 9;
   attribute C_REG_SLICE_MODE_AXIS : integer;
@@ -7180,7 +7180,7 @@ entity prevMap_fifo_fifo_generator_v13_2_3 is
   attribute C_WR_DEPTH_WRCH : integer;
   attribute C_WR_DEPTH_WRCH of prevMap_fifo_fifo_generator_v13_2_3 : entity is 16;
   attribute C_WR_FREQ : integer;
-  attribute C_WR_FREQ of prevMap_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_WR_FREQ of prevMap_fifo_fifo_generator_v13_2_3 : entity is 100;
   attribute C_WR_PNTR_WIDTH : integer;
   attribute C_WR_PNTR_WIDTH of prevMap_fifo_fifo_generator_v13_2_3 : entity is 9;
   attribute C_WR_PNTR_WIDTH_AXIS : integer;
@@ -8207,7 +8207,7 @@ architecture STRUCTURE of prevMap_fifo is
   attribute C_RD_DEPTH : integer;
   attribute C_RD_DEPTH of U0 : label is 512;
   attribute C_RD_FREQ : integer;
-  attribute C_RD_FREQ of U0 : label is 1;
+  attribute C_RD_FREQ of U0 : label is 400;
   attribute C_RD_PNTR_WIDTH : integer;
   attribute C_RD_PNTR_WIDTH of U0 : label is 9;
   attribute C_REG_SLICE_MODE_AXIS : integer;
@@ -8285,7 +8285,7 @@ architecture STRUCTURE of prevMap_fifo is
   attribute C_WR_DEPTH_WRCH : integer;
   attribute C_WR_DEPTH_WRCH of U0 : label is 16;
   attribute C_WR_FREQ : integer;
-  attribute C_WR_FREQ of U0 : label is 1;
+  attribute C_WR_FREQ of U0 : label is 100;
   attribute C_WR_PNTR_WIDTH : integer;
   attribute C_WR_PNTR_WIDTH of U0 : label is 9;
   attribute C_WR_PNTR_WIDTH_AXIS : integer;
@@ -8307,10 +8307,10 @@ architecture STRUCTURE of prevMap_fifo is
   attribute x_interface_info of full : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE FULL";
   attribute x_interface_info of rd_clk : signal is "xilinx.com:signal:clock:1.0 read_clk CLK";
   attribute x_interface_parameter : string;
-  attribute x_interface_parameter of rd_clk : signal is "XIL_INTERFACENAME read_clk, FREQ_HZ 1000000, PHASE 0.000, INSERT_VIP 0";
+  attribute x_interface_parameter of rd_clk : signal is "XIL_INTERFACENAME read_clk, FREQ_HZ 400000000, PHASE 0.000, INSERT_VIP 0";
   attribute x_interface_info of rd_en : signal is "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN";
   attribute x_interface_info of wr_clk : signal is "xilinx.com:signal:clock:1.0 write_clk CLK";
-  attribute x_interface_parameter of wr_clk : signal is "XIL_INTERFACENAME write_clk, FREQ_HZ 1000000, PHASE 0.000, INSERT_VIP 0";
+  attribute x_interface_parameter of wr_clk : signal is "XIL_INTERFACENAME write_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0";
   attribute x_interface_info of wr_en : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN";
   attribute x_interface_info of din : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA";
   attribute x_interface_info of dout : signal is "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_DATA";
