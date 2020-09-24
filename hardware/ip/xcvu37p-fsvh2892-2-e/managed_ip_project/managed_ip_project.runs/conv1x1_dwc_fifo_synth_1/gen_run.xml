@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="conv1x1_dwc_fifo_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1600883475">
-  <File Type="VDS-TIMING-PB" Name="conv1x1_dwc_fifo_timing_summary_synth.pb"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="conv1x1_dwc_fifo_timing_summary_synth.rpt"/>
+  <File Type="PA-TCL" Name="conv1x1_dwc_fifo.tcl"/>
+  <File Type="REPORTS-TCL" Name="conv1x1_dwc_fifo_reports.tcl"/>
+  <File Type="RDS-RDS" Name="conv1x1_dwc_fifo.vds"/>
   <File Type="RDS-DCP" Name="conv1x1_dwc_fifo.dcp"/>
   <File Type="RDS-UTIL-PB" Name="conv1x1_dwc_fifo_utilization_synth.pb"/>
   <File Type="RDS-UTIL" Name="conv1x1_dwc_fifo_utilization_synth.rpt"/>
-  <File Type="RDS-PROPCONSTRS" Name="conv1x1_dwc_fifo_drc_synth.rpt"/>
-  <File Type="RDS-RDS" Name="conv1x1_dwc_fifo.vds"/>
-  <File Type="REPORTS-TCL" Name="conv1x1_dwc_fifo_reports.tcl"/>
-  <File Type="PA-TCL" Name="conv1x1_dwc_fifo.tcl"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/conv1x1_dwc_fifo">
     <File Path="$PPRDIR/../conv1x1_dwc_fifo/conv1x1_dwc_fifo.xci">
       <FileInfo>

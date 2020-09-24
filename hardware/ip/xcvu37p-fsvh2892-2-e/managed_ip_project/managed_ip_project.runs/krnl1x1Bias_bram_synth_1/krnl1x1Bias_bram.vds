@@ -1,0 +1,22 @@
+#-----------------------------------------------------------
+# Vivado v2018.3 (64-bit)
+# SW Build 2405991 on Thu Dec  6 23:36:41 MST 2018
+# IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
+# Start of session at: Wed Sep 23 23:06:15 2020
+# Process ID: 17395
+# Current directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/krnl1x1Bias_bram_synth_1
+# Command line: vivado -log krnl1x1Bias_bram.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source krnl1x1Bias_bram.tcl
+# Log file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/krnl1x1Bias_bram_synth_1/krnl1x1Bias_bram.vds
+# Journal file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/krnl1x1Bias_bram_synth_1/vivado.jou
+#-----------------------------------------------------------
+source krnl1x1Bias_bram.tcl -notrace
+Command: synth_design -top krnl1x1Bias_bram -part xcvu37p-fsvh2892-2-e -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcvu37p'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcvu37p'
+INFO: [Common 17-1540] The version limit for your license is '2019.01' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 17437 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:19 . Memory (MB): peak = 1456.336 ; gain = 68.000 ; free physical = 57659 ; free virtual = 110351
+---------------------------------------------------------------------------------
