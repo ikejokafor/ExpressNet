@@ -1,11 +1,11 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Tue Sep 22 18:31:01 2020
+-- Date        : Sun Aug 30 16:16:39 2020
 -- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 -- Command     : write_vhdl -force -mode funcsim -rename_top job_fetch_fifo -prefix
---               job_fetch_fifo_ res_dwc_fifo_sim_netlist.vhdl
--- Design      : res_dwc_fifo
+--               job_fetch_fifo_ trans_fifo_sim_netlist.vhdl
+-- Design      : trans_fifo
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
 -- Device      : xcvu37p-fsvh2892-2-e
@@ -2515,8 +2515,6 @@ entity job_fetch_fifo_builtin_prim_21 is
     rd_rst_busy : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    wr_ack_i : out STD_LOGIC;
-    valid_i : out STD_LOGIC;
     clk : in STD_LOGIC;
     rd_en : in STD_LOGIC;
     srst : in STD_LOGIC;
@@ -2528,8 +2526,6 @@ entity job_fetch_fifo_builtin_prim_21 is
 end job_fetch_fifo_builtin_prim_21;
 
 architecture STRUCTURE of job_fetch_fifo_builtin_prim_21 is
-  signal \^empty\ : STD_LOGIC;
-  signal \^full\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_0\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_1\ : STD_LOGIC;
   signal \gf36e2_inst.sngfifo36e2_n_100\ : STD_LOGIC;
@@ -2649,8 +2645,6 @@ architecture STRUCTURE of job_fetch_fifo_builtin_prim_21 is
   attribute box_type : string;
   attribute box_type of \gf36e2_inst.sngfifo36e2\ : label is "PRIMITIVE";
 begin
-  empty <= \^empty\;
-  full <= \^full\;
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
     generic map(
       CASCADE_ORDER => "NONE",
@@ -2773,8 +2767,8 @@ begin
       ECCPARITY(2) => \gf36e2_inst.sngfifo36e2_n_189\,
       ECCPARITY(1) => \gf36e2_inst.sngfifo36e2_n_190\,
       ECCPARITY(0) => \gf36e2_inst.sngfifo36e2_n_191\,
-      EMPTY => \^empty\,
-      FULL => \^full\,
+      EMPTY => empty,
+      FULL => full,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       PROGEMPTY => \gf36e2_inst.sngfifo36e2_n_5\,
@@ -2820,24 +2814,6 @@ begin
       WREN => wr_en,
       WRERR => p_7_out,
       WRRSTBUSY => wr_rst_busy
-    );
-\gv.gv3.VALID_i_1\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"2"
-    )
-        port map (
-      I0 => rd_en,
-      I1 => \^empty\,
-      O => valid_i
-    );
-\gwakn.WR_ACK_i_1\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"2"
-    )
-        port map (
-      I0 => wr_en,
-      I1 => \^full\,
-      O => wr_ack_i
     );
 end STRUCTURE;
 library IEEE;
@@ -5328,17 +5304,15 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity job_fetch_fifo_builtin_extdepth_5 is
   port (
-    wr_ack_i : out STD_LOGIC;
-    full : out STD_LOGIC;
-    valid_i : out STD_LOGIC;
     empty : out STD_LOGIC;
+    full : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    wr_en : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
     clk : in STD_LOGIC;
+    rd_en : in STD_LOGIC;
     srst : in STD_LOGIC;
+    wr_en : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -5362,12 +5336,10 @@ begin
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
-      valid_i => valid_i,
-      wr_ack_i => wr_ack_i,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
-i_0: unisim.vcomponents.LUT1
+\rst_val_sym.gextw_sym[1].inst_extdi_0\: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5375,7 +5347,7 @@ i_0: unisim.vcomponents.LUT1
       I0 => '1',
       O => srst_qr(1)
     );
-i_1: unisim.vcomponents.LUT1
+\rst_val_sym.gextw_sym[1].inst_extdi_1\: unisim.vcomponents.LUT1
     generic map(
       INIT => X"2"
     )
@@ -5595,8 +5567,6 @@ entity job_fetch_fifo_builtin_top is
     rd_rst_busy : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    wr_ack : out STD_LOGIC;
-    valid : out STD_LOGIC;
     clk : in STD_LOGIC;
     rd_en : in STD_LOGIC;
     srst : in STD_LOGIC;
@@ -5606,31 +5576,7 @@ entity job_fetch_fifo_builtin_top is
 end job_fetch_fifo_builtin_top;
 
 architecture STRUCTURE of job_fetch_fifo_builtin_top is
-  signal valid_i : STD_LOGIC;
-  signal wr_ack_i : STD_LOGIC;
 begin
-\gv.gv3.VALID_reg\: unisim.vcomponents.FDRE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clk,
-      CE => '1',
-      D => valid_i,
-      Q => valid,
-      R => '0'
-    );
-\gwakn.WR_ACK_reg\: unisim.vcomponents.FDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => clk,
-      CE => '1',
-      CLR => srst,
-      D => wr_ack_i,
-      Q => wr_ack
-    );
 \rst_val_sym.gextw_sym[10].inst_extd\: entity work.job_fetch_fifo_builtin_extdepth
      port map (
       clk => clk,
@@ -5695,8 +5641,6 @@ begin
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
-      valid_i => valid_i,
-      wr_ack_i => wr_ack_i,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -5784,8 +5728,6 @@ entity job_fetch_fifo_fifo_generator_v13_2_3_builtin is
     rd_rst_busy : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    wr_ack : out STD_LOGIC;
-    valid : out STD_LOGIC;
     clk : in STD_LOGIC;
     rd_en : in STD_LOGIC;
     srst : in STD_LOGIC;
@@ -5806,8 +5748,6 @@ begin
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
-      valid => valid,
-      wr_ack => wr_ack,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -5823,8 +5763,6 @@ entity job_fetch_fifo_fifo_generator_top is
     rd_rst_busy : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    wr_ack : out STD_LOGIC;
-    valid : out STD_LOGIC;
     clk : in STD_LOGIC;
     rd_en : in STD_LOGIC;
     srst : in STD_LOGIC;
@@ -5845,8 +5783,6 @@ begin
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
-      valid => valid,
-      wr_ack => wr_ack,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -5862,8 +5798,6 @@ entity job_fetch_fifo_fifo_generator_v13_2_3_synth is
     rd_rst_busy : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    wr_ack : out STD_LOGIC;
-    valid : out STD_LOGIC;
     clk : in STD_LOGIC;
     rd_en : in STD_LOGIC;
     srst : in STD_LOGIC;
@@ -5884,8 +5818,6 @@ begin
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
-      valid => valid,
-      wr_ack => wr_ack,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -6313,9 +6245,9 @@ entity job_fetch_fifo_fifo_generator_v13_2_3 is
   attribute C_HAS_UNDERFLOW : integer;
   attribute C_HAS_UNDERFLOW of job_fetch_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_VALID : integer;
-  attribute C_HAS_VALID of job_fetch_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_HAS_VALID of job_fetch_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_WR_ACK : integer;
-  attribute C_HAS_WR_ACK of job_fetch_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_HAS_WR_ACK of job_fetch_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_WR_DATA_COUNT : integer;
   attribute C_HAS_WR_DATA_COUNT of job_fetch_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_WR_RST : integer;
@@ -7047,6 +6979,8 @@ begin
   s_axis_tready <= \<const0>\;
   sbiterr <= \<const0>\;
   underflow <= \<const0>\;
+  valid <= \<const0>\;
+  wr_ack <= \<const0>\;
   wr_data_count(8) <= \<const0>\;
   wr_data_count(7) <= \<const0>\;
   wr_data_count(6) <= \<const0>\;
@@ -7074,8 +7008,6 @@ inst_fifo_gen: entity work.job_fetch_fifo_fifo_generator_v13_2_3_synth
       rd_en => rd_en,
       rd_rst_busy => rd_rst_busy,
       srst => srst,
-      valid => valid,
-      wr_ack => wr_ack,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
     );
@@ -7093,16 +7025,14 @@ entity job_fetch_fifo is
     rd_en : in STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
     full : out STD_LOGIC;
-    wr_ack : out STD_LOGIC;
     empty : out STD_LOGIC;
-    valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC
   );
   attribute NotValidForBitStream : boolean;
   attribute NotValidForBitStream of job_fetch_fifo : entity is true;
   attribute CHECK_LICENSE_TYPE : string;
-  attribute CHECK_LICENSE_TYPE of job_fetch_fifo : entity is "res_dwc_fifo,fifo_generator_v13_2_3,{}";
+  attribute CHECK_LICENSE_TYPE of job_fetch_fifo : entity is "trans_fifo,fifo_generator_v13_2_3,{}";
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of job_fetch_fifo : entity is "yes";
   attribute x_core_info : string;
@@ -7169,6 +7099,8 @@ architecture STRUCTURE of job_fetch_fifo is
   signal NLW_U0_s_axis_tready_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_sbiterr_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_underflow_UNCONNECTED : STD_LOGIC;
+  signal NLW_U0_valid_UNCONNECTED : STD_LOGIC;
+  signal NLW_U0_wr_ack_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_axi_ar_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal NLW_U0_axi_ar_rd_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal NLW_U0_axi_ar_wr_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
@@ -7414,9 +7346,9 @@ architecture STRUCTURE of job_fetch_fifo is
   attribute C_HAS_UNDERFLOW : integer;
   attribute C_HAS_UNDERFLOW of U0 : label is 0;
   attribute C_HAS_VALID : integer;
-  attribute C_HAS_VALID of U0 : label is 1;
+  attribute C_HAS_VALID of U0 : label is 0;
   attribute C_HAS_WR_ACK : integer;
-  attribute C_HAS_WR_ACK of U0 : label is 1;
+  attribute C_HAS_WR_ACK of U0 : label is 0;
   attribute C_HAS_WR_DATA_COUNT : integer;
   attribute C_HAS_WR_DATA_COUNT of U0 : label is 0;
   attribute C_HAS_WR_RST : integer;
@@ -7870,8 +7802,8 @@ U0: entity work.job_fetch_fifo_fifo_generator_v13_2_3
       sleep => '0',
       srst => srst,
       underflow => NLW_U0_underflow_UNCONNECTED,
-      valid => valid,
-      wr_ack => wr_ack,
+      valid => NLW_U0_valid_UNCONNECTED,
+      wr_ack => NLW_U0_wr_ack_UNCONNECTED,
       wr_clk => '0',
       wr_data_count(8 downto 0) => NLW_U0_wr_data_count_UNCONNECTED(8 downto 0),
       wr_en => wr_en,

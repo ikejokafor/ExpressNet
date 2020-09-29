@@ -1,11 +1,11 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Wed Sep 23 13:53:33 2020
+-- Date        : Wed Sep 23 13:49:38 2020
 -- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
--- Command     : write_vhdl -force -mode funcsim
---               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/prevMap_fifo_sim_netlist.vhdl
--- Design      : prevMap_fifo
+-- Command     : write_vhdl -force -mode funcsim -rename_top prevMap_fifo -prefix
+--               prevMap_fifo_ convMap_fifo_sim_netlist.vhdl
+-- Design      : convMap_fifo
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
 -- Device      : xcvu37p-fsvh2892-2-e
@@ -28,12 +28,12 @@ entity prevMap_fifo_builtin_prim is
     wr_clk : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 );
     \^wr_en\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_1\ : in STD_LOGIC;
+    \dout[639]\ : in STD_LOGIC;
+    \dout[639]_0\ : in STD_LOGIC;
+    \dout[639]_1\ : in STD_LOGIC;
     FULL : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_2\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_3\ : in STD_LOGIC;
+    \^full\ : in STD_LOGIC;
+    full_0 : in STD_LOGIC;
     \^rd_en\ : in STD_LOGIC;
     \gv.gv3.VALID_reg\ : in STD_LOGIC;
     \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
@@ -42,8 +42,6 @@ entity prevMap_fifo_builtin_prim is
     \gv.gv3.VALID_reg_2\ : in STD_LOGIC;
     \gv.gv3.VALID_reg_3\ : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of prevMap_fifo_builtin_prim : entity is "builtin_prim";
 end prevMap_fifo_builtin_prim;
 
 architecture STRUCTURE of prevMap_fifo_builtin_prim is
@@ -194,8 +192,8 @@ full_INST_0_i_3: unisim.vcomponents.LUT4
         port map (
       I0 => p_61_out,
       I1 => FULL,
-      I2 => \gwakn.WR_ACK_reg_2\,
-      I3 => \gwakn.WR_ACK_reg_3\,
+      I2 => \^full\,
+      I3 => full_0,
       O => \^rd_clk_0\
     );
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
@@ -387,9 +385,9 @@ full_INST_0_i_3: unisim.vcomponents.LUT4
         port map (
       I0 => \^wr_en\,
       I1 => \^rd_clk_0\,
-      I2 => \gwakn.WR_ACK_reg\,
-      I3 => \gwakn.WR_ACK_reg_0\,
-      I4 => \gwakn.WR_ACK_reg_1\,
+      I2 => \dout[639]\,
+      I3 => \dout[639]_0\,
+      I4 => \dout[639]_1\,
       O => \^wr_en_1\
     );
 end STRUCTURE;
@@ -2675,8 +2673,8 @@ entity prevMap_fifo_builtin_prim_21 is
     wr_clk : in STD_LOGIC;
     WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 );
-    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    \gf36e2_inst.sngfifo36e2_i_2\ : in STD_LOGIC;
+    \gf36e2_inst.sngfifo36e2_i_2_0\ : in STD_LOGIC;
     \gv.gv3.VALID_reg\ : in STD_LOGIC;
     \gv.gv3.VALID_reg_0\ : in STD_LOGIC
   );
@@ -2994,8 +2992,8 @@ begin
     )
         port map (
       I0 => \^full\,
-      I1 => \gwakn.WR_ACK_reg\,
-      I2 => \gwakn.WR_ACK_reg_0\,
+      I1 => \gf36e2_inst.sngfifo36e2_i_2\,
+      I2 => \gf36e2_inst.sngfifo36e2_i_2_0\,
       O => rd_clk_0
     );
 end STRUCTURE;
@@ -3755,8 +3753,8 @@ entity prevMap_fifo_builtin_prim_24 is
     WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 );
     FULL : in STD_LOGIC;
-    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    \^full\ : in STD_LOGIC;
+    full_0 : in STD_LOGIC;
     EMPTY : in STD_LOGIC;
     \gv.gv3.VALID_reg\ : in STD_LOGIC;
     \gv.gv3.VALID_reg_0\ : in STD_LOGIC
@@ -3905,8 +3903,8 @@ full_INST_0_i_2: unisim.vcomponents.LUT4
         port map (
       I0 => p_25_out,
       I1 => FULL,
-      I2 => \gwakn.WR_ACK_reg\,
-      I3 => \gwakn.WR_ACK_reg_0\,
+      I2 => \^full\,
+      I3 => full_0,
       O => rd_clk_0
     );
 \gf36e2_inst.sngfifo36e2\: unisim.vcomponents.FIFO36E2
@@ -5037,8 +5035,6 @@ entity prevMap_fifo_builtin_extdepth is
     WR_EN : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 71 downto 0 )
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of prevMap_fifo_builtin_extdepth : entity is "builtin_extdepth";
 end prevMap_fifo_builtin_extdepth;
 
 architecture STRUCTURE of prevMap_fifo_builtin_extdepth is
@@ -5393,12 +5389,12 @@ entity prevMap_fifo_builtin_extdepth_13 is
     WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
     \^wr_en\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_1\ : in STD_LOGIC;
+    \dout[639]\ : in STD_LOGIC;
+    \dout[639]_0\ : in STD_LOGIC;
+    \dout[639]_1\ : in STD_LOGIC;
     FULL : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_2\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_3\ : in STD_LOGIC;
+    \^full\ : in STD_LOGIC;
+    full_0 : in STD_LOGIC;
     \^rd_en\ : in STD_LOGIC;
     \gv.gv3.VALID_reg\ : in STD_LOGIC;
     \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
@@ -5432,16 +5428,16 @@ begin
       WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
+      \dout[639]\ => \dout[639]\,
+      \dout[639]_0\ => \dout[639]_0\,
+      \dout[639]_1\ => \dout[639]_1\,
+      \^full\ => \^full\,
+      full_0 => full_0,
       \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
       \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
       \gv.gv3.VALID_reg_1\ => \gv.gv3.VALID_reg_1\,
       \gv.gv3.VALID_reg_2\ => \gv.gv3.VALID_reg_2\,
       \gv.gv3.VALID_reg_3\ => \gv.gv3.VALID_reg_3\,
-      \gwakn.WR_ACK_reg\ => \gwakn.WR_ACK_reg\,
-      \gwakn.WR_ACK_reg_0\ => \gwakn.WR_ACK_reg_0\,
-      \gwakn.WR_ACK_reg_1\ => \gwakn.WR_ACK_reg_1\,
-      \gwakn.WR_ACK_reg_2\ => \gwakn.WR_ACK_reg_2\,
-      \gwakn.WR_ACK_reg_3\ => \gwakn.WR_ACK_reg_3\,
       rd_clk => rd_clk,
       rd_clk_0 => rd_clk_0,
       rd_clk_1 => rd_clk_1,
@@ -5479,8 +5475,8 @@ entity prevMap_fifo_builtin_extdepth_2 is
     WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
     FULL : in STD_LOGIC;
-    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    \^full\ : in STD_LOGIC;
+    full_0 : in STD_LOGIC;
     EMPTY : in STD_LOGIC;
     \gv.gv3.VALID_reg\ : in STD_LOGIC;
     \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
@@ -5512,10 +5508,10 @@ begin
       WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
+      \^full\ => \^full\,
+      full_0 => full_0,
       \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
       \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
-      \gwakn.WR_ACK_reg\ => \gwakn.WR_ACK_reg\,
-      \gwakn.WR_ACK_reg_0\ => \gwakn.WR_ACK_reg_0\,
       rd_clk => rd_clk,
       rd_clk_0 => rd_clk_0,
       rd_clk_1 => rd_clk_1,
@@ -5672,8 +5668,8 @@ entity prevMap_fifo_builtin_extdepth_5 is
     RDRSTBUSY : out STD_LOGIC;
     WRRSTBUSY : out STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 71 downto 0 );
-    \gwakn.WR_ACK_reg\ : in STD_LOGIC;
-    \gwakn.WR_ACK_reg_0\ : in STD_LOGIC;
+    \gf36e2_inst.sngfifo36e2_i_2\ : in STD_LOGIC;
+    \gf36e2_inst.sngfifo36e2_i_2_0\ : in STD_LOGIC;
     \gv.gv3.VALID_reg\ : in STD_LOGIC;
     \gv.gv3.VALID_reg_0\ : in STD_LOGIC;
     rd_clk : in STD_LOGIC;
@@ -5704,10 +5700,10 @@ begin
       WR_EN => WR_EN,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
+      \gf36e2_inst.sngfifo36e2_i_2\ => \gf36e2_inst.sngfifo36e2_i_2\,
+      \gf36e2_inst.sngfifo36e2_i_2_0\ => \gf36e2_inst.sngfifo36e2_i_2_0\,
       \gv.gv3.VALID_reg\ => \gv.gv3.VALID_reg\,
       \gv.gv3.VALID_reg_0\ => \gv.gv3.VALID_reg_0\,
-      \gwakn.WR_ACK_reg\ => \gwakn.WR_ACK_reg\,
-      \gwakn.WR_ACK_reg_0\ => \gwakn.WR_ACK_reg_0\,
       rd_clk => rd_clk,
       rd_clk_0 => rd_clk_0,
       rd_clk_1 => rd_clk_1,
@@ -6014,7 +6010,6 @@ use UNISIM.VCOMPONENTS.ALL;
 entity prevMap_fifo_builtin_top is
   port (
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    wr_ack : out STD_LOGIC;
     valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
@@ -6027,8 +6022,6 @@ entity prevMap_fifo_builtin_top is
     wr_en : in STD_LOGIC;
     rd_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of prevMap_fifo_builtin_top : entity is "builtin_top";
 end prevMap_fifo_builtin_top;
 
 architecture STRUCTURE of prevMap_fifo_builtin_top is
@@ -6083,17 +6076,6 @@ begin
       D => rd_tmp,
       Q => valid,
       R => '0'
-    );
-\gwakn.WR_ACK_reg\: unisim.vcomponents.FDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => wr_clk,
-      CE => '1',
-      CLR => srst,
-      D => wr_tmp,
-      Q => wr_ack
     );
 rd_rst_busy_INST_0: unisim.vcomponents.LUT5
     generic map(
@@ -6185,10 +6167,10 @@ rd_rst_busy_INST_0_i_2: unisim.vcomponents.LUT6
       WR_EN => wr_tmp,
       din(71 downto 0) => din(935 downto 864),
       dout(71 downto 0) => dout(935 downto 864),
+      \^full\ => p_7_out,
+      full_0 => p_16_out,
       \gv.gv3.VALID_reg\ => p_6_out,
       \gv.gv3.VALID_reg_0\ => p_15_out,
-      \gwakn.WR_ACK_reg\ => p_7_out,
-      \gwakn.WR_ACK_reg_0\ => p_16_out,
       rd_clk => rd_clk,
       rd_clk_0 => \rst_val_sym.gextw_sym[13].inst_extd_n_0\,
       rd_clk_1 => \rst_val_sym.gextw_sym[13].inst_extd_n_1\,
@@ -6233,10 +6215,10 @@ rd_rst_busy_INST_0_i_2: unisim.vcomponents.LUT6
       WR_EN => wr_tmp,
       din(71 downto 0) => din(71 downto 0),
       dout(71 downto 0) => dout(71 downto 0),
+      \gf36e2_inst.sngfifo36e2_i_2\ => p_115_out,
+      \gf36e2_inst.sngfifo36e2_i_2_0\ => p_124_out,
       \gv.gv3.VALID_reg\ => p_114_out,
       \gv.gv3.VALID_reg_0\ => p_123_out,
-      \gwakn.WR_ACK_reg\ => p_115_out,
-      \gwakn.WR_ACK_reg_0\ => p_124_out,
       rd_clk => rd_clk,
       rd_clk_0 => \rst_val_sym.gextw_sym[1].inst_extd_n_0\,
       rd_clk_1 => \rst_val_sym.gextw_sym[1].inst_extd_n_2\,
@@ -6369,16 +6351,16 @@ rd_rst_busy_INST_0_i_2: unisim.vcomponents.LUT6
       WR_EN => wr_tmp,
       din(71 downto 0) => din(647 downto 576),
       dout(71 downto 0) => dout(647 downto 576),
+      \dout[639]\ => \rst_val_sym.gextw_sym[13].inst_extd_n_0\,
+      \dout[639]_0\ => \rst_val_sym.gextw_sym[1].inst_extd_n_0\,
+      \dout[639]_1\ => \rst_val_sym.gextw_sym[5].inst_extd_n_1\,
+      \^full\ => p_43_out,
+      full_0 => p_52_out,
       \gv.gv3.VALID_reg\ => \rst_val_sym.gextw_sym[13].inst_extd_n_1\,
       \gv.gv3.VALID_reg_0\ => \rst_val_sym.gextw_sym[1].inst_extd_n_2\,
       \gv.gv3.VALID_reg_1\ => \rst_val_sym.gextw_sym[5].inst_extd_n_3\,
       \gv.gv3.VALID_reg_2\ => p_42_out,
       \gv.gv3.VALID_reg_3\ => p_51_out,
-      \gwakn.WR_ACK_reg\ => \rst_val_sym.gextw_sym[13].inst_extd_n_0\,
-      \gwakn.WR_ACK_reg_0\ => \rst_val_sym.gextw_sym[1].inst_extd_n_0\,
-      \gwakn.WR_ACK_reg_1\ => \rst_val_sym.gextw_sym[5].inst_extd_n_1\,
-      \gwakn.WR_ACK_reg_2\ => p_43_out,
-      \gwakn.WR_ACK_reg_3\ => p_52_out,
       rd_clk => rd_clk,
       rd_clk_0 => \rst_val_sym.gextw_sym[9].inst_extd_n_1\,
       rd_clk_1 => \rst_val_sym.gextw_sym[9].inst_extd_n_3\,
@@ -6433,7 +6415,6 @@ use UNISIM.VCOMPONENTS.ALL;
 entity prevMap_fifo_fifo_generator_v13_2_3_builtin is
   port (
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    wr_ack : out STD_LOGIC;
     valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
@@ -6446,8 +6427,6 @@ entity prevMap_fifo_fifo_generator_v13_2_3_builtin is
     wr_en : in STD_LOGIC;
     rd_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of prevMap_fifo_fifo_generator_v13_2_3_builtin : entity is "fifo_generator_v13_2_3_builtin";
 end prevMap_fifo_fifo_generator_v13_2_3_builtin;
 
 architecture STRUCTURE of prevMap_fifo_fifo_generator_v13_2_3_builtin is
@@ -6463,7 +6442,6 @@ begin
       rd_rst_busy => rd_rst_busy,
       srst => srst,
       valid => valid,
-      wr_ack => wr_ack,
       wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
@@ -6476,7 +6454,6 @@ use UNISIM.VCOMPONENTS.ALL;
 entity prevMap_fifo_fifo_generator_top is
   port (
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    wr_ack : out STD_LOGIC;
     valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
@@ -6489,8 +6466,6 @@ entity prevMap_fifo_fifo_generator_top is
     wr_en : in STD_LOGIC;
     rd_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of prevMap_fifo_fifo_generator_top : entity is "fifo_generator_top";
 end prevMap_fifo_fifo_generator_top;
 
 architecture STRUCTURE of prevMap_fifo_fifo_generator_top is
@@ -6506,7 +6481,6 @@ begin
       rd_rst_busy => rd_rst_busy,
       srst => srst,
       valid => valid,
-      wr_ack => wr_ack,
       wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
@@ -6519,7 +6493,6 @@ use UNISIM.VCOMPONENTS.ALL;
 entity prevMap_fifo_fifo_generator_v13_2_3_synth is
   port (
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
-    wr_ack : out STD_LOGIC;
     valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC;
@@ -6532,8 +6505,6 @@ entity prevMap_fifo_fifo_generator_v13_2_3_synth is
     wr_en : in STD_LOGIC;
     rd_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of prevMap_fifo_fifo_generator_v13_2_3_synth : entity is "fifo_generator_v13_2_3_synth";
 end prevMap_fifo_fifo_generator_v13_2_3_synth;
 
 architecture STRUCTURE of prevMap_fifo_fifo_generator_v13_2_3_synth is
@@ -6549,7 +6520,6 @@ begin
       rd_rst_busy => rd_rst_busy,
       srst => srst,
       valid => valid,
-      wr_ack => wr_ack,
       wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
@@ -6980,7 +6950,7 @@ entity prevMap_fifo_fifo_generator_v13_2_3 is
   attribute C_HAS_VALID : integer;
   attribute C_HAS_VALID of prevMap_fifo_fifo_generator_v13_2_3 : entity is 1;
   attribute C_HAS_WR_ACK : integer;
-  attribute C_HAS_WR_ACK of prevMap_fifo_fifo_generator_v13_2_3 : entity is 1;
+  attribute C_HAS_WR_ACK of prevMap_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_WR_DATA_COUNT : integer;
   attribute C_HAS_WR_DATA_COUNT of prevMap_fifo_fifo_generator_v13_2_3 : entity is 0;
   attribute C_HAS_WR_RST : integer;
@@ -7197,8 +7167,6 @@ entity prevMap_fifo_fifo_generator_v13_2_3 is
   attribute C_WR_PNTR_WIDTH_WRCH of prevMap_fifo_fifo_generator_v13_2_3 : entity is 4;
   attribute C_WR_RESPONSE_LATENCY : integer;
   attribute C_WR_RESPONSE_LATENCY of prevMap_fifo_fifo_generator_v13_2_3 : entity is 1;
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of prevMap_fifo_fifo_generator_v13_2_3 : entity is "fifo_generator_v13_2_3";
 end prevMap_fifo_fifo_generator_v13_2_3;
 
 architecture STRUCTURE of prevMap_fifo_fifo_generator_v13_2_3 is
@@ -7714,6 +7682,7 @@ begin
   s_axis_tready <= \<const0>\;
   sbiterr <= \<const0>\;
   underflow <= \<const0>\;
+  wr_ack <= \<const0>\;
   wr_data_count(8) <= \<const0>\;
   wr_data_count(7) <= \<const0>\;
   wr_data_count(6) <= \<const0>\;
@@ -7742,7 +7711,6 @@ inst_fifo_gen: entity work.prevMap_fifo_fifo_generator_v13_2_3_synth
       rd_rst_busy => rd_rst_busy,
       srst => srst,
       valid => valid,
-      wr_ack => wr_ack,
       wr_clk => wr_clk,
       wr_en => wr_en,
       wr_rst_busy => wr_rst_busy
@@ -7762,7 +7730,6 @@ entity prevMap_fifo is
     rd_en : in STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
     full : out STD_LOGIC;
-    wr_ack : out STD_LOGIC;
     empty : out STD_LOGIC;
     valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
@@ -7771,7 +7738,7 @@ entity prevMap_fifo is
   attribute NotValidForBitStream : boolean;
   attribute NotValidForBitStream of prevMap_fifo : entity is true;
   attribute CHECK_LICENSE_TYPE : string;
-  attribute CHECK_LICENSE_TYPE of prevMap_fifo : entity is "prevMap_fifo,fifo_generator_v13_2_3,{}";
+  attribute CHECK_LICENSE_TYPE of prevMap_fifo : entity is "convMap_fifo,fifo_generator_v13_2_3,{}";
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of prevMap_fifo : entity is "yes";
   attribute x_core_info : string;
@@ -7838,6 +7805,7 @@ architecture STRUCTURE of prevMap_fifo is
   signal NLW_U0_s_axis_tready_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_sbiterr_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_underflow_UNCONNECTED : STD_LOGIC;
+  signal NLW_U0_wr_ack_UNCONNECTED : STD_LOGIC;
   signal NLW_U0_axi_ar_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal NLW_U0_axi_ar_rd_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal NLW_U0_axi_ar_wr_data_count_UNCONNECTED : STD_LOGIC_VECTOR ( 4 downto 0 );
@@ -8085,7 +8053,7 @@ architecture STRUCTURE of prevMap_fifo is
   attribute C_HAS_VALID : integer;
   attribute C_HAS_VALID of U0 : label is 1;
   attribute C_HAS_WR_ACK : integer;
-  attribute C_HAS_WR_ACK of U0 : label is 1;
+  attribute C_HAS_WR_ACK of U0 : label is 0;
   attribute C_HAS_WR_DATA_COUNT : integer;
   attribute C_HAS_WR_DATA_COUNT of U0 : label is 0;
   attribute C_HAS_WR_RST : integer;
@@ -8542,7 +8510,7 @@ U0: entity work.prevMap_fifo_fifo_generator_v13_2_3
       srst => srst,
       underflow => NLW_U0_underflow_UNCONNECTED,
       valid => valid,
-      wr_ack => wr_ack,
+      wr_ack => NLW_U0_wr_ack_UNCONNECTED,
       wr_clk => wr_clk,
       wr_data_count(8 downto 0) => NLW_U0_wr_data_count_UNCONNECTED(8 downto 0),
       wr_en => wr_en,

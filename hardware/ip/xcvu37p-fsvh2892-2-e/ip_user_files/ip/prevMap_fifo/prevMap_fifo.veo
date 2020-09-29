@@ -63,7 +63,6 @@ prevMap_fifo your_instance_name (
   .rd_en(rd_en),              // input wire rd_en
   .dout(dout),                // output wire [1023 : 0] dout
   .full(full),                // output wire full
-  .wr_ack(wr_ack),            // output wire wr_ack
   .empty(empty),              // output wire empty
   .valid(valid),              // output wire valid
   .wr_rst_busy(wr_rst_busy),  // output wire wr_rst_busy

@@ -1,11 +1,11 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Tue Sep 22 18:31:01 2020
+-- Date        : Sun Aug 30 16:16:39 2020
 -- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 -- Command     : write_vhdl -force -mode synth_stub -rename_top job_fetch_fifo -prefix
---               job_fetch_fifo_ res_dwc_fifo_stub.vhdl
--- Design      : res_dwc_fifo
+--               job_fetch_fifo_ trans_fifo_stub.vhdl
+-- Design      : trans_fifo
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xcvu37p-fsvh2892-2-e
 -- --------------------------------------------------------------------------------
@@ -21,9 +21,7 @@ entity job_fetch_fifo is
     rd_en : in STD_LOGIC;
     dout : out STD_LOGIC_VECTOR ( 1023 downto 0 );
     full : out STD_LOGIC;
-    wr_ack : out STD_LOGIC;
     empty : out STD_LOGIC;
-    valid : out STD_LOGIC;
     wr_rst_busy : out STD_LOGIC;
     rd_rst_busy : out STD_LOGIC
   );
@@ -34,7 +32,7 @@ architecture stub of job_fetch_fifo is
 attribute syn_black_box : boolean;
 attribute black_box_pad_pin : string;
 attribute syn_black_box of stub : architecture is true;
-attribute black_box_pad_pin of stub : architecture is "clk,srst,din[1023:0],wr_en,rd_en,dout[1023:0],full,wr_ack,empty,valid,wr_rst_busy,rd_rst_busy";
+attribute black_box_pad_pin of stub : architecture is "clk,srst,din[1023:0],wr_en,rd_en,dout[1023:0],full,empty,wr_rst_busy,rd_rst_busy";
 attribute x_core_info : string;
 attribute x_core_info of stub : architecture is "fifo_generator_v13_2_3,Vivado 2018.3";
 begin

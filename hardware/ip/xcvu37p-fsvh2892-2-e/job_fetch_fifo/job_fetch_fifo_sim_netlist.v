@@ -1,18 +1,18 @@
 // Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
-// Date        : Tue Sep 22 18:31:01 2020
+// Date        : Sun Aug 30 16:16:39 2020
 // Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
 // Command     : write_verilog -force -mode funcsim -rename_top job_fetch_fifo -prefix
-//               job_fetch_fifo_ res_dwc_fifo_sim_netlist.v
-// Design      : res_dwc_fifo
+//               job_fetch_fifo_ trans_fifo_sim_netlist.v
+// Design      : trans_fifo
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
 // Device      : xcvu37p-fsvh2892-2-e
 // --------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CHECK_LICENSE_TYPE = "res_dwc_fifo,fifo_generator_v13_2_3,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "fifo_generator_v13_2_3,Vivado 2018.3" *) 
+(* CHECK_LICENSE_TYPE = "trans_fifo,fifo_generator_v13_2_3,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "fifo_generator_v13_2_3,Vivado 2018.3" *) 
 (* NotValidForBitStream *)
 module job_fetch_fifo
    (clk,
@@ -22,9 +22,7 @@ module job_fetch_fifo
     rd_en,
     dout,
     full,
-    wr_ack,
     empty,
-    valid,
     wr_rst_busy,
     rd_rst_busy);
   (* x_interface_info = "xilinx.com:signal:clock:1.0 core_clk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME core_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *) input clk;
@@ -34,9 +32,7 @@ module job_fetch_fifo
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN" *) input rd_en;
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_DATA" *) output [1023:0]dout;
   (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE FULL" *) output full;
-  output wr_ack;
   (* x_interface_info = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *) output empty;
-  output valid;
   output wr_rst_busy;
   output rd_rst_busy;
 
@@ -48,8 +44,6 @@ module job_fetch_fifo
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
-  wire wr_ack;
   wire wr_en;
   wire wr_rst_busy;
   wire NLW_U0_almost_empty_UNCONNECTED;
@@ -111,6 +105,8 @@ module job_fetch_fifo
   wire NLW_U0_s_axis_tready_UNCONNECTED;
   wire NLW_U0_sbiterr_UNCONNECTED;
   wire NLW_U0_underflow_UNCONNECTED;
+  wire NLW_U0_valid_UNCONNECTED;
+  wire NLW_U0_wr_ack_UNCONNECTED;
   wire [4:0]NLW_U0_axi_ar_data_count_UNCONNECTED;
   wire [4:0]NLW_U0_axi_ar_rd_data_count_UNCONNECTED;
   wire [4:0]NLW_U0_axi_ar_wr_data_count_UNCONNECTED;
@@ -264,8 +260,8 @@ module job_fetch_fifo
   (* C_HAS_SLAVE_CE = "0" *) 
   (* C_HAS_SRST = "1" *) 
   (* C_HAS_UNDERFLOW = "0" *) 
-  (* C_HAS_VALID = "1" *) 
-  (* C_HAS_WR_ACK = "1" *) 
+  (* C_HAS_VALID = "0" *) 
+  (* C_HAS_WR_ACK = "0" *) 
   (* C_HAS_WR_DATA_COUNT = "0" *) 
   (* C_HAS_WR_RST = "0" *) 
   (* C_IMPLEMENTATION_TYPE = "6" *) 
@@ -599,8 +595,8 @@ module job_fetch_fifo
         .sleep(1'b0),
         .srst(srst),
         .underflow(NLW_U0_underflow_UNCONNECTED),
-        .valid(valid),
-        .wr_ack(wr_ack),
+        .valid(NLW_U0_valid_UNCONNECTED),
+        .wr_ack(NLW_U0_wr_ack_UNCONNECTED),
         .wr_clk(1'b0),
         .wr_data_count(NLW_U0_wr_data_count_UNCONNECTED[8:0]),
         .wr_en(wr_en),
@@ -1029,29 +1025,25 @@ endmodule
 
 (* ORIG_REF_NAME = "builtin_extdepth" *) 
 module job_fetch_fifo_builtin_extdepth_5
-   (wr_ack_i,
+   (empty,
     full,
-    valid_i,
-    empty,
     rd_rst_busy,
     wr_rst_busy,
     dout,
-    wr_en,
-    rd_en,
     clk,
+    rd_en,
     srst,
+    wr_en,
     din);
-  output wr_ack_i;
-  output full;
-  output valid_i;
   output empty;
+  output full;
   output rd_rst_busy;
   output wr_rst_busy;
   output [71:0]dout;
-  input wr_en;
-  input rd_en;
   input clk;
+  input rd_en;
   input srst;
+  input wr_en;
   input [71:0]din;
 
   wire clk;
@@ -1063,8 +1055,6 @@ module job_fetch_fifo_builtin_extdepth_5
   wire rd_rst_busy;
   wire srst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [1:0]srst_qr;
-  wire valid_i;
-  wire wr_ack_i;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -1077,18 +1067,16 @@ module job_fetch_fifo_builtin_extdepth_5
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid_i(valid_i),
-        .wr_ack_i(wr_ack_i),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
   LUT1 #(
     .INIT(2'h2)) 
-    i_0
+    \rst_val_sym.gextw_sym[1].inst_extdi_0 
        (.I0(1'b1),
         .O(srst_qr[1]));
   LUT1 #(
     .INIT(2'h2)) 
-    i_1
+    \rst_val_sym.gextw_sym[1].inst_extdi_1 
        (.I0(1'b1),
         .O(srst_qr[0]));
 endmodule
@@ -2939,8 +2927,6 @@ module job_fetch_fifo_builtin_prim_21
     rd_rst_busy,
     wr_rst_busy,
     dout,
-    wr_ack_i,
-    valid_i,
     clk,
     rd_en,
     srst,
@@ -2951,8 +2937,6 @@ module job_fetch_fifo_builtin_prim_21
   output rd_rst_busy;
   output wr_rst_busy;
   output [71:0]dout;
-  output wr_ack_i;
-  output valid_i;
   input clk;
   input rd_en;
   input srst;
@@ -3083,8 +3067,6 @@ module job_fetch_fifo_builtin_prim_21
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid_i;
-  wire wr_ack_i;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -3153,18 +3135,6 @@ module job_fetch_fifo_builtin_prim_21
         .WREN(wr_en),
         .WRERR(p_7_out),
         .WRRSTBUSY(wr_rst_busy));
-  LUT2 #(
-    .INIT(4'h2)) 
-    \gv.gv3.VALID_i_1 
-       (.I0(rd_en),
-        .I1(empty),
-        .O(valid_i));
-  LUT2 #(
-    .INIT(4'h2)) 
-    \gwakn.WR_ACK_i_1 
-       (.I0(wr_en),
-        .I1(full),
-        .O(wr_ack_i));
 endmodule
 
 (* ORIG_REF_NAME = "builtin_prim" *) 
@@ -4483,8 +4453,6 @@ module job_fetch_fifo_builtin_top
     rd_rst_busy,
     wr_rst_busy,
     dout,
-    wr_ack,
-    valid,
     clk,
     rd_en,
     srst,
@@ -4495,8 +4463,6 @@ module job_fetch_fifo_builtin_top
   output rd_rst_busy;
   output wr_rst_busy;
   output [1023:0]dout;
-  output wr_ack;
-  output valid;
   input clk;
   input rd_en;
   input srst;
@@ -4511,29 +4477,9 @@ module job_fetch_fifo_builtin_top
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
-  wire valid_i;
-  wire wr_ack;
-  wire wr_ack_i;
   wire wr_en;
   wire wr_rst_busy;
 
-  FDRE #(
-    .INIT(1'b0)) 
-    \gv.gv3.VALID_reg 
-       (.C(clk),
-        .CE(1'b1),
-        .D(valid_i),
-        .Q(valid),
-        .R(1'b0));
-  FDCE #(
-    .INIT(1'b0)) 
-    \gwakn.WR_ACK_reg 
-       (.C(clk),
-        .CE(1'b1),
-        .CLR(srst),
-        .D(wr_ack_i),
-        .Q(wr_ack));
   job_fetch_fifo_builtin_extdepth \rst_val_sym.gextw_sym[10].inst_extd 
        (.clk(clk),
         .din(din[719:648]),
@@ -4585,8 +4531,6 @@ module job_fetch_fifo_builtin_top
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid_i(valid_i),
-        .wr_ack_i(wr_ack_i),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
   job_fetch_fifo_builtin_extdepth_6 \rst_val_sym.gextw_sym[2].inst_extd 
@@ -4653,8 +4597,6 @@ module job_fetch_fifo_fifo_generator_top
     rd_rst_busy,
     wr_rst_busy,
     dout,
-    wr_ack,
-    valid,
     clk,
     rd_en,
     srst,
@@ -4665,8 +4607,6 @@ module job_fetch_fifo_fifo_generator_top
   output rd_rst_busy;
   output wr_rst_busy;
   output [1023:0]dout;
-  output wr_ack;
-  output valid;
   input clk;
   input rd_en;
   input srst;
@@ -4681,8 +4621,6 @@ module job_fetch_fifo_fifo_generator_top
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
-  wire wr_ack;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -4695,8 +4633,6 @@ module job_fetch_fifo_fifo_generator_top
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid(valid),
-        .wr_ack(wr_ack),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
 endmodule
@@ -4731,8 +4667,8 @@ endmodule
 (* C_HAS_PROG_FLAGS_RACH = "0" *) (* C_HAS_PROG_FLAGS_RDCH = "0" *) (* C_HAS_PROG_FLAGS_WACH = "0" *) 
 (* C_HAS_PROG_FLAGS_WDCH = "0" *) (* C_HAS_PROG_FLAGS_WRCH = "0" *) (* C_HAS_RD_DATA_COUNT = "0" *) 
 (* C_HAS_RD_RST = "0" *) (* C_HAS_RST = "0" *) (* C_HAS_SLAVE_CE = "0" *) 
-(* C_HAS_SRST = "1" *) (* C_HAS_UNDERFLOW = "0" *) (* C_HAS_VALID = "1" *) 
-(* C_HAS_WR_ACK = "1" *) (* C_HAS_WR_DATA_COUNT = "0" *) (* C_HAS_WR_RST = "0" *) 
+(* C_HAS_SRST = "1" *) (* C_HAS_UNDERFLOW = "0" *) (* C_HAS_VALID = "0" *) 
+(* C_HAS_WR_ACK = "0" *) (* C_HAS_WR_DATA_COUNT = "0" *) (* C_HAS_WR_RST = "0" *) 
 (* C_IMPLEMENTATION_TYPE = "6" *) (* C_IMPLEMENTATION_TYPE_AXIS = "1" *) (* C_IMPLEMENTATION_TYPE_RACH = "1" *) 
 (* C_IMPLEMENTATION_TYPE_RDCH = "1" *) (* C_IMPLEMENTATION_TYPE_WACH = "1" *) (* C_IMPLEMENTATION_TYPE_WDCH = "1" *) 
 (* C_IMPLEMENTATION_TYPE_WRCH = "1" *) (* C_INIT_WR_PNTR_VAL = "0" *) (* C_INTERFACE_TYPE = "0" *) 
@@ -5243,8 +5179,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
-  wire wr_ack;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -5757,6 +5691,8 @@ module job_fetch_fifo_fifo_generator_v13_2_3
   assign s_axis_tready = \<const0> ;
   assign sbiterr = \<const0> ;
   assign underflow = \<const0> ;
+  assign valid = \<const0> ;
+  assign wr_ack = \<const0> ;
   assign wr_data_count[8] = \<const0> ;
   assign wr_data_count[7] = \<const0> ;
   assign wr_data_count[6] = \<const0> ;
@@ -5779,8 +5715,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid(valid),
-        .wr_ack(wr_ack),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
 endmodule
@@ -5791,8 +5725,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3_builtin
     rd_rst_busy,
     wr_rst_busy,
     dout,
-    wr_ack,
-    valid,
     clk,
     rd_en,
     srst,
@@ -5803,8 +5735,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3_builtin
   output rd_rst_busy;
   output wr_rst_busy;
   output [1023:0]dout;
-  output wr_ack;
-  output valid;
   input clk;
   input rd_en;
   input srst;
@@ -5819,8 +5749,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3_builtin
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
-  wire wr_ack;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -5833,8 +5761,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3_builtin
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid(valid),
-        .wr_ack(wr_ack),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
 endmodule
@@ -5845,8 +5771,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3_synth
     rd_rst_busy,
     wr_rst_busy,
     dout,
-    wr_ack,
-    valid,
     clk,
     rd_en,
     srst,
@@ -5857,8 +5781,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3_synth
   output rd_rst_busy;
   output wr_rst_busy;
   output [1023:0]dout;
-  output wr_ack;
-  output valid;
   input clk;
   input rd_en;
   input srst;
@@ -5873,8 +5795,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3_synth
   wire rd_en;
   wire rd_rst_busy;
   wire srst;
-  wire valid;
-  wire wr_ack;
   wire wr_en;
   wire wr_rst_busy;
 
@@ -5887,8 +5807,6 @@ module job_fetch_fifo_fifo_generator_v13_2_3_synth
         .rd_en(rd_en),
         .rd_rst_busy(rd_rst_busy),
         .srst(srst),
-        .valid(valid),
-        .wr_ack(wr_ack),
         .wr_en(wr_en),
         .wr_rst_busy(wr_rst_busy));
 endmodule

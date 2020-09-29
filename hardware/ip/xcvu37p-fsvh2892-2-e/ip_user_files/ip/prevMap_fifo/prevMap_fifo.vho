@@ -62,7 +62,6 @@ COMPONENT prevMap_fifo
     rd_en : IN STD_LOGIC;
     dout : OUT STD_LOGIC_VECTOR(1023 DOWNTO 0);
     full : OUT STD_LOGIC;
-    wr_ack : OUT STD_LOGIC;
     empty : OUT STD_LOGIC;
     valid : OUT STD_LOGIC;
     wr_rst_busy : OUT STD_LOGIC;
@@ -85,7 +84,6 @@ your_instance_name : prevMap_fifo
     rd_en => rd_en,
     dout => dout,
     full => full,
-    wr_ack => wr_ack,
     empty => empty,
     valid => valid,
     wr_rst_busy => wr_rst_busy,

@@ -1,3 +1,6 @@
+rm -r work
+
+
 vlib work
 
 

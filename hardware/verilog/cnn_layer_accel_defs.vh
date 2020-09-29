@@ -40,13 +40,13 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 //	[] SYS DEFS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define SYS_RD_LEN_WIDTH                32
-`define SYS_WR_LEN_WIDTH                32
-`define SYS_RD_ADDR_WIDTH               32
-`define SYS_WR_ADDR_WIDTH               32
-`define SYS_RD_DATA_WIDTH               1024
-`define SYS_WR_DATA_WIDTH               1024
-`define SYS_INTC_DT_WIDTH               1024
+`define INIT_RD_LEN_WIDTH                32
+`define INIT_WR_LEN_WIDTH                32
+`define INIT_RD_ADDR_WIDTH               32
+`define INIT_WR_ADDR_WIDTH               32
+`define INIT_RD_DATA_WIDTH               1024
+`define INIT_WR_DATA_WIDTH               1024
+`define SYS_INTC_DT_WIDTH                1024
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -274,10 +274,6 @@
 `define KRNL_1X1_BIAS_BRAM_RD_DEPTH         256
 `define MAX_AWP_PER_FAS						1
 `define MAX_FAS_RD_ID						5
-`define FAS_JOB_FETCH_ID                    0
-`define FAS_RES_MAP_FETCH_ID                1
-`define FAS_PART_MAP_FETCH_ID               2
-`define FAS_PREV_MAP_FETCH_ID               3
 `define KRNL_1X1_SIMD                       1
 `define KRNL_1X1_DEPTH_SIMD                 8
 `define KRNL_1X1_DPH_SIMD_SHMAT             (clog2(`KRNL_1X1_DEPTH_SIMD))
@@ -547,7 +543,7 @@
 `define TRANS_OP_HIGH				    (`TRANS_OP_LOW + (`TRANS_OP_WIDTH  - 1))
 `define TRANS_OP_FIELD			        (`TRANS_OP_HIGH:`TRANS_OP_LOW)
 
-`define TRANS_PYLD_WIDTH			    floor((`SYS_INTC_DT_WIDTH - `TRANS_OP_WIDTH),  `PIXEL_WIDTH)
+`define TRANS_PYLD_WIDTH			    floor(`SYS_INTC_DT_WIDTH, `PIXEL_WIDTH)
 `define TRANS_PYLD_LOW			        (`TRANS_OP_HIGH + 1)
 `define TRANS_PYLD_HIGH				    (`TRANS_PYLD_LOW + (`TRANS_PYLD_WIDTH - 1))
 `define TRANS_PYLD_FIELD			    (`TRANS_PYLD_HIGH):(`TRANS_PYLD_LOW)
