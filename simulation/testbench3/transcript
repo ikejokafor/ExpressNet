@@ -12,369 +12,1481 @@
 # //  is prohibited from disclosure under the Trade Secrets Act,
 # //  18 U.S.C. Section 1905.
 # //
-do sim_compile.do
+do sim_compile.do; do startsim.do
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:47:48 on Sep 29,2020
+# Start time: 13:49:52 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 17:47:50 on Sep 29,2020, Elapsed time: 0:00:02
+# End time: 13:49:53 on Sep 30,2020, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:47:50 on Sep 29,2020
+# Start time: 13:49:53 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(199): (vlog-13299) Undefined variable: 'targ_write_addr'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(199): near ";": syntax error, unexpected ';'.
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(200): (vlog-13299) Undefined variable: 'targ_write_addr_vld'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(200): near ";": syntax error, unexpected ';'.
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(202): (vlog-13299) Undefined variable: 'targ_write_ack'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(202): near ";": syntax error, unexpected ';'.
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(206): (vlog-13299) Undefined variable: 'targ_read_ack'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(206): near ";": syntax error, unexpected ';'.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(697): (vlog-2623) Undefined variable: partMap_fifo_wren.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(717): (vlog-2623) Undefined variable: prevMap_fifo_wren.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(738): (vlog-2623) Undefined variable: resdMap_fifo_wren.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(887): (vlog-2730) Undefined variable: 'krnl1x1_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(901): (vlog-2730) Undefined variable: 'krnl1x1Bias_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1204): (vlog-2730) Undefined variable: 'FAS_cfg_fetch_amount'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1207): (vlog-2730) Undefined variable: 'AWP_cfg_fetch_amount'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1448): (vlog-2730) Undefined variable: 'send_FAS_complete'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1455): (vlog-2730) Undefined variable: 'start_FAS_ack'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(66): (vlog-2730) Undefined variable: 'targ_write_addr'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(66): (vlog-13294) Identifier must be declared with a port mode: targ_write_addr.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(67): (vlog-2730) Undefined variable: 'targ_write_addr_vld'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(67): (vlog-13294) Identifier must be declared with a port mode: targ_write_addr_vld.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(69): (vlog-2730) Undefined variable: 'targ_write_ack'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(69): (vlog-13294) Identifier must be declared with a port mode: targ_write_ack.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(73): (vlog-2730) Undefined variable: 'targ_read_ack'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(73): (vlog-13294) Identifier must be declared with a port mode: targ_read_ack.
-# End time: 17:47:50 on Sep 29,2020, Elapsed time: 0:00:00
-# Errors: 22, Warnings: 3
+# 
+# Top level modules:
+# 	cnn_layer_accel_FAS
+# End time: 13:49:53 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:53 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 13:49:53 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:53 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/convMap_fifo/sim/convMap_fifo.v 
+# -- Compiling module convMap_fifo
+# 
+# Top level modules:
+# 	convMap_fifo
+# End time: 13:49:53 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:53 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/partMap_fifo/sim/partMap_fifo.v 
+# -- Compiling module partMap_fifo
+# 
+# Top level modules:
+# 	partMap_fifo
+# End time: 13:49:54 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/resdMap_fifo/sim/resdMap_fifo.v 
+# -- Compiling module resdMap_fifo
+# 
+# Top level modules:
+# 	resdMap_fifo
+# End time: 13:49:54 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v 
+# -- Compiling module conv1x1_dwc_fifo
+# 
+# Top level modules:
+# 	conv1x1_dwc_fifo
+# End time: 13:49:54 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/sim/outbuf_fifo.v 
+# -- Compiling module outbuf_fifo
+# 
+# Top level modules:
+# 	outbuf_fifo
+# End time: 13:49:54 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
+# -- Compiling module prevMap_fifo
+# 
+# Top level modules:
+# 	prevMap_fifo
+# End time: 13:49:54 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/job_fetch_fifo/sim/job_fetch_fifo.v 
+# -- Compiling module job_fetch_fifo
+# 
+# Top level modules:
+# 	job_fetch_fifo
+# End time: 13:49:55 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/res_dwc_fifo/sim/res_dwc_fifo.v 
+# -- Compiling module res_dwc_fifo
+# 
+# Top level modules:
+# 	res_dwc_fifo
+# End time: 13:49:55 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_in_fifo/sim/trans_in_fifo.v 
+# -- Compiling module trans_in_fifo
+# 
+# Top level modules:
+# 	trans_in_fifo
+# End time: 13:49:55 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_eg_fifo/sim/trans_eg_fifo.v 
+# -- Compiling module trans_eg_fifo
+# 
+# Top level modules:
+# 	trans_eg_fifo
+# End time: 13:49:55 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1_bram/sim/krnl1x1_bram.v 
+# -- Compiling module krnl1x1_bram
+# 
+# Top level modules:
+# 	krnl1x1_bram
+# End time: 13:49:55 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 13:49:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v 
+# -- Compiling module krnl1x1Bias_bram
+# 
+# Top level modules:
+# 	krnl1x1Bias_bram
+# End time: 13:49:56 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.testbench
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.testbench
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.clock_gen
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.cnn_layer_accel_FAS
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.cnn_layer_accel_FAS
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bit
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_in_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_in_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.job_fetch_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.job_fetch_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.convMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.convMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.res_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.res_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.conv1x1_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.conv1x1_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.partMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.partMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.prevMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.prevMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.resdMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.resdMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.outbuf_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.outbuf_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_eg_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_eg_fifo
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bus
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1Bias_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1Bias_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.vector_multiply
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.adder_tree
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_mem_module
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_output_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_softecc_output_reg_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_axi_regs_fwd_v8_4
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading synopsys.attributes
+# Loading ieee.std_logic_misc(body)
+# ** Warning: (vsim-3479) Time unit '<protected>' is less than the simulator resolution (<protected>).
+#    Time: 0 ns  Iteration: 0  Protected: /testbench/i0_cnn_layer_accel_FAS/i0_trans_in_fifo/inst/<protected>/<protected>
+# Loading xpm.vcomponents
+# Loading ieee.numeric_std(body)
+# Loading ieee.vital_timing(body)
+# Loading ieee.vital_primitives(body)
+# Loading unisim.vpkg(body)
+# Loading unisim.fifo36e2(fifo36e2_v)
+# ** Error (suppressible): (vsim-3839) Variable '/testbench/i0_cnn_layer_accel_FAS/init_write_data', driven via a port connection, is multiply driven. See ./testbench.sv(183).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/i0_outBuf_fifo File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 759
+# ** Warning: (vsim-3015) [PCDPC] - Port size (32) does not match connection size (16) for port 'doutb'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v(65).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/iX_krnl1x1Bias_bram File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 903
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (1152) for port 'datain'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(39).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 921
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (128) for port 'dout'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(42).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 921
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:44 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 14:03:44 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:44 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# 
+# Top level modules:
+# 	cnn_layer_accel_FAS
+# End time: 14:03:44 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:44 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 14:03:44 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:44 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/convMap_fifo/sim/convMap_fifo.v 
+# -- Compiling module convMap_fifo
+# 
+# Top level modules:
+# 	convMap_fifo
+# End time: 14:03:45 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:45 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/partMap_fifo/sim/partMap_fifo.v 
+# -- Compiling module partMap_fifo
+# 
+# Top level modules:
+# 	partMap_fifo
+# End time: 14:03:45 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:45 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/resdMap_fifo/sim/resdMap_fifo.v 
+# -- Compiling module resdMap_fifo
+# 
+# Top level modules:
+# 	resdMap_fifo
+# End time: 14:03:45 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:45 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v 
+# -- Compiling module conv1x1_dwc_fifo
+# 
+# Top level modules:
+# 	conv1x1_dwc_fifo
+# End time: 14:03:45 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:45 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/sim/outbuf_fifo.v 
+# -- Compiling module outbuf_fifo
+# 
+# Top level modules:
+# 	outbuf_fifo
+# End time: 14:03:45 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:45 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
+# -- Compiling module prevMap_fifo
+# 
+# Top level modules:
+# 	prevMap_fifo
+# End time: 14:03:46 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:46 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/job_fetch_fifo/sim/job_fetch_fifo.v 
+# -- Compiling module job_fetch_fifo
+# 
+# Top level modules:
+# 	job_fetch_fifo
+# End time: 14:03:46 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:46 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/res_dwc_fifo/sim/res_dwc_fifo.v 
+# -- Compiling module res_dwc_fifo
+# 
+# Top level modules:
+# 	res_dwc_fifo
+# End time: 14:03:46 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:46 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_in_fifo/sim/trans_in_fifo.v 
+# -- Compiling module trans_in_fifo
+# 
+# Top level modules:
+# 	trans_in_fifo
+# End time: 14:03:46 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:46 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_eg_fifo/sim/trans_eg_fifo.v 
+# -- Compiling module trans_eg_fifo
+# 
+# Top level modules:
+# 	trans_eg_fifo
+# End time: 14:03:46 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:46 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1_bram/sim/krnl1x1_bram.v 
+# -- Compiling module krnl1x1_bram
+# 
+# Top level modules:
+# 	krnl1x1_bram
+# End time: 14:03:47 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:03:47 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v 
+# -- Compiling module krnl1x1Bias_bram
+# 
+# Top level modules:
+# 	krnl1x1Bias_bram
+# End time: 14:03:47 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.testbench
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.testbench
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.clock_gen
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.cnn_layer_accel_FAS
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.cnn_layer_accel_FAS
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bit
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_in_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_in_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.job_fetch_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.job_fetch_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.convMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.convMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.res_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.res_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.conv1x1_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.conv1x1_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.partMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.partMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.prevMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.prevMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.resdMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.resdMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.outbuf_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.outbuf_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_eg_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_eg_fifo
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bus
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1Bias_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1Bias_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.vector_multiply
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.adder_tree
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_mem_module
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_output_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_softecc_output_reg_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_axi_regs_fwd_v8_4
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading synopsys.attributes
+# Loading ieee.std_logic_misc(body)
+# Loading xpm.vcomponents
+# Loading ieee.numeric_std(body)
+# Loading ieee.vital_timing(body)
+# Loading ieee.vital_primitives(body)
+# Loading unisim.vpkg(body)
+# Loading unisim.fifo36e2(fifo36e2_v)
+# ** Error (suppressible): (vsim-3053) Illegal output or inout port connection for port 'doutb'.
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/iX_krnl1x1Bias_bram File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 904
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (1152) for port 'datain'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(39).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 922
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (128) for port 'dout'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(42).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 922
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:04:45 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 14:04:45 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:04:45 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(913): near ")": syntax error, unexpected ')'.
+# End time: 14:04:45 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 # Error in macro ./sim_compile.do line 12
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# ** Error: (vsim-3170) Could not find 'testbench'.
+#         Searched libraries:
+#             /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work
+#             /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/secureip
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unisims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/simprims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unimacro_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unifast_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/blk_mem_gen_v8_4_2
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/fifo_generator_v13_2_3
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:49:57 on Sep 29,2020
+# Start time: 14:05:03 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 17:49:57 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:05:03 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:49:57 on Sep 29,2020
+# Start time: 14:05:03 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(202): (vlog-13299) Undefined variable: 'targ_write_ack'.
-# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(202): near ";": syntax error, unexpected ';'.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(697): (vlog-2623) Undefined variable: partMap_fifo_wren.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(717): (vlog-2623) Undefined variable: prevMap_fifo_wren.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(738): (vlog-2623) Undefined variable: resdMap_fifo_wren.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(887): (vlog-2730) Undefined variable: 'krnl1x1_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(901): (vlog-2730) Undefined variable: 'krnl1x1Bias_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1204): (vlog-2730) Undefined variable: 'FAS_cfg_fetch_amount'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1207): (vlog-2730) Undefined variable: 'AWP_cfg_fetch_amount'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1448): (vlog-2730) Undefined variable: 'send_FAS_complete'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1455): (vlog-2730) Undefined variable: 'start_FAS_ack'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(69): (vlog-2730) Undefined variable: 'targ_write_ack'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(69): (vlog-13294) Identifier must be declared with a port mode: targ_write_ack.
-# End time: 17:49:57 on Sep 29,2020, Elapsed time: 0:00:00
-# Errors: 10, Warnings: 3
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(913): near ")": syntax error, unexpected ')'.
+# End time: 14:05:03 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 # Error in macro ./sim_compile.do line 12
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# ** Error: (vsim-3170) Could not find 'testbench'.
+#         Searched libraries:
+#             /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work
+#             /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/secureip
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unisims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/simprims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unimacro_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unifast_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/blk_mem_gen_v8_4_2
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/fifo_generator_v13_2_3
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:50:13 on Sep 29,2020
+# Start time: 14:05:22 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 17:50:13 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:05:22 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:50:14 on Sep 29,2020
+# Start time: 14:05:22 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(697): (vlog-2623) Undefined variable: partMap_fifo_wren.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(717): (vlog-2623) Undefined variable: prevMap_fifo_wren.
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(738): (vlog-2623) Undefined variable: resdMap_fifo_wren.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(887): (vlog-2730) Undefined variable: 'krnl1x1_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(901): (vlog-2730) Undefined variable: 'krnl1x1Bias_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1204): (vlog-2730) Undefined variable: 'FAS_cfg_fetch_amount'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1207): (vlog-2730) Undefined variable: 'AWP_cfg_fetch_amount'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1448): (vlog-2730) Undefined variable: 'send_FAS_complete'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1455): (vlog-2730) Undefined variable: 'start_FAS_ack'.
-# End time: 17:50:14 on Sep 29,2020, Elapsed time: 0:00:00
-# Errors: 6, Warnings: 3
+# 
+# Top level modules:
+# 	cnn_layer_accel_FAS
+# End time: 14:05:22 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:22 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 14:05:23 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:23 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/convMap_fifo/sim/convMap_fifo.v 
+# -- Compiling module convMap_fifo
+# 
+# Top level modules:
+# 	convMap_fifo
+# End time: 14:05:23 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:23 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/partMap_fifo/sim/partMap_fifo.v 
+# -- Compiling module partMap_fifo
+# 
+# Top level modules:
+# 	partMap_fifo
+# End time: 14:05:23 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:23 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/resdMap_fifo/sim/resdMap_fifo.v 
+# -- Compiling module resdMap_fifo
+# 
+# Top level modules:
+# 	resdMap_fifo
+# End time: 14:05:23 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:23 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v 
+# -- Compiling module conv1x1_dwc_fifo
+# 
+# Top level modules:
+# 	conv1x1_dwc_fifo
+# End time: 14:05:23 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:23 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/sim/outbuf_fifo.v 
+# -- Compiling module outbuf_fifo
+# 
+# Top level modules:
+# 	outbuf_fifo
+# End time: 14:05:24 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:24 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
+# -- Compiling module prevMap_fifo
+# 
+# Top level modules:
+# 	prevMap_fifo
+# End time: 14:05:24 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:24 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/job_fetch_fifo/sim/job_fetch_fifo.v 
+# -- Compiling module job_fetch_fifo
+# 
+# Top level modules:
+# 	job_fetch_fifo
+# End time: 14:05:24 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:24 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/res_dwc_fifo/sim/res_dwc_fifo.v 
+# -- Compiling module res_dwc_fifo
+# 
+# Top level modules:
+# 	res_dwc_fifo
+# End time: 14:05:24 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:24 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_in_fifo/sim/trans_in_fifo.v 
+# -- Compiling module trans_in_fifo
+# 
+# Top level modules:
+# 	trans_in_fifo
+# End time: 14:05:24 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:24 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_eg_fifo/sim/trans_eg_fifo.v 
+# -- Compiling module trans_eg_fifo
+# 
+# Top level modules:
+# 	trans_eg_fifo
+# End time: 14:05:25 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:25 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1_bram/sim/krnl1x1_bram.v 
+# -- Compiling module krnl1x1_bram
+# 
+# Top level modules:
+# 	krnl1x1_bram
+# End time: 14:05:25 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:25 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v 
+# -- Compiling module krnl1x1Bias_bram
+# 
+# Top level modules:
+# 	krnl1x1Bias_bram
+# End time: 14:05:25 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.testbench
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.testbench
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.clock_gen
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.cnn_layer_accel_FAS
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.cnn_layer_accel_FAS
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bit
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_in_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_in_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.job_fetch_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.job_fetch_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.convMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.convMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.res_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.res_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.conv1x1_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.conv1x1_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.partMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.partMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.prevMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.prevMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.resdMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.resdMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.outbuf_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.outbuf_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_eg_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_eg_fifo
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bus
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1Bias_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1Bias_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.vector_multiply
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.adder_tree
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_mem_module
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_output_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_softecc_output_reg_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_axi_regs_fwd_v8_4
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading synopsys.attributes
+# Loading ieee.std_logic_misc(body)
+# Loading xpm.vcomponents
+# Loading ieee.numeric_std(body)
+# Loading ieee.vital_timing(body)
+# Loading ieee.vital_primitives(body)
+# Loading unisim.vpkg(body)
+# Loading unisim.fifo36e2(fifo36e2_v)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (32) does not match connection size (16) for port 'doutb'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v(65).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/iX_krnl1x1Bias_bram File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 904
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (1152) for port 'datain'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(39).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 922
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (128) for port 'dout'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(42).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 922
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[0]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1581).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[0] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[1]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1600).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[1] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[2]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1619).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[2] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[3]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1650).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[3] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[4]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1699).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[4] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[5]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1676).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[5] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/convMap_fifo_prog_full' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(970).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk4[0] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 951
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:53 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 14:05:53 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:53 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# 
+# Top level modules:
+# 	cnn_layer_accel_FAS
+# End time: 14:05:54 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 14:05:54 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/convMap_fifo/sim/convMap_fifo.v 
+# -- Compiling module convMap_fifo
+# 
+# Top level modules:
+# 	convMap_fifo
+# End time: 14:05:54 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/partMap_fifo/sim/partMap_fifo.v 
+# -- Compiling module partMap_fifo
+# 
+# Top level modules:
+# 	partMap_fifo
+# End time: 14:05:54 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/resdMap_fifo/sim/resdMap_fifo.v 
+# -- Compiling module resdMap_fifo
+# 
+# Top level modules:
+# 	resdMap_fifo
+# End time: 14:05:54 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:54 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v 
+# -- Compiling module conv1x1_dwc_fifo
+# 
+# Top level modules:
+# 	conv1x1_dwc_fifo
+# End time: 14:05:55 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/sim/outbuf_fifo.v 
+# -- Compiling module outbuf_fifo
+# 
+# Top level modules:
+# 	outbuf_fifo
+# End time: 14:05:55 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
+# -- Compiling module prevMap_fifo
+# 
+# Top level modules:
+# 	prevMap_fifo
+# End time: 14:05:55 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/job_fetch_fifo/sim/job_fetch_fifo.v 
+# -- Compiling module job_fetch_fifo
+# 
+# Top level modules:
+# 	job_fetch_fifo
+# End time: 14:05:55 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/res_dwc_fifo/sim/res_dwc_fifo.v 
+# -- Compiling module res_dwc_fifo
+# 
+# Top level modules:
+# 	res_dwc_fifo
+# End time: 14:05:55 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:55 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_in_fifo/sim/trans_in_fifo.v 
+# -- Compiling module trans_in_fifo
+# 
+# Top level modules:
+# 	trans_in_fifo
+# End time: 14:05:56 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:56 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_eg_fifo/sim/trans_eg_fifo.v 
+# -- Compiling module trans_eg_fifo
+# 
+# Top level modules:
+# 	trans_eg_fifo
+# End time: 14:05:56 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:56 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1_bram/sim/krnl1x1_bram.v 
+# -- Compiling module krnl1x1_bram
+# 
+# Top level modules:
+# 	krnl1x1_bram
+# End time: 14:05:56 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:05:56 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v 
+# -- Compiling module krnl1x1Bias_bram
+# 
+# Top level modules:
+# 	krnl1x1Bias_bram
+# End time: 14:05:56 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.testbench
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.testbench
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.clock_gen
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.cnn_layer_accel_FAS
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.cnn_layer_accel_FAS
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bit
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_in_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_in_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.job_fetch_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.job_fetch_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.convMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.convMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.res_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.res_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.conv1x1_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.conv1x1_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.partMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.partMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.prevMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.prevMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.resdMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.resdMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.outbuf_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.outbuf_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_eg_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_eg_fifo
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bus
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1Bias_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1Bias_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.vector_multiply
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.adder_tree
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_mem_module
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_output_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_softecc_output_reg_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_axi_regs_fwd_v8_4
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading synopsys.attributes
+# Loading ieee.std_logic_misc(body)
+# Loading xpm.vcomponents
+# Loading ieee.numeric_std(body)
+# Loading ieee.vital_timing(body)
+# Loading ieee.vital_primitives(body)
+# Loading unisim.vpkg(body)
+# Loading unisim.fifo36e2(fifo36e2_v)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (32) does not match connection size (16) for port 'doutb'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v(65).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/iX_krnl1x1Bias_bram File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 904
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (1152) for port 'datain'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(39).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 922
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (128) for port 'dout'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(42).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk4[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 922
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[0]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1581).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[0] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[1]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1600).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[1] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[2]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1619).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[2] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[3]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1650).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[3] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[4]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1699).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[4] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/init_read_req_id_arr[5]' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1676).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk3[5] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 326
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/convMap_fifo_prog_full' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(970).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk4[0] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 951
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:25:12 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 14:25:13 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:25:13 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1583): (vlog-2730) Undefined variable: 'init_read_addr_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1584): (vlog-2730) Undefined variable: 'init_read_len_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1594): (vlog-2730) Undefined variable: 'init_read_req_id_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1602): (vlog-2730) Undefined variable: 'init_read_addr_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1603): (vlog-2730) Undefined variable: 'init_read_len_arr'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1622): near ",": syntax error, unexpected ','.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1629): (vlog-2730) Undefined variable: 'init_read_addr_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1630): (vlog-2730) Undefined variable: 'init_read_len_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1658): (vlog-2730) Undefined variable: 'init_read_addr_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1659): (vlog-2730) Undefined variable: 'init_read_len_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1683): (vlog-2730) Undefined variable: 'init_read_addr_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1684): (vlog-2730) Undefined variable: 'init_read_len_arr'.
+# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1708): (vlog-2730) Undefined variable: 'init_read_addr_arr'.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'ARR_IDX' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1709)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1709): near "init_read_len_arr": syntax error, unexpected IDENTIFIER, expecting ';'.
+# End time: 14:25:13 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 14, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 # Error in macro ./sim_compile.do line 12
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# ** Error: (vsim-3170) Could not find 'testbench'.
+#         Searched libraries:
+#             /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work
+#             /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/secureip
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unisims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/simprims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unimacro_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unifast_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/blk_mem_gen_v8_4_2
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/fifo_generator_v13_2_3
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:57:28 on Sep 29,2020
+# Start time: 14:27:24 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 17:57:28 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:27:24 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:57:28 on Sep 29,2020
+# Start time: 14:27:24 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(890): (vlog-2730) Undefined variable: 'krnl1x1_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(904): (vlog-2730) Undefined variable: 'krnl1x1Bias_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1454): (vlog-2730) Undefined variable: 'start_FAS_ack'.
-# End time: 17:57:28 on Sep 29,2020, Elapsed time: 0:00:00
-# Errors: 3, Warnings: 0
-# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 12
-# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-#     while executing
-# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:58:13 on Sep 29,2020
-# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
-# -- Compiling module glbl
-# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
-# 
-# Top level modules:
-# 	glbl
-# End time: 17:58:14 on Sep 29,2020, Elapsed time: 0:00:01
-# Errors: 0, Warnings: 1
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 17:58:14 on Sep 29,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
-# -- Compiling module cnn_layer_accel_FAS
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(890): (vlog-2730) Undefined variable: 'krnl1x1_bram_wren'.
-# ** Error: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(904): (vlog-2730) Undefined variable: 'krnl1x1Bias_bram_wren'.
-# End time: 17:58:14 on Sep 29,2020, Elapsed time: 0:00:00
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1622): near ",": syntax error, unexpected ','.
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'ARR_IDX' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1709)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1709): near "init_read_len": syntax error, unexpected IDENTIFIER, expecting ';'.
+# End time: 14:27:25 on Sep 30,2020, Elapsed time: 0:00:01
 # Errors: 2, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 # Error in macro ./sim_compile.do line 12
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# ** Error: (vsim-3170) Could not find 'testbench'.
+#         Searched libraries:
+#             /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work
+#             /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/secureip
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unisims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/simprims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unimacro_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unifast_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/blk_mem_gen_v8_4_2
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/fifo_generator_v13_2_3
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:00:43 on Sep 29,2020
+# Start time: 14:28:01 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 18:00:43 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:28:02 on Sep 30,2020, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:00:43 on Sep 29,2020
+# Start time: 14:28:02 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1558): (vlog-12003) Variable 'trans_eg_fifo_wren' written by continuous and procedural assignments. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1546). 
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1561): (vlog-12003) Variable 'trans_eg_fifo_wren' written by continuous and procedural assignments. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1546). 
-# ** Error (suppressible): /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1564): (vlog-12003) Variable 'trans_eg_fifo_wren' written by continuous and procedural assignments. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1546). 
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(324): (vlog-2697) MSB 31 of part-select into 'init_read_req_id_arr' is out of bounds.
-# End time: 18:00:43 on Sep 29,2020, Elapsed time: 0:00:00
-# Errors: 3, Warnings: 1
+# ** Error: (vlog-13069) ** while parsing macro expansion: 'ARR_IDX' starting at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1709)
+# ** at /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1709): near "init_read_len": syntax error, unexpected IDENTIFIER, expecting ';'.
+# End time: 14:28:02 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 # Error in macro ./sim_compile.do line 12
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# ** Error: (vsim-3170) Could not find 'testbench'.
+#         Searched libraries:
+#             /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work
+#             /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/secureip
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unisims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/simprims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unimacro_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unifast_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/blk_mem_gen_v8_4_2
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/fifo_generator_v13_2_3
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:01:51 on Sep 29,2020
+# Start time: 14:50:25 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 18:01:51 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:50:25 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:01:51 on Sep 29,2020
+# Start time: 14:50:25 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(324): (vlog-2697) MSB 31 of part-select into 'init_read_req_id_arr' is out of bounds.
-# 
-# Top level modules:
-# 	cnn_layer_accel_FAS
-# End time: 18:01:51 on Sep 29,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 1
-# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:01:52 on Sep 29,2020
-# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
-# -- Compiling module testbench
-# ** Error: ./testbench.sv(141): (vlog-2730) Undefined variable: 'targ_write_addr'.
-# ** Error: (vlog-13069) ./testbench.sv(141): near ";": syntax error, unexpected ';'.
-# ** Error: ./testbench.sv(142): (vlog-2730) Undefined variable: 'targ_write_addr_vld'.
-# ** Error: (vlog-13069) ./testbench.sv(142): near ";": syntax error, unexpected ';'.
-# ** Error: ./testbench.sv(144): (vlog-2730) Undefined variable: 'targ_write_ack'.
-# ** Error: (vlog-13069) ./testbench.sv(144): near ";": syntax error, unexpected ';'.
-# ** Error: ./testbench.sv(148): (vlog-2730) Undefined variable: 'targ_read_ack'.
-# ** Error: (vlog-13069) ./testbench.sv(148): near ";": syntax error, unexpected ';'.
-# End time: 18:01:52 on Sep 29,2020, Elapsed time: 0:00:00
-# Errors: 8, Warnings: 0
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1575): near ";": syntax error, unexpected ';'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1687): near "+:": syntax error, unexpected +:.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1688): near "+:": syntax error, unexpected +:.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1712): near "+:": syntax error, unexpected +:.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1713): near "init_read_len": syntax error, unexpected IDENTIFIER, expecting ';'.
+# End time: 14:50:26 on Sep 30,2020, Elapsed time: 0:00:01
+# Errors: 5, Warnings: 0
 # ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
-# Error in macro ./sim_compile.do line 13
+# Error in macro ./sim_compile.do line 12
 # /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
 #     while executing
 # "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
-do sim_compile.do
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# ** Error: (vsim-3170) Could not find 'testbench'.
+#         Searched libraries:
+#             /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work
+#             /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/secureip
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unisims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/simprims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unimacro_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unifast_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/blk_mem_gen_v8_4_2
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/fifo_generator_v13_2_3
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:00 on Sep 29,2020
+# Start time: 14:51:22 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
 # -- Compiling module glbl
 # ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
 # 
 # Top level modules:
 # 	glbl
-# End time: 18:03:00 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:51:23 on Sep 30,2020, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:00 on Sep 29,2020
+# Start time: 14:51:23 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
 # -- Compiling module cnn_layer_accel_FAS
-# ** Warning: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(324): (vlog-2697) MSB 31 of part-select into 'init_read_req_id_arr' is out of bounds.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1575): near ";": syntax error, unexpected ';'.
+# ** Error: (vlog-13069) /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(1713): near "init_read_len": syntax error, unexpected IDENTIFIER, expecting ';'.
+# End time: 14:51:23 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# ** Error: /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+# Error in macro ./sim_compile.do line 12
+# /home/software/mentor-2019/questasim/linux_x86_64/vlog failed.
+#     while executing
+# "vlog -lint -sv +define+SIMULATION -work work +incdir+$env(WORKSPACE_PATH)/accel_infst_common/hardware/verilog/ +incdir+$env(WORKSPACE_PATH)/cnn_layer_..."
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# ** Error: (vsim-3170) Could not find 'testbench'.
+#         Searched libraries:
+#             /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work
+#             /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/secureip
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unisims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/simprims_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unimacro_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/unifast_ver
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/blk_mem_gen_v8_4_2
+#             /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/fifo_generator_v13_2_3
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16
+do sim_compile.do; do startsim.do
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:52:38 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv -work work /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v 
+# -- Compiling module glbl
+# ** Warning: /home/software/vivado-2018.3/Vivado/2018.3/data/verilog/src/glbl.v(6): (vlog-2605) empty port name in port list.
+# 
+# Top level modules:
+# 	glbl
+# End time: 14:52:38 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
+# Start time: 14:52:38 on Sep 30,2020
+# vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v 
+# -- Compiling module cnn_layer_accel_FAS
 # 
 # Top level modules:
 # 	cnn_layer_accel_FAS
-# End time: 18:03:00 on Sep 29,2020, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 1
+# End time: 14:52:38 on Sep 30,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:00 on Sep 29,2020
+# Start time: 14:52:38 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work "+incdir+/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/" "+incdir+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/" ./testbench.sv 
 # -- Compiling module testbench
 # 
 # Top level modules:
 # 	testbench
-# End time: 18:03:01 on Sep 29,2020, Elapsed time: 0:00:01
+# End time: 14:52:39 on Sep 30,2020, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:01 on Sep 29,2020
+# Start time: 14:52:39 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/convMap_fifo/sim/convMap_fifo.v 
 # -- Compiling module convMap_fifo
 # 
 # Top level modules:
 # 	convMap_fifo
-# End time: 18:03:01 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:39 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:01 on Sep 29,2020
+# Start time: 14:52:39 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/partMap_fifo/sim/partMap_fifo.v 
 # -- Compiling module partMap_fifo
 # 
 # Top level modules:
 # 	partMap_fifo
-# End time: 18:03:01 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:39 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:02 on Sep 29,2020
+# Start time: 14:52:39 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/resdMap_fifo/sim/resdMap_fifo.v 
 # -- Compiling module resdMap_fifo
 # 
 # Top level modules:
 # 	resdMap_fifo
-# End time: 18:03:02 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:39 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:02 on Sep 29,2020
+# Start time: 14:52:39 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v 
 # -- Compiling module conv1x1_dwc_fifo
 # 
 # Top level modules:
 # 	conv1x1_dwc_fifo
-# End time: 18:03:02 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:39 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:02 on Sep 29,2020
+# Start time: 14:52:39 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/sim/outbuf_fifo.v 
 # -- Compiling module outbuf_fifo
 # 
 # Top level modules:
 # 	outbuf_fifo
-# End time: 18:03:02 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:40 on Sep 30,2020, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:03 on Sep 29,2020
+# Start time: 14:52:40 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/prevMap_fifo/sim/prevMap_fifo.v 
 # -- Compiling module prevMap_fifo
 # 
 # Top level modules:
 # 	prevMap_fifo
-# End time: 18:03:03 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:40 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:03 on Sep 29,2020
+# Start time: 14:52:40 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/job_fetch_fifo/sim/job_fetch_fifo.v 
 # -- Compiling module job_fetch_fifo
 # 
 # Top level modules:
 # 	job_fetch_fifo
-# End time: 18:03:03 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:40 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:03 on Sep 29,2020
+# Start time: 14:52:40 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/res_dwc_fifo/sim/res_dwc_fifo.v 
 # -- Compiling module res_dwc_fifo
 # 
 # Top level modules:
 # 	res_dwc_fifo
-# End time: 18:03:04 on Sep 29,2020, Elapsed time: 0:00:01
+# End time: 14:52:40 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:04 on Sep 29,2020
+# Start time: 14:52:40 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_in_fifo/sim/trans_in_fifo.v 
 # -- Compiling module trans_in_fifo
 # 
 # Top level modules:
 # 	trans_in_fifo
-# End time: 18:03:04 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:40 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:04 on Sep 29,2020
+# Start time: 14:52:41 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/trans_eg_fifo/sim/trans_eg_fifo.v 
 # -- Compiling module trans_eg_fifo
 # 
 # Top level modules:
 # 	trans_eg_fifo
-# End time: 18:03:04 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:41 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:05 on Sep 29,2020
+# Start time: 14:52:41 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1_bram/sim/krnl1x1_bram.v 
 # -- Compiling module krnl1x1_bram
 # 
 # Top level modules:
 # 	krnl1x1_bram
-# End time: 18:03:05 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:41 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2019.4_2 Compiler 2019.12 Dec  7 2019
-# Start time: 18:03:05 on Sep 29,2020
+# Start time: 14:52:41 on Sep 30,2020
 # vlog -reportprogress 300 -lint -sv "+define+SIMULATION" -work work /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v 
 # -- Compiling module krnl1x1Bias_bram
 # 
 # Top level modules:
 # 	krnl1x1Bias_bram
-# End time: 18:03:05 on Sep 29,2020, Elapsed time: 0:00:00
+# End time: 14:52:41 on Sep 30,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
+# /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3
+# vsim "+outputDir=/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3" "+notimingchecks" -t 1ns -novopt -suppress 12110 -suppress 7045 -suppress 12003 -L work -L /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/ -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//secureip -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unisims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//simprims_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unimacro_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//unifast_ver -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2 -L /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//fifo_generator_v13_2_3 -fsmdebug -c "+nowarnTSCALE" work.glbl work.testbench 
+# Start time: 13:49:56 on Sep 30,2020
+# ** Warning: (vsim-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.glbl
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading sv_std.std
+# Loading work.glbl
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.testbench
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.testbench
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.clock_gen
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.cnn_layer_accel_FAS
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.cnn_layer_accel_FAS
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bit
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_in_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_in_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.job_fetch_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.job_fetch_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.convMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.convMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.res_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.res_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.conv1x1_dwc_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.conv1x1_dwc_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.partMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.partMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.prevMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.prevMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.resdMap_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.resdMap_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.outbuf_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.outbuf_fifo
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.trans_eg_fifo
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.trans_eg_fifo
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.SRL_bus
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2
+# Refreshing /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/simulation/testbench3/work.krnl1x1Bias_bram
+# ** Warning: (vlog-8891) All optimizations are disabled because the -novopt option is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features, please see the User's Manual section on Preserving Object Visibility with vopt. -novopt option is now deprecated and will be removed in future releases.
+# Loading work.krnl1x1Bias_bram
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.vector_multiply
+# Loading /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/build/.adder_tree
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_mem_module
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_output_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_gen_v8_4_2_softecc_output_reg_stage
+# Loading /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs//blk_mem_gen_v8_4_2.blk_mem_axi_regs_fwd_v8_4
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading synopsys.attributes
+# Loading ieee.std_logic_misc(body)
+# Loading xpm.vcomponents
+# Loading ieee.numeric_std(body)
+# Loading ieee.vital_timing(body)
+# Loading ieee.vital_primitives(body)
+# Loading unisim.vpkg(body)
+# Loading unisim.fifo36e2(fifo36e2_v)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (32) does not match connection size (16) for port 'doutb'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v(65).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk1[0]/iX_krnl1x1Bias_bram File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 898
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (1152) for port 'datain'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(39).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk1[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 916
+# ** Warning: (vsim-3015) [PCDPC] - Port size (256) does not match connection size (128) for port 'dout'. The port definition is at: /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/simulation/../hardware/verilog/vector_multiply.v(42).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/i0_cnn_layer_accel_FAS/genblk1[0]/i0X_vector_multiply File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 916
+# ** Error: (vsim-3837) Variable '/testbench/i0_cnn_layer_accel_FAS/convMap_fifo_prog_full' written by more than one continuous assignment. See /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v(964).
+#    Time: 0 ns  Iteration: 0  Region: /testbench/i0_cnn_layer_accel_FAS/genblk1[0] File: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/cnn_layer_accel_FAS.v Line: 945
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./startsim.do PAUSED at line 16

@@ -1,5 +1,9 @@
 set outputDir [pwd]
 vsim +outputDir=$outputDir +notimingchecks -t 1ns \
+    -novopt \
+    -suppress 12110 \
+    -suppress 7045 \
+    -suppress 12003 \
 	-L work \
 	-L $env(WORKSPACE_PATH)/accel_infst_common/simulation/build/ \
 	-L $env(VIVADO_2018_3_SIM_LIBS)/secureip \

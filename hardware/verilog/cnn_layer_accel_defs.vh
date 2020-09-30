@@ -273,11 +273,10 @@
 `define KRNL_1X1_BIAS_BRAM_WR_DEPTH         256
 `define KRNL_1X1_BIAS_BRAM_RD_DEPTH         256
 `define MAX_AWP_PER_FAS						1
-`define MAX_FAS_RD_ID						5
+`define MAX_FAS_RD_ID						6
 `define KRNL_1X1_SIMD                       1
-`define KRNL_1X1_DEPTH_SIMD                 8
+`define KRNL_1X1_DEPTH_SIMD                 64
 `define KRNL_1X1_DPH_SIMD_SHMAT             (clog2(`KRNL_1X1_DEPTH_SIMD))
-`define KRNL_1X1_BRAM_RD_WIDTH				`KRNL_1X1_DEPTH_SIMD
 `define VECTOR_ADD_SIMD                     `KRNL_1X1_DEPTH_SIMD
 `define VECTOR_MULT_SIMD                    `KRNL_1X1_DEPTH_SIMD
 `define KRNL_1X1_SIMD_SHMAT                 (clog2(`KRNL_1X1_SIMD))
@@ -543,12 +542,7 @@
 `define TRANS_OP_HIGH				    (`TRANS_OP_LOW + (`TRANS_OP_WIDTH  - 1))
 `define TRANS_OP_FIELD			        (`TRANS_OP_HIGH:`TRANS_OP_LOW)
 
-`define TRANS_PYLD_WIDTH			    floor(`SYS_INTC_DT_WIDTH, `PIXEL_WIDTH)
-`define TRANS_PYLD_LOW			        (`TRANS_OP_HIGH + 1)
-`define TRANS_PYLD_HIGH				    (`TRANS_PYLD_LOW + (`TRANS_PYLD_WIDTH - 1))
-`define TRANS_PYLD_FIELD			    (`TRANS_PYLD_HIGH):(`TRANS_PYLD_LOW)
-
-`define TRANS_FIFO_WIH                  (`TRANS_OP_WIDTH + `TRANS_PYLD_WIDTH)
+`define TRANS_PYLD_WIDTH			    `SYS_INTC_DT_WIDTH
 
 `define JOB_FTCH_AWP_ID_WIDTH			16
 `define JOB_FTCH_AWP_ID_LOW	            0
