@@ -1,0 +1,63 @@
+# Current time Wed Sep 30 18:55:28 2020
+# Program = vsim
+# Id = "2019.4_2"
+# Version = "2019.12"
+# Date = "Dec  7 2019"
+# Platform = "linux_x86_64"
+# Signature = ea762eed4e8cf974e45de8ffed524cd4
+# 0    0x00007ffff701cda6: '__strcmp_sse42 + 0x0000000000000016' in '/lib64/libc.so.6'
+# 1    0x000000000106501d: '<unknown (@0x106501d)>'
+# 2    0x00000000014d05b0: '<unknown (@0x14d05b0)>'
+# 3    0x0000000001067c51: '<unknown (@0x1067c51)>'
+# 4    0x0000000000ae69f8: '<unknown (@0xae69f8)>'
+# 5    0x000000000099189c: '<unknown (@0x99189c)>'
+# 6    0x00000000014cf766: '<unknown (@0x14cf766)>'
+# 7    0x00000000014cf75c: '<unknown (@0x14cf75c)>'
+# 8    0x0000000000996e83: '<unknown (@0x996e83)>'
+# 9    0x000000000099802b: '<unknown (@0x99802b)>'
+# 10   0x0000000000e61a91: '<unknown (@0xe61a91)>'
+# 11   0x0000000000e5a68d: '<unknown (@0xe5a68d)>'
+# 12   0x0000000001595c2d: '<unknown (@0x1595c2d)>'
+# 13   0x000000000159a086: '<unknown (@0x159a086)>'
+# 14   0x000000000159b771: '<unknown (@0x159b771)>'
+# 15   0x000000000159bad6: '<unknown (@0x159bad6)>'
+# 16   0x000000000108c016: '<unknown (@0x108c016)>'
+# 17   0x000000000163b9df: '<unknown (@0x163b9df)>'
+# 18   0x000000000168f547: '<unknown (@0x168f547)>'
+# 19   0x0000000001652447: '<unknown (@0x1652447)>'
+# 20   0x0000000001652729: '<unknown (@0x1652729)>'
+# 21   0x00000000014660ad: '<unknown (@0x14660ad)>'
+# 22   0x0000000000b6f75c: '<unknown (@0xb6f75c)>'
+# End of Stack Trace
+
+
+# Current time Wed Sep 30 18:56:17 2020
+# Program = vsim
+# Id = "2019.4_2"
+# Version = "2019.12"
+# Date = "Dec  7 2019"
+# Platform = "linux_x86_64"
+# Signature = ea762eed4e8cf974e45de8ffed524cd4
+# 0    0x0000000000ae69e8: '<unknown (@0xae69e8)>'
+# 1    0x000000000099189c: '<unknown (@0x99189c)>'
+# 2    0x00000000014cf766: '<unknown (@0x14cf766)>'
+# 3    0x00000000014cf75c: '<unknown (@0x14cf75c)>'
+# 4    0x00000000014cf75c: '<unknown (@0x14cf75c)>'
+# 5    0x0000000000996e83: '<unknown (@0x996e83)>'
+# 6    0x000000000099802b: '<unknown (@0x99802b)>'
+# 7    0x0000000000e61a91: '<unknown (@0xe61a91)>'
+# 8    0x0000000000e5a68d: '<unknown (@0xe5a68d)>'
+# 9    0x0000000001595c2d: '<unknown (@0x1595c2d)>'
+# 10   0x000000000159a086: '<unknown (@0x159a086)>'
+# 11   0x000000000159b771: '<unknown (@0x159b771)>'
+# 12   0x000000000159bad6: '<unknown (@0x159bad6)>'
+# 13   0x000000000108c016: '<unknown (@0x108c016)>'
+# 14   0x000000000163b9df: '<unknown (@0x163b9df)>'
+# 15   0x000000000168f547: '<unknown (@0x168f547)>'
+# 16   0x0000000001652447: '<unknown (@0x1652447)>'
+# 17   0x0000000001652729: '<unknown (@0x1652729)>'
+# 18   0x00000000014660ad: '<unknown (@0x14660ad)>'
+# 19   0x0000000000b6f75c: '<unknown (@0xb6f75c)>'
+# End of Stack Trace
+
+

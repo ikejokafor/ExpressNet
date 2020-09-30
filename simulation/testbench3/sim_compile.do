@@ -1,4 +1,6 @@
-rm -r work
+if {[file exist work]} {
+    vdel -all -lib work
+}
 
 
 vlib work

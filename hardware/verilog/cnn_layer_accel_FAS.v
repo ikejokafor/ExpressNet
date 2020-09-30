@@ -102,8 +102,8 @@ module cnn_layer_accel_FAS #(
     localparam ST_WAIT_LAST_WRITE                   = 7'b0100000;
     localparam ST_SEND_COMPLETE                     = 7'b1000000;
 
-    localparam C_VEC_ADD_WIDTH                      = `KRNL_1X1_SIMD * `PIXEL_WIDTH;
-    localparam C_VEC_MULT_WIDTH                     = `KRNL_1X1_DEPTH_SIMD * `PIXEL_WIDTH;
+    localparam C_VEC_ADD_WIDTH                      = `VECTOR_ADD_SIMD * `PIXEL_WIDTH;
+    localparam C_VEC_MULT_WIDTH                     = `VECTOR_MULT_SIMD * `PIXEL_WIDTH;
     localparam C_INIT_REQ_ID_WTH                    = `MAX_FAS_RD_ID * `MAX_FAS_RD_ID;
     localparam C_TARG_DATA_WTH                      = 1024;
     localparam C_INIT_MEM_RD_ADDR_WTH               = `MAX_FAS_RD_ID * `INIT_RD_ADDR_WIDTH;
@@ -165,8 +165,8 @@ module cnn_layer_accel_FAS #(
     localparam C_JB_FTH_FIFO_WR_DTH                 = 512; // TODO: Remove hard coding
     localparam C_JB_FTH_FIFO_RD_WTH                 = 1024; // TODO: Remove hard coding
     localparam C_JB_FTH_FIFO_RD_DTH                 = 512; // TODO: Remove hard coding
-    localparam C_VEC_SUM_ARR_SZ                     = `MAX_1X1_KRNL_DEPTH / `KRNL_1X1_DEPTH_SIMD;
-    localparam C_VEC_SUM_ARR_ADDR_WTH               = clog2(`MAX_1X1_KRNL_DEPTH / `KRNL_1X1_DEPTH_SIMD);
+    localparam C_VEC_SUM_ARR_SZ                     = `MAX_1X1_KRNL_DEPTH / `VECTOR_ADD_SIMD;
+    localparam C_VEC_SUM_ARR_ADDR_WTH               = clog2(C_VEC_SUM_ARR_SZ);
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -843,7 +843,7 @@ module cnn_layer_accel_FAS #(
 
             SRL_bus #(  
                 .C_CLOCK_CYCLES  ( C_CONV1X1_PIP_DLY   ),
-                .C_DATA_WIDTH    ( `PIXEL_WIDTH        )
+                .C_DATA_WIDTH    ( C_VEC_ADD_WIDTH     )
             ) 
             i0_SRL_bus (
                 .clk        ( clk_FAS                           ),
@@ -856,7 +856,7 @@ module cnn_layer_accel_FAS #(
             
             SRL_bus #(  
                 .C_CLOCK_CYCLES  ( C_CONV1X1_PIP_DLY   ),
-                .C_DATA_WIDTH    ( `PIXEL_WIDTH        )
+                .C_DATA_WIDTH    ( C_VEC_ADD_WIDTH     )
             ) 
             i1X_SRL_bus (
                 .clk        ( clk_FAS                               ),
@@ -869,7 +869,7 @@ module cnn_layer_accel_FAS #(
             
             SRL_bus #(  
                 .C_CLOCK_CYCLES  ( C_CONV1X1_PIP_DLY   ),
-                .C_DATA_WIDTH    ( `PIXEL_WIDTH        )
+                .C_DATA_WIDTH    ( C_VEC_ADD_WIDTH     )
             ) 
             i2X_SRL_bus (
                 .clk        ( clk_FAS                               ),
@@ -910,8 +910,8 @@ module cnn_layer_accel_FAS #(
 
             vector_multiply
             #(
-                .C_OP_WIDTH      ( `PIXEL_WIDTH         ),
-                .C_NUM_OPERANDS  ( `VECTOR_MULT_SIMD    )
+                .C_OP_WIDTH      ( `PIXEL_WIDTH          ),
+                .C_NUM_OPERANDS  ( `VECTOR_MULT_SIMD * 2 )
             )
             i0X_vector_multiply (
                 .clk                ( clk_FAS                                       ),
@@ -958,25 +958,6 @@ module cnn_layer_accel_FAS #(
                 end
             end
             // END logic ---------------------------------------------------------------------------------------------------------------------------- 
-
- 
-            // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
-            assign convMap_fifo_prog_full = (convMap_fifo_count > cm_high_watermark_cfg);
-
-            always@(posedge clk_FAS) begin
-                if(rst) begin
-                    convMap_fifo_count <= 0;
-                end else begin
-                    if(convMap_fifo_wren && convMap_fifo_rden) begin
-                        convMap_fifo_count <= convMap_fifo_count;
-                    end else if(convMap_fifo_wren) begin
-                        convMap_fifo_count <= convMap_fifo_count + 1;
-                    end else if(convMap_fifo_rden) begin
-                        convMap_fifo_count <= convMap_fifo_count - 1;
-                    end
-                end
-            end
-            // END logic ----------------------------------------------------------------------------------------------------------------------------
 
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
@@ -1141,7 +1122,7 @@ module cnn_layer_accel_FAS #(
                     adder_tree_datain_valid[g4] <= 0;
                     if(krnl1x1_bram_rden[g4]) begin
                         adder_tree_datain_valid[g4]     <= 1;
-                        if(dpth_count[g4] == (krnl1x1Depth_cfg - `KRNL_1X1_BRAM_RD_WIDTH)) begin
+                        if(dpth_count[g4] == (krnl1x1Depth_cfg - C_KRNL_1X1_BRAM_RD_WTH)) begin
                             dpth_count[g4]         <= 0;
                             if(krnl_count[g4] == (num_1x1_kernels_cfg  - 1)) begin
                                 krnl_count[g4]     <= 0;
@@ -1149,7 +1130,7 @@ module cnn_layer_accel_FAS #(
                                 krnl_count[g4] <= krnl_count[g4] + 1;
                             end
                         end else begin
-                            dpth_count[g4] <= dpth_count[g4] + `KRNL_1X1_BRAM_RD_WIDTH;
+                            dpth_count[g4] <= dpth_count[g4] + C_KRNL_1X1_BRAM_RD_WTH;
                         end
                     end
                 end
@@ -1158,7 +1139,7 @@ module cnn_layer_accel_FAS #(
             
             
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
-            assign krnl1x1Bias_bram_dout_w = krnl1x1Bias_bram_dout[`PIXEL_WIDTH - 1:0];
+            assign krnl1x1Bias_bram_dout_w[g4] = krnl1x1Bias_bram_dout[g4][`PIXEL_WIDTH - 1:0];
 			
 			always@(posedge clk_FAS) begin
                 if(rst) begin
@@ -1496,7 +1477,7 @@ module cnn_layer_accel_FAS #(
                 ST_SEND_COMPLETE: begin
                     if(all_AWP_complete) begin
                         init_usrIntr               <= init_usrIntr_ack ? 1'b0 : (~init_usrIntr_acked ? 1'b1 : init_usrIntr);
-                        init_usrIntr_ack           <= init_usrIntr_ack ? 1'b1 :  init_usrIntr_acked;
+                        init_usrIntr_acked         <= init_usrIntr_ack ? 1'b1 :  init_usrIntr_acked;
                     end
                 end
             endcase
@@ -1900,7 +1881,7 @@ module cnn_layer_accel_FAS #(
             krnl_count_r            <= 0;
         end else begin
             if(krnl1x1_bram_rden_w) begin
-                if(dpth_count_r == (krnl1x1Depth_cfg - `KRNL_1X1_BRAM_RD_WIDTH)) begin
+                if(dpth_count_r == (krnl1x1Depth_cfg - C_KRNL_1X1_BRAM_RD_WTH)) begin
                     dpth_count_r          <= 0;
                     if(krnl_count_r == (num_1x1_kernels_cfg  - 1)) begin
                         krnl_count_r      <= 0;
@@ -1908,7 +1889,7 @@ module cnn_layer_accel_FAS #(
                         krnl_count_r <= krnl_count_r + 1;
                     end
                 end else begin
-                    dpth_count_r <= dpth_count_r + `KRNL_1X1_BRAM_RD_WIDTH;
+                    dpth_count_r <= dpth_count_r + C_KRNL_1X1_BRAM_RD_WTH;
                 end
             end
         end
