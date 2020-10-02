@@ -184,7 +184,7 @@ module testbench;
         .clk_intf                   ( clk_intf                  ),              
         .clk_FAS                    ( clk_FAS                   ),              
         .rst                        ( rst                       ),              
-        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+        // BEGIN ------------------------------------------------------------------------------------------------------------------------------------
         .init_read_req              ( init_read_req             ),
         .init_read_req_id           ( init_read_req_id          ),
         .init_read_addr             ( init_read_addr            ),
@@ -205,7 +205,7 @@ module testbench;
         .init_write_data_vld        ( init_write_data_vld       ),
         .init_write_data_rdy        ( init_write_data_rdy       ),
         .init_write_cmpl            ( init_write_cmpl           ),
-        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+        // BEGIN ------------------------------------------------------------------------------------------------------------------------------------
         .targ_write_addr            ( targ_write_addr           ),
         .targ_write_addr_vld        ( targ_write_addr_vld       ),
         .targ_write_data            ( targ_write_data           ),
@@ -214,25 +214,103 @@ module testbench;
         .targ_read_addr_vld         ( targ_read_addr_vld        ),
         .targ_read_data             ( targ_read_data            ),
         .targ_read_ack              ( targ_read_ack             ),
-        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+        // BEGIN ------------------------------------------------------------------------------------------------------------------------------------
         .trans_in_fifo_wren         ( trans_in_fifo_wren        ),
         .convMap_fifo_wren          ( convMap_fifo_wren         ),
-        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
+        // BEGIN ------------------------------------------------------------------------------------------------------------------------------------ 
         .init_usrIntr               ( init_usrIntr              ),
         .init_usrIntr_ack           ( init_usrIntr_ack          ),
-        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+        // BEGIN ------------------------------------------------------------------------------------------------------------------------------------
         .trans_in_fifo_din          ( trans_in_fifo_din         ),
         .convMap_fifo_din           ( convMap_fifo_din          ),
-        // BEGIN -----------------------------------------------------------------------------------------------------------------------------------------
+        // BEGIN ------------------------------------------------------------------------------------------------------------------------------------
         .trans_eg_fifo_dout_vld     ( trans_eg_fifo_dout_vld    ),
         .trans_eg_fifo_dout         ( trans_eg_fifo_dout        )
     );
- 
     
-    initial begin
-        rst = 1;
-		#(C_PERIOD_400MHz * 10) rst <= 0;    // 10 cycle rst asserted is arbitrairy
+    
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+    always@(posedge clk_FAS) begin
+
     end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
+
+
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    always@(posedge clk_intf) begin
+
+    end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
+
+  
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------  
+	initial begin
+        rst 															= 1;
+        init_read_req_ack         										= 0;
+        init_read_in_prog         										= 0;
+        init_read_data_vld        										= 0;
+        init_read_cmpl            										= 0;
+        init_write_req_ack        										= 0;
+        init_write_in_prog        										= 0;
+        init_write_data_rdy       										= 0;
+        init_write_cmpl           										= 0;
+        targ_write_addr           										= 0;
+        targ_write_addr_vld       										= 0;
+        targ_read_addr            										= 0;
+        targ_read_addr_vld        										= 0;
+        trans_in_fifo_wren        										= 0;
+        convMap_fifo_wren         										= 0;
+        init_usrIntr_ack          										= 0;
+        // testbench.i0_cnn_layer_accel_FAS.FAS_cfg_data_len               = ;
+        // testbench.i0_cnn_layer_accel_FAS.AWP_cfg_data_len               = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl1x1Depth_cfg               = ;
+        // testbench.i0_cnn_layer_accel_FAS.pixSeqCfgFetchTotal_cfg        = ;
+        // testbench.i0_cnn_layer_accel_FAS.inMapFetchFactor_cfg           = ;
+        // testbench.i0_cnn_layer_accel_FAS.inMapFetchTotal_cfg            = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl3x3FetchTotal_cfg          = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl3x3BiasFetchTotal_cfg      = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl1x1FetchTotal_cfg          = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl1x1BiasFetchTotal_cfg      = ;
+        // testbench.i0_cnn_layer_accel_FAS.partMapFetchTotal_cfg          = ;
+        // testbench.i0_cnn_layer_accel_FAS.resdMapFetchTotal_cfg          = ;
+        // testbench.i0_cnn_layer_accel_FAS.outMapStoreTotal_cfg           = ;
+        // testbench.i0_cnn_layer_accel_FAS.outMapStoreFactor_cfg          = ;
+        // testbench.i0_cnn_layer_accel_FAS.prevMapFetchTotal_cfg          = ;
+        // testbench.i0_cnn_layer_accel_FAS.num_1x1_kernels_cfg            = ;
+        // testbench.i0_cnn_layer_accel_FAS.cm_high_watermark_cfg          = ;
+        // testbench.i0_cnn_layer_accel_FAS.rm_low_watermark_cfg           = ;
+        // testbench.i0_cnn_layer_accel_FAS.pm_low_watermark_cfg           = ;
+        // testbench.i0_cnn_layer_accel_FAS.pv_low_watermark_cfg           = ;
+        // testbench.i0_cnn_layer_accel_FAS.rm_fetch_amount_cfg            = ;
+        // testbench.i0_cnn_layer_accel_FAS.pm_fetch_amount_cfg            = ;
+        // testbench.i0_cnn_layer_accel_FAS.pv_fetch_amount_cfg            = ;
+        // testbench.i0_cnn_layer_accel_FAS.im_fetch_amount_cfg            = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl1x1_pding_cfg              = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl1x1_pad_bgn_cfg            = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl1x1_pad_end_cfg            = ;
+        // testbench.i0_cnn_layer_accel_FAS.opcode_cfg                     = ;
+        // testbench.i0_cnn_layer_accel_FAS.res_high_watermark_cfg         = ;
+        // testbench.i0_cnn_layer_accel_FAS.conv1x1_pip_en_cfg             = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl1x1_bram_rdAddr_end_cfg    = ;
+        // testbench.i0_cnn_layer_accel_FAS.krnl1x1_dpth_end_cfg           = ;
+        // testbench.i0_cnn_layer_accel_FAS.ob_store_amount_cfg            = ;
+		#(C_PERIOD_100MHz * 10) rst                                     = 0;    // 10 cycle rst asserted is arbitrairy
+		
+		repeat(2) @(posedge clk_intf);
+		targ_write_addr      = 1;
+        targ_write_addr_vld  = 1;
+		@(posedge clk_intf);
+		targ_write_addr_vld  = 0;
+		
+        forever begin
+            @(posedge clk_intf);
+            if(init_usrIntr) begin
+				init_usrIntr_ack = 1;
+                break;
+            end
+        end
+    end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
     
 
 endmodule

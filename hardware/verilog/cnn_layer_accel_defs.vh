@@ -530,12 +530,11 @@
 // [9] FAS TRANS FIELDS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 `define TRANS_AWP_CFG                   0
-`define TRANS_AWP_CFG_ACK               1
-`define TRANS_JOB_FETCH                 2
-`define TRANS_AWP_START                 3
-`define TRANS_AWP_START_ACK             4
-`define TRANS_RESULT_WRITE              5
-`define TRANS_JOB_CMPL                  6
+`define TRANS_JOB_FETCH                 1
+`define TRANS_AWP_START                 2
+`define TRANS_RESULT_WRITE              3
+`define TRANS_LAST_CO                   4
+`define TRANS_JOB_CMPL                  5
 
 `define TRANS_OP_WIDTH			        3
 `define TRANS_OP_LOW			        0
