@@ -75,13 +75,12 @@ module cnn_layer_accel_FAS #(
     init_usrIntr                ,
     init_usrIntr_ack            ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    trans_in_fifo_wren          ,
-    convMap_fifo_wren           ,
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    trans_in_fifo_din_vld       ,
+	trans_in_fifo_din_rdy		,
     trans_in_fifo_din           ,
-    convMap_fifo_din            ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     trans_eg_fifo_dout_vld      ,
+	trans_eg_fifo_dout_rdy		,
     trans_eg_fifo_dout
 );
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -102,6 +101,11 @@ module cnn_layer_accel_FAS #(
     localparam ST_WAIT_LAST_WRITE                   = 7'b0100000;
     localparam ST_SEND_COMPLETE                     = 7'b1000000;
 
+	localparam C_CONV_1X1_PIP_EN_CFG_WTH			= `KRNL_1X1_SIMD * `MAX_1X1_KRNL_IT;
+	localparam C_CURR_CONV1X1_IT_META_WTH			= `KRNL_1X1_SIMD;
+	localparam C_conv1x1_it_WTH					= clog2(`KRNL_1X1_SIMD);
+	localparam C_AWP_QUAD_EN_CFG_WTH				= `MAX_AWP_PER_FAS * `MAX_QUAD_PER_AWP;
+	localparam C_NUM_QUAD_CFG_PKTS					= 1;
     localparam C_VEC_ADD_WIDTH                      = `VECTOR_ADD_SIMD * `PIXEL_WIDTH;
     localparam C_VEC_MULT_WIDTH                     = `VECTOR_MULT_SIMD * `PIXEL_WIDTH;
     localparam C_INIT_REQ_ID_WTH                    = `MAX_FAS_RD_ID * `MAX_FAS_RD_ID;
@@ -115,7 +119,9 @@ module cnn_layer_accel_FAS #(
     localparam C_KRNL_1X1_BRAM_RD_DTH               = 8192; // TODO: Remove hard coding    
     localparam C_KRNL_1X1_BRAM_RD_ADDR_WTH          = clog2(C_KRNL_1X1_BRAM_RD_DTH);
 	localparam C_KRNL_1X1_TRAN_SZ					= `INIT_RD_DATA_WIDTH / `PIXEL_WIDTH;
-	localparam C_CLG2_KRNL_1X1_KI_WTH				= clog2(`KRNL_1X1_SIMD);
+	localparam C_KRNL_1X1_SIMD_M1					= `KRNL_1X1_SIMD - 1;
+	localparam C_KN1X1_BM_WR_SEL_DEF				= {{C_KRNL_1X1_SIMD_M1{1'b0}}, 1'b1};
+	localparam C_KN1X1_BM_WR_SEL_END				= {1'b1, {C_KRNL_1X1_SIMD_M1{1'b0}}};
     localparam C_KRNL_1X1_BIAS_BRAM_WR_WTH          = 1024; // TODO: Remove hard coding
     localparam C_KRNL_1X1_BIAS_BRAM_WR_DTH          = 8192; // TODO: Remove hard coding   
     localparam C_KRNL_1X1_BIAS_BRAM_WR_ADDR_WTH     = clog2(C_KRNL_1X1_BIAS_BRAM_WR_DTH);
@@ -159,10 +165,20 @@ module cnn_layer_accel_FAS #(
     localparam C_RES_DWC_FIFO_RD_WTH                = 1024; // TODO: Remove hard coding
     localparam C_RES_DWC_FIFO_RD_DTH                = 512; // TODO: Remove hard coding
     localparam C_RES_DWC_FIFO_CT_WTH                = clog2(C_CONVMAP_FIFO_RD_DTH) + 1;
-    localparam C_TRANS_FIFO_WR_WTH                  = 1024; // TODO: Remove hard coding
-    localparam C_TRANS_FIFO_WR_DTH                  = 512; // TODO: Remove hard coding
-    localparam C_TRANS_FIFO_RD_WTH                  = 1024; // TODO: Remove hard coding
-    localparam C_TRANS_FIFO_RD_DTH                  = 512; // TODO: Remove hard coding
+    localparam C_TRANS_IN_META_FIFO_WR_WTH          = 1024; // TODO: Remove hard coding
+	localparam C_TRANS_IN_PYLD_FIFO_WR_WTH          = 1024; // TODO: Remove hard coding
+    localparam C_TRANS_IN_META_FIFO_RD_WTH          = 1024; // TODO: Remove hard coding
+	localparam C_TRANS_IN_PTLD_FIFO_RD_WTH          = 1024; // TODO: Remove hard coding
+    localparam C_TRANS_IN_META_FIFO_DTH             = 512; // TODO: Remove hard coding
+	localparam C_TRANS_IN_FIFO_WTH					= C_TRANS_IN_META_FIFO_WR_WTH + C_TRANS_IN_PYLD_FIFO_WR_WTH;
+	localparam C_TRANS_IN_FIFO_HIGH					= (C_TRANS_IN_META_FIFO_WR_WTH + C_TRANS_IN_PYLD_FIFO_WR_WTH) - 1;
+    localparam C_TRANS_EG_META_FIFO_WR_WTH          = 1024; // TODO: Remove hard coding
+	localparam C_TRANS_EG_PYLD_FIFO_WR_WTH          = 1024; // TODO: Remove hard coding
+    localparam C_TRANS_EG_META_FIFO_RD_WTH          = 1024; // TODO: Remove hard coding
+	localparam C_TRANS_EG_PYLD_FIFO_RD_WTH          = 1024; // TODO: Remove hard coding
+    localparam C_TRANS_EG_META_FIFO_DTH             = 512; // TODO: Remove hard coding
+	localparam C_TRANS_EG_FIFO_WTH					= C_TRANS_EG_META_FIFO_WR_WTH + C_TRANS_EG_PYLD_FIFO_WR_WTH;
+	localparam C_TRANS_EG_FIFO_HIGH					= (C_TRANS_EG_META_FIFO_WR_WTH + C_TRANS_IN_PYLD_FIFO_WR_WTH) - 1;
     localparam C_JB_FTH_FIFO_WR_WTH                 = 1024; // TODO: Remove hard coding
     localparam C_JB_FTH_FIFO_WR_DTH                 = 512; // TODO: Remove hard coding
     localparam C_JB_FTH_FIFO_RD_WTH                 = 1024; // TODO: Remove hard coding
@@ -207,18 +223,17 @@ module cnn_layer_accel_FAS #(
     input  logic                                      targ_read_addr_vld         ;
     input  logic [           C_TARG_DATA_WTH - 1:0]   targ_read_data             ;
     output logic                                      targ_read_ack              ;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    input  logic                                      trans_in_fifo_wren         ;
-    input  logic                                      convMap_fifo_wren          ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     output logic                                      init_usrIntr               ;
     input  logic                                      init_usrIntr_ack           ;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    input  logic [          `TRANS_PYLD_WIDTH - 1:0]  trans_in_fifo_din          ;
-    input  logic [      C_CONVMAP_FIFO_WR_WTH - 1:0]  convMap_fifo_din           ;
+	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    input  logic                                      trans_in_fifo_din_vld      ;
+	output logic									  trans_in_fifo_din_rdy		 ;
+    input  logic [        C_TRANS_IN_FIFO_WTH - 1:0]  trans_in_fifo_din          ;
     // BEGIN -----------------------------------------------------------------------------------------------------------------------------------------
     output logic                                      trans_eg_fifo_dout_vld     ;
-    output logic [          `TRANS_PYLD_WIDTH - 1:0]  trans_eg_fifo_dout         ;
+	input  logic									  trans_eg_fifo_dout_rdy	 ;
+    output logic [        C_TRANS_EG_FIFO_WTH - 1:0]  trans_eg_fifo_dout         ;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -248,8 +263,9 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   resdMapFetchTotal_cfg                                           ;
     logic [                                     15:0]   outMapStoreTotal_cfg                                            ;
     logic [                                     15:0]   prevMapFetchTotal_cfg                                           ;
-    logic [                                     15:0]   num_1x1_kernels_cfg                                             ;
-    logic [                                     15:0]   cm_high_watermark_cfg                                           ;
+    logic [                                     15:0]   num_itN_1x1_kernels_cfg        [`MAX_1X1_KRNL_IT - 1:0]         ;
+    logic [										15:0]	num_tot_1x1_kernels_cfg											;
+	logic [                                     15:0]   cm_high_watermark_cfg                                           ;
     logic [                                     15:0]   rm_low_watermark_cfg                                            ;
     logic [                                     15:0]   pm_low_watermark_cfg                                            ;
     logic [                                     15:0]   pv_low_watermark_cfg                                            ;
@@ -257,23 +273,32 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   pm_fetch_amount_cfg                                             ;
     logic [                                     15:0]   pv_fetch_amount_cfg                                             ;
     logic [                                     15:0]   im_fetch_amount_cfg                                             ;
-    logic [                                     15:0]   krnl1x1_pding_cfg                                               ;
-    logic [                                     15:0]   krnl1x1_pad_bgn_cfg                                             ;
-    logic [                                     15:0]   krnl1x1_pad_end_cfg                                             ;
     logic [                                     17:0]   opcode_cfg                                                      ;
     logic [                                     15:0]   res_high_watermark_cfg                                          ;
-    logic [                                     15:0]   conv1x1_pip_en_cfg                                              ;
-    logic [                                     15:0]   krnl1x1_bram_rdAddr_end_cfg                                     ;
+    logic [          C_CONV_1X1_PIP_EN_CFG_WTH - 1:0]   conv1x1_pip_en_cfg                                              ;
+    logic [										15:0]	num_conv1x1_it_cfg												;
+	logic [                                     15:0]   krnl1x1_bram_rdAddr_end_cfg                                     ;
     logic [                                     15:0]   krnl1x1_dpth_end_cfg                                            ;
     logic [                                     15:0]   ob_store_amount_cfg                                             ;
 	logic [								        15:0]   ob_high_watermark_cfg											;
-    logic                                               start_FAS                                                       ;
+	logic [										15:0]   krnl1x1_dpth_tot_cfg											; // host cfg by doing krnl1x1Depth_cfg / krnl_trans_s
+	logic [										15:0]	krnl_1x1_ld_sz_cfg 											    ;
+	logic [										15:0]	krnl_1x1_fetch_total_cfg										;
+	logic [                                     31:0]   krnl_1x1_itN_addr_cfg			[`MAX_1X1_KRNL_IT - 1:0]        ;
+	logic [                                     15:0]   krnl_1x1_itN_fetch_amount_cfg	[`MAX_1X1_KRNL_IT - 1:0]        ;
+	logic [			     C_AWP_QUAD_EN_CFG_WTH - 1:0]	AWP_QUAD_en_cfg													;						
+	logic                                               start_FAS                                                       ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [                                      6:0]   state                                                           ;
+	logic [		    C_CURR_CONV1X1_IT_META_WTH - 1:0]   curr_conv1x1_it_pip_en											;
+	logic [		       	   C_conv1x1_it_WTH - 1:0]	conv1x1_it													;		
+	logic [										 6:0]	ret_state														;
     logic                                               start_AWP_done                                                  ;
     logic                                               cfg_AWP_done                                                    ;
     logic                                               all_AWP_complete                                                ;
     logic                                               process_cmpl                                                    ;
+	logic [						 `CLOCK_FACTOR - 1:0]	process_cmpl_r													;
+	logic 												process_cmpl_w													;
     logic                                               init_usrIntr_acked                                              ;
     logic                                               last_wrt_r                                                      ;
     logic                                               last_wrt                                                        ;
@@ -282,10 +307,12 @@ module cnn_layer_accel_FAS #(
     logic                                               pipe_enable                                                     ;
     logic                                               pipe_enable_d                                                   ;
     logic                                               state_update_in_prog                                            ;
-	logic [									   	 3:0]	init_usrIntr_r													;
+	logic [					     `CLOCK_FACTOR - 1:0]	init_usrIntr_r													;
 	logic												FAS_rdy_n														;
 	logic												FAS_intf_rdy_n 													;
 	logic [										15:0]	krnl1x1_ld_count												;
+	logic [										15:0]	tot_krnl_count  												;
+	logic												all_AWP_complete_r												;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [                                     15:0]   dpth_count_r                                                    ;
     logic [                                     15:0]   krnl_count_r                                                    ;
@@ -353,9 +380,8 @@ module cnn_layer_accel_FAS #(
     logic                      [`KRNL_1X1_SIMD - 1:0]   krnl1x1Bias_bram_rden                                           ;
     logic [        C_KRNL_1X1_BIAS_BRAM_RD_WTH - 1:0]   krnl1x1Bias_bram_dout           [`KRNL_1X1_SIMD - 1:0]          ;
 	logic [                       `PIXEL_WIDTH - 1:0]   krnl1x1Bias_bram_dout_w         [`KRNL_1X1_SIMD - 1:0]          ;
-    logic                                               kn1x1_bm_wr_sel                 [`KRNL_1X1_SIMD - 1:0]          ;
-	logic [			    C_CLG2_KRNL_1X1_KI_WTH - 1:0]	ki																;										
-    logic                                               kn1x1b_bm_wr_sel                [`KRNL_1X1_SIMD - 1:0]          ;
+    logic [					    `KRNL_1X1_SIMD - 1:0]   kn1x1_bm_wr_sel                          						;
+    logic [						`KRNL_1X1_SIMD - 1:0]   kn1x1b_bm_wr_sel                         						;
     logic                                               conv1x1_pip_start_d             [`KRNL_1X1_SIMD - 1:0]          ;
     // BEGIN -----------------------------------------------------------------------------------------------------------------------------------------
     logic                                               conv1x1_pip_start0                                              ;
@@ -424,22 +450,42 @@ module cnn_layer_accel_FAS #(
     logic                                               outBuf_fifo_rd_rst_busy                                         ;
     logic [               C_OUTBUF_FIFO_CT_WTH - 1:0]   outBuf_fifo_count                                               ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    logic                                               trans_in_fifo_rden                                              ;
-    logic                                               trans_in_fifo_empty                                             ;
-    logic [                C_TRANS_FIFO_WR_WTH - 1:0]   trans_in_fifo_dout                                              ;
-    logic                                               trans_in_fifo_vld                                               ;
-    logic                                               trans_in_fifo_wr_rst_busy                                       ;
-    logic                                               trans_in_fifo_rd_rst_busy                                       ;
+    logic												trans_in_fifo_rden												;
+	logic												trans_in_fifo_empty												;
+	logic                                               trans_in_meta_fifo_rden                                         ;
+    logic                                               trans_in_meta_fifo_empty                                        ;
+    logic [        C_TRANS_IN_META_FIFO_RD_WTH - 1:0]   trans_in_meta_fifo_dout                                         ;
+    logic                                               trans_in_meta_fifo_vld                                          ;
+    logic                                               trans_in_meta_fifo_wr_rst_busy                                  ;
+    logic                                               trans_in_meta_fifo_rd_rst_busy                                  ;
+	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    logic                                               trans_in_pyld_fifo_rden                                         ;
+    logic                                               trans_in_pyld_fifo_empty                                        ;
+	logic [		C_TRANS_IN_PYLD_FIFO_WR_WTH - 1:0]		trans_in_pyld_fifo_din											;
+    logic [     C_TRANS_IN_PYLD_FIFO_RD_WTH - 1:0]   	trans_in_pyld_fifo_dout                                         ;
+    logic                                               trans_in_pyld_fifo_vld                                          ;
+    logic                                               trans_in_pyld_fifo_wr_rst_busy                                  ;
+    logic                                               trans_in_pyld_fifo_rd_rst_busy                                  ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    logic                                               trans_eg_fifo_wren                                              ;
-    logic                                               trans_eg_fifo_wren_r                                            ;
-    logic                                               trans_eg_fifo_rden                                              ;
-    logic [                C_TRANS_FIFO_WR_WTH - 1:0]   trans_eg_fifo_din                                               ;
-    logic [                C_TRANS_FIFO_RD_WTH - 1:0]   trans_eg_fifo_din_r                                             ;
-    logic                                               trans_eg_fifo_vld                                               ;
-    logic                                               trans_eg_fifo_empty                                             ;
-    logic                                               trans_eg_fifo_wr_rst_busy                                       ;
-    logic                                               trans_eg_fifo_rd_rst_busy                                       ;
+    logic                                               trans_eg_meta_fifo_wren                                         ;
+    logic                                               trans_eg_meta_fifo_wren_r                                       ;
+    logic                                               trans_eg_meta_fifo_rden                                         ;
+    logic [                C_TRANS_FIFO_WR_WTH - 1:0]   trans_eg_meta_fifo_din                                          ;
+    logic [                C_TRANS_FIFO_RD_WTH - 1:0]   trans_eg_meta_fifo_din_r                                        ;
+    logic                                               trans_eg_meta_fifo_vld                                          ;
+    logic                                               trans_eg_meta_fifo_empty                                        ;
+    logic                                               trans_eg_meta_fifo_wr_rst_busy                                  ;
+    logic                                               trans_eg_meta_fifo_rd_rst_busy                                  ;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    logic                                               trans_eg_pyld_fifo_wren                                         ;
+    logic                                               trans_eg_pyld_fifo_wren_r                                       ;
+    logic                                               trans_eg_pyld_fifo_rden                                         ;
+    logic [                C_TRANS_FIFO_WR_WTH - 1:0]   trans_eg_pyld_fifo_din                                          ;
+    logic [                C_TRANS_FIFO_RD_WTH - 1:0]   trans_eg_pyld_fifo_din_r                                        ;
+    logic                                               trans_eg_pyld_fifo_vld                                          ;
+    logic                                               trans_eg_pyld_fifo_empty                                        ;
+    logic                                               trans_eg_pyld_fifo_wr_rst_busy                                  ;
+    logic                                               trans_eg_pyld_fifo_rd_rst_busy                                  ;	
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                               job_fetch_fifo_wren                                             ;
     logic                                               job_fetch_fifo_rden                                             ;
@@ -591,24 +637,46 @@ module cnn_layer_accel_FAS #(
         .data_out   ( outBuf_fifo_wren2_d            )
     );
 
+
     // WR_WIDTH: 1024
     // WR_DPETH: 512
     // RD_WIDTH: 1024
     // RD_DEPTH: 512 
-    trans_in_fifo
-    i0_trans_in_fifo (
-        .srst           ( rst                                           ),
-        .wr_clk         ( clk_intf                                      ),
-        .rd_clk         ( clk_FAS                                       ),
-        .din            ( trans_in_fifo_din                             ),
-        .wr_en          ( trans_in_fifo_wren                            ),
-        .rd_en          ( trans_in_fifo_rden                            ),
-        .dout           ( trans_in_fifo_dout                            ),
-        .full           (                                               ),
-        .empty          (                                               ),
-        .valid          ( trans_in_fifo_vld                             ),
-        .wr_rst_busy    ( trans_in_fifo_wr_rst_busy                     ),
-        .rd_rst_busy    ( trans_in_fifo_rd_rst_busy                     )
+    trans_in_meta_fifo
+    i0_trans_in_meta_fifo (
+        .srst           ( rst                                           						),
+        .wr_clk         ( clk_intf                                      						),
+        .rd_clk         ( clk_FAS                                       						),
+        .din            ( trans_in_fifo_din[C_TRANS_IN_FIFO_HIGH:C_TRANS_IN_PYLD_FIFO_WR_WTH]	),
+        .wr_en          ( trans_in_meta_fifo_din_vld                    						),
+        .rd_en          ( trans_in_meta_fifo_rden                       						),
+        .dout           ( trans_in_meta_fifo_dout                       						),
+        .full           (                                               						),
+        .empty          (                                               						),
+        .valid          ( trans_in_meta_fifo_vld                        						),
+        .wr_rst_busy    ( trans_in_meta_fifo_wr_rst_busy                						),
+        .rd_rst_busy    ( trans_in_meta_fifo_rd_rst_busy                						)
+    );
+	
+	
+	// WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512 
+    trans_in_pyld_fifo
+    i0_trans_in_pyld_fifo (
+        .srst           ( rst                                           		),
+        .wr_clk         ( clk_intf                                      		),
+        .rd_clk         ( clk_FAS                                       		),
+        .din            ( trans_in_fifo_din[C_TRANS_IN_PYLD_FIFO_WR_WTH - 1:0]	),
+        .wr_en          ( trans_in_pyld_fifo_din_vld                    		),
+        .rd_en          ( trans_in_pyld_fifo_rden                       		),
+        .dout           ( trans_in_pyld_fifo_dout                       		),
+        .full           (                                               		),
+        .empty          (                                               		),
+        .valid          ( trans_in_pyld_fifo_vld                        		),
+        .wr_rst_busy    ( trans_in_pyld_fifo_wr_rst_busy                		),
+        .rd_rst_busy    ( trans_in_pyld_fifo_rd_rst_busy                		)
     );
     
 
@@ -637,18 +705,18 @@ module cnn_layer_accel_FAS #(
     // RD_DEPTH: 512
     convMap_fifo
     i0_convMap_fifo (
-        .srst         ( rst                                             ),
-        .wr_clk       ( clk_intf                                        ),
-        .rd_clk       ( clk_FAS                                         ),
-        .din          ( trans_in_fifo_din                               ),
-        .wr_en        ( convMap_fifo_wren                               ),
-        .rd_en        ( convMap_fifo_rden                               ),
-        .dout         ( convMap_fifo_dout                               ),
-        .full         (                                                 ),
-        .empty        ( convMap_fifo_empty                              ),
-        .valid        ( convMap_fifo_vld                                ),
-        .wr_rst_busy  ( convMap_fifo_wr_rst_busy                        ),
-        .rd_rst_busy  ( convMap_fifo_rd_rst_busy                        ) 
+        .srst         ( rst                                             		),
+        .wr_clk       ( clk_intf                                        		),
+        .rd_clk       ( clk_FAS                                         		),
+        .din          ( trans_in_fifo_din[C_TRANS_IN_PYLD_FIFO_WR_WTH - 1:0]	),
+        .wr_en        ( convMap_fifo_wren                               		),
+        .rd_en        ( convMap_fifo_rden                               		),
+        .dout         ( convMap_fifo_dout                               		),
+        .full         (                                                 		),
+        .empty        ( convMap_fifo_empty                              		),
+        .valid        ( convMap_fifo_vld                                		),
+        .wr_rst_busy  ( convMap_fifo_wr_rst_busy                        		),
+        .rd_rst_busy  ( convMap_fifo_rd_rst_busy                        		) 
     );
 
 
@@ -777,20 +845,41 @@ module cnn_layer_accel_FAS #(
     // WR_DPETH: 512
     // RD_WIDTH: 1024
     // RD_DEPTH: 512 
-    trans_eg_fifo
-    i0_trans_eg_fifo (
-        .srst           ( rst                                           ),
-        .wr_clk         ( clk_intf                                      ),
-        .rd_clk         ( clk_FAS                                       ),
-        .din            ( trans_eg_fifo_din                             ),
-        .wr_en          ( trans_eg_fifo_wren                            ),
-        .rd_en          ( trans_eg_fifo_rden                            ),
-        .dout           ( trans_eg_fifo_dout                            ),
-        .full           (                                               ),
-        .empty          ( trans_eg_fifo_empty                           ),
-        .valid          ( trans_eg_fifo_vld                             ),
-        .wr_rst_busy    ( trans_eg_fifo_wr_rst_busy                     ),
-        .rd_rst_busy    ( trans_eg_fifo_rd_rst_busy                     )
+    trans_eg_meta_fifo
+    i0_trans_eg_meta_fifo (
+        .srst           ( rst                                           						),
+        .wr_clk         ( clk_intf                                      						),
+        .rd_clk         ( clk_FAS                                       						),
+        .din            ( trans_eg_meta_fifo_din                        						),
+        .wr_en          ( trans_eg_meta_fifo_wren                       						),
+        .rd_en          ( trans_eg_meta_fifo_rden                       						),
+        .dout           ( trans_eg_fifo_dout[C_TRANS_EG_FIFO_HIGH:C_TRANS_EG_PYLD_FIFO_WR_WTH]	),
+        .full           (                                               						),
+        .empty          ( trans_eg_meta_fifo_empty                      						),
+        .valid          ( trans_eg_meta_fifo_vld                        						),
+        .wr_rst_busy    ( trans_eg_meta_fifo_wr_rst_busy                						),
+        .rd_rst_busy    ( trans_eg_meta_fifo_rd_rst_busy                						)
+    );
+	
+	
+	// WR_WIDTH: 1024
+    // WR_DPETH: 512
+    // RD_WIDTH: 1024
+    // RD_DEPTH: 512 
+    trans_eg_pyld_fifo
+    i0_trans_eg_pyld_fifo (
+        .srst           ( rst                                           		),
+        .wr_clk         ( clk_intf                                      		),
+        .rd_clk         ( clk_FAS                                       		),
+        .din            ( trans_eg_pyld_fifo_din                        		),
+        .wr_en          ( trans_eg_pyld_fifo_wren                       		),
+        .rd_en          ( trans_eg_pyld_fifo_rden                       		),
+        .dout           ( trans_eg_fifo_dout[C_TRANS_EG_PYLD_FIFO_WR_WTH - 1:0]	),
+        .full           (                                               		),
+        .empty          ( trans_eg_pyld_fifo_empty                      		),
+        .valid          ( trans_eg_pyld_fifo_vld                        		),
+        .wr_rst_busy    ( trans_eg_pyld_fifo_wr_rst_busy                		),
+        .rd_rst_busy    ( trans_eg_pyld_fifo_rd_rst_busy                		)
     );
 
 
@@ -950,12 +1039,16 @@ module cnn_layer_accel_FAS #(
 
             // BEGIN logic --------------------------------------------------------------------------------------------------------------------------
 			always@(posedge clk_intf) begin
-				if(rst || FAS_intf_rdy_n) begin
-					krnl1x1_bram_wren[g4] <= 0;
+				if(rst || FAS_intf_rdy_n || process_cmpl_w) begin
+					krnl1x1_bram_wren[g4] 	<= 0;
+					krnl1x1_bram_wrAddr[g4]	<= 0;
 				end else begin
 					krnl1x1_bram_wren[g4] <= 0;
-					if(krnl1x1_bram_wren_r && kn1x1_bm_wr_sel[g4] ) begin
-						krnl1x1_bram_wren[g4] &&  <= 1;
+					if(krnl1x1_bram_wren[g4]) begin
+						krnl1x1_bram_wrAddr[g4] <= krnl1x1_bram_wrAddr[g4] + 1;
+					end
+					if(krnl1x1_bram_wren_r && kn1x1_bm_wr_sel[g4]) begin
+						krnl1x1_bram_wren[g4] <= 1;
 					end
 				end
 			end
@@ -1032,7 +1125,7 @@ module cnn_layer_accel_FAS #(
                 if(rst || FAS_rdy_n) begin
                     krnl1x1_bram_rden[g4] <= 0;
                 end else begin
-                    krnl1x1_bram_rden[g4] <=    (conv1x1_pip_en_cfg[g4] && 
+                    krnl1x1_bram_rden[g4] <=    (curr_conv1x1_it_pip_en[g4] && 
                                                    (conv1x1_pip_start0_d[g4]
                                                    || conv1x1_pip_start1_d[g4]
                                                    || conv1x1_pip_start2_d[g4])) ? 1
@@ -1045,7 +1138,7 @@ module cnn_layer_accel_FAS #(
                     krnl1x1_bram_rdAddr[g4] <= 0;
                 end else begin
 					krnl1x1_bram_rden[g4] <= 0;
-                    if(krnl1x1_bram_rden[g4] && (krnl1x1_bram_rdAddr[g4] == krnl1x1_bram_rdAddr_end_cfg) && conv1x1_pip_en_cfg[g4]) begin
+                    if(krnl1x1_bram_rden[g4] && (krnl1x1_bram_rdAddr[g4] == krnl1x1_bram_rdAddr_end_cfg) && curr_conv1x1_it_pip_en[g4]) begin
                         krnl1x1_bram_rdAddr[g4] <= 0;
                     end else if(krnl1x1_bram_rden[g4]) begin
                         krnl1x1_bram_rdAddr[g4] <= krnl1x1_bram_rdAddr[g4]+ 1;
@@ -1069,7 +1162,7 @@ module cnn_layer_accel_FAS #(
                         adder_tree_datain_valid[g4]     <= 1;
                         if(dpth_count[g4] == (krnl1x1Depth_cfg - C_KRNL_1X1_BRAM_RD_WTH)) begin
                             dpth_count[g4]         <= 0;
-                            if(krnl_count[g4] == (num_1x1_kernels_cfg  - 1)) begin
+                            if(krnl_count[g4] == num_itN_1x1_kernels_cfg[conv1x1_it]) begin
                                 krnl_count[g4]     <= 0;
                             end else begin
                                 krnl_count[g4] <= krnl_count[g4] + 1;
@@ -1113,7 +1206,7 @@ module cnn_layer_accel_FAS #(
                 if(rst || FAS_rdy_n) begin
                     krnl1x1Bias_bram_rdAddr[g4] <= 0;
                 end else begin
-                    if(krnl1x1Bias_bram_rden[g4] && krnl_count[g4] == num_1x1_kernels_cfg) begin
+                    if(krnl1x1Bias_bram_rden[g4] && krnl_count[g4] == num_itN_1x1_kernels_cfg[conv1x1_it]) begin
                         krnl1x1Bias_bram_rdAddr[g4] <= 0;
                     end else if(krnl1x1Bias_bram_rden[g4]) begin
                         krnl1x1Bias_bram_rdAddr[g4] <= krnl1x1Bias_bram_rdAddr[g4] + 1;
@@ -1127,7 +1220,8 @@ module cnn_layer_accel_FAS #(
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
 	always@(*) begin
-		if(trans_in_fifo_rd_rst_busy
+		if(trans_in_meta_fifo_rd_rst_busy
+			&& trans_in_pyld_fifo_rd_rst_busy
 			&& job_fetch_fifo_wr_rst_busy
 			&& job_fetch_fifo_rd_rst_busy
 			&& convMap_fifo_rd_rst_busy
@@ -1139,7 +1233,8 @@ module cnn_layer_accel_FAS #(
 			&& prevMap_fifo_rd_rst_busy
 			&& resdMap_fifo_rd_rst_busy
 			&& outBuf_fifo_wr_rst_busy
-			&& trans_eg_fifo_wr_rst_busy)
+			&& trans_eg_meta_fifo_wr_rst_busy
+			&& trans_eg_pyld_fifo_wr_rst_busy)
 		begin
 			FAS_rdy_n = 1;
 		end else begin
@@ -1148,13 +1243,15 @@ module cnn_layer_accel_FAS #(
 	end
 	
 	always@(*) begin
-		if(trans_in_fifo_wr_rst_busy
+		if(trans_in_meta_fifo_wr_rst_busy
+			&& trans_in_pyld_fifo_wr_rst_busy
 			&& convMap_fifo_wr_rst_busy
 			&& partMap_fifo_wr_rst_busy
 			&& prevMap_fifo_wr_rst_busy
 			&& resdMap_fifo_wr_rst_busy
 			&& outBuf_fifo_rd_rst_busy
-			&& trans_eg_fifo_rd_rst_busy)
+			&& trans_eg_meta_fifo_rd_rst_busy
+			&& trans_eg_pyld_fifo_rd_rst_busy)
 		begin
 			FAS_intf_rdy_n = 1;
 		end else begin
@@ -1165,6 +1262,30 @@ module cnn_layer_accel_FAS #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+	assign curr_conv1x1_it_pip_en = conv1x1_pip_en_cfg[(`KRNL_1X1_SIMD * conv1x1_it) +: `KRNL_1X1_SIMD];
+	
+	always@(posedge clk_FAS) begin
+		if(rst) begin
+			conv1x1_it <= 0;
+		end else begin
+			if(krnl_count_r == num_itN_1x1_kernels_cfg[conv1x1_it]) begin
+				conv1x1_it <= conv1x1_it + 1;
+			end			
+		end
+	end
+	
+	assign curr_AWP_QUAD_en = awp_quad_en_cfg[(`MAX_QUAD_PER_AWP * AWP_QUAD_idx) +: `MAX_QUAD_PER_AWP];
+	
+	always@(posedge clk_FAS) begin
+		if(rst) begin
+			AWP_QUAD_idx <= 0;
+		end else begin
+			if(AWP_QUAD_cfg_ct == C_AWP_QUAD_CFG_PKT_TOT || ) begin
+				AWP_QUAD_idx <= AWP_QUAD_idx + 1;
+			end			
+		end
+	end
+	
 	always@(posedge clk_intf) begin
 		if(rst || FAS_intf_rdy_n) begin
 			targ_write_ack <= 0;
@@ -1181,106 +1302,80 @@ module cnn_layer_accel_FAS #(
 			targ_read_ack <= 0;
 		end else begin
 			targ_read_ack <= 0;
-			if(targ_read_addr_vld)begin
-				targ_read_ack <= 1;
-			end
+            if(targ_read_addr == 0 && targ_read_addr_vld) begin
+				// <= targ_read_data[];
+				targ_read_ack	<= 1;
+            end
 		end
 	end
-	
+
     always@(posedge clk_intf) begin
         if(rst || process_cmpl || FAS_intf_rdy_n) begin
-            krnl1x1Depth_cfg                <= 0;
-            FAS_cfg_Addr                    <= 0;
-            FAS_cfg_data_len                <= 0;
-            AWP_cfg_Addr                    <= 0;
-            AWP_cfg_data_len                <= 0;
-            pixelSeqAddr_cfg                <= 0;
-            partMapAddr_cfg                 <= 0;
-            resdMapAddr_cfg                 <= 0;
-            outMapAddr_cfg                  <= 0;
-            pixSeqCfgFetchTotal_cfg         <= 0;
-            inMapAddr_cfg                   <= 0;
-            prevMapAddr_cfg                 <= 0;
-            im_fetch_amount_cfg             <= 0;
-            inMapFetchTotal_cfg             <= 0;
-            krnl3x3Addr_cfg                 <= 0;
-            krnl3x3BiasAddr_cfg             <= 0;
-            krnl3x3FetchTotal_cfg           <= 0;
-            krnl3x3BiasFetchTotal_cfg       <= 0;
-            krnl1x1FetchTotal_cfg           <= 0;
-            krnl1x1BiasFetchTotal_cfg       <= 0;
-            partMapFetchTotal_cfg           <= 0;
-            resdMapFetchTotal_cfg           <= 0;
-            outMapStoreTotal_cfg            <= 0;
-            ob_store_amount_cfg             <= 0;
-            prevMapFetchTotal_cfg           <= 0;
-            num_1x1_kernels_cfg             <= 0;
-            cm_high_watermark_cfg           <= 0;
-            rm_low_watermark_cfg            <= 0;
-            pm_low_watermark_cfg            <= 0;
-            pv_low_watermark_cfg            <= 0;
-            rm_fetch_amount_cfg             <= 0;
-            pm_fetch_amount_cfg             <= 0;
-            pv_fetch_amount_cfg             <= 0;
-            im_fetch_amount_cfg             <= 0;
-            krnl1x1_pding_cfg               <= 0;
-            krnl1x1_pad_bgn_cfg             <= 0;
-            krnl1x1_pad_end_cfg             <= 0;
-            opcode_cfg                      <= 0;
-            res_high_watermark_cfg          <= 0;
-            krnl1x1_bram_rdAddr_end_cfg     <= 0;
-            krnl1x1_dpth_end_cfg            <= 0;
-			conv1x1_pip_en_cfg				<= 0;
-			ob_high_watermark_cfg			<= 0;
-            start_FAS                       <= 0;
-        end else begin
+            krnl1x1Depth_cfg                	<= 0;
+            FAS_cfg_Addr                    	<= 0;
+            FAS_cfg_data_len                	<= 0;
+            AWP_cfg_Addr                    	<= 0;
+            AWP_cfg_data_len                	<= 0;
+            pixelSeqAddr_cfg                	<= 0;
+            partMapAddr_cfg                 	<= 0;
+            resdMapAddr_cfg                 	<= 0;
+            outMapAddr_cfg                  	<= 0;
+            pixSeqCfgFetchTotal_cfg         	<= 0;
+            inMapAddr_cfg                   	<= 0;
+            prevMapAddr_cfg                 	<= 0;
+            im_fetch_amount_cfg             	<= 0;
+            inMapFetchTotal_cfg             	<= 0;
+            krnl3x3Addr_cfg                 	<= 0;
+            krnl3x3BiasAddr_cfg             	<= 0;
+            krnl3x3FetchTotal_cfg           	<= 0;
+            krnl3x3BiasFetchTotal_cfg       	<= 0;
+            krnl1x1FetchTotal_cfg           	<= 0;
+            krnl1x1BiasFetchTotal_cfg       	<= 0;
+            partMapFetchTotal_cfg           	<= 0;
+            resdMapFetchTotal_cfg           	<= 0;
+            outMapStoreTotal_cfg            	<= 0;
+            ob_store_amount_cfg             	<= 0;
+            prevMapFetchTotal_cfg           	<= 0;
+            num_itN_1x1_kernels_cfg[0]          <= 0;
+			num_itN_1x1_kernels_cfg[1]			<= 0;
+			num_itN_1x1_kernels_cfg[2]			<= 0;
+			num_itN_1x1_kernels_cfg[3]			<= 0;
+			num_tot_1x1_kernels_cfg				<= 0;
+            cm_high_watermark_cfg           	<= 0;
+            rm_low_watermark_cfg            	<= 0;
+            pm_low_watermark_cfg            	<= 0;
+            pv_low_watermark_cfg            	<= 0;
+            rm_fetch_amount_cfg             	<= 0;
+            pm_fetch_amount_cfg             	<= 0;
+            pv_fetch_amount_cfg             	<= 0;
+            im_fetch_amount_cfg             	<= 0;
+            opcode_cfg                      	<= 0;
+            res_high_watermark_cfg          	<= 0;
+            krnl1x1_bram_rdAddr_end_cfg     	<= 0;
+            krnl1x1_dpth_end_cfg            	<= 0;
+			conv1x1_pip_en_cfg					<= 0;
+			ob_high_watermark_cfg				<= 0;
+			krnl_1x1_itN_addr_cfg[0]			<= 0;
+			krnl_1x1_itN_addr_cfg[1]			<= 0;
+			krnl_1x1_itN_addr_cfg[2]			<= 0;
+			krnl_1x1_itN_addr_cfg[3]			<= 0;
+			krnl_1x1_itN_fetch_amount_cfg[0]	<= 0;
+			krnl_1x1_itN_fetch_amount_cfg[1]	<= 0;
+			krnl_1x1_itN_fetch_amount_cfg[2]	<= 0;
+			krnl_1x1_itN_fetch_amount_cfg[3]	<= 0;
+			AWP_QUAD_en_cfg						<= 0;
+			krnl_1x1_ld_sz_cfg			    	<= C_KRNL_1X1_TRAN_SZ;
+            start_FAS                       	<= 0;
+			targ_write_ack						<= 0;
+			krnl1x1FetchTotal_cfg				<= 0;
+        end else begin	
+			targ_write_ack						<= 0;
             if(targ_write_addr == 0 && targ_write_addr_vld) begin
-                // krnl1x1Depth_cfg                <= targ_write_data[];
-                // FAS_cfg_Addr                    <= targ_write_data[];
-                // FAS_cfg_fetch_amount            <= targ_write_data[];
-                // FAS_cfg_data_len                <= targ_write_data[];
-                // AWP_cfg_Addr                    <= targ_write_data[];
-                // AWP_cfg_fetch_amount            <= targ_write_data[];
-                // AWP_cfg_data_len                <= targ_write_data[];
-                // pixelSeqAddr_cfg                <= targ_write_data[];
-                // partMapAddr_cfg                 <= targ_write_data[];
-                // resdMapAddr_cfg                 <= targ_write_data[];
-                // outMapAddr_cfg                  <= targ_write_data[];
-                // pixSeqCfgFetchTotal_cfg         <= targ_write_data[];
-                // inMapAddr_cfg                   <= targ_write_data[];
-                // prevMapAddr_cfg                 <= targ_write_data[];
-                // im_fetch_amount_cfg             <= targ_write_data[];
-                // inMapFetchTotal_cfg             <= targ_write_data[];
-                // krnl3x3Addr_cfg                 <= targ_write_data[];
-                // krnl3x3BiasAddr_cfg             <= targ_write_data[];
-                // krnl3x3FetchTotal_cfg           <= targ_write_data[];
-                // krnl3x3BiasFetchTotal_cfg       <= targ_write_data[];
-                // krnl1x1FetchTotal_cfg           <= targ_write_data[];
-                // krnl1x1BiasFetchTotal_cfg       <= targ_write_data[];
-                // partMapFetchTotal_cfg           <= targ_write_data[];
-                // resdMapFetchTotal_cfg           <= targ_write_data[];
-                // outMapStoreTotal_cfg            <= targ_write_data[];
-                // ob_store_amount_cfg             <= targ_write_data[];
-                // prevMapFetchTotal_cfg           <= targ_write_data[];
-                // num_1x1_kernels_cfg             <= targ_write_data[];
-                // cm_high_watermark_cfg           <= targ_write_data[];
-                // rm_low_watermark_cfg            <= targ_write_data[];
-                // pm_low_watermark_cfg            <= targ_write_data[];
-                // pv_low_watermark_cfg            <= targ_write_data[];
-                // rm_fetch_amount_cfg             <= targ_write_data[];
-                // pm_fetch_amount_cfg             <= targ_write_data[];
-                // pv_fetch_amount_cfg             <= targ_write_data[];
-                // im_fetch_amount_cfg             <= targ_write_data[];
-                // krnl1x1_pding_cfg               <= targ_write_data[];
-                // krnl1x1_pad_bgn_cfg             <= targ_write_data[];
-                // krnl1x1_pad_end_cfg             <= targ_write_data[];
-                // opcode_cfg                      <= targ_write_data[];
-                // res_high_watermark_cfg          <= targ_write_data[];
-                // krnl1x1_bram_rdAddr_end_cfg     <= targ_write_data[];   
-                // krnl1x1_dpth_end_cfg            <= targ_write_data[];
-				// conv1x1_pip_en_cfg			   <= targ_write_data[];
+				// <= targ_write_data[];
+				targ_write_ack	<= 1;
             end else if(targ_write_addr == 1 && targ_write_addr_vld) begin
-                start_FAS                       <= 1;
+                start_FAS       <= 1;
+				targ_write_ack	<= 1;
             end
         end
     end
@@ -1292,20 +1387,17 @@ module cnn_layer_accel_FAS #(
 		if(rst || FAS_intf_rdy_n) begin
 			krnl1x1_bram_wren_r <= 0;
 			krnl1x1_ld_count	<= 0;
-			ki					<= 0;
-			for(i8 = 0; i8 < `KRNL_1X1_SIMD; i8 = i8 + 1) begin
-				kn1x1_bm_wr_sel[i8] <= 0;
-			end
+			kn1x1_bm_wr_sel 	<= C_KN1X1_BM_WR_SEL_DEF;
 		end else begin
-			kn1x1_bm_wr_sel[ki] <= 0;
-			if(krnl1x1_bram_wren_r && kn1x1_bm_wr_sel) begin
-				ki
+			if(krnl1x1_bram_wren_r && krnl1x1_ld_count == krnl1x1_dpth_tot_cfg && kn1x1_bm_wr_sel == C_KN1X1_BM_WR_SEL_END) begin
+				kn1x1_bm_wr_sel		<= C_KN1X1_BM_WR_SEL_DEF;
+			end else if(krnl1x1_bram_wren_r && krnl1x1_ld_count == krnl1x1_dpth_tot_cfg) begin
+				kn1x1_bm_wr_sel		<= kn1x1_bm_wr_sel << 1;
 			end
 			if(init_read_data_rdy[C_KL_IT_RD_ID] && init_read_data_vld[C_KL_IT_RD_ID]) begin
 				krnl1x1_bram_wren_r 	<= 1;
 				krnl1x1_ld_count 		<= krnl1x1_ld_count + C_KRNL_1X1_TRAN_SZ;
-			end
-			if(init_read_cmpl[C_KL_IT_RD_ID]) begin
+			end else if(init_read_cmpl[C_KL_IT_RD_ID]) begin
 				krnl1x1_ld_count 		<= 0;
 			end
 		end
@@ -1541,11 +1633,19 @@ module cnn_layer_accel_FAS #(
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign init_usrIntr = |init_usrIntr_r;
+	assign process_cmpl_w = |process_cmpl_r;
 	
 	integer i7;
 	always@(posedge clk_FAS) begin
-		for(int i7 = 1; i7 < 4; i7 = i7 + 1) begin // TODO: Fix hardcoding of 4
+		for(int i7 = 1; i7 < `CLOCK_FACTOR; i7 = i7 + 1) begin // TODO: Fix hardcoding of 4
 			init_usrIntr_r[i7] <= init_usrIntr_r[i7 - 1];
+		end
+	end
+
+	integer i8;
+	always@(posedge clk_FAS) begin
+		for(int i8 = 1; i8 < `CLOCK_FACTOR; i8 = i8 + 1) begin // TODO: Fix hardcoding of 4
+			process_cmpl_r[i8] <= process_cmpl_r[i8 - 1];
 		end
 	end
 	
@@ -1553,14 +1653,15 @@ module cnn_layer_accel_FAS #(
         if(rst || FAS_rdy_n) begin
             last_wrt_r          <= 0;
             last_CO_recvd_r     <= 0;
-            process_cmpl        <= 0;
+            process_cmpl_r[0]   <= 0;
             init_usrIntr_acked  <= 0;
 			init_usrIntr_r[0]   <= 0;
 			state				<= ST_IDLE;
         end else begin
-            process_cmpl        <= 0;
-            last_wrt_r          <= (last_wrt)       ? 1 : last_wrt_r;
-            last_CO_recvd_r     <= (last_CO_recvd)  ? 1 : last_CO_recvd_r;
+            process_cmpl_r[0]   <= 0;
+            last_wrt_r          <= (last_wrt)         ? 1 : last_wrt_r;
+            last_CO_recvd_r     <= (last_CO_recvd)    ? 1 : last_CO_recvd_r;
+			all_AWP_complete_r	<= (all_AWP_complete) ? 1 : all_AWP_complete_r;
 			init_usrIntr_r[0]	<= 0;
             case(state)
                 ST_IDLE: begin
@@ -1574,7 +1675,7 @@ module cnn_layer_accel_FAS #(
                 ST_LD_1X1_KRN: begin
                     if(init_read_cmpl[C_KL_IT_RD_ID] && ret_state == ST_CFG_AWP && opcode_cfg[`OPCODE_14_FIELD]) begin // 1x1 only no AWP exe
                         state <= ST_ACTIVE;
-					end else if(init_read_cmpl[C_KL_IT_RD_ID]0 begin
+					end else if(init_read_cmpl[C_KL_IT_RD_ID]) begin
 						state <= ret_state;
 					end
                 end
@@ -1585,11 +1686,11 @@ module cnn_layer_accel_FAS #(
                 end
                 ST_START_AWP: begin
                     if(start_AWP_done) begin
-                        state               <= ST_ACTIVE;
+                        state	<= ST_ACTIVE;
                     end
                 end
                 ST_ACTIVE: begin
-					if() begin
+					if(krnl_count_r == num_itN_1x1_kernels_cfg[conv1x1_it] && tot_krnl_count < num_tot_1x1_kernels_cfg) begin
 						state 		<= ST_LD_1X1_KRN;
 						ret_state	<= ST_ACTIVE;
 					end else if(partMapFetchCount == partMapFetchTotal_cfg
@@ -1605,11 +1706,12 @@ module cnn_layer_accel_FAS #(
                     if(last_wrt_r) begin
                         last_wrt_r          <= 0;
                         last_CO_recvd_r     <= 0;
+						process_cmpl_r[0]	<= 1;
                         state               <= ST_SEND_COMPLETE;
                     end
                 end
                 ST_SEND_COMPLETE: begin
-                    if(all_AWP_complete) begin
+                    if(all_AWP_complete_r) begin
                         init_usrIntr_r[0]	<= init_usrIntr_ack ? 1'b0 : (~init_usrIntr_acked ? 1'b1 : init_usrIntr_r[0]);
                         init_usrIntr_acked	<= init_usrIntr_ack ? 1'b1 :  init_usrIntr_acked;
                     end
@@ -1623,12 +1725,13 @@ module cnn_layer_accel_FAS #(
 	// BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
 	always@(posedge clk_FAS) begin
 		if(rst) begin
-			trans_eg_fifo_wren_r <= 0;
+			trans_eg_fifo_wren_r 	<= 0;
 		end else begin
-			trans_eg_fifo_wren_r <= 0;
+			trans_eg_fifo_wren_r 	<= 0;
 			case(state)
+				trans_eg_fifo_din_r
 				ST_CFG_AWP: begin
-
+					if(trans_eg_fifo_wren_r
 				end
 				ST_START_AWP: begin
 
@@ -1640,7 +1743,14 @@ module cnn_layer_accel_FAS #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    always@(posedge clk_FAS) begin
+    assign trans_in_fifo_din_rdy  	= 1;
+	assign trans_in_meta_fifo_dout 	= trans_in_fifo_dout[C_TRANS_IN_PYLD_FIFO_RD_WTH - 1:0]
+	assign trans_in_pyld_fifo_dout 	= trans_in_fifo_dout[C_TRANS_IN_FIFO_HIGH:C_TRANS_IN_PYLD_FIFO_RD_WTH];
+	assign trans_in_fifo_empty 		= trans_in_meta_fifo_empty && trans_in_pyld_fifo_empty;
+	assign trans_in_meta_fifo_rden 	= trans_in_fifo_rden;
+	assign trans_in_pyld_fifo_rden 	= trans_in_fifo_rden;
+	
+	always@(posedge clk_FAS) begin
         if(rst || FAS_rdy_n) begin
             trans_in_fifo_rden  	<= 0;
             cfg_AWP_done        	<= 0;
@@ -1659,17 +1769,13 @@ module cnn_layer_accel_FAS #(
             res_dwc_fifo_wren   	<= 0;
             job_fetch_fifo_wren 	<= 0;
 			last_CO_recvd			<= 0;
-            if(trans_in_fifo_rden && trans_in_fifo_dout[`TRANS_AWP_CFG_ACK]) begin
-                cfg_AWP_done        <= 1;
-            end if(trans_in_fifo_rden && trans_in_fifo_dout[`TRANS_AWP_START_ACK]) begin
-                start_AWP_done      <= 1;
-            end else if(trans_in_fifo_rden && trans_in_fifo_dout[`TRANS_RESULT_WRITE] && opcode_cfg[`OPCODE_16_FIELD]) begin
+			if(trans_in_fifo_rden && trans_in_meta_fifo_dout[`TRANS_RESULT_WRITE] && opcode_cfg[`OPCODE_16_FIELD]) begin
                 res_dwc_fifo_wren   <= 1;
-            end else if(trans_in_fifo_rden && trans_in_fifo_dout[`TRANS_JOB_CMPL]) begin
+            end else if(trans_in_fifo_rden && trans_in_meta_fifo_dout[`TRANS_JOB_CMPL]) begin
                 all_AWP_complete    <= 1;
-            end else if(trans_in_fifo_rden && trans_in_fifo_dout[`TRANS_JOB_FETCH]) begin
+            end else if(trans_in_fifo_rden && trans_in_meta_fifo_dout[`TRANS_JOB_FETCH]) begin
                 job_fetch_fifo_wren <= 1;
-            end else if(state == ST_ACTIVE && trans_in_fifo_dout[`TRANS_LAST_CO]) begin
+            end else if(state == ST_ACTIVE && trans_in_meta_fifo_dout[`TRANS_LAST_CO]) begin
 				last_CO_recvd 		<= 1;
 			end
         end
@@ -1678,13 +1784,22 @@ module cnn_layer_accel_FAS #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    assign trans_eg_fifo_wren = trans_eg_fifo_wren_r || (init_read_data_vld[C_IM_IT_RD_ID] && init_read_data_rdy[C_IM_IT_RD_ID]);
-    
+    assign trans_eg_fifo_wren 		= trans_eg_fifo_wren_r || (init_read_data_vld[C_IM_IT_RD_ID] && init_read_data_rdy[C_IM_IT_RD_ID]);
+    assign trans_eg_meta_fifo_wren 	= trans_eg_fifo_wren;
+	assign trans_eg_pyld_fifo_wren 	= trans_eg_fifo_wren;
+	assign trans_eg_meta_fifo_din 	= trans_eg_meta_fifo_din_r;
+	assign trans_eg_pyld_fifo_din 	= trans_eg_pyld_fifo_din_r;
+	assign trans_eg_fifo_empty		= trans_eg_meta_fifo_empty && trans_eg_pyld_fifo_empty;
+	assign trans_eg_meta_fifo_wren 	= trans_eg_fifo_rden;
+	assign trans_eg_pyld_fifo_wren 	= trans_eg_fifo_rden;
+	
     always@(*) begin
         if(state == ST_CFG_AWP || state == ST_START_AWP) begin
-            trans_eg_fifo_din = trans_eg_fifo_din_r;
+            trans_eg_fifo_din[C_TRANS_EG_FIFO_HIGH:C_TRANS_EG_PYLD_FIFO_WR_WTH] = trans_eg_meta_fifo_din_r;
+			trans_eg_fifo_din[C_TRANS_EG_PYLD_FIFO_WR_WTH - 1:0] 				= trans_eg_pyld_fifo_din_r;
         end else begin
-            trans_eg_fifo_din = init_read_data;
+			trans_eg_fifo_din[C_TRANS_EG_FIFO_HIGH:C_TRANS_EG_PYLD_FIFO_WR_WTH] = init_read_data;
+			// trans_eg_fifo_din[C_TRANS_EG_PYLD_FIFO_WR_WTH - 1:0] 				= /* TODO */;
         end
     end
 
@@ -1693,7 +1808,7 @@ module cnn_layer_accel_FAS #(
 			trans_eg_fifo_rden		<= 0;
         end else begin
             trans_eg_fifo_rden      <= 0;
-            if(!trans_eg_fifo_empty) begin
+            if(!trans_eg_fifo_empty && trans_eg_fifo_dout_rdy) begin
                 trans_eg_fifo_rden     <= 1;
             end
         end
@@ -1705,7 +1820,7 @@ module cnn_layer_accel_FAS #(
     assign init_read_req_id[(`MAX_FAS_RD_ID * C_KL_IT_RD_ID) +: `MAX_FAS_RD_ID] = C_KL_IT_RD_ID;
     
     always@(posedge clk_FAS) begin
-        if(rst || FAS_rdy_n || process_cmpl) begin
+        if(rst || FAS_rdy_n || process_cmpl_r[0]) begin
             init_read_req[C_KL_IT_RD_ID]           											<= 0;
             init_read_req_acked[C_KL_IT_RD_ID]     											<= 0;
 			init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= 0;
@@ -1714,8 +1829,8 @@ module cnn_layer_accel_FAS #(
         end else begin
 			init_read_data_rdy[C_KL_IT_RD_ID]		<= 0;
             if(state == ST_LD_1X1_KRN && !init_read_in_prog[C_KL_IT_RD_ID]) begin
-                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= FAS_cfg_Addr;
-                init_read_len[(`INIT_RD_LEN_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]     	<= FAS_cfg_data_len;
+                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= krnl_1x1_itN_addr_cfg[conv1x1_it];
+                init_read_len[(`INIT_RD_LEN_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]     	<= krnl_1x1_itN_fetch_amount_cfg[conv1x1_it];
                 init_read_req[C_KL_IT_RD_ID]        						
 					<= init_read_req_ack[C_KL_IT_RD_ID] ? 1'b0 : (~init_read_req_acked[C_KL_IT_RD_ID] ? 1'b1 : init_read_req[C_KL_IT_RD_ID]);
                 init_read_req_acked[C_KL_IT_RD_ID]							
@@ -1724,9 +1839,6 @@ module cnn_layer_accel_FAS #(
 			if(state == ST_LD_1X1_KRN && init_read_in_prog[C_KL_IT_RD_ID]) begin
 				init_read_data_rdy[C_KL_IT_RD_ID]	<= 1;
 			end
-			if(init_read_cmpl[C_KL_IT_RD_ID]) begin
-                __FetchCount     <= __FetchCount + __fetch_amount_cfg;
-            end
         end
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
@@ -1736,7 +1848,7 @@ module cnn_layer_accel_FAS #(
     assign init_read_req_id[(`MAX_FAS_RD_ID * C_AC_IT_RD_ID) +: `MAX_FAS_RD_ID] = C_AC_IT_RD_ID;
     
     always@(posedge clk_FAS) begin
-        if(rst || FAS_rdy_n || process_cmpl) begin
+        if(rst || FAS_rdy_n || process_cmpl_r[0]) begin
 			init_read_req[C_AC_IT_RD_ID]          											<= 0;
 			init_read_req_acked[C_AC_IT_RD_ID]    											<= 0;
 			init_read_addr[(`INIT_RD_ADDR_WIDTH * C_AC_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= 0;
@@ -1764,7 +1876,7 @@ module cnn_layer_accel_FAS #(
     assign init_read_req_id[(`MAX_FAS_RD_ID * C_IM_IT_RD_ID) +: `MAX_FAS_RD_ID] = C_IM_IT_RD_ID;
     
     always@(posedge clk_FAS) begin
-        if(rst || FAS_rdy_n || process_cmpl) begin
+        if(rst || FAS_rdy_n || process_cmpl_r[0]) begin
             init_read_req[C_IM_IT_RD_ID]           											<= 0;
             init_read_req_acked[C_IM_IT_RD_ID]     											<= 0;
             inMapFetchCount                        											<= 0;
@@ -1804,7 +1916,7 @@ module cnn_layer_accel_FAS #(
     assign init_read_req_id[(`MAX_FAS_RD_ID * C_PM_IT_RD_ID) +: `MAX_FAS_RD_ID] = C_PM_IT_RD_ID;
     
     always@(posedge clk_FAS) begin
-        if(rst || FAS_rdy_n || process_cmpl) begin
+        if(rst || FAS_rdy_n || process_cmpl_r[0]) begin
             init_read_req[C_PM_IT_RD_ID]           											<= 0;
             init_read_req_acked[C_PM_IT_RD_ID]     											<= 0;
 			init_read_addr[(`INIT_RD_ADDR_WIDTH * C_PM_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= 0;
@@ -2071,11 +2183,15 @@ module cnn_layer_accel_FAS #(
         if(rst || FAS_rdy_n) begin
             dpth_count_r            <= 0;
             krnl_count_r            <= 0;
+			tot_krnl_count			<= 0;
         end else begin
             if(krnl1x1_bram_rden_w) begin
+				if(krnl_count_r == num_itN_1x1_kernels_cfg[conv1x1_it]) begin
+					tot_krnl_count <= tot_krnl_count + krnl_count_r;
+				end
                 if(dpth_count_r == (krnl1x1Depth_cfg - C_KRNL_1X1_BRAM_RD_WTH)) begin
                     dpth_count_r          <= 0;
-                    if(krnl_count_r == (num_1x1_kernels_cfg  - 1)) begin
+                    if(krnl_count_r == num_itN_1x1_kernels_cfg[conv1x1_it]) begin
                         krnl_count_r      <= 0;
                     end else begin
                         krnl_count_r <= krnl_count_r + 1;
@@ -2137,7 +2253,7 @@ module cnn_layer_accel_FAS #(
     end
     
     always@(posedge clk_FAS) begin
-        if(rst || FAS_rdy_n || process_cmpl) begin
+        if(rst || FAS_rdy_n || process_cmpl_r[0]) begin
 			init_write_req			<= 0;
 			init_read_addr      	<= 0;
 			init_read_len       	<= 0;
@@ -2228,7 +2344,7 @@ module cnn_layer_accel_FAS #(
     always@(state) begin
         case(state)
             ST_IDLE:                state_s = "ST_IDLE";
-			ST_LD_1X1_KRN			state_s = "ST_LD_1X1_KRN";
+			ST_LD_1X1_KRN:			state_s = "ST_LD_1X1_KRN";
             ST_CFG_AWP:             state_s = "ST_CFG_AWP";
             ST_START_AWP:           state_s = "ST_START_AWP";
             ST_ACTIVE:              state_s = "ST_ACTIVE";

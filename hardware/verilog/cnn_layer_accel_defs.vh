@@ -47,6 +47,7 @@
 `define INIT_RD_DATA_WIDTH               1024
 `define INIT_WR_DATA_WIDTH               1024
 `define SYS_INTC_DT_WIDTH                1024
+`define CLOCK_FACTOR					 4
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -89,6 +90,7 @@
 `define CONV_OUT_FMT1                   1'b1
 `define PIX_SEQ_BRAM_DEPTH              (`MAX_NUM_INPUT_COLS * 8) // (`MAX_NUM_INPUT_COLS * ceil2(`WINDOW_3x3_NUM_CYCLES))
 `define NUM_WHT_TABLES                  `NUM_CE_PER_QUAD
+`define MAX_QUAD_PER_AWP				4
 // Act Field
 // `define ACTV_NUM_FRAC_BITS              14
 // `define ACTV_WIDTH                      16
@@ -285,7 +287,7 @@
 `define ADDER_TREE_LATENCY                  clog2(`KRNL_1X1_DEPTH_SIMD)
 `define ADD_BIAS_LATENCY                    1
 `define MAX_1X1_KRNL_DEPTH                  1024                        
-
+`define MAX_1X1_KRNL_IT						4
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // [8] FAS CFG DEFS
@@ -529,12 +531,15 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // [9] FAS TRANS FIELDS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define TRANS_AWP_CFG                   0
-`define TRANS_JOB_FETCH                 1
-`define TRANS_AWP_START                 2
-`define TRANS_RESULT_WRITE              3
-`define TRANS_LAST_CO                   4
-`define TRANS_JOB_CMPL                  5
+`define TRANS_AWP_GEN_CFG               0
+`define TRANS_AWP_PXS_CFG               1
+`define TRANS_AWP_KRN_CFG               2
+`define TRANS_AWP_KNB_CFG               3
+`define TRANS_JOB_FETCH                 4
+`define TRANS_AWP_START                 5
+`define TRANS_RESULT_WRITE              6
+`define TRANS_LAST_CO                   7
+`define TRANS_JOB_CMPL                  8
 
 `define TRANS_OP_WIDTH			        3
 `define TRANS_OP_LOW			        0

@@ -1,2 +1,0 @@
-resdMap_dpth_fifo.v,verilog,xil_defaultlib,../../../../resdMap_dpth_fifo/sim/resdMap_dpth_fifo.v,
-glbl.v,Verilog,xil_defaultlib,glbl.v

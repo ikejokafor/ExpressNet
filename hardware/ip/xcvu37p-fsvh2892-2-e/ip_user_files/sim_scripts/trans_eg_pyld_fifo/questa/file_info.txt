@@ -1,0 +1,2 @@
+trans_eg_pyld_fifo.v,verilog,xil_defaultlib,../../../../trans_eg_pyld_fifo/sim/trans_eg_pyld_fifo.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v
