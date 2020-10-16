@@ -30,7 +30,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_conv1x1_pip #(
-    parameter C_CONV1X1_PIP_DLY         = 0
+    parameter C_CONV1X1_PIP_DLY = 0
 ) (
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     rst                         ,
@@ -43,7 +43,7 @@ module cnn_layer_accel_conv1x1_pip #(
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     opcode_cfg                  ,
     krnl1x1Depth_cfg            ,
-    num_itN_1x1_kernels_cfg     ,
+    itN_num_1x1_kernels_cfg     ,
     conv1x1_it_pip_en           ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     conv1x1_pip_start0          ,
@@ -95,9 +95,9 @@ module cnn_layer_accel_conv1x1_pip #(
     input  logic                                        FAS_intf_rdy_n               ;
     input  logic                                        FAS_rdy_n                    ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-    input  logic [                            15:0]     opcode_cfg                   ;
+    input  logic [                            17:0]     opcode_cfg                   ;
     input  logic [                            15:0]     krnl1x1Depth_cfg             ;
-    input  logic [                            15:0]     num_itN_1x1_kernels_cfg      ;
+    input  logic [                            15:0]     itN_num_1x1_kernels_cfg      ;
     input  logic                                       	conv1x1_it_pip_en            ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     input  logic                                        conv1x1_pip_start0           ;
@@ -435,7 +435,7 @@ module cnn_layer_accel_conv1x1_pip #(
                 adder_tree_datain_valid     <= 1;
                 if(dpth_count == (krnl1x1Depth_cfg - `KRNL_1X1_BRAM_RD_WTH)) begin
                     dpth_count         <= 0;
-                    if(krnl_count == num_itN_1x1_kernels_cfg) begin
+                    if(krnl_count == itN_num_1x1_kernels_cfg) begin
                         krnl_count     <= 0;
                     end else begin
                         krnl_count <= krnl_count + 1;
@@ -480,7 +480,7 @@ module cnn_layer_accel_conv1x1_pip #(
         if(rst || FAS_rdy_n) begin
             krnl1x1Bias_bram_rdAddr <= 0;
         end else begin
-            if(krnl1x1Bias_bram_rden && krnl_count == num_itN_1x1_kernels_cfg) begin
+            if(krnl1x1Bias_bram_rden && krnl_count == itN_num_1x1_kernels_cfg) begin
                 krnl1x1Bias_bram_rdAddr <= 0;
             end else if(krnl1x1Bias_bram_rden) begin
                 krnl1x1Bias_bram_rdAddr <= krnl1x1Bias_bram_rdAddr + 1;

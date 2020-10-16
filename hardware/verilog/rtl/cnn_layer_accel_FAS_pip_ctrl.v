@@ -67,13 +67,14 @@ module cnn_layer_accel_FAS_pip_ctrl (
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Parameters
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam ST_IDLE                  = 7'b0000001;
-    localparam ST_LD_1X1_KRN            = 7'b0000010;
-    localparam ST_CFG_AWP               = 7'b0000100;
-    localparam ST_START_AWP             = 7'b0001000;
-    localparam ST_ACTIVE                = 7'b0010000;
-    localparam ST_WAIT_LAST_WRITE		= 7'b0100000;
-    localparam ST_SEND_COMPLETE         = 7'b1000000;
+    localparam ST_IDLE                       = 8'b00000001;
+    localparam ST_LD_1X1_KRN                 = 8'b00000010;
+	localparam ST_LD_1X1_KRB                 = 8'b00000100;
+    localparam ST_CFG_AWP                    = 8'b00001000;
+    localparam ST_START_AWP                  = 8'b00010000;
+    localparam ST_ACTIVE                     = 8'b00100000;
+    localparam ST_WAIT_LAST_WRITE            = 8'b01000000;
+    localparam ST_SEND_COMPLETE              = 8'b10000000;
 
 	
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -83,14 +84,14 @@ module cnn_layer_accel_FAS_pip_ctrl (
 	input  logic    	rst						;	
 	input  logic    	clk_FAS             	;
 	input  logic    	FAS_rdy_n           	;
-	input  logic [16:0]	opcode_cfg				;
-	input  logic [ 6:0] state 					;
+	input  logic [17:0]	opcode_cfg				;
+	input  logic [ 7:0] state 					;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 	input  logic 		convMap_fifo_empty		;
 	input  logic 		partMap_fifo_empty      ;
 	input  logic 		resdMap_fifo_empty      ;
 	input  logic 		prevMap_fifo_empty      ;
-	input  logic		krnl_count				;
+	input  logic [15:0]	krnl_count				;
 	input  logic		conv1x1_dwc_fifo_rden	;
 	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------	
 	output logic 		pipe_enable				;	
@@ -362,14 +363,14 @@ module cnn_layer_accel_FAS_pip_ctrl (
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk_FAS) begin
         if(rst || FAS_rdy_n) begin
-            vector_add_rm_conv  <= 0;
-            vector_add_pv       <= 0;
+            vector_add_rm_conv_r  	<= 0;
+            vector_add_pv_r     	<= 0;
         end else begin
-            vector_add_rm_conv  <= 0;
-            vector_add_pv       <= 0;
+            vector_add_rm_conv_r  	<= 0;
+            vector_add_pv_r     	<= 0;
             // - - - - - - - - - - - - - -
             if(conv1x1_dwc_fifo_rden && (opcode_cfg[`OPCODE_0_FIELD] || opcode_cfg[`OPCODE_2_FIELD])) begin
-                vector_add_rm_conv <= 1;
+                vector_add_rm_conv_r <= 1;
             end
             // - - - - - - - - - - - - - -
             if(conv1x1_dwc_fifo_rden && (opcode_cfg[`OPCODE_1_FIELD] 
@@ -377,7 +378,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                                         || opcode_cfg[`OPCODE_5_FIELD] 
                                         || opcode_cfg[`OPCODE_7_FIELD])) 
             begin
-                vector_add_pv <= 1;
+                vector_add_pv_r <= 1;
             end
             // - - - - - - - - - - - - - -
         end
@@ -391,6 +392,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
         case(state)
             ST_IDLE:                state_s = "ST_IDLE";
             ST_LD_1X1_KRN:          state_s = "ST_LD_1X1_KRN";
+			ST_LD_1X1_KRB:          state_s = "ST_LD_1X1_KRB";
             ST_CFG_AWP:             state_s = "ST_CFG_AWP";
             ST_START_AWP:           state_s = "ST_START_AWP";
             ST_ACTIVE:              state_s = "ST_ACTIVE";

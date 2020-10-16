@@ -90,12 +90,8 @@
 `define FAS_DSP_LATENCY                     5    
 `define FAS_BRAM_LATENCY                    3
 `define FAS_FIFO_LATENCY                    3
-`define KRNL_1X1_BRAM_WR_DEPTH				256
-`define KRNL_1X1_BRAM_RD_DEPTH              256
-`define KRNL_1X1_BIAS_BRAM_WR_DEPTH         256
-`define KRNL_1X1_BIAS_BRAM_RD_DEPTH         256
 `define MAX_AWP_PER_FAS						1
-`define MAX_FAS_RD_ID						6
+`define MAX_FAS_RD_ID						7
 `define KRNL_1X1_SIMD                       1
 `define KRNL_1X1_DEPTH_SIMD                 64
 `define KRNL_1X1_DPH_SIMD_SHMAT             (clog2(`KRNL_1X1_DEPTH_SIMD))

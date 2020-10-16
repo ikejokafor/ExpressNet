@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="krnl1x1Bias_bram_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1600916772">
-  <File Type="RDS-DCP" Name="krnl1x1Bias_bram.dcp"/>
   <File Type="PA-TCL" Name="krnl1x1Bias_bram.tcl"/>
+  <File Type="RDS-DCP" Name="krnl1x1Bias_bram.dcp"/>
   <File Type="REPORTS-TCL" Name="krnl1x1Bias_bram_reports.tcl"/>
   <File Type="RDS-RDS" Name="krnl1x1Bias_bram.vds"/>
   <File Type="RDS-UTIL-PB" Name="krnl1x1Bias_bram_utilization_synth.pb"/>
