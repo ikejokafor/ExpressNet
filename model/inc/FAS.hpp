@@ -74,16 +74,20 @@ SC_MODULE(FAS)
                 sensitive << clk.pos();
             SC_THREAD(adder_tree_done_process)
                 sensitive << clk.pos();
+				
+			// TODO: see if you can consolidate this into one fifo	
             SC_THREAD(resdMap_dwc_fifo_process)
                 sensitive << clk.pos();
-            SC_THREAD(resdMap_read_process)
+			SC_THREAD(prevMap_dwc_fifo_process)
                 sensitive << clk.pos();
-            SC_THREAD(prevMap_dwc_fifo_process)
+			SC_THREAD(outBuf_dwc_wr_process)
+                sensitive << clk.pos();
+           
+		   SC_THREAD(resdMap_read_process)
                 sensitive << clk.pos();
             SC_THREAD(S_process)
                 sensitive << clk.pos();
-            SC_THREAD(outBuf_dwc_wr_process)
-                sensitive << clk.pos();
+
             SC_THREAD(outBuf_wr_process)
                 sensitive << clk.pos();
 
@@ -101,17 +105,17 @@ SC_MODULE(FAS)
             m_krnl1x1FetchTotal_cfg         = 0;
             m_krnl1x1BiasFetchCount         = 0;
             m_krnl1x1BiasFetchTotal_cfg     = 0;
-            m_resdMapFetchCount              = 0;
-            m_resdMapFetchTotal_cfg          = 0;
+            m_resdMapFetchCount             = 0;
+            m_resdMapFetchTotal_cfg         = 0;
             m_outMapStoreCount              = 0;
             m_outMapStoreTotal_cfg          = 0;
             m_ob_dwc_fifo_sz                = 0;
             m_dpth_count                    = 0;
             m_krnl_count                    = 0;
             m_outBuf_fifo_sz                = 0;
-            m_partMap_bram_sz               = 0;
-            m_resdMap_bram_sz               = 0;
-            m_convMap_bram_sz               = 0;
+            m_partMap_fifo_sz               = 0;
+            m_resdMap_fifo_sz               = 0;
+            m_convMap_fifo_sz               = 0;
             m_pixSeqCfgFetchTotal_cfg       = 0;
             m_inMapFetchTotal_cfg           = 0;
             m_krnl3x3FetchTotal_cfg         = 0;
@@ -219,7 +223,7 @@ SC_MODULE(FAS)
         int                                     m_inMapFetchFactor_cfg          ;
         int                                     m_inMapFetchCount               ;
         int                                     m_inMapFetchTotal_cfg           ;
-        int                                     m_convMap_bram_sz               ;
+        int                                     m_convMap_fifo_sz               ;
         int                                     m_krnl3x3FetchCount             ;
         int                                     m_krnl3x3FetchTotal_cfg         ;
         int                                     m_krnl3x3BiasFetchCount         ;
@@ -230,11 +234,11 @@ SC_MODULE(FAS)
         int                                     m_krnl_1x1_bias_bram_sz         ;
         int                                     m_krnl1x1BiasFetchCount         ;
         int                                     m_krnl1x1BiasFetchTotal_cfg     ;
-        int                                     m_partMap_bram_sz               ;
+        int                                     m_partMap_fifo_sz               ;
         int                                     m_partMapFetchCount             ;
         int                                     m_partMapFetchTotal_cfg         ;
         int                                     m_resdMap_dwc_fifo_sz           ;
-        int                                     m_resdMap_bram_sz               ;
+        int                                     m_resdMap_fifo_sz               ;
         int                                     m_resdMapFetchCount             ;
         int                                     m_resdMapFetchTotal_cfg         ;
         int                                     m_outBuf_fifo_sz                ;

@@ -151,7 +151,7 @@ void QUAD::ctrl_process_1()
             if(m_output_col == (m_num_output_cols_cfg - 1))
             {
                 m_output_col = 0;
-                if(m_krnl_count == (m_num_kernels_cfg - 1))
+                if(m_krnl_count == ((m_num_3x3_kernels_cfg / KRNL_3X3_SIMD) - 1))
                 {
                     string str =
                         "[" + string(name()) + "]:" + " finished output Row " + to_string(m_output_row) + " at time " + sc_time_stamp().to_string() + "\n";
@@ -250,7 +250,7 @@ void QUAD::b_cfg_write(unsigned char* data)
     m_res_high_watermark_cfg    = accel_trans->res_high_watermark_cfg;
     m_num_output_cols_cfg		= accel_trans->num_output_cols_cfg;
     m_num_output_rows_cfg		= accel_trans->num_output_rows_cfg;
-    m_num_kernels_cfg			= accel_trans->num_kernels_cfg;
+    m_num_3x3_kernels_cfg	    = accel_trans->num_3x3_kernels_cfg;
     m_master_QUAD_cfg			= accel_trans->master_QUAD_cfg;
     m_cascade_cfg				= accel_trans->cascade_cfg;
     m_num_expd_input_cols_cfg	= accel_trans->num_expd_input_cols_cfg;
@@ -272,7 +272,7 @@ void QUAD::print_cfg()
         "\tResult Fifo HighWatermark:           " + to_string(m_res_high_watermark_cfg)     + "\n"
         "\tNumber of Output Columns:            " + to_string(m_num_output_cols_cfg) 		+ "\n"
         "\tNumber of Output Rows:               " + to_string(m_num_output_rows_cfg) 		+ "\n"
-        "\tNumber of Kernels:                   " + to_string(m_num_kernels_cfg) 			+ "\n"
+        "\tNumber of 3x3 Kernels:               " + to_string(m_num_3x3_kernels_cfg) 		+ "\n"
         "\tMaster QUAD:                         " + to_string(m_master_QUAD_cfg) 			+ "\n"
         "\tCascade:                             " + to_string(m_cascade_cfg) 				+ "\n"
         "\tNumber of Expanded Input Coloumns:   " + to_string(m_num_expd_input_cols_cfg) 	+ "\n"
@@ -294,14 +294,14 @@ void QUAD::b_pxSeqCfg_write()
 
 void QUAD::b_krnl3x3Cfg_write()
 {
-    int numcycles = m_num_kernels_cfg * KRNL_SLOT_SIZE;
+    int numcycles = m_num_3x3_kernels_cfg * KRNL_SLOT_SIZE;
     wait(numcycles, SC_NS);
 }
 
 
 void QUAD::b_krnl3x3BiasCfg_write()
 {
-    wait(m_num_kernels_cfg, SC_NS);
+    wait(m_num_3x3_kernels_cfg, SC_NS);
 }
 
 

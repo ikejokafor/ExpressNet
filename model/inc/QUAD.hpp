@@ -85,7 +85,7 @@ SC_MODULE(QUAD)
         int						    m_num_input_cols_cfg		;
         int						    m_num_output_cols_cfg		;
         int						    m_num_output_rows_cfg		;
-        int						    m_num_kernels_cfg			;
+        int						    m_num_3x3_kernels_cfg		;
         bool					    m_master_QUAD_cfg			;
         bool					    m_cascade_cfg				;
         int						    m_num_expd_input_cols_cfg	;

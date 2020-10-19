@@ -12,6 +12,7 @@
 
 
 // #define VERBOSE_DEBUG
+#define KRNL_3X3_SIMD						1
 #define BITS_PER_PIXEL                      16
 #define AXI_BUS_SIZE                        ((uint32_t)64) // bytes
 #define AXI_ACCEL_CLK_RATIO                 5
@@ -32,9 +33,9 @@
 #define MAX_FAS_ROUT_TRANS                  1
 #define MAX_3x3_KERNELS                     64
 #define YOLOV3_MAX_1x1_INPUT_DEPTH          1024
-#define KERNEL_1x1_SIMD                     1
-#define KERNEL_1x1_DEPTH_SIMD               32
-#define LOG2_KERNEL_1x1_DEPTH_SIMD          log2(KERNEL_1x1_DEPTH_SIMD)
+#define KRNL_1X1_SIMD                     	1
+#define KERNEL_1X1_DEPTH_SIMD               32
+#define LOG2_KERNEL_1X1_DEPTH_SIMD          log2(KERNEL_1X1_DEPTH_SIMD)
 #define MAX_1x1_KERNELS                     1024
 #define PIXEL_SIZE                          2    // 2 bytes
 #define WINDOW_3x3_NUM_CYCLES               (uint64_t(5))
@@ -43,11 +44,11 @@
 #define RES_FIFO_RD_WIDTH                   8
 #define RES_PKT_SIZE                        RES_FIFO_RD_WIDTH
 #define RES_FIFO_DEPTH                      (RES_FIFO_RD_WIDTH * 2)
-#define KRNL_1X1_BRAM_DEPTH                 (KERNEL_1x1_DEPTH_SIMD * MAX_1x1_KERNELS)
-#define KRNL_1x1_BRAM_NUM_PIX_READ          KERNEL_1x1_DEPTH_SIMD
-#define KRNL_1x1_BRAM_RD_WIDTH              KERNEL_1x1_DEPTH_SIMD
-#define KRNL_1x1_BRAM_NUM_PIX_WRITE         KERNEL_1x1_DEPTH_SIMD
-#define KRNL_1x1_BRAM_WR_WIDTH              KERNEL_1x1_DEPTH_SIMD
+#define KRNL_1X1_BRAM_DEPTH                 (KERNEL_1X1_DEPTH_SIMD * MAX_1x1_KERNELS)
+#define KRNL_1x1_BRAM_NUM_PIX_READ          KERNEL_1X1_DEPTH_SIMD
+#define KRNL_1x1_BRAM_RD_WIDTH              KERNEL_1X1_DEPTH_SIMD
+#define KRNL_1x1_BRAM_NUM_PIX_WRITE         KERNEL_1X1_DEPTH_SIMD
+#define KRNL_1x1_BRAM_WR_WIDTH              KERNEL_1X1_DEPTH_SIMD
 #define KRNL_1X1_BIAS_BRAM_DEPTH            MAX_1x1_KERNELS
 #define KRNL_1X1_BIAS_BRAM_NUM_PIX_READ     1
 #define KRNL_1X1_BIAS_BRAM_RD_WIDTH         1
@@ -55,24 +56,24 @@
 #define KRNL_1X1_BIAS_BRAM_WR_WIDTH         1
 #define OB_FIFO_DEPTH                       256
 #define OB_NUM_PIX_WRITE                    RES_PKT_SIZE
-#define OB_FIFO_WR_WIDTH                    KERNEL_1x1_DEPTH_SIMD
-#define OB_FIFO_RD_WIDTH                    KERNEL_1x1_DEPTH_SIMD
+#define OB_FIFO_WR_WIDTH                    KERNEL_1X1_DEPTH_SIMD
+#define OB_FIFO_RD_WIDTH                    KERNEL_1X1_DEPTH_SIMD
 #define PM_FIFO_DEPTH                       256
 #define PM_NUM_PIX_READ                     8
 #define PM_FIFO_WR_WIDTH                    8
-#define PM_BRAM_RD_WIDTH                    OB_FIFO_WR_WIDTH
+#define PM_FIFO_RD_WIDTH                    OB_FIFO_WR_WIDTH
 #define PV_FIFO_DEPTH                       256
 #define PV_FIFO_WR_WIDTH                    8
 #define PV_FIFO_RD_WIDTH                    OB_FIFO_WR_WIDTH
-#define CM_BRAM_DEPTH                       (MAX_1x1_KERNELS * KERNEL_1x1_DEPTH_SIMD)
-#define CM_NUM_PIX_READ                     KERNEL_1x1_DEPTH_SIMD
-#define CM_BRAM_WR_WIDTH                    8
-#define CM_BRAM_RD_WIDTH                    KERNEL_1x1_DEPTH_SIMD
+#define CM_FIFO_DEPTH                       (MAX_1x1_KERNELS * KERNEL_1X1_DEPTH_SIMD)
+#define CM_NUM_PIX_READ                     KERNEL_1X1_DEPTH_SIMD
+#define CM_FIFO_WR_WIDTH                    8
+#define CM_FIFO_RD_WIDTH                    KERNEL_1X1_DEPTH_SIMD
 #define RM_FIFO_DEPTH                       256
 #define RM_NUM_PIX_READ                     8
-#define RM_BRAM_WR_WIDTH                    8
+#define RM_FIFO_WR_WIDTH                    8
 #define RM_NUM_PIX_WRITE                    8
-#define RM_BRAM_RD_WIDTH                    OB_FIFO_WR_WIDTH
+#define RM_FIFO_RD_WIDTH                    OB_FIFO_WR_WIDTH
 
 
 typedef enum
@@ -111,8 +112,8 @@ class Accel_Trans
         int res_high_watermark_cfg      ;
         int num_output_cols_cfg         ;
         int num_output_rows_cfg         ;
-        int num_kernels_cfg             ;
-        int num_1x1_kernels_cfg         ;
+        int num_3x3_kernels_cfg         ;
+        // int num_1x1_kernels_cfg         ;
         bool master_QUAD_cfg            ;
         bool cascade_cfg                ;
         int num_expd_input_cols_cfg     ;

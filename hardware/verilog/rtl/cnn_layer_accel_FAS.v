@@ -787,7 +787,6 @@ module cnn_layer_accel_FAS #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(*) begin
         if(trans_in_fifo_rd_rst_busy
-            && trans_in_fifo_rd_rst_busy
             && job_fetch_fifo_wr_rst_busy
             && job_fetch_fifo_rd_rst_busy
             && convMap_fifo_rd_rst_busy
@@ -800,7 +799,6 @@ module cnn_layer_accel_FAS #(
             && resdMap_fifo_rd_rst_busy
             && outBuf_fifo_wr_rst_busy
             && trans_eg_fifo_wr_rst_busy
-            && trans_eg_fifo_wr_rst_busy
 			&& krnl1x1Bias_dwc_fifo_rd_rst_busy)
         begin
             FAS_rdy_n = 1;
@@ -811,13 +809,11 @@ module cnn_layer_accel_FAS #(
     
     always@(*) begin
         if(trans_in_fifo_wr_rst_busy
-            && trans_in_fifo_wr_rst_busy
             && convMap_fifo_wr_rst_busy
             && partMap_fifo_wr_rst_busy
             && prevMap_fifo_wr_rst_busy
             && resdMap_fifo_wr_rst_busy
             && outBuf_fifo_rd_rst_busy
-            && trans_eg_fifo_rd_rst_busy
             && trans_eg_fifo_rd_rst_busy
 			&& krnl1x1Bias_dwc_fifo_wr_rst_busy)
         begin
