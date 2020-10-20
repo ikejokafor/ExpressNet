@@ -9,6 +9,7 @@
 //  A_S: Accumulation SIMD
 //  K_3: Number of 3x3 Kernels
 //  K_1: Number of 1x1 Kernels
+//  K_3_S: 3x3 Kernel SIMD
 //  K_1_S: 1x1 Kernel SIMD
 //  K_1_D: 1x1 Kernel Depth
 //  K_1_D_S: 1x1 Kernel Depth SIMD
@@ -31,7 +32,7 @@
 //          + (M +  K_3))
 //          + (3 * (M + I_C))
 //          + ((I_R - 3)(M + I_C))
-//          + (K_3 * O_R * O_C)
+//          + ((K_3 / K_3_S) * O_R * O_C)
 //
 //      For stride 2:
 //          (M + 8192)
@@ -39,7 +40,7 @@
 //          + (M +  K_3))
 //          + (3 * (M + I_C))
 //          + ((I_R - 3)(M + I_C))
-//          + (K_3 * O_R * O_C) + (I_R / 2)
+//          + ((K_3 / K_3_S)* O_R * O_C) + (I_R / 2)
 //
 //  FAS Cycle Latency:
 //

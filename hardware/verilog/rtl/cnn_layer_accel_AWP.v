@@ -58,6 +58,9 @@ module cnn_layer_accel_awp (
     localparam C_TRANS_IN_FIFO_RD_WTH               = `TRANS_IN_FIFO_META_WIDTH + `TRANS_IN_FIFO_PYLD_WIDTH;
     localparam C_TRANS_EG_FIFO_WR_WTH               = `TRANS_EG_FIFO_META_WIDTH + `TRANS_EG_FIFO_PYLD_WIDTH;
     localparam C_TRANS_EG_FIFO_RD_WTH               = `TRANS_EG_FIFO_META_WIDTH + `TRANS_EG_FIFO_PYLD_WIDTH;
+   	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
+    localparam C_NUM_QUAD_PER_CM_FIFO               = `CONVMAP_FIFO_WR_WTH / `PIXEL_WIDTH;
+    localparam C_NUM_CONVMAP_FIFO                   = ceil(`NUM_QUADS, C_NUM_QUAD_PER_CM_FIFO);
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -141,7 +144,15 @@ module cnn_layer_accel_awp (
     logic                                       trans_eg_fifo_empty                     ;
     logic                                       trans_eg_fifo_wr_rst_busy               ;
     logic                                       trans_eg_fifo_rd_rst_busy     	        ;
-	
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    logic [     `CONVMAP_FIFO_WR_WTH - 1:0]     convMap_fifo_datain         [C_NUM_CONVMAP_FIFO - 1:0]  ;
+    logic                                       convMap_fifo_wren           [C_NUM_CONVMAP_FIFO - 1:0]  ;                        
+    logic                                       convMap_fifo_rden           [C_NUM_CONVMAP_FIFO - 1:0]  ;               
+    logic                                       convMap_fifo_empty          [C_NUM_CONVMAP_FIFO - 1:0]  ;                    
+    logic                                       convMap_fifo_vld            [C_NUM_CONVMAP_FIFO - 1:0]  ;              
+    logic                                       convMap_fifo_wr_rst_busy    [C_NUM_CONVMAP_FIFO - 1:0]  ;               
+    logic                                       convMap_fifo_rd_rst_busy    [C_NUM_CONVMAP_FIFO - 1:0]  ;              
+    
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -177,90 +188,128 @@ module cnn_layer_accel_awp (
         .valid         ( trans_eg_fifo_vld              ),
         .wr_rst_busy   ( trans_eg_fifo_wr_rst_busy      ),
         .rd_rst_busy   ( trans_eg_fifo_rd_rst_busy      )
-    );  
-
+    );
+    
 
     genvar gi0;
-    for(gi0 = 0; gi0 < `NUM_QUADS; gi0 = gi0 + 1) begin: QUAD
-        cnn_layer_accel_quad
-        i0_cnn_layer_accel_quad (
-            .clk_if               ( clk_intf                ),  
-            .clk_core             ( clk_core                ),  
-            .rst                  ( rst                     ),  
+    generate
+        for(gi0 = 0; gi0 < `NUM_QUADS; gi0 = gi0 + 1) begin: QUAD
+            cnn_layer_accel_quad
+            i0_cnn_layer_accel_quad (
+                .clk_if               ( clk_intf                ),  
+                .clk_core             ( clk_core                ),  
+                .rst                  ( rst                     ),  
 
-            .job_start            ( job_start[gi0]            ),  
-            .job_accept           ( job_accept[gi0]           ),  
-            .job_parameters       ( job_parameters[gi0]       ),  
-            .job_fetch_request    ( job_fetch_request[gi0]    ),  
-            .job_fetch_ack        ( job_fetch_ack[gi0]        ), 
-            .job_fetch_complete   ( job_fetch_complete[gi0]   ),
-            .job_complete         ( job_complete[gi0]         ),  
-            .job_complete_ack     ( job_complete_ack[gi0]     ), 
-            .pip_primed           ( pip_primed[gi0]           ),
-            .all_pip_primed       ( all_pip_primed_arr[gi0]   ),
-            .pfb_loaded           ( pfb_loaded[gi0]           ),
-            .all_pfb_loaded       ( all_pfb_loaded_arr[gi0]   ),
+                .job_start            ( job_start[gi0]            ),  
+                .job_accept           ( job_accept[gi0]           ),  
+                .job_parameters       ( job_parameters[gi0]       ),  
+                .job_fetch_request    ( job_fetch_request[gi0]    ),  
+                .job_fetch_ack        ( job_fetch_ack[gi0]        ), 
+                .job_fetch_complete   ( job_fetch_complete[gi0]   ),
+                .job_complete         ( job_complete[gi0]         ),  
+                .job_complete_ack     ( job_complete_ack[gi0]     ), 
+                .pip_primed           ( pip_primed[gi0]           ),
+                .all_pip_primed       ( all_pip_primed_arr[gi0]   ),
+                .pfb_loaded           ( pfb_loaded[gi0]           ),
+                .all_pfb_loaded       ( all_pfb_loaded_arr[gi0]   ),
 
-            .cascade_in_valid     ( cascade_in_valid[gi0]     ),
-            .cascade_in_ready     ( cascade_in_ready[gi0]     ),
-            .cascade_in_data      ( cascade_in_data[gi0]      ),
+                .cascade_in_valid     ( cascade_in_valid[gi0]     ),
+                .cascade_in_ready     ( cascade_in_ready[gi0]     ),
+                .cascade_in_data      ( cascade_in_data[gi0]      ),
 
-            .cascade_out_valid    ( cascade_out_valid[gi0]    ),
-            .cascade_out_ready    ( cascade_out_ready[gi0]    ),
-            .cascade_out_data     ( cascade_out_data[gi0]     ),
+                .cascade_out_valid    ( cascade_out_valid[gi0]    ),
+                .cascade_out_ready    ( cascade_out_ready[gi0]    ),
+                .cascade_out_data     ( cascade_out_data[gi0]     ),
 
-            .config_valid         ( config_valid[gi0]         ),
-            .config_accept        ( config_accept[gi0]        ),
-            .config_data          ( config_data[gi0]          ),
+                .config_valid         ( config_valid[gi0]         ),
+                .config_accept        ( config_accept[gi0]        ),
+                .config_data          ( config_data[gi0]          ),
 
-            .weight_valid         ( weight_valid[gi0]         ),
-            .weight_ready         ( weight_ready[gi0]         ),
-            .weight_data          ( weight_data[gi0]          ),
+                .weight_valid         ( weight_valid[gi0]         ),
+                .weight_ready         ( weight_ready[gi0]         ),
+                .weight_data          ( weight_data[gi0]          ),
 
-            .result_valid         ( result_valid[gi0]         ),
-            .result_accept        ( result_accept[gi0]        ),
-            .result_data          ( result_data[gi0]          ),
-     
-            .pixel_valid          ( pixel_valid[gi0]          ),
-            .pixel_ready          ( pixel_ready[gi0]          ),
-            .pixel_data           ( pixel_data[gi0]           )
-        );
-        
-        if(gi0 == 0) begin
-            assign all_pip_primed_arr[gi0] = all_pip_primed;
-            assign all_pfb_loaded_arr[gi0] = all_pfb_loaded;
-            assign cascade_in_valid[gi0]   = 1;
-            assign cascade_in_data[gi0]    = 0;
-        end else begin
-            assign all_pip_primed_arr[gi0] = 0;
-            assign all_pfb_loaded_arr[gi0] = 0;
-        end
-
-        if(gi0 != (`NUM_QUADS - 1)) begin
-            fifo_fwft #(
-                .C_DATA_WIDTH( `PIXEL_WIDTH ),
-                .C_FIFO_DEPTH( 5            )
-            ) i0_fifo_fwft (
-                .clk            ( clk_core                  ),
-                .rst            ( rst                       ),
-                .wren           ( cascade_out_valid[gi0]    ),
-                .rden           ( cascade_in_ready[gi0 + 1] ),
-                .datain         ( cascade_out_data[gi0]     ),
-                .dataout        ( cascade_in_data[gi0 + 1]  ),
-                .empty          ( fifo_empty[gi0]           ),
-                .full           (                           ),
-                .almost_full    (                           )
+                .result_valid         ( result_valid[gi0]         ),
+                .result_accept        ( result_accept[gi0]        ),
+                .result_data          ( result_data[gi0]          ),
+         
+                .pixel_valid          ( pixel_valid[gi0]          ),
+                .pixel_ready          ( pixel_ready[gi0]          ),
+                .pixel_data           ( pixel_data[gi0]           )
             );
             
-            assign cascade_in_valid[gi0 + 1] = !fifo_empty[gi0];
+            if(gi0 == 0) begin
+                assign all_pip_primed_arr[gi0] = all_pip_primed;
+                assign all_pfb_loaded_arr[gi0] = all_pfb_loaded;
+                assign cascade_in_valid[gi0]   = 1;
+                assign cascade_in_data[gi0]    = 0;
+            end else begin
+                assign all_pip_primed_arr[gi0] = 0;
+                assign all_pfb_loaded_arr[gi0] = 0;
+            end
+
+            if(gi0 != (`NUM_QUADS - 1)) begin
+                fifo_fwft #(
+                    .C_DATA_WIDTH( `PIXEL_WIDTH ),
+                    .C_FIFO_DEPTH( 5            )
+                ) i0_fifo_fwft (
+                    .clk            ( clk_core                  ),
+                    .rst            ( rst                       ),
+                    .wren           ( cascade_out_valid[gi0]    ),
+                    .rden           ( cascade_in_ready[gi0 + 1] ),
+                    .datain         ( cascade_out_data[gi0]     ),
+                    .dataout        ( cascade_in_data[gi0 + 1]  ),
+                    .empty          ( fifo_empty[gi0]           ),
+                    .full           (                           ),
+                    .almost_full    (                           )
+                );
+                
+                assign cascade_in_valid[gi0 + 1] = !fifo_empty[gi0];
+            end
         end
-    end
+    endgenerate
     
+    
+    generate
+    generate
+        for(gi0 = 0; gi0 < C_NUM_CONVMAP_FIFO; gi0 = gi0 + 1) begin
+            // WR_WIDTH: 1024
+            // WR_DPETH: 512
+            // RD_WIDTH: 1024
+            // RD_DEPTH: 512
+            convMap_fifo
+            i0_convMap_fifo (
+                .srst         ( rst                                                     ),
+                .wr_clk       ( clk_core                                                ),
+                .rd_clk       ( clk_intf                                                ),
+                .din          ( convMap_fifo_datain[gi0]	                            ),
+                .wr_en        ( convMap_fifo_wren[gi0]                                  ),
+                .rd_en        ( convMap_fifo_rden[gi0]                                  ),
+                .dout         ( trans_eg_fifo_din[`TRANS_IN_FIFO_PYLD_FIELD]            ),
+                .full         (                                                         ),
+                .empty        ( convMap_fifo_empty[gi0]                                 ),
+                .valid        ( convMap_fifo_vld[gi0]                                   ),
+                .wr_rst_busy  ( convMap_fifo_wr_rst_busy[gi0]                           ),
+                .rd_rst_busy  ( convMap_fifo_rd_rst_busy[gi0]                           ) 
+            );
+            
+            assign convMap_fifo_wren[gi0] = 1; // FIXME: needs to last quad in set that is active, since this is variable best to have quad tell you through QUAD_enable and valid
+            
+            always@(posedge clk) begin
+                for(gi1 = 0; gi1 < C_NUM_QUAD_PER_CM_FIFO; gi1 = gi1 + 1) begin
+                    if(result_valid[gi1]) begin
+                        onvMap_fifo_datain[gi0][(gi1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] <= result_data[(gi1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
+                    end
+                end
+            end
+        end
+    endgenerate
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(*) begin
         if(trans_in_fifo_rd_rst_busy
-            && trans_eg_fifo_wr_rst_busy)
+            && trans_eg_fifo_wr_rst_busy
+            && convMap_fifo_wr_rst_busy)
         begin
             AWP_rdy_n = 1;
         end else begin
@@ -270,7 +319,8 @@ module cnn_layer_accel_awp (
     
     always@(*) begin
         if(trans_in_fifo_wr_rst_busy
-            && trans_eg_fifo_rd_rst_busy)
+            && trans_eg_fifo_rd_rst_busy
+            && convMap_fifo_rd_rst_busy)
         begin
             AWP_intf_rdy_n = 1;
         end else begin
@@ -292,10 +342,25 @@ module cnn_layer_accel_awp (
     end    
     // END Logic --------------------------------------------------------------------------------------------------------------------------------
 	
+    
+    // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
+    always@(posedge clk_intf) begin
+        if(rst) begin
+            
+            convMap_fifo_count <= 0;
+            if(convMap_fifo_count
+        end
+    end    
+    // END Logic --------------------------------------------------------------------------------------------------------------------------------
+    
 	
 	// BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
     always@(posedge clk_intf) begin
-        
+        if(rst) begin
+            
+            convMap_fifo_count <= 0;
+            if(convMap_fifo_count
+        end
     end    
     // END Logic --------------------------------------------------------------------------------------------------------------------------------
 
