@@ -61,6 +61,7 @@ module cnn_layer_accel_awp (
    	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
     localparam C_NUM_QUAD_PER_CM_FIFO               = `CONVMAP_FIFO_WR_WTH / `PIXEL_WIDTH;
     localparam C_NUM_CONVMAP_FIFO                   = ceil(`NUM_QUADS, C_NUM_QUAD_PER_CM_FIFO);
+    localparam C_CONVMAP_FIFO_CT_WTH                = clog2(`CONVMAP_FIFO_RD_DTH) + 1; 
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -130,7 +131,8 @@ module cnn_layer_accel_awp (
     logic                                       trans_in_fifo_wren                      ;
     logic                                       trans_in_fifo_wren_r                    ;
     logic                                       trans_in_fifo_rden                      ;
-    logic [   C_TRANS_IN_FIFO_RD_WTH - 1:0]	    trans_in_fifo_dout					    ; 
+    logic [    C_TRANS_IN_FIFO_RD_WTH - 1:0]	trans_in_fifo_dout					    ;
+    logic [`TRANS_EG_PYLD_FIFO_RD_WTH - 1:0]    trans_in_meta                           ;
 	logic                                       trans_in_fifo_vld                       ;
     logic                                       trans_in_fifo_empty                     ;
     logic                                       trans_in_fifo_wr_rst_busy               ;
@@ -145,13 +147,15 @@ module cnn_layer_accel_awp (
     logic                                       trans_eg_fifo_wr_rst_busy               ;
     logic                                       trans_eg_fifo_rd_rst_busy     	        ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    logic [     `CONVMAP_FIFO_WR_WTH - 1:0]     convMap_fifo_datain         [C_NUM_CONVMAP_FIFO - 1:0]  ;
-    logic                                       convMap_fifo_wren           [C_NUM_CONVMAP_FIFO - 1:0]  ;                        
-    logic                                       convMap_fifo_rden           [C_NUM_CONVMAP_FIFO - 1:0]  ;               
-    logic                                       convMap_fifo_empty          [C_NUM_CONVMAP_FIFO - 1:0]  ;                    
-    logic                                       convMap_fifo_vld            [C_NUM_CONVMAP_FIFO - 1:0]  ;              
-    logic                                       convMap_fifo_wr_rst_busy    [C_NUM_CONVMAP_FIFO - 1:0]  ;               
-    logic                                       convMap_fifo_rd_rst_busy    [C_NUM_CONVMAP_FIFO - 1:0]  ;              
+    logic [     `CONVMAP_FIFO_WR_WTH - 1:0]     convMap_fifo_datain[C_NUM_CONVMAP_FIFO - 1:0]   ;
+    logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_wren                               ;                        
+    logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_rden                               ;               
+    logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_empty                              ;                    
+    logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_vld                                ;              
+    logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_wr_rst_busy                        ;               
+    logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_rd_rst_busy                        ;
+    logic [    C_CONVMAP_FIFO_CT_WTH - 1:0]     convMap_fifo_count[C_NUM_CONVMAP_FIFO - 1:0]    ;                              ;
+    logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_prog_full                          ;
     
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -293,15 +297,33 @@ module cnn_layer_accel_awp (
                 .rd_rst_busy  ( convMap_fifo_rd_rst_busy[gi0]                           ) 
             );
             
-            assign convMap_fifo_wren[gi0] = 1; // FIXME: needs to last quad in set that is active, since this is variable best to have quad tell you through QUAD_enable and valid
-            
+            // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+            assign convMap_fifo_wren[gi0] = 1; // FIXME: needs to be last quad in set that is active, since this is variable best to have quad tell you through QUAD_enable and valid
+            assign convMap_fifo_prog_full[gi0] = (convMap_fifo_count > cm_high_watermark_cfg);
+         
             always@(posedge clk) begin
                 for(gi1 = 0; gi1 < C_NUM_QUAD_PER_CM_FIFO; gi1 = gi1 + 1) begin
                     if(result_valid[gi1]) begin
-                        onvMap_fifo_datain[gi0][(gi1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] <= result_data[(gi1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
+                        convMap_fifo_datain[gi0][(gi1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] <= result_data[(gi1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
                     end
                 end
             end
+            
+
+            always@(posedge clk_FAS) begin
+                if(rst || FAS_rdy_n) begin
+                    convMap_fifo_count[gi0] <= 0;
+                end else begin
+                    if(convMap_fifo_wren[gi0] && convMap_fifo_rden[gi0]) begin
+                        convMap_fifo_count[gi0] <= convMap_fifo_count[gi0];
+                    end else if(convMap_fifo_wren) begin
+                        convMap_fifo_count[gi0] <= convMap_fifo_count[gi0] + 1;
+                    end else if(convMap_fifo_rden) begin
+                        convMap_fifo_count[gi0] <= convMap_fifo_count[gi0] - 1;
+                    end
+                end
+            end
+            // END logic ------------------------------------------------------------------------------------------------------------------------------------
         end
     endgenerate
     
@@ -309,7 +331,7 @@ module cnn_layer_accel_awp (
     always@(*) begin
         if(trans_in_fifo_rd_rst_busy
             && trans_eg_fifo_wr_rst_busy
-            && convMap_fifo_wr_rst_busy)
+            && |convMap_fifo_wr_rst_busy)
         begin
             AWP_rdy_n = 1;
         end else begin
@@ -320,7 +342,7 @@ module cnn_layer_accel_awp (
     always@(*) begin
         if(trans_in_fifo_wr_rst_busy
             && trans_eg_fifo_rd_rst_busy
-            && convMap_fifo_rd_rst_busy)
+            && |convMap_fifo_rd_rst_busy)
         begin
             AWP_intf_rdy_n = 1;
         end else begin
@@ -344,24 +366,21 @@ module cnn_layer_accel_awp (
 	
     
     // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
+    assign trans_in_meta = trans_in_fifo_dout[`TRANS_IN_FIFO_META_FIELD];
+
     always@(posedge clk_intf) begin
         if(rst) begin
-            
-            convMap_fifo_count <= 0;
-            if(convMap_fifo_count
+            trans_in_fifo_rden <= 0;
+        end else begin
+            trans_in_fifo_rden <= 1;
+            if(!trans_in_fifo_empty) begin
+                trans_in_fifo_rden <= 1;
+            end
+            if(trans_in_meta[`TRANS_AWP_CFG]) begin
+                
+            end
         end
-    end    
-    // END Logic --------------------------------------------------------------------------------------------------------------------------------
-    
-	
-	// BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
-    always@(posedge clk_intf) begin
-        if(rst) begin
-            
-            convMap_fifo_count <= 0;
-            if(convMap_fifo_count
-        end
-    end    
+    end   
     // END Logic --------------------------------------------------------------------------------------------------------------------------------
 
 endmodule

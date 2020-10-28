@@ -196,7 +196,7 @@ SC_MODULE(CNN_Layer_Accel)
             {
                 m_wr_req_arr[i].req_pending = false;
             }
-            m_accelCfg                  = new AccelConfig();
+            m_accelCfg                  = new AccelConfig(NULL);
             m_num_sys_mem_wr_in_prog    = 0;
             m_num_sys_mem_rd_in_prog    = 0;
             m_next_wr_req_id            = 0;

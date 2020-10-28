@@ -330,7 +330,7 @@ void CNN_Layer_Accel::setMemory(uint64_t addr)
 void CNN_Layer_Accel::start()
 {
     m_start_time = sc_time_stamp().to_double();
-    m_accelCfg->m_address = m_memory[0];
+    m_accelCfg->m_buffer = (void*)m_memory[0];
     m_accelCfg->deserialize();
     for(int i = 0; i < NUM_FAS; i++)
     {
@@ -352,8 +352,9 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     QUAD_time = awp[0]->quad[0]->m_QUAD_time;
     FAS_time = fas[0]->m_FAS_time;
     delete m_accelCfg;
-    m_accelCfg = new AccelConfig();
+    m_accelCfg = new AccelConfig(NULL);
     // FIXME: might need to read back data
+	cout << "Data is being deleted FIXME - CNN_layer_accl.cpp:357" << endl;
     m_memory.clear();
 }
 

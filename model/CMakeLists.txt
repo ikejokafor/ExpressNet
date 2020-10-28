@@ -78,6 +78,7 @@ MESSAGE("[" ${TARGET_NAME} "] Build Type: " ${CMAKE_BUILD_TYPE})
 # BEGIN Compiler Definitions ------------------------------------------------------------------------------------------------------------------------
 #ADD_DEFINITIONS(-DLINUX)   #define LINUX
 #ADD_DEFINITIONS(-ULINUX)   #undef  LINUX
+ADD_DEFINITIONS(-DSYSTEMC)   #undef  LINUX
 # END Compiler Definitions --------------------------------------------------------------------------------------------------------------------------
 
 
@@ -195,6 +196,9 @@ ELSE()
         ${PROJECT_SOURCE_DIR}/../../espresso/inc/FPGA/
         ${PROJECT_SOURCE_DIR}/../../FPGA_shim/inc/
         ${PROJECT_SOURCE_DIR}/../../fixedPoint/inc/
+		${PROJECT_SOURCE_DIR}/../../SYSC_FPGA_shim/inc/
+		${PROJECT_SOURCE_DIR}/../../network/inc/
+        ${PROJECT_SOURCE_DIR}/../../myNetProto/inc/
 		/home/mdl/izo5011/IkennaWorkSpace/izo5011_dev_tools/x86/include/
         #<include_path0>
         #<include_path1>
