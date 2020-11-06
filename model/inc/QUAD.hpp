@@ -5,8 +5,15 @@
 #include <string>
 #include "systemc"
 #include <csignal>
+#include <cstring>
+#include <vector>
+#include <thread>
+#include <random>
+#include <algorithm>
+#include <functional>
 #include "cnn_layer_accel_common.hpp"
 #include "AWP_if.hpp"
+#include "fixedPoint.hpp"
 
 
 SC_MODULE(QUAD)
@@ -40,15 +47,22 @@ SC_MODULE(QUAD)
             SC_THREAD(result_write_process);
                 sensitive << clk.pos();
 
-            m_state = ST_IDLE;
-            m_pfb_count = 0;
-            m_krnl_count = 0;
-            m_input_row = 0;
-            m_output_col = 0;
-            m_output_row = 0;
-            m_stride_count = 0;
-            m_res_fifo = 0;
-            m_last_res_wrtn = false;
+            m_state             = ST_IDLE;
+            m_pfb_count         = 0;
+            m_krnl_count        = 0;
+            m_input_row         = 0;
+            m_output_col        = 0;
+            m_output_row        = 0;
+            m_stride_count      = 0;
+            m_res_fifo_sz       = 0;
+            m_doutIdx           = 0;
+            m_res_fifo_idx      = 0;
+            m_datain            = NULL;
+            m_dataout           = NULL;
+            m_filters           = NULL;
+            m_bias              = NULL;
+            m_res_fifo          = new fixedPoint_t[RES_PKT_SIZE];
+            m_last_res_wrtn     = false;
         }
 
         // Destructor
@@ -70,6 +84,7 @@ SC_MODULE(QUAD)
         void b_job_fetch();
         void b_pfb_write();
         void b_pfb_read();
+        void nb_do_conv();
 
         // Module Variables
         QUAD_state_t			    m_state						;
@@ -82,14 +97,17 @@ SC_MODULE(QUAD)
         int						    m_output_col				;
         int						    m_output_row				;
         int                         m_res_high_watermark_cfg    ;
-        int						    m_num_input_cols_cfg		;
         int						    m_num_output_cols_cfg		;
         int						    m_num_output_rows_cfg		;
+        int                         m_output_depth_cfg          ;
         int						    m_num_3x3_kernels_cfg		;
+        int                         m_kernel3x3Depth_cfg        ;
         bool					    m_master_QUAD_cfg			;
         bool					    m_cascade_cfg				;
         int						    m_num_expd_input_cols_cfg	;
         int                         m_num_expd_input_rows_cfg   ;
+        int						    m_num_input_cols_cfg	    ;
+        int                         m_num_input_rows_cfg        ;
         bool					    m_conv_out_fmt0_cfg			;
         bool					    m_padding_cfg				;
         bool					    m_upsmaple_cfg				;
@@ -97,14 +115,23 @@ SC_MODULE(QUAD)
         int                         m_stride_count              ;
         int						    m_crpd_input_row_start_cfg	;
         int						    m_crpd_input_row_end_cfg	;
+        int                         m_numKernelRows_cfg         ;
+        int                         m_numKernelCols_cfg         ;
+        int                         m_kernelDepth               ;
         int						    m_QUAD_id					;
-        int         	            m_res_fifo					;
+        int         	            m_res_fifo_sz   			;
         bool					    m_last_res_wrtn				;
         sc_core::sc_event_queue     m_pfb_wrtn					;
         sc_core::sc_event_queue*    m_prev_quad_ack				;
         bool*                       m_primed    				;
         sc_core::sc_event_queue*    m_QUAD_start   				;
-        double                      m_start_time                ;
-
-        double m_QUAD_time                ;
+        double                      m_start_time                ;     
+        fixedPoint_t*               m_dataout                   ;
+        fixedPoint_t*               m_datain                    ;
+        fixedPoint_t*               m_filters                   ;
+        fixedPoint_t*               m_bias                      ;
+        fixedPoint_t*               m_res_fifo                  ;
+        int                         m_doutIdx                   ;
+        int                         m_res_fifo_idx              ;
+        double                      m_QUAD_time                 ;
 };

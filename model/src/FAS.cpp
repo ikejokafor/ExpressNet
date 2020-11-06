@@ -1094,10 +1094,13 @@ void FAS::b_QUAD_config(int AWP_addr, int QUAD_addr)
     accel_trans->num_output_cols_cfg        = QUAD_cfg->m_num_output_cols;
     accel_trans->num_output_rows_cfg        = QUAD_cfg->m_num_output_rows;
     accel_trans->num_3x3_kernels_cfg        = QUAD_cfg->m_num_kernels;
+    accel_trans->kernel3x3Depth_cfg         = QUAD_cfg->m_kernel3x3Depth;
     accel_trans->master_QUAD_cfg            = QUAD_cfg->m_master_QUAD;
     accel_trans->cascade_cfg                = QUAD_cfg->m_cascade;
     accel_trans->num_expd_input_cols_cfg    = QUAD_cfg->m_num_expd_input_cols;
     accel_trans->num_expd_input_rows_cfg    = QUAD_cfg->m_num_expd_input_rows;
+    accel_trans->num_input_rows_cfg         = QUAD_cfg->m_num_input_rows;
+    accel_trans->num_input_cols_cfg         = QUAD_cfg->m_num_input_cols;
     accel_trans->conv_out_fmt0_cfg          = true;
     accel_trans->padding_cfg                = QUAD_cfg->m_padding;
     accel_trans->upsample_cfg               = QUAD_cfg->m_upsample;

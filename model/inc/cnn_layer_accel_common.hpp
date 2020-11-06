@@ -12,6 +12,8 @@
 
 
 // #define VERBOSE_DEBUG
+#define QUAD_MAX_INPUT_ROWS                 1024
+#define QUAD_MAX_INPUT_COLS                 1024
 #define KRNL_3X3_SIMD						1
 #define BITS_PER_PIXEL                      16
 #define AXI_BUS_SIZE                        ((uint32_t)64) // bytes
@@ -113,11 +115,13 @@ class Accel_Trans
         int num_output_cols_cfg         ;
         int num_output_rows_cfg         ;
         int num_3x3_kernels_cfg         ;
-        // int num_1x1_kernels_cfg         ;
+        int kernel3x3Depth_cfg          ;
         bool master_QUAD_cfg            ;
         bool cascade_cfg                ;
         int num_expd_input_cols_cfg     ;
         int num_expd_input_rows_cfg     ;
+        int num_input_rows_cfg          ;
+        int num_input_cols_cfg          ;
         int QUAD_id                     ;
         int num_QUADS_cfgd              ;
         int AWP_id                      ;
