@@ -321,20 +321,39 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
 }
 
 
-void CNN_Layer_Accel::setMemory(uint64_t addr)
+void CNN_Layer_Accel::setMemory(int idx, uint64_t addr, int size)
 {
-    m_memory.push_back(addr);
+    m_memory[idx].addr = addr;
+    m_memory[idx].size = size;
+}
+
+
+mem_ele_t* CNN_Layer_Accel::getMemory(int idx)
+{
+	mem_ele_t* mem_ele = new mem_ele_t;
+	mem_ele->addr = m_memory[idx].addr;
+    mem_ele->size = m_memory[idx].size;
+    return mem_ele;
 }
 
 
 void CNN_Layer_Accel::start()
 {
+    // TODO: Properly expand for multiple FAS's
     m_start_time = sc_time_stamp().to_double();
-    m_accelCfg->m_buffer = (void*)m_memory[0];
+    m_accelCfg->m_buffer = (void*)m_memory[0].addr;
     m_accelCfg->deserialize();
     for(int i = 0; i < NUM_FAS; i++)
     {
         fas[i]->m_FAS_cfg = m_accelCfg->m_FAS_cfg_arr[i];
+        fas[i]->m_inputMap = (fixedPoint_t*)m_memory[1].addr;
+        fas[i]->m_filters3x3 = (fixedPoint_t*)m_memory[2].addr;
+        fas[i]->m_bias3x3 = (fixedPoint_t*)m_memory[3].addr;
+        fas[i]->m_filters1x1 = (fixedPoint_t*)m_memory[4].addr;
+        fas[i]->m_bias1x1 = (fixedPoint_t*)m_memory[5].addr;
+        fas[i]->m_partMap_fifo = (fixedPoint_t*)m_memory[6].addr;
+        fas[i]->m_resdMap_fifo = (fixedPoint_t*)m_memory[7].addr;
+        fas[i]->m_prevMap_fifo = (fixedPoint_t*)m_memory[8].addr;
         wait();
         fas[i]->m_start.notify();
         wait(fas[i]->m_start_ack);
@@ -353,9 +372,6 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     FAS_time = fas[0]->m_FAS_time;
     delete m_accelCfg;
     m_accelCfg = new AccelConfig(NULL);
-    // FIXME: might need to read back data
-	cout << "Data is being deleted FIXME - CNN_layer_accl.cpp:357" << endl;
-    m_memory.clear();
 }
 
 

@@ -84,6 +84,13 @@
 #include "Interconnect.hpp"
 
 
+typedef struct
+{
+    uint64_t 	addr;
+    int   		size;
+} mem_ele_t;
+
+
 SC_MODULE(CNN_Layer_Accel)
 {
     public:
@@ -134,7 +141,8 @@ SC_MODULE(CNN_Layer_Accel)
         SC_CTOR(CNN_Layer_Accel)
             :	clk("clk"),
                 FAS2AWP_bus("FAS2AWP_bus"),
-                AWP2FAS_bus("AWP2FAS_bus")
+                AWP2FAS_bus("AWP2FAS_bus"),
+                m_memory(9, mem_ele_t())
         {
             tar_soc.register_b_transport(this, &CNN_Layer_Accel::b_transport);
             FAS2AWP_bus.clk(clk);
@@ -221,7 +229,8 @@ SC_MODULE(CNN_Layer_Accel)
         
         // Methods
         void b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
-        void setMemory(uint64_t addr);
+		void setMemory(int idx, uint64_t addr, int size);
+		mem_ele_t* getMemory(int idx);
         void start();
         void waitComplete(double& elapsedTime, double& memPower, double& QUAD_time, double& FAS_time);
 #ifdef SIMULATE_MEMORY
@@ -238,7 +247,7 @@ SC_MODULE(CNN_Layer_Accel)
         // Members
         sc_core::sc_event_queue m_complete;
         AccelConfig* m_accelCfg;
-        std::vector<uint64_t> m_memory;
+        std::vector<mem_ele_t> m_memory;
         std::vector<bool> m_FAS_complt_arr;
         Accel_Trans	m_rd_req_arr[MAX_FAS_RD_REQ];
         Accel_Trans	m_wr_req_arr[MAX_FAS_WR_REQ];

@@ -4,6 +4,7 @@
 
 #include "systemc"
 #include "mem_mng.hpp"
+#include "fixedPoint.hpp"
 #include "tlm.h"
 #include "tlm_utils/peq_with_cb_and_phase.h"
 #include "tlm_utils/simple_initiator_socket.h"
@@ -12,8 +13,13 @@
 
 
 // #define VERBOSE_DEBUG
+#define NUM_FAS                             1
+#define MAX_AWP_PER_FAS                     1
+#define NUM_QUADS_PER_AWP                   4
 #define QUAD_MAX_INPUT_ROWS                 1024
 #define QUAD_MAX_INPUT_COLS                 1024
+#define QUAD_MAX_DEPTH                      8
+#define QUAD_DEPTH_SIMD                     (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP * QUAD_MAX_DEPTH)
 #define KRNL_3X3_SIMD						1
 #define BITS_PER_PIXEL                      16
 #define AXI_BUS_SIZE                        ((uint32_t)64) // bytes
@@ -24,13 +30,8 @@
 #define MAX_SYS_MEM_WR_TRANS                1
 #define CLK_PRD                             10
 #define PIXEL_SEQUENCE_SIZE                 8192
-#define NUM_FAS                             1
-#define MAX_AWP_PER_FAS                     1
-#define NUM_QUADS_PER_AWP                   4
 #define MAX_AWP_TRANS                       (NUM_QUADS_PER_AWP * 2)    // each quad can send 2 requests at a time
 #define MAX_NETWORK_TRANS                   (MAX_AWP_PER_FAS * MAX_AWP_TRANS)
-#define QUAD_MAX_DEPTH                      8
-#define QUAD_DEPTH_SIMD                     (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP * QUAD_MAX_DEPTH)
 #define MAX_FAS_SYS_MEM_TRANS               1
 #define MAX_FAS_ROUT_TRANS                  1
 #define MAX_3x3_KERNELS                     64
@@ -39,6 +40,7 @@
 #define KERNEL_1X1_DEPTH_SIMD               32
 #define LOG2_KERNEL_1X1_DEPTH_SIMD          log2(KERNEL_1X1_DEPTH_SIMD)
 #define MAX_1x1_KERNELS                     1024
+#define MAX_1x1_KRNL_DEPTH                  1024
 #define PIXEL_SIZE                          2    // 2 bytes
 #define WINDOW_3x3_NUM_CYCLES               (uint64_t(5))
 #define PIX_SEQ_CFG_WRT_CYCS                (uint64_t(1024) * WINDOW_3x3_NUM_CYCLES)
@@ -76,6 +78,7 @@
 #define RM_FIFO_WR_WIDTH                    8
 #define RM_NUM_PIX_WRITE                    8
 #define RM_FIFO_RD_WIDTH                    OB_FIFO_WR_WIDTH
+#define QUAD_DOUT_SZ						(QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS)
 
 
 typedef enum
@@ -127,6 +130,7 @@ class Accel_Trans
         int AWP_id                      ;
         int FAS_id                      ;
         int res_pkt_size                ;
+        fixedPoint_t* m_quad_dout       ;
         bool conv_out_fmt0_cfg          ;
         bool padding_cfg                ;
         bool upsample_cfg               ;
@@ -140,6 +144,9 @@ class Accel_Trans
         sc_core::sc_event request       ;
         fas_rd_id_t fas_rd_id           ;
         fas_wr_id_t fas_wr_id           ;
+        fixedPoint_t* m_datain          ;
+        fixedPoint_t* m_filters3x3      ;
+        fixedPoint_t* m_bias3x3         ;
 };
 
 

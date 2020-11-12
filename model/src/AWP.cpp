@@ -91,10 +91,14 @@ void AWP::send_complete()
             {
                 bus.m_QUAD_complt_arr[i] = false;
             }
+			
+			int qIdx = NUM_QUADS_PER_AWP - 1;
+			quad[qIdx]->nb_do_conv();			
             Accel_Trans* accel_trans = new Accel_Trans();
             accel_trans->AWP_id = m_AWP_id;
             accel_trans->FAS_id = m_FAS_id;
             accel_trans->accel_cmd = ACCL_CMD_JOB_COMPLETE;
+			accel_trans->m_quad_dout = quad[qIdx]->m_dataout;
             tlm_generic_payload* trans = nb_createTLMTrans(
                 m_mem_mng,
                 m_FAS_id,
@@ -145,6 +149,9 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
                 // cout << str;
             }
             quad[QUAD_id]->b_cfg_write(trans.get_data_ptr());
+            quad[QUAD_id]->m_datain       = accel_trans->m_datain;
+            quad[QUAD_id]->m_filters3x3   = accel_trans->m_filters3x3;
+            quad[QUAD_id]->m_bias3x3      = accel_trans->m_bias3x3;
             break;
         }
         case ACCL_CMD_PIX_SEQ_CFG_WRITE:

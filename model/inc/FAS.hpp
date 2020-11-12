@@ -5,6 +5,10 @@
 
 
 #include <vector>
+#include <thread>
+#include <random>
+#include <algorithm>
+#include <functional>
 #include <deque>
 #include "systemc"
 #include "tlm.h"
@@ -13,7 +17,6 @@
 #include "tlm_utils/simple_target_socket.h"
 #include "mem_mng.hpp"
 #include "cnn_layer_accel_common.hpp"
-#include "fixedPoint.hpp"
 #include "FPGA_shim.hpp"
 #include "AccelConfig.hpp"
 #include "InputMaps.hpp"
@@ -146,6 +149,9 @@ SC_MODULE(FAS)
             m_krnl1x1_pad_end_cfg           = 0;
             m_prevMapFetchCount             = 0;
             m_prevMapFetchTotal_cfg         = 0;
+			m_num_output_rows_cfg			= 0;
+			m_num_output_cols_cfg			= 0;
+			m_output_depth_cfg				= 0;
             m_prevMap_fifo_sz               = 0;
             m_prevMap_dwc_fifo_sz           = 0;
             m_opcode_cfg                    = -1;
@@ -154,6 +160,15 @@ SC_MODULE(FAS)
             m_adder_tree_rdv_count          = 0;
             m_prog_factor                   = 10;
             m_last_output                   = false;
+            m_outBuf_fifo                   = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
+            m_partMap_fifo                  = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
+            m_resdMap_fifo                  = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
+            m_prevMap_fifo                  = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
+            m_convMap_fifo                  = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
+            m_bias1x1                       = new fixedPoint_t[MAX_1x1_KERNELS];
+            m_bias3x3                       = new fixedPoint_t[MAX_3x3_KERNELS];
+            m_filters3x3                    = new fixedPoint_t[MAX_3x3_KERNELS * QUAD_DEPTH_SIMD * 3 * 3];
+            m_filters1x1                    = new fixedPoint_t[MAX_1x1_KERNELS * MAX_1x1_KRNL_DEPTH];
         }
 
         // Destructor
@@ -183,6 +198,8 @@ SC_MODULE(FAS)
         // Methods
         void nb_krnl_1x1_bram_rd();
         void nb_result_write(int res_pkt_size);
+        void nb_do_accum();
+        void nb_do_conv_accum();
         void b_cfg_Accel();
         void b_getCfgData();
         void b_cfg1x1Kernels();
@@ -260,6 +277,9 @@ SC_MODULE(FAS)
         int                                     m_krnl1x1_pad_bgn_cfg           ;
         int                                     m_krnl1x1_pad_end_cfg           ;
         int                                     m_opcode_cfg                    ;
+		int										m_num_output_rows_cfg			;
+		int										m_num_output_cols_cfg			;
+		int										m_output_depth_cfg				;
         int                                     m_ob_dwc_fifo_sz                ;
         std::deque<tlm::tlm_generic_payload*>   m_trans_fifo                    ;
         bool                                    m_last_wrt                      ;
@@ -285,5 +305,16 @@ SC_MODULE(FAS)
         int                                     m_res_high_watermark_cfg        ;
         bool                                    m_last_output                   ;
         double                                  m_start_time                    ;
-        double                                  m_FAS_time;
+        double                                  m_FAS_time                      ;
+		fixedPoint_t*							m_quad_dout						;
+        fixedPoint_t*                           m_outBuf_fifo                   ;
+        fixedPoint_t*                           m_inputMap                      ;
+        fixedPoint_t*                           m_partMap_fifo                  ;
+        fixedPoint_t*                           m_resdMap_fifo                  ;
+        fixedPoint_t*                           m_prevMap_fifo                  ;
+        fixedPoint_t*                           m_convMap_fifo                  ;
+        fixedPoint_t*                           m_bias1x1                       ;
+        fixedPoint_t*                           m_bias3x3                       ;
+        fixedPoint_t*                           m_filters3x3                    ;
+        fixedPoint_t*                           m_filters1x1                    ;
 };

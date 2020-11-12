@@ -32,7 +32,7 @@ class AWPBus : public sc_core::sc_module, public AWP_if
         ~AWPBus();
 
         // Channel Methods
-        void b_request(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size, bool last_CO = false);
+        void b_request(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size, bool last_CO = false, fixedPoint_t* m_quad_dout = NULL);
         void b_transaction(int idx, bool last_CO = false);
 
 

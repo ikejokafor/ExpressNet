@@ -27,10 +27,6 @@ void QUAD::ctrl_process_0()
                 {
                     b_job_fetch();
                 }
-                if(m_return_state == ST_ACTIVE)
-                {
-                    nb_do_conv();
-                }
                 m_state = m_return_state;
                 break;
             }
@@ -73,14 +69,12 @@ void QUAD::ctrl_process_0()
                         wait(m_QUAD_start->default_event());
                         m_primed[m_QUAD_id] = false;
                         cout << str;
-                        nb_do_conv();
                         m_state = ST_ACTIVE;
                     }
                     else
                     {
                         str = "[" + string(name()) + "]: Starting Convolution process "+ sc_time_stamp().to_string() + "\n";
                         cout << str;
-                        nb_do_conv();
                         m_state = ST_ACTIVE;
                     }
                 }
@@ -131,14 +125,13 @@ void QUAD::ctrl_process_0()
                     cout << str;
                     raise(SIGINT);
                 }
-                bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, int());
+				nb_do_conv();
+                bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, -1, bool(), m_dataout);
                 m_krnl_count = 0;
                 m_input_row = 0;
                 m_output_col = 0;
                 m_output_row = 0;
                 m_stride_count = 0;
-                m_doutIdx = 0;
-                m_res_fifo_idx = 0;
                 m_state = ST_IDLE;
                 break;
             }
@@ -196,9 +189,6 @@ void QUAD::conv_process()
             && m_stride_count != 1)
         {
             m_res_fifo_sz++;
-            m_res_fifo[m_res_fifo_idx] = m_dataout[m_doutIdx];
-            m_res_fifo_idx %= RES_PKT_SIZE;
-            m_doutIdx++;
         }
     }
 }
@@ -314,7 +304,7 @@ void QUAD::b_pxSeqCfg_write()
 void QUAD::b_krnl3x3Cfg_write()
 {
     int numcycles = m_num_3x3_kernels_cfg * KRNL_SLOT_SIZE;
-    wait(numcycles, SC_NS);
+    wait(numcycles, SC_NS);    
 }
 
 
@@ -377,6 +367,7 @@ void QUAD::nb_do_conv()
     int nthreads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads(nthreads);
     fixedPoint_t leakyScaleValue = fixedPoint::create(16, 14, 0.1f);    // FIXME: hardcoding
+    fixedPoint_t one = fixedPoint::create(16, 14, 1.0f);                // FIXME: hardcoding
     for (int t = 0; t < nthreads; t++)
 	{
 		threads[t] = std::thread(std::bind(
@@ -386,10 +377,10 @@ void QUAD::nb_do_conv()
             {
                 for (int x = 0, a = 0; x < m_num_output_rows_cfg; x++, a += m_stride_cfg)
                 {
-                    for (int y = 0, b = 0; y < m_num_input_cols_cfg; y++, b += m_stride_cfg)
+                    for (int y = 0, b = 0; y < m_num_output_cols_cfg; y++, b += m_stride_cfg)
                     {
-                        int do_i = index3D(m_num_input_cols_cfg, m_output_depth_cfg, x, y, m);
-                        m_dataout[do_i] = m_bias[m];
+                        int do_i = index3D(QUAD_MAX_INPUT_ROWS, QUAD_MAX_INPUT_COLS, m, x, y);
+                        m_dataout[do_i] = m_bias3x3[m];
                         for (int k = 0; k < m_kernel3x3Depth_cfg; k++)
                         {
                             for (int i = a - m_padding_cfg, kr = 0; kr < 3; i++, kr++) // FIXME: hardcoding
@@ -398,14 +389,16 @@ void QUAD::nb_do_conv()
                                 {
                                     if ((i >= 0 && j >= 0) && (i < m_num_input_rows_cfg && j < m_num_input_cols_cfg)) // in valid region, assuming zero padding
                                     {
-                                        int do_i = index3D(m_num_input_cols_cfg, m_output_depth_cfg, x, y, m);
-                                        int di_i = index3D(m_num_input_rows_cfg, m_num_input_cols_cfg, k, i, j);
-                                        int f_i = index4D(m_kernel3x3Depth_cfg, 3, 3, m, k, kr, kc); // FIXME: hardcoding
-                                        m_dataout[do_i] += (m_datain[di_i] + m_filters[f_i]);
+                                        int di_i = index3D(, QUAD_MAX_INPUT_COLS, k, i, j);
+                                        int f_i = index4D(QUAD_DEPTH_SIMD, 3, 3, m, k, kr, kc); // FIXME: hardcoding
+                                        m_dataout[do_i] += (m_datain[di_i] + m_filters3x3[f_i]);
                                     }
                                 }
                             }
                         }
+                        fixedPoint::SetParam(32, 28, 16, 14, m_dataout[do_i]);
+                        m_dataout[do_i] = (m_dataout[m] < 0) ? m_dataout[m] * leakyScaleValue : m_dataout[m] * one;
+                        fixedPoint::SetParam(32, 28, 16, 14, m_dataout[do_i]);
                     }
                 }
             }
@@ -415,14 +408,4 @@ void QUAD::nb_do_conv()
         t));
 	}
 	for_each(threads.begin(), threads.end(), [](std::thread& x){x.join(); });
-    
-    
-    fixedPoint::SetParam(
-		32, // FIXME: hardcoding
-		28, // FIXME: hardcoding
-		16, // FIXME: hardcoding
-		14, // FIXME: hardcoding
-		m_dataout,
-		(m_output_depth_cfg * m_num_output_rows_cfg * m_num_input_cols_cfg)
-	);
 }

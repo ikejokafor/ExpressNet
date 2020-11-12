@@ -13,7 +13,6 @@
 #include <functional>
 #include "cnn_layer_accel_common.hpp"
 #include "AWP_if.hpp"
-#include "fixedPoint.hpp"
 
 
 SC_MODULE(QUAD)
@@ -55,13 +54,7 @@ SC_MODULE(QUAD)
             m_output_row        = 0;
             m_stride_count      = 0;
             m_res_fifo_sz       = 0;
-            m_doutIdx           = 0;
-            m_res_fifo_idx      = 0;
-            m_datain            = NULL;
-            m_dataout           = NULL;
-            m_filters           = NULL;
-            m_bias              = NULL;
-            m_res_fifo          = new fixedPoint_t[RES_PKT_SIZE];
+			m_dataout			= new fixedPoint_t[QUAD_DOUT_SZ];
             m_last_res_wrtn     = false;
         }
 
@@ -126,12 +119,10 @@ SC_MODULE(QUAD)
         bool*                       m_primed    				;
         sc_core::sc_event_queue*    m_QUAD_start   				;
         double                      m_start_time                ;     
-        fixedPoint_t*               m_dataout                   ;
-        fixedPoint_t*               m_datain                    ;
-        fixedPoint_t*               m_filters                   ;
-        fixedPoint_t*               m_bias                      ;
-        fixedPoint_t*               m_res_fifo                  ;
-        int                         m_doutIdx                   ;
-        int                         m_res_fifo_idx              ;
+        fixedPoint_t*               m_inputMap                  ;
+        fixedPoint_t*               m_filters3x3                ;
+        fixedPoint_t*               m_bias3x3                   ;
+		fixedPoint_t*				m_datain					;
+		fixedPoint_t*				m_dataout					;
         double                      m_QUAD_time                 ;
 };
