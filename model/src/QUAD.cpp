@@ -125,7 +125,6 @@ void QUAD::ctrl_process_0()
                     cout << str;
                     raise(SIGINT);
                 }
-				nb_do_conv();
                 bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, -1, bool(), m_dataout);
                 m_krnl_count = 0;
                 m_input_row = 0;
@@ -304,7 +303,7 @@ void QUAD::b_pxSeqCfg_write()
 void QUAD::b_krnl3x3Cfg_write()
 {
     int numcycles = m_num_3x3_kernels_cfg * KRNL_SLOT_SIZE;
-    wait(numcycles, SC_NS);    
+    wait(numcycles, SC_NS);
 }
 
 
@@ -322,6 +321,7 @@ bool QUAD::b_job_start()
         cout << str;
         m_start_time = sc_time_stamp().to_double();
         m_state = ST_PRIM_BUFFER;
+		nb_do_conv();
         return true;
     }
     else
@@ -389,9 +389,9 @@ void QUAD::nb_do_conv()
                                 {
                                     if ((i >= 0 && j >= 0) && (i < m_num_input_rows_cfg && j < m_num_input_cols_cfg)) // in valid region, assuming zero padding
                                     {
-                                        int di_i = index3D(, QUAD_MAX_INPUT_COLS, k, i, j);
+                                        int di_i = index3D(QUAD_MAX_INPUT_ROWS, QUAD_MAX_INPUT_COLS, k, i, j);
                                         int f_i = index4D(QUAD_DEPTH_SIMD, 3, 3, m, k, kr, kc); // FIXME: hardcoding
-                                        m_dataout[do_i] += (m_datain[di_i] + m_filters3x3[f_i]);
+                                        m_dataout[do_i] += (m_inputMap[di_i] + m_filters3x3[f_i]);
                                     }
                                 }
                             }

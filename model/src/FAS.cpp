@@ -1003,9 +1003,9 @@ void FAS::b_getCfgData()
     m_krnl1x1_pding_cfg             = m_FAS_cfg->m_krnl1x1_pding;
     m_krnl1x1_pad_bgn_cfg           = m_FAS_cfg->m_krnl1x1_pad_bgn;
     m_krnl1x1_pad_end_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
-	m_num_output_rows_cfg			= m_FAS_cfg->m_num_output_rows_cfg;
-	m_num_output_cols_cfg			= m_FAS_cfg->m_num_output_cols_cfg;
-	m_output_depth_cfg				= m_FAS_cfg->m_output_depth_cfg;
+	m_num_output_rows_cfg			= m_FAS_cfg->m_num_output_rows;
+	m_num_output_cols_cfg			= m_FAS_cfg->m_num_output_cols;
+	m_output_depth_cfg 				= m_FAS_cfg->m_output_depth;
 	
 	
     if(m_krnl1x1_pding_cfg)
@@ -1139,7 +1139,11 @@ void FAS::b_QUAD_config(int AWP_addr, int QUAD_addr)
     accel_trans->upsample_cfg               = QUAD_cfg->m_upsample;
     accel_trans->stride_cfg                 = QUAD_cfg->m_stride;
     accel_trans->crpd_input_row_start_cfg   = QUAD_cfg->m_crpd_input_row_start;
-    accel_trans->crpd_input_row_end_cfg     = QUAD_cfg->m_crpd_input_row_end;
+    accel_trans->crpd_input_row_end_cfg     = QUAD_cfg->m_crpd_input_row_end;	
+	accel_trans->m_inputMap       			= m_inputMap;
+	accel_trans->m_filters3x3      			= m_filters3x3;
+	accel_trans->m_bias3x3         			= m_bias3x3;
+
     trans = nb_createTLMTrans(
         m_mem_mng,
         AWP_addr,

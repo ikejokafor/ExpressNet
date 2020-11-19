@@ -344,7 +344,7 @@ void CNN_Layer_Accel::start()
     m_accelCfg->m_buffer = (void*)m_memory[0].addr;
     m_accelCfg->deserialize();
     for(int i = 0; i < NUM_FAS; i++)
-    {
+    {		
         fas[i]->m_FAS_cfg = m_accelCfg->m_FAS_cfg_arr[i];
         fas[i]->m_inputMap = (fixedPoint_t*)m_memory[1].addr;
         fas[i]->m_filters3x3 = (fixedPoint_t*)m_memory[2].addr;
@@ -370,6 +370,9 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     memPower = calculateMemPower();
     QUAD_time = awp[0]->quad[0]->m_QUAD_time;
     FAS_time = fas[0]->m_FAS_time;
+	// OutMaps Maps
+	int size = QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS * sizeof(fixedPoint_t);
+	setMemory(9, (uint64_t)fas[0]->m_outBuf_fifo, size);    // FIXME: Hardcoding
     delete m_accelCfg;
     m_accelCfg = new AccelConfig(NULL);
 }

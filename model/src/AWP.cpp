@@ -149,7 +149,7 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
                 // cout << str;
             }
             quad[QUAD_id]->b_cfg_write(trans.get_data_ptr());
-            quad[QUAD_id]->m_datain       = accel_trans->m_datain;
+            quad[QUAD_id]->m_inputMap     = accel_trans->m_inputMap;
             quad[QUAD_id]->m_filters3x3   = accel_trans->m_filters3x3;
             quad[QUAD_id]->m_bias3x3      = accel_trans->m_bias3x3;
             break;

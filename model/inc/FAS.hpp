@@ -161,14 +161,6 @@ SC_MODULE(FAS)
             m_prog_factor                   = 10;
             m_last_output                   = false;
             m_outBuf_fifo                   = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
-            m_partMap_fifo                  = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
-            m_resdMap_fifo                  = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
-            m_prevMap_fifo                  = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
-            m_convMap_fifo                  = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
-            m_bias1x1                       = new fixedPoint_t[MAX_1x1_KERNELS];
-            m_bias3x3                       = new fixedPoint_t[MAX_3x3_KERNELS];
-            m_filters3x3                    = new fixedPoint_t[MAX_3x3_KERNELS * QUAD_DEPTH_SIMD * 3 * 3];
-            m_filters1x1                    = new fixedPoint_t[MAX_1x1_KERNELS * MAX_1x1_KRNL_DEPTH];
         }
 
         // Destructor
