@@ -1,17 +1,17 @@
 -makelib xcelium_lib/xil_defaultlib -sv \
-  "/home/software/vivado-2018.3/Vivado/2018.3/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
-  "/home/software/vivado-2018.3/Vivado/2018.3/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+  "/home/software/vivado-2019.1/Vivado/2019.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+  "/home/software/vivado-2019.1/Vivado/2019.1/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 -endlib
 -makelib xcelium_lib/xpm \
-  "/home/software/vivado-2018.3/Vivado/2018.3/data/ip/xpm/xpm_VCOMP.vhd" \
+  "/home/software/vivado-2019.1/Vivado/2019.1/data/ip/xpm/xpm_VCOMP.vhd" \
 -endlib
--makelib xcelium_lib/fifo_generator_v13_2_3 \
+-makelib xcelium_lib/fifo_generator_v13_2_4 \
   "../../../ipstatic/simulation/fifo_generator_vlog_beh.v" \
 -endlib
--makelib xcelium_lib/fifo_generator_v13_2_3 \
+-makelib xcelium_lib/fifo_generator_v13_2_4 \
   "../../../ipstatic/hdl/fifo_generator_v13_2_rfs.vhd" \
 -endlib
--makelib xcelium_lib/fifo_generator_v13_2_3 \
+-makelib xcelium_lib/fifo_generator_v13_2_4 \
   "../../../ipstatic/hdl/fifo_generator_v13_2_rfs.v" \
 -endlib
 -makelib xcelium_lib/xil_defaultlib \

@@ -1,8 +1,8 @@
-Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------
-| Tool Version : Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
-| Date         : Wed Sep 23 22:53:32 2020
-| Host         : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 18:46:35 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
 | Command      : report_utilization -file krnl1x1_bram_utilization_synth.rpt -pb krnl1x1_bram_utilization_synth.pb
 | Design       : krnl1x1_bram
 | Device       : xcvu37pfsvh2892-2
@@ -117,7 +117,7 @@ Table of Contents
 | PLL                  |    0 |     0 |        24 |  0.00 |
 | MMCM                 |    0 |     0 |        12 |  0.00 |
 +----------------------+------+-------+-----------+-------+
-* Note: Each used BUFGCTRL counts as two global buffer resources. This table does not include global clocking resources, only buffer cell usage. See the Clock Utilization Report (report_clock_utilization) for detailed accounting of global clocking resource availability.
+* Note: Each used BUFGCTRL counts as two GLOBAL CLOCK BUFFERs. This table does not include global clocking resources, only buffer cell usage. See the Clock Utilization Report (report_clock_utilization) for detailed accounting of global clocking resource availability.
 
 
 6. ADVANCED
@@ -218,13 +218,13 @@ Table of Contents
 12. SLR Connectivity Matrix
 ---------------------------
 
-+------+------+------+------+
-|      | SLR2 | SLR1 | SLR0 |
-+------+------+------+------+
-| SLR2 |    0 |    0 |    0 |
-| SLR1 |    0 |    0 |    0 |
-| SLR0 |    0 |    0 |    0 |
-+------+------+------+------+
++-----------+------+------+------+
+| FROM \ TO | SLR2 | SLR1 | SLR0 |
++-----------+------+------+------+
+| SLR2      |    0 |    0 |    0 |
+| SLR1      |    0 |    0 |    0 |
+| SLR0      |    0 |    0 |    0 |
++-----------+------+------+------+
 
 
 13. SLR CLB Logic and Dedicated Block Utilization
@@ -261,14 +261,14 @@ Table of Contents
 14. SLR IO Utilization
 ----------------------
 
-+-----------+-------------+---------+--------------+----------+--------------+----------+-----+
-| SLR Index | Bonded IOBs | (%)IOBs | Bonded IPADs | (%)IPADs | Bonded OPADs | (%)OPADs | GTs |
-+-----------+-------------+---------+--------------+----------+--------------+----------+-----+
-| SLR2      |           0 |    0.00 |            0 |     0.00 |            0 |     0.00 |   0 |
-| SLR1      |           0 |    0.00 |            0 |     0.00 |            0 |     0.00 |   0 |
-| SLR0      |           0 |    0.00 |            0 |     0.00 |            0 |     0.00 |   0 |
-+-----------+-------------+---------+--------------+----------+--------------+----------+-----+
-| Total     |           0 |         |            0 |          |            0 |          |   0 |
-+-----------+-------------+---------+--------------+----------+--------------+----------+-----+
++-----------+-----------+---------+------------+----------+------------+----------+-----+
+| SLR Index | Used IOBs | (%)IOBs | Used IPADs | (%)IPADs | Used OPADs | (%)OPADs | GTs |
++-----------+-----------+---------+------------+----------+------------+----------+-----+
+| SLR2      |         0 |    0.00 |          0 |     0.00 |          0 |     0.00 |   0 |
+| SLR1      |         0 |    0.00 |          0 |     0.00 |          0 |     0.00 |   0 |
+| SLR0      |         0 |    0.00 |          0 |     0.00 |          0 |     0.00 |   0 |
++-----------+-----------+---------+------------+----------+------------+----------+-----+
+| Total     |         0 |         |          0 |          |          0 |          |   0 |
++-----------+-----------+---------+------------+----------+------------+----------+-----+
 
 

@@ -1,2 +1,3 @@
+blk_mem_gen_v8_4.v,verilog,blk_mem_gen_v8_4_3,../../../ipstatic/simulation/blk_mem_gen_v8_4.v,
 krnl1x1Bias_bram.v,verilog,xil_defaultlib,../../../../krnl1x1Bias_bram/sim/krnl1x1Bias_bram.v,
 glbl.v,Verilog,xil_defaultlib,glbl.v

@@ -35,6 +35,7 @@
 `include "cnn_layer_accel_FAS_pip_ctrl.svh"
 `include "cnn_layer_accel_QUAD.svh"
 
+
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 //    Global Variables
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -46,14 +47,18 @@ typedef struct {
     acclprm_t krnl1x1b;
     acclprm_t convMap;
 } acclprm_tup_t;
+acclprm_tup_t apt;
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 typedef struct {
     int                             krnl1x1Depth                                            ;
+    int                             AWP_cfg_Addr                                            ;
+    int                             AWP_cfg_data_len                                        ;
     int                             pixelSeqAddr                                            ;
     int                             partMapAddr                                             ;
     int                             resdMapAddr                                             ;
     int                             outMapAddr                                              ;
     int                             pixSeqCfgFetchTotal                                     ;
+    int                             inMapAddr                                               ;
     int                             prevMapAddr                                             ;
     int                             im_fetch_amount                                         ;
     int                             inMapFetchTotal                                         ;
@@ -64,21 +69,20 @@ typedef struct {
     int                             partMapFetchTotal                                       ;
     int                             resdMapFetchTotal                                       ;
     int                             outMapStoreTotal                                        ;
-    int                             ob_store_amount                                         ;
     int                             prevMapFetchTotal                                       ;
     int                             num_tot_1x1_kernels                                     ;
     int                             cm_high_watermark                                       ;
     int                             rm_low_watermark                                        ;
     int                             pm_low_watermark                                        ;
     int                             pv_low_watermark                                        ;
+    int                             ob_high_watermark                                       ;
     int                             rm_fetch_amount                                         ;
     int                             pm_fetch_amount                                         ;
     int                             pv_fetch_amount                                         ;
+    int                             ob_store_amount                                         ;
     logic	[                17:0]	opcode                                                  ;
-    int                             res_high_watermark                                      ;
     int                             krnl1x1_dpth_end                                        ;
     logic	[`KRNL_1X1_SIMD - 1:0]  conv1x1_pip_en                                          ;
-    int                             ob_high_watermark                                       ;
     int                             itN_num_1x1_kernels         [`MAX_1X1_KRNL_IT - 1:0]    ;
     int                             itN_krnl_1x1_addr           [`MAX_1X1_KRNL_IT - 1:0]    ;
     int                             itN_krnl_1x1_fetch_amount	[`MAX_1X1_KRNL_IT - 1:0]    ;
@@ -238,35 +242,31 @@ module testbench;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     testParams_t tp;
     initial begin
-        createTest                       (tp);
-        rst                               = 1;
-        init_read_req_ack                 = 0;
-        init_read_in_prog                 = 0;
-        init_read_data_vld                = 0;
-        init_read_cmpl                    = 0;
-        init_write_req_ack                = 0;
-        init_write_in_prog                = 0;
-        init_write_data_rdy               = 0;
-        init_write_cmpl                   = 0;
-        targ_write_addr                   = 0;
-        targ_write_addr_vld               = 0;
-        targ_read_addr                    = 0;
-        targ_read_addr_vld                = 0;
-        trans_in_fifo_din_vld             = 0;
-        trans_eg_fifo_dout_rdy            = 0;
-        init_usrIntr_ack                  = 0;
-        #(C_PERIOD_100MHz * 10) rst       = 0;    // 10 cycle rst asserted is arbitrairy
-        trans_eg_fifo_dout_rdy            = 1;
-        cfgDUT                            (tp);
-
-
-
+        createTest                      (tp);
+        apt                             = genAcclParamTup(tp);
+        rst                             = 1;
+        init_read_req_ack               = 0;
+        init_read_in_prog               = 0;
+        init_read_data_vld              = 0;
+        init_read_cmpl                  = 0;
+        init_write_req_ack              = 0;
+        init_write_in_prog              = 0;
+        init_write_data_rdy             = 0;
+        init_write_cmpl                 = 0;
+        targ_write_addr                 = 0;
+        targ_write_addr_vld             = 0;
+        targ_read_addr                  = 0;
+        targ_read_addr_vld              = 0;
+        trans_in_fifo_din_vld           = 0;
+        trans_eg_fifo_dout_rdy          = 0;
+        init_usrIntr_ack                = 0;
+        #(C_PERIOD_100MHz * 10) rst     = 0;    // 10 cycle rst asserted is arbitrairy
+        trans_eg_fifo_dout_rdy          = 1;
+        cfgDUT                          (tp);
         fork
             initTransHandle();
             waitComplete();
         join_none
-
-
         // start FAS
         repeat(2) @(posedge clk_intf);
         targ_write_addr      = 1;
@@ -278,20 +278,23 @@ module testbench;
 endmodule
 
 
-function int ftchSzAlgn(int value, int algnm);
-    return (ceil(value, algnm) * algnm);
-endfunction: ftchSzAlgn
+function int szAlgn(int value, int algnm);
+    return (ceil(value, algnm));
+endfunction: szAlgn
 
 
 function automatic void createTest(ref testParams_t tp);
-    tp.krnl1x1Depth                     = 64;
+    tp.convMapDepth                     = 64;
+    tp.krnl1x1Depth                     = tp.convMapDepth;
+    tp.AWP_cfg_Addr                     = 0;
+    tp.AWP_cfg_data_len                 = 0;
     tp.pixelSeqAddr                     = 0;
     tp.partMapAddr                      = 0;
     tp.resdMapAddr                      = 0;
     tp.outMapAddr                       = 0;
-    tp.pixSeqCfgFetchTotal              = 0;
+    tp.pixSeqCfgFetchTotal              = szAlgn(131072, `INIT_WR_DATA_WIDTH);
+    tp.inMapAddr_cfg                    = 0;
     tp.prevMapAddr                      = 0;
-    tp.im_fetch_amount                  = 0;
     tp.inMapFetchTotal                  = 0;
     tp.krnl3x3FetchTotal                = 0;
     tp.krnl3x3BiasFetchTotal            = 0;
@@ -305,14 +308,15 @@ function automatic void createTest(ref testParams_t tp);
     tp.rm_low_watermark                 = 0;
     tp.pm_low_watermark                 = 0;
     tp.pv_low_watermark                 = 0;
+    tp.ob_high_watermark                = 0;
     tp.rm_fetch_amount                  = 0;
     tp.pm_fetch_amount                  = 0;
     tp.pv_fetch_amount                  = 0;
+    tp.im_fetch_amount                  = 0;
+    tp.ob_store_amount                  = 0;
     tp.opcode                           = `OPCODE_16;
-    tp.res_high_watermark               = 0;
     tp.krnl1x1_dpth_end                 = 0;
-    tp.conv1x1_pip_en                   = 1'b0;
-    tp.ob_high_watermark                = 
+    tp.conv1x1_pip_en                   = 0;
     tp.itN_num_1x1_kernels[0]           = 0;
     tp.itN_num_1x1_kernels[1]           = 0;
     tp.itN_num_1x1_kernels[2]           = 0;
@@ -325,41 +329,35 @@ function automatic void createTest(ref testParams_t tp);
     tp.itN_krnl_1x1_fetch_amount[1]     = 0;
     tp.itN_krnl_1x1_fetch_amount[2]     = 0;
     tp.itN_krnl_1x1_fetch_amount[3]     = 0;
-
-    if(tp.opcode == `OPCODE_16;
-    tp.ob_store_amount                     = ;    
-    tp.outMapStoreTotal                    = ;
+    tp.convMap_h                        = 32;
+    tp.convMap_w                        = 32;
+    if(tp.opcode == `OPCODE_16) begin
+        tp.ob_high_watermark            = tp.convMapDepth * `OB_HIGH_WATERMARK_FACTOR;
+        tp.ob_store_amount              = tp.convMapDepth * `OB_STORE_FACTOR;    
+        tp.outMapStoreTotal             = szAlgn(tp.convMap_h * tp.convMap_w * tp.convMapDepth, `NUM_PIX_PER_BUS) * `BYTES_PER_PIXEL;       
+    end
 endfunction: createTest
 
 
 function acclprm_tup_t genAcclParamTup(testParams_t tp);
-    int numkrnl1x1_val;
-    int numkrnl1x1b_val;
-    int krnl1x1_prm_sz;
-    int krnl1x1b_prm_sz;
-    acclprm_tup_t apt;
-
     genAcclConvMap(tp, apt);
-
     if(tp.num_tot_1x1_kernels > 0) begin
         genAcclKrnl1x1(tp, apt);
     end
-
     return apt;
 endfunction: genAcclParamTup
 
 
-function automatic void genAcclConvMap(testParams_t tp, ref acclprm_tup_t krnl1x1);
+function automatic void genAcclConvMap(testParams_t tp);
     int numConvMapVal;
     int convMapSz;
 
-    numConvMapVal     = tp.krnl1x1Depth * tp.convMap_h * tp.convMap_w;
-    convMapSz         = ftchSzAlgn(numConvMapVal, `PIX_FETCH_SZ);
+    numConvMapVal     = tp.convMapDepth * tp.convMap_h * tp.convMap_w;
+    convMapSz         = szAlgn(numConvMapVal, `NUM_PIX_PER_BUS) * `BYTES_PER_PIXEL;
     apt.convMap = genAcclParam(
         convMapSz
     );
 endfunction: genAcclConvMap
-
 
 
 function automatic void genAcclKrnl1x1(testParams_t tp, ref acclprm_tup_t apt);
@@ -367,11 +365,10 @@ function automatic void genAcclKrnl1x1(testParams_t tp, ref acclprm_tup_t apt);
     int numkrnl1x1b_val;
     int krnl1x1_prm_sz;
     int krnl1x1b_prm_sz;
-
-    numkrnl1x1_val     = tp.itN_num_1x1_kernels[0] * tp.krnl1x1Depth;
-    numkrnl1x1b_val = tp.itN_num_1x1_kernels[0];
-    krnl1x1_prm_sz     = ftchSzAlgn(numkrnl1x1_val, `PIX_FETCH_SZ);
-    krnl1x1b_prm_sz = ftchSzAlgn(numkrnl1x1b_val, `PIX_FETCH_SZ);
+    numkrnl1x1_val      = tp.itN_num_1x1_kernels[0] * tp.krnl1x1Depth;
+    numkrnl1x1b_val     = tp.itN_num_1x1_kernels[0];
+    krnl1x1_prm_sz      = szAlgn(numkrnl1x1_val, `NUM_PIX_PER_BUS);
+    krnl1x1b_prm_sz     = szAlgn(numkrnl1x1b_val, `NUM_PIX_PER_BUS);
     apt.krnl1x1 = genAcclParam(
         krnl1x1_prm_sz
     );
@@ -383,49 +380,60 @@ endfunction: genAcclKrnl1x1
 
 function acclprm_t genAcclParam(int acclprm_sz);
     int i;
-    int arr_sz;
     acclprm_t acclprm;
-
     acclprm = new[acclprm_sz];
     for(i = 0; i < acclprm_sz; i = i + 1) begin
         acclprm[i] = $urandom_range(1, 16);
     end
-
     return acclprm;
 endfunction: genAcclParam
 
 
 task cfgDUT(testParams_t tp);
-    testbench.i0_cnn_layer_accel_FAS.krnl1x1Depth_cfg               = tp.krnl1x1Depth;
-    testbench.i0_cnn_layer_accel_FAS.pixSeqCfgFetchTotal_cfg        = ftchSzAlgn(131072, `INIT_WR_DATA_WIDTH);
-    testbench.i0_cnn_layer_accel_FAS.inMapFetchTotal_cfg            = 0;
-    // testbench.i0_cnn_layer_accel_FAS.krnl3x3FetchTotal_cfg          = ;
-    // testbench.i0_cnn_layer_accel_FAS.krnl3x3BiasFetchTotal_cfg      = ;
-    // testbench.i0_cnn_layer_accel_FAS.krnl1x1FetchTotal_cfg          = ;
-    // testbench.i0_cnn_layer_accel_FAS.krnl1x1BiasFetchTotal_cfg      = ;
-    // testbench.i0_cnn_layer_accel_FAS.partMapFetchTotal_cfg          = ;
-    // testbench.i0_cnn_layer_accel_FAS.resdMapFetchTotal_cfg          = ;
-    // testbench.i0_cnn_layer_accel_FAS.outMapStoreTotal_cfg           = ;
-    // testbench.i0_cnn_layer_accel_FAS.outMapStoreFactor_cfg          = ;
-    // testbench.i0_cnn_layer_accel_FAS.prevMapFetchTotal_cfg          = ;
-    // testbench.i0_cnn_layer_accel_FAS.num_1x1_kernels_cfg            = tp.num_1x1_kernels;
-    // testbench.i0_cnn_layer_accel_FAS.cm_high_watermark_cfg          = ;
-    // testbench.i0_cnn_layer_accel_FAS.rm_low_watermark_cfg           = ;
-    // testbench.i0_cnn_layer_accel_FAS.pm_low_watermark_cfg           = ;
-    // testbench.i0_cnn_layer_accel_FAS.pv_low_watermark_cfg           = ;
-    // testbench.i0_cnn_layer_accel_FAS.rm_fetch_amount_cfg            = ;
-    // testbench.i0_cnn_layer_accel_FAS.pm_fetch_amount_cfg            = ;
-    // testbench.i0_cnn_layer_accel_FAS.pv_fetch_amount_cfg            = ;
-    // testbench.i0_cnn_layer_accel_FAS.im_fetch_amount_cfg            = ;
-    // testbench.i0_cnn_layer_accel_FAS.krnl1x1_pding_cfg              = ;
-    // testbench.i0_cnn_layer_accel_FAS.krnl1x1_pad_bgn_cfg            = ;
-    // testbench.i0_cnn_layer_accel_FAS.krnl1x1_pad_end_cfg            = ;
-    // testbench.i0_cnn_layer_accel_FAS.opcode_cfg                     = ;
-    // testbench.i0_cnn_layer_accel_FAS.res_high_watermark_cfg         = ;
-    // testbench.i0_cnn_layer_accel_FAS.conv1x1_pip_en_cfg             = ;
-    // testbench.i0_cnn_layer_accel_FAS.krnl1x1_bram_rdAddr_end_cfg    = ;
-    // testbench.i0_cnn_layer_accel_FAS.krnl1x1_dpth_end_cfg           = ;
-    // testbench.i0_cnn_layer_accel_FAS.ob_store_amount_cfg            = ;
+    testbench.i0_cnn_layer_accel_FAS.krnl1x1Depth_cfg                   = tp.krnl1x1Depth                   ;   
+    testbench.i0_cnn_layer_accel_FAS.AWP_cfg_Addr_cfg                   = tp.AWP_cfg_Addr                   ;
+    testbench.i0_cnn_layer_accel_FAS.AWP_cfg_data_len_cfg               = tp.AWP_cfg_data_len               ;
+    testbench.i0_cnn_layer_accel_FAS.pixelSeqAddr_cfg                   = tp.pixelSeqAddr                   ;
+    testbench.i0_cnn_layer_accel_FAS.partMapAddr_cfg                    = tp.partMapAddr                    ;
+    testbench.i0_cnn_layer_accel_FAS.resdMapAddr_cfg                    = tp.resdMapAddr                    ;
+    testbench.i0_cnn_layer_accel_FAS.outMapAddr_cfg                     = tp.outMapAddr                     ;
+    testbench.i0_cnn_layer_accel_FAS.pixSeqCfgFetchTotal_cfg            = tp.pixSeqCfgFetchTotal            ;
+    testbench.i0_cnn_layer_accel_FAS.inMapAddr_cfg_cfg                  = tp.inMapAddr_cfg                  ;
+    testbench.i0_cnn_layer_accel_FAS.prevMapAddr_cfg                    = tp.prevMapAddr                    ;
+    testbench.i0_cnn_layer_accel_FAS.inMapFetchTotal_cfg                = tp.inMapFetchTotal                ;
+    testbench.i0_cnn_layer_accel_FAS.krnl3x3FetchTotal_cfg              = tp.krnl3x3FetchTotal              ;
+    testbench.i0_cnn_layer_accel_FAS.krnl3x3BiasFetchTotal_cfg          = tp.krnl3x3BiasFetchTotal          ;
+    testbench.i0_cnn_layer_accel_FAS.krnl1x1FetchTotal_cfg              = tp.krnl1x1FetchTotal              ;
+    testbench.i0_cnn_layer_accel_FAS.krnl1x1BiasFetchTotal_cfg          = tp.krnl1x1BiasFetchTotal          ;
+    testbench.i0_cnn_layer_accel_FAS.partMapFetchTotal_cfg              = tp.partMapFetchTotal              ;
+    testbench.i0_cnn_layer_accel_FAS.resdMapFetchTotal_cfg              = tp.resdMapFetchTotal              ;
+    testbench.i0_cnn_layer_accel_FAS.prevMapFetchTotal_cfg              = tp.prevMapFetchTotal              ;
+    testbench.i0_cnn_layer_accel_FAS.num_tot_1x1_kernels_cfg            = tp.num_tot_1x1_kernels            ;
+    testbench.i0_cnn_layer_accel_FAS.cm_high_watermark_cfg              = tp.cm_high_watermark              ;
+    testbench.i0_cnn_layer_accel_FAS.rm_low_watermark_cfg               = tp.rm_low_watermark               ;
+    testbench.i0_cnn_layer_accel_FAS.pm_low_watermark_cfg               = tp.pm_low_watermark               ;
+    testbench.i0_cnn_layer_accel_FAS.pv_low_watermark_cfg               = tp.pv_low_watermark               ;
+    testbench.i0_cnn_layer_accel_FAS.ob_high_watermark_cfg              = tp.ob_high_watermark              ;
+    testbench.i0_cnn_layer_accel_FAS.rm_fetch_amount_cfg                = tp.rm_fetch_amount                ;
+    testbench.i0_cnn_layer_accel_FAS.pm_fetch_amount_cfg                = tp.pm_fetch_amount                ;
+    testbench.i0_cnn_layer_accel_FAS.pv_fetch_amount_cfg                = tp.pv_fetch_amount                ;
+    testbench.i0_cnn_layer_accel_FAS.im_fetch_amount_cfg                = tp.im_fetch_amount                ;
+    testbench.i0_cnn_layer_accel_FAS.ob_store_amount_cfg                = tp.ob_store_amount                ;
+    testbench.i0_cnn_layer_accel_FAS.opcode_cfg                         = tp.opcode                         ;
+    testbench.i0_cnn_layer_accel_FAS.krnl1x1_dpth_end_cfg               = tp.krnl1x1_dpth_end               ;
+    testbench.i0_cnn_layer_accel_FAS.conv1x1_pip_en_cfg                 = tp.conv1x1_pip_en                 ;
+    testbench.i0_cnn_layer_accel_FAS.itN_num_1x1_kernels_cfg[0]         = tp.itN_num_1x1_kernels[0]         ;
+    testbench.i0_cnn_layer_accel_FAS.itN_num_1x1_kernels_cfg[1]         = tp.itN_num_1x1_kernels[1]         ;
+    testbench.i0_cnn_layer_accel_FAS.itN_num_1x1_kernels_cfg[2]         = tp.itN_num_1x1_kernels[2]         ;
+    testbench.i0_cnn_layer_accel_FAS.itN_num_1x1_kernels_cfg[3]         = tp.itN_num_1x1_kernels[3]         ;
+    testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_addr_cfg[0]           = tp.itN_krnl_1x1_addr[0]           ;
+    testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_addr_cfg[1]           = tp.itN_krnl_1x1_addr[1]           ;
+    testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_addr_cfg[2]           = tp.itN_krnl_1x1_addr[2]           ;
+    testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_addr_cfg[3]           = tp.itN_krnl_1x1_addr[3]           ; 
+    testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_fetch_amount_cfg[0]   = tp.itN_krnl_1x1_fetch_amount[0]   ;		
+    testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_fetch_amount_cfg[1]   = tp.itN_krnl_1x1_fetch_amount[1]   ; 
+    testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_fetch_amount_cfg[2]   = tp.itN_krnl_1x1_fetch_amount[2]   ; 
+    testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_fetch_amount_cfg[3]   = tp.itN_krnl_1x1_fetch_amount[3]   ;
 endtask: cfgDUT
 
 

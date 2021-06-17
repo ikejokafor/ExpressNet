@@ -51,7 +51,7 @@ read_xdc dont_touch.xdc
 set_property used_in_implementation false [get_files dont_touch.xdc]
 set_param ips.enableIPCacheLiteLoad 1
 
-set cached_ip [config_ip_cache -export -no_bom -use_project_ipc -dir /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/partMap_fifo_synth_1 -new_name partMap_fifo -ip [get_ips partMap_fifo]]
+set cached_ip [config_ip_cache -export -no_bom  -dir /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/partMap_fifo_synth_1 -new_name partMap_fifo -ip [get_ips partMap_fifo]]
 
 if { $cached_ip eq {} } {
 close [open __synthesis_is_running__ w]

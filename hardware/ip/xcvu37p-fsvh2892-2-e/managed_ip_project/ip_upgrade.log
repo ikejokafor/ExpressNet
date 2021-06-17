@@ -1,0 +1,310 @@
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:31 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'trans_in_pyld_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of trans_in_pyld_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:29 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'trans_in_meta_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of trans_in_meta_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:27 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'trans_eg_pyld_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of trans_eg_pyld_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:25 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'trans_eg_meta_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of trans_eg_meta_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:23 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'resdMap_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of resdMap_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:21 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'res_dwc_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of res_dwc_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:20 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'prevMap_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of prevMap_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:18 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'partMap_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of partMap_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:15 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'outbuf_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of outbuf_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:12 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'krnl1x1_bram'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of krnl1x1_bram (xilinx.com:ip:blk_mem_gen:8.4) from (Rev. 2) to (Rev. 3)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:09 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'krnl1x1Bias_dwc_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of krnl1x1Bias_dwc_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:35:06 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'krnl1x1Bias_bram'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of krnl1x1Bias_bram (xilinx.com:ip:blk_mem_gen:8.4) from (Rev. 2) to (Rev. 3)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:34:54 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'job_fetch_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of job_fetch_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:34:52 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'convMap_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of convMap_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Jun 16 17:34:50 2021
+| Host         : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
+| Command      : upgrade_ip
+| Device       : xcvu37p-fsvh2892-2-e
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'conv1x1_dwc_fifo'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of conv1x1_dwc_fifo (xilinx.com:ip:fifo_generator:13.2) from (Rev. 3) to (Rev. 4)
+

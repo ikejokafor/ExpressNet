@@ -9,7 +9,7 @@
 `include "cnn_layer_accel_FAS.svh"
 
 
-`define PIX_FETCH_SZ	(`INIT_WR_DATA_WIDTH / `PIXEL_WIDTH)
+`define BYTES_PER_PIXEL	2
 
 
 `define KL_IT_RD_ID  	7'b0000001
@@ -19,6 +19,18 @@
 `define PM_IT_RD_ID  	7'b0010000
 `define RM_IT_RD_ID  	7'b0100000
 `define PV_IT_RD_ID  	7'b1000000
+
+
+`define CO_HIGH_WATERMARK_FACTOR    3
+`define RM_LOW_WATERMARK_FACTOR     1
+`define PM_LOW_WATERMARK_FACTOR     1
+`define PV_LOW_WATERMARK_FACTOR     1
+`define OB_HIGH_WATERMARK_FACTOR    1
+`define RM_FETCH_FACTOR             1
+`define PM_FETCH_FACTOR             1
+`define PV_FETCH_FACTOR             1
+`define OB_STORE_FACTOR             1
+`define NUM_PIX_PER_BUS             (`INIT_RD_DATA_WIDTH / `PIXEL_WIDTH)
 
 
 `define OPCODE_0		18'b000000000000000001

@@ -37,14 +37,14 @@
 `include "utilities.svh"
 
 
-`define KRNL_1X1_BRAM_WR_WTH     	1024 // TODO: Remove hard coding
-`define KRNL_1X1_BRAM_WR_DTH     	8192 // TODO: Remove hard coding   
-`define KRNL_1X1_BRAM_RD_WTH     	1024 // TODO: Remove hard coding
-`define KRNL_1X1_BRAM_RD_DTH     	8192 // TODO: Remove hard coding    
-`define KRNL_1X1_BIAS_BRAM_WR_WTH	1024 // TODO: Remove hard coding
-`define KRNL_1X1_BIAS_BRAM_WR_DTH	8192 // TODO: Remove hard coding   
-`define KRNL_1X1_BIAS_BRAM_RD_WTH	32 // TODO: Remove hard coding
-`define KRNL_1X1_BIAS_BRAM_RD_DTH	262144 // TODO: Remove hard coding    
+`define KRNL_1X1_BRAM_WR_WTH     	1024    // TODO: Remove hard coding
+`define KRNL_1X1_BRAM_WR_DTH     	8192    // TODO: Remove hard coding   
+`define KRNL_1X1_BRAM_RD_WTH     	1024    // TODO: Remove hard coding
+`define KRNL_1X1_BRAM_RD_DTH     	8192    // TODO: Remove hard coding    
+`define KRNL_1X1_BIAS_BRAM_WR_WTH	16      // TODO: Remove hard coding
+`define KRNL_1X1_BIAS_BRAM_WR_DTH	8192    // TODO: Remove hard coding   
+`define KRNL_1X1_BIAS_BRAM_RD_WTH	16      // TODO: Remove hard coding
+`define KRNL_1X1_BIAS_BRAM_RD_DTH	65536   // TODO: Remove hard coding    
 
 
 `endif

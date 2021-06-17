@@ -1,8 +1,8 @@
--- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+-- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
--- Date        : Wed Sep 23 22:53:33 2020
--- Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
+-- Tool Version: Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+-- Date        : Wed Jun 16 18:46:36 2021
+-- Host        : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
 -- Command     : write_vhdl -force -mode synth_stub
 --               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1_bram/krnl1x1_bram_stub.vhdl
 -- Design      : krnl1x1_bram
@@ -33,6 +33,6 @@ attribute black_box_pad_pin : string;
 attribute syn_black_box of stub : architecture is true;
 attribute black_box_pad_pin of stub : architecture is "clka,ena,wea[0:0],addra[12:0],dina[1023:0],clkb,enb,addrb[12:0],doutb[1023:0]";
 attribute x_core_info : string;
-attribute x_core_info of stub : architecture is "blk_mem_gen_v8_4_2,Vivado 2018.3";
+attribute x_core_info of stub : architecture is "blk_mem_gen_v8_4_3,Vivado 2019.1";
 begin
 end;

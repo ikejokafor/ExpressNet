@@ -1,8 +1,8 @@
-// Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+// Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
-// Date        : Wed Sep 23 22:53:33 2020
-// Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
+// Tool Version: Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+// Date        : Wed Jun 16 18:46:36 2021
+// Host        : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
 // Command     : write_verilog -force -mode synth_stub
 //               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1_bram/krnl1x1_bram_stub.v
 // Design      : krnl1x1_bram
@@ -13,7 +13,7 @@
 // This empty module with port declaration file causes synthesis tools to infer a black box for IP.
 // The synthesis directives are for Synopsys Synplify support to prevent IO buffer insertion.
 // Please paste the declaration into a Verilog source file or add the file as an additional source.
-(* x_core_info = "blk_mem_gen_v8_4_2,Vivado 2018.3" *)
+(* x_core_info = "blk_mem_gen_v8_4_3,Vivado 2019.1" *)
 module krnl1x1_bram(clka, ena, wea, addra, dina, clkb, enb, addrb, doutb)
 /* synthesis syn_black_box black_box_pad_pin="clka,ena,wea[0:0],addra[12:0],dina[1023:0],clkb,enb,addrb[12:0],doutb[1023:0]" */;
   input clka;

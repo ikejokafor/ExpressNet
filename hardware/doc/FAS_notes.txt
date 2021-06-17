@@ -48,3 +48,69 @@ FAS is going to have 3 slave spaces
 do not use vivado 2018.3.1
 
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+To initiate cnn processing
+
+1) Do a target transaction to set configuration registers in the FAS
+    
+    fetch/store amounts/totals, data addresses, number of 1x1 kernels, number of 1x1 kernel iterations
+
+2) Do a target transaction to target address [] to start the FAS
+
+3) FAS will start to load the 1st iteration of 1x1 kernels from memory using initiator intf
+    
+    1x1 kernels should be arranged depthwise in memory (D, R, C)
+    
+    The number of 1x1 kernels and the depth of individual 1x1 kernels should be padded to a power 2
+    
+    The FAS can have multiple 1x1 conv pipelines to process multiple 1x1 kernels simaltaneously
+       
+    The FAS will coordinate the incoming data to the correct 1x1 conv pip fifo
+    
+        The initiator read data bus may contain multiple 1x1 values, and the FAS will count them as them come in,
+        
+        Data comes in depth size, so once a particular depth is reached, the incoming data is transfered to the next availble
+            conv 1x1 pip bram
+            
+    Conclusion of this process is signified by the completion of reading kernel data ie init_read_cmpl for the 1x1 kernel data memory transaction ID
+
+    FAS will then start loading 1x1 kernel bias data
+    
+4)  Similar to step 3, only differnce is that the data is put in a dwc fifo so singular bias data can be loaded sequentially
+        to each conv 1x1 pip kernel bias fifo
+    
+    Conclusion of this process is signified by the completion of reading kernel bias data ie init_read_cmpl for the 1x1 kernel bias data memory transaction ID
+
+    FAS will then start configuring fetching and configuring AWPs
+
+5)  AWP configuration data should be laid out sequentially in memory
+
+    
+    Conclusion of this process is signified by the completion of reading AWP cfg data ie init_read_cmpl for the 1x1 AWP cfg data memory transaction ID
+
+    FAS will then send signal to start the AWPs
+    
+6)  FAS will send trans packet to AWPs   
+
+
+    Conclusion of this process is signified by
+
+    FAS will then be in the active phas
+    
+7)  During the active phase

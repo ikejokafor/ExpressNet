@@ -71,7 +71,7 @@
 `define OUTBUF_FIFO_WR_WTH                  1024 // TODO: Remove hard coding
 `define OUTBUF_FIFO_RD_WTH                  1024 // TODO: Remove hard coding
 
-`define CONV1X1_DWC_FIFO_WR_WTH             128 // TODO: Remove hard coding
+`define CONV1X1_DWC_FIFO_WR_WTH             128  // TODO: Remove hard coding
 `define CONV1X1_DWC_FIFO_RD_WTH             1024 // TODO: Remove hard coding
 
 `define RES_DWC_FIFO_WR_WTH                 1024 // TODO: Remove hard coding

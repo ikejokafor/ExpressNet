@@ -251,7 +251,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 end
                 conv1x1_pip_start1          <= 1;
             end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE)
-                && (opcode_cfg[`OPCODE_2_FIELD] || opcode_cfg[`OPCODE_6_FIELD])
+                && (opcode_cfg[`OPCODE_2_FIELD] || opcode_cfg[`OPCODE_6_FIELD]
                     || opcode_cfg[`OPCODE_14_FIELD])
                 && !convMap_fifo_empty
                 && !(|state_update_in_prog))

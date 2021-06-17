@@ -1,8 +1,8 @@
-// Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+// Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2018.3 (lin64) Build 2405991 Thu Dec  6 23:36:41 MST 2018
-// Date        : Thu Oct  8 17:43:07 2020
-// Host        : cse-p322mdl16.cse.psu.edu running 64-bit Ubuntu 16.04.6 LTS
+// Tool Version: Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+// Date        : Wed Jun 16 18:41:36 2021
+// Host        : e5-cse-322-17 running 64-bit CentOS Linux release 7.9.2009 (Core)
 // Command     : write_verilog -force -mode funcsim
 //               /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/krnl1x1Bias_dwc_fifo/krnl1x1Bias_dwc_fifo_sim_netlist.v
 // Design      : krnl1x1Bias_dwc_fifo
@@ -12,7 +12,7 @@
 // --------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CHECK_LICENSE_TYPE = "krnl1x1Bias_dwc_fifo,fifo_generator_v13_2_3,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "fifo_generator_v13_2_3,Vivado 2018.3" *) 
+(* CHECK_LICENSE_TYPE = "krnl1x1Bias_dwc_fifo,fifo_generator_v13_2_4,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "fifo_generator_v13_2_4,Vivado 2019.1" *) 
 (* NotValidForBitStream *)
 module krnl1x1Bias_dwc_fifo
    (srst,
@@ -375,7 +375,7 @@ module krnl1x1Bias_dwc_fifo
   (* C_WR_PNTR_WIDTH_WDCH = "10" *) 
   (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
   (* C_WR_RESPONSE_LATENCY = "1" *) 
-  krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3 U0
+  krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_4 U0
        (.almost_empty(NLW_U0_almost_empty_UNCONNECTED),
         .almost_full(NLW_U0_almost_full_UNCONNECTED),
         .axi_ar_data_count(NLW_U0_axi_ar_data_count_UNCONNECTED[4:0]),
@@ -4969,7 +4969,7 @@ module krnl1x1Bias_dwc_fifo_fifo_generator_top
   wire wr_en;
   wire wr_rst_busy;
 
-  krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3_builtin \gbi.bi 
+  krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_4_builtin \gbi.bi 
        (.din(din),
         .dout(dout),
         .empty(empty),
@@ -5051,8 +5051,8 @@ endmodule
 (* C_WR_DEPTH_WRCH = "16" *) (* C_WR_FREQ = "400" *) (* C_WR_PNTR_WIDTH = "9" *) 
 (* C_WR_PNTR_WIDTH_AXIS = "10" *) (* C_WR_PNTR_WIDTH_RACH = "4" *) (* C_WR_PNTR_WIDTH_RDCH = "10" *) 
 (* C_WR_PNTR_WIDTH_WACH = "4" *) (* C_WR_PNTR_WIDTH_WDCH = "10" *) (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
-(* C_WR_RESPONSE_LATENCY = "1" *) (* ORIG_REF_NAME = "fifo_generator_v13_2_3" *) 
-module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3
+(* C_WR_RESPONSE_LATENCY = "1" *) (* ORIG_REF_NAME = "fifo_generator_v13_2_4" *) 
+module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_4
    (backup,
     backup_marker,
     clk,
@@ -6057,7 +6057,7 @@ module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3
        (.G(\<const0> ));
   VCC VCC
        (.P(\<const1> ));
-  krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3_synth inst_fifo_gen
+  krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_4_synth inst_fifo_gen
        (.din(din),
         .dout(dout),
         .empty(empty),
@@ -6072,8 +6072,8 @@ module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3
         .wr_rst_busy(wr_rst_busy));
 endmodule
 
-(* ORIG_REF_NAME = "fifo_generator_v13_2_3_builtin" *) 
-module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3_builtin
+(* ORIG_REF_NAME = "fifo_generator_v13_2_4_builtin" *) 
+module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_4_builtin
    (dout,
     valid,
     wr_rst_busy,
@@ -6127,8 +6127,8 @@ module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3_builtin
         .wr_rst_busy(wr_rst_busy));
 endmodule
 
-(* ORIG_REF_NAME = "fifo_generator_v13_2_3_synth" *) 
-module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_3_synth
+(* ORIG_REF_NAME = "fifo_generator_v13_2_4_synth" *) 
+module krnl1x1Bias_dwc_fifo_fifo_generator_v13_2_4_synth
    (dout,
     valid,
     wr_rst_busy,

@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2020 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2021 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -48,7 +48,7 @@
 
 
 // IP VLNV: xilinx.com:ip:blk_mem_gen:8.4
-// IP Revision: 2
+// IP Revision: 3
 
 `timescale 1ns/1ps
 
@@ -86,7 +86,7 @@ input wire [12 : 0] addrb;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB DOUT" *)
 output wire [1023 : 0] doutb;
 
-  blk_mem_gen_v8_4_2 #(
+  blk_mem_gen_v8_4_3 #(
     .C_FAMILY("virtexuplusHBM"),
     .C_XDEVICEFAMILY("virtexuplusHBM"),
     .C_ELABORATION_DIR("./"),

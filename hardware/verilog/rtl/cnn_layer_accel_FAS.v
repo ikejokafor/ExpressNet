@@ -31,13 +31,13 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_FAS #(
     parameter C_FAS_ID = 0,
-    parameter C_KL_IT_RD_ID = 0,
-	parameter C_KB_IT_RD_ID = 1,
-    parameter C_AC_IT_RD_ID = 2,
-    parameter C_IM_IT_RD_ID = 3,
-    parameter C_PM_IT_RD_ID = 4,
-    parameter C_RM_IT_RD_ID = 5,
-    parameter C_PV_IT_RD_ID = 6
+    parameter C_KL_IT_RD_ID = 0,    // mem trans ID for kernels params
+	parameter C_KB_IT_RD_ID = 1,    // mem trans ID for kernel bias params
+    parameter C_AC_IT_RD_ID = 2,    // mem trans ID for AWP cfg params
+    parameter C_IM_IT_RD_ID = 3,    // mem trans ID for input map params
+    parameter C_PM_IT_RD_ID = 4,    // mem trans ID for part maps params
+    parameter C_RM_IT_RD_ID = 5,    // mem trans ID for resd maps params
+    parameter C_PV_IT_RD_ID = 6     // mem trans ID for prev maps params
 ) (
     clk_intf                    ,
     clk_FAS                     ,
@@ -227,17 +227,16 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   rm_low_watermark_cfg                                    ;
     logic [                                     15:0]   pm_low_watermark_cfg                                    ;
     logic [                                     15:0]   pv_low_watermark_cfg                                    ;
+    logic [                                     15:0]   ob_high_watermark_cfg                                   ;    
     logic [                                     15:0]   rm_fetch_amount_cfg                                     ;
     logic [                                     15:0]   pm_fetch_amount_cfg                                     ;
     logic [                                     15:0]   pv_fetch_amount_cfg                                     ;
     logic [                                     15:0]   im_fetch_amount_cfg                                     ;
+    logic [                                     15:0]   ob_store_amount_cfg                                     ;    
     logic [                                     17:0]   opcode_cfg                                              ;
-    logic [                                     15:0]   res_high_watermark_cfg                                  ;
     logic [          C_CONV_1X1_PIP_EN_CFG_WTH - 1:0]   conv1x1_pip_en_cfg                                      ;
     logic [                                     15:0]   num_conv1x1_it_cfg                                      ;
     logic [                                     15:0]   krnl1x1_dpth_end_cfg                                    ;
-    logic [                                     15:0]   ob_store_amount_cfg                                     ;
-    logic [                                     15:0]   ob_high_watermark_cfg                                   ;
     logic [                                     15:0]   krnl1x1_dpth_tot_cfg                                    ; // host cfg by doing krnl1x1Depth_cfg / krnl_trans_s
     logic [                                     15:0]   krnl_1x1_fetch_total_cfg                                ;
     logic [                                     31:0]   itN_krnl_1x1_addr_cfg[`MAX_1X1_KRNL_IT - 1:0]           ;
@@ -772,7 +771,7 @@ module cnn_layer_accel_FAS #(
                 .vec_add_rm1_sum            ( vec_add_rm1_sum                                   ),
                 // BEGIN ----------------------------------------------------------------------------------------------------------------------------    
                 .krnl1x1_bram_din           ( init_read_data                                    ),
-                .krnl1x1Bias_bram_din       ( init_read_data                                    ),                
+                .krnl1x1Bias_bram_din       ( krnl1x1Bias_dwc_fifo_dout_w                       ),                
                 .krnl1x1_bram_wren          ( krnl1x1_bram_wren && kn1x1_bm_wr_sel[g4]      	),
                 .krnl1x1Bias_bram_wren      ( krnl1x1Bias_bram_wren && kn1x1b_bm_wr_sel[g4]		),
 				.convMap_fifo_dout			( convMap_fifo_dout									),
@@ -895,11 +894,10 @@ module cnn_layer_accel_FAS #(
             pm_fetch_amount_cfg                 	<= 0;
             pv_fetch_amount_cfg                 	<= 0;
             im_fetch_amount_cfg                 	<= 0;
+            ob_high_watermark_cfg               	<= 0;
             opcode_cfg                          	<= 0;
-            res_high_watermark_cfg              	<= 0;
             krnl1x1_dpth_end_cfg                	<= 0;
             conv1x1_pip_en_cfg                  	<= 0;
-            ob_high_watermark_cfg               	<= 0;
 			for(i0 = 0; i0 < `MAX_1X1_KRNL_IT; i0 = i0 + 1) begin
 				itN_num_1x1_kernels_cfg[i0]     	<= 0;			
 			end			
@@ -928,7 +926,9 @@ module cnn_layer_accel_FAS #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
-	always@(posedge clk_intf) begin
+	assign krnl1x1Bias_dwc_fifo_dout_w = krnl1x1Bias_dwc_fifo_dout[`PIXEL_WIDTH - 1:0];
+    
+    always@(posedge clk_intf) begin
         if(rst || FAS_intf_rdy_n) begin
 			kl_ld_count    				<= 0;
         end else begin
@@ -941,13 +941,11 @@ module cnn_layer_accel_FAS #(
                 kl_ld_count         <= 0;
             end
         end
-    end    
-	
+    end
 	
 	always@(posedge clk_intf) begin
         if(rst || FAS_intf_rdy_n) begin
             krnl1x1_bram_wren 	<= 0;
-            kl_ld_count    		<= 0;
             kn1x1_bm_wr_sel     <= C_KN1X1_BM_WR_SEL_DFT;
         end else begin
 			if(init_read_data_rdy[C_KL_IT_RD_ID] && init_read_data_vld[C_KL_IT_RD_ID]) begin
@@ -1140,27 +1138,23 @@ module cnn_layer_accel_FAS #(
                 end
                 ST_LD_1X1_KRN: begin
                     if(init_read_cmpl[C_KL_IT_RD_ID]) begin
-                        state <= ST_ACTIVE;
-                    end else if(init_read_cmpl[C_KL_IT_RD_ID]) begin
                         state <= ST_LD_1X1_KRB;
                     end
                 end
 				ST_LD_1X1_KRB: begin
                     if(init_read_cmpl[C_KB_IT_RD_ID]) begin
-                        state <= ST_ACTIVE;
-                    end else if(init_read_cmpl[C_KL_IT_RD_ID]) begin
                         state <= ret_state;
                     end
                 end
                 ST_CFG_AWP: begin
                     // if(cfg_AWP_done) begin
-                        state <= ST_START_AWP;
+                        state   <= ST_START_AWP;
                     // end
                 end
                 ST_START_AWP: begin
-                    if(start_AWP_done) begin
-                        state    <= ST_ACTIVE;
-                    end
+                    // if(start_AWP_done) begin
+                        state   <= ST_ACTIVE;
+                    // end
                 end
                 ST_ACTIVE: begin
                     if(krnl_count == itN_num_1x1_kernels_cfg[conv1x1_it] && tot_krnl_count < num_tot_1x1_kernels_cfg) begin
@@ -1198,9 +1192,13 @@ module cnn_layer_accel_FAS #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
 	always@(posedge clk_FAS) begin
         if(rst) begin
-            trans_eg_fifo_wren     <= 0;
+            cfg_AWP_done            <= 0;
+            start_AWP_done          <= 0;
+            trans_eg_fifo_wren      <= 0;
         end else begin
-            trans_eg_fifo_wren     <= 0;
+            cfg_AWP_done            <= 0;
+            start_AWP_done          <= 0;
+            trans_eg_fifo_wren      <= 0;
             case(state)
                 // trans_eg_fifo_din
                 ST_CFG_AWP: begin
@@ -1222,8 +1220,6 @@ module cnn_layer_accel_FAS #(
     always@(posedge clk_FAS) begin
         if(rst || FAS_rdy_n) begin
             trans_in_fifo_rden      <= 0;
-            cfg_AWP_done            <= 0;
-            start_AWP_done          <= 0;
             all_AWP_complete        <= 0;
             res_dwc_fifo_wren       <= 0;
             job_fetch_fifo_wren     <= 0;
@@ -1232,8 +1228,6 @@ module cnn_layer_accel_FAS #(
             if(!trans_in_fifo_empty) begin
                 trans_in_fifo_rden <= 1;
             end
-            cfg_AWP_done            <= 0;
-            start_AWP_done          <= 0;
             all_AWP_complete        <= 0;
             res_dwc_fifo_wren       <= 0;
             job_fetch_fifo_wren     <= 0;
@@ -1311,7 +1305,7 @@ module cnn_layer_accel_FAS #(
         end else begin
             init_read_data_rdy[C_KB_IT_RD_ID]        <= 0;
 			krnl1x1Bias_bram_wren					 <= 0;
-            if(state == ST_LD_1X1_KRN && !init_read_in_prog[C_KB_IT_RD_ID]) begin
+            if(state == ST_LD_1X1_KRB && !init_read_in_prog[C_KB_IT_RD_ID]) begin
                 init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= itN_krnl_1x1_addr_cfg[conv1x1_it];
                 init_read_len[(`INIT_RD_LEN_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]		<= itN_krnl_1x1_fetch_amount_cfg[conv1x1_it];
                 init_read_req[C_KB_IT_RD_ID]                                
@@ -1583,10 +1577,9 @@ module cnn_layer_accel_FAS #(
     always@(posedge clk_FAS) begin
         if(rst || FAS_intf_rdy_n || process_cmpl_intf) begin
             init_write_req          <= 0;
-            init_read_addr          <= 0;
-            init_read_len           <= 0;
-            init_read_addr          <= 0;
-            init_read_len           <= 0;
+            init_write_addr         <= 0;
+            init_write_len          <= 0;
+            init_write_addr         <= 0;
             init_write_data_vld     <= 0;
             outMapStoreCount        <= 0;
             last_wrt                <= 0;
@@ -1594,8 +1587,8 @@ module cnn_layer_accel_FAS #(
             last_wrt                <= 0;
             init_write_data_vld     <= 0;
             if(outBuf_fifo_prog_full && (state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && outMapStoreCount != outMapStoreTotal_cfg) begin
-                init_read_addr           <= outMapAddr_cfg;
-                init_read_len            <= ob_store_amount_cfg;
+                init_write_addr          <= outMapAddr_cfg;
+                init_write_len           <= ob_store_amount_cfg;
                 init_write_req           <= init_write_req_ack  ? 1'b0 : (~init_write_req_acked ? 1'b1 : init_write_req);
                 init_write_req_acked     <= init_write_req_ack  ? 1'b1 :  init_write_req_acked;
             end

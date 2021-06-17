@@ -36,8 +36,8 @@ set_property ip_output_repo /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/ha
 set_property ip_cache_permissions {read write} [current_project]
 read_ip -quiet /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo.xci
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo.xdc]
-set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo_ooc.xdc]
 set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo_clocks.xdc]
+set_property used_in_implementation false [get_files -all /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/outbuf_fifo/outbuf_fifo_ooc.xdc]
 
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -51,7 +51,7 @@ read_xdc dont_touch.xdc
 set_property used_in_implementation false [get_files dont_touch.xdc]
 set_param ips.enableIPCacheLiteLoad 1
 
-set cached_ip [config_ip_cache -export -no_bom -use_project_ipc -dir /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/outbuf_fifo_synth_1 -new_name outbuf_fifo -ip [get_ips outbuf_fifo]]
+set cached_ip [config_ip_cache -export -no_bom  -dir /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/outbuf_fifo_synth_1 -new_name outbuf_fifo -ip [get_ips outbuf_fifo]]
 
 if { $cached_ip eq {} } {
 close [open __synthesis_is_running__ w]
