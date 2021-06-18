@@ -1,354 +1,345 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_FAS_ID
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_FC_IT_RD_ID
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_AC_IT_RD_ID
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_IM_IT_RD_ID
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PM_IT_RD_ID
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RM_IT_RD_ID
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PV_IT_RD_ID
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_IDLE
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_CFG_FAS
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_CFG_AWP
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_START_AWP
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_ACTIVE
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_WAIT_LAST_WRITE
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_SEND_COMPLETE
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_VEC_ADD_WIDTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_VEC_MULT_WIDTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_INIT_REQ_ID_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TARG_DATA_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_INIT_MEM_RD_ADDR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_INIT_MEM_RD_LEN_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BRAM_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BRAM_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BRAM_WR_ADDR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BRAM_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BRAM_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BRAM_RD_ADDR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BIAS_BRAM_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BIAS_BRAM_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BIAS_BRAM_WR_ADDR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BIAS_BRAM_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BIAS_BRAM_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BIAS_BRAM_RD_ADDR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONVMAP_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONVMAP_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONVMAP_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONVMAP_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONVMAP_FIFO_CT_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PARTMAP_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PARTMAP_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PARTMAP_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PARTMAP_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PARTMAP_FIFO_CT_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PREVMAP_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PREVMAP_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PREVMAP_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PREVMAP_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PREVMAP_FIFO_CT_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RESDMAP_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RESDMAP_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RESDMAP_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RESDMAP_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RESDMAP_FIFO_CT_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_OUTBUF_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_OUTBUF_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_OUTBUF_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_OUTBUF_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_OUTBUF_FIFO_CT_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_OUTBUF_FIFO_DIN_FACTOR
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_DWC_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_DWC_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_DWC_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_DWC_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_DWC_CT_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_DWC_DIN_RF
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RES_DWC_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RES_DWC_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RES_DWC_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RES_DWC_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RES_DWC_FIFO_CT_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TRANS_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TRANS_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TRANS_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TRANS_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_JB_FTH_FIFO_WR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_JB_FTH_FIFO_WR_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_JB_FTH_FIFO_RD_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_JB_FTH_FIFO_RD_DTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_VEC_SUM_ARR_SZ
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/C_VEC_SUM_ARR_ADDR_WTH
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/clk_intf
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/clk_FAS
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/rst
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_req
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_req_id
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_len
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_req_ack
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_in_prog
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_data
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_data_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_data_rdy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_cmpl
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_req
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_req_id
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_len
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_req_ack
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_in_prog
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_data
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_data_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_data_rdy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_cmpl
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_write_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_write_addr_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_write_data
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_write_ack
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_read_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_read_addr_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_read_data
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_read_ack
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_usrIntr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_usrIntr_ack
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_din
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_din
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_dout_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/FAS_cfg_Addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/FAS_cfg_data_len
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/AWP_cfg_Addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/AWP_cfg_data_len
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Depth_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/pixelSeqAddr_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMapAddr_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMapAddr_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outMapAddr_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/pixSeqCfgFetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/inMapAddr_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMapAddr_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/inMapFetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl3x3Addr_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl3x3BiasAddr_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl3x3FetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl3x3BiasFetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1FetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1BiasFetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMapFetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMapFetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outMapStoreTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMapFetchTotal_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/num_1x1_kernels_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/cm_high_watermark_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/rm_low_watermark_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/pm_low_watermark_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/pv_low_watermark_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/rm_fetch_amount_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/pm_fetch_amount_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/pv_fetch_amount_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/im_fetch_amount_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_pding_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_pad_bgn_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_pad_end_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/opcode_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_high_watermark_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_en_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_bram_rdAddr_end_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_dpth_end_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ob_store_amount_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/ob_high_watermark_cfg
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/start_FAS
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/state
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/start_AWP_done
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/cfg_AWP_done
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/all_AWP_complete
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/process_cmpl
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_usrIntr_acked
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/last_wrt_r
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/last_wrt
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/last_CO_recvd_r
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/last_CO_recvd
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/pipe_enable
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/pipe_enable_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/state_update_in_prog
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_usrIntr_r
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/FAS_rdy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/FAS_intf_rdy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/dpth_count_r
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl_count_r
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/dpth_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/adder_tree_datain_valid
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_pm
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_pm_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm0
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm0_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm1
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm1_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm_conv
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm_conv_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_pv
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_pv_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_pm_arr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm0_arr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm1_arr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm_conv_arr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_pv_arr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_pm_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm0_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm1_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm_conv_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_pv_addr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_pv_out
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm_conv_out
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_pm_out_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm0_out_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm1_out_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_req_acked
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_req_acked
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_prog_full
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_din
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_rd_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_bram_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_bram_wrAddr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_bram_rdAddr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_bram_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_bram_rden_w
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_bram_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_bram_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_bram_wrAddr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_bram_rdAddr
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_bram_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_bram_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_bram_dout_w
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/kn1x1_bm_wr_sel
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/kn1x1b_bm_wr_sel
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start0
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start1
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start2
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start0_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start1_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start2_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_prog_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMapFetchCount
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_rden_w1
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_prog_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMapFetchCount
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_din
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_rden_r
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_prog_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_valid
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMapFetchCount
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren1
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren1_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren2
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren2_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren_pv
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren_rm
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_din
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outMapStoreCount
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_prog_full
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_count
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_wren_r
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_din
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_din_r
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_data
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_wren
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_rden
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_empty
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_din
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_wr_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_rd_rst_busy
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_data_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/inMapFetchCount
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_mult_din_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_mult_din_vld0
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_mult_din_vld1
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_mult_din_vld2
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_mult_din
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_mult_dout_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_mult_dout
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/adder_tree_out_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/adder_tree_out
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_out
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_bias_vld
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_bias_vld_d
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/i0
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/i1
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/i2
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/i3
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/i4
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/i5
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/i8
-add wave -noupdate -expand -group FAS /testbench/i0_cnn_layer_accel_FAS/state_s
+add wave -noupdate -group TOP /testbench/C_PERIOD_100MHz
+add wave -noupdate -group TOP /testbench/C_PERIOD_400MHz
+add wave -noupdate -group TOP /testbench/C_NUM_QUAD_CFG_PKTS
+add wave -noupdate -group TOP /testbench/C_INIT_REQ_ID_WTH
+add wave -noupdate -group TOP /testbench/C_INIT_MEM_RD_ADDR_WTH
+add wave -noupdate -group TOP /testbench/C_INIT_MEM_RD_LEN_WTH
+add wave -noupdate -group TOP /testbench/C_TRANS_IN_FIFO_WR_WTH
+add wave -noupdate -group TOP /testbench/C_TRANS_IN_FIFO_RD_WTH
+add wave -noupdate -group TOP /testbench/clk_intf
+add wave -noupdate -group TOP /testbench/clk_FAS
+add wave -noupdate -group TOP /testbench/rst
+add wave -noupdate -group TOP /testbench/init_read_req
+add wave -noupdate -group TOP /testbench/init_read_req_id
+add wave -noupdate -group TOP /testbench/init_read_addr
+add wave -noupdate -group TOP /testbench/init_read_len
+add wave -noupdate -group TOP /testbench/init_read_req_ack
+add wave -noupdate -group TOP /testbench/init_read_in_prog
+add wave -noupdate -group TOP /testbench/init_read_data
+add wave -noupdate -group TOP /testbench/init_read_data_vld
+add wave -noupdate -group TOP /testbench/init_read_data_rdy
+add wave -noupdate -group TOP /testbench/init_read_cmpl
+add wave -noupdate -group TOP /testbench/init_write_req
+add wave -noupdate -group TOP /testbench/init_write_req_id
+add wave -noupdate -group TOP /testbench/init_write_addr
+add wave -noupdate -group TOP /testbench/init_write_len
+add wave -noupdate -group TOP /testbench/init_write_req_ack
+add wave -noupdate -group TOP /testbench/init_write_in_prog
+add wave -noupdate -group TOP /testbench/init_write_data
+add wave -noupdate -group TOP /testbench/init_write_data_vld
+add wave -noupdate -group TOP /testbench/init_write_data_rdy
+add wave -noupdate -group TOP /testbench/init_write_cmpl
+add wave -noupdate -group TOP /testbench/targ_write_addr
+add wave -noupdate -group TOP /testbench/targ_write_addr_vld
+add wave -noupdate -group TOP /testbench/targ_write_data
+add wave -noupdate -group TOP /testbench/targ_write_ack
+add wave -noupdate -group TOP /testbench/targ_read_addr
+add wave -noupdate -group TOP /testbench/targ_read_addr_vld
+add wave -noupdate -group TOP /testbench/targ_read_data
+add wave -noupdate -group TOP /testbench/targ_read_ack
+add wave -noupdate -group TOP /testbench/init_usrIntr
+add wave -noupdate -group TOP /testbench/init_usrIntr_ack
+add wave -noupdate -group TOP /testbench/trans_in_fifo_din_vld
+add wave -noupdate -group TOP /testbench/trans_in_fifo_din_rdy
+add wave -noupdate -group TOP /testbench/trans_in_fifo_din
+add wave -noupdate -group TOP /testbench/trans_eg_fifo_dout_vld
+add wave -noupdate -group TOP /testbench/trans_eg_fifo_dout_rdy
+add wave -noupdate -group TOP /testbench/trans_eg_fifo_dout
+add wave -noupdate -group TOP /testbench/tp
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/all_AWP_complete
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/all_AWP_complete_r
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/AWP_ct
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/AWP_meta_Addr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/AWP_meta_data_len_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_AC_IT_RD_ID
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_AWP_QUAD_CFG_PKT_TOT
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_DWC_CT_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_DWC_DIN_PD
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV1X1_IT_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONV_1X1_PIP_EN_CFG_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CONVMAP_FIFO_CT_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_CURR_CONV1X1_IT_META_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_FAS_ID
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_IM_IT_RD_ID
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_INIT_MEM_RD_ADDR_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_INIT_MEM_RD_LEN_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_INIT_REQ_ID_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KB_IT_RD_ID
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KL_IT_RD_ID
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KN1X1_BM_WR_SEL_DFT
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KN1X1_BM_WR_SEL_END
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KN1X1B_BM_WR_SEL_DFT
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KN1X1B_BM_WR_SEL_END
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_BRAM_RD_ADDR_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_SIMD_M1
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_KRNL_1X1_TRAN_SZ
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_NUM_QUAD_CFG_PKTS
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_OUTBUF_FIFO_CT_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_OUTBUF_FIFO_DIN_FACTOR
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PARTMAP_FIFO_CT_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PM_IT_RD_ID
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PREVMAP_FIFO_CT_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_PV_IT_RD_ID
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RES_DWC_FIFO_CT_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RESDMAP_FIFO_CT_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_RM_IT_RD_ID
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TRANS_EG_FIFO_RD_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TRANS_EG_FIFO_WR_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TRANS_IN_FIFO_RD_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_TRANS_IN_FIFO_WR_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_VEC_ADD_WIDTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_VEC_MULT_WIDTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_VEC_SUM_ARR_ADDR_WTH
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/C_VEC_SUM_ARR_SZ
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/cfg_AWP_done
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/clk_FAS
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/clk_intf
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/cm_high_watermark_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_din
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_dwc_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_it
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_out
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_en_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_exec
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start0
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start1
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start2
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_pip_start_d
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/conv1x1_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_prog_full
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/convMap_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/curr_conv1x1_it_pip_en
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/dpth_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/FAS_intf_rdy_n
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/FAS_rdy_n
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/i0
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/i1
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/i2
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/i5
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/i7
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/i8
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/im_fetch_amount_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_addr
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_cmpl
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_data
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_data_rdy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_data_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_in_prog
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_len
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_req
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_req_ack
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_req_acked
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_read_req_id
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_usrIntr
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_usrIntr_ack
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_usrIntr_acked
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_usrIntr_r
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_addr
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_cmpl
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_data
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_data_rdy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_data_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_in_prog
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_len
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_req
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_req_ack
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_req_acked
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/init_write_req_id
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/inMapAddr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/inMapFetchCount
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/inMapFetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/itN_krnl_1x1_addr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/itN_krnl_1x1_fetch_amount_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/itN_num_1x1_kernels_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_data_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_din
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/job_fetch_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/kl_ld_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/kn1x1_bm_wr_sel
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/kn1x1b_bm_wr_sel
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_bram_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_dpth_end_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1_dpth_tot_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1B_ld_start_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_bram_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_dwc_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_dwc_fifo_dout_w
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_dwc_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_dwc_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_dwc_fifo_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_dwc_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Bias_dwc_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1BiasFetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1Depth_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl1x1FetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl3x3Addr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl3x3BiasAddr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl3x3BiasFetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl3x3FetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl_1x1_fetch_total_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/krnl_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/last_CO_recvd
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/last_CO_recvd_r
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/last_wrt
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/last_wrt_r
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/num_conv1x1_it_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/num_tot_1x1_kernels_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ob_high_watermark_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ob_store_amount_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/opcode_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_din
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_prog_full
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren1
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren1_d
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren2
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren2_d
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren_pv
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outBuf_fifo_wren_rm
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outMapAddr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outMapStoreCount
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/outMapStoreTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_prog_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_rden_w1
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMap_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMapAddr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMapFetchCount
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/partMapFetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/pipe_enable
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/pixelSeqAddr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/pixSeqCfgFetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/pm_fetch_amount_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/pm_low_watermark_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_prog_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_valid
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMap_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMapAddr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMapFetchCount
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/prevMapFetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/process_cmpl_FAS
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/process_cmpl_intf
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/process_cmpl_r
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/pv_fetch_amount_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/pv_low_watermark_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/QUAD_ct
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_din
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_rd_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/res_dwc_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_prog_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMap_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMapAddr_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMapFetchCount
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/resdMapFetchTotal_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ret_state
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/rm_fetch_amount_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/rm_low_watermark_cfg
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/rst
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_ACTIVE
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_CFG_AWP
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_IDLE
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_LD_1X1_KRB
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_LD_1X1_KRN
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_SEND_COMPLETE
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_START_AWP
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/ST_WAIT_LAST_WRITE
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/start_AWP_done
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/start_FAS
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/state
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/state_s
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/state_update_in_prog
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_read_ack
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_read_addr
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_read_addr_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_read_data
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_write_ack
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_write_addr
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_write_addr_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/targ_write_data
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/tot_krnl_count
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_din
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_dout_rdy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_dout_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_eg_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_din
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_din_rdy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_din_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_dout
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_empty
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_rd_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_rden
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_vld
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_wr_rst_busy
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_wren
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_fifo_wren_r
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/trans_in_meta
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_pm_sum
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_pv_sum
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm0_sum
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm1_sum
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vec_add_rm_conv_sum
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_pm
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_pv
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm0
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm1
+add wave -noupdate -group FAS /testbench/i0_cnn_layer_accel_FAS/vector_add_rm_conv
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {106 ps} 0}
+WaveRestoreCursors {{Cursor 1} {122500 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -364,4 +355,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {2 ns}
+WaveRestoreZoom {0 ps} {3446625 ps}

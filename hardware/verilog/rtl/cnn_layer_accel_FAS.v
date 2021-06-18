@@ -222,6 +222,7 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   outMapStoreTotal_cfg                                    ;
     logic [                                     15:0]   prevMapFetchTotal_cfg                                   ;
     logic [                                     15:0]   itN_num_1x1_kernels_cfg[`MAX_1X1_KRNL_IT - 1:0]         ;
+    logic [                                     15:0]   itN_num_act_conv1x1_pip_cfg[`MAX_1X1_KRNL_IT - 1:0]     ;
     logic [                                     15:0]   num_tot_1x1_kernels_cfg                                 ;
     logic [                                     15:0]   cm_high_watermark_cfg                                   ;
     logic [                                     15:0]   rm_low_watermark_cfg                                    ;
@@ -786,19 +787,19 @@ module cnn_layer_accel_FAS #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     always@(*) begin
         if(trans_in_fifo_rd_rst_busy
-            && job_fetch_fifo_wr_rst_busy
-            && job_fetch_fifo_rd_rst_busy
-            && convMap_fifo_rd_rst_busy
-            && res_dwc_fifo_wr_rst_busy
-            && res_dwc_fifo_rd_rst_busy
-            && conv1x1_dwc_fifo_wr_rst_busy
-            && conv1x1_dwc_fifo_rd_rst_busy
-            && partMap_fifo_rd_rst_busy
-            && prevMap_fifo_rd_rst_busy
-            && resdMap_fifo_rd_rst_busy
-            && outBuf_fifo_wr_rst_busy
-            && trans_eg_fifo_wr_rst_busy
-			&& krnl1x1Bias_dwc_fifo_rd_rst_busy)
+            || job_fetch_fifo_wr_rst_busy
+            || job_fetch_fifo_rd_rst_busy
+            || convMap_fifo_rd_rst_busy
+            || res_dwc_fifo_wr_rst_busy
+            || res_dwc_fifo_rd_rst_busy
+            || conv1x1_dwc_fifo_wr_rst_busy
+            || conv1x1_dwc_fifo_rd_rst_busy
+            || partMap_fifo_rd_rst_busy
+            || prevMap_fifo_rd_rst_busy
+            || resdMap_fifo_rd_rst_busy
+            || outBuf_fifo_wr_rst_busy
+            || trans_eg_fifo_wr_rst_busy
+			|| krnl1x1Bias_dwc_fifo_rd_rst_busy)
         begin
             FAS_rdy_n = 1;
         end else begin
@@ -808,13 +809,13 @@ module cnn_layer_accel_FAS #(
     
     always@(*) begin
         if(trans_in_fifo_wr_rst_busy
-            && convMap_fifo_wr_rst_busy
-            && partMap_fifo_wr_rst_busy
-            && prevMap_fifo_wr_rst_busy
-            && resdMap_fifo_wr_rst_busy
-            && outBuf_fifo_rd_rst_busy
-            && trans_eg_fifo_rd_rst_busy
-			&& krnl1x1Bias_dwc_fifo_wr_rst_busy)
+            || convMap_fifo_wr_rst_busy
+            || partMap_fifo_wr_rst_busy
+            || prevMap_fifo_wr_rst_busy
+            || resdMap_fifo_wr_rst_busy
+            || outBuf_fifo_rd_rst_busy
+            || trans_eg_fifo_rd_rst_busy
+			|| krnl1x1Bias_dwc_fifo_wr_rst_busy)
         begin
             FAS_intf_rdy_n = 1;
         end else begin
@@ -911,7 +912,8 @@ module cnn_layer_accel_FAS #(
             targ_write_ack                      	<= 0;
             krnl1x1FetchTotal_cfg               	<= 0;
 			krnl1x1B_ld_start_cfg					<= 0;
-        end else begin    
+        end else begin
+            start_FAS                               <= 0;
             targ_write_ack                        	<= 0;
             if(targ_write_addr == 0 && targ_write_addr_vld) begin
                 // <= targ_write_data[];
@@ -1125,11 +1127,11 @@ module cnn_layer_accel_FAS #(
             process_cmpl_r[0]   <= 0;
             last_wrt_r          <= (last_wrt)         ? 1 : last_wrt_r;
             last_CO_recvd_r     <= (last_CO_recvd)    ? 1 : last_CO_recvd_r;
-            all_AWP_complete_r    <= (all_AWP_complete) ? 1 : all_AWP_complete_r;
-            init_usrIntr_r[0]    <= 0;
+            all_AWP_complete_r  <= (all_AWP_complete) ? 1 : all_AWP_complete_r;
+            init_usrIntr_r[0]   <= 0;
             case(state)
                 ST_IDLE: begin
-                    if(start_FAS && (opcode_cfg[`OPCODE_17_FIELD] || opcode_cfg[`OPCODE_14_FIELD])) begin    // res only no AWP exe OR // 1x1 only no AWP exe
+                    if(start_FAS && (opcode_cfg[`OPCODE_17_FIELD] || opcode_cfg[`OPCODE_14_FIELD] || opcode_cfg[`OPCODE_16_FIELD])) begin    // res only no AWP exe OR // 1x1 only no AWP exe // or 1st it and wrt back
                         state        <= ST_ACTIVE;
                     end else if(start_FAS) begin
                         state        <= ST_LD_1X1_KRN;
@@ -1173,7 +1175,7 @@ module cnn_layer_accel_FAS #(
                     if(last_wrt_r) begin
                         last_wrt_r          <= 0;
                         last_CO_recvd_r     <= 0;
-                        process_cmpl_r[0]    <= 1;
+                        process_cmpl_r[0]   <= 1;
                         state               <= ST_SEND_COMPLETE;
                     end
                 end
@@ -1223,6 +1225,7 @@ module cnn_layer_accel_FAS #(
             all_AWP_complete        <= 0;
             res_dwc_fifo_wren       <= 0;
             job_fetch_fifo_wren     <= 0;
+            convMap_fifo_wren       <= 0;
             last_CO_recvd           <= 0;
         end else begin
             if(!trans_in_fifo_empty) begin
@@ -1519,7 +1522,7 @@ module cnn_layer_accel_FAS #(
         if(rst) begin
             conv1x1_it <= 0;
         end else begin
-            if(krnl_count == itN_num_1x1_kernels_cfg[conv1x1_it]) begin
+            if(krnl_count == itN_num_1x1_kernels_cfg[conv1x1_it] && |conv1x1_pip_en_cfg && (state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE)) begin
                 conv1x1_it <= conv1x1_it + 1;
             end            
         end
@@ -1539,7 +1542,7 @@ module cnn_layer_accel_FAS #(
             partMap_fifo_rden       <= 0;
             resdMap_fifo_rden       <= 0;
             prevMap_fifo_rden       <= 0;
-            if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && krnl_count == 0 && (!opcode_cfg[`OPCODE_14_FIELD] && !opcode_cfg[`OPCODE_17_FIELD])) begin
+            if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && !convMap_fifo_empty && krnl_count == 0 && (!opcode_cfg[`OPCODE_14_FIELD] && !opcode_cfg[`OPCODE_17_FIELD])) begin
                 convMap_fifo_rden       <= 1;
             end
             if(vector_add_pm) begin

@@ -50,6 +50,22 @@ typedef struct {
 acclprm_tup_t apt;
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 typedef struct {
+    int num_input_rows;
+    int num_input_cols;
+    int depth;
+    int num_kernels;
+    int stride;
+    int padding;
+    int kernel_size;
+    bool conv_out_fmt;
+    bool cascade;
+    bool upsample;
+    bool master_quad;
+    int actv;
+} AWP_cfg_tup_t;
+AWP_cfg_tup_t AWPCt[];
+// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+typedef struct {
     int                             krnl1x1Depth                                            ;
     int                             AWP_meta_Addr                                           ;
     int                             AWP_meta_data_len                                       ;
@@ -84,12 +100,17 @@ typedef struct {
     int                             krnl1x1_dpth_end                                        ;
     logic	[`KRNL_1X1_SIMD - 1:0]  conv1x1_pip_en                                          ;
     int                             itN_num_1x1_kernels         [`MAX_1X1_KRNL_IT - 1:0]    ;
+    int                             itN_num_act_conv1x1_pip     [`MAX_1X1_KRNL_IT - 1:0]    ;
     int                             itN_krnl_1x1_addr           [`MAX_1X1_KRNL_IT - 1:0]    ;
     int                             itN_krnl_1x1_fetch_amount	[`MAX_1X1_KRNL_IT - 1:0]    ;
     int                             convMap_d                                               ;
     int                             convMap_h                                               ;
     int                             convMap_w                                               ;
+    int                             imMap_h                                                 ;
+    int                             imMap_w                                                 ;
+    int                             imMap_d                                                 ;
 } testParams_t;
+testParams_t tp;
 
 
 module testbench;
@@ -241,7 +262,6 @@ module testbench;
 
 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    testParams_t tp;
     initial begin
         createTest                      (tp);
         apt                             = genAcclParamTup(tp);
@@ -273,6 +293,7 @@ module testbench;
         targ_write_addr      = 1;
         targ_write_addr_vld  = 1;
         @(posedge clk_intf);
+        targ_write_addr      = 0;
         targ_write_addr_vld  = 0;
     end
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
@@ -280,7 +301,7 @@ endmodule
 
 
 function int szAlgn(int value, int algnm);
-    return ($ceil(value / algnm));
+    return ($ceil(value / algnm) * algnm);
 endfunction: szAlgn
 
 
@@ -322,6 +343,10 @@ function automatic void createTest(ref testParams_t tp);
     tp.itN_num_1x1_kernels[1]           = 0;
     tp.itN_num_1x1_kernels[2]           = 0;
     tp.itN_num_1x1_kernels[3]           = 0;
+    tp.itN_num_act_conv1x1_pip[0]       = 0;
+    tp.itN_num_act_conv1x1_pip[1]       = 0;
+    tp.itN_num_act_conv1x1_pip[2]       = 0;
+    tp.itN_num_act_conv1x1_pip[3]       = 0;
     tp.itN_krnl_1x1_addr[0]             = 0;
     tp.itN_krnl_1x1_addr[1]             = 0;
     tp.itN_krnl_1x1_addr[2]             = 0;
@@ -339,6 +364,31 @@ function automatic void createTest(ref testParams_t tp);
     end
 endfunction: createTest
 
+
+function automatic void setTargReg(ref testParams_t tp);
+    if(m_padding && !m_upsample) begin
+        m_num_expd_input_rows = m_num_input_rows + 2;
+        m_num_expd_input_cols = m_num_input_cols + 2;       
+    end else if(!m_padding && m_upsample) begin
+        m_num_expd_input_rows = m_num_input_rows * 2;
+        m_num_expd_input_cols = m_num_input_cols * 2; 
+        m_num_output_rows = ((m_num_expd_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+        m_num_output_cols = ((m_num_expd_input_cols - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+    end else if(m_padding && m_upsample) begin
+        m_num_expd_input_rows = (m_num_input_rows * 2) + 2;
+        m_num_expd_input_cols = (m_num_input_cols * 2) + 2;
+        m_num_output_rows = (((m_num_expd_input_rows - 2) - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
+        m_num_output_cols = (((m_num_expd_input_cols - 2) - m_kernel_size + (2 * m_padding)) / m_stride) + 1;        
+    end else begin // !m_padding && !m_upsample
+        m_num_expd_input_rows = m_num_input_rows;
+        m_num_expd_input_cols = m_num_input_cols;      
+    end
+    if(tp.opcode == `OPCODE_16) begin
+        tp.ob_high_watermark            = tp.convMap_d * `OB_HIGH_WATERMARK_FACTOR;
+        tp.ob_store_amount              = tp.convMap_d * `OB_STORE_FACTOR;    
+        tp.outMapStoreTotal             = szAlgn(tp.convMap_h * tp.convMap_w * tp.convMap_d, `NUM_PIX_PER_BUS) * `BYTES_PER_PIXEL;       
+    end
+endfunction: setSlvReg
 
 function acclprm_tup_t genAcclParamTup(testParams_t tp);
     acclprm_tup_t apt;
@@ -428,6 +478,10 @@ task cfgDUT(testParams_t tp);
     testbench.i0_cnn_layer_accel_FAS.itN_num_1x1_kernels_cfg[1]         = tp.itN_num_1x1_kernels[1]         ;
     testbench.i0_cnn_layer_accel_FAS.itN_num_1x1_kernels_cfg[2]         = tp.itN_num_1x1_kernels[2]         ;
     testbench.i0_cnn_layer_accel_FAS.itN_num_1x1_kernels_cfg[3]         = tp.itN_num_1x1_kernels[3]         ;
+    testbench.i0_cnn_layer_accel_FAS.itN_num_act_conv1x1_pip_cfg[0]     = tp.itN_num_act_conv1x1_pip[0]     ;
+    testbench.i0_cnn_layer_accel_FAS.itN_num_act_conv1x1_pip_cfg[1]     = tp.itN_num_act_conv1x1_pip[1]     ;
+    testbench.i0_cnn_layer_accel_FAS.itN_num_act_conv1x1_pip_cfg[2]     = tp.itN_num_act_conv1x1_pip[2]     ;
+    testbench.i0_cnn_layer_accel_FAS.itN_num_act_conv1x1_pip_cfg[3]     = tp.itN_num_act_conv1x1_pip[3]     ;
     testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_addr_cfg[0]           = tp.itN_krnl_1x1_addr[0]           ;
     testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_addr_cfg[1]           = tp.itN_krnl_1x1_addr[1]           ;
     testbench.i0_cnn_layer_accel_FAS.itN_krnl_1x1_addr_cfg[2]           = tp.itN_krnl_1x1_addr[2]           ;
