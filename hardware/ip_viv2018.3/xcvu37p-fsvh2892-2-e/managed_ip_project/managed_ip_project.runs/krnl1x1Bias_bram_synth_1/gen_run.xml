@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="krnl1x1Bias_bram_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1623967556">
+  <File Type="RDS-UTIL-PB" Name="krnl1x1Bias_bram_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="krnl1x1Bias_bram_utilization_synth.rpt"/>
+  <File Type="RDS-RDS" Name="krnl1x1Bias_bram.vds"/>
+  <File Type="RDS-DCP" Name="krnl1x1Bias_bram.dcp"/>
+  <File Type="PA-TCL" Name="krnl1x1Bias_bram.tcl"/>
+  <File Type="REPORTS-TCL" Name="krnl1x1Bias_bram_reports.tcl"/>
+  <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/krnl1x1Bias_bram">
+    <File Path="$PPRDIR/../krnl1x1Bias_bram/krnl1x1Bias_bram.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="krnl1x1Bias_bram"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="BlockSrcs" RelSrcDir="$PSRCDIR/krnl1x1Bias_bram">
+    <File Path="$PPRDIR/../krnl1x1Bias_bram/krnl1x1Bias_bram.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="krnl1x1Bias_bram"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
+    <Filter Type="Utils"/>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2018"/>
+    <Step Id="synth_design"/>
+  </Strategy>
+</GenRun>

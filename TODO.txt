@@ -1,0 +1,28 @@
+ref: ad-ug-0113_v1_2.pdf
+
+    Hang when using a bitstream built with Vivado 2018.3.1
+    When running the demonstration program host_hbm with an ADM-PCIE-9H7 that has been configured with a
+    host_hbm bitstream built using Vivado 2018.3.1, the program might hang after displaying the message
+    INFO: Testing HBM bank 0 range 0x0 - 0x1000000 using CPU ...
+
+    Because this appears to result from a hang condition on an AXI channel somewhere, the DMA transfer cannot be
+    aborted and the program does not respond to CTRL-C. After issuing a CTRL-C, the adxdma_reset utility of the
+    ADXDMA Driver can be used to abort the program, resetting the XDMA PCI Express endpoint and all
+    downstream logic in the process.
+    The root cause of this is not known at present, and using Vivado 2019.1 is recommended instead.
+
+
+Sim env issue
+    
+    AlphaData docs say to use vivado 2019.1 to avoid HBM stack bitstream hang issue
+
+    latest questasim is incompatible with vivado 2019.1, and vivado ips are currently 2019.1
+    
+    either use older model/questa sim version with vivado 2019.1, or
+        
+        manually downgrade 2019.1 ips to 2018.3
+    
+CNN accel sim
+
+    testing opcode 16 functionality
+

@@ -1,0 +1,2 @@
+partMap_fifo.v,verilog,xil_defaultlib,../../../../partMap_fifo/sim/partMap_fifo.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

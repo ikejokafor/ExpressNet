@@ -51,8 +51,8 @@ acclprm_tup_t apt;
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 typedef struct {
     int                             krnl1x1Depth                                            ;
-    int                             AWP_cfg_Addr                                            ;
-    int                             AWP_cfg_data_len                                        ;
+    int                             AWP_meta_Addr                                           ;
+    int                             AWP_meta_data_len                                       ;
     int                             pixelSeqAddr                                            ;
     int                             partMapAddr                                             ;
     int                             resdMapAddr                                             ;
@@ -86,6 +86,7 @@ typedef struct {
     int                             itN_num_1x1_kernels         [`MAX_1X1_KRNL_IT - 1:0]    ;
     int                             itN_krnl_1x1_addr           [`MAX_1X1_KRNL_IT - 1:0]    ;
     int                             itN_krnl_1x1_fetch_amount	[`MAX_1X1_KRNL_IT - 1:0]    ;
+    int                             convMap_d                                               ;
     int                             convMap_h                                               ;
     int                             convMap_w                                               ;
 } testParams_t;
@@ -279,21 +280,21 @@ endmodule
 
 
 function int szAlgn(int value, int algnm);
-    return (ceil(value, algnm));
+    return ($ceil(value / algnm));
 endfunction: szAlgn
 
 
 function automatic void createTest(ref testParams_t tp);
-    tp.convMapDepth                     = 64;
-    tp.krnl1x1Depth                     = tp.convMapDepth;
-    tp.AWP_cfg_Addr                     = 0;
-    tp.AWP_cfg_data_len                 = 0;
+    tp.convMap_d                        = 64;
+    tp.krnl1x1Depth                     = tp.convMap_d;
+    tp.AWP_meta_Addr                    = 0;
+    tp.AWP_meta_data_len                = 0;
     tp.pixelSeqAddr                     = 0;
     tp.partMapAddr                      = 0;
     tp.resdMapAddr                      = 0;
     tp.outMapAddr                       = 0;
     tp.pixSeqCfgFetchTotal              = szAlgn(131072, `INIT_WR_DATA_WIDTH);
-    tp.inMapAddr_cfg                    = 0;
+    tp.inMapAddr                        = 0;
     tp.prevMapAddr                      = 0;
     tp.inMapFetchTotal                  = 0;
     tp.krnl3x3FetchTotal                = 0;
@@ -332,14 +333,15 @@ function automatic void createTest(ref testParams_t tp);
     tp.convMap_h                        = 32;
     tp.convMap_w                        = 32;
     if(tp.opcode == `OPCODE_16) begin
-        tp.ob_high_watermark            = tp.convMapDepth * `OB_HIGH_WATERMARK_FACTOR;
-        tp.ob_store_amount              = tp.convMapDepth * `OB_STORE_FACTOR;    
-        tp.outMapStoreTotal             = szAlgn(tp.convMap_h * tp.convMap_w * tp.convMapDepth, `NUM_PIX_PER_BUS) * `BYTES_PER_PIXEL;       
+        tp.ob_high_watermark            = tp.convMap_d * `OB_HIGH_WATERMARK_FACTOR;
+        tp.ob_store_amount              = tp.convMap_d * `OB_STORE_FACTOR;    
+        tp.outMapStoreTotal             = szAlgn(tp.convMap_h * tp.convMap_w * tp.convMap_d, `NUM_PIX_PER_BUS) * `BYTES_PER_PIXEL;       
     end
 endfunction: createTest
 
 
 function acclprm_tup_t genAcclParamTup(testParams_t tp);
+    acclprm_tup_t apt;
     genAcclConvMap(tp, apt);
     if(tp.num_tot_1x1_kernels > 0) begin
         genAcclKrnl1x1(tp, apt);
@@ -348,11 +350,11 @@ function acclprm_tup_t genAcclParamTup(testParams_t tp);
 endfunction: genAcclParamTup
 
 
-function automatic void genAcclConvMap(testParams_t tp);
+function automatic void genAcclConvMap(testParams_t tp, ref acclprm_tup_t apt);
     int numConvMapVal;
     int convMapSz;
 
-    numConvMapVal     = tp.convMapDepth * tp.convMap_h * tp.convMap_w;
+    numConvMapVal     = tp.convMap_d * tp.convMap_h * tp.convMap_w;
     convMapSz         = szAlgn(numConvMapVal, `NUM_PIX_PER_BUS) * `BYTES_PER_PIXEL;
     apt.convMap = genAcclParam(
         convMapSz
@@ -391,14 +393,14 @@ endfunction: genAcclParam
 
 task cfgDUT(testParams_t tp);
     testbench.i0_cnn_layer_accel_FAS.krnl1x1Depth_cfg                   = tp.krnl1x1Depth                   ;   
-    testbench.i0_cnn_layer_accel_FAS.AWP_cfg_Addr_cfg                   = tp.AWP_cfg_Addr                   ;
-    testbench.i0_cnn_layer_accel_FAS.AWP_cfg_data_len_cfg               = tp.AWP_cfg_data_len               ;
+    testbench.i0_cnn_layer_accel_FAS.AWP_meta_Addr_cfg                  = tp.AWP_meta_Addr                  ;
+    testbench.i0_cnn_layer_accel_FAS.AWP_meta_data_len_cfg              = tp.AWP_meta_data_len              ;
     testbench.i0_cnn_layer_accel_FAS.pixelSeqAddr_cfg                   = tp.pixelSeqAddr                   ;
     testbench.i0_cnn_layer_accel_FAS.partMapAddr_cfg                    = tp.partMapAddr                    ;
     testbench.i0_cnn_layer_accel_FAS.resdMapAddr_cfg                    = tp.resdMapAddr                    ;
     testbench.i0_cnn_layer_accel_FAS.outMapAddr_cfg                     = tp.outMapAddr                     ;
     testbench.i0_cnn_layer_accel_FAS.pixSeqCfgFetchTotal_cfg            = tp.pixSeqCfgFetchTotal            ;
-    testbench.i0_cnn_layer_accel_FAS.inMapAddr_cfg_cfg                  = tp.inMapAddr_cfg                  ;
+    testbench.i0_cnn_layer_accel_FAS.inMapAddr_cfg                      = tp.inMapAddr                      ;
     testbench.i0_cnn_layer_accel_FAS.prevMapAddr_cfg                    = tp.prevMapAddr                    ;
     testbench.i0_cnn_layer_accel_FAS.inMapFetchTotal_cfg                = tp.inMapFetchTotal                ;
     testbench.i0_cnn_layer_accel_FAS.krnl3x3FetchTotal_cfg              = tp.krnl3x3FetchTotal              ;

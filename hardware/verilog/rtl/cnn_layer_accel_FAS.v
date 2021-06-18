@@ -200,8 +200,8 @@ module cnn_layer_accel_FAS #(
     //  Local Variables
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    logic [                                     31:0]   AWP_cfg_Addr                                            ;
-    logic [                                     15:0]   AWP_cfg_data_len                                        ;
+    logic [                                     31:0]   AWP_meta_Addr_cfg                                       ;
+    logic [                                     15:0]   AWP_meta_data_len_cfg                                   ;
     logic [                                     15:0]   krnl1x1Depth_cfg                                        ;
     logic [                                     31:0]   pixelSeqAddr_cfg                                        ;
     logic [                                     31:0]   partMapAddr_cfg                                         ;
@@ -864,8 +864,8 @@ module cnn_layer_accel_FAS #(
     always@(posedge clk_intf) begin
         if(rst || process_cmpl_intf || FAS_intf_rdy_n) begin
             krnl1x1Depth_cfg                    	<= 0;
-            AWP_cfg_Addr                        	<= 0;
-            AWP_cfg_data_len                    	<= 0;
+            AWP_meta_Addr_cfg                      	<= 0;
+            AWP_meta_data_len_cfg                 	<= 0;
             pixelSeqAddr_cfg                    	<= 0;
             partMapAddr_cfg                     	<= 0;
             resdMapAddr_cfg                     	<= 0;
@@ -1334,8 +1334,8 @@ module cnn_layer_accel_FAS #(
         end else begin
             init_read_data_rdy[C_AC_IT_RD_ID]    <= 0;
             if(state == ST_CFG_AWP && !init_read_in_prog[C_AC_IT_RD_ID]) begin
-                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]      <= AWP_cfg_Addr;
-                init_read_len[(`INIT_RD_LEN_WIDTH * C_AC_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]         <= AWP_cfg_data_len;
+                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]      <= AWP_meta_Addr_cfg;
+                init_read_len[(`INIT_RD_LEN_WIDTH * C_AC_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]         <= AWP_meta_data_len_cfg;
                 init_read_req[C_AC_IT_RD_ID]                                       
                     <= init_read_req_ack[C_AC_IT_RD_ID] ? 1'b0 : (~init_read_req_acked[C_AC_IT_RD_ID] ? 1'b1 : init_read_req[C_AC_IT_RD_ID]);
                 init_read_req_acked[C_AC_IT_RD_ID]                                 
