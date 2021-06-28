@@ -193,6 +193,7 @@ ELSE()
         ${PROJECT_SOURCE_DIR}/src/
         ${PROJECT_SOURCE_DIR}/../../util/inc
         /home/ikenna/downloaded_repos/systemc-2.3.3/src
+        ${PROJECT_SOURCE_DIR}/../../espresso/inc/
         ${PROJECT_SOURCE_DIR}/../../espresso/inc/FPGA/
         ${PROJECT_SOURCE_DIR}/../../FPGA_shim/inc/
         ${PROJECT_SOURCE_DIR}/../../fixedPoint/inc/

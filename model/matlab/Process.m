@@ -23,9 +23,9 @@ function [li_outMaps] = Process( ...
     do_krnl_layer_1x1, ...
     prevLIOut ...
 )
-    if(dpth_iter == num_depth_iter)
+    if(dpth_iter == num_depth_iter && ~do_krnl_layer_1x1)
         li_outMaps = Convolution(li_krnl3x3, li_krnl3x3bias, li_inMaps, nOut3x3Cols, nOut3x3Rows, out3x3Dpth);  
-    else
+    elseif(~do_krnl_layer_1x1)
         li_outMaps = Convolution(li_krnl3x3, [], li_inMaps, nOut3x3Cols, nOut3x3Rows, out3x3Dpth);
     end
 

@@ -8777,3 +8777,5 @@ run -all
 #    Time: 0 ps  Iteration: 0  Protected: /testbench/i0_cnn_layer_accel_FAS/i0_krnl1x1Bias_dwc_fifo/inst/<protected>/<protected>/<protected>/<protected>/<protected>/<protected>
 # Block Memory Generator module testbench.i0_cnn_layer_accel_FAS.genblk1[0].iX_cnn_layer_accel_conv1x1_pip.i_krnl1x1_bram.inst.native_mem_module.blk_mem_gen_v8_4_2_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
 # Block Memory Generator module testbench.i0_cnn_layer_accel_FAS.genblk1[0].iX_cnn_layer_accel_conv1x1_pip.i_krnl1x1Bias_bram.inst.native_mem_module.blk_mem_gen_v8_4_2_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
+# End time: 17:54:51 on Jun 22,2021, Elapsed time: 97:03:07
+# Errors: 499, Warnings: 219

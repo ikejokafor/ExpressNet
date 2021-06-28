@@ -22,6 +22,7 @@ numInputMapRows = 16;
 numInputMapCols = 16;
 padding = 0;
 stride = 1;
+do_krnl_layer_1x1 = 0;
 num3x3Kernels = 96;
 num1x1Kernels = 56;
 numKernelRows = 3;
@@ -32,6 +33,7 @@ outputDepth3x3 = num3x3Kernels;
 num1x1OutputRows = num3x3OutputRows;
 num1x1OutputCols = num3x3OutputCols;
 outputDepth1x1 = num1x1Kernels;
+
 
 
 inputMaps = randi([1, 8], [numInputMapCols, numInputMapRows, inputMapDepth]);
@@ -135,6 +137,7 @@ for i = 1:num_krnl_iter
             do_1x1_res, ...
             do_krnl1x1, ...
             do_resLayer, ...
+            do_krnl_layer_1x1, ...
             outputMapQry ...
         );
         remDepth = remDepth - depth;
