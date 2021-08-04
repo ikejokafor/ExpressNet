@@ -6,6 +6,7 @@
 // Includes
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 `include "utilities.svh"
+`include "verification_defs.svh"
 `include "cnn_layer_accel_FAS.svh"
 
 
@@ -19,7 +20,6 @@
 `define PM_IT_RD_ID  	7'b0010000
 `define RM_IT_RD_ID  	7'b0100000
 `define PV_IT_RD_ID  	7'b1000000
-
 
 `define CO_HIGH_WATERMARK_FACTOR    3
 `define RM_LOW_WATERMARK_FACTOR     1

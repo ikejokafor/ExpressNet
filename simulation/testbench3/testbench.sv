@@ -41,11 +41,16 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
 typedef logic[15:0] acclprm_t[];
+typedef bit [63:0] mem_queue_t[$];
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 typedef struct {
     acclprm_t krnl1x1;
     acclprm_t krnl1x1b;
     acclprm_t convMap;
+    acclprm_t inMap;
+    acclprm_t partMap;
+    acclprm_t resdMap;
+    acclprm_t prevMap;
 } acclprm_tup_t;
 acclprm_tup_t apt;
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
@@ -67,8 +72,6 @@ AWP_cfg_tup_t AWPCt[];
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 typedef struct {
     int                             krnl1x1Depth                                            ;
-    int                             AWP_meta_Addr                                           ;
-    int                             AWP_meta_data_len                                       ;
     int                             pixelSeqAddr                                            ;
     int                             partMapAddr                                             ;
     int                             resdMapAddr                                             ;
@@ -77,6 +80,8 @@ typedef struct {
     int                             inMapAddr                                               ;
     int                             prevMapAddr                                             ;
     int                             im_fetch_amount                                         ;
+    int                             AWP_meta_Addr                                           ;
+    int                             AWP_meta_data_len                                       ;
     int                             inMapFetchTotal                                         ;
     int                             krnl3x3FetchTotal                                       ;
     int                             krnl3x3BiasFetchTotal                                   ;
@@ -106,28 +111,36 @@ typedef struct {
     int                             convMap_d                                               ;
     int                             convMap_h                                               ;
     int                             convMap_w                                               ;
-    int                             imMap_h                                                 ;
-    int                             imMap_w                                                 ;
-    int                             imMap_d                                                 ;
+    int                             inMap_h                                                 ;
+    int                             inMap_w                                                 ;
+    int                             inMap_d                                                 ;
 } testParams_t;
 testParams_t tp;
+bool model_delay = FALSE;
 
 
 module testbench;
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //    Local Parameters
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     localparam C_PERIOD_100MHz                      = 10;
     localparam C_PERIOD_400MHz                      = 2.5;
-     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     localparam C_NUM_QUAD_CFG_PKTS                  = 1;
     localparam C_INIT_REQ_ID_WTH                    = `MAX_FAS_RD_ID * `MAX_FAS_RD_ID;
     localparam C_INIT_MEM_RD_ADDR_WTH               = `MAX_FAS_RD_ID * `INIT_RD_ADDR_WIDTH;
     localparam C_INIT_MEM_RD_LEN_WTH                = `MAX_FAS_RD_ID * `INIT_RD_LEN_WIDTH;
-     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     localparam C_TRANS_IN_FIFO_WR_WTH               = `TRANS_IN_FIFO_META_WIDTH + `TRANS_IN_FIFO_PYLD_WIDTH;
     localparam C_TRANS_IN_FIFO_RD_WTH               = `TRANS_IN_FIFO_META_WIDTH + `TRANS_IN_FIFO_PYLD_WIDTH;
+    parameter C_KL_IT_RD_ID                         = 0;    // mem trans ID for kernels params
+	parameter C_KB_IT_RD_ID                         = 1;    // mem trans ID for kernel bias params
+    parameter C_AC_IT_RD_ID                         = 2;    // mem trans ID for AWP cfg params
+    parameter C_IM_IT_RD_ID                         = 3;    // mem trans ID for input map params
+    parameter C_PM_IT_RD_ID                         = 4;    // mem trans ID for part maps params
+    parameter C_RM_IT_RD_ID                         = 5;    // mem trans ID for resd maps params
+    parameter C_PV_IT_RD_ID                         = 6;    // mem trans ID for prev maps params
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -198,7 +211,15 @@ module testbench;
     );
 
 
-    cnn_layer_accel_FAS
+    cnn_layer_accel_FAS #(
+        .C_KL_IT_RD_ID              ( C_KL_IT_RD_ID             ),    // mem trans ID for kernels params
+        .C_KB_IT_RD_ID              ( C_KB_IT_RD_ID             ),    // mem trans ID for kernel bias params
+        .C_AC_IT_RD_ID              ( C_AC_IT_RD_ID             ),    // mem trans ID for AWP cfg params
+        .C_IM_IT_RD_ID              ( C_IM_IT_RD_ID             ),    // mem trans ID for input map params
+        .C_PM_IT_RD_ID              ( C_PM_IT_RD_ID             ),    // mem trans ID for part maps params
+        .C_RM_IT_RD_ID              ( C_RM_IT_RD_ID             ),    // mem trans ID for resd maps params
+        .C_PV_IT_RD_ID              ( C_PV_IT_RD_ID             )     // mem trans ID for prev maps params
+    )
     i0_cnn_layer_accel_FAS (
         .clk_intf                   ( clk_intf                  ),
         .clk_FAS                    ( clk_FAS                   ),
@@ -263,8 +284,8 @@ module testbench;
 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     initial begin
-        createTest                      (tp);
-        apt                             = genAcclParamTup(tp);
+        createTest();
+        genAcclParamTup();
         rst                             = 1;
         init_read_req_ack               = 0;
         init_read_in_prog               = 0;
@@ -283,7 +304,7 @@ module testbench;
         init_usrIntr_ack                = 0;
         #(C_PERIOD_100MHz * 10) rst     = 0;    // 10 cycle rst asserted is arbitrairy
         trans_eg_fifo_dout_rdy          = 1;
-        cfgDUT                          (tp);
+        cfgDUT                          ();
         fork
             initTransHandle();
             waitComplete();
@@ -305,8 +326,13 @@ function int szAlgn(int value, int algnm);
 endfunction: szAlgn
 
 
-function automatic void createTest(ref testParams_t tp);
+function automatic void createTest();
     tp.convMap_d                        = 64;
+    tp.convMap_h                        = 32;
+    tp.convMap_w                        = 32;    
+    tp.inMap_d                          = 64;
+    tp.inMap_h                          = 64;
+    tp.inMap_w                          = 64;     
     tp.krnl1x1Depth                     = tp.convMap_d;
     tp.AWP_meta_Addr                    = 0;
     tp.AWP_meta_data_len                = 0;
@@ -355,8 +381,6 @@ function automatic void createTest(ref testParams_t tp);
     tp.itN_krnl_1x1_fetch_amount[1]     = 0;
     tp.itN_krnl_1x1_fetch_amount[2]     = 0;
     tp.itN_krnl_1x1_fetch_amount[3]     = 0;
-    tp.convMap_h                        = 32;
-    tp.convMap_w                        = 32;
     if(tp.opcode == `OPCODE_16) begin
         tp.ob_high_watermark            = tp.convMap_d * `OB_HIGH_WATERMARK_FACTOR;
         tp.ob_store_amount              = tp.convMap_d * `OB_STORE_FACTOR;    
@@ -365,42 +389,29 @@ function automatic void createTest(ref testParams_t tp);
 endfunction: createTest
 
 
-function automatic void setTargReg(ref testParams_t tp);
-    if(m_padding && !m_upsample) begin
-        m_num_expd_input_rows = m_num_input_rows + 2;
-        m_num_expd_input_cols = m_num_input_cols + 2;       
-    end else if(!m_padding && m_upsample) begin
-        m_num_expd_input_rows = m_num_input_rows * 2;
-        m_num_expd_input_cols = m_num_input_cols * 2; 
-        m_num_output_rows = ((m_num_expd_input_rows - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
-        m_num_output_cols = ((m_num_expd_input_cols - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
-    end else if(m_padding && m_upsample) begin
-        m_num_expd_input_rows = (m_num_input_rows * 2) + 2;
-        m_num_expd_input_cols = (m_num_input_cols * 2) + 2;
-        m_num_output_rows = (((m_num_expd_input_rows - 2) - m_kernel_size + (2 * m_padding)) / m_stride) + 1;
-        m_num_output_cols = (((m_num_expd_input_cols - 2) - m_kernel_size + (2 * m_padding)) / m_stride) + 1;        
-    end else begin // !m_padding && !m_upsample
-        m_num_expd_input_rows = m_num_input_rows;
-        m_num_expd_input_cols = m_num_input_cols;      
-    end
-    if(tp.opcode == `OPCODE_16) begin
-        tp.ob_high_watermark            = tp.convMap_d * `OB_HIGH_WATERMARK_FACTOR;
-        tp.ob_store_amount              = tp.convMap_d * `OB_STORE_FACTOR;    
-        tp.outMapStoreTotal             = szAlgn(tp.convMap_h * tp.convMap_w * tp.convMap_d, `NUM_PIX_PER_BUS) * `BYTES_PER_PIXEL;       
-    end
-endfunction: setSlvReg
-
-function acclprm_tup_t genAcclParamTup(testParams_t tp);
-    acclprm_tup_t apt;
-    genAcclConvMap(tp, apt);
+function acclprm_tup_t genAcclParamTup();
+    genAcclInMap();
+    genAcclConvMap();
     if(tp.num_tot_1x1_kernels > 0) begin
-        genAcclKrnl1x1(tp, apt);
+        genAcclKrnl1x1();
     end
     return apt;
 endfunction: genAcclParamTup
 
 
-function automatic void genAcclConvMap(testParams_t tp, ref acclprm_tup_t apt);
+function automatic void genAcclInMap();
+    int numInMapVal;
+    int inMapSz;
+
+    numInMapVal     = tp.inMap_d * tp.inMap_h * tp.inMap_w;
+    inMapSz         = szAlgn(numInMapVal, `NUM_PIX_PER_BUS) * `BYTES_PER_PIXEL;
+    apt.inMap = genAcclParam(
+        inMapSz
+    );
+endfunction: genAcclInMap
+
+
+function automatic void genAcclConvMap();
     int numConvMapVal;
     int convMapSz;
 
@@ -412,7 +423,7 @@ function automatic void genAcclConvMap(testParams_t tp, ref acclprm_tup_t apt);
 endfunction: genAcclConvMap
 
 
-function automatic void genAcclKrnl1x1(testParams_t tp, ref acclprm_tup_t apt);
+function automatic void genAcclKrnl1x1();
     int numkrnl1x1_val;
     int numkrnl1x1b_val;
     int krnl1x1_prm_sz;
@@ -441,7 +452,7 @@ function acclprm_t genAcclParam(int acclprm_sz);
 endfunction: genAcclParam
 
 
-task cfgDUT(testParams_t tp);
+task cfgDUT();
     testbench.i0_cnn_layer_accel_FAS.krnl1x1Depth_cfg                   = tp.krnl1x1Depth                   ;   
     testbench.i0_cnn_layer_accel_FAS.AWP_meta_Addr_cfg                  = tp.AWP_meta_Addr                  ;
     testbench.i0_cnn_layer_accel_FAS.AWP_meta_data_len_cfg              = tp.AWP_meta_data_len              ;
@@ -494,33 +505,199 @@ endtask: cfgDUT
 
 
 task initTransHandle();
+    int arb;
+    
+    arb = 0;
     forever begin
         @(posedge testbench.clk_intf);
-        case(testbench.init_read_req)
+        case(|testbench.init_read_req)
             `KL_IT_RD_ID: begin
-
+                testbench.init_read_req_ack[testbench.KL_IT_RD_ID] <= 1;
+                @(posedge testbench.clk_intf);
+                testbench.init_read_req_ack[testbench.KL_IT_RD_ID] <= 0;
+                testbench.init_read_in_prog[testbench.KL_IT_RD_ID] <= 1;
+                fork
+                    rd_data_hndl(testbench.KL_IT_RD_ID);
+                join_none        
             end
             `KB_IT_RD_ID: begin
-
+                testbench.init_read_req_ack[testbench.KB_IT_RD_ID] <= 1;
+                @(posedge testbench.clk_intf);
+                testbench.init_read_req_ack[testbench.KB_IT_RD_ID] <= 0;
+                testbench.init_read_in_prog[testbench.KB_IT_RD_ID] <= 1;
+                fork
+                    rd_data_hndl(testbench.KB_IT_RD_ID);
+                join_none                
             end
             `AC_IT_RD_ID: begin
-
+                testbench.init_read_req_ack[testbench.AC_IT_RD_ID] <= 1;
+                @(posedge testbench.clk_intf);
+                testbench.init_read_req_ack[testbench.AC_IT_RD_ID] <= 0;
+                testbench.init_read_in_prog[testbench.AC_IT_RD_ID] <= 1;
+                fork
+                    rd_data_hndl(testbench.AC_IT_RD_ID);
+                join_none                
             end
             `IM_IT_RD_ID: begin
-
+                testbench.init_read_req_ack[testbench.IM_IT_RD_ID] <= 1;
+                @(posedge testbench.clk_intf);
+                testbench.init_read_req_ack[testbench.IM_IT_RD_ID] <= 0;
+                testbench.init_read_in_prog[testbench.IM_IT_RD_ID] <= 1;
+                fork
+                    rd_data_hndl(testbench.IM_IT_RD_ID);
+                join_none
             end
             `PM_IT_RD_ID: begin
-
+                testbench.init_read_req_ack[testbench.PM_IT_RD_ID] <= 1;
+                @(posedge testbench.clk_intf);
+                testbench.init_read_req_ack[testbench.PM_IT_RD_ID] <= 0;
+                testbench.init_read_in_prog[testbench.PM_IT_RD_ID] <= 1;
+                fork
+                    rd_data_hndl(testbench.PM_IT_RD_ID);
+                join_none                
             end
             `RM_IT_RD_ID: begin
-
+                testbench.init_read_req_ack[testbench.RM_IT_RD_ID] <= 1;
+                @(posedge testbench.clk_intf);
+                testbench.init_read_req_ack[testbench.RM_IT_RD_ID] <= 0;
+                testbench.init_read_in_prog[testbench.RM_IT_RD_ID] <= 1;
+                fork
+                    rd_data_hndl(testbench.RM_IT_RD_ID);
+                join_none
             end
             `PV_IT_RD_ID: begin
-
+                testbench.init_read_req_ack[testbench.PV_IT_RD_ID] <= 1;
+                @(posedge testbench.clk_intf);
+                testbench.init_read_req_ack[testbench.PV_IT_RD_ID] <= 0;
+                testbench.init_read_in_prog[testbench.PV_IT_RD_ID] <= 1;
+                fork
+                    rd_data_hndl(testbench.PV_IT_RD_ID);
+                join_none
             end
         endcase
+        if(testbench.init_write_req) begin
+            wr_data_hndl();
+        end
+        arb = ((arb + 1) % 8);
     end
 endtask: initTransHandle
+
+
+function mem_queue_t getInitRdData(int init_i);
+    mem_queue_t mem_queue;
+    int addr;
+    int len;
+    int i;
+    int j;
+    logic[15:0] mem_arr[];
+    
+    len  = testbench.init_read_len[init_i]; 
+    addr = testbench.init_read_addr[init_i];
+    case(init_i)
+        testbench.KL_IT_RD_ID: begin
+            mem_arr = apt.krnl1x1;
+        end
+        testbench.KB_IT_RD_ID: begin
+            mem_arr = apt.krnl1x1b;
+        end
+        testbench.AC_IT_RD_ID: begin
+            // mem_arr = 
+        end
+        testbench.IM_IT_RD_ID: begin
+            mem_arr = apt.inMap;
+        end
+        testbench.PM_IT_RD_ID: begin
+            mem_arr = apt.partMap;
+        end
+        testbench.RM_IT_RD_ID: begin
+            mem_arr = apt.resdMap;
+        end
+        testbench.PV_IT_RD_ID: begin
+            mem_arr = apt.prevMap;
+        end
+    endcase
+    for(i = 0; i < len; i = i + (`BYTES_PER_PIXEL * `NUM_PIX_PER_BUS)) begin
+        for(j = 0; j < `NUM_PIX_PER_BUS; j = j + 1) begin
+            mem_queue.push_back(mem_arr[addr]);
+            addr = addr + 1;
+        end
+    end
+    return mem_queue;
+endfunction: getInitRdData
+
+
+task rd_data_hndl(int init_i);
+    mem_queue_t mem_queue;
+    logic[63:0] datum;
+    int len;
+    int i;
+
+    len = testbench.init_read_len;
+    mem_queue = getInitRdData(init_i);
+    @(posedge testbench.clk_intf);
+    testbench.init_read_data[init_i] = mem_queue.pop_front();
+    testbench.init_read_data_vld[init_i] = 1;
+    datum = mem_queue[0];
+    for(i = (`BYTES_PER_PIXEL * `NUM_PIX_PER_BUS); i < len; i = i + (`BYTES_PER_PIXEL * `NUM_PIX_PER_BUS)) begin
+        @(posedge testbench.clk_intf);
+        if($urandom_range(0, 1) && model_delay) begin
+            testbench.init_read_data_vld[init_i]  = 0;
+            rnd_delay(5);
+            testbench.init_read_data[init_i]  = datum; 
+            testbench.init_read_data_vld[init_i]  = 1;
+        end
+        wait(testbench.init_read_data_rdy[init_i]) begin
+            testbench.init_read_data[init_i] = datum; 
+            datum = mem_queue.pop_front();
+        end
+    end
+    @(posedge testbench.clk_intf);
+    testbench.init_read_data_vld[init_i] = 0;
+    @(posedge testbench.clk_intf);
+    testbench.init_read_cmpl[init_i]  = 1;
+    @(posedge testbench.clk_intf);
+    testbench.init_read_cmpl[init_i]  = 0;   
+endtask: rd_data_hndl
+
+
+task wr_data_hndl(); 
+    mem_queue_t mem_queue;
+    int len;
+    int i;
+
+    len = testbench.init_write_len;
+    @(posedge testbench.clk_intf);
+    for(i = (`BYTES_PER_PIXEL * `NUM_PIX_PER_BUS); i < len; i = i + (`BYTES_PER_PIXEL * `NUM_PIX_PER_BUS)) begin
+        @(posedge testbench.clk_intf);
+        if($urandom_range(0, 1) && model_delay) begin
+            testbench.init_write_data_rdy  = 0;
+            rnd_delay(5);
+            mem_queue.push_back(testbench.init_write_data);
+            testbench.init_write_data_rdy  = 1;
+        end
+        wait(testbench.init_write_data_vld) begin
+            mem_queue.push_back(testbench.init_write_data);
+        end
+    end
+    @(posedge testbench.clk_intf);
+    testbench.init_write_data_rdy = 0;
+    @(posedge testbench.clk_intf);
+    testbench.init_write_cmpl  = 1;
+    @(posedge testbench.clk_intf);
+    testbench.init_write_cmpl  = 0;
+    setInitWrData(mem_queue);
+endtask: wr_data_hndl
+
+
+function void setInitWrData(mem_queue_t mem_queue);
+endfunction: setInitWrData
+
+
+task rnd_delay(int mx_dly_amt);
+    repeat($urandom_range(1, mx_dly_amt)) begin
+        @(posedge testbench.clk_if);
+    end
+endtask: rnd_delay
 
 
 task waitComplete();

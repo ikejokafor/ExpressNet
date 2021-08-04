@@ -166,7 +166,7 @@ function void `cnl_scX_generator::createTest(crtTestParams_t params);
     $display("// Conv Output Format:    %0d", m_conv_out_fmt                    );
     $display("// Created Specific Test ----------------------------------------");
     $display("\n");
-        
+
 endfunction: createTest
 
 

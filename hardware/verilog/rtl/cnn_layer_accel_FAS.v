@@ -150,6 +150,7 @@ module cnn_layer_accel_FAS #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Module Ports
     //-----------------------------------------------------------------------------------------------------------------------------------------------
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     input  logic                                      clk_intf                   								;
     input  logic                                      clk_FAS                    								;
     input  logic                                      rst                        								;
@@ -222,7 +223,6 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   outMapStoreTotal_cfg                                    ;
     logic [                                     15:0]   prevMapFetchTotal_cfg                                   ;
     logic [                                     15:0]   itN_num_1x1_kernels_cfg[`MAX_1X1_KRNL_IT - 1:0]         ;
-    logic [                                     15:0]   itN_num_act_conv1x1_pip_cfg[`MAX_1X1_KRNL_IT - 1:0]     ;
     logic [                                     15:0]   num_tot_1x1_kernels_cfg                                 ;
     logic [                                     15:0]   cm_high_watermark_cfg                                   ;
     logic [                                     15:0]   rm_low_watermark_cfg                                    ;
@@ -242,6 +242,8 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   krnl_1x1_fetch_total_cfg                                ;
     logic [                                     31:0]   itN_krnl_1x1_addr_cfg[`MAX_1X1_KRNL_IT - 1:0]           ;
     logic [                                     15:0]   itN_krnl_1x1_fetch_amount_cfg[`MAX_1X1_KRNL_IT - 1:0]   ;
+    logic [                                     31:0]   itN_krnlbi_1x1_addr_cfg[`MAX_1X1_KRNL_IT - 1:0]         ;
+    logic [                                     15:0]   itN_krnlbi_1x1_fetch_amount_cfg[`MAX_1X1_KRNL_IT - 1:0] ;
     logic [										15:0]	krnl1x1B_ld_start_cfg									;
 	logic                                               start_FAS                                               ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
@@ -907,7 +909,7 @@ module cnn_layer_accel_FAS #(
 			end
 			for(i2 = 0; i2 < `MAX_1X1_KRNL_IT; i2 = i2 + 1) begin
 				itN_krnl_1x1_fetch_amount_cfg[i2]	<= 0;
-			end		
+			end
             start_FAS                           	<= 0;
             targ_write_ack                      	<= 0;
             krnl1x1FetchTotal_cfg               	<= 0;
@@ -1160,8 +1162,8 @@ module cnn_layer_accel_FAS #(
                 end
                 ST_ACTIVE: begin
                     if(krnl_count == itN_num_1x1_kernels_cfg[conv1x1_it] && tot_krnl_count < num_tot_1x1_kernels_cfg) begin
-                        state         <= ST_LD_1X1_KRN;
-                        ret_state    <= ST_ACTIVE;
+                        state       <= ST_LD_1X1_KRN;
+                        ret_state   <= ST_ACTIVE;
                     end else if(partMapFetchCount == partMapFetchTotal_cfg
                         && inMapFetchCount == inMapFetchTotal_cfg
                         && resdMapFetchCount == resdMapFetchTotal_cfg
@@ -1202,12 +1204,15 @@ module cnn_layer_accel_FAS #(
             start_AWP_done          <= 0;
             trans_eg_fifo_wren      <= 0;
             case(state)
-                // trans_eg_fifo_din
+                // trans_eg_fifo_din                
                 ST_CFG_AWP: begin
                     
                 end
                 ST_START_AWP: begin
 
+                end
+                ST_ACTIVE: begin
+                
                 end
             endcase
         end
@@ -1309,8 +1314,8 @@ module cnn_layer_accel_FAS #(
             init_read_data_rdy[C_KB_IT_RD_ID]        <= 0;
 			krnl1x1Bias_bram_wren					 <= 0;
             if(state == ST_LD_1X1_KRB && !init_read_in_prog[C_KB_IT_RD_ID]) begin
-                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= itN_krnl_1x1_addr_cfg[conv1x1_it];
-                init_read_len[(`INIT_RD_LEN_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]		<= itN_krnl_1x1_fetch_amount_cfg[conv1x1_it];
+                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= itN_krnlbi_1x1_addr_cfg[conv1x1_it];
+                init_read_len[(`INIT_RD_LEN_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]		<= itN_krnlbi_1x1_fetch_amount_cfg[conv1x1_it];
                 init_read_req[C_KB_IT_RD_ID]                                
                     <= init_read_req_ack[C_KB_IT_RD_ID] ? 1'b0 : (~init_read_req_acked[C_KB_IT_RD_ID] ? 1'b1 : init_read_req[C_KB_IT_RD_ID]);
                 init_read_req_acked[C_KB_IT_RD_ID]                            
