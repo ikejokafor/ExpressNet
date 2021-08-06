@@ -49,16 +49,19 @@ module cnn_layer_accel_FAS #(
     init_read_len               ,
     init_read_req_ack           ,
     init_read_in_prog           ,
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     init_read_data              ,
     init_read_data_vld          ,
     init_read_data_rdy          ,
     init_read_cmpl              ,
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------  
     init_write_req              ,
     init_write_req_id           ,
     init_write_addr             ,
     init_write_len              ,
     init_write_req_ack          ,
     init_write_in_prog          ,
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     init_write_cmpl             ,
     init_write_data             ,
     init_write_data_vld         ,
@@ -160,17 +163,20 @@ module cnn_layer_accel_FAS #(
     output logic [    C_INIT_MEM_RD_ADDR_WTH - 1:0]   init_read_addr             							    ;
     output logic [     C_INIT_MEM_RD_LEN_WTH - 1:0]   init_read_len              							    ;
     input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_req_ack          							    ;
-    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_in_prog          							    ;  
+    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_in_prog          							    ;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     input  logic [       `INIT_RD_DATA_WIDTH - 1:0]   init_read_data             							    ;
     input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_data_vld         							    ;
     output logic [            `MAX_FAS_RD_ID - 1:0]   init_read_data_rdy         							    ;
     input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_cmpl             							    ;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     output logic                                      init_write_req             							    ;
     output logic                                      init_write_req_id          							    ;
     output logic [       `INIT_WR_ADDR_WIDTH - 1:0]   init_write_addr            							    ;
     output logic [        `INIT_WR_LEN_WIDTH - 1:0]   init_write_len             							    ;
     input  logic                                      init_write_req_ack         							    ;
     input  logic                                      init_write_in_prog         							    ;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
     output logic [       `INIT_RD_DATA_WIDTH - 1:0]   init_write_data            							    ;
     output logic                                      init_write_data_vld        							    ;
     input  logic                                      init_write_data_rdy        							    ;

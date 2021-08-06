@@ -190,8 +190,6 @@ SC_MODULE(FAS)
         // Methods
         void nb_krnl_1x1_bram_rd();
         void nb_result_write(int res_pkt_size);
-        void nb_do_accum();
-        void nb_do_conv_accum();
         void b_cfg_Accel();
         void b_getCfgData();
         void b_cfg1x1Kernels();
@@ -298,15 +296,4 @@ SC_MODULE(FAS)
         bool                                    m_last_output                   ;
         double                                  m_start_time                    ;
         double                                  m_FAS_time                      ;
-		fixedPoint_t*							m_quad_dout						;
-        fixedPoint_t*                           m_outBuf_fifo                   ;
-        fixedPoint_t*                           m_inputMap                      ;
-        fixedPoint_t*                           m_partMap_fifo                  ;
-        fixedPoint_t*                           m_resdMap_fifo                  ;
-        fixedPoint_t*                           m_prevMap_fifo                  ;
-        fixedPoint_t*                           m_convMap_fifo                  ;
-        fixedPoint_t*                           m_bias1x1                       ;
-        fixedPoint_t*                           m_bias3x3                       ;
-        fixedPoint_t*                           m_filters3x3                    ;
-        fixedPoint_t*                           m_filters1x1                    ;
 };

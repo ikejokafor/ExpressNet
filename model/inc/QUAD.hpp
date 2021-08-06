@@ -77,7 +77,7 @@ SC_MODULE(QUAD)
         void b_job_fetch();
         void b_pfb_write();
         void b_pfb_read();
-        void nb_do_conv();
+
 
         // Module Variables
         QUAD_state_t			    m_state						;

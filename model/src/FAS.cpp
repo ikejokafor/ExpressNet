@@ -1034,7 +1034,7 @@ void FAS::b_cfg1x1Kernels()
     int krnl_1x1_depth = MAX_3x3_KERNELS;
     sc_time delay;
     tlm::tlm_generic_payload* trans;
-    //////
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
     trans = nb_createTLMTrans(
         m_mem_mng,
         m_krnl1x1Addr_cfg,
@@ -1048,9 +1048,9 @@ void FAS::b_cfg1x1Kernels()
     );
     sys_mem_init_soc->b_transport(*trans, delay);
     trans->release();
-    //////
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
     wait((int)ceil(m_krnl1x1FetchTotal_cfg / KRNL_1x1_BRAM_WR_WIDTH), SC_NS);
-    //////
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
     trans = nb_createTLMTrans(
         m_mem_mng,
         m_krnl1x1BiasAddr_cfg,
@@ -1064,7 +1064,7 @@ void FAS::b_cfg1x1Kernels()
     );
     sys_mem_init_soc->b_transport(*trans, delay);
     trans->release();
-    //////
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
     wait((int)ceil(m_krnl1x1BiasFetchTotal_cfg / KRNL_1X1_BIAS_BRAM_WR_WIDTH), SC_NS);
 }
 
@@ -1338,110 +1338,4 @@ void FAS::nb_print_cfg()
         "\tKernel 1x1 Padding begin:                    " + to_string(m_krnl1x1_pad_bgn_cfg)           + "\n"
         "\tKernel 1x1 Padding end:                      " + to_string(m_krnl1x1_pad_end_cfg)           + "\n";
     cout << str;
-}
-
-
-void FAS::nb_do_accum()
-{
-    m_convMap_fifo = m_quad_dout;
-    int nthreads = std::thread::hardware_concurrency();
-    std::vector<std::thread> threads(nthreads);
-    for (int t = 0; t < nthreads; t++)
-	{
-		threads[t] = std::thread(std::bind(
-		[&](const int bi_m, const int ei_m, const int t)
-        {
-            for (int m = bi_m; m < ei_m; m++) 
-            {
-                for (int x = 0; x < m_num_output_rows_cfg; x++)
-                {
-                    for (int y = 0; y < m_num_output_cols_cfg; y++)
-                    {
-                        int do_i = index3D(QUAD_MAX_INPUT_ROWS, QUAD_MAX_INPUT_COLS, m, x, y);
-                        if( m_opcode_cfg == 8
-                            || m_opcode_cfg == 15
-                            || m_opcode_cfg == 6
-                            || m_opcode_cfg == 7)
-                        {
-                            m_outBuf_fifo[do_i] += m_partMap_fifo[do_i];
-                        }
-                        if( m_opcode_cfg == 8
-                            || m_opcode_cfg == 9
-                            || m_opcode_cfg == 17)
-                        {
-                            m_outBuf_fifo[do_i] += m_resdMap_fifo[do_i];
-                        }  
-                    }
-                }
-            }
-        },
-        t * m_output_depth_cfg / nthreads,
-        (t + 1) == nthreads ? m_output_depth_cfg : (t + 1) * m_output_depth_cfg / nthreads,
-        t));
-	}
-	for_each(threads.begin(), threads.end(), [](std::thread& x){x.join(); });            
-}
-
-
-void FAS::nb_do_conv_accum()
-{
-    m_convMap_fifo = m_quad_dout;
-    int nthreads = std::thread::hardware_concurrency();
-    std::vector<std::thread> threads(nthreads);
-    for (int t = 0; t < nthreads; t++)
-	{
-		threads[t] = std::thread(std::bind(
-		[&](const int bi_m, const int ei_m, const int t)
-        {
-            for (int m = bi_m; m < ei_m; m++) 
-            {
-                for (int x = 0; x < m_num_output_rows_cfg; x++)
-                {
-                    for (int y = 0; y < m_num_output_cols_cfg; y++)
-                    {
-                        int do_i = index3D(QUAD_MAX_INPUT_ROWS, QUAD_MAX_INPUT_COLS, m, x, y);  // FIXME: make macro for dims
-                        m_outBuf_fifo[do_i] = m_bias1x1[m];
-                        if( m_opcode_cfg == 4
-                            || m_opcode_cfg == 5
-                            || m_opcode_cfg == 6
-                            || m_opcode_cfg == 7)
-                        {
-                            m_outBuf_fifo[do_i] += m_resdMap_fifo[do_i];
-                        }
-                        if( m_opcode_cfg == 4
-                            || m_opcode_cfg == 5
-                            || m_opcode_cfg == 10
-                            || m_opcode_cfg == 11)
-                        {
-                            m_outBuf_fifo[do_i] += m_partMap_fifo[do_i];
-                        }                      
-                        for(int k = 0; k < m_output_depth_cfg; k++)
-                        {
-                            int di_i = index3D(QUAD_MAX_INPUT_ROWS, QUAD_MAX_INPUT_COLS, m, x, y); // FIXME: make macro for dims
-                            int f_i = index2D(MAX_1x1_KERNELS, m, k);
-                            m_outBuf_fifo[do_i] += (m_convMap_fifo[di_i] + m_filters1x1[f_i]);
-                        }
-                        fixedPoint::SetParam(32, 28, 16, 14, m_outBuf_fifo[do_i]);
-                        if( m_opcode_cfg == 0
-                            || m_opcode_cfg == 2)
-                        {
-                            m_outBuf_fifo[do_i] += m_resdMap_fifo[do_i];
-                        }
-                        if( m_opcode_cfg == 1
-                            || m_opcode_cfg == 3
-                            || m_opcode_cfg == 5
-                            || m_opcode_cfg == 7
-                            || m_opcode_cfg == 11)
-                        {
-                            m_outBuf_fifo[do_i] += m_prevMap_fifo[do_i];
-                        }
-                    }
-                }
-            }
-        },
-        t * m_num_1x1_kernels_cfg / nthreads,
-        (t + 1) == nthreads ? m_num_1x1_kernels_cfg : (t + 1) * m_num_1x1_kernels_cfg / nthreads,
-        t));
-	}
-	for_each(threads.begin(), threads.end(), [](std::thread& x){x.join(); });
 }

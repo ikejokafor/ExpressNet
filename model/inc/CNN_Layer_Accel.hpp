@@ -95,41 +95,31 @@ SC_MODULE(CNN_Layer_Accel)
 {
     public:
 		sc_core::sc_in<bool>						clk				;
-#ifdef SIMULATE_MEMORY
-    	sc_core::sc_in<bool>						rst				;
-		sc_core::sc_in<bool >  						axi_awready		;	// Indicates slave is ready to accept a 
-		sc_core::sc_out<sc_bv<32> >  				axi_awid		;	// Write ID
-		sc_core::sc_out<sc_bv<33> > 				axi_awaddr		;	// Write address
-		sc_core::sc_out<sc_bv<8> >  				axi_awlen		;	// Write Burst Length
-		sc_core::sc_out<sc_bv<3> >  				axi_awsize		;	// Write Burst size
-		sc_core::sc_out<sc_bv<2> >  				axi_awburst		;	// Write Burst type
-		sc_core::sc_out<bool >  					axi_awvalid		;	// Write address valid
-		// AXI write data channel signals
-		sc_core::sc_in<bool >  						axi_wready		;	// Write data ready
-		sc_core::sc_out<sc_bv<512> >  				axi_wdata		;	// Write data
-		sc_core::sc_out<sc_bv<64> >  				axi_wstrb		;	// Write strobes
-		sc_core::sc_out<bool >  					axi_wlast		;	// Last write transaction   
-		sc_core::sc_out<bool >  					axi_wvalid		;	// Write valid  
-		// AXI write response channel signals
-		sc_core::sc_in<sc_bv<32> >  				axi_bid			;	// Response ID
-		sc_core::sc_in<sc_bv<2> >  					axi_bresp		;	// Write response
-		sc_core::sc_in<bool >  						axi_bvalid		;	// Write reponse valid
-		sc_core::sc_out<bool>  						axi_bready		;	// Response ready
-		// AXI read address channel signals
-		sc_core::sc_in<bool >  						axi_arready		;   // Read address ready
-		sc_core::sc_out<sc_bv<32> > 				axi_arid		;	// Read ID
-		sc_core::sc_out<sc_bv<33> >					axi_araddr		;   // Read address
-		sc_core::sc_out<sc_bv<8> > 					axi_arlen		;   // Read Burst Length
-		sc_core::sc_out<sc_bv<3> > 					axi_arsize		;   // Read Burst size
-		sc_core::sc_out<sc_bv<2> > 					axi_arburst		;   // Read Burst type
-		sc_core::sc_out<bool >  					axi_arvalid		;   // Read address valid 
-		// AXI read data channel signals   
-		sc_core::sc_in<sc_bv<32> > 					axi_rid			;   // Response ID
-		sc_core::sc_in<sc_bv<2> > 					axi_rresp		;   // Read response
-		sc_core::sc_in<bool> 						axi_rvalid		;   // Read reponse valid
-		sc_core::sc_in<sc_bv<512> > 				axi_rdata		;   // Read data
-		sc_core::sc_in<bool> 						axi_rlast		;   // Read last
-		sc_core::sc_out<bool> 						axi_rready		;   // Read Response ready
+#ifdef DDR_AXI_MEMORY
+   // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    output logic [            `MAX_FAS_RD_ID - 1:0]   init_read_req              							    ;
+    output logic [         C_INIT_REQ_ID_WTH - 1:0]   init_read_req_id           							    ;
+    output logic [    C_INIT_MEM_RD_ADDR_WTH - 1:0]   init_read_addr             							    ;
+    output logic [     C_INIT_MEM_RD_LEN_WTH - 1:0]   init_read_len              							    ;
+    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_req_ack          							    ;
+    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_in_prog          							    ;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
+    input  logic [       `INIT_RD_DATA_WIDTH - 1:0]   init_read_data             							    ;
+    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_data_vld         							    ;
+    output logic [            `MAX_FAS_RD_ID - 1:0]   init_read_data_rdy         							    ;
+    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_cmpl             							    ;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
+    output logic                                      init_write_req             							    ;
+    output logic                                      init_write_req_id          							    ;
+    output logic [       `INIT_WR_ADDR_WIDTH - 1:0]   init_write_addr            							    ;
+    output logic [        `INIT_WR_LEN_WIDTH - 1:0]   init_write_len             							    ;
+    input  logic                                      init_write_req_ack         							    ;
+    input  logic                                      init_write_in_prog         							    ;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
+    output logic [       `INIT_RD_DATA_WIDTH - 1:0]   init_write_data            							    ;
+    output logic                                      init_write_data_vld        							    ;
+    input  logic                                      init_write_data_rdy        							    ;
+    input  logic                                      init_write_cmpl            							    ;
 #endif	
         tlm_utils::simple_target_socket<CNN_Layer_Accel>	tar_soc;
 
@@ -168,17 +158,11 @@ SC_MODULE(CNN_Layer_Accel)
 
             SC_THREAD(main_process);
                 sensitive << clk.pos();
-#ifdef SIMULATE_MEMORY                
-            SC_THREAD(system_mem_read_arb_process)
-                sensitive << clk.pos();
-            SC_THREAD(system_mem_write_arb_process)
-                sensitive << clk.pos();
-			// SC_THREAD(axi_awvalid_process)
-			// 	sensitive << clk.pos();
-            SC_THREAD(read_resp_process)
-                sensitive << clk.pos();
-            SC_THREAD(write_resp_process)       
-                sensitive << clk.pos();
+#ifdef DDR_AXI_MEMORY
+
+#endif
+#ifndef DDR_AXI_MEMORY                
+
 #endif
             for(int i = 0 ; i < NUM_FAS ; i++)
             {
@@ -209,6 +193,8 @@ SC_MODULE(CNN_Layer_Accel)
             m_num_sys_mem_rd_in_prog    = 0;
             m_next_wr_req_id            = 0;
             m_next_rd_req_id            = 0;
+            m_curr_sys_mem_bw           = 0;
+            m_total_sys_mem_bw          = 0;
         }
 
         // Destructor
@@ -258,4 +244,7 @@ SC_MODULE(CNN_Layer_Accel)
         double m_start_time;
         double m_QUAD_time;
         double m_FAS_time;
+        
+        int m_curr_sys_mem_bw;
+        int m_total_sys_mem_bw;
 };
