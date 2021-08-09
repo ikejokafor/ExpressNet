@@ -96,33 +96,6 @@ void FAS::ctrl_process()
                     str = "[" + string(name()) + "]: FAS processing time: " + to_string((int)m_FAS_time) + " ns\n";
                     cout << str;            
                     wait();
-                    if(m_opcode_cfg == 8 
-                       || m_opcode_cfg == 9 
-                       || m_opcode_cfg == 15
-                       || m_opcode_cfg == 17)
-                    {
-                        nb_do_accum();
-                    }
-                    else if( m_opcode_cfg == 0
-                        || m_opcode_cfg == 1
-                        || m_opcode_cfg == 2
-                        || m_opcode_cfg == 3
-                        || m_opcode_cfg == 4
-                        || m_opcode_cfg == 5
-                        || m_opcode_cfg == 6
-                        || m_opcode_cfg == 7
-                        || m_opcode_cfg == 10
-                        || m_opcode_cfg == 11
-                        || m_opcode_cfg == 12
-                        || m_opcode_cfg == 13
-                        || m_opcode_cfg == 14)
-                    {
-                        nb_do_conv_accum();
-                    }
-                    else
-                    {
-                        m_outBuf_fifo = m_quad_dout;
-                    }
                     m_complete.notify();
                     wait(m_complete_ack);
                     m_state                         = ST_IDLE;
@@ -873,7 +846,6 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         case ACCL_CMD_JOB_COMPLETE:
         {
             m_AWP_complt_arr[accel_trans->AWP_id] = true;
-			m_quad_dout = accel_trans->m_quad_dout;
             trans.release();
             break;
         }
@@ -1032,39 +1004,37 @@ void FAS::b_getCfgData()
 void FAS::b_cfg1x1Kernels()
 {
     int krnl_1x1_depth = MAX_3x3_KERNELS;
-    sc_time delay;
-    tlm::tlm_generic_payload* trans;
-    //-----------------------------------------------------------------------------------------------------------------------------------------------
-    trans = nb_createTLMTrans(
-        m_mem_mng,
-        m_krnl1x1Addr_cfg,
-        TLM_IGNORE_COMMAND,
-        nullptr,
-        m_krnl1x1FetchTotal_cfg,
-        0,
-        nullptr,
-        false,
-        TLM_INCOMPLETE_RESPONSE
-    );
-    sys_mem_init_soc->b_transport(*trans, delay);
-    trans->release();
-    //-----------------------------------------------------------------------------------------------------------------------------------------------
+    // sc_time delay;
+    // tlm::tlm_generic_payload* trans;
+    // //-----------------------------------------------------------------------------------------------------------------------------------------------
+    // trans = nb_createTLMTrans(
+    //     m_mem_mng,
+    //     m_krnl1x1Addr_cfg,
+    //     TLM_IGNORE_COMMAND,
+    //     nullptr,
+    //     m_krnl1x1FetchTotal_cfg,
+    //     0,
+    //     nullptr,
+    //     false,
+    //     TLM_INCOMPLETE_RESPONSE
+    // );
+    // sys_mem_init_soc->b_transport(*trans, delay);
+    // trans->release();
     wait((int)ceil(m_krnl1x1FetchTotal_cfg / KRNL_1x1_BRAM_WR_WIDTH), SC_NS);
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    trans = nb_createTLMTrans(
-        m_mem_mng,
-        m_krnl1x1BiasAddr_cfg,
-        TLM_IGNORE_COMMAND,
-        nullptr,
-        m_krnl1x1BiasFetchTotal_cfg,
-        0,
-        nullptr,
-        false,
-        TLM_INCOMPLETE_RESPONSE
-    );
-    sys_mem_init_soc->b_transport(*trans, delay);
-    trans->release();
-    //-----------------------------------------------------------------------------------------------------------------------------------------------
+    // trans = nb_createTLMTrans(
+    //     m_mem_mng,
+    //     m_krnl1x1BiasAddr_cfg,
+    //     TLM_IGNORE_COMMAND,
+    //     nullptr,
+    //     m_krnl1x1BiasFetchTotal_cfg,
+    //     0,
+    //     nullptr,
+    //     false,
+    //     TLM_INCOMPLETE_RESPONSE
+    // );
+    // sys_mem_init_soc->b_transport(*trans, delay);
+    // trans->release();
     wait((int)ceil(m_krnl1x1BiasFetchTotal_cfg / KRNL_1X1_BIAS_BRAM_WR_WIDTH), SC_NS);
 }
 
@@ -1140,9 +1110,6 @@ void FAS::b_QUAD_config(int AWP_addr, int QUAD_addr)
     accel_trans->stride_cfg                 = QUAD_cfg->m_stride;
     accel_trans->crpd_input_row_start_cfg   = QUAD_cfg->m_crpd_input_row_start;
     accel_trans->crpd_input_row_end_cfg     = QUAD_cfg->m_crpd_input_row_end;	
-	accel_trans->m_inputMap       			= m_inputMap;
-	accel_trans->m_filters3x3      			= m_filters3x3;
-	accel_trans->m_bias3x3         			= m_bias3x3;
 
     trans = nb_createTLMTrans(
         m_mem_mng,
@@ -1166,19 +1133,19 @@ void FAS::b_QUAD_pix_seq_config(int AWP_addr, int QUAD_addr)
     wait(clk->posedge_event());
     sc_time delay;
     tlm::tlm_generic_payload* trans;
-    trans = nb_createTLMTrans(
-        m_mem_mng,
-        m_pixelSeqAddr_cfg,
-        TLM_IGNORE_COMMAND,
-        nullptr,
-        PIXEL_SEQUENCE_SIZE,
-        0,
-        nullptr,
-        false,
-        TLM_INCOMPLETE_RESPONSE
-    );
-    sys_mem_init_soc->b_transport(*trans, delay);
-    trans->release();
+    // trans = nb_createTLMTrans(
+    //     m_mem_mng,
+    //     m_pixelSeqAddr_cfg,
+    //     TLM_IGNORE_COMMAND,
+    //     nullptr,
+    //     PIXEL_SEQUENCE_SIZE,
+    //     0,
+    //     nullptr,
+    //     false,
+    //     TLM_INCOMPLETE_RESPONSE
+    // );
+    // sys_mem_init_soc->b_transport(*trans, delay);
+    // trans->release();
     Accel_Trans* accel_trans = new Accel_Trans();
     accel_trans->accel_cmd = ACCL_CMD_PIX_SEQ_CFG_WRITE;
     accel_trans->AWP_id = AWP_addr;
@@ -1206,19 +1173,19 @@ void FAS::b_QUAD_krnl3x3_config(int AWP_addr, int QUAD_addr)
     wait(clk->posedge_event());
     sc_time delay;
     tlm::tlm_generic_payload* trans;
-    trans = nb_createTLMTrans(
-        m_mem_mng,
-        m_krnl3x3AddrArr_cfg[AWP_addr][QUAD_addr],
-        TLM_IGNORE_COMMAND,
-        nullptr,
-        m_krnl3x3BiasFetchTotal_cfg,
-        0,
-        nullptr,
-        false,
-        TLM_INCOMPLETE_RESPONSE
-    );
-    sys_mem_init_soc->b_transport(*trans, delay);
-    trans->release();
+    // trans = nb_createTLMTrans(
+    //     m_mem_mng,
+    //     m_krnl3x3AddrArr_cfg[AWP_addr][QUAD_addr],
+    //     TLM_IGNORE_COMMAND,
+    //     nullptr,
+    //     m_krnl3x3BiasFetchTotal_cfg,
+    //     0,
+    //     nullptr,
+    //     false,
+    //     TLM_INCOMPLETE_RESPONSE
+    // );
+    // sys_mem_init_soc->b_transport(*trans, delay);
+    // trans->release();
     Accel_Trans* accel_trans = new Accel_Trans();
     accel_trans->accel_cmd = ACCL_CMD_KRL3x3_CFG_WRITE;
     accel_trans->AWP_id = AWP_addr;
@@ -1246,19 +1213,19 @@ void FAS::b_QUAD_krnl3x3Bias_config(int AWP_addr, int QUAD_addr)
     wait(clk->posedge_event());
     sc_time delay;
     tlm::tlm_generic_payload* trans;
-    trans = nb_createTLMTrans(
-        m_mem_mng,
-        m_krnl3x3BiasAddrArr[AWP_addr][QUAD_addr],
-        TLM_IGNORE_COMMAND,
-        nullptr,
-        m_krnl3x3BiasFetchTotal_cfg,
-        0,
-        nullptr,
-        false,
-        TLM_INCOMPLETE_RESPONSE
-    );
-    sys_mem_init_soc->b_transport(*trans, delay);
-    trans->release();
+    // trans = nb_createTLMTrans(
+    //     m_mem_mng,
+    //     m_krnl3x3BiasAddrArr[AWP_addr][QUAD_addr],
+    //     TLM_IGNORE_COMMAND,
+    //     nullptr,
+    //     m_krnl3x3BiasFetchTotal_cfg,
+    //     0,
+    //     nullptr,
+    //     false,
+    //     TLM_INCOMPLETE_RESPONSE
+    // );
+    // sys_mem_init_soc->b_transport(*trans, delay);
+    // trans->release();
     Accel_Trans* accel_trans = new Accel_Trans();
     accel_trans->accel_cmd = ACCL_CMD_KRL3x3BIAS_CFG_WRITE;
     accel_trans->AWP_id = AWP_addr;

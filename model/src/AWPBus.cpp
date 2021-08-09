@@ -12,7 +12,7 @@ AWPBus::~AWPBus()
 }
 
 
-void AWPBus::b_request(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size, bool last_CO, fixedPoint_t* m_quad_dout)
+void AWPBus::b_request(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size, bool last_CO)
 {
     if(accel_cmd == ACCL_CMD_JOB_COMPLETE)
     {

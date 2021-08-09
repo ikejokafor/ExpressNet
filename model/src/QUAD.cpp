@@ -125,7 +125,7 @@ void QUAD::ctrl_process_0()
                     cout << str;
                     raise(SIGINT);
                 }
-                bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, -1, bool(), m_dataout);
+                bus->b_request(m_QUAD_id, ACCL_CMD_JOB_COMPLETE, -1, bool());
                 m_krnl_count = 0;
                 m_input_row = 0;
                 m_output_col = 0;

@@ -54,7 +54,6 @@ SC_MODULE(QUAD)
             m_output_row        = 0;
             m_stride_count      = 0;
             m_res_fifo_sz       = 0;
-			m_dataout			= new fixedPoint_t[QUAD_DOUT_SZ];
             m_last_res_wrtn     = false;
         }
 
@@ -118,11 +117,6 @@ SC_MODULE(QUAD)
         sc_core::sc_event_queue*    m_prev_quad_ack				;
         bool*                       m_primed    				;
         sc_core::sc_event_queue*    m_QUAD_start   				;
-        double                      m_start_time                ;     
-        fixedPoint_t*               m_inputMap                  ;
-        fixedPoint_t*               m_filters3x3                ;
-        fixedPoint_t*               m_bias3x3                   ;
-		fixedPoint_t*				m_datain					;
-		fixedPoint_t*				m_dataout					;
+        double                      m_start_time                ;
         double                      m_QUAD_time                 ;
 };

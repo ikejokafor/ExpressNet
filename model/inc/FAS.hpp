@@ -160,7 +160,6 @@ SC_MODULE(FAS)
             m_adder_tree_rdv_count          = 0;
             m_prog_factor                   = 10;
             m_last_output                   = false;
-            m_outBuf_fifo                   = new fixedPoint_t[QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS];
         }
 
         // Destructor

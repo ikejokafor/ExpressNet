@@ -22,17 +22,13 @@
 #define QUAD_DEPTH_SIMD                     (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP * QUAD_MAX_DEPTH)
 #define KRNL_3X3_SIMD						1
 #define BITS_PER_PIXEL                      16
-#define AXI_BUS_SIZE                        ((uint32_t)64) // bytes
+#define BUS_WIDTH                           ((uint32_t)8) // bytes
 #define AXI_ACCEL_CLK_RATIO                 5
-#define MAX_FAS_RD_REQ                      4
-#define MAX_FAS_WR_REQ                      1
-#define MAX_SYS_MEM_RD_TRANS                1
-#define MAX_SYS_MEM_WR_TRANS                1
+#define MAX_FAS_REQ                         5
 #define CLK_PRD                             10
 #define PIXEL_SEQUENCE_SIZE                 8192
 #define MAX_AWP_TRANS                       (NUM_QUADS_PER_AWP * 2)    // each quad can send 2 requests at a time
 #define MAX_NETWORK_TRANS                   (MAX_AWP_PER_FAS * MAX_AWP_TRANS)
-#define MAX_FAS_SYS_MEM_TRANS               1
 #define MAX_FAS_ROUT_TRANS                  1
 #define MAX_3x3_KERNELS                     64
 #define YOLOV3_MAX_1x1_INPUT_DEPTH          1024
@@ -99,7 +95,7 @@ typedef enum
     FAS_JOB_FETCH_ID = 0,
     FAS_RES_MAP_FETCH_ID = 1,
     FAS_PART_MAP_FETCH_ID = 2,
-    FAS_PREV_MAP_FETCH_ID = 3,
+    FAS_PREV_MAP_FETCH_ID = 3
 } fas_rd_id_t;
 
 

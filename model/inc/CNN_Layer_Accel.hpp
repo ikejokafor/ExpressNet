@@ -180,21 +180,17 @@ SC_MODULE(CNN_Layer_Accel)
                     &args
                 );
             }
-            for(int i = 0; i < MAX_FAS_RD_REQ; i++)
+            for(int i = 0; i < MAX_FAS_REQ; i++)
             {
-                m_rd_req_arr[i].req_pending = false;
-            }
-            for(int i = 0; i < MAX_FAS_WR_REQ; i++)
-            {
-                m_wr_req_arr[i].req_pending = false;
+                m_req_arr[i].req_pending = false;
             }
             m_accelCfg                  = new AccelConfig(NULL);
             m_num_sys_mem_wr_in_prog    = 0;
             m_num_sys_mem_rd_in_prog    = 0;
             m_next_wr_req_id            = 0;
             m_next_rd_req_id            = 0;
-            m_curr_sys_mem_bw           = 0;
-            m_total_sys_mem_bw          = 0;
+            m_total_sys_mem_trans       = 0;
+            m_max_sys_mem_trans         = 0;
         }
 
         // Destructor
@@ -203,15 +199,7 @@ SC_MODULE(CNN_Layer_Accel)
         // Processes
         void main_process();
         int complt_process(int idx);
-#ifdef SIMULATE_MEMORY
-        void system_mem_read_arb_process();
-        void system_mem_write_arb_process();
-		// void axi_awvalid_process();
-		int system_mem_read(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size);
-		int system_mem_write(int* memory, int req_idx, uint64_t mem_trans_addr, uint32_t mem_trans_size);
-		void read_resp_process();
-		void write_resp_process();
-#endif
+
         
         // Methods
         void b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
@@ -219,9 +207,11 @@ SC_MODULE(CNN_Layer_Accel)
 		mem_ele_t* getMemory(int idx);
         void start();
         void waitComplete(double& elapsedTime, double& memPower, double& QUAD_time, double& FAS_time);
-#ifdef SIMULATE_MEMORY
-		void b_schedule_read(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size);
-		void b_schedule_write(int id, uint64_t mem_trans_addr, uint32_t mem_trans_size);
+#ifdef DDR_AXI_MEMORY
+
+#else
+        void system_mem_arb_process();
+        int system_mem_trans(int req_idx, uint32_t mem_trans_size);
 #endif
 		
         double calculateMemPower();
@@ -235,8 +225,7 @@ SC_MODULE(CNN_Layer_Accel)
         AccelConfig* m_accelCfg;
         std::vector<mem_ele_t> m_memory;
         std::vector<bool> m_FAS_complt_arr;
-        Accel_Trans	m_rd_req_arr[MAX_FAS_RD_REQ];
-        Accel_Trans	m_wr_req_arr[MAX_FAS_WR_REQ];
+        Accel_Trans	m_req_arr[MAX_FAS_REQ];
         int m_num_sys_mem_wr_in_prog;
         int m_num_sys_mem_rd_in_prog;
         int m_next_wr_req_id;
@@ -245,6 +234,6 @@ SC_MODULE(CNN_Layer_Accel)
         double m_QUAD_time;
         double m_FAS_time;
         
-        int m_curr_sys_mem_bw;
-        int m_total_sys_mem_bw;
+        int m_total_sys_mem_trans;
+        int m_max_sys_mem_trans;
 };

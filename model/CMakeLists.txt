@@ -199,7 +199,7 @@ ELSE()
         ${PROJECT_SOURCE_DIR}/../../fixedPoint/inc/
 		${PROJECT_SOURCE_DIR}/../../SYSC_FPGA_shim/inc/
 		${PROJECT_SOURCE_DIR}/../../network/inc/
-        ${PROJECT_SOURCE_DIR}/../../myNetProto/inc/
+        ${PROJECT_SOURCE_DIR}/../../syscNetProto/inc/
 		/home/mdl/izo5011/IkennaWorkSpace/izo5011_dev_tools/x86/include/
         #<include_path0>
         #<include_path1>

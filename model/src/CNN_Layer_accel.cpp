@@ -82,23 +82,23 @@ void CNN_Layer_Accel::system_mem_arb_process()
     {
         wait();
         int numReq = 0;
-        for(int i = 0; i < MAX_FAS_WR_REQ; i++)
+        for(int i = 0; i < MAX_FAS_REQ; i++)
         {
-            if(m_wr_req_arr[i].req_pending)
+            if(m_req_arr[i].req_pending)
             {
                 numReq++;
             }
         }
-        if(numReq > 0 && m_curr_sys_mem_bw < m_total_sys_mem_bw)
+        if(numReq > 0 && m_total_sys_mem_trans < m_max_sys_mem_trans)
         {
-            for(int i = m_next_wr_req_id; true; i = (i + 1) % MAX_FAS_WR_REQ)
+            for(int i = m_next_wr_req_id; true; i = (i + 1) % MAX_FAS_REQ)
             {
-                if(m_wr_req_arr[i].req_pending)
+                if(m_req_arr[i].req_pending)
                 {
                     wait();
-                    m_wr_req_arr[i].ack.notify_delayed(SC_ZERO_TIME);
-                    m_next_wr_req_id = (i + 1) % MAX_FAS_WR_REQ;
-                    m_curr_sys_mem_bw += BUS_SIZE;
+                    m_req_arr[i].ack.notify_delayed(SC_ZERO_TIME);
+                    m_next_wr_req_id = (i + 1) % MAX_FAS_REQ;
+                    m_total_sys_mem_trans++;
                     break;
                 }
             }
@@ -110,10 +110,10 @@ void CNN_Layer_Accel::system_mem_arb_process()
 int CNN_Layer_Accel::system_mem_trans(int req_idx, uint32_t mem_trans_size)
 {
     int _numCycles = ceil((float)mem_trans_size / (float)BUS_WIDTH);
-    sc_core::sc_time* numCycles = new sc_core::sc_time(_numCycles * CLK_PRD, sc_core::SC_NS);
+    sc_core::sc_time numCycles(_numCycles * CLK_PRD, sc_core::SC_NS);
     wait(numCycles);
-    m_curr_sys_mem_bw -= BUS_SIZE;
-	m_rd_req_arr[req_idx].ack.notify_delayed(numCycles);
+    m_total_sys_mem_trans--;;
+	m_req_arr[req_idx].ack.notify_delayed(SC_ZERO_TIME);
 }
 #endif
 
@@ -138,8 +138,8 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
 #else
     Accel_Trans* accel_trans = (Accel_Trans*)trans.get_data_ptr();
     int req_idx = accel_trans->fas_rd_id;
-    m_rd_req_arr[req_idx].req_pending = true;
-    wait(m_rd_req_arr[req_idx].ack);
+    m_req_arr[req_idx].req_pending = true;
+    wait(m_req_arr[req_idx].ack);
     sc_core::sc_spawn_options args;
     args.set_sensitivity(&clk);
     sc_core::sc_spawn
@@ -152,10 +152,10 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
             req_idx,
             trans.get_data_length()
         ),
-        ("system_mem_read" + std::to_string(req_idx)).c_str(),
+        ("system_mem_trans" + std::to_string(req_idx)).c_str(),
         &args
     );         
-    wait(m_rd_req_arr[req_idx].ack);
+    wait(m_req_arr[req_idx].ack);
 #endif
     trans.release();
 }
@@ -186,14 +186,6 @@ void CNN_Layer_Accel::start()
     for(int i = 0; i < NUM_FAS; i++)
     {        
         fas[i]->m_FAS_cfg = m_accelCfg->m_FAS_cfg_arr[i];
-        fas[i]->m_inputMap = (fixedPoint_t*)m_memory[1].addr;
-        fas[i]->m_filters3x3 = (fixedPoint_t*)m_memory[2].addr;
-        fas[i]->m_bias3x3 = (fixedPoint_t*)m_memory[3].addr;
-        fas[i]->m_filters1x1 = (fixedPoint_t*)m_memory[4].addr;
-        fas[i]->m_bias1x1 = (fixedPoint_t*)m_memory[5].addr;
-        fas[i]->m_partMap_fifo = (fixedPoint_t*)m_memory[6].addr;
-        fas[i]->m_resdMap_fifo = (fixedPoint_t*)m_memory[7].addr;
-        fas[i]->m_prevMap_fifo = (fixedPoint_t*)m_memory[8].addr;
         wait();
         fas[i]->m_start.notify();
         wait(fas[i]->m_start_ack);
@@ -212,7 +204,6 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     FAS_time = fas[0]->m_FAS_time;
     // OutMaps Maps
     int size = QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS * sizeof(fixedPoint_t);
-    setMemory(9, (uint64_t)fas[0]->m_outBuf_fifo, size);    // FIXME: Hardcoding
     delete m_accelCfg;
     m_accelCfg = new AccelConfig(NULL);
 }
