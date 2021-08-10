@@ -140,9 +140,6 @@ class Accel_Trans
         sc_core::sc_event request       ;
         fas_rd_id_t fas_rd_id           ;
         fas_wr_id_t fas_wr_id           ;
-        fixedPoint_t* m_inputMap        ;
-        fixedPoint_t* m_filters3x3      ;
-        fixedPoint_t* m_bias3x3         ;
 };
 
 

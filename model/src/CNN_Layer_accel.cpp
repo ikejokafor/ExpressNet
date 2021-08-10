@@ -25,7 +25,7 @@ void CNN_Layer_Accel::main_process()
     while (true)
     {
         wait();
-#ifdef SIMULATE_MEMORY
+#ifdef DDR_AXI_MEMORY
 
 #endif
         bool all_complete = true;
@@ -96,7 +96,7 @@ void CNN_Layer_Accel::system_mem_arb_process()
                 if(m_req_arr[i].req_pending)
                 {
                     wait();
-                    m_req_arr[i].ack.notify_delayed(SC_ZERO_TIME);
+                    m_req_arr[i].ack.notify(SC_ZERO_TIME);
                     m_next_wr_req_id = (i + 1) % MAX_FAS_REQ;
                     m_total_sys_mem_trans++;
                     break;
@@ -113,7 +113,8 @@ int CNN_Layer_Accel::system_mem_trans(int req_idx, uint32_t mem_trans_size)
     sc_core::sc_time numCycles(_numCycles * CLK_PRD, sc_core::SC_NS);
     wait(numCycles);
     m_total_sys_mem_trans--;;
-	m_req_arr[req_idx].ack.notify_delayed(SC_ZERO_TIME);
+	m_req_arr[req_idx].ack.notify(SC_ZERO_TIME);
+    return 0;
 }
 #endif
 
@@ -142,9 +143,10 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     wait(m_req_arr[req_idx].ack);
     sc_core::sc_spawn_options args;
     args.set_sensitivity(&clk);
+    int ret;
     sc_core::sc_spawn
     (
-        nullptr,
+        &ret,
         sc_core::sc_bind
         (
             &CNN_Layer_Accel::system_mem_trans,
