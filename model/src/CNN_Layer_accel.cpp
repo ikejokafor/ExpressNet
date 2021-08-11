@@ -137,27 +137,27 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
         }
     }
 #else
-    Accel_Trans* accel_trans = (Accel_Trans*)trans.get_data_ptr();
-    int req_idx = accel_trans->fas_rd_id;
-    m_req_arr[req_idx].req_pending = true;
-    wait(m_req_arr[req_idx].ack);
-    sc_core::sc_spawn_options args;
-    args.set_sensitivity(&clk);
-    int ret;
-    sc_core::sc_spawn
-    (
-        &ret,
-        sc_core::sc_bind
-        (
-            &CNN_Layer_Accel::system_mem_trans,
-            this,
-            req_idx,
-            trans.get_data_length()
-        ),
-        ("system_mem_trans" + std::to_string(req_idx)).c_str(),
-        &args
-    );         
-    wait(m_req_arr[req_idx].ack);
+    // Accel_Trans* accel_trans = (Accel_Trans*)trans.get_data_ptr();
+    // int req_idx = accel_trans->fas_rd_id;
+    // m_req_arr[req_idx].req_pending = true;
+    // wait(m_req_arr[req_idx].ack);
+    // sc_core::sc_spawn_options args;
+    // args.set_sensitivity(&clk);
+    // int ret;
+    // sc_core::sc_spawn
+    // (
+    //     &ret,
+    //     sc_core::sc_bind
+    //     (
+    //         &CNN_Layer_Accel::system_mem_trans,
+    //         this,
+    //         req_idx,
+    //         trans.get_data_length()
+    //     ),
+    //     ("system_mem_trans" + std::to_string(req_idx)).c_str(),
+    //     &args
+    // );         
+    // wait(m_req_arr[req_idx].ack);
 #endif
     trans.release();
 }
@@ -205,7 +205,6 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     QUAD_time = awp[0]->quad[0]->m_QUAD_time;
     FAS_time = fas[0]->m_FAS_time;
     // OutMaps Maps
-    int size = QUAD_DEPTH_SIMD * QUAD_MAX_INPUT_ROWS * QUAD_MAX_INPUT_COLS * sizeof(fixedPoint_t);
     delete m_accelCfg;
     m_accelCfg = new AccelConfig(NULL);
 }
