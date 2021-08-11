@@ -22,7 +22,7 @@
 #define QUAD_DEPTH_SIMD                     (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP * QUAD_MAX_DEPTH)
 #define KRNL_3X3_SIMD						1
 #define BITS_PER_PIXEL                      16
-#define BUS_WIDTH                           ((uint32_t)8) // bytes
+#define BUS_SIZE                            ((uint32_t)8) // bytes
 #define AXI_ACCEL_CLK_RATIO                 5
 #define MAX_FAS_REQ                         5
 #define CLK_PRD                             10

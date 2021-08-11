@@ -156,7 +156,7 @@ void FAS::ctrl_process()
 
 void FAS::job_fetch_process()
 {
-    // FIXME:   In this model you are loading a QUAD completely before moving to the next QUAD
+    // INFO:   In this model you are loading a QUAD completely before moving to the next QUAD
     //              but in the hardware you will actually load the QUADs in a round robin fashion
     //              Shouldnt affect model accuracy.
     tlm::tlm_generic_payload* trans;
