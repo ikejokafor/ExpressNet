@@ -204,9 +204,10 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     memPower = calculateMemPower();
     QUAD_time = awp[0]->quad[0]->m_QUAD_time;
     FAS_time = fas[0]->m_FAS_time;
-    // OutMaps Maps
+    FPGA_hndl *m_fpga_hndl = m_accelCfg->m_fpga_hndl;
     delete m_accelCfg;
     m_accelCfg = new AccelConfig(NULL);
+    m_accelCfg->m_fpga_hndl = m_fpga_hndl;
 }
 
 
