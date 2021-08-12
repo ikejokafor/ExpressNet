@@ -137,7 +137,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     }
 #else
     Accel_Trans* accel_trans = (Accel_Trans*)trans.get_data_ptr();
-    int req_idx = accel_trans->fas_rd_id;
+    int req_idx = accel_trans->fas_req_id;
     m_req_arr[req_idx].req_pending = true;
     wait(m_req_arr[req_idx].ack);
     m_req_arr[req_idx].req_pending = false;

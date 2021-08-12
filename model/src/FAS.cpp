@@ -176,7 +176,7 @@ void FAS::job_fetch_process()
             trans->release();
             int inMapFetchAmt = m_inMapFetchFactor_cfg * m_inMapDepthFetchAmt[AWP_id][QUAD_id] * PIXEL_SIZE;
             accel_trans = new Accel_Trans();
-            accel_trans->fas_rd_id = FAS_JOB_FETCH_ID;
+            accel_trans->fas_req_id = FAS_JOB_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 AWP_id,
@@ -240,7 +240,7 @@ void FAS::partMap_fetch_process()
             cout << str;
 #endif
             accel_trans = new Accel_Trans();
-            accel_trans->fas_rd_id = FAS_PART_MAP_FETCH_ID;
+            accel_trans->fas_req_id = FAS_PART_MAP_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
@@ -295,7 +295,7 @@ void FAS::prevMap_fetch_process()
             cout << str;
 #endif
             accel_trans = new Accel_Trans();
-            accel_trans->fas_rd_id = FAS_PREV_MAP_FETCH_ID;
+            accel_trans->fas_req_id = FAS_PREV_MAP_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
@@ -343,7 +343,7 @@ void FAS::resdMap_fetch_process()
             cout << str;
 #endif
             accel_trans = new Accel_Trans();
-            accel_trans->fas_rd_id = FAS_RES_MAP_FETCH_ID;
+            accel_trans->fas_req_id = FAS_RES_MAP_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
@@ -772,7 +772,7 @@ void FAS::S_process()
             cout << str;
 #endif
             accel_trans = new Accel_Trans();
-            accel_trans->fas_wr_id = FAS_STORE_ID;
+            accel_trans->fas_req_id = FAS_STORE_ID;
             m_outBuf_fifo_sz -= m_outMapStoreFactor_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
@@ -901,26 +901,26 @@ void FAS::nb_result_write(int res_pkt_size)
     string str;
     if(m_opcode_cfg == 16)
     {
-        if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
-        {
-            str = "m_outBuf_fifo is full\n";
-            cout << str;
-            raise(SIGINT);
-            // reset_Accel();
-            return;
-        }
+        // if(m_outBuf_fifo_sz == OB_FIFO_DEPTH)
+        // {
+        //     str = "m_outBuf_fifo is full\n";
+        //     cout << str;
+        //     raise(SIGINT);
+        //     // reset_Accel();
+        //     return;
+        // }
         m_outBuf_fifo_sz += res_pkt_size;
     }
     else
     {
-        if(m_convMap_fifo_sz == CM_FIFO_DEPTH)
-        {
-            str = "m_convMap_fifo_sz is full\n";
-            cout << str;
-            raise(SIGINT);
-            // reset_Accel();
-            return;
-        }
+        // if(m_convMap_fifo_sz == CM_FIFO_DEPTH)
+        // {
+        //     str = "m_convMap_fifo_sz is full\n";
+        //     cout << str;
+        //     raise(SIGINT);
+        //     // reset_Accel();
+        //     return;
+        // }
         m_convMap_fifo_sz += res_pkt_size;
     }
 }

@@ -40,9 +40,8 @@ void QUAD::ctrl_process_0()
                 else if(m_input_row == 3)
                 {
                     m_primed[m_QUAD_id] = true;
-                    if(!m_primed[m_QUAD_id])
+                    if(m_primed[m_QUAD_id])
                     {
-                        str = "[" + string(name()) + "]: finished Priming at " + sc_time_stamp().to_string() + "\n";
                         m_primed[m_QUAD_id] = true;
                     }
                     if(m_cascade_cfg && m_master_QUAD_cfg)
@@ -68,7 +67,6 @@ void QUAD::ctrl_process_0()
                     {
                         wait(m_QUAD_start->default_event());
                         m_primed[m_QUAD_id] = false;
-                        cout << str;
                         m_state = ST_ACTIVE;
                     }
                     else
