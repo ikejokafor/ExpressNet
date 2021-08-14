@@ -211,7 +211,6 @@ SC_MODULE(CNN_Layer_Accel)
 
 #else
         void system_mem_arb_process();
-        int system_mem_trans(int req_idx, uint32_t mem_trans_size);
 #endif
 		
         double calculateMemPower();

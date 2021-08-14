@@ -93,8 +93,8 @@ typedef enum
 typedef enum
 {
     FAS_JOB_FETCH_ID = 0,
-    FAS_RES_MAP_FETCH_ID = 1,
-    FAS_PART_MAP_FETCH_ID = 2,
+    FAS_PART_MAP_FETCH_ID = 1,
+    FAS_RES_MAP_FETCH_ID = 2,
     FAS_PREV_MAP_FETCH_ID = 3,
     FAS_STORE_ID = 4
 } fas_req_id_t;

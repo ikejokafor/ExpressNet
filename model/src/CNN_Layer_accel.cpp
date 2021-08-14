@@ -61,8 +61,9 @@ void CNN_Layer_Accel::main_process()
 }
 
 
-int CNN_Layer_Accel::complt_process(int idx)
+int CNN_Layer_Accel::complt_process(int _idx)
 {
+    int idx = _idx;
     while(true)
     {
         wait(fas[idx]->m_complete);
@@ -96,6 +97,7 @@ void CNN_Layer_Accel::system_mem_arb_process()
                 if(m_req_arr[i].req_pending)
                 {
                     wait();
+                    m_req_arr[i].req_pending = false;
                     m_req_arr[i].ack.notify(SC_ZERO_TIME);
                     m_next_wr_req_id = (i + 1) % MAX_FAS_REQ;
                     m_total_sys_mem_trans++;
@@ -104,17 +106,6 @@ void CNN_Layer_Accel::system_mem_arb_process()
             }
         }
     }
-}
-
-
-int CNN_Layer_Accel::system_mem_trans(int req_idx, uint32_t mem_trans_size)
-{
-    int _numCycles = ceil((float)mem_trans_size / (float)BUS_SIZE);
-    sc_core::sc_time numCycles(_numCycles * CLK_PRD, sc_core::SC_NS);
-    wait(numCycles);
-    m_total_sys_mem_trans--;
-	m_req_arr[req_idx].ack.notify(SC_ZERO_TIME);
-    return 0;
 }
 #endif
 
@@ -140,24 +131,10 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     int req_idx = accel_trans->fas_req_id;
     m_req_arr[req_idx].req_pending = true;
     wait(m_req_arr[req_idx].ack);
-    m_req_arr[req_idx].req_pending = false;
-    sc_core::sc_spawn_options args;
-    args.set_sensitivity(&clk);
-    int ret;
-    sc_core::sc_spawn
-    (
-        &ret,
-        sc_core::sc_bind
-        (
-            &CNN_Layer_Accel::system_mem_trans,
-            this,
-            req_idx,
-            trans.get_data_length()
-        ),
-        ("system_mem_trans" + std::to_string(req_idx)).c_str(),
-        &args
-    );         
-    wait(m_req_arr[req_idx].ack);
+    int _numCycles = ceil((float)trans.get_data_length() / (float)BUS_SIZE);
+    sc_core::sc_time numCycles(_numCycles * CLK_PRD, sc_core::SC_NS);
+    wait(numCycles);
+    m_total_sys_mem_trans--;
 #endif
     trans.release();
 }
