@@ -230,7 +230,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && !convMap_fifo_empty
                 && !partMap_fifo_empty
                 && !resdMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 if(krnl_count == 0) begin
@@ -243,7 +243,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && !convMap_fifo_empty
                 && !partMap_fifo_empty
                 && !prevMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 if(krnl_count == 0) begin
@@ -254,7 +254,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && (opcode_cfg[`OPCODE_2_FIELD] || opcode_cfg[`OPCODE_6_FIELD]
                     || opcode_cfg[`OPCODE_14_FIELD])
                 && !convMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 conv1x1_pip_start0          <= 1;
@@ -263,7 +263,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                     || opcode_cfg[`OPCODE_13_FIELD])
                 && !convMap_fifo_empty
                 && !prevMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 conv1x1_pip_start0          <= 1;
@@ -272,7 +272,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && !convMap_fifo_empty
                 && !partMap_fifo_empty
                 && !resdMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 if(krnl_count == 0) begin
@@ -286,7 +286,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && !partMap_fifo_empty
                 && !resdMap_fifo_empty
                 && !prevMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 if(krnl_count == 0) begin
@@ -298,7 +298,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && opcode_cfg[`OPCODE_6_FIELD]
                 && !convMap_fifo_empty
                 && !resdMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 if(krnl_count == 0) begin
@@ -311,7 +311,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && !convMap_fifo_empty
                 && !resdMap_fifo_empty
                 && !prevMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 if(krnl_count == 0) begin
@@ -322,7 +322,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && !convMap_fifo_empty
                 && !partMap_fifo_empty
                 && !resdMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 vector_add_pm_r             <= 1;
@@ -331,7 +331,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
             end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && (opcode_cfg[`OPCODE_9_FIELD] || opcode_cfg[`OPCODE_17_FIELD])
                 && !convMap_fifo_empty
                 && !resdMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 vector_add_rm0_r            <= 1;
@@ -340,7 +340,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
                 && opcode_cfg[`OPCODE_10_FIELD]
                 && !convMap_fifo_empty
                 && !partMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 vector_add_pm_r             <= 1;
@@ -348,7 +348,7 @@ module cnn_layer_accel_FAS_pip_ctrl (
             end else if((state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && opcode_cfg[`OPCODE_15_FIELD]
                 && !convMap_fifo_empty
                 && !partMap_fifo_empty
-                && !(|state_update_in_prog))
+                && !(&state_update_in_prog))
             begin
                 pipe_enable_r               <= 1;
                 vector_add_pm_r             <= 1;

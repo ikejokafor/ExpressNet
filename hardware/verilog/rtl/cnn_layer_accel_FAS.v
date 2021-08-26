@@ -251,6 +251,8 @@ module cnn_layer_accel_FAS #(
     logic [                                     31:0]   itN_krnlbi_1x1_addr_cfg[`MAX_1X1_KRNL_IT - 1:0]         ;
     logic [                                     15:0]   itN_krnlbi_1x1_fetch_amount_cfg[`MAX_1X1_KRNL_IT - 1:0] ;
     logic [										15:0]	krnl1x1B_ld_start_cfg									;
+    logic [                                     15:0]   VECTOR_ADD_SIMD_cfg                                     ;
+    logic [                                     15:0]   KRNL_1X1_SIMD_cfg                                       ;
 	logic                                               start_FAS                                               ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [                                      7:0]   state                                                   ;
@@ -907,6 +909,8 @@ module cnn_layer_accel_FAS #(
             opcode_cfg                          	<= 0;
             krnl1x1_dpth_end_cfg                	<= 0;
             conv1x1_pip_en_cfg                  	<= 0;
+            VECTOR_ADD_SIMD_cfg                     <= `VECTOR_ADD_SIMD;
+            KRNL_1X1_SIMD_cfg                       <= `KRNL_1X1_SIMD;
 			for(i0 = 0; i0 < `MAX_1X1_KRNL_IT; i0 = i0 + 1) begin
 				itN_num_1x1_kernels_cfg[i0]     	<= 0;			
 			end			

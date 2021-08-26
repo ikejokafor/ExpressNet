@@ -13,7 +13,9 @@ ref: ad-ug-0113_v1_2.pdf
 
 
 CNN accel sim
-
+    
+    Check if count on fifos changes automatically when read latency is high
+    
     testing opcode 16 functionality. Need to add logic to verification framework which will generate and inject
     input img data, generate convMap result of data and send over AWP FAS interconnect, and store data to memory
 

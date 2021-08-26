@@ -159,6 +159,7 @@ SC_MODULE(FAS)
             m_last_CO_recvd                 = 0;
             m_adder_tree_rdv_count          = 0;
             m_prog_factor                   = 10;
+            m_trans_no                      = 0.0f;
             m_last_output                   = false;
         }
 
@@ -295,4 +296,5 @@ SC_MODULE(FAS)
         bool                                    m_last_output                   ;
         double                                  m_start_time                    ;
         double                                  m_FAS_time                      ;
+        float                                   m_trans_no                      ;
 };

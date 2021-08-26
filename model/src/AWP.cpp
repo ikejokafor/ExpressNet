@@ -91,7 +91,6 @@ void AWP::send_complete()
             {
                 bus.m_QUAD_complt_arr[i] = false;
             }
-			
 			int qIdx = NUM_QUADS_PER_AWP - 1;
             Accel_Trans* accel_trans = new Accel_Trans();
             accel_trans->AWP_id = m_AWP_id;

@@ -144,6 +144,7 @@ void FAS::ctrl_process()
                     m_prevMapFetchTotal_cfg         = 0;
                     m_opcode_cfg                    = -1;
                     m_prog_factor                   = 10;
+                    m_trans_no                      = 0;
                     str = "[" + string(name()) + "]: sent complete\n";
                     cout << str;
                 }
@@ -396,6 +397,9 @@ void FAS::A_process()
             //      add resdMap; 1 cycle
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
+            // m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            // m_partMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            // m_resdMap_fifo_sz -= m_krnl1x1Depth_cfg;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) 
 			&& (m_opcode_cfg == 1 || m_opcode_cfg == 11)
@@ -413,6 +417,8 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
+            // m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            // m_partMap_fifo_sz -= m_krnl1x1Depth_cfg;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) 
 			&& (m_opcode_cfg == 2 || m_opcode_cfg == 6)
@@ -430,6 +436,8 @@ void FAS::A_process()
             //      add resdMap; 1 cycle
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
+            // m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            // m_resdMap_fifo_sz -= m_krnl1x1Depth_cfg;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) 
 			&& (m_opcode_cfg == 3 || m_opcode_cfg == 13)
@@ -446,6 +454,7 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
+            // m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 5
             && m_convMap_fifo_sz >= CM_FIFO_RD_WIDTH
@@ -466,6 +475,9 @@ void FAS::A_process()
             //      add prevMap; 1 cycle
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
+            // m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            // m_partMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            // m_resdMap_fifo_sz -= m_krnl1x1Depth_cfg;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 7
             && m_convMap_fifo_sz >= CM_FIFO_RD_WIDTH
@@ -483,6 +495,8 @@ void FAS::A_process()
             //      Add bias - 1 1x1 krnl done; 1 cycle
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
+            // m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            // m_resdMap_fifo_sz -= m_krnl1x1Depth_cfg;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 8
             && m_convMap_fifo_sz >= CM_FIFO_RD_WIDTH
@@ -524,6 +538,8 @@ void FAS::A_process()
             //          Sum across depth with adder tree; log2(KRNL_DPTH / DPTH_SIMD)-cycles
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
+            // m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            // m_partMap_fifo_sz -= m_krnl1x1Depth_cfg;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) 
 			&& (m_opcode_cfg == 12 || m_opcode_cfg == 14)
@@ -538,6 +554,7 @@ void FAS::A_process()
             //      Add bias - 1 1x1 krnl done; 1 cycle
             //      write to output buffer; 1 cycle
             nb_krnl_1x1_bram_rd();
+            // m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
         }
         else if((m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE) && m_opcode_cfg == 15
             && m_convMap_fifo_sz >= CM_FIFO_RD_WIDTH
@@ -764,7 +781,8 @@ void FAS::S_process()
     while(true)
     {
         wait();
-        if(m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE))
+        if((m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)) 
+            || (m_state == ST_WAIT_LAST_WRITE || m_state == ST_ACTIVE && m_outBuf_fifo_sz > 0 && m_convMap_fifo_sz == 0 && m_partMap_fifo_sz == 0 && m_resdMap_fifo_sz == 0 && m_prevMap_fifo_sz == 0))
         {
 #ifdef VERBOSE_DEBUG
             start = sc_time_stamp().to_double();
@@ -773,13 +791,14 @@ void FAS::S_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_STORE_ID;
-            m_outBuf_fifo_sz -= m_outMapStoreFactor_cfg;
+            int storeAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ?  m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
+            m_outBuf_fifo_sz -= storeAmt;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_WRITE_COMMAND,
                 (unsigned char*)accel_trans,
-                (m_outMapStoreFactor_cfg * PIXEL_SIZE),
+                (storeAmt * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -787,16 +806,15 @@ void FAS::S_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_outMapStoreCount += (m_outMapStoreFactor_cfg * PIXEL_SIZE);
+            m_outMapStoreCount += (storeAmt * PIXEL_SIZE);
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
-                float total_store_trans = (float)m_outMapStoreTotal_cfg / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE);
-                float trans_no = (float)m_outMapStoreCount / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE);
-                int perct = floor((trans_no / total_store_trans) * 100.0f);
+                float total_store_trans = ceil((float)m_outMapStoreTotal_cfg / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE));
+                int perct = floor((m_trans_no / total_store_trans) * 100.0f);
                 if((perct % m_prog_factor) == 0 && perct > 0)
                 {
                     m_prog_factor += 10;
-                    str = "[" + string(name()) + "]: finished " + to_string((int)trans_no) + " / " + to_string((int)total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + "\n";
+                    str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + "\n";
                     cout << str;
                 }
             }
@@ -813,6 +831,7 @@ void FAS::S_process()
                 cout << str;
             }
 #endif
+            m_trans_no++:
         }
     }
 }
@@ -845,6 +864,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_JOB_COMPLETE:
         {
+            cout << "Recieved Job complete" << endl;
             m_AWP_complt_arr[accel_trans->AWP_id] = true;
             trans.release();
             break;
@@ -860,6 +880,7 @@ void FAS::nb_krnl_1x1_bram_rd()
         m_dpth_count = 0;
         if(m_krnl_count == ((m_num_1x1_kernels_cfg / KRNL_1X1_SIMD) - 1))
         {
+            // Need to wait until next clock cycle to update buffer or will prematurely remove data
             m_buffer_update.notify(SC_ZERO_TIME);
             m_krnl_count = 0;
         }

@@ -134,6 +134,9 @@ class Accel_Trans
         sc_core::sc_event ack           ;
         sc_core::sc_event request       ;
         fas_req_id_t fas_req_id         ;
+        
+        int max_tally                   ;
+        int tally                       ;
 };
 
 
@@ -148,3 +151,8 @@ tlm::tlm_generic_payload* nb_createTLMTrans(
     bool DMI_EN,
     tlm::tlm_response_status status
 );
+
+
+static int numReq_st = 0;
+static int total_sys_mem_trans_st = 0;
+static int pending = 0;

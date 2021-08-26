@@ -10,7 +10,8 @@
 // Project Name:
 // Target Devices:
 // Tool versions:
-// Description:
+// Description:                 array of sum vectors needed to reuse entire depth of convMap for multiple 1x1 kernels. this occurs when you must
+//                                  sum with partial maps or resd maps before you convolve with 1x1 kernel.
 //
 // Dependencies:
 //
@@ -195,19 +196,19 @@ module cnn_layer_accel_FAS_vec_add (
             vec_add_pv_sum_arr_addr         <= 0;
         end else begin
             // - - - - - - - - - - - - - -
-            if(pipe_enable && vec_add_pm_sum_arr_addr == krnl1x1_dpth_end_cfg) begin
+            if(vector_add_pm && pipe_enable && vec_add_pm_sum_arr_addr == krnl1x1_dpth_end_cfg) begin
                 vec_add_pm_sum_arr_addr <= 0;
             end else if(pipe_enable) begin
                 vec_add_pm_sum_arr_addr <= vec_add_pm_sum_arr_addr + 1;
             end
             // - - - - - - - - - - - - - -
-            if(pipe_enable && vec_add_rm0_sum_arr_addr == krnl1x1_dpth_end_cfg) begin
+            if(vector_add_rm0 && pipe_enable && vec_add_rm0_sum_arr_addr == krnl1x1_dpth_end_cfg) begin
                 vec_add_rm0_sum_arr_addr <= 0;
             end else if(pipe_enable) begin
                 vec_add_rm0_sum_arr_addr <= vec_add_rm0_sum_arr_addr + 1;
             end
             // - - - - - - - - - - - - - -
-            if(pipe_enable && vec_add_rm1_sum_arr_addr == krnl1x1_dpth_end_cfg) begin
+            if(vector_add_rm1 && pipe_enable && vec_add_rm1_sum_arr_addr == krnl1x1_dpth_end_cfg) begin
                 vec_add_rm1_sum_arr_addr <= 0;
             end else if(pipe_enable) begin
                 vec_add_rm1_sum_arr_addr <= vec_add_rm1_sum_arr_addr + 1;

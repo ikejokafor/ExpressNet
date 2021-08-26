@@ -10,7 +10,8 @@
 // Project Name:
 // Target Devices:
 // Tool versions:
-// Description:
+// Description:             Responsible for multiplying pixels across the depth of a kernel, followed by accumulation across the depth
+//                          Can be instantiated multiple times to handle multiply kernels at once
 //
 // Dependencies:
 //

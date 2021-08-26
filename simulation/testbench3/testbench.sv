@@ -41,7 +41,8 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
 typedef logic[15:0] acclprm_t[];
-typedef bit [63:0] mem_queue_t[$];
+typedef bit [63:0] mem_bus_t;
+typedef mem_bus_t mem_queue_t[$];
 // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
 typedef struct {
     acclprm_t krnl1x1;
@@ -576,7 +577,9 @@ task initTransHandle();
             end
         endcase
         if(testbench.init_write_req) begin
-            wr_data_hndl();
+            fork
+                wr_data_hndl();
+            join_none
         end
         arb = ((arb + 1) % 8);
     end
@@ -589,7 +592,8 @@ function mem_queue_t getInitRdData(int init_i);
     int len;
     int i;
     int j;
-    logic[15:0] mem_arr[];
+    acclprm_t mem_arr[];
+    mem_bus_t mem_bus;
     
     len  = testbench.init_read_len[init_i]; 
     addr = testbench.init_read_addr[init_i];
@@ -618,9 +622,10 @@ function mem_queue_t getInitRdData(int init_i);
     endcase
     for(i = 0; i < len; i = i + (`BYTES_PER_PIXEL * `NUM_PIX_PER_BUS)) begin
         for(j = 0; j < `NUM_PIX_PER_BUS; j = j + 1) begin
-            mem_queue.push_back(mem_arr[addr]);
+            mem_bus[(j * `PIXEL_WIDTH) +: `PIXEL_WIDTH] = mem_arr[addr];
             addr = addr + 1;
         end
+        mem_queue.push_back(mem_bus);
     end
     return mem_queue;
 endfunction: getInitRdData

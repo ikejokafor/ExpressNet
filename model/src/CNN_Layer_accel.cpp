@@ -87,9 +87,12 @@ void CNN_Layer_Accel::system_mem_arb_process()
         {
             if(m_req_arr[i].req_pending)
             {
+                m_req_arr[i].tally++;
                 numReq++;
             }
         }
+        numReq_st = max(numReq_st, numReq);
+        total_sys_mem_trans_st = max(total_sys_mem_trans_st, m_total_sys_mem_trans);
         if(numReq > 0 && m_total_sys_mem_trans < m_max_sys_mem_trans)
         {
             for(int i = m_next_wr_req_id; true; i = (i + 1) % MAX_FAS_REQ)
@@ -97,6 +100,8 @@ void CNN_Layer_Accel::system_mem_arb_process()
                 if(m_req_arr[i].req_pending)
                 {
                     wait();
+                    m_req_arr[i].max_tally = max(m_req_arr[i].max_tally, m_req_arr[i].tally);
+                    m_req_arr[i].tally = 0;
                     m_req_arr[i].req_pending = false;
                     m_req_arr[i].ack.notify(SC_ZERO_TIME);
                     m_next_wr_req_id = (i + 1) % MAX_FAS_REQ;
@@ -133,7 +138,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     wait(m_req_arr[req_idx].ack);
     int _numCycles = ceil((float)trans.get_data_length() / (float)BUS_SIZE);
     sc_core::sc_time numCycles(_numCycles * CLK_PRD, sc_core::SC_NS);
-    wait(numCycles);
+    // wait(numCycles);
     m_total_sys_mem_trans--;
 #endif
     trans.release();
@@ -185,6 +190,14 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     delete m_accelCfg;
     m_accelCfg = new AccelConfig(NULL);
     m_accelCfg->m_fpga_hndl = m_fpga_hndl;
+    
+    cout << "numReq_st: " << numReq_st << endl;
+    cout << "total_sys_mem_trans_st:" << total_sys_mem_trans_st << endl;
+    cout << "m_req_arr_0: " << m_req_arr[0].max_tally << endl;
+    cout << "m_req_arr_1: " << m_req_arr[1].max_tally << endl;
+    cout << "m_req_arr_2: " << m_req_arr[2].max_tally << endl;
+    cout << "m_req_arr_3: " << m_req_arr[3].max_tally << endl;
+    cout << "m_req_arr_4: " << m_req_arr[4].max_tally << endl;
 }
 
 
