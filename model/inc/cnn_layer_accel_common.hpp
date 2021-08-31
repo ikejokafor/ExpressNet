@@ -155,4 +155,3 @@ tlm::tlm_generic_payload* nb_createTLMTrans(
 
 static int numReq_st = 0;
 static int total_sys_mem_trans_st = 0;
-static int pending = 0;

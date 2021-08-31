@@ -242,12 +242,16 @@ void FAS::partMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_PART_MAP_FETCH_ID;
+            int remAmt = m_partMapFetchTotal_cfg - m_partMapFetchCount;
+            int fetchAmt = (remAmt < m_pm_fetch_amount_cfg) ? remAmt : m_pm_fetch_amount_cfg;
+            if(fetchAmt == remAmt)
+                raise(SIGINT);
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                (m_pm_fetch_amount_cfg * PIXEL_SIZE),
+                fetchAmt,
                 0,
                 nullptr,
                 false,
@@ -257,13 +261,13 @@ void FAS::partMap_fetch_process()
             trans->release();
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
-                m_convMap_fifo_sz += m_pm_fetch_amount_cfg;
+                m_convMap_fifo_sz += (fetchAmt / PIXEL_SIZE);
             }
             else
             {
-                m_partMap_fifo_sz += m_pm_fetch_amount_cfg;
+                m_partMap_fifo_sz += (fetchAmt / PIXEL_SIZE);
             }
-            m_partMapFetchCount += (m_pm_fetch_amount_cfg * PIXEL_SIZE);
+            m_partMapFetchCount += fetchAmt;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Part Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -297,12 +301,14 @@ void FAS::prevMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_PREV_MAP_FETCH_ID;
+            int remAmt = m_prevMapFetchTotal_cfg - m_prevMapFetchCount;
+            int fetchAmt = (remAmt < m_pv_fetch_amount_cfg) ? remAmt : m_pv_fetch_amount_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                (m_pv_fetch_amount_cfg * PIXEL_SIZE),
+                fetchAmt,
                 0,
                 nullptr,
                 false,
@@ -310,8 +316,8 @@ void FAS::prevMap_fetch_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_prevMap_fifo_sz += m_pv_fetch_amount_cfg;
-            m_prevMapFetchCount += (m_pv_fetch_amount_cfg * PIXEL_SIZE);
+            m_prevMap_fifo_sz += fetchAmt / PIXEL_SIZE;
+            m_prevMapFetchCount += fetchAmt;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Prev Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -345,12 +351,14 @@ void FAS::resdMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_RES_MAP_FETCH_ID;
+            int remAmt = m_resdMapFetchTotal_cfg - m_resdMapFetchCount;
+            int fetchAmt = (remAmt < m_rm_fetch_amount_cfg) ? remAmt : m_rm_fetch_amount_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                (m_rm_fetch_amount_cfg * PIXEL_SIZE),
+                fetchAmt,
                 0,
                 nullptr,
                 false,
@@ -358,8 +366,8 @@ void FAS::resdMap_fetch_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_resdMap_fifo_sz += m_rm_fetch_amount_cfg;
-            m_resdMapFetchCount += (m_rm_fetch_amount_cfg * PIXEL_SIZE);
+            m_resdMap_fifo_sz += fetchAmt / PIXEL_SIZE;
+            m_resdMapFetchCount += fetchAmt;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Resd Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -781,7 +789,7 @@ void FAS::S_process()
     while(true)
     {
         wait();
-        if((m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)) 
+        if((m_outBuf_fifo_sz >= (m_outMapStoreFactor_cfg / PIXEL_SIZE) && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)) 
             || (m_state == ST_WAIT_LAST_WRITE || m_state == ST_ACTIVE && m_outBuf_fifo_sz > 0 && m_convMap_fifo_sz == 0 && m_partMap_fifo_sz == 0 && m_resdMap_fifo_sz == 0 && m_prevMap_fifo_sz == 0))
         {
 #ifdef VERBOSE_DEBUG
@@ -791,14 +799,14 @@ void FAS::S_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_STORE_ID;
-            int storeAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ?  m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
-            m_outBuf_fifo_sz -= storeAmt;
+            int storeAmt = ((m_outBuf_fifo_sz  >= (m_outMapStoreFactor_cfg / PIXEL_SIZE)) ?  m_outMapStoreFactor_cfg : m_outBuf_fifo_sz * PIXEL_SIZE;
+            m_outBuf_fifo_sz -= (storeAmt / PIXEL_SIZE);
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_WRITE_COMMAND,
                 (unsigned char*)accel_trans,
-                (storeAmt * PIXEL_SIZE),
+                storeAmt,
                 0,
                 nullptr,
                 false,
@@ -806,10 +814,10 @@ void FAS::S_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_outMapStoreCount += (storeAmt * PIXEL_SIZE);
+            m_outMapStoreCount += storeAmt;
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
-                float total_store_trans = ceil((float)m_outMapStoreTotal_cfg / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE));
+                float total_store_trans = ceil((float)m_outMapStoreTotal_cfg / (float)(m_outMapStoreFactor_cfg));
                 int perct = floor((m_trans_no / total_store_trans) * 100.0f);
                 if((perct % m_prog_factor) == 0 && perct > 0)
                 {
@@ -831,7 +839,7 @@ void FAS::S_process()
                 cout << str;
             }
 #endif
-            m_trans_no++:
+            m_trans_no++;
         }
     }
 }
