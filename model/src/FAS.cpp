@@ -244,8 +244,6 @@ void FAS::partMap_fetch_process()
             accel_trans->fas_req_id = FAS_PART_MAP_FETCH_ID;
             int remAmt = m_partMapFetchTotal_cfg - m_partMapFetchCount;
             int fetchAmt = (remAmt < m_pm_fetch_amount_cfg) ? remAmt : m_pm_fetch_amount_cfg;
-            if(fetchAmt == remAmt)
-                raise(SIGINT);
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
@@ -789,8 +787,8 @@ void FAS::S_process()
     while(true)
     {
         wait();
-        if((m_outBuf_fifo_sz >= (m_outMapStoreFactor_cfg / PIXEL_SIZE) && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)) 
-            || (m_state == ST_WAIT_LAST_WRITE || m_state == ST_ACTIVE && m_outBuf_fifo_sz > 0 && m_convMap_fifo_sz == 0 && m_partMap_fifo_sz == 0 && m_resdMap_fifo_sz == 0 && m_prevMap_fifo_sz == 0))
+        if((m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)) 
+            || (m_state == ST_WAIT_LAST_WRITE && m_outBuf_fifo_sz > 0 && m_convMap_fifo_sz == 0 && m_partMap_fifo_sz == 0 && m_resdMap_fifo_sz == 0 && m_prevMap_fifo_sz == 0))
         {
 #ifdef VERBOSE_DEBUG
             start = sc_time_stamp().to_double();
@@ -799,14 +797,14 @@ void FAS::S_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_STORE_ID;
-            int storeAmt = ((m_outBuf_fifo_sz  >= (m_outMapStoreFactor_cfg / PIXEL_SIZE)) ?  m_outMapStoreFactor_cfg : m_outBuf_fifo_sz * PIXEL_SIZE;
-            m_outBuf_fifo_sz -= (storeAmt / PIXEL_SIZE);
+            int storeAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ?  m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
+            m_outBuf_fifo_sz -= storeAmt;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 0,
                 TLM_WRITE_COMMAND,
                 (unsigned char*)accel_trans,
-                storeAmt,
+                (storeAmt * PIXEL_SIZE),
                 0,
                 nullptr,
                 false,
@@ -814,10 +812,10 @@ void FAS::S_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_outMapStoreCount += storeAmt;
+            m_outMapStoreCount += (storeAmt * PIXEL_SIZE);
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
-                float total_store_trans = ceil((float)m_outMapStoreTotal_cfg / (float)(m_outMapStoreFactor_cfg));
+                float total_store_trans = ceil((float)(m_outMapStoreTotal_cfg) / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE));
                 int perct = floor((m_trans_no / total_store_trans) * 100.0f);
                 if((perct % m_prog_factor) == 0 && perct > 0)
                 {
