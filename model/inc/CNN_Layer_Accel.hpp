@@ -192,19 +192,16 @@ SC_MODULE(CNN_Layer_Accel)
             m_total_sys_mem_trans       = 0;
             m_max_sys_mem_trans         = 0;
             
-            m_req_arr[0].tally = 0;
-            m_req_arr[1].tally = 0;
-            m_req_arr[2].tally = 0;
-            m_req_arr[3].tally = 0;
-            m_req_arr[4].tally = 0;
-            
-            
-            m_req_arr[0].max_tally = 0;
-            m_req_arr[1].max_tally = 0;
-            m_req_arr[2].max_tally = 0;
-            m_req_arr[3].max_tally = 0;
-            m_req_arr[4].max_tally = 0;
-            
+            // m_req_arr[0].tally = 0;
+            // m_req_arr[1].tally = 0;
+            // m_req_arr[2].tally = 0;
+            // m_req_arr[3].tally = 0;
+            // m_req_arr[4].tally = 0;
+            // m_req_arr[0].max_tally = 0;
+            // m_req_arr[1].max_tally = 0;
+            // m_req_arr[2].max_tally = 0;
+            // m_req_arr[3].max_tally = 0;
+            // m_req_arr[4].max_tally = 0;
         }
 
         // Destructor

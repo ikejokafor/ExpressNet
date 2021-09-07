@@ -47,6 +47,7 @@ SC_MODULE(AWP)
 
             // Create Modules
             memset(m_primed, 0x0, (sizeof(bool) * NUM_QUADS_PER_AWP));
+            memset(m_en, 0x0, (sizeof(bool) * NUM_QUADS_PER_AWP));
             for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
             {
                 quad[i] = new QUAD(("QUAD_" + std::to_string(i)).c_str());
@@ -54,6 +55,7 @@ SC_MODULE(AWP)
                 quad[i]->clk(clk);
                 quad[i]->bus(bus);
                 quad[i]->m_primed = m_primed;
+                quad[i]->m_en = m_en;
                 quad[i]->m_QUAD_start = &m_QUAD_start;
             }
 
@@ -96,5 +98,6 @@ SC_MODULE(AWP)
         int m_num_QUADs_cfgd;
         bool m_AWP_cfgd;
         bool m_primed[NUM_QUADS_PER_AWP];
+        bool m_en[NUM_QUADS_PER_AWP];
         sc_core::sc_event_queue m_QUAD_start;
 };

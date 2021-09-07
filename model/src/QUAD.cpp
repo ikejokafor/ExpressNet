@@ -49,7 +49,7 @@ void QUAD::ctrl_process_0()
                         bool all_primed = true;
                         for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
                         {
-                            if(!m_primed[i])
+                            if(!m_primed[i] && m_en[i])
                             {
                                 all_primed = false;
                             }
@@ -129,6 +129,7 @@ void QUAD::ctrl_process_0()
                 m_output_col = 0;
                 m_output_row = 0;
                 m_stride_count = 0;
+                m_en[m_QUAD_id] = false;
                 m_state = ST_IDLE;
                 break;
             }
@@ -319,6 +320,7 @@ bool QUAD::b_job_start()
         cout << str;
         m_start_time = sc_time_stamp().to_double();
         m_state = ST_PRIM_BUFFER;
+        m_en[m_QUAD_id] = true;
         return true;
     }
     else

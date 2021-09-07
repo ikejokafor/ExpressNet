@@ -116,6 +116,7 @@ SC_MODULE(QUAD)
         sc_core::sc_event_queue     m_pfb_wrtn					;
         sc_core::sc_event_queue*    m_prev_quad_ack				;
         bool*                       m_primed    				;
+        bool*                       m_en                        ;
         sc_core::sc_event_queue*    m_QUAD_start   				;
         double                      m_start_time                ;
         double                      m_QUAD_time                 ;

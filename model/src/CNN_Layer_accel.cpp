@@ -198,8 +198,6 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     cout << "m_req_arr_2: " << m_req_arr[2].max_tally << endl;
     cout << "m_req_arr_3: " << m_req_arr[3].max_tally << endl;
     cout << "m_req_arr_4: " << m_req_arr[4].max_tally << endl;
-    
-    
     numReq_st = 0;
     total_sys_mem_trans_st = 0;
     m_req_arr[0].max_tally = 0;
