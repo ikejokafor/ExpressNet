@@ -797,7 +797,7 @@ void FAS::S_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_STORE_ID;
-            int storeAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ?  m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
+            int storeAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ? m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
             m_outBuf_fifo_sz -= storeAmt;
             trans = nb_createTLMTrans(
                 m_mem_mng,
@@ -815,12 +815,11 @@ void FAS::S_process()
             m_outMapStoreCount += (storeAmt * PIXEL_SIZE);
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
-                float total_store_trans = ceil((float)(m_outMapStoreTotal_cfg) / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE));
-                int perct = floor((m_trans_no / total_store_trans) * 100.0f);
+                int perct = floor((m_trans_no / m_total_store_trans) * 100.0f);
                 if((perct % m_prog_factor) == 0 && perct > 0)
                 {
                     m_prog_factor += 10;
-                    str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + "\n";
+                    str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + "\n";
                     cout << str;
                 }
             }
@@ -1025,6 +1024,7 @@ void FAS::b_getCfgData()
         }
         m_num_QUAD_cfgd[i] = num_QUAD_cfgd;
     }
+    m_total_store_trans = ceil((float)(m_outMapStoreTotal_cfg) / (float)(m_outMapStoreFactor_cfg * PIXEL_SIZE));
 }
 
 

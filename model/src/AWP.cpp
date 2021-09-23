@@ -87,6 +87,10 @@ void AWP::send_complete()
                 }
             }
             m_num_QUADs_cfgd = 0;
+            for(int i = 0; i < m_QUADs_cfgd_arr.size(); i++)
+            {
+                m_QUADs_cfgd_arr[i] = false;
+            }
             for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
             {
                 bus.m_QUAD_complt_arr[i] = false;

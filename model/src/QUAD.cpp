@@ -137,7 +137,7 @@ void QUAD::ctrl_process_0()
     }
 }
 
-
+static int temp = 0;
 void QUAD::ctrl_process_1()
 {
     while(true)
@@ -170,6 +170,12 @@ void QUAD::ctrl_process_1()
             {
                 m_output_col++;
             }
+            if((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg)
+                && m_res_fifo_sz < m_res_high_watermark_cfg)
+            {
+                m_res_fifo_sz++;
+                temp++;
+            }
         }
     }
 }
@@ -177,18 +183,21 @@ void QUAD::ctrl_process_1()
 
 void QUAD::conv_process()
 {
-    while(true)
-    {
-        wait();
-        if(((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
-            && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
-            && (m_res_fifo_sz < m_res_high_watermark_cfg)
-            && m_output_row != m_num_output_rows_cfg
-            && m_stride_count != 1)
-        {
-            m_res_fifo_sz++;
-        }
-    }
+    // while(true)
+    // {
+    //     wait();
+    //     if(((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
+    //         && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_RES_WRITE)
+    //         && (m_res_fifo_sz < m_res_high_watermark_cfg)
+    //         && m_output_row != m_num_output_rows_cfg
+    //         && m_stride_count != 1)
+    //     {
+    //         m_res_fifo_sz++;
+    //         temp++;
+    //         if(temp == 23103)
+    //             raise(SIGINT);
+    //     }
+    // }
 }
 
 

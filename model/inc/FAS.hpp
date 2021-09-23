@@ -297,4 +297,5 @@ SC_MODULE(FAS)
         double                                  m_start_time                    ;
         double                                  m_FAS_time                      ;
         float                                   m_trans_no                      ;
+        float                                   m_total_store_trans             ;
 };

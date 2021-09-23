@@ -16,6 +16,7 @@
 #define NUM_FAS                             1
 #define MAX_AWP_PER_FAS                     1
 #define NUM_QUADS_PER_AWP                   8
+
 #define QUAD_MAX_INPUT_ROWS                 1024
 #define QUAD_MAX_INPUT_COLS                 1024
 #define QUAD_MAX_DEPTH                      8
