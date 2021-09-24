@@ -23,14 +23,16 @@
 //
 // Additional Comments:
 //
-//
+//  cX - clientX or that individual bus line for that particular client
+//  reason0 - hardcoded 0 because AXI4 does not suport write interleaving 
 //
 //
 //
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_axi_bridge (
-	parameter C_NUM_CLIENTS = 8;
+	parameter C_NUM_RD_CLIENTS = 8,
+    parameter C_NUM_WR_CLIENTS = 8
 ) (
 	clk				        ,
 	rst				        ,
@@ -105,8 +107,8 @@ module cnn_layer_accel_axi_bridge (
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Parameters
     //-----------------------------------------------------------------------------------------------------------------------------------------------    
-	localparam C_NUM_CLIENTS_FIXED          = C_NUM_CLIENTS;
-    localparam C_LOG2_NUM_CLIENTS_FIXED     = clog2(C_NUM_CLIENTS_FIXED);
+    localparam C_LOG2_NUM_RD_CLIENTS        = clog2(C_NUM_RD_CLIENTS);
+    localparam C_LOG2_NUM_WR_CLIENTS        = clog2(C_NUM_WR_CLIENTS);
     localparam C_MAX_N_TAGS                 = 16;
     localparam C_INIT_REQ_ID_WTH            = `MAX_FAS_RD_ID * `MAX_FAS_RD_ID;
     localparam C_INIT_MEM_RD_ADDR_WTH       = `MAX_FAS_RD_ID * `INIT_RD_ADDR_WIDTH;
@@ -184,15 +186,25 @@ module cnn_layer_accel_axi_bridge (
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Variables
     //-----------------------------------------------------------------------------------------------------------------------------------------------	
-	logic	[        C_NUM_CLIENTS_FIXED - 1:0]		tag_to_client_lookaside_oh  [C_MAX_N_TAGS - 1:0];
-	logic	[   C_LOG2_NUM_CLIENTS_FIXED - 1:0]		tag_to_client_lookaside		[C_MAX_N_TAGS - 1:0];
-	logic	[        C_NUM_CLIENTS_FIXED - 1:0]		request;
-	logic											grant_release;
-	logic											grant_valid;
-	logic	[   C_LOG2_NUM_CLIENTS_FIXED - 1:0]		grant;
-	logic	[        C_NUM_CLIENTS_FIXED - 1:0]		grant_oh;
-    logic                                           axi_rd_ack;
-    logic                                           axi_wr_ack;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------		
+    logic	[        C_NUM_RD_CLIENTS - 1:0]		rd_tag_to_client_lookaside_oh   [C_MAX_N_TAGS - 1:0];
+	logic	[   C_LOG2_NUM_RD_CLIENTS_FIXED - 1:0]  rd_tag_to_client_lookaside	    [C_MAX_N_TAGS - 1:0];
+	logic	[        C_NUM_RD_CLIENTS - 1:0]		rd_request;
+	logic											rd_grant_release;
+	logic											rd_grant_valid;
+	logic	[   C_LOG2_NUM_RD_CLIENTS_FIXED - 1:0]	rd_grant;
+	logic	[        C_NUM_RD_CLIENTS - 1:0]		rd_grant_oh;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    logic	[        C_NUM_WR_CLIENTS - 1:0]		wr_tag_to_client_lookaside_oh   [C_MAX_N_TAGS - 1:0];
+	logic	[   C_LOG2_NUM_WR_CLIENTS_FIXED - 1:0]  wr_tag_to_client_lookaside	    [C_MAX_N_TAGS - 1:0];
+	logic	[        C_NUM_WR_CLIENTS - 1:0]		wr_request;
+	logic											wr_grant_release;
+	logic											wr_grant_valid;
+	logic	[   C_LOG2_NUM_WR_CLIENTS_FIXED - 1:0]	wr_grant;
+	logic	[        C_NUM_WR_CLIENTS - 1:0]		wr_grant_oh;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------	
+    logic                                           axi_addr_rd_ack;
+    logic                                           axi_addr_wr_ack;
     logic                                           axi_rd_cmpl;
     logic                                           axi_wr_cmpl;
 
@@ -201,52 +213,88 @@ module cnn_layer_accel_axi_bridge (
     //  Module Instantiations
     //----------------------------------------------------------------------------------------------------------------------------------------------- 
     arbitration_nway_single_cycle #(
-        .C_NUM_REQUESTORS(C_NUM_CLIENTS_FIXED)
+        .C_NUM_REQUESTORS(C_RD_NUM_CLIENTS_FIXED)
     ) arbiter (
-        .clk            ( clk           ),
-        .rst            ( rst           ),
-        .requests       ( request       ),
-        .grant_release  ( grant_release ),
-        .grant_valid    ( grant_valid   ),
-        .grant          ( grant         ),
-        .grant_oh       ( grant_oh      )
+        .clk            ( clk               ),
+        .rst            ( rst               ),
+        .requests       ( rd_request        ),
+        .grant_release  ( rd_grant_release  ),
+        .grant_valid    ( rd_grant_valid    ),
+        .grant          ( rd_grant          ),
+        .grant_oh       ( rd_grant_oh       )
     );
+    
+    
+    arbitration_nway_single_cycle #(
+        .C_NUM_REQUESTORS(C_WR_NUM_CLIENTS_FIXED)
+    ) arbiter (
+        .clk            ( clk               ),
+        .rst            ( rst               ),
+        .requests       ( wr_request        ),
+        .grant_release  ( wr_grant_release  ),
+        .grant_valid    ( wr_grant_valid    ),
+        .grant          ( wr_grant          ),
+        .grant_oh       ( wr_grant_oh       )
+    );
+    
+    
+     
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
-	assign axi_rd_ack                           = (axi_arready && axi_arvalid);
-    assign grant_release 						= axi_rd_ack;
-	
-	assign axi_arvalid 						    = cX_init_read_req[grant] && grant_valid;
-	assign axi_araddr               			= cX_init_read_addr[grant * 64 +: 29];
-	assign axi_arid                             = cX_init_read_req_id[grant];
-    assign axi_arburst                          = 1;    // burst type ALWAYS 1
-    assign axi_arsize		                    = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes
-    assign axi_arlen				            = cX_init_read_len[grant * 36 +: 36];
-    assign axi_rready                           = init_read_data_rdy[grant];
+	assign axi_arvalid 						                            = cX_init_read_req[rd_grant] && rd_grant_valid;	
+    assign axi_addr_rd_ack                                              = (axi_arready && axi_arvalid);
+    assign rd_grant_release 					                        = axi_addr_rd_ack;	
+	assign axi_araddr               			                        = cX_init_read_addr[rd_grant * 64 +: 29];
+	assign axi_arid                                                     = cX_init_read_req_id[rd_grant];
+    assign axi_arburst                                                  = 1;    // burst type ALWAYS 1
+    assign axi_arsize		                                            = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes
+    assign axi_arlen				                                    = cX_init_read_len[rd_grant * 36 +: 36];
+    assign axi_rready                                                   = cX_init_read_data_rdy[rd_tag_to_client_lookaside[axi_rid]];
+    assign cX_init_read_data_vld[rd_tag_to_client_lookaside[axi_rid]]   = tag_to_client_lookaside_oh[axi_rid] && {C_NUM_RD_CLIENTS_FIXED{axi_rvalid}};
+    assign cX_init_read_data[rd_tag_to_client_lookaside[axi_rid]]       = axi_rdata;
+    assign axi_rd_cmpl                                                  = axi_rlast;
+    assign cX_init_read_cmpl[rd_tag_to_client_lookaside[axi_rid]]       = axi_rd_cmpl;
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
+
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
+    assign axi_awvalid                                                  = cX_init_write_req[wr_grant] && wr_grant_valid;	
+    assign axi_addr_wr_ack                                              = (axi_awready && axi_awvalid);
+    assign wr_grant_release 					                        = axi_addr_wr_ack;
+	assign axi_awaddr		                                            = cX_init_write_addr[wr_grant * 64 +: 29];  
+	assign axi_awid		                                                = cX_init_write_req_id[wr_grant];
+    assign axi_arburst                                                  = 1;    // burst type ALWAYS 1
+    assign axi_arsize		                                            = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes   
+    assign axi_awlen		                                            = cX_init_write_len[wr_grant * 36 +: 36];
+    assign axi_wvalid                                                   = cX_init_write_data_vld[wr_tag_to_client_lookaside[0]]; // reason0                
+    assign cX_init_write_data_rdy[wr_tag_to_client_lookaside[0]]        = tag_to_client_lookaside_oh[0] && {C_NUM_WR_CLIENTS_FIXED{axi_wready}};    // reason0               
+	assign axi_wstrb                                                    =
+    assign axi_wdata						                            = cX_init_write_data[wr_tag_to_client_lookaside[master_dataout_tag] * 64 +: 64];    
+    assign axi_wr_cmpl                                                  =
+    assign cX_init_write_cmpl[wr_tag_to_client_lookaside[0]]            = axi_wr_cmpl;  // reason0
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
     integer i0;
     always@(*) begin
         for(i0 = 0; i0 < `MAX_FAS_RD_ID; i0 = i0 + 1) begin
-            if(grant_oh[i0] && ) begin
-                init_read_in_prog[grant] = 1;            
+            if(rd_grant_oh[i0]) begin
+                init_read_in_prog[rd_grant] = 1;            
             end else if(grant_oh[i0] && axi_rlast  begin
-                init_read_in_prog[grant] = 0;
+                init_read_in_prog[rd_grant] = 0;
             end
         end
     end
     
     integer i1;
     always@(*) begin
-        for(i0 = 0; i0 < `MAX_FAS_RD_ID; i0 = i0 + 1) begin
-            if(grant_oh[i0] && ) begin
-                init_read_in_prog[grant] = 1;            
-            end else if(grant_oh[i0] && axi_rlast  begin
-                init_read_in_prog[grant] = 0;
+        for(i1 = 0; i1 < `MAX_FAS_RD_ID; i1 = i1 + 1) begin
+            if(wr_grant_oh[i1]) begin
+                init_read_in_prog[wr_grant] = 1;            
+            end else if(grant_oh[i1] && axi_rlast  begin
+                init_read_in_prog[wr_grant] = 0;
             end
         end
     end
@@ -254,17 +302,32 @@ module cnn_layer_accel_axi_bridge (
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    integer i1;
+    integer i2;
     always@(posedge clk) begin
 		if(rst) begin
-			for(i1 = 0; i1 < C_MAX_N_TAGS; i1 = i1 + 1) begin
-				tag_to_client_lookaside_oh[i1] 	<= {C_NUM_CLIENTS_FIXED{1'b0}};
-				tag_to_client_lookaside[i1] 		<= {C_NUM_CLIENTS_FIXED{1'b0}};
+			for(i2 = 0; i2 < C_MAX_N_TAGS; i2 = i2 + 1) begin
+				rd_tag_to_client_lookaside_oh[i2] 	<= {C_NUM_RD_CLIENTS{1'b0}};
+				rd_tag_to_client_lookaside[i2] 		<= {C_NUM_RD_CLIENTS{1'b0}};
 			end
 		end else begin
-			if(master_request && master_request_ack && (master_request_tag != 0)) begin
-				tag_to_client_lookaside_oh[master_request_tag] 	<= grant_oh[C_NUM_CLIENTS_FIXED-1:0];
-				tag_to_client_lookaside[master_request_tag] 	<= grant[C_LOG2_NUM_CLIENTS_FIXED-1:0];
+			if(axi_arvalid && axi_addr_rd_ack) begin
+				rd_tag_to_client_lookaside_oh[axi_arid] 	<= rd_grant_oh[C_NUM_RD_CLIENTS - 1:0];
+				rd_tag_to_client_lookaside[axi_arid] 	    <= rd_grant[C_NUM_RD_CLIENTS - 1:0];
+			end
+		end
+	end
+    
+    integer i3;
+    always@(posedge clk) begin
+		if(rst) begin
+			for(i3 = 0; i3 < C_MAX_N_TAGS; i3 = i3 + 1) begin
+				wr_tag_to_client_lookaside_oh[i3] 	<= {C_NUM_WR_CLIENTS{1'b0}};
+				wr_tag_to_client_lookaside[i3] 		<= {C_NUM_WR_CLIENTS{1'b0}};
+			end
+		end else begin
+			if(axi_awvalid && axi_addr_wr_ack) begin
+				wr_tag_to_client_lookaside_oh[axi_awid] 	<= wr_grant_oh[C_NUM_WR_CLIENTS - 1:0];
+				wr_tag_to_client_lookaside[axi_awid] 	    <= wr_grant[C_NUM_WR_CLIENTS - 1:0];
 			end
 		end
 	end
@@ -272,13 +335,24 @@ module cnn_layer_accel_axi_bridge (
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-	genvar r;
+	genvar r0;
 	generate
-		for (r = 0; r < C_NUM_CLIENTS_FIXED; r = r + 1) begin: LBL_REQUEST_GEN
-			if(r < C_NUM_CLIENTS_FIXED) begin
-				assign request[r] = (grant_oh[r] && (axi_rd_ack || (master_request_complete) ? 1'b0 : cX_init_read_req[r];
+		for(r0 = 0; r0 < C_NUM_RD_CLIENTS; r0 = r0 + 1) begin: LBL_REQUEST_GEN
+			if(r0 < C_NUM_RD_CLIENTS) begin
+				assign rd_request[r0] = (rd_grant_oh[r0] && (axi_rd_ack || (axi_rd_cmpl) ? 1'b0 : cX_init_read_req[r0];
 			end else begin
-				assign request[r] = 1'b0;
+				assign rd_request[r0] = 1'b0;
+			end
+		end
+	endgenerate
+    
+    genvar r1;
+    generate
+		for(r1 = 0; r1 < C_NUM_WR_CLIENTS; r1 = r1 + 1) begin: LBL_REQUEST_GEN
+			if(r1 < C_NUM_WR_CLIENTS) begin
+				assign wr_request[r1] = (wr_grant_oh[r1] && (axi_wr_ack || (axi_wr_cmpl) ? 1'b0 : cX_init_write_req[r1];
+			end else begin
+				assign wr_request[r1] = 1'b0;
 			end
 		end
 	endgenerate

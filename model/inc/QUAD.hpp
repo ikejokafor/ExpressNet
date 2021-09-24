@@ -41,8 +41,6 @@ SC_MODULE(QUAD)
                 sensitive << clk.pos();
             SC_THREAD(ctrl_process_1);
                 sensitive << clk.pos();
-            SC_THREAD(conv_process)
-                sensitive << clk.pos();
             SC_THREAD(result_write_process);
                 sensitive << clk.pos();
 
@@ -63,7 +61,6 @@ SC_MODULE(QUAD)
         // Processes
         void ctrl_process_0();
         void ctrl_process_1();
-        void conv_process();
         void result_write_process();
 
         // Methods
