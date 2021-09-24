@@ -96,30 +96,30 @@ SC_MODULE(CNN_Layer_Accel)
     public:
 		sc_core::sc_in<bool>						clk				;
 #ifdef DDR_AXI_MEMORY
-   // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    output logic [            `MAX_FAS_RD_ID - 1:0]   init_read_req              							    ;
-    output logic [         C_INIT_REQ_ID_WTH - 1:0]   init_read_req_id           							    ;
-    output logic [    C_INIT_MEM_RD_ADDR_WTH - 1:0]   init_read_addr             							    ;
-    output logic [     C_INIT_MEM_RD_LEN_WTH - 1:0]   init_read_len              							    ;
-    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_req_ack          							    ;
-    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_in_prog          							    ;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-    input  logic [       `INIT_RD_DATA_WIDTH - 1:0]   init_read_data             							    ;
-    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_data_vld         							    ;
-    output logic [            `MAX_FAS_RD_ID - 1:0]   init_read_data_rdy         							    ;
-    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_cmpl             							    ;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-    output logic                                      init_write_req             							    ;
-    output logic                                      init_write_req_id          							    ;
-    output logic [       `INIT_WR_ADDR_WIDTH - 1:0]   init_write_addr            							    ;
-    output logic [        `INIT_WR_LEN_WIDTH - 1:0]   init_write_len             							    ;
-    input  logic                                      init_write_req_ack         							    ;
-    input  logic                                      init_write_in_prog         							    ;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
-    output logic [       `INIT_RD_DATA_WIDTH - 1:0]   init_write_data            							    ;
-    output logic                                      init_write_data_vld        							    ;
-    input  logic                                      init_write_data_rdy        							    ;
-    input  logic                                      init_write_cmpl            							    ;
+        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+        sc_core::sc_out<sc_bv<MAX_FAS_RD_REQ> >             init_read_req                                           ;
+        sc_core::sc_out<sc_bv<INIT_REQ_ID_WTH> >            init_read_req_id           							    ;
+        sc_core::sc_out<sc_bv<INIT_MEM_RD_ADDR_WTH> >       init_read_addr             							    ;
+        sc_core::sc_out<sc_bv<INIT_MEM_RD_LEN_WTH> >        init_read_len              							    ;
+        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_read_req_ack          							    ;
+        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_read_in_prog          							    ;
+        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
+        sc_core:: sc_in<sc_bv<INIT_RD_DATA_WIDTH> >         init_read_data             							    ;
+        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_read_data_vld         							    ;
+        sc_core::sc_out<sc_bv<MAX_FAS_RD_REQ> >             init_read_data_rdy         							    ;
+        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_read_cmpl             							    ;
+        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
+        sc_core::sc_out<bool>                               init_write_req             							    ;
+        sc_core::sc_out<bool>                               init_write_req_id          							    ;
+        sc_core::sc_out<sc_bv<32> >                         init_write_addr            							    ;
+        sc_core::sc_out<sc_bv<32> >                         init_write_len             							    ;
+        sc_core:: sc_in<bool>                               init_write_req_ack         							    ;
+        sc_core:: sc_in<bool>                               init_write_in_prog         							    ;
+        // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
+        sc_core::sc_out<sc_bv<32> >                         init_write_data            							    ;
+        sc_core::sc_out<bool>                               init_write_data_vld        							    ;
+        sc_core:: sc_in<bool>                               init_write_data_rdy        							    ;
+        sc_core:: sc_in<bool>                               init_write_cmpl           							    ;
 #endif	
         tlm_utils::simple_target_socket<CNN_Layer_Accel>	tar_soc;
 
@@ -191,17 +191,6 @@ SC_MODULE(CNN_Layer_Accel)
             m_next_rd_req_id            = 0;
             m_total_sys_mem_trans       = 0;
             m_max_sys_mem_trans         = 0;
-            
-            // m_req_arr[0].tally = 0;
-            // m_req_arr[1].tally = 0;
-            // m_req_arr[2].tally = 0;
-            // m_req_arr[3].tally = 0;
-            // m_req_arr[4].tally = 0;
-            // m_req_arr[0].max_tally = 0;
-            // m_req_arr[1].max_tally = 0;
-            // m_req_arr[2].max_tally = 0;
-            // m_req_arr[3].max_tally = 0;
-            // m_req_arr[4].max_tally = 0;
         }
 
         // Destructor

@@ -26,6 +26,12 @@
 #define BUS_SIZE                            ((uint32_t)8) // bytes
 #define AXI_ACCEL_CLK_RATIO                 5
 #define MAX_FAS_REQ                         5
+#define MAX_FAS_RD_REQ                      4
+#define MAX_FAS_RD_ID                       4
+#define INIT_RD_DATA_WIDTH                  64
+#define INIT_REQ_ID_WTH                     MAX_FAS_RD_REQ * MAX_FAS_RD_ID
+#define INIT_MEM_RD_ADDR_WTH                MAX_FAS_RD_REQ * INIT_RD_ADDR_WIDTH
+#define INIT_MEM_RD_LEN_WTH                 MAX_FAS_RD_REQ * INIT_RD_LEN_WIDTH
 #define CLK_PRD                             10
 #define PIXEL_SEQUENCE_SIZE                 8192
 #define MAX_AWP_TRANS                       (NUM_QUADS_PER_AWP * 2)    // each quad can send 2 requests at a time

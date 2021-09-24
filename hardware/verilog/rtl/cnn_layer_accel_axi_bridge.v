@@ -237,12 +237,9 @@ module cnn_layer_accel_axi_bridge (
         .grant_oh       ( wr_grant_oh       )
     );
     
-    
-     
-
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
-	assign axi_arvalid 						                            = cX_init_read_req[rd_grant] && rd_grant_valid;	
+    assign axi_arvalid 						                            = cX_init_read_req[rd_grant] && rd_grant_valid;	
     assign axi_addr_rd_ack                                              = (axi_arready && axi_arvalid);
     assign rd_grant_release 					                        = axi_addr_rd_ack;	
 	assign axi_araddr               			                        = cX_init_read_addr[rd_grant * 64 +: 29];
@@ -251,7 +248,7 @@ module cnn_layer_accel_axi_bridge (
     assign axi_arsize		                                            = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes
     assign axi_arlen				                                    = cX_init_read_len[rd_grant * 36 +: 36];
     assign axi_rready                                                   = cX_init_read_data_rdy[rd_tag_to_client_lookaside[axi_rid]];
-    assign cX_init_read_data_vld[rd_tag_to_client_lookaside[axi_rid]]   = tag_to_client_lookaside_oh[axi_rid] && {C_NUM_RD_CLIENTS_FIXED{axi_rvalid}};
+    assign cX_init_read_data_vld                                        = tag_to_client_lookaside_oh[axi_rid] && {C_NUM_RD_CLIENTS_FIXED{axi_rvalid}};
     assign cX_init_read_data[rd_tag_to_client_lookaside[axi_rid]]       = axi_rdata;
     assign axi_rd_cmpl                                                  = axi_rlast;
     assign cX_init_read_cmpl[rd_tag_to_client_lookaside[axi_rid]]       = axi_rd_cmpl;
@@ -259,6 +256,7 @@ module cnn_layer_accel_axi_bridge (
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
+    assign axi_wr_ack                                                   = 
     assign axi_awvalid                                                  = cX_init_write_req[wr_grant] && wr_grant_valid;	
     assign axi_addr_wr_ack                                              = (axi_awready && axi_awvalid);
     assign wr_grant_release 					                        = axi_addr_wr_ack;
@@ -268,10 +266,11 @@ module cnn_layer_accel_axi_bridge (
     assign axi_arsize		                                            = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes   
     assign axi_awlen		                                            = cX_init_write_len[wr_grant * 36 +: 36];
     assign axi_wvalid                                                   = cX_init_write_data_vld[wr_tag_to_client_lookaside[0]]; // reason0                
-    assign cX_init_write_data_rdy[wr_tag_to_client_lookaside[0]]        = tag_to_client_lookaside_oh[0] && {C_NUM_WR_CLIENTS_FIXED{axi_wready}};    // reason0               
-	assign axi_wstrb                                                    =
+    assign cX_init_write_data_rdy                                       = wr_tag_to_client_lookaside_oh[0] && {C_NUM_WR_CLIENTS_FIXED{axi_wready}};    // reason0               
+	assign axi_wstrb                                                    = 8'hFF;
     assign axi_wdata						                            = cX_init_write_data[wr_tag_to_client_lookaside[master_dataout_tag] * 64 +: 64];    
-    assign axi_wr_cmpl                                                  =
+    assign axi_bready                                                   = 1;
+    assign axi_wr_cmpl                                                  = axi_bvalid;
     assign cX_init_write_cmpl[wr_tag_to_client_lookaside[0]]            = axi_wr_cmpl;  // reason0
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -337,9 +336,9 @@ module cnn_layer_accel_axi_bridge (
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
 	genvar r0;
 	generate
-		for(r0 = 0; r0 < C_NUM_RD_CLIENTS; r0 = r0 + 1) begin: LBL_REQUEST_GEN
+		for(r0 = 0; r0 < C_NUM_RD_CLIENTS; r0 = r0 + 1) begin: LBL_WR_REQUEST_GEN
 			if(r0 < C_NUM_RD_CLIENTS) begin
-				assign rd_request[r0] = (rd_grant_oh[r0] && (axi_rd_ack || (axi_rd_cmpl) ? 1'b0 : cX_init_read_req[r0];
+				assign rd_request[r0] = (rd_grant_oh[r0] && (axi_addr_rd_ack || (axi_rd_cmpl) ? 1'b0 : cX_init_read_req[r0];
 			end else begin
 				assign rd_request[r0] = 1'b0;
 			end
@@ -348,9 +347,9 @@ module cnn_layer_accel_axi_bridge (
     
     genvar r1;
     generate
-		for(r1 = 0; r1 < C_NUM_WR_CLIENTS; r1 = r1 + 1) begin: LBL_REQUEST_GEN
+		for(r1 = 0; r1 < C_NUM_WR_CLIENTS; r1 = r1 + 1) begin: LBL_RD_REQUEST_GEN
 			if(r1 < C_NUM_WR_CLIENTS) begin
-				assign wr_request[r1] = (wr_grant_oh[r1] && (axi_wr_ack || (axi_wr_cmpl) ? 1'b0 : cX_init_write_req[r1];
+				assign wr_request[r1] = (wr_grant_oh[r1] && (axi_addr_wr_ack || (axi_wr_cmpl) ? 1'b0 : cX_init_write_req[r1];
 			end else begin
 				assign wr_request[r1] = 1'b0;
 			end
