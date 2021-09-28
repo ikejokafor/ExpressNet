@@ -22,18 +22,18 @@ CNN_Layer_Accel::~CNN_Layer_Accel()
 void CNN_Layer_Accel::main_process()
 {
 #ifdef DDR_AXI_MEMORY
-    init_read_req_id[(MAX_FAS_RD_ID * FAS_JOB_FETCH_ID) +: MAX_FAS_RD_ID] = FAS_JOB_FETCH_ID;
-    init_read_req_id[(MAX_FAS_RD_ID * FAS_PART_MAP_FETCH_ID) +: MAX_FAS_RD_ID] = FAS_PART_MAP_FETCH_ID;
-    init_read_req_id[(MAX_FAS_RD_ID * FAS_RES_MAP_FETCH_ID) +: MAX_FAS_RD_ID] = FAS_RES_MAP_FETCH_ID;
-    init_read_req_id[(MAX_FAS_RD_ID * FAS_PREV_MAP_FETCH_ID) +: MAX_FAS_RD_ID] = FAS_PREV_MAP_FETCH_ID;
-    init_write_req_id[(MAX_FAS_RD_ID * FAS_STORE_ID) +: MAX_FAS_RD_ID] = FAS_STORE_ID;
-    
-    
-    init_read_data_rdy[C_IM_IT_RD_ID]   = 1;
-    init_read_data_rdy[C_IM_IT_RD_ID]   = 1;
-    init_read_data_rdy[C_IM_IT_RD_ID]   = 1;
-    init_read_data_rdy[C_IM_IT_RD_ID]   = 1;
-    init_write_data_vld[C_IM_IT_RD_ID]  = 1;
+    // set id's
+    init_read_req_id.range(0, 0) = 0;
+    init_read_req_id.range(0, 1) = 1;
+    init_read_req_id.range(0, 2) = 2;
+    init_read_req_id.range(0, 3) = 3;
+    init_write_req_id.range(0, 1) = 4;
+    // read is always ready, writing is always valid
+    init_read_data_rdy.range(0, 1)  = 1;
+    init_read_data_rdy.range(1, 1)  = 1;
+    init_read_data_rdy.range(2, 1)  = 1;
+    init_read_data_rdy.range(3, 2)  = 1;
+    init_write_data_vld.range(0, 1) = 1;
 #endif   
     string str;
     while (true)
@@ -124,70 +124,48 @@ void CNN_Layer_Accel::system_mem_arb_process()
 #endif
 
 
+// FAS_JOB_FETCH_ID = 0,
+// FAS_PART_MAP_FETCH_ID = 1,
+// FAS_RES_MAP_FETCH_ID = 2,
+// FAS_PREV_MAP_FETCH_ID = 3,
+// FAS_STORE_ID = 4
+
+
 void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay)
 {
     trans.acquire();
     Accel_Trans* accel_trans = (Accel_Trans*)trans.get_data_ptr();
+    int address = trans.get_address();
     int req_idx = accel_trans->fas_req_id;
+    int length = trans.get_data_length();
 #ifdef DDR_AXI_MEMORY
     if(trans.get_command() == TLM_READ_COMMAND)
     {
         while(true)
         {
-        
-        always@(posedge clk_FAS) begin
-            begin
-            init_read_data_rdy[C_IM_IT_RD_ID]        <= 0;
-  
-            
-            init_read_addr[(`INIT_RD_ADDR_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= inMapAddr_cfg;
-            init_read_len[(`INIT_RD_LEN_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= im_fetch_amount_cfg;
-            init_read_req[C_IM_IT_RD_ID]                                     
-                <= init_read_req_ack[C_IM_IT_RD_ID] ? 1'b0 : (~init_read_req_acked[C_IM_IT_RD_ID] ? 1'b1 : init_read_req[C_IM_IT_RD_ID]);
-            init_read_req_acked[C_IM_IT_RD_ID]                                
-                <= init_read_req_ack[C_IM_IT_RD_ID] ? 1'b1 : init_read_req_acked[C_IM_IT_RD_ID];
-  
-            if(init_read_in_prog[C_IM_IT_RD_ID]) begin
-                init_read_data_rdy[C_IM_IT_RD_ID]    <= 1;
-            end
-            if(init_read_cmpl[C_IM_IT_RD_ID]) begin
-                job_fetch_data_vld  <= 0;
-                inMapFetchCount     <= inMapFetchCount + im_fetch_amount_cfg;
-            end
-        end
+            wait(clk);
+            init_read_addr.range(req_idx, INIT_RD_ADDR_WIDTH) = address;
+            init_read_len.range(req_idx, INIT_RD_LEN_WIDTH) = length;
+            init_read_req.range(req_idx, 1) = 1;
+            wait(init_read_req_ack.range(req_idx, 1));
+            init_read_req.range(req_idx, 1) = 0;
+            wait(init_read_cmpl.range(req_idx, C_IM_IT_RD_ID);
+        }
     }
     else // TLM_WRITE_COMMAND
     {
-        assign init_write_req_id[(`MAX_FAS_RD_ID * C_IM_IT_RD_ID) +: `MAX_FAS_RD_ID] = C_IM_IT_RD_ID;
-        
-        always@(posedge clk_FAS) begin
-            begin
-            init_write_data_rdy[C_IM_IT_RD_ID]        <= 0;
-            if(!job_fetch_fifo_empty && !init_write_in_prog[C_IM_IT_RD_ID] && !job_fetch_data_vld) begin
-                job_fetch_fifo_rden                   <= 1;
-                job_fetch_data_vld                    <= 1;
-            end
-            if(!convMap_fifo_prog_full && job_fetch_data_vld && inMapFetchCount != inMapFetchTotal_cfg) begin
-                init_write_addr[(`INIT_RD_ADDR_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= inMapAddr_cfg;
-                init_write_len[(`INIT_RD_LEN_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= im_fetch_amount_cfg;
-                init_write_req[C_IM_IT_RD_ID]                                     
-                    <= init_write_req_ack[C_IM_IT_RD_ID] ? 1'b0 : (~init_write_req_acked[C_IM_IT_RD_ID] ? 1'b1 : init_write_req[C_IM_IT_RD_ID]);
-                init_write_req_acked[C_IM_IT_RD_ID]                                
-                    <= init_write_req_ack[C_IM_IT_RD_ID] ? 1'b1 : init_write_req_acked[C_IM_IT_RD_ID];
-            end
-            if(init_write_in_prog[C_IM_IT_RD_ID]) begin
-                init_write_data_rdy[C_IM_IT_RD_ID]    <= 1;
-            end
-            if(init_write_cmpl[C_IM_IT_RD_ID]) begin
-                job_fetch_data_vld  <= 0;
-                inMapFetchCount     <= inMapFetchCount + im_fetch_amount_cfg;
-            end
-        end        
+        wait(clk);
+        init_write_addr.range(req_idx, INIT_RD_ADDR_WIDTH) = address;
+        init_write_len.range(req_idx, INIT_RD_LEN_WIDTH) = length;
+        init_write_req.range(req_idx, 1) = 1;
+        wait(init_read_req_ack.range(req_idx, 1));
+        init_write_req.range(req_idx, 1) = 0;
+        wait(init_write_cmpl.range(req_idx, C_IM_IT_RD_ID));      
     }
 #else
     m_req_arr[req_idx].req_pending = true;
     wait(m_req_arr[req_idx].ack);
-    int _numCycles = ceil((float)trans.get_data_length() / (float)BUS_SIZE);
+    int _numCycles = ceil((float)length / (float)BUS_SIZE);
     sc_core::sc_time numCycles(_numCycles * CLK_PRD, sc_core::SC_NS);
     wait(numCycles);
     m_total_sys_mem_trans--;

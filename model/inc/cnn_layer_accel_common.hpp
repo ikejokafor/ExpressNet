@@ -17,6 +17,13 @@
 #define MAX_AWP_PER_FAS                     1
 #define NUM_QUADS_PER_AWP                   8
 
+#define INIT_RD_LEN_WIDTH                   32
+#define INIT_WR_LEN_WIDTH                   32
+#define INIT_RD_ADDR_WIDTH                  32
+#define INIT_WR_ADDR_WIDTH                  32
+#define INIT_RD_DATA_WIDTH                  64
+#define INIT_WR_DATA_WIDTH                  64
+
 #define QUAD_MAX_INPUT_ROWS                 1024
 #define QUAD_MAX_INPUT_COLS                 1024
 #define QUAD_MAX_DEPTH                      8

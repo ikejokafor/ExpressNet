@@ -44,8 +44,8 @@
 `define INIT_WR_LEN_WIDTH                   32
 `define INIT_RD_ADDR_WIDTH                  32
 `define INIT_WR_ADDR_WIDTH                  32
-`define INIT_RD_DATA_WIDTH                  1024
-`define INIT_WR_DATA_WIDTH                  1024
+`define INIT_RD_DATA_WIDTH                  64
+`define INIT_WR_DATA_WIDTH                  64
 `define SYS_INTC_DT_WIDTH                   1024
 `define TARG_WR_DATA_WTH                    1024
 `define TARG_RD_DATA_WTH                    1024
