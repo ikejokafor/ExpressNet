@@ -73,29 +73,29 @@ module cnn_layer_accel_axi_bridge #(
 	axi_rlast		        ,   // Read last
 	axi_rready		        ,   // Read Response ready 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    init_read_req           ,
-    init_read_req_id        ,
-    init_read_addr          ,
-    init_read_len           ,
-    init_read_req_ack       ,
-    init_read_in_prog       ,
+    cX_init_read_req        ,
+    cX_init_read_req_id     ,
+    cX_init_read_addr       ,
+    cX_init_read_len        ,
+    cX_init_read_req_ack    ,
+    cX_init_read_in_prog    ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-    init_read_data          ,
-    init_read_data_vld      ,
-    init_read_data_rdy      ,
-    init_read_cmpl          ,
+    cX_init_read_data       ,
+    cX_init_read_data_vld   ,
+    cX_init_read_data_rdy   ,
+    cX_init_read_cmpl       ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-    init_write_req          ,
-    init_write_req_id       ,
-    init_write_addr         ,
-    init_write_len          ,
-    init_write_req_ack      ,
-    init_write_in_prog      ,
+    cX_init_write_req       ,
+    cX_init_write_req_id    ,
+    cX_init_write_addr      ,
+    cX_init_write_len       ,
+    cX_init_write_req_ack   ,
+    cX_init_write_in_prog   ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
-    init_write_data         ,
-    init_write_data_vld     ,
-    init_write_data_rdy     ,
-    init_write_cmpl  
+    cX_init_write_data      ,
+    cX_init_write_data_vld  ,
+    cX_init_write_data_rdy  ,
+    cX_init_write_cmpl  
 );
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Includes
@@ -107,13 +107,21 @@ module cnn_layer_accel_axi_bridge #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Parameters
     //-----------------------------------------------------------------------------------------------------------------------------------------------    
+    localparam C_NUM_RD_CLIENTS_FIXED       = C_NUM_RD_CLIENTS;
+    localparam C_NUM_WR_CLIENTS_FIXED       = C_NUM_WR_CLIENTS;   
     localparam C_LOG2_NUM_RD_CLIENTS        = clog2(C_NUM_RD_CLIENTS);
     localparam C_LOG2_NUM_WR_CLIENTS        = clog2(C_NUM_WR_CLIENTS);
     localparam C_MAX_N_TAGS                 = 16;
-    localparam C_INIT_REQ_ID_WTH            = `MAX_FAS_RD_ID * `MAX_FAS_RD_ID;
-    localparam C_INIT_MEM_RD_ADDR_WTH       = `MAX_FAS_RD_ID * `INIT_RD_ADDR_WIDTH;
-    localparam C_INIT_MEM_RD_LEN_WTH        = `MAX_FAS_RD_ID * `INIT_RD_LEN_WIDTH;  
+    
+    localparam C_INIT_RD_REQ_ID_WTH         = C_NUM_RD_CLIENTS * `MAX_FAS_RD_ID;
+    localparam C_INIT_MEM_RD_ADDR_WTH       = C_NUM_RD_CLIENTS * `INIT_RD_ADDR_WIDTH;
+    localparam C_INIT_MEM_RD_LEN_WTH        = C_NUM_RD_CLIENTS * `INIT_RD_LEN_WIDTH;  
+    localparam C_INIT_MEM_RD_DATA_WTH       = C_NUM_RD_CLIENTS * `INIT_RD_DATA_WIDTH;
 
+    localparam C_INIT_WR_REQ_ID_WTH         = C_NUM_WR_CLIENTS;
+    localparam C_INIT_MEM_WR_ADDR_WTH       = C_NUM_WR_CLIENTS * `INIT_RD_ADDR_WIDTH;
+    localparam C_INIT_MEM_WR_LEN_WTH        = C_NUM_WR_CLIENTS * `INIT_RD_LEN_WIDTH;  
+    localparam C_INIT_MEM_WR_DATA_WTH       = C_NUM_WR_CLIENTS * `INIT_RD_DATA_WIDTH;
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Module Ports
@@ -158,29 +166,29 @@ module cnn_layer_accel_axi_bridge #(
 	input  logic            axi_rlast		;   // Read last
 	output logic            axi_rready		;   // Read Response ready
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    input  logic [            `MAX_FAS_RD_ID - 1:0]   cX_init_read_req              							    ;
-    input  logic [         C_INIT_REQ_ID_WTH - 1:0]   cX_init_read_req_id           							    ;
-    input  logic [    C_INIT_MEM_RD_ADDR_WTH - 1:0]   cX_init_read_addr             							    ;
-    input  logic [     C_INIT_MEM_RD_LEN_WTH - 1:0]   cX_init_read_len              							    ;
-    output logic [            `MAX_FAS_RD_ID - 1:0]   cX_init_read_req_ack          							    ;
-    output logic [            `MAX_FAS_RD_ID - 1:0]   cX_init_read_in_prog          							    ;
+    input  logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_req          ;
+    input  logic [      C_INIT_RD_REQ_ID_WTH - 1:0]   cX_init_read_req_id       ;
+    input  logic [    C_INIT_MEM_RD_ADDR_WTH - 1:0]   cX_init_read_addr         ;
+    input  logic [     C_INIT_MEM_RD_LEN_WTH - 1:0]   cX_init_read_len          ;
+    output logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_req_ack      ;
+    output logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_in_prog      ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-    output logic [       `INIT_RD_DATA_WIDTH - 1:0]   cX_init_read_data             							    ;
-    output logic [            `MAX_FAS_RD_ID - 1:0]   cX_init_read_data_vld         							    ;
-    input  logic [            `MAX_FAS_RD_ID - 1:0]   cX_init_read_data_rdy         							    ;
-    output logic [            `MAX_FAS_RD_ID - 1:0]   cX_init_read_cmpl             							    ;
+    output logic [    C_INIT_MEM_RD_DATA_WTH - 1:0]   cX_init_read_data         ;
+    output logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_data_vld     ;
+    input  logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_data_rdy     ;
+    output logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_cmpl         ;
     // BEGIN -------------------------------------------------------------------------------------------------------------------------------------------    
-    input  logic                                      cX_init_write_req             							    ;
-    input  logic                                      cX_init_write_req_id          							    ;
-    input  logic [       `INIT_WR_ADDR_WIDTH - 1:0]   cX_init_write_addr            							    ;
-    input  logic [        `INIT_WR_LEN_WIDTH - 1:0]   cX_init_write_len             							    ;
-    output logic                                      cX_init_write_req_ack         							    ;
-    output logic                                      cX_init_write_in_prog         							    ;
+    input  logic [          C_NUM_WR_CLIENTS - 1:0]   cX_init_write_req         ;
+    input  logic [      C_INIT_WR_REQ_ID_WTH - 1:0]   cX_init_write_req_id      ;
+    input  logic [    C_INIT_MEM_WR_ADDR_WTH - 1:0]   cX_init_write_addr        ;
+    input  logic [     C_INIT_MEM_WR_LEN_WTH - 1:0]   cX_init_write_len         ;
+    output logic                                      cX_init_write_req_ack     ;
+    output logic                                      cX_init_write_in_prog     ;
     // BEGIN -------------------------------------------------------------------------------------------------------------------------------------------   
-    input  logic [       `INIT_RD_DATA_WIDTH - 1:0]   cX_init_write_data            							    ;
-    input  logic                                      cX_init_write_data_vld        							    ;
-    output logic                                      cX_init_write_data_rdy        							    ;
-    output logic                                      cX_init_write_cmpl  	                                        ;
+    input  logic [    C_INIT_MEM_WR_DATA_WTH - 1:0]   cX_init_write_data        ;
+    input  logic [          C_NUM_WR_CLIENTS - 1:0]   cX_init_write_data_vld    ;
+    output logic [          C_NUM_WR_CLIENTS - 1:0]   cX_init_write_data_rdy    ;
+    output logic [          C_NUM_WR_CLIENTS - 1:0]   cX_init_write_cmpl  	    ;
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -213,7 +221,7 @@ module cnn_layer_accel_axi_bridge #(
     //  Module Instantiations
     //----------------------------------------------------------------------------------------------------------------------------------------------- 
     arbitration_nway_single_cycle #(
-        .C_NUM_REQUESTORS( C_RD_NUM_CLIENTS )
+        .C_NUM_REQUESTORS( C_NUM_RD_CLIENTS_FIXED )
     ) i0_arbitration_nway_single_cycle (
         .clk            ( clk               ),
         .rst            ( rst               ),
@@ -226,7 +234,7 @@ module cnn_layer_accel_axi_bridge #(
     
     
     arbitration_nway_single_cycle #(
-        .C_NUM_REQUESTORS( C_WR_NUM_CLIENTS )
+        .C_NUM_REQUESTORS( C_NUM_WR_CLIENTS_FIXED )
     ) i1_arbitration_nway_single_cycle (
         .clk            ( clk               ),
         .rst            ( rst               ),
@@ -249,28 +257,28 @@ module cnn_layer_accel_axi_bridge #(
     assign axi_arlen				                                    = cX_init_read_len[rd_grant * 36 +: 36];
     assign axi_rready                                                   = cX_init_read_data_rdy[rd_tag_to_client_lookaside[axi_rid]];
     assign cX_init_read_data_vld                                        = rd_tag_to_client_lookaside_oh[axi_rid] && {C_NUM_RD_CLIENTS{axi_rvalid}};
-    assign cX_init_read_data[rd_tag_to_client_lookaside[axi_rid]]       = axi_rdata;
+    assign cX_init_read_data                                            = {C_NUM_RD_CLIENTS{axi_rdata}};
     assign axi_rd_cmpl                                                  = axi_rlast;
-    assign cX_init_read_cmpl[rd_tag_to_client_lookaside[axi_rid]]       = axi_rd_cmpl;
+    assign cX_init_read_cmpl                                            = {{C_NUM_RD_CLIENTS - 1{1'b0}}, axi_rd_cmpl} << rd_tag_to_client_lookaside[axi_rid];
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
-    assign axi_awvalid                                                  = cX_init_write_req[wr_grant] && wr_grant_valid;	
+    assign axi_awvalid                                                  = cX_init_write_req[0] && wr_grant_valid;	// reason0 
     assign axi_addr_wr_ack                                              = (axi_awready && axi_awvalid);
     assign wr_grant_release 					                        = axi_addr_wr_ack;
 	assign axi_awaddr		                                            = cX_init_write_addr[wr_grant * 64 +: 29];  
 	assign axi_awid		                                                = cX_init_write_req_id[wr_grant];
-    assign axi_arburst                                                  = 1;    // burst type ALWAYS 1
-    assign axi_arsize		                                            = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes   
+    assign axi_awburst                                                  = 1;    // burst type ALWAYS 1
+    assign axi_awsize		                                            = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes   
     assign axi_awlen		                                            = cX_init_write_len[wr_grant * 36 +: 36];
-    assign axi_wvalid                                                   = cX_init_write_data_vld[wr_tag_to_client_lookaside[0]]; // reason0                
+    assign axi_wvalid                                                   = cX_init_write_data_vld[0]; // reason0                
     assign cX_init_write_data_rdy                                       = wr_tag_to_client_lookaside_oh[0] && {C_NUM_WR_CLIENTS{axi_wready}};    // reason0               
 	assign axi_wstrb                                                    = 8'hFF;
     assign axi_wdata						                            = cX_init_write_data[wr_tag_to_client_lookaside[0] * 64 +: 64];   // reason0   
     assign axi_bready                                                   = 1;
     assign axi_wr_cmpl                                                  = axi_bvalid;
-    assign cX_init_write_cmpl[wr_tag_to_client_lookaside[0]]            = axi_wr_cmpl;  // reason0
+    assign cX_init_write_cmpl[0]                                        = {{C_NUM_WR_CLIENTS - 1{1'b0}}, axi_wr_cmpl} << wr_tag_to_client_lookaside[0];  // reason0
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -279,9 +287,9 @@ module cnn_layer_accel_axi_bridge #(
     always@(*) begin
         for(i0 = 0; i0 < `MAX_FAS_RD_ID; i0 = i0 + 1) begin
             if(rd_grant_oh[i0]) begin
-                init_read_in_prog[rd_grant] = 1;            
+                cX_init_read_in_prog[rd_grant] = 1;            
             end else if(rd_grant_oh[i0] && axi_rlast) begin
-                init_read_in_prog[rd_grant] = 0;
+                cX_init_read_in_prog[rd_grant] = 0;
             end
         end
     end
@@ -290,9 +298,9 @@ module cnn_layer_accel_axi_bridge #(
     always@(*) begin
         for(i1 = 0; i1 < `MAX_FAS_RD_ID; i1 = i1 + 1) begin
             if(wr_grant_oh[i1]) begin
-                init_read_in_prog[wr_grant] = 1;            
+                cX_init_read_in_prog[wr_grant] = 1;            
             end else if(wr_grant_oh[i1] && axi_rlast)  begin
-                init_read_in_prog[wr_grant] = 0;
+                cX_init_read_in_prog[wr_grant] = 0;
             end
         end
     end
@@ -337,7 +345,7 @@ module cnn_layer_accel_axi_bridge #(
 	generate
 		for(r0 = 0; r0 < C_NUM_RD_CLIENTS; r0 = r0 + 1) begin: LBL_WR_REQUEST_GEN
 			if(r0 < C_NUM_RD_CLIENTS) begin
-				assign rd_request[r0] = (rd_grant_oh[r0] && (axi_addr_rd_ack || (axi_rd_cmpl)) ? 1'b0 : cX_init_read_req[r0];
+				assign rd_request[r0] = (rd_grant_oh[r0] && (axi_addr_rd_ack || (axi_rd_cmpl))) ? 1'b0 : cX_init_read_req[r0];
 			end else begin
 				assign rd_request[r0] = 1'b0;
 			end
@@ -348,7 +356,7 @@ module cnn_layer_accel_axi_bridge #(
     generate
 		for(r1 = 0; r1 < C_NUM_WR_CLIENTS; r1 = r1 + 1) begin: LBL_RD_REQUEST_GEN
 			if(r1 < C_NUM_WR_CLIENTS) begin
-				assign wr_request[r1] = (wr_grant_oh[r1] && (axi_addr_wr_ack || (axi_wr_cmpl)) ? 1'b0 : cX_init_write_req[r1];
+				assign wr_request[r1] = (wr_grant_oh[r1] && (axi_addr_wr_ack || (axi_wr_cmpl))) ? 1'b0 : cX_init_write_req[0]; // reason0
 			end else begin
 				assign wr_request[r1] = 1'b0;
 			end

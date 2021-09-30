@@ -158,9 +158,7 @@ SC_MODULE(CNN_Layer_Accel)
 
             SC_THREAD(main_process);
                 sensitive << clk.pos();
-#ifdef DDR_AXI_MEMORY
-
-#else
+#ifndef DDR_AXI_MEMORY
             SC_THREAD(system_mem_arb_process);
                 sensitive << clk.pos();
 #endif
