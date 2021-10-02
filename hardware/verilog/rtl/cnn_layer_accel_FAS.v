@@ -48,7 +48,6 @@ module cnn_layer_accel_FAS #(
     init_read_addr              ,
     init_read_len               ,
     init_read_req_ack           ,
-    init_read_in_prog           ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     init_read_data              ,
     init_read_data_vld          ,
@@ -60,7 +59,6 @@ module cnn_layer_accel_FAS #(
     init_write_addr             ,
     init_write_len              ,
     init_write_req_ack          ,
-    init_write_in_prog          ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     init_write_cmpl             ,
     init_write_data             ,
@@ -163,7 +161,6 @@ module cnn_layer_accel_FAS #(
     output logic [    C_INIT_MEM_RD_ADDR_WTH - 1:0]   init_read_addr             							    ;
     output logic [     C_INIT_MEM_RD_LEN_WTH - 1:0]   init_read_len              							    ;
     input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_req_ack          							    ;
-    input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_in_prog          							    ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     input  logic [       `INIT_RD_DATA_WIDTH - 1:0]   init_read_data             							    ;
     input  logic [            `MAX_FAS_RD_ID - 1:0]   init_read_data_vld         							    ;
@@ -175,7 +172,6 @@ module cnn_layer_accel_FAS #(
     output logic [       `INIT_WR_ADDR_WIDTH - 1:0]   init_write_addr            							    ;
     output logic [        `INIT_WR_LEN_WIDTH - 1:0]   init_write_len             							    ;
     input  logic                                      init_write_req_ack         							    ;
-    input  logic                                      init_write_in_prog         							    ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
     output logic [       `INIT_RD_DATA_WIDTH - 1:0]   init_write_data            							    ;
     output logic                                      init_write_data_vld        							    ;
@@ -284,7 +280,9 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   tot_krnl_count                                          ;    
 	logic												conv1x1_pip_exec										;
 	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    logic [                     `MAX_FAS_RD_ID - 1:0]   init_read_in_prog                                       ;
     logic [                     `MAX_FAS_RD_ID - 1:0]   init_read_req_acked                                     ;
+    logic                                               init_write_in_prog                                      ;
     logic                                               init_write_req_acked                                    ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic												convMap_fifo_wren										;
@@ -1284,6 +1282,11 @@ module cnn_layer_accel_FAS #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign init_read_req_id[(`MAX_FAS_RD_ID * C_KL_IT_RD_ID) +: `MAX_FAS_RD_ID] = C_KL_IT_RD_ID;
     
+    always@(posedge clk) begin
+        if(rst) begin
+        init_read_in_prog
+    end
+    
     always@(posedge clk_FAS) begin
         if(rst || FAS_intf_rdy_n || process_cmpl_intf) begin
             init_read_req[C_KL_IT_RD_ID]                                                    <= 0;
@@ -1291,8 +1294,14 @@ module cnn_layer_accel_FAS #(
             init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= 0;
             init_read_len[(`INIT_RD_LEN_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= 0;
             init_read_data_rdy[C_KL_IT_RD_ID]                                               <= 0;
+            init_read_in_prog[C_KL_IT_RD_ID]                                                <= 0;
         end else begin
             init_read_data_rdy[C_KL_IT_RD_ID]        <= 0;
+            if(init_read_req_ack[C_KL_IT_RD_ID]) begin
+                init_read_in_prog[C_KL_IT_RD_ID] <= 1;
+            end else if(init_read_cmpl[C_KL_IT_RD_ID]) begin
+                init_read_in_prog[C_KL_IT_RD_ID] <= 0;
+            end
             if(state == ST_LD_1X1_KRN && !init_read_in_prog[C_KL_IT_RD_ID]) begin
                 init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= itN_krnl_1x1_addr_cfg[conv1x1_it];
                 init_read_len[(`INIT_RD_LEN_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]		<= itN_krnl_1x1_fetch_amount_cfg[conv1x1_it];
@@ -1320,9 +1329,15 @@ module cnn_layer_accel_FAS #(
             init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= 0;
             init_read_len[(`INIT_RD_LEN_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= 0;
             init_read_data_rdy[C_KB_IT_RD_ID]                                               <= 0;
+            init_read_in_prog[C_KB_IT_RD_ID]                                                <= 0;
         end else begin
             init_read_data_rdy[C_KB_IT_RD_ID]        <= 0;
 			krnl1x1Bias_bram_wren					 <= 0;
+            if(init_read_req_ack[C_KB_IT_RD_ID]) begin
+                init_read_in_prog[C_KB_IT_RD_ID] <= 1;
+            end else if(init_read_cmpl[C_KB_IT_RD_ID]) begin
+                init_read_in_prog[C_KB_IT_RD_ID] <= 0;
+            end
             if(state == ST_LD_1X1_KRB && !init_read_in_prog[C_KB_IT_RD_ID]) begin
                 init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= itN_krnlbi_1x1_addr_cfg[conv1x1_it];
                 init_read_len[(`INIT_RD_LEN_WIDTH * C_KB_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]		<= itN_krnlbi_1x1_fetch_amount_cfg[conv1x1_it];
@@ -1349,8 +1364,14 @@ module cnn_layer_accel_FAS #(
             init_read_addr[(`INIT_RD_ADDR_WIDTH * C_AC_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= 0;
             init_read_len[(`INIT_RD_LEN_WIDTH * C_AC_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= 0;
             init_read_data_rdy[C_AC_IT_RD_ID]                                               <= 0;
+            init_read_in_prog[C_AC_IT_RD_ID]                                                <= 0;
         end else begin
             init_read_data_rdy[C_AC_IT_RD_ID]    <= 0;
+            if(init_read_req_ack[C_AC_IT_RD_ID]) begin
+                init_read_in_prog[C_AC_IT_RD_ID] <= 1;
+            end else if(init_read_cmpl[C_AC_IT_RD_ID]) begin
+                init_read_in_prog[C_AC_IT_RD_ID] <= 0;
+            end
             if(state == ST_CFG_AWP && !init_read_in_prog[C_AC_IT_RD_ID]) begin
                 init_read_addr[(`INIT_RD_ADDR_WIDTH * C_KL_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]      <= AWP_meta_Addr_cfg;
                 init_read_len[(`INIT_RD_LEN_WIDTH * C_AC_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]         <= AWP_meta_data_len_cfg;
@@ -1380,12 +1401,18 @@ module cnn_layer_accel_FAS #(
             init_read_addr[(`INIT_RD_ADDR_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]    <= 0;
             init_read_len[(`INIT_RD_LEN_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= 0;
             init_read_data_rdy[C_IM_IT_RD_ID]                                               <= 0;
+            init_read_in_prog[C_IM_IT_RD_ID]                                                <= 0;
         end else begin
             job_fetch_fifo_rden                     <= 0;
             init_read_data_rdy[C_IM_IT_RD_ID]        <= 0;
             if(!job_fetch_fifo_empty && !init_read_in_prog[C_IM_IT_RD_ID] && !job_fetch_data_vld) begin
                 job_fetch_fifo_rden                   <= 1;
                 job_fetch_data_vld                    <= 1;
+            end
+            if(init_read_req_ack[C_IM_IT_RD_ID]) begin
+                init_read_in_prog[C_IM_IT_RD_ID] <= 1;
+            end else if(init_read_cmpl[C_IM_IT_RD_ID]) begin
+                init_read_in_prog[C_IM_IT_RD_ID] <= 0;
             end
             if(!convMap_fifo_prog_full && job_fetch_data_vld && inMapFetchCount != inMapFetchTotal_cfg) begin
                 init_read_addr[(`INIT_RD_ADDR_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= inMapAddr_cfg;
@@ -1418,8 +1445,14 @@ module cnn_layer_accel_FAS #(
             init_read_len[(`INIT_RD_LEN_WIDTH * C_PM_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= 0;
             init_read_data_rdy[C_PM_IT_RD_ID]                                               <= 0;
             partMapFetchCount                                                               <= 0;
+            init_read_in_prog[C_PM_IT_RD_ID]                                                <= 0;
         end else begin
             init_read_data_rdy[C_PM_IT_RD_ID]       <= 0;
+            if(init_read_req_ack[C_PM_IT_RD_ID]) begin
+                init_read_in_prog[C_PM_IT_RD_ID] <= 1;
+            end else if(init_read_cmpl[C_PM_IT_RD_ID]) begin
+                init_read_in_prog[C_PM_IT_RD_ID] <= 0;
+            end
             if(state == ST_ACTIVE && !init_read_in_prog[C_PM_IT_RD_ID]
                 && ((!opcode_cfg[`OPCODE_14_FIELD] && partMap_fifo_prog_empty && partMapFetchCount != partMapFetchTotal_cfg)
                 || ((opcode_cfg[`OPCODE_14_FIELD] || opcode_cfg[`OPCODE_17_FIELD]) && partMap_fifo_prog_empty && partMapFetchCount != partMapFetchTotal_cfg)))
@@ -1453,8 +1486,14 @@ module cnn_layer_accel_FAS #(
             init_read_len[(`INIT_RD_LEN_WIDTH * C_PV_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= 0;
             init_read_data_rdy[C_PV_IT_RD_ID]                                               <= 0;
             prevMapFetchCount                                                               <= 0;
+            init_read_in_prog[C_PV_IT_RD_ID]                                                <= 0;
         end else begin
             init_read_data_rdy[C_PV_IT_RD_ID]        <= 0;
+            if(init_read_req_ack[C_PV_IT_RD_ID]) begin
+                init_read_in_prog[C_PV_IT_RD_ID] <= 1;
+            end else if(init_read_cmpl[C_PV_IT_RD_ID]) begin
+                init_read_in_prog[C_PV_IT_RD_ID] <= 0;
+            end
             if(!init_read_in_prog[C_PV_IT_RD_ID] && state == ST_ACTIVE && prevMap_fifo_prog_empty && prevMapFetchCount != prevMapFetchTotal_cfg) begin
                 init_read_addr[(`INIT_RD_ADDR_WIDTH * C_PV_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]    <= prevMapAddr_cfg;
                 init_read_len[(`INIT_RD_LEN_WIDTH * C_PV_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= pv_fetch_amount_cfg;
@@ -1485,8 +1524,14 @@ module cnn_layer_accel_FAS #(
             init_read_len[(`INIT_RD_LEN_WIDTH * C_RM_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= 0;
             init_read_data_rdy[C_RM_IT_RD_ID]                                               <= 0;
             resdMapFetchCount                                                               <= 0;
+            init_read_in_prog[C_RM_IT_RD_ID]                                                <= 0;
         end else begin
             init_read_data_rdy[C_RM_IT_RD_ID]    <= 0;
+            if(init_read_req_ack[C_RM_IT_RD_ID]) begin
+                init_read_in_prog[C_RM_IT_RD_ID] <= 1;
+            end else if(init_read_cmpl[C_RM_IT_RD_ID]) begin
+                init_read_in_prog[C_RM_IT_RD_ID] <= 0;
+            end
             if(!init_read_in_prog[C_RM_IT_RD_ID] && state == ST_ACTIVE && (resdMap_fifo_prog_empty || resdMap_fifo_prog_empty) && resdMapFetchCount != resdMapFetchTotal_cfg) begin
                 init_read_addr[(`INIT_RD_ADDR_WIDTH * C_RM_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]    <= resdMapAddr_cfg;
                 init_read_len[(`INIT_RD_LEN_WIDTH * C_RM_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= rm_fetch_amount_cfg;
@@ -1604,13 +1649,18 @@ module cnn_layer_accel_FAS #(
         end else begin
             last_wrt                <= 0;
             init_write_data_vld     <= 0;
+            if(init_write_req_ack) begin
+                init_write_in_prog <= 1;
+            end else if(init_write_cmpl) begin
+                init_write_in_prog <= 0;
+            end
             if(outBuf_fifo_prog_full && (state == ST_ACTIVE || state == ST_WAIT_LAST_WRITE) && outMapStoreCount != outMapStoreTotal_cfg) begin
                 init_write_addr          <= outMapAddr_cfg;
                 init_write_len           <= ob_store_amount_cfg;
                 init_write_req           <= init_write_req_ack  ? 1'b0 : (~init_write_req_acked ? 1'b1 : init_write_req);
                 init_write_req_acked     <= init_write_req_ack  ? 1'b1 :  init_write_req_acked;
             end
-            if(init_read_in_prog[C_AC_IT_RD_ID]) begin
+            if(init_write_in_prog) begin
                 init_write_data_vld        <= 1;
             end            
             if(init_write_cmpl) begin

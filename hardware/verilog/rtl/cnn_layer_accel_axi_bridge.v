@@ -78,7 +78,6 @@ module cnn_layer_accel_axi_bridge #(
     cX_init_read_addr       ,
     cX_init_read_len        ,
     cX_init_read_req_ack    ,
-    cX_init_read_in_prog    ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     cX_init_read_data       ,
     cX_init_read_data_vld   ,
@@ -90,7 +89,6 @@ module cnn_layer_accel_axi_bridge #(
     cX_init_write_addr      ,
     cX_init_write_len       ,
     cX_init_write_req_ack   ,
-    cX_init_write_in_prog   ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
     cX_init_write_data      ,
     cX_init_write_data_vld  ,
@@ -171,7 +169,6 @@ module cnn_layer_accel_axi_bridge #(
     input  logic [    C_INIT_MEM_RD_ADDR_WTH - 1:0]   cX_init_read_addr         ;
     input  logic [     C_INIT_MEM_RD_LEN_WTH - 1:0]   cX_init_read_len          ;
     output logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_req_ack      ;
-    output logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_in_prog      ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     output logic [    C_INIT_MEM_RD_DATA_WTH - 1:0]   cX_init_read_data         ;
     output logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_data_vld     ;
@@ -183,7 +180,6 @@ module cnn_layer_accel_axi_bridge #(
     input  logic [    C_INIT_MEM_WR_ADDR_WTH - 1:0]   cX_init_write_addr        ;
     input  logic [     C_INIT_MEM_WR_LEN_WTH - 1:0]   cX_init_write_len         ;
     output logic [          C_NUM_WR_CLIENTS - 1:0]   cX_init_write_req_ack     ;
-    output logic [          C_NUM_WR_CLIENTS - 1:0]   cX_init_write_in_prog     ;
     // BEGIN -------------------------------------------------------------------------------------------------------------------------------------------   
     input  logic [    C_INIT_MEM_WR_DATA_WTH - 1:0]   cX_init_write_data        ;
     input  logic [          C_NUM_WR_CLIENTS - 1:0]   cX_init_write_data_vld    ;
@@ -247,6 +243,13 @@ module cnn_layer_accel_axi_bridge #(
         );
     end endgenerate
     
+                    if (|address[11:0]) //Don't cross 4k boundaries
+                    max_bytes_this_chunk = $unsigned(~address[11:0]) + 1;
+                else
+                    max_bytes_this_chunk = 4096;
+                    
+                max_bytes_this_chunk = (bytes_remaining > max_bytes_this_chunk) ? max_bytes_this_chunk : bytes_remaining;
+    
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
     assign axi_arvalid 						                            = cX_init_read_req[rd_grant] && rd_grant_valid;	
@@ -302,44 +305,6 @@ module cnn_layer_accel_axi_bridge #(
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    integer i0; always@(*) begin
-        for(i0 = 0; i0 < `MAX_FAS_RD_ID; i0 = i0 + 1) begin
-            if(rd_grant_oh[i0]) begin
-                cX_init_read_in_prog[rd_grant] = 1;            
-            end else if(rd_grant_oh[i0] && axi_rlast) begin
-                cX_init_read_in_prog[rd_grant] = 0;
-            end
-        end
-    end
-
-    generate if(C_NUM_WR_CLIENTS > 1) begin
-        integer i1; always@(*) begin
-            for(i1 = 0; i1 < `MAX_FAS_RD_ID; i1 = i1 + 1) begin
-                if(wr_grant_oh[i1]) begin
-                    cX_init_write_in_prog[wr_grant] = 1;            
-                end else if(wr_grant_oh[i1] && axi_rlast)  begin
-                    cX_init_write_in_prog[wr_grant] = 0;
-                end
-            end
-        end
-    end else begin
-        always@(posedge clk) begin
-            if(rst) begin
-                cX_init_write_in_prog <= 0;
-            end else begin
-                if(axi_addr_wr_ack) begin
-                    cX_init_write_in_prog <= 1;
-                end
-                if(axi_wr_cmpl) begin
-                    cX_init_write_in_prog <= 0;
-                end
-            end
-        end
-    end endgenerate
-    // END logic ------------------------------------------------------------------------------------------------------------------------------------
-
-
     // BEGIN logic ---------------------------------------------------------------------------------------------------------------------------------- 
     integer i2; always@(posedge clk) begin
 		if(rst) begin
@@ -354,8 +319,6 @@ module cnn_layer_accel_axi_bridge #(
 			end
 		end
 	end
-    
-
     
     integer i3; always@(posedge clk) begin
         if(rst) begin
@@ -374,7 +337,7 @@ module cnn_layer_accel_axi_bridge #(
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-	genvar r0; generate for(r0 = 0; r0 < C_NUM_RD_CLIENTS; r0 = r0 + 1) begin: LBL_WR_REQUEST_GEN
+	genvar r0; generate for(r0 = 0; (r0 < C_NUM_RD_CLIENTS && C_NUM_RD_CLIENTS > 1); r0 = r0 + 1) begin: LBL_WR_REQUEST_GEN
         if(r0 < C_NUM_RD_CLIENTS) begin
 			assign rd_request[r0] = (rd_grant_oh[r0] && (axi_addr_rd_ack || (axi_rd_cmpl))) ? 1'b0 : cX_init_read_req[r0];
 		end else begin

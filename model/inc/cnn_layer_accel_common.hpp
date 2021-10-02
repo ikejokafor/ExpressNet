@@ -23,12 +23,14 @@
 #define INIT_WR_ADDR_WIDTH                  32
 #define INIT_RD_DATA_WIDTH                  64
 #define INIT_WR_DATA_WIDTH                  64
+#define KRNL_1X1_SIMD                     	2
+#define KRNL_3X3_SIMD						2
 
 #define QUAD_MAX_INPUT_ROWS                 1024
 #define QUAD_MAX_INPUT_COLS                 1024
 #define QUAD_MAX_DEPTH                      8
 #define QUAD_DEPTH_SIMD                     (MAX_AWP_PER_FAS * NUM_QUADS_PER_AWP * QUAD_MAX_DEPTH)
-#define KRNL_3X3_SIMD						1
+
 #define BITS_PER_PIXEL                      16
 #define BUS_SIZE                            ((uint32_t)8) // bytes
 #define AXI_ACCEL_CLK_RATIO                 5
@@ -46,7 +48,6 @@
 #define MAX_FAS_ROUT_TRANS                  1
 #define MAX_3x3_KERNELS                     64
 #define YOLOV3_MAX_1x1_INPUT_DEPTH          1024
-#define KRNL_1X1_SIMD                     	1
 #define KERNEL_1X1_DEPTH_SIMD               32
 #define LOG2_KERNEL_1X1_DEPTH_SIMD          log2(KERNEL_1X1_DEPTH_SIMD)
 #define MAX_1x1_KERNELS                     1024

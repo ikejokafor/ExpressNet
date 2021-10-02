@@ -816,7 +816,7 @@ void FAS::S_process()
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
                 int perct = floor((m_trans_no / m_total_store_trans) * 100.0f);
-                if((perct % m_prog_factor) == 0 && perct > 0)
+                if(perct >= m_prog_factor && perct > 0)
                 {
                     m_prog_factor += 10;
                     str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + "\n";
@@ -869,7 +869,6 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_JOB_COMPLETE:
         {
-            cout << "Recieved Job complete" << endl;
             m_AWP_complt_arr[accel_trans->AWP_id] = true;
             trans.release();
             break;

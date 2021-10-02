@@ -169,7 +169,7 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_JOB_START:
         {
-            if(!quad[QUAD_id]->b_job_start())
+            if(!quad[QUAD_id]->nb_job_start())
             {
                 status = TLM_GENERIC_ERROR_RESPONSE;
             }
