@@ -249,7 +249,11 @@ module cnn_layer_accel_FAS #(
     logic [										15:0]	krnl1x1B_ld_start_cfg									;
     logic [                                     15:0]   VECTOR_ADD_SIMD_cfg                                     ;
     logic [                                     15:0]   KRNL_1X1_SIMD_cfg                                       ;
-	logic                                               start_FAS                                               ;
+	logic [                                     31:0]   inMapAddr                                               ;
+    logic [                                     31:0]   partMapAddr                                             ;
+    logic [                                     31:0]   prevMapAddr                                             ;
+    logic [                                     31:0]   resdMapAddr                                             ;
+    logic                                               start_FAS                                               ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic [                                      7:0]   state                                                   ;
     logic [         C_CURR_CONV1X1_IT_META_WTH - 1:0]   curr_conv1x1_it_pip_en                                  ;
@@ -1165,7 +1169,11 @@ module cnn_layer_accel_FAS #(
                 end
                 ST_START_AWP: begin
                     // if(start_AWP_done) begin
-                        state   <= ST_ACTIVE;
+                        inMapAddr       <= inMapAddr_cfg;
+                        partMapAddr     <= partMapAddr_cfg;
+                        prevMapAddr     <= prevMapAddr_cfg;
+                        resdMapAddr     <= resdMapAddr_cfg;
+                        state           <= ST_ACTIVE;
                     // end
                 end
                 ST_ACTIVE: begin
@@ -1415,7 +1423,7 @@ module cnn_layer_accel_FAS #(
                 init_read_in_prog[C_IM_IT_RD_ID] <= 0;
             end
             if(!convMap_fifo_prog_full && job_fetch_data_vld && inMapFetchCount != inMapFetchTotal_cfg) begin
-                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= inMapAddr_cfg;
+                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]	<= inMapAddr;
                 init_read_len[(`INIT_RD_LEN_WIDTH * C_IM_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= im_fetch_amount_cfg;
                 init_read_req[C_IM_IT_RD_ID]                                     
                     <= init_read_req_ack[C_IM_IT_RD_ID] ? 1'b0 : (~init_read_req_acked[C_IM_IT_RD_ID] ? 1'b1 : init_read_req[C_IM_IT_RD_ID]);
@@ -1428,6 +1436,7 @@ module cnn_layer_accel_FAS #(
             if(init_read_cmpl[C_IM_IT_RD_ID]) begin
                 job_fetch_data_vld  <= 0;
                 inMapFetchCount     <= inMapFetchCount + im_fetch_amount_cfg;
+                inMapAddr           <= inMapAddr + im_fetch_amount_cfg;
             end
         end
     end
@@ -1468,7 +1477,8 @@ module cnn_layer_accel_FAS #(
                 init_read_data_rdy[C_PM_IT_RD_ID]    <= 1;
             end
             if(init_read_cmpl[C_PM_IT_RD_ID]) begin
-                partMapFetchCount  <= partMapFetchCount + pm_fetch_amount_cfg;
+                partMapFetchCount   <= partMapFetchCount + pm_fetch_amount_cfg;
+                partMapAddr         <= partMapAddr + pm_fetch_amount_cfg;
             end
         end
     end
@@ -1495,7 +1505,7 @@ module cnn_layer_accel_FAS #(
                 init_read_in_prog[C_PV_IT_RD_ID] <= 0;
             end
             if(!init_read_in_prog[C_PV_IT_RD_ID] && state == ST_ACTIVE && prevMap_fifo_prog_empty && prevMapFetchCount != prevMapFetchTotal_cfg) begin
-                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_PV_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]    <= prevMapAddr_cfg;
+                init_read_addr[(`INIT_RD_ADDR_WIDTH * C_PV_IT_RD_ID) +: `INIT_RD_ADDR_WIDTH]    <= prevMapAddr;
                 init_read_len[(`INIT_RD_LEN_WIDTH * C_PV_IT_RD_ID) +: `INIT_RD_LEN_WIDTH]       <= pv_fetch_amount_cfg;
                 init_read_req[C_PV_IT_RD_ID]           
                     <= init_read_req_ack[C_PV_IT_RD_ID] ? 1'b0 : (~init_read_req_acked[C_PV_IT_RD_ID] ? 1'b1 : init_read_req[C_PV_IT_RD_ID]);
@@ -1507,6 +1517,7 @@ module cnn_layer_accel_FAS #(
             end            
             if(init_read_cmpl[C_PV_IT_RD_ID]) begin
                 prevMapFetchCount  <= prevMapFetchCount + pv_fetch_amount_cfg;
+                prevMapAddr        <= prevMapAddr + pv_fetch_amount_cfg;
             end
         end
     end
@@ -1544,7 +1555,8 @@ module cnn_layer_accel_FAS #(
                 init_read_data_rdy[C_RM_IT_RD_ID]    <= 1;
             end
             if(init_read_cmpl[C_RM_IT_RD_ID]) begin
-                resdMapFetchCount  <= resdMapFetchCount + rm_fetch_amount_cfg;
+                resdMapFetchCount   <= resdMapFetchCount + rm_fetch_amount_cfg;
+                resdMapAddr         <= resdMapAddr + rm_fetch_amount_cfg;
             end
         end
     end

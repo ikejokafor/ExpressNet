@@ -211,44 +211,26 @@ module cnn_layer_accel_axi_bridge #(
     logic                                       axi_addr_wr_ack;
     logic                                       axi_rd_cmpl;
     logic                                       axi_wr_cmpl;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------	
+    logic                                       axi_rd_fifo_wren    ;
+    logic                                       axi_rd_fifo_rden    ;
+    logic [`AXI_TRANS_META_WTH - 1:0]           axi_rd_fifo_din     ;
+    logic [`AXI_TRANS_META_WTH - 1:0]           axi_rd_fifo_dou     ;
+    logic                                       axi_rd_fifo_empty   ;
+    logic                                       axi_rd_fifo_full    ;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------	
+    logic                                       axi_wr_fifo_wren    ;
+    logic                                       axi_wr_fifo_rden    ;
+    logic [`AXI_TRANS_META_WTH - 1:0]           axi_wr_fifo_din     ;
+    logic [`AXI_TRANS_META_WTH - 1:0]           axi_wr_fifo_dou     ;
+    logic                                       axi_wr_fifo_empty   ;
+    logic                                       axi_wr_fifo_full    ;
 
 
-    //-----------------------------------------------------------------------------------------------------------------------------------------------
-    //  Module Instantiations
-    //----------------------------------------------------------------------------------------------------------------------------------------------- 
-    arbitration_nway_single_cycle #(
-        .C_NUM_REQUESTORS( C_NUM_RD_CLIENTS_FIXED )
-    ) i0_arbitration_nway_single_cycle (
-        .clk            ( clk               ),
-        .rst            ( rst               ),
-        .requests       ( rd_request        ),
-        .grant_release  ( rd_grant_release  ),
-        .grant_valid    ( rd_grant_valid    ),
-        .grant          ( rd_grant          ),
-        .grant_oh       ( rd_grant_oh       )
-    );
+
     
-    
-    generate if(C_NUM_WR_CLIENTS > 1) begin
-        arbitration_nway_single_cycle #(
-            .C_NUM_REQUESTORS( C_NUM_WR_CLIENTS_FIXED )
-        ) i1_arbitration_nway_single_cycle (
-            .clk            ( clk               ),
-            .rst            ( rst               ),
-            .requests       ( wr_request        ),
-            .grant_release  ( wr_grant_release  ),
-            .grant_valid    ( wr_grant_valid    ),
-            .grant          ( wr_grant          ),
-            .grant_oh       ( wr_grant_oh       )
-        );
-    end endgenerate
-    
-                    if (|address[11:0]) //Don't cross 4k boundaries
-                    max_bytes_this_chunk = $unsigned(~address[11:0]) + 1;
-                else
-                    max_bytes_this_chunk = 4096;
-                    
-                max_bytes_this_chunk = (bytes_remaining > max_bytes_this_chunk) ? max_bytes_this_chunk : bytes_remaining;
+
+
     
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
@@ -351,7 +333,52 @@ module cnn_layer_accel_axi_bridge #(
         end else begin
             assign wr_request[r1] = 1'b0;
         end
-    end endgenerate
+    end endgenerate   
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
     
-    // END logic ------------------------------------------------------------------------------------------------------------------------------------	
+    
+     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
+    always@(posedge clk) begin
+        if(rst) begin
+            axi_trans_rd_state <= ST_WAIT;
+        end else begin
+        
+        end
+    end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
+
+
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
+    always@(posedge clk) begin
+        if(rst) begin
+            axi_trans_wr_state <= ST_WAIT;
+        end else begin
+            case(axi_trans_wr_state)
+                ST_WAIT_DATA: begin
+                    if() begin
+                        wr_Addr <= cX_init_write_addr[wr_grant * 64 +: 29] + cX_init_write_len[wr_grant * 36 +: 36];
+                        axi_trans_wr_state <= ST_ANALYZE_DATA;
+                    end
+                end
+                ST_ANALYZE_DATA: begin
+                    if() begin
+                        axi_trans_wr_state <= ST_PROCESS;
+                    end else begin
+                        axi_trans_wr_state <= ST_STORE_RES;
+                    end
+                end
+                ST_PROCESS: begin
+                    if() begin
+                        axi_trans_wr_state <= ST_STORE_RES;
+                    end
+                end
+                ST_STORE_RES: begin
+                    axi_trans_wr_state <= ST_ANALYZE_DATA;
+                end
+            endcase
+        end    
+    end
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
+
+
 endmodule
