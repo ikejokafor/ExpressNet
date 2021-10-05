@@ -37,41 +37,39 @@ module cnn_layer_accel_axi_bridge #(
 	clk				        ,
 	rst				        ,
 	// AXI Write Address Ports
-	axi_awready		        ,	// Indicates slave is ready to accept a 
-	axi_awid		        ,	// Write ID
-	axi_awaddr		        ,	// Write address
-	axi_awlen		        ,	// Write Burst Length
-	axi_awsize		        ,	// Write Burst size
-	axi_awburst		        ,	// Write Burst type
-	axi_awcache		        ,	// Write Cache type
-	axi_awvalid		        ,	// Write address valid
+	cX_axi_awready		        ,	// Indicates slave is ready to accept a 
+	cX_axi_awid		            ,	// Write ID
+	cX_axi_awaddr		        ,	// Write address
+	cX_axi_awlen		        ,	// Write Burst Length
+	cX_axi_awsize		        ,	// Write Burst size
+	cX_axi_awburst		        ,	// Write Burst type
+	cX_axi_awvalid		        ,	// Write address valid
 	// AXI write data channel signals
-	axi_wready		        ,	// Write data ready
-	axi_wdata		        ,	// Write data
-	axi_wstrb		        ,	// Write strobes
-	axi_wlast		        ,	// Last write transaction   
-	axi_wvalid		        ,	// Write valid  
+	cX_axi_wready		        ,	// Write data ready
+	cX_axi_wdata		        ,	// Write data
+	cX_axi_wstrb		        ,	// Write strobes
+	cX_axi_wlast		        ,	// Last write transaction   
+	cX_axi_wvalid		        ,	// Write valid  
 	// AXI write response channel signals
-	axi_bid			        ,	// Response ID
-	axi_bresp		        ,	// Write response
-	axi_bvalid		        ,	// Write reponse valid
-	axi_bready		        ,	// Response ready
+	cX_axi_bid			        ,	// Response ID
+	cX_axi_bresp		        ,	// Write response
+	cX_axi_bvalid		        ,	// Write reponse valid
+	cX_axi_bready		        ,	// Response ready
 	// AXI read address channel signals
-	axi_arready		        ,   // Read address ready
-	axi_arid		        ,	// Read ID
-	axi_araddr		        ,   // Read address
-	axi_arlen		        ,   // Read Burst Length
-	axi_arsize		        ,   // Read Burst size
-	axi_arburst		        ,   // Read Burst type
-	axi_arcache		        ,   // Read Cache type
-	axi_arvalid		        ,   // Read address valid 
+	cX_axi_arready		        ,   // Read address ready
+	cX_axi_arid		            ,	// Read ID
+	cX_axi_araddr		        ,   // Read address
+	cX_axi_arlen		        ,   // Read Burst Length
+	cX_axi_arsize		        ,   // Read Burst size
+	cX_axi_arburst		        ,   // Read Burst type
+	cX_axi_arvalid		        ,   // Read address valid 
 	// AXI read data channel signals   
-	axi_rid			        ,   // Response ID
-	axi_rresp		        ,   // Read response
-	axi_rvalid		        ,   // Read reponse valid
-	axi_rdata		        ,   // Read data
-	axi_rlast		        ,   // Read last
-	axi_rready		        ,   // Read Response ready 
+	cX_axi_rid			        ,   // Response ID
+	cX_axi_rdata		        ,   // Read data
+	cX_axi_rresp		        ,   // Read response	
+    cX_axi_rlast		        ,   // Read last
+	cX_axi_rvalid		        ,   // Read reponse valid	
+    cX_axi_rready		        ,   // Read Response ready 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     cX_init_read_req        ,
     cX_init_read_req_id     ,
@@ -128,41 +126,41 @@ module cnn_layer_accel_axi_bridge #(
 	input logic             clk             ;
     input logic             rst             ;
  	// AXI Write Address Ports   
-    input  logic   	        axi_awready		;	// Wrire address is ready
-	output logic [ 3:0]  	axi_awid		;	// Write ID
-	output logic [28:0]  	axi_awaddr		;	// Write address
-	output logic [ 7:0]  	axi_awlen		;	// Write Burst Length
-	output logic [ 2:0]  	axi_awsize		;	// Write Burst size
-	output logic [ 1:0]  	axi_awburst		;	// Write Burst type
-	output logic [ 3:0]  	axi_awcache		;	// Write Cache type
-	output logic  	        axi_awvalid		;	// Write address valid
+    input  logic   	        cX_axi_awready		;	// Wrire address is ready
+	output logic [ 3:0]  	cX_axi_awid		    ;	// Write ID
+	output logic [28:0]  	cX_axi_awaddr		;	// Write address
+	output logic [ 7:0]  	cX_axi_awlen		;	// Write Burst Length
+	output logic [ 2:0]  	cX_axi_awsize		;	// Write Burst size
+	output logic [ 1:0]  	cX_axi_awburst		;	// Write Burst type
+	output logic [ 3:0]  	cX_axi_awcache		;	// Write Cache type
+	output logic  	        cX_axi_awvalid		;	// Write address valid
 	// AXI write data channel signals
-	input  logic  	        axi_wready		;	// Write data ready
-	output logic [63:0]  	axi_wdata		;	// Write data
-	output logic [ 7:0]  	axi_wstrb		;	// Write strobes
-	output logic  	        axi_wlast		;	// Last write transaction   
-	output logic  	        axi_wvalid		;	// Write valid  
+	input  logic  	        cX_axi_wready		;	// Write data ready
+	output logic [63:0]  	cX_axi_wdata		;	// Write data
+	output logic [ 7:0]  	cX_axi_wstrb		;	// Write strobes
+	output logic  	        cX_axi_wlast		;	// Last write transaction   
+	output logic  	        cX_axi_wvalid		;	// Write valid  
 	// AXI write response channel signals
-	input  logic [3:0]  	axi_bid			;	// Response ID
-	input  logic [1:0]  	axi_bresp		;	// Write response
-	input  logic  	        axi_bvalid		;	// Write reponse valid
-	output logic  	        axi_bready		;	// Response ready
+	input  logic [3:0]  	cX_axi_bid			;	// Response ID
+	input  logic [1:0]  	cX_axi_bresp		;	// Write response
+	input  logic  	        cX_axi_bvalid		;	// Write reponse valid
+	output logic  	        cX_axi_bready		;	// Response ready
 	// AXI read address channel signals
-	input  logic   	        axi_arready		;   // Read address ready
-	output logic [ 3:0]     axi_arid		;	// Read ID
-	output logic [28:0]     axi_araddr		;   // Read address
-	output logic [ 7:0]     axi_arlen		;   // Read Burst Length
-	output logic [ 2:0]     axi_arsize		;   // Read Burst size
-	output logic [ 1:0]     axi_arburst		;   // Read Burst type
-	output logic [ 3:0]     axi_arcache		;   // Read Cache type
-	output logic  	        axi_arvalid		;   // Read address valid 
+	input  logic   	        cX_axi_arready		;   // Read address ready
+	output logic [ 3:0]     cX_axi_arid		    ;	// Read ID
+	output logic [28:0]     cX_axi_araddr		;   // Read address
+	output logic [ 7:0]     cX_axi_arlen		;   // Read Burst Length
+	output logic [ 2:0]     cX_axi_arsize		;   // Read Burst size
+	output logic [ 1:0]     cX_axi_arburst		;   // Read Burst type
+	output logic [ 3:0]     cX_axi_arcache		;   // Read Cache type
+	output logic  	        cX_axi_arvalid		;   // Read address valid 
 	// AXI read data channel signals   
-	input  logic [ 3:0]     axi_rid			;   // Response ID
-	input  logic [ 1:0]     axi_rresp		;   // Read response
-	input  logic            axi_rvalid		;   // Read reponse valid
-	input  logic [63:0]     axi_rdata		;   // Read data
-	input  logic            axi_rlast		;   // Read last
-	output logic            axi_rready		;   // Read Response ready
+	input  logic [ 3:0]     cX_axi_rid			;   // Response ID
+	input  logic [63:0]     cX_axi_rdata		;   // Read data
+	input  logic [ 1:0]     cX_axi_rresp		;   // Read response
+	input  logic            cX_axi_rlast		;   // Read last
+	input  logic            cX_axi_rvalid		;   // Read reponse valid
+	output logic            cX_axi_rready		;   // Read Response ready
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     input  logic [          C_NUM_RD_CLIENTS - 1:0]   cX_init_read_req          ;
     input  logic [      C_INIT_RD_REQ_ID_WTH - 1:0]   cX_init_read_req_id       ;
@@ -190,68 +188,32 @@ module cnn_layer_accel_axi_bridge #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Variables
     //-----------------------------------------------------------------------------------------------------------------------------------------------	
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------		
-    logic	[        C_NUM_RD_CLIENTS - 1:0]	rd_tag_to_client_lookaside_oh   [C_MAX_N_TAGS - 1:0];
-	logic	[   C_LOG2_NUM_RD_CLIENTS - 1:0]    rd_tag_to_client_lookaside	    [C_MAX_N_TAGS - 1:0];
-	logic	[        C_NUM_RD_CLIENTS - 1:0]	rd_request;
-	logic										rd_grant_release;
-	logic										rd_grant_valid;
-	logic	[    C_LOG2_NUM_RD_CLIENTS- 1:0]	rd_grant;
-	logic	[        C_NUM_RD_CLIENTS - 1:0]	rd_grant_oh;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    logic	[        C_NUM_WR_CLIENTS - 1:0]    wr_tag_to_client_lookaside_oh   [C_MAX_N_TAGS - 1:0];
-	logic	[   C_LOG2_NUM_WR_CLIENTS - 1:0]    wr_tag_to_client_lookaside	    [C_MAX_N_TAGS - 1:0];
-	logic	[        C_NUM_WR_CLIENTS - 1:0]	wr_request;
-	logic										wr_grant_release;
-	logic										wr_grant_valid;
-	logic	[   C_LOG2_NUM_WR_CLIENTS - 1:0]	wr_grant;
-	logic	[        C_NUM_WR_CLIENTS - 1:0]	wr_grant_oh;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------	
-    logic                                       axi_addr_rd_ack;
-    logic                                       axi_addr_wr_ack;
-    logic                                       axi_rd_cmpl;
-    logic                                       axi_wr_cmpl;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------	
-    logic                                       axi_rd_fifo_wren    ;
-    logic                                       axi_rd_fifo_rden    ;
-    logic [`AXI_TRANS_META_WTH - 1:0]           axi_rd_fifo_din     ;
-    logic [`AXI_TRANS_META_WTH - 1:0]           axi_rd_fifo_dou     ;
-    logic                                       axi_rd_fifo_empty   ;
-    logic                                       axi_rd_fifo_full    ;
-    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------	
-    logic                                       axi_wr_fifo_wren    ;
-    logic                                       axi_wr_fifo_rden    ;
-    logic [`AXI_TRANS_META_WTH - 1:0]           axi_wr_fifo_din     ;
-    logic [`AXI_TRANS_META_WTH - 1:0]           axi_wr_fifo_dou     ;
-    logic                                       axi_wr_fifo_empty   ;
-    logic                                       axi_wr_fifo_full    ;
+    logic                                       cX_axi_addr_rd_ack;
+    logic                                       cX_axi_addr_wr_ack;
 
-
-
-    
-
-
-    
-
-    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
-    assign axi_arvalid 						                            = cX_init_read_req[rd_grant] && rd_grant_valid;	
-    assign axi_addr_rd_ack                                              = (axi_arready && axi_arvalid);
-    assign rd_grant_release 					                        = axi_addr_rd_ack;	
-	assign axi_araddr               			                        = cX_init_read_addr[rd_grant * 64 +: 29];
-	assign axi_arid                                                     = cX_init_read_req_id[rd_grant];
-    assign axi_arburst                                                  = 1;    // burst type ALWAYS 1
-    assign axi_arsize		                                            = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes
-    assign axi_arlen				                                    = cX_init_read_len[rd_grant * 36 +: 36];
-    assign axi_rready                                                   = cX_init_read_data_rdy[rd_tag_to_client_lookaside[axi_rid]];
-    assign cX_init_read_data_vld                                        = rd_tag_to_client_lookaside_oh[axi_rid] && {C_NUM_RD_CLIENTS{axi_rvalid}};
-    assign cX_init_read_data                                            = {C_NUM_RD_CLIENTS{axi_rdata}};
-    assign axi_rd_cmpl                                                  = axi_rlast;
-    assign cX_init_read_cmpl                                            = {{C_NUM_RD_CLIENTS - 1{1'b0}}, axi_rd_cmpl} << rd_tag_to_client_lookaside[axi_rid];
-    // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    generate if(C_NUM_WR_CLIENTS > 1) begin
+    generate genvar g0; for(g0 = 0; g0 < C_NUM_RD_CLIENTS; g0 = g0 + 1) begin
+        assign cX_axi_arvalid[g0] 						                = cX_init_read_req[g0];
+        assign cX_axi_addr_rd_ack[g0]                                   = (axi_arready[g0] && axi_arvalid[g0]);
+        assign cX_init_read_req_ack[g0] 			                    = axi_addr_rd_ack[g0];	
+        assign cX_axi_araddr[g0 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH]       = cX_init_read_addr[g0 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH];
+        assign cX_axi_arid[g0 * `AXI_ID_WTH +: `AXI_ID_WTH]             = cX_init_read_req_id[g0 * `AXI_ID_WTH +: `AXI_ID_WTH];
+        assign cX_axi_arburst[g0]                                       = 1;    // burst type ALWAYS 1
+        assign cX_axi_arsize[g0]                                        = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes
+        assign cX_axi_arlen[g0 * `AXI_LEN_WTH +: `AXI_LEN_WTH]          = cX_init_read_len[g0 * `AXI_LEN_WTH +: `AXI_LEN_WTH];
+        assign cX_axi_rready[g0]	                                    = cX_init_read_data_rdy[g0];
+        assign cX_init_read_data_vld[g0]                                = axi_rvalid[g0];
+        assign cX_init_read_data[                                        = axi_rdata}};
+        assign cX_init_read_cmpl[g0]                                    = axi_rlast[g0];
+    end endgenerate
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------
+
+    
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+    generate genvar g1; for(g1 = 0; g1 < C_NUM_WR_CLIENTS; g1 = g1 + 1) begin
         assign axi_awvalid                                                  = cX_init_write_req[wr_grant] && wr_grant_valid;	 
         assign axi_addr_wr_ack                                              = (axi_awready && axi_awvalid);
         assign wr_grant_release 					                        = axi_addr_wr_ack;
@@ -266,7 +228,19 @@ module cnn_layer_accel_axi_bridge #(
         assign axi_wdata						                            = cX_init_write_data[wr_tag_to_client_lookaside[axi_bid] * 64 +: 64];      
         assign axi_bready                                                   = 1;
         assign axi_wr_cmpl                                                  = axi_bvalid;
-        assign cX_init_write_cmpl[0]                                        = {{C_NUM_WR_CLIENTS - 1{1'b0}}, axi_wr_cmpl} << wr_tag_to_client_lookaside[axi_bid];  
+        assign cX_init_write_cmpl[0]                                        = {{C_NUM_WR_CLIENTS - 1{1'b0}}, axi_wr_cmpl} << wr_tag_to_client_lookaside[axi_bid];   
+    end endgenerate
+    // END logic ------------------------------------------------------------------------------------------------------------------------------------   
+
+
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+    generate genvar g1; for(g1 = 0; g1 < C_NUM_WR_CLIENTS; g1 = g1 + 1) begin
+    
+    end generate
+    
+    // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
+    generate if(C_NUM_WR_CLIENTS > 1) begin
+
     end else begin
         assign axi_awvalid                                                  = cX_init_write_req; 
         assign axi_addr_wr_ack                                              = (axi_awready && axi_awvalid);
