@@ -17,12 +17,24 @@
 #define MAX_AWP_PER_FAS                     1
 #define NUM_QUADS_PER_AWP                   8
 
-#define INIT_RD_LEN_WIDTH                   32
-#define INIT_WR_LEN_WIDTH                   32
-#define INIT_RD_ADDR_WIDTH                  32
-#define INIT_WR_ADDR_WIDTH                  32
-#define INIT_RD_DATA_WIDTH                  64
-#define INIT_WR_DATA_WIDTH                  64
+#define AXI_ID_WTH                          3
+#define AXI_ADDR_WTH                        32
+#define AXI_LEN_WTH                         8
+#define AXI_DATA_WTH                        512 
+
+#define MAX_FAS_REQ                         5
+#define MAX_FAS_RD_REQ                      4
+
+#define INIT_ID_WTH                         AXI_ID_WTH
+#define INIT_LEN_WTH                        AXI_LEN_WTH
+#define INIT_ADDR_WTH                       AXI_ADDR_WTH
+#define INIT_DATA_WTH                       AXI_DATA_WTH
+#define N_INIT_ID_WTH                       MAX_FAS_RD_REQ * INIT_ID_WTH
+#define N_INIT_ADDR_WTH                     MAX_FAS_RD_REQ * INIT_ADDR_WTH
+#define N_INIT_LEN_WTH                      MAX_FAS_RD_REQ * INIT_LEN_WTH
+#define N_INIT_DATA_WTH                     MAX_FAS_RD_REQ * INIT_DATA_WTH
+
+  
 #define KRNL_1X1_SIMD                     	2
 #define KRNL_3X3_SIMD						2
 
@@ -34,13 +46,6 @@
 #define BITS_PER_PIXEL                      16
 #define BUS_SIZE                            ((uint32_t)8) // bytes
 #define AXI_ACCEL_CLK_RATIO                 5
-#define MAX_FAS_REQ                         5
-#define MAX_FAS_RD_REQ                      4
-#define MAX_FAS_RD_ID                       4
-#define INIT_REQ_ID_WTH                     MAX_FAS_RD_REQ * MAX_FAS_RD_ID
-#define INIT_MEM_RD_ADDR_WTH                MAX_FAS_RD_REQ * INIT_RD_ADDR_WIDTH
-#define INIT_MEM_RD_LEN_WTH                 MAX_FAS_RD_REQ * INIT_RD_LEN_WIDTH
-#define INIT_MEM_RD_DATA_WIDTH              MAX_FAS_RD_REQ * INIT_WR_DATA_WIDTH
 #define CLK_PRD                             10
 #define PIXEL_SEQUENCE_SIZE                 8192
 #define MAX_AWP_TRANS                       (NUM_QUADS_PER_AWP * 2)    // each quad can send 2 requests at a time

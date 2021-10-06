@@ -180,7 +180,7 @@ void FAS::job_fetch_process()
             accel_trans->fas_req_id = FAS_JOB_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
-                AWP_id,
+                0, /*m_im_addr*/
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
                 inMapFetchAmt,
@@ -201,7 +201,7 @@ void FAS::job_fetch_process()
                 AWP_id,
                 TLM_WRITE_COMMAND,
                 (unsigned char*)accel_trans,
-                inMapFetchAmt,
+                0,
                 0,
                 nullptr,
                 false,
@@ -211,6 +211,7 @@ void FAS::job_fetch_process()
             rout_init_soc->b_transport(*trans, delay);
             trans->release();
             m_inMapFetchCount += inMapFetchAmt;
+            // m_im_addr += inMapFetchAmt;
             if(m_inMapFetchCount == m_inMapFetchTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + "\n";
@@ -246,7 +247,7 @@ void FAS::partMap_fetch_process()
             int fetchAmt = (remAmt < m_pm_fetch_amount_cfg) ? remAmt : m_pm_fetch_amount_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
-                0,
+                m_pm_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
                 fetchAmt,
@@ -266,6 +267,7 @@ void FAS::partMap_fetch_process()
                 m_partMap_fifo_sz += (fetchAmt / PIXEL_SIZE);
             }
             m_partMapFetchCount += fetchAmt;
+            m_pm_addr += fetchAmt;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Part Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -303,7 +305,7 @@ void FAS::prevMap_fetch_process()
             int fetchAmt = (remAmt < m_pv_fetch_amount_cfg) ? remAmt : m_pv_fetch_amount_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
-                0,
+                m_pv_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
                 fetchAmt,
@@ -316,6 +318,7 @@ void FAS::prevMap_fetch_process()
             trans->release();
             m_prevMap_fifo_sz += fetchAmt / PIXEL_SIZE;
             m_prevMapFetchCount += fetchAmt;
+            m_pv_addr += fetchAmt;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Prev Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -353,7 +356,7 @@ void FAS::resdMap_fetch_process()
             int fetchAmt = (remAmt < m_rm_fetch_amount_cfg) ? remAmt : m_rm_fetch_amount_cfg;
             trans = nb_createTLMTrans(
                 m_mem_mng,
-                0,
+                m_rm_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
                 fetchAmt,
@@ -366,6 +369,7 @@ void FAS::resdMap_fetch_process()
             trans->release();
             m_resdMap_fifo_sz += fetchAmt / PIXEL_SIZE;
             m_resdMapFetchCount += fetchAmt;
+            m_rm_addr += fetchAmt;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Resd Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -801,7 +805,7 @@ void FAS::S_process()
             m_outBuf_fifo_sz -= storeAmt;
             trans = nb_createTLMTrans(
                 m_mem_mng,
-                0,
+                m_om_addr,
                 TLM_WRITE_COMMAND,
                 (unsigned char*)accel_trans,
                 (storeAmt * PIXEL_SIZE),
@@ -813,6 +817,7 @@ void FAS::S_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
             m_outMapStoreCount += (storeAmt * PIXEL_SIZE);
+            m_om_addr += (storeAmt * PIXEL_SIZE);
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
                 int perct = floor((m_trans_no / m_total_store_trans) * 100.0f);
@@ -1004,7 +1009,12 @@ void FAS::b_getCfgData()
 	m_num_output_cols_cfg			= m_FAS_cfg->m_num_output_cols;
 	m_output_depth_cfg 				= m_FAS_cfg->m_output_depth;
 	
-	
+    // m_im_addr                       = m_inMapAddrArr_cfg;
+    m_pm_addr                       = m_partMapAddr_cfg;
+    m_pv_addr                       = m_prevMapAddr_cfg;
+    m_rm_addr                       = m_resdMapAddr_cfg;
+    m_om_addr                       = m_outMapAddr_cfg;
+
     if(m_krnl1x1_pding_cfg)
     {
         m_num_1x1_kernels_cfg       = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);

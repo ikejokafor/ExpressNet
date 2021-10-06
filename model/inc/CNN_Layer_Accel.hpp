@@ -97,27 +97,27 @@ SC_MODULE(CNN_Layer_Accel)
 		sc_core::sc_in<bool>						clk				;
 #ifdef DDR_AXI_MEMORY
         // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-        sc_core::sc_out<sc_bv<MAX_FAS_RD_REQ> >             init_read_req                                           ;
-        sc_core::sc_out<sc_bv<INIT_REQ_ID_WTH> >            init_read_req_id           							    ;
-        sc_core::sc_out<sc_bv<INIT_MEM_RD_ADDR_WTH> >       init_read_addr             							    ;
-        sc_core::sc_out<sc_bv<INIT_MEM_RD_LEN_WTH> >        init_read_len              							    ;
-        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_read_req_ack          							    ;
+        sc_core::sc_out<sc_bv<MAX_FAS_RD_REQ> >             init_rd_req         ;
+        sc_core::sc_out<sc_bv<N_INIT_ID_WTH> >              init_rd_req_id      ;
+        sc_core::sc_out<sc_bv<N_INIT_ADDR_WTH> >            init_rd_addr        ;
+        sc_core::sc_out<sc_bv<N_INIT_LEN_WTH> >             init_rd_len         ;
+        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_rd_req_ack     ;
         // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-        sc_core:: sc_in<sc_bv<INIT_MEM_RD_DATA_WIDTH> >     init_read_data             							    ;
-        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_read_data_vld         							    ;
-        sc_core::sc_out<sc_bv<MAX_FAS_RD_REQ> >             init_read_data_rdy         							    ;
-        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_read_cmpl             							    ;
+        sc_core:: sc_in<sc_bv<N_INIT_DATA_WTH> >            init_rd_data        ;
+        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_rd_data_vld    ;
+        sc_core::sc_out<sc_bv<MAX_FAS_RD_REQ> >             init_rd_data_rdy    ;
+        sc_core:: sc_in<sc_bv<MAX_FAS_RD_REQ> >             init_rd_cmpl        ;
         // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-        sc_core::sc_out<bool>                               init_write_req             							    ;
-        sc_core::sc_out<bool>                               init_write_req_id          							    ;
-        sc_core::sc_out<sc_bv<32> >                         init_write_addr            							    ;
-        sc_core::sc_out<sc_bv<32> >                         init_write_len             							    ;
-        sc_core:: sc_in<bool>                               init_write_req_ack         							    ;
+        sc_core::sc_out<bool>                               init_wr_req         ;
+        sc_core::sc_out<sc_bv<INIT_ID_WTH> >                init_wr_req_id      ;
+        sc_core::sc_out<sc_bv<INIT_ADDR_WTH> >              init_wr_addr        ;
+        sc_core::sc_out<sc_bv<INIT_LEN_WTH> >               init_wr_len         ;
+        sc_core:: sc_in<bool>                               init_wr_req_ack     ;
         // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
-        sc_core::sc_out<sc_bv<64> >                         init_write_data            							    ;
-        sc_core::sc_out<bool>                               init_write_data_vld        							    ;
-        sc_core:: sc_in<bool>                               init_write_data_rdy        							    ;
-        sc_core:: sc_in<bool>                               init_write_cmpl           							    ;
+        sc_core::sc_out<sc_bv<INIT_DATA_WTH> >              init_wr_data        ;
+        sc_core::sc_out<bool>                               init_wr_data_vld    ;
+        sc_core:: sc_in<bool>                               init_wr_data_rdy    ;
+        sc_core:: sc_in<bool>                               init_wr_cmpl        ;
 #endif	
         tlm_utils::simple_target_socket<CNN_Layer_Accel>	tar_soc;
 

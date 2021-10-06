@@ -298,4 +298,9 @@ SC_MODULE(FAS)
         double                                  m_FAS_time                      ;
         float                                   m_trans_no                      ;
         float                                   m_total_store_trans             ;
+        uint32_t                                m_im_addr                       ;
+        uint32_t                                m_pm_addr                       ;
+        uint32_t                                m_pv_addr                       ;
+        uint32_t                                m_rm_addr                       ;
+        uint32_t                                m_om_addr                       ;
 };

@@ -35,21 +35,20 @@
 // Includes
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 `include "utilities.svh"
+`include "axi_defs.svh"
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //	SYS INIT / TARG  READ / WRITE DEFS
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-`define INIT_RD_LEN_WIDTH                   32
-`define INIT_WR_LEN_WIDTH                   32
-`define INIT_RD_ADDR_WIDTH                  32
-`define INIT_WR_ADDR_WIDTH                  32
-`define INIT_RD_DATA_WIDTH                  64
-`define INIT_WR_DATA_WIDTH                  64
-`define SYS_INTC_DT_WIDTH                   1024
-`define TARG_WR_DATA_WTH                    1024
-`define TARG_RD_DATA_WTH                    1024
-`define CLOCK_FACTOR					    4
+`define INIT_ID_WTH             (`AXI_ID_WTH)
+`define INIT_LEN_WTH            (`AXI_LEN_WTH)
+`define INIT_ADDR_WTH           (`AXI_ADDR_WTH)
+`define INIT_DATA_WTH           (`AXI_DATA_WTH)
+`define SYS_INTC_DT_WIDTH       1024
+`define TARG_WR_DATA_WTH        1024
+`define TARG_RD_DATA_WTH        1024
+`define CLOCK_FACTOR			4
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------

@@ -23,11 +23,11 @@ void CNN_Layer_Accel::main_process()
 {
 #ifdef DDR_AXI_MEMORY
     // set id's
-    init_read_req_id = "0x43210";    // 0100 0011 0010 0001 0000
-    init_write_req_id = "0x21908";
+    init_rd_req_id = "0x43210";    // 0100 0011 0010 0001 0000
+    init_wr_req_id = "0x21908";
     // read is always ready, writing is always valid
-    init_read_data_rdy = "0xF";
-    init_write_data_vld = "0x1";
+    init_rd_data_rdy = "0xF";
+    init_wr_data_vld = "0x1";
 #endif   
     string str;
     while (true)
@@ -138,24 +138,24 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
         while(true)
         {
             wait(clk);
-            sc_bv<INIT_MEM_RD_ADDR_WTH> t0; t0.range(req_idx, INIT_RD_ADDR_WIDTH) = address;
-            init_read_addr.write(t0);
-            sc_bv<INIT_MEM_RD_ADDR_WTH> t1; t1.range(req_idx, INIT_RD_LEN_WIDTH) = length;
-            init_read_len.write(t1);
-            sc_bv<INIT_MEM_RD_ADDR_WTH> t2; t2.range(req_idx, 1) = 1;
-            init_read_req.write(t2);
+            sc_bv<INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
+            init_rd_addr.write(t0);
+            sc_bv<INIT_ADDR_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
+            init_rd_len.write(t1);
+            sc_bv<INIT_ADDR_WTH> t2; t2.range(req_idx, 1) = 1;
+            init_rd_req.write(t2);
             while(true)
             {
                 wait(clk);
-                if(init_read_req_ack.read().range(req_idx, 1) == 1)
+                if(init_rd_req_ack.read().range(req_idx, 1) == 1)
                     break;
             }
             t2.range(req_idx, 1) = 0;
-            init_read_req.write(t2);
+            init_rd_req.write(t2);
             while(true)
             {
                 wait(clk);
-                if(init_read_cmpl.read().range(req_idx, 1) == 1)
+                if(init_rd_cmpl.read().range(req_idx, 1) == 1)
                     break;
             }
         }
@@ -166,23 +166,22 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
         while(true)
         {
             wait(clk);
-            sc_bv<INIT_MEM_RD_ADDR_WTH> t0; t0.range(req_idx, INIT_WR_ADDR_WIDTH) = address;
-            init_write_addr.write(t0);
-            sc_bv<INIT_MEM_RD_ADDR_WTH> t1; t1.range(req_idx, INIT_WR_LEN_WIDTH) = length;
-            init_write_len.write(t1);
-            init_write_req.write(1);
+            sc_bv<INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
+            init_wr_addr.write(t0);
+            sc_bv<INIT_ADDR_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
+            init_wr_len.write(t1);
+            init_wr_req.write(1);
             while(true)
             {
                 wait(clk);
-                if(init_write_req_ack.read() == 1)
-                if(init_write_req_ack.read() == 1)
+                if(init_wr_req_ack.read() == 1)
                     break;
             }
-            init_write_req.write(1);
+            init_wr_req.write(0);
             while(true)
             {
                 wait(clk);
-                if(init_write_cmpl.read() == 1)
+                if(init_wr_cmpl.read() == 1)
                     break;
             }
         }     
