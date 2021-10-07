@@ -203,9 +203,7 @@ SC_MODULE(CNN_Layer_Accel)
 		mem_ele_t* getMemory(int idx);
         void start();
         void waitComplete(double& elapsedTime, double& memPower, double& QUAD_time, double& FAS_time);
-#ifdef DDR_AXI_MEMORY
-
-#else
+#ifndef DDR_AXI_MEMORY
         void system_mem_arb_process();
 #endif
 		

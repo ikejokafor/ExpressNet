@@ -211,14 +211,14 @@ module cnn_layer_accel_axi_bridge #(
             assign init_rd_data[g0]                                      = axi_rdata[g0];
             assign init_rd_cmpl[g0]                                      = axi_bvalid[g0];
         end else begin
-            assign axi_arvalid[g0] 						                        = 0;
-            assign axi_addr_rd_ack[g0]                                          = 0;
-            assign axi_araddr[g0 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH]              = 0;
-            assign axi_arid[g0 * `AXI_ID_WTH +: `AXI_ID_WTH]                    = 0;
-            assign axi_arburst[g0]                                              = 0;
-            assign axi_arsize[g0]                                               = 0;
-            assign axi_arlen[g0 * `AXI_LEN_WTH +: `AXI_LEN_WTH]                 = 0;
-            assign axi_rready[g0]	                                            = 0; 
+            assign axi_arvalid[g0] 						                 = 0;
+            assign axi_addr_rd_ack[g0]                                   = 0;
+            assign axi_araddr[g0 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH]       = 0;
+            assign axi_arid[g0 * `AXI_ID_WTH +: `AXI_ID_WTH]             = 0;
+            assign axi_arburst[g0]                                       = 0;
+            assign axi_arsize[g0]                                        = 0;
+            assign axi_arlen[g0 * `AXI_LEN_WTH +: `AXI_LEN_WTH]          = 0;
+            assign axi_rready[g0]	                                     = 0; 
         end
     end endgenerate
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
@@ -227,20 +227,20 @@ module cnn_layer_accel_axi_bridge #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     genvar g1; generate for(g1 = 0; g1 < C_NUM_TOTAL_CLIENTS; g1 = g1 + 1) begin       
         if(g1 >= C_NUM_RD_CLIENTS) begin
-            assign axi_awvalid[g1]                                           = init_wr_req[g1];
-            assign axi_addr_wr_ack[g1]                                       = (axi_awready && axi_awvalid);
-            assign axi_awaddr[g1 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH]           = init_wr_addr[g1 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH];  
-            assign axi_awid[g1 * `AXI_ID_WTH +: `AXI_ID_WTH]                 = init_wr_req_id[g1 * `AXI_ID_WTH +: `AXI_ID_WTH];
+            assign axi_awvalid[g1]                                           = init_wr_req[g1 - C_NUM_RD_CLIENTS];
+            assign axi_addr_wr_ack[g1]                                       = (axi_awready[g1 - C_NUM_RD_CLIENTS] && axi_awvalid[g1 - C_NUM_RD_CLIENTS]);
+            assign axi_awaddr[g1 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH]           = init_wr_addr[(g1 - C_NUM_RD_CLIENTS) * `AXI_ADDR_WTH +: `AXI_ADDR_WTH];  
+            assign axi_awid[g1 * `AXI_ID_WTH +: `AXI_ID_WTH]                 = init_wr_req_id[(g1 - C_NUM_RD_CLIENTS) * `AXI_ID_WTH +: `AXI_ID_WTH];
             assign axi_awburst[g1]                                           = 1;    // burst type ALWAYS 1
             assign axi_awsize[g1]                                            = 3;    // clog2(BUS_WIDTH / `BITS_PER_BYTE) // 8 Bytes   
-            assign axi_awlen[g1 * `AXI_LEN_WTH +: `AXI_LEN_WTH]              = init_wr_len[g1 * `AXI_LEN_WTH +: `AXI_LEN_WTH];
-            assign axi_wvalid[g1]                                            = init_wr_data_vld[g1];                 
-            assign init_wr_data_rdy[g1]                                      = axi_wready[g1];                   
+            assign axi_awlen[g1 * `AXI_LEN_WTH +: `AXI_LEN_WTH]              = init_wr_len[(g1 - C_NUM_RD_CLIENTS) * `AXI_LEN_WTH +: `AXI_LEN_WTH];
+            assign axi_wvalid[g1]                                            = init_wr_data_vld[g1 - C_NUM_RD_CLIENTS];                 
+            assign init_wr_data_rdy[g1]                                      = axi_wready[g1 - C_NUM_RD_CLIENTS];                   
             assign axi_wstrb[g1]                                             = 8'hFF;
-            assign axi_wdata[g1 * `AXI_DATA_WTH +: `AXI_DATA_WTH]            = init_wr_data[g1 * `AXI_DATA_WTH +: `AXI_DATA_WTH];      
+            assign axi_wdata[g1 * `AXI_DATA_WTH +: `AXI_DATA_WTH]            = init_wr_data[(g1 - C_NUM_RD_CLIENTS) * `AXI_DATA_WTH +: `AXI_DATA_WTH];      
             assign axi_bready[g1]                                            = 1;
-            assign axi_wlast[g1]                                             = (axi_addr_wr_ackd && axi_wr_ct[g1] == (axi_wr_len[g1] - axi_wr_ct[g1]));
-            assign init_wr_cmpl[g1]                                          = axi_bvalid[g1];
+            assign axi_wlast[g1]                                             = (axi_addr_wr_ackd[g1 - C_NUM_RD_CLIENTS] && axi_wr_ct[g1 - C_NUM_RD_CLIENTS] == (axi_wr_len[g1 - C_NUM_RD_CLIENTS] - axi_wr_ct[g1 - C_NUM_RD_CLIENTS]));
+            assign init_wr_cmpl[g1]                                          = axi_bvalid[g1 - C_NUM_RD_CLIENTS];
 
             always@(posedge clk) begin
                 if(rst) begin
