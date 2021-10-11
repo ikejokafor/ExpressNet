@@ -19,3 +19,4 @@ CNN accel sim
     testing opcode 16 functionality. Need to add logic to verification framework which will generate and inject
     input img data, generate convMap result of data and send over AWP FAS interconnect, and store data to memory
 
+    Change signal spec to look more like axi, read and wrtie groups for every possible initiator

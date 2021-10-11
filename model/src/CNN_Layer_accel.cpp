@@ -23,8 +23,8 @@ void CNN_Layer_Accel::main_process()
 {
 #ifdef DDR_AXI_MEMORY
     // set id's
-    init_rd_req_id = "0x43210";    // 0100 0011 0010 0001 0000
-    init_wr_req_id = "0x21908";
+    init_rd_req_id = "0x688";    // 0100 0011 0010 0001 0000
+    init_wr_req_id = "0x0";
     // read is always ready, writing is always valid
     init_rd_data_rdy = "0xF";
     init_wr_data_vld = "0x1";
@@ -133,59 +133,59 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     int req_idx = accel_trans->fas_req_id;
     int length = trans.get_data_length();
 #ifdef DDR_AXI_MEMORY
-    if(trans.get_command() == TLM_READ_COMMAND)
-    {
-        while(true)
-        {
-            wait(clk);
-            sc_bv<INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
-            init_rd_addr.write(t0);
-            sc_bv<INIT_ADDR_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
-            init_rd_len.write(t1);
-            sc_bv<INIT_ADDR_WTH> t2; t2.range(req_idx, 1) = 1;
-            init_rd_req.write(t2);
-            while(true)
-            {
-                wait(clk);
-                if(init_rd_req_ack.read().range(req_idx, 1) == 1)
-                    break;
-            }
-            t2.range(req_idx, 1) = 0;
-            init_rd_req.write(t2);
-            while(true)
-            {
-                wait(clk);
-                if(init_rd_cmpl.read().range(req_idx, 1) == 1)
-                    break;
-            }
-        }
-    }
-    else // TLM_WRITE_COMMAND
-    {
-        
-        while(true)
-        {
-            wait(clk);
-            sc_bv<INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
-            init_wr_addr.write(t0);
-            sc_bv<INIT_ADDR_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
-            init_wr_len.write(t1);
-            init_wr_req.write(1);
-            while(true)
-            {
-                wait(clk);
-                if(init_wr_req_ack.read() == 1)
-                    break;
-            }
-            init_wr_req.write(0);
-            while(true)
-            {
-                wait(clk);
-                if(init_wr_cmpl.read() == 1)
-                    break;
-            }
-        }     
-    }
+    // if(trans.get_command() == TLM_READ_COMMAND)
+    // {
+    //     while(true)
+    //     {
+    //         wait(clk);
+    //         sc_bv<INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
+    //         init_rd_addr.write(t0);
+    //         sc_bv<INIT_ADDR_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
+    //         init_rd_len.write(t1);
+    //         sc_bv<INIT_ADDR_WTH> t2; t2.range(req_idx, 1) = 1;
+    //         init_rd_req.write(t2);
+    //         while(true)
+    //         {
+    //             wait(clk);
+    //             if(init_rd_req_ack.read().range(req_idx, 1) == 1)
+    //                 break;
+    //         }
+    //         t2.range(req_idx, 1) = 0;
+    //         init_rd_req.write(t2);
+    //         while(true)
+    //         {
+    //             wait(clk);
+    //             if(init_rd_cmpl.read().range(req_idx, 1) == 1)
+    //                 break;
+    //         }
+    //     }
+    // }
+    // else // TLM_WRITE_COMMAND
+    // {
+    //     
+    //     while(true)
+    //     {
+    //         wait(clk);
+    //         sc_bv<INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
+    //         init_wr_addr.write(t0);
+    //         sc_bv<INIT_ADDR_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
+    //         init_wr_len.write(t1);
+    //         init_wr_req.write(1);
+    //         while(true)
+    //         {
+    //             wait(clk);
+    //             if(init_wr_req_ack.read() == 1)
+    //                 break;
+    //         }
+    //         init_wr_req.write(0);
+    //         while(true)
+    //         {
+    //             wait(clk);
+    //             if(init_wr_cmpl.read() == 1)
+    //                 break;
+    //         }
+    //     }     
+    // }
 #else
     m_req_arr[req_idx].req_pending = true;
     wait(m_req_arr[req_idx].ack);
