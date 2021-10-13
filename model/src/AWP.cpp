@@ -37,14 +37,58 @@ void AWP::bus_arbitrate()
                 {
                     wait();
 #ifdef VERBOSE_DEBUG
-                        str = "[" + string(name()) + "]: Gave QUAD " + to_string(i) + " the bus at " + sc_time_stamp().to_string() + "\n";
-                        cout << str;
+                    str = "[" + string(name()) + "]: Gave QUAD " + to_string(i) + " the bus at " + sc_time_stamp().to_string() + "\n";
+                    cout << str;
 #endif
                     bus.m_req_arr[i].ack.notify(SC_ZERO_TIME);
                     m_next_req_id = (i + 1) % MAX_AWP_TRANS;
                     break;
                 }
             }
+        }
+    }
+}
+
+
+void AWP::send_job_request()
+{
+    sc_time delay;
+    while(true)
+    {
+        wait();
+        bool all_reqd = true;
+        for(int i = 0; i < m_QUADs_cfgd_arr.size(); i++)
+        {
+            if(m_QUADs_cfgd_arr[i] && !bus.m_QUAD_job_req_arr[i])
+            {
+                all_reqd = false;
+                break;
+            }
+        }
+        if(all_reqd && m_num_QUADs_cfgd > 0)
+        {
+            for(int i = 0; i < m_QUADs_cfgd_arr.size(); i++)
+            {
+                bus.m_QUAD_job_req_arr[i] = false;
+            }
+            Accel_Trans* accel_trans = new Accel_Trans();
+            accel_trans->AWP_id = m_AWP_id;
+            accel_trans->FAS_id = m_FAS_id;
+            accel_trans->accel_cmd = ACCL_CMD_JOB_FETCH;
+            tlm_generic_payload* trans = nb_createTLMTrans(
+                m_mem_mng,
+                m_FAS_id,
+                TLM_IGNORE_COMMAND,
+                (unsigned char*)accel_trans,
+                0,
+                0,
+                nullptr,
+                false,
+                TLM_INCOMPLETE_RESPONSE
+            );
+            wait();
+            init_soc->b_transport(*trans, delay);
+            trans->release();
         }
     }
 }
@@ -95,7 +139,6 @@ void AWP::send_complete()
             {
                 bus.m_QUAD_complt_arr[i] = false;
             }
-			int qIdx = NUM_QUADS_PER_AWP - 1;
             Accel_Trans* accel_trans = new Accel_Trans();
             accel_trans->AWP_id = m_AWP_id;
             accel_trans->FAS_id = m_FAS_id;
@@ -131,7 +174,10 @@ void AWP::b_transport(tlm_generic_payload& trans, sc_time& delay)
     {
         case ACCL_CMD_JOB_FETCH:
         {
-            quad[QUAD_id]->b_pfb_write();
+            for(int i = 0; i < NUM_QUADS_PER_AWP; i++)
+            {
+                quad[i]->b_pfb_write();
+            }
             break;
         }
         case ACCL_CMD_CFG_WRITE:

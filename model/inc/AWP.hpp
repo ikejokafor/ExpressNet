@@ -65,6 +65,8 @@ SC_MODULE(AWP)
                 sensitive << clk.pos();
             SC_THREAD(send_complete)
                 sensitive << clk.pos();
+            SC_THREAD(send_job_request)
+                sensitive << clk.pos();
 
             m_next_req_id = 0;
             for (int i = 0; i < NUM_QUADS_PER_AWP; i++)
@@ -82,6 +84,7 @@ SC_MODULE(AWP)
         void bus_arbitrate();
         int request_process(int idx);
         void send_complete();
+        void send_job_request();
 
         // Methods
         void b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);

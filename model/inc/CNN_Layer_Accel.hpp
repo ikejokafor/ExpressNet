@@ -95,7 +95,7 @@ SC_MODULE(CNN_Layer_Accel)
 {
     public:
 		sc_core::sc_in<bool>						clk				;
-#ifdef DDR_AXI_MEMORY
+#ifdef DDR_AXI_MEM_SIM
         // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
         sc_core::sc_out<sc_bv<MAX_FAS_RD_REQ> >             init_rd_req         ;
         sc_core::sc_out<sc_bv<N_INIT_ID_WTH> >              init_rd_req_id      ;
@@ -156,7 +156,7 @@ SC_MODULE(CNN_Layer_Accel)
 
             SC_THREAD(main_process);
                 sensitive << clk.pos();
-#ifndef DDR_AXI_MEMORY
+#ifndef DDR_AXI_MEM_SIM
             SC_THREAD(system_mem_arb_process);
                 sensitive << clk.pos();
 #endif
@@ -203,7 +203,7 @@ SC_MODULE(CNN_Layer_Accel)
 		mem_ele_t* getMemory(int idx);
         void start();
         void waitComplete(double& elapsedTime, double& memPower, double& QUAD_time, double& FAS_time);
-#ifndef DDR_AXI_MEMORY
+#ifndef DDR_AXI_MEM_SIM
         void system_mem_arb_process();
 #endif
 		

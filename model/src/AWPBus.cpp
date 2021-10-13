@@ -18,6 +18,10 @@ void AWPBus::b_request(int QUAD_id, accel_cmd_t accel_cmd, int res_pkt_size, boo
     {
         m_QUAD_complt_arr[QUAD_id] = true;
     }
+    else if(accel_cmd == ACCL_CMD_JOB_FETCH)
+    {
+        m_QUAD_job_req_arr[QUAD_id] = true;
+    }
     else
     {
         int req_id = (accel_cmd == ACCL_CMD_JOB_FETCH) ? 0 : 1;

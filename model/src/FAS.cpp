@@ -125,7 +125,7 @@ void FAS::ctrl_process()
                     m_num_1x1_kernels_cfg           = 0;
                     m_resdMapFetchTotal_cfg         = 0;
                     m_outMapStoreTotal_cfg          = 0;
-                    m_inMapFetchFactor_cfg          = 0;
+                    m_inMapFetchAmt_cfg             = 0;
                     m_outMapStoreFactor_cfg         = 0;
                     m_krnl1x1Addr_cfg               = 0;
                     m_krnl1x1BiasAddr_cfg           = 0;
@@ -175,7 +175,6 @@ void FAS::job_fetch_process()
             int AWP_id = accel_trans->AWP_id;
             int QUAD_id = accel_trans->QUAD_id;
             trans->release();
-            int inMapFetchAmt = m_inMapFetchFactor_cfg * m_inMapDepthFetchAmt[AWP_id][QUAD_id] * PIXEL_SIZE;
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_JOB_FETCH_ID;
             trans = nb_createTLMTrans(
@@ -183,7 +182,7 @@ void FAS::job_fetch_process()
                 0, /*m_im_addr*/
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                inMapFetchAmt,
+                m_inMapFetchAmt_cfg,
                 0,
                 nullptr,
                 false,
@@ -210,8 +209,8 @@ void FAS::job_fetch_process()
             wait(clk->posedge_event());
             rout_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_inMapFetchCount += inMapFetchAmt;
-            // m_im_addr += inMapFetchAmt;
+            m_inMapFetchCount += m_inMapFetchAmt_cfg;
+            m_im_addr += m_inMapFetchAmt_cfg;
             if(m_inMapFetchCount == m_inMapFetchTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + "\n";
@@ -983,7 +982,7 @@ void FAS::b_getCfgData()
     m_num_1x1_kernels_cfg           = m_FAS_cfg->m_num_1x1_kernels;
     m_resdMapFetchTotal_cfg         = m_FAS_cfg->m_resMapFetchTotal;
     m_outMapStoreTotal_cfg          = m_FAS_cfg->m_outMapStoreTotal;
-    m_inMapFetchFactor_cfg          = m_FAS_cfg->m_inMapFetchFactor;
+    m_inMapFetchAmt_cfg             = m_FAS_cfg->m_inMapFetchAmt;
     m_outMapStoreFactor_cfg         = m_FAS_cfg->m_outMapStoreFactor;
     m_krnl1x1Addr_cfg               = m_FAS_cfg->m_krnl1x1Addr;
     m_krnl1x1BiasAddr_cfg           = m_FAS_cfg->m_krnl1x1BiasAddr;
@@ -991,10 +990,10 @@ void FAS::b_getCfgData()
     m_partMapAddr_cfg               = m_FAS_cfg->m_partMapAddr;
     m_resdMapAddr_cfg               = m_FAS_cfg->m_resMapAddr;
     m_outMapAddr_cfg                = m_FAS_cfg->m_outMapAddr;
-    m_inMapAddrArr_cfg              = m_FAS_cfg->m_inMapAddrArr;
-    m_krnl3x3AddrArr_cfg            = m_FAS_cfg->m_krnl3x3AddrArr;
-	m_prevMapAddr_cfg				= m_FAS_cfg->m_prevMapAddr;
-    m_krnl3x3BiasAddrArr            = m_FAS_cfg->m_krnl3x3BiasAddrArr;
+    m_inMapAddr_cfg                 = m_FAS_cfg->m_inMapAddr;
+    m_krnl3x3Addr_cfg               = m_FAS_cfg->m_krnl3x3Addr;
+    m_krnl3x3BiasAddr_cfg           = m_FAS_cfg->m_krnl3x3BiasAddr;
+	m_prevMapAddr_cfg				= m_FAS_cfg->m_prevMapAddr;    
     m_co_high_watermark_cfg         = m_FAS_cfg->m_co_high_watermark;
     m_rm_low_watermark_cfg          = m_FAS_cfg->m_rm_low_watermark;
     m_pm_low_watermark_cfg          = m_FAS_cfg->m_pm_low_watermark;
@@ -1008,8 +1007,7 @@ void FAS::b_getCfgData()
 	m_num_output_rows_cfg			= m_FAS_cfg->m_num_output_rows;
 	m_num_output_cols_cfg			= m_FAS_cfg->m_num_output_cols;
 	m_output_depth_cfg 				= m_FAS_cfg->m_output_depth;
-	
-    // m_im_addr                       = m_inMapAddrArr_cfg;
+    m_im_addr                       = m_inMapAddr_cfg;
     m_pm_addr                       = m_partMapAddr_cfg;
     m_pv_addr                       = m_prevMapAddr_cfg;
     m_rm_addr                       = m_resdMapAddr_cfg;
@@ -1027,7 +1025,6 @@ void FAS::b_getCfgData()
         int num_QUAD_cfgd = 0;
         for(int j = 0; j < NUM_QUADS_PER_AWP; j++)
         {
-            m_inMapDepthFetchAmt[i][j] = AWP_cfg_arr[i]->m_QUAD_cfg_arr[j]->m_inMapDepth;
             m_QUAD_en_arr[i][j] = AWP_cfg_arr[i]->m_QUAD_en_arr[j];
             if(m_QUAD_en_arr[i][j]) num_QUAD_cfgd++;
         }
@@ -1320,13 +1317,13 @@ void FAS::nb_print_cfg()
         "\tKernel 1x1 Depth:                            " + to_string(m_krnl1x1Depth_cfg)              + "\n"
         "\tPixel Sequence Configuration Fetch Total:    " + to_string(m_pixSeqCfgFetchTotal_cfg)       + "\n"
         "\tInput Map Fetch Total:                       " + to_string(m_inMapFetchTotal_cfg)           + "\n"
-        "\tInput Map Fetch Factor:                      " + to_string(m_inMapFetchFactor_cfg)          + "\n"
+        "\tInput Map Fetch Amount:                      " + to_string(m_inMapFetchAmt_cfg)             + "\n"
         "\tKernel 3x3 Fetch Total:                      " + to_string(m_krnl3x3FetchTotal_cfg)         + "\n"
         "\tKernel 3x3 Bias Fetch Total:                 " + to_string(m_krnl3x3BiasFetchTotal_cfg)     + "\n"
         "\tPartial Map Fetch Total:                     " + to_string(m_partMapFetchTotal_cfg)         + "\n"
         "\tKernel 1x1 Fetch Total:                      " + to_string(m_krnl1x1FetchTotal_cfg)         + "\n"
         "\tKernel 1x1 Bias Fetch Total:                 " + to_string(m_krnl1x1BiasFetchTotal_cfg)     + "\n"
-        "\tResidual Map Fetch Total:                    " + to_string(m_resdMapFetchTotal_cfg)          + "\n"
+        "\tResidual Map Fetch Total:                    " + to_string(m_resdMapFetchTotal_cfg)         + "\n"
         "\tOutput Map Store Total:                      " + to_string(m_outMapStoreTotal_cfg)          + "\n"
         "\tPrev1x1 Map Fetch Total                      " + to_string(m_prevMapFetchTotal_cfg)         + "\n"
         "\tOutput Map Store Factor:                     " + to_string(m_outMapStoreFactor_cfg)         + "\n"

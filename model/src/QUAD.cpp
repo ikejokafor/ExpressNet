@@ -204,7 +204,7 @@ void QUAD::ctrl_process_1()
             }
             if((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
             {
-                m_res_fifo_sz += KRNL_3X3_SIMD;
+                m_res_fifo_sz += (KRNL_3X3_SIMD * MULT_SIMD);
                 m_output_count += KRNL_3X3_SIMD;
             }
         }
@@ -369,14 +369,25 @@ void QUAD::b_job_fetch()
 
 void QUAD::b_pfb_write()
 {
+#ifdef DDR_AXI_MEM_SIM
+    // overlapoed reading from DDR4 and writing to this buffer. 
+    //  DDR4 read latency will most likely be higher so no need to call wait() after priming
+    if(m_primed[m_QUAD_id])
+    {
+        m_pfb_count = m_num_expd_input_cols_cfg;
+        m_pfb_wrtn.notify(SC_ZERO_TIME);
+    }
+#else
     wait(m_num_expd_input_cols_cfg, SC_NS);
     m_pfb_count = m_num_expd_input_cols_cfg;
     m_pfb_wrtn.notify(SC_ZERO_TIME);
+#endif
 }
 
 
 void QUAD::b_pfb_read()
 {
+    // will be read from while data processing so need to continually call this function
     wait(m_num_expd_input_cols_cfg, SC_NS);
     m_input_row = m_input_row + 1;
     m_pfb_count = 0;

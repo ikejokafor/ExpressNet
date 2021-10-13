@@ -12,6 +12,8 @@ ref: ad-ug-0113_v1_2.pdf
     The root cause of this is not known at present, and using Vivado 2019.1 is recommended instead.
 
 
+
+
 CNN accel sim
     
     Check if count on fifos changes automatically when read latency is high
@@ -20,3 +22,15 @@ CNN accel sim
     input img data, generate convMap result of data and send over AWP FAS interconnect, and store data to memory
 
     Change signal spec to look more like axi, read and wrtie groups for every possible initiator
+ 
+
+
+There should be one input map address per AWP, one row for entire depth across all AWP’s quads is 
+fetched at a time, address is incremented as such.s. counters inside AWP will dictate which 
+quad data goes to. Within FAS, if not enough depth, (using counters to know), will send zeros 
+to quads, again AWP will dictate which quads data goes to.
+
+
+ 
+Interconnect will send data plus, strobe to know which pieces of data are valid
+, use counters in AWP to determine signaling and where to send data to.

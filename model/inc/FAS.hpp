@@ -52,7 +52,6 @@ SC_MODULE(FAS)
                 m_AWP_complt_arr(MAX_AWP_PER_FAS, false),
                 m_QUAD_en_arr(MAX_AWP_PER_FAS, std::vector<bool>(NUM_QUADS_PER_AWP, false)),
                 m_num_QUAD_cfgd(MAX_AWP_PER_FAS, 0),
-                m_inMapDepthFetchAmt(MAX_AWP_PER_FAS, std::vector<int>(NUM_QUADS_PER_AWP, 0)),
                 m_two_cycles_later(2 * CLK_PRD, sc_core::SC_NS),
                 m_three_cycles_later(3 * CLK_PRD, sc_core::SC_NS),
                 m_four_cycles_later(4 * CLK_PRD, sc_core::SC_NS),
@@ -120,7 +119,6 @@ SC_MODULE(FAS)
             m_resdMap_fifo_sz               = 0;
             m_convMap_fifo_sz               = 0;
             m_pixSeqCfgFetchTotal_cfg       = 0;
-            m_inMapFetchTotal_cfg           = 0;
             m_krnl3x3FetchTotal_cfg         = 0;
             m_krnl3x3BiasFetchTotal_cfg     = 0;
             m_partMapFetchTotal_cfg         = 0;
@@ -130,7 +128,7 @@ SC_MODULE(FAS)
             m_num_1x1_kernels_cfg           = 0;
             m_resdMapFetchTotal_cfg         = 0;
             m_outMapStoreTotal_cfg          = 0;
-            m_inMapFetchFactor_cfg          = 0;
+            m_inMapFetchAmt_cfg             = 0;
             m_outMapStoreFactor_cfg         = 0;
             m_krnl1x1Addr_cfg               = 0;
             m_krnl1x1BiasAddr_cfg           = 0;
@@ -222,12 +220,11 @@ SC_MODULE(FAS)
         uint64_t                                m_resdMapAddr_cfg               ;
         uint64_t                                m_outMapAddr_cfg                ;
         int                                     m_pixSeqCfgFetchTotal_cfg       ;
-        std::vector<std::vector<uint64_t>>      m_inMapAddrArr_cfg              ;
-        std::vector<std::vector<uint64_t>>      m_krnl3x3AddrArr_cfg            ;
-        std::vector<std::vector<uint64_t>>      m_krnl3x3BiasAddrArr            ;
+        uint64_t                                m_inMapAddr_cfg                 ;
+        uint64_t                                m_krnl3x3Addr_cfg               ;
+        uint64_t                                m_krnl3x3BiasAddr_cfg           ;
 		uint64_t								m_prevMapAddr_cfg				;
-        std::vector<std::vector<int>>           m_inMapDepthFetchAmt            ;
-        int                                     m_inMapFetchFactor_cfg          ;
+        int                                     m_inMapFetchAmt_cfg             ;
         int                                     m_inMapFetchCount               ;
         int                                     m_inMapFetchTotal_cfg           ;
         int                                     m_convMap_fifo_sz               ;
