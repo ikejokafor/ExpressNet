@@ -156,40 +156,37 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     int address = trans.get_address();
     int req_idx = accel_trans->fas_req_id;
     int length = trans.get_data_length();
-    cout << "here" << endl;
 #ifdef DDR_AXI_MEM_SIM
     cout << endl << endl;
     string str = (trans.get_command() == TLM_READ_COMMAND) ? "READ" : "WRITE";
     cout << "[CNN_Layer_Accel]: " << str << endl;
     cout << "\t\taddress - " << address << endl;
     cout << "\t\treq_idx - " << req_idx << endl;
-    cout << "\t\tlength - " << length <<  endl;
+    cout << "\t\tlength  - " << length <<  endl;
     cout << endl << endl;
     if(trans.get_command() == TLM_READ_COMMAND)
     {
         while(true)
         {
-            cout << "here2" << endl;
             b_wait_ce();
-            cout << "left" << endl;
-            sc_bv<N_INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
+            sc_bv<N_INIT_ADDR_WTH> t0; t0.range(INIT_ADDR_WTH, req_idx) = address;
             init_rd_addr.write(t0);
-            sc_bv<N_INIT_LEN_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
+            sc_bv<N_INIT_LEN_WTH> t1; t1.range(INIT_LEN_WTH, req_idx) = length;
             init_rd_len.write(t1);
-            sc_bv<MAX_FAS_RD_REQ> t2; t2.range(req_idx, 1) = 0x1;
+            sc_bv<MAX_FAS_RD_REQ> t2; t2.range(1, req_idx) = 0x1;
             init_rd_req.write(t2);
             while(true)
             {
                 b_wait_ce();
-                if(init_rd_req_ack.read().range(req_idx, 1) == 1)
+                if(init_rd_req_ack.read().range(1, req_idx) == 1)
                     break;
             }
-            t2.range(req_idx, 1) = 0;
+            t2.range(1, req_idx) = 0;
             init_rd_req.write(t2);
             while(true)
             {
                 b_wait_ce();
-                if(init_rd_cmpl.read().range(req_idx, 1) == 1)
+                if(init_rd_cmpl.read().range(1, req_idx) == 1)
                     break;
             }
         }
@@ -199,9 +196,9 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
         while(true)
         {
             b_wait_ce();
-            sc_bv<INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
+            sc_bv<INIT_ADDR_WTH> t0; t0.range(INIT_ADDR_WTH, req_idx) = address;
             init_wr_addr.write(t0);
-            sc_bv<INIT_LEN_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
+            sc_bv<INIT_LEN_WTH> t1; t1.range(INIT_LEN_WTH, req_idx) = length;
             init_wr_len.write(t1);
             init_wr_req.write(1);
             while(true)
