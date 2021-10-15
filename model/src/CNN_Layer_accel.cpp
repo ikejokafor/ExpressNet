@@ -22,12 +22,23 @@ CNN_Layer_Accel::~CNN_Layer_Accel()
 void CNN_Layer_Accel::main_process()
 {
 #ifdef DDR_AXI_MEM_SIM
+    // set req
+    init_rd_req = 0x0;
+    init_wr_req = 0x0;
     // set id's
-    init_rd_req_id = "0x688";    // 0100 0011 0010 0001 0000
-    init_wr_req_id = "0x0";
+    init_rd_req_id = 0x688;    // 0100 0011 0010 0001 0000
+    init_wr_req_id = 0x0;
+    // set addr
+    init_rd_addr = 0x00000000000000000000000000000000;
+    init_wr_addr = 0x00000000;
+    // set len
+    init_rd_len = 0x00000000;
+    init_wr_len = 0x00;
     // read is always ready, writing is always valid
-    init_rd_data_rdy = "0xF";
-    init_wr_data_vld = "0x1";
+    init_rd_data_rdy = 0xF;
+    init_wr_data_vld = 0x1;
+    // init_wr_data
+
 #endif   
     string str;
     while (true)
@@ -123,6 +134,19 @@ void CNN_Layer_Accel::system_mem_arb_process()
 // FAS_RES_MAP_FETCH_ID = 2,
 // FAS_PREV_MAP_FETCH_ID = 3,
 // FAS_STORE_ID = 4
+#ifdef DDR_AXI_MEM_SIM
+void CNN_Layer_Accel::b_wait_ce()
+{
+    while(true)
+    {
+        wait();
+        if(ce->read() == 0x1)
+        {
+            break;
+        }
+    }
+}
+#endif
 
 
 void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay)
@@ -132,26 +156,31 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     int address = trans.get_address();
     int req_idx = accel_trans->fas_req_id;
     int length = trans.get_data_length();
-    cout << endl << endl;
-    cout << address << endl;
-    cout << req_idx << endl;
-    cout << length << endl;
-    cout << endl << endl;
+    cout << "here" << endl;
 #ifdef DDR_AXI_MEM_SIM
+    cout << endl << endl;
+    string str = (trans.get_command() == TLM_READ_COMMAND) ? "READ" : "WRITE";
+    cout << "[CNN_Layer_Accel]: " << str << endl;
+    cout << "\t\taddress - " << address << endl;
+    cout << "\t\treq_idx - " << req_idx << endl;
+    cout << "\t\tlength - " << length <<  endl;
+    cout << endl << endl;
     if(trans.get_command() == TLM_READ_COMMAND)
     {
         while(true)
         {
-            wait(clk);
+            cout << "here2" << endl;
+            b_wait_ce();
+            cout << "left" << endl;
             sc_bv<N_INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
             init_rd_addr.write(t0);
             sc_bv<N_INIT_LEN_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
             init_rd_len.write(t1);
-            sc_bv<MAX_FAS_RD_REQ> t2; t2.range(req_idx, 1) = "0x1";
+            sc_bv<MAX_FAS_RD_REQ> t2; t2.range(req_idx, 1) = 0x1;
             init_rd_req.write(t2);
             while(true)
             {
-                wait(clk);
+                b_wait_ce();
                 if(init_rd_req_ack.read().range(req_idx, 1) == 1)
                     break;
             }
@@ -159,7 +188,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
             init_rd_req.write(t2);
             while(true)
             {
-                wait(clk);
+                b_wait_ce();
                 if(init_rd_cmpl.read().range(req_idx, 1) == 1)
                     break;
             }
@@ -169,7 +198,7 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     {
         while(true)
         {
-            wait(clk);
+            b_wait_ce();
             sc_bv<INIT_ADDR_WTH> t0; t0.range(req_idx, INIT_ADDR_WTH) = address;
             init_wr_addr.write(t0);
             sc_bv<INIT_LEN_WTH> t1; t1.range(req_idx, INIT_LEN_WTH) = length;
@@ -177,14 +206,14 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
             init_wr_req.write(1);
             while(true)
             {
-                wait(clk);
+                b_wait_ce();
                 if(init_wr_req_ack.read() == 1)
                     break;
             }
             init_wr_req.write(0);
             while(true)
             {
-                wait(clk);
+                b_wait_ce();
                 if(init_wr_cmpl.read() == 1)
                     break;
             }

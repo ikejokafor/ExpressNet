@@ -169,6 +169,11 @@ void FAS::job_fetch_process()
         if(m_trans_fifo.size() > 0 && m_convMap_fifo_sz < m_co_high_watermark_cfg)
         // if(m_trans_fifo.size() > 0)
         {
+#ifdef VERBOSE_DEBUG
+            start = sc_time_stamp().to_double();
+            str = "[" + string(name()) + "]:" + " Starting Job Map Fetch at " + sc_time_stamp().to_string() + "\n";
+            cout << str;
+#endif            
             trans = m_trans_fifo.front();
             m_trans_fifo.pop_front();
             Accel_Trans* accel_trans = (Accel_Trans*)trans->get_data_ptr();
@@ -179,7 +184,7 @@ void FAS::job_fetch_process()
             accel_trans->fas_req_id = FAS_JOB_FETCH_ID;
             trans = nb_createTLMTrans(
                 m_mem_mng,
-                0, /*m_im_addr*/
+                (uint32_t)m_im_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
                 m_inMapFetchAmt_cfg,
@@ -211,6 +216,10 @@ void FAS::job_fetch_process()
             trans->release();
             m_inMapFetchCount += m_inMapFetchAmt_cfg;
             m_im_addr += m_inMapFetchAmt_cfg;
+#ifdef VERBOSE_DEBUG
+            str = "[" + string(name()) + "]:" + " finished Job Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+            cout << str;
+#endif            
             if(m_inMapFetchCount == m_inMapFetchTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + "\n";
@@ -1017,7 +1026,7 @@ void FAS::b_getCfgData()
     {
         m_num_1x1_kernels_cfg       = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);
     }
-    // nb_print_cfg();
+    nb_print_cfg();
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
     for(int i = 0; i < MAX_AWP_PER_FAS; i++)

@@ -35,10 +35,11 @@ module cnn_layer_accel_axi_bridge #(
     parameter C_NUM_WR_CLIENTS = 8
 ) (
 	clk				        ,
+    ce                      ,
 	rst				        ,
 	// AXI Write Address Ports
 	axi_awready		        ,	// Indicates slave is ready to accept a 
-	axi_awid		            ,	// Write ID
+	axi_awid		        ,	// Write ID
 	axi_awaddr		        ,	// Write address
 	axi_awlen		        ,	// Write Burst Length
 	axi_awsize		        ,	// Write Burst size
@@ -124,8 +125,9 @@ module cnn_layer_accel_axi_bridge #(
     //  Module Ports
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	// AXI Write Address Ports
-	input logic                                 clk                 ;
-    input logic                                 rst                 ;
+	input  logic                                clk                 ;
+    input  logic                                ce                  ;
+    input  logic                                rst                 ;
  	// AXI Write Address Ports   
     input  logic [C_NUM_TOTAL_CLIENTS - 1:0]    axi_awready		    ;	// Wrire address is ready
 	output logic [       C_AXI_ID_WTH - 1:0]  	axi_awid		    ;	// Write ID
@@ -195,7 +197,6 @@ module cnn_layer_accel_axi_bridge #(
     logic [                     15:0]   axi_wr_len[C_NUM_TOTAL_CLIENTS - 1:0];
 
 
-/*
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     genvar g0; generate for(g0 = 0; g0 < C_NUM_TOTAL_CLIENTS; g0 = g0 + 1) begin
         if(g0 < C_NUM_RD_CLIENTS) begin
@@ -248,7 +249,7 @@ module cnn_layer_accel_axi_bridge #(
                     axi_addr_wr_ackd            <= 0;
                     axi_wr_ct[g1]               <= 0;
                     axi_wr_len[g1]              <= 0;
-                end else begin
+                end else if(ce) begin
                     if(axi_addr_wr_ack[g1]) begin
                         axi_wr_len[g1]          <= axi_awlen[g1];
                         axi_addr_wr_ackd[g1]    <= 1;
@@ -284,9 +285,9 @@ module cnn_layer_accel_axi_bridge #(
         end
     end endgenerate
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
-*/
 
 
+    /*
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     genvar g0; generate for(g0 = 0; g0 < C_NUM_TOTAL_CLIENTS; g0 = g0 + 1) begin
         assign axi_arvalid[g0] 						                 = 0;
@@ -308,7 +309,7 @@ module cnn_layer_accel_axi_bridge #(
         assign axi_awaddr[g1 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH]              = 0;
         assign axi_awid[g1 * `AXI_ID_WTH +: `AXI_ID_WTH]                    = 0;
         assign axi_awburst[g1 * `AXI_BR_WTH +: `AXI_BR_WTH]                 = 0;
-        assign axi_awsize[g1 * `AXI_SZ_WTH +: `AXI_SZ_WTH]                                               = 0;
+        assign axi_awsize[g1 * `AXI_SZ_WTH +: `AXI_SZ_WTH]                  = 0;
         assign axi_awlen[g1 * `AXI_LEN_WTH +: `AXI_LEN_WTH]                 = 0;
         assign axi_wvalid[g1]                                               = 0;
         assign axi_wstrb[g1 * `AXI_WSTRB_WTH +: `AXI_WSTRB_WTH]             = 0;
@@ -322,4 +323,5 @@ module cnn_layer_accel_axi_bridge #(
         end
     end endgenerate
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
+    */
 endmodule

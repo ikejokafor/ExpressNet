@@ -284,7 +284,7 @@ void QUAD::b_cfg_write(unsigned char* data)
     m_stride_cfg                = accel_trans->stride_cfg;
     m_crpd_input_row_start_cfg  = accel_trans->crpd_input_row_start_cfg;
     m_crpd_input_row_end_cfg    = accel_trans->crpd_input_row_end_cfg;
-    // print_cfg();
+    print_cfg();
     m_num_outputs               = m_num_output_cols_cfg * m_num_output_rows_cfg * m_num_3x3_kernels_cfg;
 }
 
@@ -372,7 +372,7 @@ void QUAD::b_pfb_write()
 #ifdef DDR_AXI_MEM_SIM
     // overlapoed reading from DDR4 and writing to this buffer. 
     //  DDR4 read latency will most likely be higher so no need to call wait() after priming
-    if(m_primed[m_QUAD_id])
+    if(m_primed[m_QUAD_id] || (m_padding_cfg && (m_input_row < m_crpd_input_row_start_cfg || m_input_row > m_crpd_input_row_end_cfg))) // padding will take some latency but not alot
     {
         m_pfb_count = m_num_expd_input_cols_cfg;
         m_pfb_wrtn.notify(SC_ZERO_TIME);
