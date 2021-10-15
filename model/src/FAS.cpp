@@ -163,6 +163,7 @@ void FAS::job_fetch_process()
     tlm::tlm_generic_payload* trans;
     sc_time delay;
     string str;
+    int start;
     while(true)
     {
         wait();
@@ -1326,6 +1327,7 @@ void FAS::nb_print_cfg()
         "\tKernel 1x1 Depth:                            " + to_string(m_krnl1x1Depth_cfg)              + "\n"
         "\tPixel Sequence Configuration Fetch Total:    " + to_string(m_pixSeqCfgFetchTotal_cfg)       + "\n"
         "\tInput Map Fetch Total:                       " + to_string(m_inMapFetchTotal_cfg)           + "\n"
+        "\tInput Map Fetch Address:                     " + to_string(m_inMapAddr_cfg)                 + "\n"
         "\tInput Map Fetch Amount:                      " + to_string(m_inMapFetchAmt_cfg)             + "\n"
         "\tKernel 3x3 Fetch Total:                      " + to_string(m_krnl3x3FetchTotal_cfg)         + "\n"
         "\tKernel 3x3 Bias Fetch Total:                 " + to_string(m_krnl3x3BiasFetchTotal_cfg)     + "\n"
