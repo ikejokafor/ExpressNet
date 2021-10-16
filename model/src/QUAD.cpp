@@ -284,7 +284,7 @@ void QUAD::b_cfg_write(unsigned char* data)
     m_stride_cfg                = accel_trans->stride_cfg;
     m_crpd_input_row_start_cfg  = accel_trans->crpd_input_row_start_cfg;
     m_crpd_input_row_end_cfg    = accel_trans->crpd_input_row_end_cfg;
-    print_cfg();
+    // print_cfg();
     m_num_outputs               = m_num_output_cols_cfg * m_num_output_rows_cfg * m_num_3x3_kernels_cfg;
 }
 

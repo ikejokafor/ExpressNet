@@ -166,55 +166,50 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     cout << endl << endl;
     if(trans.get_command() == TLM_READ_COMMAND)
     {
+        b_wait_ce();
+        sc_bv<N_INIT_ADDR_WTH> t0; t0.range(INIT_ADDR_WTH, (req_idx * INIT_ADDR_WTH)) = address;
+        init_rd_addr.write(t0);
+        int ofst = req_idx * INIT_LEN_WTH;
+        sc_bv<N_INIT_LEN_WTH> t1; t1.range((INIT_LEN_WTH + ofst) - 1, ofst) = length;
+        init_rd_len.write(t1);
+        sc_bv<MAX_FAS_RD_REQ> t2; t2.range(1, req_idx) = 0x1;
+        init_rd_req.write(t2);
         while(true)
         {
             b_wait_ce();
-            sc_bv<N_INIT_ADDR_WTH> t0; t0.range(INIT_ADDR_WTH, req_idx) = address;
-            init_rd_addr.write(t0);
-            sc_bv<N_INIT_LEN_WTH> t1; t1.range(INIT_LEN_WTH, req_idx) = length;
-            init_rd_len.write(t1);
-            sc_bv<MAX_FAS_RD_REQ> t2; t2.range(1, req_idx) = 0x1;
-            init_rd_req.write(t2);
-            while(true)
-            {
-                b_wait_ce();
-                if(init_rd_req_ack.read().range(1, req_idx) == 1)
-                    break;
-            }
-            t2.range(1, req_idx) = 0;
-            init_rd_req.write(t2);
-            while(true)
-            {
-                b_wait_ce();
-                if(init_rd_cmpl.read().range(1, req_idx) == 1)
-                    break;
-            }
+            if(init_rd_req_ack.read().range(1, req_idx) == 1)
+                break;
+        }
+        t2.range(1, req_idx) = 0;
+        init_rd_req.write(t2);
+        while(true)
+        {
+            b_wait_ce();
+            if(init_rd_cmpl.read().range(1, req_idx) == 1)
+                break;
         }
     }
     else // TLM_WRITE_COMMAND
     {
+        b_wait_ce();
+        sc_bv<INIT_ADDR_WTH> t0; t0.range(INIT_ADDR_WTH, (req_idx * INIT_ADDR_WTH)) = address;
+        init_wr_addr.write(t0);
+        sc_bv<INIT_LEN_WTH> t1; t1.range(INIT_LEN_WTH, (req_idx * INIT_LEN_WTH)) = length;
+        init_wr_len.write(t1);
+        init_wr_req.write(1);
         while(true)
         {
             b_wait_ce();
-            sc_bv<INIT_ADDR_WTH> t0; t0.range(INIT_ADDR_WTH, req_idx) = address;
-            init_wr_addr.write(t0);
-            sc_bv<INIT_LEN_WTH> t1; t1.range(INIT_LEN_WTH, req_idx) = length;
-            init_wr_len.write(t1);
-            init_wr_req.write(1);
-            while(true)
-            {
-                b_wait_ce();
-                if(init_wr_req_ack.read() == 1)
-                    break;
-            }
-            init_wr_req.write(0);
-            while(true)
-            {
-                b_wait_ce();
-                if(init_wr_cmpl.read() == 1)
-                    break;
-            }
-        }     
+            if(init_wr_req_ack.read() == 1)
+                break;
+        }
+        init_wr_req.write(0);
+        while(true)
+        {
+            b_wait_ce();
+            if(init_wr_cmpl.read() == 1)
+                break;
+        }   
     }
 #else
     m_req_arr[req_idx].req_pending = true;

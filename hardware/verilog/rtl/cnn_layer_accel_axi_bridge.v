@@ -193,12 +193,29 @@ module cnn_layer_accel_axi_bridge #(
     logic [C_NUM_TOTAL_CLIENTS - 1:0]   axi_addr_rd_ack;
     logic [C_NUM_TOTAL_CLIENTS - 1:0]   axi_addr_wr_ack;
     logic [C_NUM_TOTAL_CLIENTS - 1:0]   axi_addr_wr_ackd;
+    logic [C_NUM_TOTAL_CLIENTS - 1:0]   axi_rlast_d;
     logic [                     15:0]   axi_wr_ct[C_NUM_TOTAL_CLIENTS - 1:0];
     logic [                     15:0]   axi_wr_len[C_NUM_TOTAL_CLIENTS - 1:0];
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    genvar g0; generate for(g0 = 0; g0 < C_NUM_TOTAL_CLIENTS; g0 = g0 + 1) begin
+    // genvar g0; always@(*) begin
+    //     for int 
+    // end endgenerate
+    
+    
+    genvar g0; generate for(g0 = 0; g0 < C_NUM_TOTAL_CLIENTS; g0 = g0 + 1) begin: RD
+        SRL_bit #(
+            .C_CLOCK_CYCLES ( 1 )
+        )
+        i_SRL_bit (
+            .clk        ( clk                           ),
+            .ce         ( 1'b1                          ),
+            .rst        ( rst                           ),
+            .data_in    ( axi_rlast[g0]                 ),
+            .data_out   ( axi_rlast_d[g0]               )
+        );        
+    
         if(g0 < C_NUM_RD_CLIENTS) begin
             assign axi_arvalid[g0] 						                 = init_rd_req[g0];
             assign axi_addr_rd_ack[g0]                                   = (axi_arready[g0] && axi_arvalid[g0]);
@@ -210,8 +227,8 @@ module cnn_layer_accel_axi_bridge #(
             assign axi_arlen[g0 * `AXI_LEN_WTH +: `AXI_LEN_WTH]          = init_rd_len[g0 * `AXI_LEN_WTH +: `AXI_LEN_WTH];
             assign axi_rready[g0]	                                     = init_rd_data_rdy[g0];
             assign init_rd_data_vld[g0]                                  = axi_rvalid[g0];
-            assign init_rd_data[g0]                                      = axi_rdata[g0];
-            assign init_rd_cmpl[g0]                                      = axi_bvalid[g0];
+            assign init_rd_data[g0]                                      = axi_rdata[g0 * `AXI_DATA_WTH +: `AXI_DATA_WTH];
+            assign init_rd_cmpl[g0]                                      = axi_rlast_d[g0];
         end else begin
             assign axi_arvalid[g0] 						                 = 0;
             assign axi_addr_rd_ack[g0]                                   = 0;
@@ -220,14 +237,17 @@ module cnn_layer_accel_axi_bridge #(
             assign axi_arburst[g0 * `AXI_BR_WTH +: `AXI_BR_WTH]          = 0;
             assign axi_arsize[g0 * `AXI_SZ_WTH +: `AXI_SZ_WTH]           = 0;
             assign axi_arlen[g0 * `AXI_LEN_WTH +: `AXI_LEN_WTH]          = 0;
-            assign axi_rready[g0]	                                     = 0; 
+            assign axi_rready[g0]	                                     = 0;
+            // assign init_rd_data_vld[g0]                                  = 0;
+            // assign init_rd_data[g0]                                      = 0;
+            // assign init_rd_cmpl[g0]                                      = 0;
         end
     end endgenerate
     // END logic ------------------------------------------------------------------------------------------------------------------------------------
 
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
-    genvar g1; generate for(g1 = 0; g1 < C_NUM_TOTAL_CLIENTS; g1 = g1 + 1) begin       
+    genvar g1; generate for(g1 = 0; g1 < C_NUM_TOTAL_CLIENTS; g1 = g1 + 1) begin: WR   
         if(g1 >= C_NUM_RD_CLIENTS) begin
             assign axi_awvalid[g1]                                           = init_wr_req[g1 - C_NUM_RD_CLIENTS];
             assign axi_addr_wr_ack[g1]                                       = (axi_awready[g1] && axi_awvalid[g1]);
@@ -265,6 +285,8 @@ module cnn_layer_accel_axi_bridge #(
                 end        
             end
         end else begin
+            // assign init_wr_data_rdy[g1]                                         = 0;
+            // assign init_wr_cmpl[g1]                                             = 0;
             assign axi_awvalid[g1]                                              = 0;
             assign axi_addr_wr_ack[g1]                                          = 0;
             assign axi_awaddr[g1 * `AXI_ADDR_WTH +: `AXI_ADDR_WTH]              = 0;

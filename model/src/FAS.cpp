@@ -172,7 +172,7 @@ void FAS::job_fetch_process()
         {
 #ifdef VERBOSE_DEBUG
             start = sc_time_stamp().to_double();
-            str = "[" + string(name()) + "]:" + " Starting Job Map Fetch at " + sc_time_stamp().to_string() + "\n";
+            str = "[" + string(name()) + "]:" + " Starting Input Map Fetch at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif            
             trans = m_trans_fifo.front();
@@ -218,7 +218,7 @@ void FAS::job_fetch_process()
             m_inMapFetchCount += m_inMapFetchAmt_cfg;
             m_im_addr += m_inMapFetchAmt_cfg;
 #ifdef VERBOSE_DEBUG
-            str = "[" + string(name()) + "]:" + " finished Job Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+            str = "[" + string(name()) + "]:" + " finished Input Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
 #endif            
             if(m_inMapFetchCount == m_inMapFetchTotal_cfg)
@@ -1027,7 +1027,7 @@ void FAS::b_getCfgData()
     {
         m_num_1x1_kernels_cfg       = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);
     }
-    nb_print_cfg();
+    // nb_print_cfg();
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
     for(int i = 0; i < MAX_AWP_PER_FAS; i++)
