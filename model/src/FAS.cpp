@@ -164,6 +164,7 @@ void FAS::job_fetch_process()
     sc_time delay;
     string str;
     int start;
+    int log2AXI_sz = (int)log2(AXI_MX_BT_SZ);
     while(true)
     {
         wait();
@@ -215,8 +216,8 @@ void FAS::job_fetch_process()
             wait(clk->posedge_event());
             rout_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_inMapFetchCount += m_inMapFetchAmt_cfg;
-            m_im_addr += m_inMapFetchAmt_cfg;
+            m_inMapFetchCount += m_inMapFetchAmt_cfg << log2AXI_sz;
+            m_im_addr += m_inMapFetchAmt_cfg << log2AXI_sz;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Input Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -252,14 +253,21 @@ void FAS::partMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_PART_MAP_FETCH_ID;
-            int remAmt = m_partMapFetchTotal_cfg - m_partMapFetchCount;
-            int fetchAmt = (remAmt < m_pm_fetch_amount_cfg) ? remAmt : m_pm_fetch_amount_cfg;
+            int rdAmt;
+            if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
+            {
+                rdAmt = (m_convMap_fifo_sz >= m_pm_low_watermark_cfg) ? m_pm_low_watermark_cfg : m_convMap_fifo_sz;
+            }
+            else
+            {
+                rdAmt = (m_partMap_fifo_sz >= m_pm_low_watermark_cfg) ? m_pm_low_watermark_cfg : m_partMap_fifo_sz;
+            }
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 m_pm_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                fetchAmt,
+                m_pm_fetch_amount_cfg,
                 0,
                 nullptr,
                 false,
@@ -269,14 +277,14 @@ void FAS::partMap_fetch_process()
             trans->release();
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
-                m_convMap_fifo_sz += (fetchAmt / PIXEL_SIZE);
+                m_convMap_fifo_sz += rdAmt;
             }
             else
             {
-                m_partMap_fifo_sz += (fetchAmt / PIXEL_SIZE);
+                m_partMap_fifo_sz += rdAmt;
             }
-            m_partMapFetchCount += fetchAmt;
-            m_pm_addr += fetchAmt;
+            m_partMapFetchCount += m_pm_fetch_amount_cfg;
+            m_pm_addr += m_pm_fetch_amount_cfg;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Part Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -310,14 +318,13 @@ void FAS::prevMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_PREV_MAP_FETCH_ID;
-            int remAmt = m_prevMapFetchTotal_cfg - m_prevMapFetchCount;
-            int fetchAmt = (remAmt < m_pv_fetch_amount_cfg) ? remAmt : m_pv_fetch_amount_cfg;
+            int rdAmt = (m_prevMap_fifo_sz >= m_pv_low_watermark_cfg) ? m_pv_low_watermark_cfg : m_prevMap_fifo_sz;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 m_pv_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                fetchAmt,
+                m_pv_fetch_amount_cfg,
                 0,
                 nullptr,
                 false,
@@ -325,9 +332,9 @@ void FAS::prevMap_fetch_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_prevMap_fifo_sz += fetchAmt / PIXEL_SIZE;
-            m_prevMapFetchCount += fetchAmt;
-            m_pv_addr += fetchAmt;
+            m_prevMap_fifo_sz += rdAmt;
+            m_prevMapFetchCount += m_pv_fetch_amount_cfg;
+            m_pv_addr += m_pv_fetch_amount_cfg;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Prev Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -361,14 +368,13 @@ void FAS::resdMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_RES_MAP_FETCH_ID;
-            int remAmt = m_resdMapFetchTotal_cfg - m_resdMapFetchCount;
-            int fetchAmt = (remAmt < m_rm_fetch_amount_cfg) ? remAmt : m_rm_fetch_amount_cfg;
+            int rdAmt = (m_resdMap_fifo_sz >= m_rm_low_watermark_cfg) ? m_rm_low_watermark_cfg : m_resdMap_fifo_sz;            
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 m_rm_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                fetchAmt,
+                m_rm_fetch_amount_cfg,
                 0,
                 nullptr,
                 false,
@@ -376,9 +382,9 @@ void FAS::resdMap_fetch_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_resdMap_fifo_sz += fetchAmt / PIXEL_SIZE;
-            m_resdMapFetchCount += fetchAmt;
-            m_rm_addr += fetchAmt;
+            m_resdMap_fifo_sz += rdAmt;
+            m_resdMapFetchCount += m_rm_fetch_amount_cfg;
+            m_rm_addr += m_rm_fetch_amount_cfg;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Resd Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -797,6 +803,8 @@ void FAS::S_process()
     sc_time delay;
     Accel_Trans* accel_trans;
     int start;
+    int log2AXI_sz = (int)log2(AXI_MX_BT_SZ);
+    int log2Px_sz = (int)log2(PIXEL_SIZE);
     while(true)
     {
         wait();
@@ -810,14 +818,15 @@ void FAS::S_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_STORE_ID;
-            int storeAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ? m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
-            m_outBuf_fifo_sz -= storeAmt;
+            int wrAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ? m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
+            int n_axi_bts = (m_outMapStoreFactor_cfg << log2Px_sz) >> log2AXI_sz;
+            m_outBuf_fifo_sz -= wrAmt;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 m_om_addr,
                 TLM_WRITE_COMMAND,
                 (unsigned char*)accel_trans,
-                (storeAmt * PIXEL_SIZE),
+                n_axi_bts,
                 0,
                 nullptr,
                 false,
@@ -825,8 +834,8 @@ void FAS::S_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_outMapStoreCount += (storeAmt * PIXEL_SIZE);
-            m_om_addr += (storeAmt * PIXEL_SIZE);
+            m_outMapStoreCount += (m_outMapStoreFactor_cfg << log2Px_sz);
+            m_om_addr += (m_outMapStoreFactor_cfg << log2Px_sz);
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
                 int perct = floor((m_trans_no / m_total_store_trans) * 100.0f);

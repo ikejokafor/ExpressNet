@@ -21,7 +21,7 @@ CNN accel sim
     testing opcode 16 functionality. Need to add logic to verification framework which will generate and inject
     input img data, generate convMap result of data and send over AWP FAS interconnect, and store data to memory
 
-    Change signal spec to look more like axi, read and wrtie groups for every possible initiator
+    Change signal init and targ spec to look more like axi, read and wrtie groups for every possible initiator
  
 
 
@@ -34,3 +34,7 @@ to quads, again AWP will dictate which quads data goes to.
  
 Interconnect will send data plus, strobe to know which pieces of data are valid
 , use counters in AWP to determine signaling and where to send data to.
+
+In the hardware make sure you count how much data you write over AXI, only last right must continue to assert wr valid to write past
+data size, up to AXI transfer size. On read must count data coming in so you know which data on the last transfer
+is valid

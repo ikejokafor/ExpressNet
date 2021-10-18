@@ -192,18 +192,16 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     else // TLM_WRITE_COMMAND
     {
         b_wait_ce();
-        sc_bv<INIT_ADDR_WTH> t0; t0.range(INIT_ADDR_WTH, (req_idx * INIT_ADDR_WTH)) = address;
-        init_wr_addr.write(t0);
-        sc_bv<INIT_LEN_WTH> t1; t1.range(INIT_LEN_WTH, (req_idx * INIT_LEN_WTH)) = length;
-        init_wr_len.write(t1);
-        init_wr_req.write(1);
+        init_wr_addr = address;
+        init_wr_len = length;
+        init_wr_req = 1;
         while(true)
         {
             b_wait_ce();
             if(init_wr_req_ack.read() == 1)
                 break;
         }
-        init_wr_req.write(0);
+        init_wr_req = 0;
         while(true)
         {
             b_wait_ce();
