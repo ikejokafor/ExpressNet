@@ -75,7 +75,7 @@ void QUAD::ctrl_process_0()
                         }
                         else
                         {
-                            str = "[" + string(name()) + "]: Starting Convolution process "+ sc_time_stamp().to_string() + "\n";
+                            str = "[" + string(name()) + "]: QUAD primed. Starting Convolution process "+ sc_time_stamp().to_string() + "\n";
                             cout << str;
                             m_state = ST_ACTIVE;
                         }

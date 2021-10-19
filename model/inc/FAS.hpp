@@ -154,7 +154,7 @@ SC_MODULE(FAS)
             m_prevMap_dwc_fifo_sz           = 0;
             m_opcode_cfg                    = -1;
             m_last_wrt                      = 0;
-            m_last_CO_recvd                 = 0;
+            m_last_CO_recvd                 = false;
             m_adder_tree_rdv_count          = 0;
             m_prog_factor                   = 10;
             m_trans_no                      = 0.0f;

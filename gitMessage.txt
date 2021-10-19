@@ -1,3 +1,1 @@
-Fixed QUAD PFB loading during DDR AXI SIM
-Fixed signaling bug in axi bridge
-
+Fixed Job fetch bug in AWP model

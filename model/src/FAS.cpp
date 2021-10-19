@@ -870,12 +870,6 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
     trans.acquire();
     Accel_Trans* accel_trans;
     accel_trans = (Accel_Trans*)trans.get_data_ptr();
-    if(accel_trans->last_CO)
-    {
-        m_last_CO_recvd = accel_trans->last_CO;
-        string str = "[" + string(name()) + "]: recieved last convolutional output\n";
-        cout << str;
-    }
     tlm_response_status status = TLM_OK_RESPONSE;
     switch (accel_trans->accel_cmd)
     {
@@ -886,6 +880,12 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         }
         case ACCL_CMD_RESULT_WRITE:
         {
+            if(accel_trans->last_CO)
+            {
+                m_last_CO_recvd = accel_trans->last_CO;
+                string str = "[" + string(name()) + "]: recieved last convolutional output\n";
+                cout << str;
+            }
             nb_result_write(accel_trans->res_pkt_size);
             trans.release();
             break;

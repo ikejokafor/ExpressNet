@@ -72,6 +72,7 @@ void AWP::send_job_request()
                 bus.m_QUAD_job_req_arr[i] = false;
             }
             Accel_Trans* accel_trans = new Accel_Trans();
+            accel_trans->last_CO = false;
             accel_trans->AWP_id = m_AWP_id;
             accel_trans->FAS_id = m_FAS_id;
             accel_trans->accel_cmd = ACCL_CMD_JOB_FETCH;

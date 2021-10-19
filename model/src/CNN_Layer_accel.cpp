@@ -157,6 +157,9 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     int req_idx = accel_trans->fas_req_id;
     int length = trans.get_data_length();
 #ifdef DDR_AXI_MEM_SIM
+
+
+#ifdef VERBOSE_DEBUG
     cout << endl << endl;
     string str = (trans.get_command() == TLM_READ_COMMAND) ? "READ" : "WRITE";
     cout << "[CNN_Layer_Accel]: " << str << endl;
@@ -164,6 +167,9 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     cout << "\t\treq_idx - " << req_idx << endl;
     cout << "\t\tlength  - " << length <<  endl;
     cout << endl << endl;
+#endif
+
+
     if(trans.get_command() == TLM_READ_COMMAND)
     {
         b_wait_ce();
