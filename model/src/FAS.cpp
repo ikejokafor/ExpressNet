@@ -251,7 +251,7 @@ void FAS::partMap_fetch_process()
     {
         wait();
         if(m_state == ST_ACTIVE &&
-			((m_opcode_cfg != 14 && m_partMap_fifo_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)
+			((m_opcode_cfg != 14 && m_partMap_fifo_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount < m_partMapFetchTotal_cfg)
 			|| ((m_opcode_cfg == 14 || m_opcode_cfg == 17) && m_convMap_fifo_sz <= m_pm_low_watermark_cfg && m_partMapFetchCount != m_partMapFetchTotal_cfg)))
         {
 #ifdef VERBOSE_DEBUG
@@ -314,7 +314,7 @@ void FAS::prevMap_fetch_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && m_prevMap_fifo_sz <= m_pv_low_watermark_cfg && m_prevMapFetchCount != m_prevMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && m_prevMap_fifo_sz <= m_pv_low_watermark_cfg && m_prevMapFetchCount < m_prevMapFetchTotal_cfg)
         {
 #ifdef VERBOSE_DEBUG
             start = sc_time_stamp().to_double();
@@ -369,7 +369,7 @@ void FAS::resdMap_fetch_process()
     while(true)
     {
         wait();
-        if(m_state == ST_ACTIVE && m_resdMap_fifo_sz <= m_rm_low_watermark_cfg && m_resdMapFetchCount != m_resdMapFetchTotal_cfg)
+        if(m_state == ST_ACTIVE && m_resdMap_fifo_sz <= m_rm_low_watermark_cfg && m_resdMapFetchCount < m_resdMapFetchTotal_cfg)
         {
 #ifdef VERBOSE_DEBUG
             start = sc_time_stamp().to_double();
@@ -842,7 +842,8 @@ void FAS::S_process()
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_STORE_ID;
             int wrAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ? m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
-            int n_axi_bts = (m_outMapStoreFactor_cfg << log2Px_sz) >> log2AXI_sz;
+            int nBytes = m_outMapStoreFactor_cfg << log2Px_sz;
+            int n_axi_bts = nBytes >> log2AXI_sz;
             m_outBuf_fifo_sz -= wrAmt;
             trans = nb_createTLMTrans(
                 m_mem_mng,
@@ -857,8 +858,8 @@ void FAS::S_process()
             );
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
-            m_outMapStoreCount += (m_outMapStoreFactor_cfg << log2Px_sz);
-            m_om_addr += (m_outMapStoreFactor_cfg << log2Px_sz);
+            m_outMapStoreCount += nBytes;
+            m_om_addr += nBytes;
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
                 int perct = floor((m_trans_no / m_total_store_trans) * 100.0f);
