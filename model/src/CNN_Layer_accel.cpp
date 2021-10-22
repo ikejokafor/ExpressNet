@@ -129,11 +129,6 @@ void CNN_Layer_Accel::system_mem_arb_process()
 #endif
 
 
-// FAS_JOB_FETCH_ID = 0,
-// FAS_PART_MAP_FETCH_ID = 1,
-// FAS_RES_MAP_FETCH_ID = 2,
-// FAS_PREV_MAP_FETCH_ID = 3,
-// FAS_STORE_ID = 4
 #ifdef DDR_AXI_MEM_SIM
 void CNN_Layer_Accel::b_wait_ce()
 {
@@ -218,9 +213,9 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
 #else
     m_req_arr[req_idx].req_pending = true;
     wait(m_req_arr[req_idx].ack);
-    int _numCycles = ceil((float)length / (float)BUS_SIZE);
-    sc_core::sc_time numCycles(_numCycles * CLK_PRD, sc_core::SC_NS);
-    wait(numCycles);
+    // int _numCycles = ceil((float)length / (float)BUS_SIZE);
+    // sc_core::sc_time numCycles(_numCycles * CLK_PRD, sc_core::SC_NS);
+    // wait(numCycles);
     m_total_sys_mem_trans--;
 #endif
     trans.release();
@@ -273,13 +268,13 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     m_accelCfg = new AccelConfig(NULL);
     m_accelCfg->m_fpga_hndl = m_fpga_hndl;
     
-    cout << "max pending simal req: " << numReq_st << endl;
-    cout << "max total_sys_mem_trans:" << total_sys_mem_trans_st << endl;
-    cout << "m_req_arr_0: " << m_req_arr[0].max_tally << endl;
-    cout << "m_req_arr_1: " << m_req_arr[1].max_tally << endl;
-    cout << "m_req_arr_2: " << m_req_arr[2].max_tally << endl;
-    cout << "m_req_arr_3: " << m_req_arr[3].max_tally << endl;
-    cout << "m_req_arr_4: " << m_req_arr[4].max_tally << endl;
+    // cout << "max pending simal req: " << numReq_st << endl;
+    // cout << "max total_sys_mem_trans:" << total_sys_mem_trans_st << endl;
+    // cout << "m_req_arr_0: " << m_req_arr[0].max_tally << endl;
+    // cout << "m_req_arr_1: " << m_req_arr[1].max_tally << endl;
+    // cout << "m_req_arr_2: " << m_req_arr[2].max_tally << endl;
+    // cout << "m_req_arr_3: " << m_req_arr[3].max_tally << endl;
+    // cout << "m_req_arr_4: " << m_req_arr[4].max_tally << endl;
     numReq_st = 0;
     total_sys_mem_trans_st = 0;
     m_req_arr[0].max_tally = 0;

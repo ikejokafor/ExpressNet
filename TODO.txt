@@ -1,19 +1,3 @@
-ref: ad-ug-0113_v1_2.pdf
-
-    Hang when using a bitstream built with Vivado 2018.3.1
-    When running the demonstration program host_hbm with an ADM-PCIE-9H7 that has been configured with a
-    host_hbm bitstream built using Vivado 2018.3.1, the program might hang after displaying the message
-    INFO: Testing HBM bank 0 range 0x0 - 0x1000000 using CPU ...
-
-    Because this appears to result from a hang condition on an AXI channel somewhere, the DMA transfer cannot be
-    aborted and the program does not respond to CTRL-C. After issuing a CTRL-C, the adxdma_reset utility of the
-    ADXDMA Driver can be used to abort the program, resetting the XDMA PCI Express endpoint and all
-    downstream logic in the process.
-    The root cause of this is not known at present, and using Vivado 2019.1 is recommended instead.
-
-
-
-
 CNN accel sim
     
     Check if count on fifos changes automatically when read latency is high
@@ -25,16 +9,7 @@ CNN accel sim
  
 
 
-There should be one input map address per AWP, one row for entire depth across all AWP’s quads is 
-fetched at a time, address is incremented as such.s. counters inside AWP will dictate which 
-quad data goes to. Within FAS, if not enough depth, (using counters to know), will send zeros 
-to quads, again AWP will dictate which quads data goes to.
 
-
- 
-Interconnect will send data plus, strobe to know which pieces of data are valid
-, use counters in AWP to determine signaling and where to send data to.
-
-In the hardware make sure you count how much data you write over AXI, only last right must continue to assert wr valid to write past
-data size, up to AXI transfer size. On read must count data coming in so you know which data on the last transfer
-is valid
+In the model code for yolov3 4_CONVOLUTION, the output buffer dwc fifo still has data in it
+    most likely an extra write is happening, fix it and add it to conditional clauses for S_Process
+    and in the complete state

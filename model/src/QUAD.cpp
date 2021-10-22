@@ -205,7 +205,6 @@ void QUAD::ctrl_process_1()
             if((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
             {
                 m_res_fifo_sz += (KRNL_3X3_SIMD * MULT_SIMD);
-                m_output_count += KRNL_3X3_SIMD;
             }
         }
     }
@@ -215,14 +214,14 @@ void QUAD::ctrl_process_1()
 void QUAD::result_write_process()
 {
     string str;
-    int numRd;
+    int numRd = 0;
     while(true)
     {
         wait();
         if(((m_cascade_cfg && m_master_QUAD_cfg) || (!m_cascade_cfg && m_master_QUAD_cfg))
             && (m_res_fifo_sz >= RES_PKT_SIZE || (m_state == ST_WAIT_LAST_RES_WRITE && m_res_fifo_sz > 0 && m_res_fifo_sz < RES_PKT_SIZE && m_output_row == m_num_output_rows_cfg)))
         {
-            for(int i = 0; i < RES_PKT_SIZE; i += RES_FIFO_RD_WIDTH)
+            for(int i = 0; i < RES_PKT_SIZE; i += RES_FIFO_RD_WIDTH) // does not work if RES_PKT_SIZE != RES_FIFO_RD_WIDTH
             {
                 if(m_res_fifo_sz == 0)
                 {
@@ -231,11 +230,13 @@ void QUAD::result_write_process()
                 else if(m_res_fifo_sz < RES_FIFO_RD_WIDTH)
                 {
                     numRd = m_res_fifo_sz;
+                    m_output_count += numRd;
                     m_res_fifo_sz = 0;
                 }
                 else
                 {
                     numRd = RES_FIFO_RD_WIDTH;
+                    m_output_count += numRd;
                     m_res_fifo_sz -= RES_FIFO_RD_WIDTH;
                 }
                 wait();

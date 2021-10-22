@@ -61,6 +61,7 @@ void FAS::ctrl_process()
             case ST_SEND_COMPLETE:
             {
                 bool all_complete = true;
+                int log2Px_sz = (int)log2(PIXEL_SIZE);
                 for(int i = 0; i < m_AWP_complt_arr.size(); i++)
                 {
                     if(m_FAS_cfg->m_AWP_en_arr[i] && !m_AWP_complt_arr[i])
@@ -74,9 +75,10 @@ void FAS::ctrl_process()
                     if(m_prevMap_fifo_sz > 0 || m_resdMap_fifo_sz > 0 
                         || m_resdMap_dwc_fifo_sz > 0 || m_prevMap_dwc_fifo_sz > 0
                         || m_partMap_fifo_sz > 0 || m_convMap_fifo_sz > 0 
-                        || m_outBuf_fifo_sz > 0 || m_trans_fifo.size() > 0)
+                        || m_outBuf_fifo_sz > 0 || m_trans_fifo.size() > 0
+                        || (m_num_ob_wr << log2Px_sz) != m_om_store_vld_total_cfg)
                     {
-                        str = "[" + string(name()) + "]: Buffers are not empty\n"
+                        str = "[" + string(name()) + "]: Buffers are not empty or not enough outputs\n"
                             "\tm_prevMap_fifo_sz:     " + to_string(m_prevMap_fifo_sz)      + "\n"
                             "\tm_resdMap_fifo_sz:     " + to_string(m_resdMap_fifo_sz)      + "\n"
                             "\tm_resdMap_dwc_fifo_sz: " + to_string(m_resdMap_dwc_fifo_sz)  + "\n"
@@ -84,8 +86,10 @@ void FAS::ctrl_process()
                             "\tm_partMap_fifo_sz:     " + to_string(m_partMap_fifo_sz)      + "\n"
                             "\tm_convMap_fifo_sz:     " + to_string(m_convMap_fifo_sz)      + "\n"
                             "\tm_outBuf_fifo_sz:      " + to_string(m_outBuf_fifo_sz)       + "\n"
-                            "\tm_trans_fifo_sz:       " + to_string(m_trans_fifo.size())    + "\n";
-                        cout << str;
+                            "\tm_trans_fifo_sz:       " + to_string(m_trans_fifo.size())    + "\n"
+                            "\tm_ob_dwc_fifo_sz:      " + to_string(m_ob_dwc_fifo_sz)       + "\n"
+                            "\tm_num_ob_wr:           " + to_string(m_num_ob_wr)            + "\n"; 
+                        cout << str << std::flush;
                         raise(SIGINT);
                     }
                     for(int i = 0; i < MAX_AWP_PER_FAS; i++)
@@ -94,11 +98,12 @@ void FAS::ctrl_process()
                     }
                     m_FAS_time = sc_time_stamp().to_double() - m_start_time;
                     str = "[" + string(name()) + "]: FAS processing time: " + to_string((int)m_FAS_time) + " ns\n";
-                    cout << str;            
+                    cout << str << std::flush;            
                     wait();
                     m_complete.notify();
                     wait(m_complete_ack);
                     m_state                         = ST_IDLE;
+                    m_ob_dwc_fifo_sz                = 0;    // FIXME
                     m_krnl3x3FetchCount             = 0;
                     m_krnl3x3BiasFetchCount         = 0;
                     m_partMapFetchCount             = 0;
@@ -145,8 +150,9 @@ void FAS::ctrl_process()
                     m_opcode_cfg                    = -1;
                     m_prog_factor                   = 10;
                     m_trans_no                      = 0;
+                    m_num_ob_wr                     = 0;
                     str = "[" + string(name()) + "]: sent complete\n";
-                    cout << str;
+                    cout << str << std::flush;
                 }
                 break;
             }
@@ -220,12 +226,12 @@ void FAS::job_fetch_process()
             m_im_addr += m_inMapFetchAmt_cfg << log2AXI_sz;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Input Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
-            cout << str;
+            cout << str ;
 #endif            
             if(m_inMapFetchCount == m_inMapFetchTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
+                cout << str << std::flush;
             }
         }
     }
@@ -239,6 +245,8 @@ void FAS::partMap_fetch_process()
     Accel_Trans* accel_trans;
     string str;
     int start;
+    int log2AXI_sz = (int)log2(AXI_MX_BT_SZ);
+    int log2Px_sz = (int)log2(PIXEL_SIZE);
     while(true)
     {
         wait();
@@ -253,21 +261,16 @@ void FAS::partMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_PART_MAP_FETCH_ID;
-            int rdAmt;
-            if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
-            {
-                rdAmt = (m_convMap_fifo_sz >= m_pm_low_watermark_cfg) ? m_pm_low_watermark_cfg : m_convMap_fifo_sz;
-            }
-            else
-            {
-                rdAmt = (m_partMap_fifo_sz >= m_pm_low_watermark_cfg) ? m_pm_low_watermark_cfg : m_partMap_fifo_sz;
-            }
+            int remAmt = m_pm_ftch_vld_total_cfg - m_partMapFetchCount;
+            int rdAmt = (remAmt < m_pm_low_watermark_cfg) ? remAmt : m_pm_low_watermark_cfg;
+            int nBytes = (m_pm_low_watermark_cfg << log2Px_sz);            
+            int n_axi_bts = nBytes >> log2AXI_sz;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 m_pm_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                m_pm_fetch_amount_cfg,
+                n_axi_bts,
                 0,
                 nullptr,
                 false,
@@ -283,8 +286,8 @@ void FAS::partMap_fetch_process()
             {
                 m_partMap_fifo_sz += rdAmt;
             }
-            m_partMapFetchCount += m_pm_fetch_amount_cfg;
-            m_pm_addr += m_pm_fetch_amount_cfg;
+            m_partMapFetchCount += nBytes;
+            m_pm_addr += nBytes;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Part Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -292,7 +295,7 @@ void FAS::partMap_fetch_process()
             if(m_partMapFetchCount == m_partMapFetchTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Part Map Fetch at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
+                cout << str << std::flush;
             }
         }
     }
@@ -306,6 +309,8 @@ void FAS::prevMap_fetch_process()
     Accel_Trans* accel_trans;
     string str;
     int start;
+    int log2AXI_sz = (int)log2(AXI_MX_BT_SZ);
+    int log2Px_sz = (int)log2(PIXEL_SIZE);    
     while(true)
     {
         wait();
@@ -318,13 +323,16 @@ void FAS::prevMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_PREV_MAP_FETCH_ID;
-            int rdAmt = (m_prevMap_fifo_sz >= m_pv_low_watermark_cfg) ? m_pv_low_watermark_cfg : m_prevMap_fifo_sz;
+            int remAmt = m_pv_ftch_vld_total_cfg - m_prevMapFetchCount;
+            int rdAmt = (remAmt < m_pv_low_watermark_cfg) ? remAmt : m_pv_low_watermark_cfg;
+            int nBytes = (m_pv_low_watermark_cfg << log2Px_sz);
+            int n_axi_bts = nBytes >> log2AXI_sz;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 m_pv_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                m_pv_fetch_amount_cfg,
+                n_axi_bts,
                 0,
                 nullptr,
                 false,
@@ -333,8 +341,8 @@ void FAS::prevMap_fetch_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
             m_prevMap_fifo_sz += rdAmt;
-            m_prevMapFetchCount += m_pv_fetch_amount_cfg;
-            m_pv_addr += m_pv_fetch_amount_cfg;
+            m_prevMapFetchCount += nBytes;
+            m_pv_addr += nBytes;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Prev Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -342,7 +350,7 @@ void FAS::prevMap_fetch_process()
             if(m_prevMapFetchCount == m_prevMapFetchTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Prev Map Fetch at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
+                cout << str << std::flush;
             }
         }
     }
@@ -356,6 +364,8 @@ void FAS::resdMap_fetch_process()
     Accel_Trans* accel_trans;
     string str;
     int start;
+    int log2AXI_sz = (int)log2(AXI_MX_BT_SZ);
+    int log2Px_sz = (int)log2(PIXEL_SIZE);       
     while(true)
     {
         wait();
@@ -368,13 +378,16 @@ void FAS::resdMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_RES_MAP_FETCH_ID;
-            int rdAmt = (m_resdMap_fifo_sz >= m_rm_low_watermark_cfg) ? m_rm_low_watermark_cfg : m_resdMap_fifo_sz;            
+            int remAmt = m_rm_ftch_vld_total_cfg - m_resdMapFetchCount;
+            int rdAmt = (remAmt < m_rm_low_watermark_cfg) ? remAmt : m_rm_low_watermark_cfg;
+            int nBytes = (m_rm_low_watermark_cfg << log2Px_sz);
+            int n_axi_bts = nBytes >> log2AXI_sz;          
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 m_rm_addr,
                 TLM_READ_COMMAND,
                 (unsigned char*)accel_trans,
-                m_rm_fetch_amount_cfg,
+                n_axi_bts,
                 0,
                 nullptr,
                 false,
@@ -383,8 +396,8 @@ void FAS::resdMap_fetch_process()
             sys_mem_init_soc->b_transport(*trans, delay);
             trans->release();
             m_resdMap_fifo_sz += rdAmt;
-            m_resdMapFetchCount += m_rm_fetch_amount_cfg;
-            m_rm_addr += m_rm_fetch_amount_cfg;
+            m_resdMapFetchCount += nBytes;
+            m_rm_addr += nBytes;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Resd Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
             cout << str;
@@ -392,7 +405,7 @@ void FAS::resdMap_fetch_process()
             if(m_resdMapFetchCount == m_resdMapFetchTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Resd Map Fetch at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
+                cout << str << std::flush;
             }
         }
     }
@@ -609,6 +622,7 @@ void FAS::A_process()
 }
 
 
+int m_num_convMap_fifo_rd = 0;
 void FAS::buffer_update_process()
 {
     while(true)
@@ -640,6 +654,7 @@ void FAS::buffer_update_process()
             || m_opcode_cfg == 14) 
         {
             m_convMap_fifo_sz -= m_krnl1x1Depth_cfg;
+            m_num_convMap_fifo_rd += m_krnl1x1Depth_cfg;
         }
     }
 }
@@ -759,6 +774,7 @@ void FAS::prevMap_dwc_fifo_process()
             m_last_output = false;
             m_prevMap_fifo_sz -= m_prevMap_dwc_fifo_sz;
             m_outBuf_fifo_sz += m_prevMap_dwc_fifo_sz;
+            m_num_ob_wr += m_prevMap_dwc_fifo_sz;
             m_prevMap_dwc_fifo_sz = 0;
         }
     }
@@ -780,6 +796,7 @@ void FAS::outBuf_dwc_wr_process()
         {
             m_last_output = false;
             m_outBuf_fifo_sz += m_ob_dwc_fifo_sz;
+            m_num_ob_wr += m_ob_dwc_fifo_sz;
             m_ob_dwc_fifo_sz = 0;
         }
     }
@@ -792,8 +809,10 @@ void FAS::outBuf_wr_process()
     {
         wait(m_outBuf_wr.default_event());
         m_outBuf_fifo_sz += OB_FIFO_WR_WIDTH;
+        m_num_ob_wr += OB_FIFO_WR_WIDTH;
     }
 }
+
 
 
 void FAS::S_process()
@@ -808,8 +827,12 @@ void FAS::S_process()
     while(true)
     {
         wait();
-        if((m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE)) 
-            || (m_state == ST_WAIT_LAST_WRITE && m_outBuf_fifo_sz > 0 && m_convMap_fifo_sz == 0 && m_partMap_fifo_sz == 0 && m_resdMap_fifo_sz == 0 && m_prevMap_fifo_sz == 0))
+        int num_ob_wr = (m_num_ob_wr << log2Px_sz);
+        if((m_outMapStoreCount < m_outMapStoreTotal_cfg) && (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg && (m_state == ST_ACTIVE || m_state == ST_WAIT_LAST_WRITE))
+            || (m_state == ST_WAIT_LAST_WRITE && m_outBuf_fifo_sz > 0 && m_convMap_fifo_sz == 0 
+                && m_partMap_fifo_sz == 0 && m_resdMap_fifo_sz == 0 && m_prevMap_fifo_sz == 0 
+                && m_prevMap_dwc_fifo_sz == 0 && m_resdMap_dwc_fifo_sz == 0
+                && num_ob_wr == m_om_store_vld_total_cfg))
         {
 #ifdef VERBOSE_DEBUG
             start = sc_time_stamp().to_double();
@@ -843,13 +866,13 @@ void FAS::S_process()
                 {
                     m_prog_factor += 10;
                     str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + "\n";
-                    cout << str;
+                    cout << str << std::flush;
                 }
             }
             if(m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
                 str = "[" + string(name()) + "]:" + " finished last Output Buffer Write at " + sc_time_stamp().to_string() + "\n";
-                cout << str;
+                cout << str << std::flush;
                 m_last_wrt = true;
             }
 #ifdef VERBOSE_DEBUG
@@ -884,7 +907,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
             {
                 m_last_CO_recvd = accel_trans->last_CO;
                 string str = "[" + string(name()) + "]: recieved last convolutional output\n";
-                cout << str;
+                cout << str << std::flush;
             }
             nb_result_write(accel_trans->res_pkt_size);
             trans.release();
@@ -936,6 +959,7 @@ void FAS::nb_krnl_1x1_bram_rd()
         || m_opcode_cfg == 14)
     {
         m_adder_tree_datain_valid.notify(m_two_cycles_later);
+        
     }
     else
     {
@@ -958,6 +982,7 @@ void FAS::nb_result_write(int res_pkt_size)
         //     return;
         // }
         m_outBuf_fifo_sz += res_pkt_size;
+        m_num_ob_wr += res_pkt_size;
     }
     else
     {
@@ -1017,21 +1042,22 @@ void FAS::b_getCfgData()
     m_rm_low_watermark_cfg          = m_FAS_cfg->m_rm_low_watermark;
     m_pm_low_watermark_cfg          = m_FAS_cfg->m_pm_low_watermark;
     m_pv_low_watermark_cfg          = m_FAS_cfg->m_pv_low_watermark;
-    m_rm_fetch_amount_cfg           = m_FAS_cfg->m_rm_fetch_amount;   
-    m_pm_fetch_amount_cfg           = m_FAS_cfg->m_pm_fetch_amount;
-    m_pv_fetch_amount_cfg           = m_FAS_cfg->m_pv_fetch_amount;
+    m_rm_ftch_vld_total_cfg         = m_FAS_cfg->m_rm_ftch_vld_total;   
+    m_pm_ftch_vld_total_cfg         = m_FAS_cfg->m_pm_ftch_vld_total;
+    m_pv_ftch_vld_total_cfg         = m_FAS_cfg->m_pv_ftch_vld_total;
     m_krnl1x1_pding_cfg             = m_FAS_cfg->m_krnl1x1_pding;
     m_krnl1x1_pad_bgn_cfg           = m_FAS_cfg->m_krnl1x1_pad_bgn;
     m_krnl1x1_pad_end_cfg           = m_FAS_cfg->m_krnl1x1_pad_end;
 	m_num_output_rows_cfg			= m_FAS_cfg->m_num_output_rows;
 	m_num_output_cols_cfg			= m_FAS_cfg->m_num_output_cols;
 	m_output_depth_cfg 				= m_FAS_cfg->m_output_depth;
+    m_om_store_vld_total_cfg        = m_FAS_cfg->m_om_store_vld_total;
     m_im_addr                       = m_inMapAddr_cfg;
     m_pm_addr                       = m_partMapAddr_cfg;
     m_pv_addr                       = m_prevMapAddr_cfg;
     m_rm_addr                       = m_resdMapAddr_cfg;
     m_om_addr                       = m_outMapAddr_cfg;
-
+    
     if(m_krnl1x1_pding_cfg)
     {
         m_num_1x1_kernels_cfg       = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);
@@ -1351,9 +1377,9 @@ void FAS::nb_print_cfg()
         "\tResdMap Low Watermark:                       " + to_string(m_rm_low_watermark_cfg)          + "\n"
         "\tPartMap Low Watermark:                       " + to_string(m_pm_low_watermark_cfg)          + "\n"
         "\tPrev1x1 Low Watermark:                       " + to_string(m_pv_low_watermark_cfg)          + "\n"
-        "\tResdMap Fetch Amount:                        " + to_string(m_rm_fetch_amount_cfg)           + "\n"   
-        "\tPartMap Fetch Amount:                        " + to_string(m_pm_fetch_amount_cfg)           + "\n"
-        "\tPrev1x1 Fetch Amount:                        " + to_string(m_pv_fetch_amount_cfg)           + "\n"
+        "\tResdMap Vld Fetch Total:                     " + to_string(m_rm_ftch_vld_total_cfg)         + "\n"   
+        "\tPartMap Vld Fetch Total:                     " + to_string(m_pm_ftch_vld_total_cfg)         + "\n"
+        "\tPrev1x1 Vld Fetch Total:                     " + to_string(m_pv_ftch_vld_total_cfg)         + "\n"
         "\tKernel 1x1 padding:                          " + to_string(m_krnl1x1_pding_cfg)             + "\n"
         "\tKernel 1x1 Padding begin:                    " + to_string(m_krnl1x1_pad_bgn_cfg)           + "\n"
         "\tKernel 1x1 Padding end:                      " + to_string(m_krnl1x1_pad_end_cfg)           + "\n";

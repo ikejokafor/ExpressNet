@@ -34,7 +34,7 @@
 #define N_INIT_LEN_WTH                      MAX_FAS_RD_REQ * INIT_LEN_WTH
 #define N_INIT_DATA_WTH                     MAX_FAS_RD_REQ * INIT_DATA_WTH
   
-#define KRNL_1X1_SIMD                     	2
+#define KRNL_1X1_SIMD                     	1
 #define KRNL_3X3_SIMD						2
 #define MULT_SIMD                           1
 

@@ -139,9 +139,9 @@ SC_MODULE(FAS)
             m_co_high_watermark_cfg         = 0;
             m_rm_low_watermark_cfg          = 0;
             m_pm_low_watermark_cfg          = 0;
-            m_rm_fetch_amount_cfg           = 0;
-            m_pm_fetch_amount_cfg           = 0;
-            m_pv_fetch_amount_cfg           = 0;
+            m_rm_ftch_vld_total_cfg         = 0;
+            m_pm_ftch_vld_total_cfg         = 0;
+            m_pv_ftch_vld_total_cfg         = 0;
             m_krnl1x1_pding_cfg             = 0;
             m_krnl1x1_pad_bgn_cfg           = 0;
             m_krnl1x1_pad_end_cfg           = 0;
@@ -150,6 +150,7 @@ SC_MODULE(FAS)
 			m_num_output_rows_cfg			= 0;
 			m_num_output_cols_cfg			= 0;
 			m_output_depth_cfg				= 0;
+            m_om_store_vld_total_cfg        = 0;
             m_prevMap_fifo_sz               = 0;
             m_prevMap_dwc_fifo_sz           = 0;
             m_opcode_cfg                    = -1;
@@ -159,6 +160,7 @@ SC_MODULE(FAS)
             m_prog_factor                   = 10;
             m_trans_no                      = 0.0f;
             m_last_output                   = false;
+            m_num_ob_wr                     = 0;
         }
 
         // Destructor
@@ -257,9 +259,9 @@ SC_MODULE(FAS)
         int                                     m_rm_low_watermark_cfg          ;
         int                                     m_pm_low_watermark_cfg          ;
         int                                     m_pv_low_watermark_cfg          ;
-        int                                     m_rm_fetch_amount_cfg           ;
-        int                                     m_pm_fetch_amount_cfg           ;                                     
-        int                                     m_pv_fetch_amount_cfg           ;
+        int                                     m_rm_ftch_vld_total_cfg         ;   
+        int                                     m_pm_ftch_vld_total_cfg         ;
+        int                                     m_pv_ftch_vld_total_cfg         ;
         bool                                    m_krnl1x1_pding_cfg             ;
         int                                     m_krnl1x1_pad_bgn_cfg           ;
         int                                     m_krnl1x1_pad_end_cfg           ;
@@ -300,4 +302,6 @@ SC_MODULE(FAS)
         uint32_t                                m_pv_addr                       ;
         uint32_t                                m_rm_addr                       ;
         uint32_t                                m_om_addr                       ;
+        int                                     m_num_ob_wr                     ;
+        int                                     m_om_store_vld_total_cfg        ;
 };
