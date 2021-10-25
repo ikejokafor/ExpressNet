@@ -11,7 +11,7 @@ FAS::~FAS() { }
 
 void FAS::ctrl_process()
 {
-    string str;
+    string str; std::time_t result;
     while(true)
     {
         wait();
@@ -61,6 +61,7 @@ void FAS::ctrl_process()
             case ST_SEND_COMPLETE:
             {
                 bool all_complete = true;
+                result = std::time(nullptr);
                 int log2Px_sz = (int)log2(PIXEL_SIZE);
                 for(int i = 0; i < m_AWP_complt_arr.size(); i++)
                 {
@@ -88,7 +89,8 @@ void FAS::ctrl_process()
                             "\tm_outBuf_fifo_sz:      " + to_string(m_outBuf_fifo_sz)       + "\n"
                             "\tm_trans_fifo_sz:       " + to_string(m_trans_fifo.size())    + "\n"
                             "\tm_ob_dwc_fifo_sz:      " + to_string(m_ob_dwc_fifo_sz)       + "\n"
-                            "\tm_num_ob_wr:           " + to_string(m_num_ob_wr)            + "\n"; 
+                            "\tm_num_ob_wr:           " + to_string(m_num_ob_wr)            + "\n"
+                            "\t\t.....(               " + string(std::ctime(&result))       + ")\n";
                         cout << str << std::flush;
                         raise(SIGINT);
                     }
@@ -97,7 +99,7 @@ void FAS::ctrl_process()
                         m_AWP_complt_arr[i] = false;
                     }
                     m_FAS_time = sc_time_stamp().to_double() - m_start_time;
-                    str = "[" + string(name()) + "]: FAS processing time: " + to_string((int)m_FAS_time) + " ns\n";
+                    str = "[" + string(name()) + "]: FAS processing time: " + to_string((int)m_FAS_time) + " ns" + ".....(" + string(std::ctime(&result));
                     cout << str << std::flush;            
                     wait();
                     m_complete.notify();
@@ -151,7 +153,7 @@ void FAS::ctrl_process()
                     m_prog_factor                   = 10;
                     m_trans_no                      = 0;
                     m_num_ob_wr                     = 0;
-                    str = "[" + string(name()) + "]: sent complete\n";
+                    str = "[" + string(name()) + "]: sent complete" + ".....(" + string(std::ctime(&result));
                     cout << str << std::flush;
                 }
                 break;
@@ -163,9 +165,7 @@ void FAS::ctrl_process()
 
 void FAS::job_fetch_process()
 {
-    // INFO:   In this model you are loading a QUAD completely before moving to the next QUAD
-    //              but in the hardware you will actually load the QUADs in a round robin fashion
-    //              Shouldnt affect model accuracy.
+    std::time_t result;
     tlm::tlm_generic_payload* trans;
     sc_time delay;
     string str;
@@ -230,7 +230,8 @@ void FAS::job_fetch_process()
 #endif            
             if(m_inMapFetchCount == m_inMapFetchTotal_cfg)
             {
-                str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + "\n";
+                result = std::time(nullptr);
+                str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
                 cout << str << std::flush;
             }
         }
@@ -240,6 +241,7 @@ void FAS::job_fetch_process()
 
 void FAS::partMap_fetch_process()
 {
+    std::time_t result;
     tlm::tlm_generic_payload* trans;
     sc_time delay;
     Accel_Trans* accel_trans;
@@ -294,7 +296,8 @@ void FAS::partMap_fetch_process()
 #endif
             if(m_partMapFetchCount == m_partMapFetchTotal_cfg)
             {
-                str = "[" + string(name()) + "]:" + " finished last Part Map Fetch at " + sc_time_stamp().to_string() + "\n";
+                result = std::time(nullptr);
+                str = "[" + string(name()) + "]:" + " finished last Part Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
                 cout << str << std::flush;
             }
         }
@@ -304,6 +307,7 @@ void FAS::partMap_fetch_process()
 
 void FAS::prevMap_fetch_process()
 {
+    std::time_t result;
     tlm::tlm_generic_payload* trans;
     sc_time delay;
     Accel_Trans* accel_trans;
@@ -349,7 +353,8 @@ void FAS::prevMap_fetch_process()
 #endif
             if(m_prevMapFetchCount == m_prevMapFetchTotal_cfg)
             {
-                str = "[" + string(name()) + "]:" + " finished last Prev Map Fetch at " + sc_time_stamp().to_string() + "\n";
+                result = std::time(nullptr);
+                str = "[" + string(name()) + "]:" + " finished last Prev Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
                 cout << str << std::flush;
             }
         }
@@ -359,6 +364,7 @@ void FAS::prevMap_fetch_process()
 
 void FAS::resdMap_fetch_process()
 {
+    std::time_t result;
     tlm::tlm_generic_payload* trans;
     sc_time delay;
     Accel_Trans* accel_trans;
@@ -404,7 +410,8 @@ void FAS::resdMap_fetch_process()
 #endif
             if(m_resdMapFetchCount == m_resdMapFetchTotal_cfg)
             {
-                str = "[" + string(name()) + "]:" + " finished last Resd Map Fetch at " + sc_time_stamp().to_string() + "\n";
+                result = std::time(nullptr);
+                str = "[" + string(name()) + "]:" + " finished last Resd Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
                 cout << str << std::flush;
             }
         }
@@ -817,6 +824,7 @@ void FAS::outBuf_wr_process()
 
 void FAS::S_process()
 {
+    std::time_t result;
     string str;
     tlm::tlm_generic_payload* trans;
     sc_time delay;
@@ -860,26 +868,27 @@ void FAS::S_process()
             trans->release();
             m_outMapStoreCount += nBytes;
             m_om_addr += nBytes;
+            result = std::time(nullptr);
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
                 int perct = floor((m_trans_no / m_total_store_trans) * 100.0f);
                 if(perct >= m_prog_factor && perct > 0)
                 {
                     m_prog_factor += 10;
-                    str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + "\n";
+                    str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
                     cout << str << std::flush;
                 }
             }
             if(m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
-                str = "[" + string(name()) + "]:" + " finished last Output Buffer Write at " + sc_time_stamp().to_string() + "\n";
+                str = "[" + string(name()) + "]:" + " finished last Output Buffer Write at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
                 cout << str << std::flush;
                 m_last_wrt = true;
             }
 #ifdef VERBOSE_DEBUG
             else
             {
-                str = "[" + string(name()) + "]:" + " finished Output Buffer Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
+                str = "[" + string(name()) + "]:" + " finished Output Buffer Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
                 cout << str;
             }
 #endif
@@ -891,6 +900,7 @@ void FAS::S_process()
 
 void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
 {
+    std::time_t result;
     trans.acquire();
     Accel_Trans* accel_trans;
     accel_trans = (Accel_Trans*)trans.get_data_ptr();
@@ -906,8 +916,9 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
         {
             if(accel_trans->last_CO)
             {
+                result = std::time(nullptr);
                 m_last_CO_recvd = accel_trans->last_CO;
-                string str = "[" + string(name()) + "]: recieved last convolutional output\n";
+                string str = "[" + string(name()) + "]: recieved last convolutional output" + ".....(" + string(std::ctime(&result));
                 cout << str << std::flush;
             }
             nb_result_write(accel_trans->res_pkt_size);

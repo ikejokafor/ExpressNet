@@ -10,6 +10,8 @@
 #include "tlm_utils/simple_initiator_socket.h"
 #include "tlm_utils/simple_target_socket.h"
 #include "util.hpp"
+#include <chrono>
+#include <ctime>
 
 
 // #define VERBOSE_DEBUG
