@@ -118,7 +118,7 @@ void AWP::send_complete()
             {
                 if(bus.m_req_arr[i].req_pending)
                 {
-                    str = "[" + string(name()) + "]: QUAD request(s) are still pending" + ".....(" + string(std::ctime(&result));
+                    str = "[" + string(name()) + "]: QUAD request(s) are still pending" + ".....(" + string(std::ctime(&result)) +")";
                     cout << str << std::flush;
                     raise(SIGINT);
                 }
@@ -127,7 +127,7 @@ void AWP::send_complete()
             {
                 if(quad[i]->m_state != 0)
                 {
-                    str = "[" + string(name()) + "]: All QUADs not IDLE" + ".....(" + string(std::ctime(&result));
+                    str = "[" + string(name()) + "]: All QUADs not IDLE" + ".....(" + string(std::ctime(&result)) +")";
                     cout << str << std::flush;
                     raise(SIGINT);
                 }

@@ -90,7 +90,7 @@ void FAS::ctrl_process()
                             "\tm_trans_fifo_sz:       " + to_string(m_trans_fifo.size())    + "\n"
                             "\tm_ob_dwc_fifo_sz:      " + to_string(m_ob_dwc_fifo_sz)       + "\n"
                             "\tm_num_ob_wr:           " + to_string(m_num_ob_wr)            + "\n"
-                            "\t\t.....(               " + string(std::ctime(&result))       + ")\n";
+                            "\t\t.....(               " + string(std::ctime(&result))       + ")";
                         cout << str << std::flush;
                         raise(SIGINT);
                     }
@@ -99,7 +99,7 @@ void FAS::ctrl_process()
                         m_AWP_complt_arr[i] = false;
                     }
                     m_FAS_time = sc_time_stamp().to_double() - m_start_time;
-                    str = "[" + string(name()) + "]: FAS processing time: " + to_string((int)m_FAS_time) + " ns" + ".....(" + string(std::ctime(&result));
+                    str = "[" + string(name()) + "]: FAS processing time: " + to_string((int)m_FAS_time) + " ns" + ".....(" + string(std::ctime(&result)) +")";
                     cout << str << std::flush;            
                     wait();
                     m_complete.notify();
@@ -153,7 +153,7 @@ void FAS::ctrl_process()
                     m_prog_factor                   = 10;
                     m_trans_no                      = 0;
                     m_num_ob_wr                     = 0;
-                    str = "[" + string(name()) + "]: sent complete" + ".....(" + string(std::ctime(&result));
+                    str = "[" + string(name()) + "]: sent complete" + ".....(" + string(std::ctime(&result)) +")";
                     cout << str << std::flush;
                 }
                 break;
@@ -226,12 +226,12 @@ void FAS::job_fetch_process()
             m_im_addr += m_inMapFetchAmt_cfg << log2AXI_sz;
 #ifdef VERBOSE_DEBUG
             str = "[" + string(name()) + "]:" + " finished Input Map Fetch in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + "\n";
-            cout << str ;
+            cout << str;
 #endif            
             if(m_inMapFetchCount == m_inMapFetchTotal_cfg)
             {
                 result = std::time(nullptr);
-                str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
+                str = "[" + string(name()) + "]:" + " finished last Input Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
                 cout << str << std::flush;
             }
         }
@@ -297,7 +297,7 @@ void FAS::partMap_fetch_process()
             if(m_partMapFetchCount == m_partMapFetchTotal_cfg)
             {
                 result = std::time(nullptr);
-                str = "[" + string(name()) + "]:" + " finished last Part Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
+                str = "[" + string(name()) + "]:" + " finished last Part Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
                 cout << str << std::flush;
             }
         }
@@ -354,7 +354,7 @@ void FAS::prevMap_fetch_process()
             if(m_prevMapFetchCount == m_prevMapFetchTotal_cfg)
             {
                 result = std::time(nullptr);
-                str = "[" + string(name()) + "]:" + " finished last Prev Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
+                str = "[" + string(name()) + "]:" + " finished last Prev Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
                 cout << str << std::flush;
             }
         }
@@ -411,7 +411,7 @@ void FAS::resdMap_fetch_process()
             if(m_resdMapFetchCount == m_resdMapFetchTotal_cfg)
             {
                 result = std::time(nullptr);
-                str = "[" + string(name()) + "]:" + " finished last Resd Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
+                str = "[" + string(name()) + "]:" + " finished last Resd Map Fetch at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
                 cout << str << std::flush;
             }
         }
@@ -875,20 +875,20 @@ void FAS::S_process()
                 if(perct >= m_prog_factor && perct > 0)
                 {
                     m_prog_factor += 10;
-                    str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
+                    str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
                     cout << str << std::flush;
                 }
             }
             if(m_outMapStoreCount == m_outMapStoreTotal_cfg)
             {
-                str = "[" + string(name()) + "]:" + " finished last Output Buffer Write at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
+                str = "[" + string(name()) + "]:" + " finished last Output Buffer Write at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
                 cout << str << std::flush;
                 m_last_wrt = true;
             }
 #ifdef VERBOSE_DEBUG
             else
             {
-                str = "[" + string(name()) + "]:" + " finished Output Buffer Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result));
+                str = "[" + string(name()) + "]:" + " finished Output Buffer Write Request in " + to_string(int(sc_time_stamp().to_double()) - start) + " ns at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
                 cout << str;
             }
 #endif
@@ -918,7 +918,7 @@ void FAS::b_rout_soc_transport(tlm::tlm_generic_payload& trans, sc_time& delay)
             {
                 result = std::time(nullptr);
                 m_last_CO_recvd = accel_trans->last_CO;
-                string str = "[" + string(name()) + "]: recieved last convolutional output" + ".....(" + string(std::ctime(&result));
+                string str = "[" + string(name()) + "]: recieved last convolutional output" + ".....(" + string(std::ctime(&result)) +")";
                 cout << str << std::flush;
             }
             nb_result_write(accel_trans->res_pkt_size);
@@ -1110,7 +1110,9 @@ void FAS::b_cfg1x1Kernels()
     // );
     // sys_mem_init_soc->b_transport(*trans, delay);
     // trans->release();
-    wait((int)ceil(m_krnl1x1FetchTotal_cfg / KRNL_1x1_BRAM_WR_WIDTH), SC_NS);
+
+    // wait((int)ceil(m_krnl1x1FetchTotal_cfg / KRNL_1x1_BRAM_WR_WIDTH), SC_NS);
+    
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     // trans = nb_createTLMTrans(
     //     m_mem_mng,
@@ -1125,7 +1127,8 @@ void FAS::b_cfg1x1Kernels()
     // );
     // sys_mem_init_soc->b_transport(*trans, delay);
     // trans->release();
-    wait((int)ceil(m_krnl1x1BiasFetchTotal_cfg / KRNL_1X1_BIAS_BRAM_WR_WIDTH), SC_NS);
+    
+    // wait((int)ceil(m_krnl1x1BiasFetchTotal_cfg / KRNL_1X1_BIAS_BRAM_WR_WIDTH), SC_NS);
 }
 
 
