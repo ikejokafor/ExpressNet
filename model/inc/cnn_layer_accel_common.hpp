@@ -156,6 +156,7 @@ class Accel_Trans
         sc_core::sc_event ack           ;
         sc_core::sc_event request       ;
         fas_req_id_t fas_req_id         ;
+        int trans_no                    ;
         
         int max_tally                   ;
         int tally                       ;

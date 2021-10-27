@@ -20,6 +20,10 @@ void FAS::ctrl_process()
             case ST_IDLE:
             {
                 wait(m_start);
+                if(m_fd != NULL)
+                {
+                    m_fd = fopen("./memTrace.txt", "w");
+                }
                 wait();
                 m_start_time = sc_time_stamp().to_double();
                 m_start_ack.notify();
@@ -151,10 +155,15 @@ void FAS::ctrl_process()
                     m_prevMapFetchTotal_cfg         = 0;
                     m_opcode_cfg                    = -1;
                     m_prog_factor                   = 10;
+                    m_store_trans_no                = 0.0f;
                     m_trans_no                      = 0;
                     m_num_ob_wr                     = 0;
                     str = "[" + string(name()) + "]: sent complete" + ".....(" + string(std::ctime(&result)) +")";
                     cout << str << std::flush;
+                    if(m_FAS_cfg->m_last)
+                    {
+                        fclose(m_fd);
+                    }
                 }
                 break;
             }
@@ -208,6 +217,7 @@ void FAS::job_fetch_process()
             accel_trans->FAS_id = m_FAS_id;
             accel_trans->AWP_id = AWP_id;
             accel_trans->QUAD_id = QUAD_id;
+            accel_trans->trans_no = ++m_trans_no;
             trans = nb_createTLMTrans(
                 m_mem_mng,
                 AWP_id,
@@ -263,6 +273,7 @@ void FAS::partMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_PART_MAP_FETCH_ID;
+            accel_trans->trans_no = ++m_trans_no;
             int remAmt = m_pm_ftch_vld_total_cfg - m_partMapFetchCount;
             int rdAmt = (remAmt < m_pm_low_watermark_cfg) ? remAmt : m_pm_low_watermark_cfg;
             int nBytes = (m_pm_low_watermark_cfg << log2Px_sz);            
@@ -327,6 +338,7 @@ void FAS::prevMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_PREV_MAP_FETCH_ID;
+            accel_trans->trans_no = ++m_trans_no;
             int remAmt = m_pv_ftch_vld_total_cfg - m_prevMapFetchCount;
             int rdAmt = (remAmt < m_pv_low_watermark_cfg) ? remAmt : m_pv_low_watermark_cfg;
             int nBytes = (m_pv_low_watermark_cfg << log2Px_sz);
@@ -384,6 +396,7 @@ void FAS::resdMap_fetch_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_RES_MAP_FETCH_ID;
+            accel_trans->trans_no = ++m_trans_no;
             int remAmt = m_rm_ftch_vld_total_cfg - m_resdMapFetchCount;
             int rdAmt = (remAmt < m_rm_low_watermark_cfg) ? remAmt : m_rm_low_watermark_cfg;
             int nBytes = (m_rm_low_watermark_cfg << log2Px_sz);
@@ -849,6 +862,7 @@ void FAS::S_process()
 #endif
             accel_trans = new Accel_Trans();
             accel_trans->fas_req_id = FAS_STORE_ID;
+            accel_trans->trans_no = ++m_trans_no;
             int wrAmt = (m_outBuf_fifo_sz >= m_outMapStoreFactor_cfg) ? m_outMapStoreFactor_cfg : m_outBuf_fifo_sz;
             int nBytes = m_outMapStoreFactor_cfg << log2Px_sz;
             int n_axi_bts = nBytes >> log2AXI_sz;
@@ -871,11 +885,11 @@ void FAS::S_process()
             result = std::time(nullptr);
             if(m_opcode_cfg == 14 || m_opcode_cfg == 17)
             {
-                int perct = floor((m_trans_no / m_total_store_trans) * 100.0f);
+                int perct = floor((m_store_trans_no / m_total_store_trans) * 100.0f);
                 if(perct >= m_prog_factor && perct > 0)
                 {
                     m_prog_factor += 10;
-                    str = "[" + string(name()) + "]: finished " + to_string((int)m_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
+                    str = "[" + string(name()) + "]: finished " + to_string((int)m_store_trans_no) + " / " + to_string((int)m_total_store_trans) + " store transactions at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
                     cout << str << std::flush;
                 }
             }
@@ -892,7 +906,7 @@ void FAS::S_process()
                 cout << str;
             }
 #endif
-            m_trans_no++;
+            m_store_trans_no++;
         }
     }
 }

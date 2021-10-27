@@ -158,9 +158,11 @@ SC_MODULE(FAS)
             m_last_CO_recvd                 = false;
             m_adder_tree_rdv_count          = 0;
             m_prog_factor                   = 10;
-            m_trans_no                      = 0.0f;
+            m_store_trans_no                = 0.0f;
+            m_trans_no                      = 0;
             m_last_output                   = false;
             m_num_ob_wr                     = 0;
+            m_fd                            = NULL;
         }
 
         // Destructor
@@ -295,7 +297,8 @@ SC_MODULE(FAS)
         bool                                    m_last_output                   ;
         double                                  m_start_time                    ;
         double                                  m_FAS_time                      ;
-        float                                   m_trans_no                      ;
+        int                                     m_trans_no                      ;
+        float                                   m_store_trans_no                ;
         float                                   m_total_store_trans             ;
         uint32_t                                m_im_addr                       ;
         uint32_t                                m_pm_addr                       ;
@@ -304,4 +307,5 @@ SC_MODULE(FAS)
         uint32_t                                m_om_addr                       ;
         int                                     m_num_ob_wr                     ;
         int                                     m_om_store_vld_total_cfg        ;
+        FILE*                                   m_fd                            ;
 };
