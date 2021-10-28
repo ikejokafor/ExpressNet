@@ -63,7 +63,7 @@ void QUAD::ctrl_process_0()
                             {
                                 m_QUAD_start->notify(SC_ZERO_TIME);
                                 m_primed[m_QUAD_id] = false;
-                                str = "[" + string(name()) + "]: All Quads primed. Starting Convolution process at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
+                                str = "[" + string(name()) + "]: All Quads primed. Starting Convolution process at " + sc_time_stamp().to_string() + "....." + string(std::ctime(&result));
                                 cout << str << std::flush;
                                 m_state = ST_ACTIVE;
                             }
@@ -76,7 +76,7 @@ void QUAD::ctrl_process_0()
                         }
                         else
                         {
-                            str = "[" + string(name()) + "]: QUAD primed. Starting Convolution process " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
+                            str = "[" + string(name()) + "]: QUAD primed. Starting Convolution process " + sc_time_stamp().to_string() + "....." + string(std::ctime(&result));
                             cout << str << std::flush;
                             m_state = ST_ACTIVE;
                         }
@@ -112,7 +112,7 @@ void QUAD::ctrl_process_0()
                         if(m_output_count != m_num_outputs && m_master_QUAD_cfg)
                         {
                             result = std::time(nullptr);
-                            str = "QUAD: " + to_string(m_QUAD_id)+ " has not sent enough outputs" ".....(" + string(std::ctime(&result)) +")";
+                            str = "QUAD: " + to_string(m_QUAD_id)+ " has not sent enough outputs" "....." + string(std::ctime(&result));
                             cout << str << std::flush;
                             raise(SIGINT);
                         }
@@ -125,14 +125,14 @@ void QUAD::ctrl_process_0()
                 {
                     result = std::time(nullptr);
                     m_QUAD_time = sc_time_stamp().to_double() - m_start_time;
-                    str = "[" + string(name()) + "]: QUAD processing time: " + to_string((int)m_QUAD_time) + " ns.....(" + string(std::ctime(&result)) +")";
+                    str = "[" + string(name()) + "]: QUAD processing time: " + to_string((int)m_QUAD_time) + " ns....." + string(std::ctime(&result));
                     if(m_master_QUAD_cfg)
                     {
                         cout << str << std::flush;
                     }
                     if(m_res_fifo_sz > 0)
                     {
-                        str = "[" + string(name()) + "]: m_res_fifo_sz is not empty.....(" + string(std::ctime(&result)) +")";
+                        str = "[" + string(name()) + "]: m_res_fifo_sz is not empty....." + string(std::ctime(&result));
                         cout << str << std::flush;
                         raise(SIGINT);
                     }
@@ -191,7 +191,7 @@ void QUAD::ctrl_process_1()
                 {
                     result = std::time(nullptr);
                     string str =
-                        "[" + string(name()) + "]:" + " finished output Row " + to_string(m_output_row) + " at time " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
+                        "[" + string(name()) + "]:" + " finished output Row " + to_string(m_output_row) + " at time " + sc_time_stamp().to_string() + "....." + string(std::ctime(&result));
                     cout << str << std::flush;
                     m_stride_count = (m_stride_count + 1) % m_stride_cfg;
                     m_input_row++;
@@ -262,7 +262,7 @@ void QUAD::result_write_process()
             if(last_CO)
             {
                 result = std::time(nullptr);
-                str = "[" + string(name()) + "]:" + " finished sending last Pixel Write Request at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
+                str = "[" + string(name()) + "]:" + " finished sending last Pixel Write Request at " + sc_time_stamp().to_string() + "....." + string(std::ctime(&result));
                 cout << str << std::flush;
                 m_last_res_wrtn = true;
             }
@@ -354,7 +354,7 @@ bool QUAD::nb_job_start()
     if(m_state == ST_IDLE)
     {
         result = std::time(nullptr);
-        string str = "[" + string(name()) + "]:" + " Started Workload at " + sc_time_stamp().to_string() + ".....(" + string(std::ctime(&result)) +")";
+        string str = "[" + string(name()) + "]:" + " Started Workload at " + sc_time_stamp().to_string() + "....." + string(std::ctime(&result));
         cout << str << std::flush;
         m_start_time = sc_time_stamp().to_double();
         m_state = ST_PRIM_BUFFER;

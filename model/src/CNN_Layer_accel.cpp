@@ -156,8 +156,8 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     int trans_no = accel_trans->trans_no;
     string cmd_str = (cmd == TLM_READ_COMMAND) ? "READ" : "WRITE";
     int cycles = (int)(sc_time_stamp().to_double() - m_last_time_stamp);
-    fprintf(fas[FAS_id]->m_fd, "%d,%d,%s,%d,%d\n", trans_no, cycles, cmd_str, address, length);
-    fflush(fas[FAS_id]->m_fd);
+    fprintf(fas[FAS_id]->m_fd[req_idx], "%d,%d,%s,%d,%d\n", trans_no, cycles, cmd_str.c_str(), address, length);
+    fflush(fas[FAS_id]->m_fd[req_idx]);
     m_last_time_stamp = sc_time_stamp().to_double();
 #ifdef DDR_AXI_MEM_SIM
 
@@ -272,6 +272,7 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     QUAD_time = awp[0]->quad[0]->m_QUAD_time;
     FAS_time = fas[0]->m_FAS_time;
     FPGA_hndl *m_fpga_hndl = m_accelCfg->m_fpga_hndl;
+    bool last = fas[0]->m_FAS_cfg->m_last;
     delete m_accelCfg;
     m_accelCfg = new AccelConfig(NULL);
     m_accelCfg->m_fpga_hndl = m_fpga_hndl;
@@ -290,7 +291,11 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     m_req_arr[2].max_tally = 0;
     m_req_arr[3].max_tally = 0;
     m_req_arr[4].max_tally = 0;
-    m_last_time_stamp      = 0.0f;
+    for(int i = 0; i < NUM_FAS; i++)
+    {
+        if(last) m_last_time_stamp = 0.0f;
+    }
+
 }
 
 
