@@ -149,16 +149,15 @@ void CNN_Layer_Accel::b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_t
     trans.acquire();
     Accel_Trans* accel_trans = (Accel_Trans*)trans.get_data_ptr();
     tlm_command cmd = trans.get_command();
-    int address = trans.get_address();
+    uint64_t address = trans.get_address();
     int req_idx = accel_trans->fas_req_id;
     int FAS_id = accel_trans->FAS_id;
     int length = trans.get_data_length();
     int trans_no = accel_trans->trans_no;
-    string cmd_str = (cmd == TLM_READ_COMMAND) ? "READ" : "WRITE";
-    int cycles = (int)(sc_time_stamp().to_double() - m_last_time_stamp);
-    fprintf(fas[FAS_id]->m_fd[req_idx], "%d,%d,%s,%d,%d\n", trans_no, cycles, cmd_str.c_str(), address, length);
+    int cmd_no = (cmd == TLM_READ_COMMAND) ? 0 : 1;
+    uint64_t cycles = (uint64_t)(sc_time_stamp().to_double() - m_ref_time) / (uint64_t)10;
+    fprintf(fas[FAS_id]->m_fd[req_idx], "%d,%llu,%d,%llu,%d\n", trans_no, cycles, cmd_no, address, length);
     fflush(fas[FAS_id]->m_fd[req_idx]);
-    m_last_time_stamp = sc_time_stamp().to_double();
 #ifdef DDR_AXI_MEM_SIM
 
 
@@ -250,6 +249,7 @@ void CNN_Layer_Accel::start()
 {
     // TODO: Properly expand for multiple FAS's
     m_start_time = sc_time_stamp().to_double();
+    
     m_accelCfg->m_buffer = (void*)m_memory[0].addr;
     m_accelCfg->deserialize();
     for(int i = 0; i < NUM_FAS; i++)
@@ -260,6 +260,7 @@ void CNN_Layer_Accel::start()
         wait(fas[i]->m_start_ack);
         wait();
     }
+    m_ref_time = (fas[0]->m_FAS_cfg->m_first) ? sc_time_stamp().to_double() : m_ref_time;
 }
 
 
@@ -293,7 +294,7 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     m_req_arr[4].max_tally = 0;
     for(int i = 0; i < NUM_FAS; i++)
     {
-        if(last) m_last_time_stamp = 0.0f;
+        if(last) m_ref_time = 0.0f;
     }
 
 }

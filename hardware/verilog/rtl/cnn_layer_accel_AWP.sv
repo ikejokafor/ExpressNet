@@ -154,7 +154,7 @@ module cnn_layer_accel_awp (
     logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_vld                                ;              
     logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_wr_rst_busy                        ;               
     logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_rd_rst_busy                        ;
-    logic [    C_CONVMAP_FIFO_CT_WTH - 1:0]     convMap_fifo_count[C_NUM_CONVMAP_FIFO - 1:0]    ;                              ;
+    logic [    C_CONVMAP_FIFO_CT_WTH - 1:0]     convMap_fifo_count[C_NUM_CONVMAP_FIFO - 1:0]    ;
     logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_prog_full                          ;
     
 

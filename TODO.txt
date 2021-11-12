@@ -8,8 +8,11 @@ CNN accel sim
     Change signal init and targ spec to look more like axi, read and wrtie groups for every possible initiator
  
 
+QUAD changes
+    
+    add more engines to process multiple 3x3 kernels at a time
+    
+    add code so the QUADS can process 1x1 kernels as well
+    
+    change code to use 4 bit look up tables and partial sums, and accumulation to do 8 bit multiplication
 
-
-In the model code for yolov3 4_CONVOLUTION, the output buffer dwc fifo still has data in it
-    most likely an extra write is happening, fix it and add it to conditional clauses for S_Process
-    and in the complete state

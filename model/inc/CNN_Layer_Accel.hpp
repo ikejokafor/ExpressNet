@@ -191,7 +191,6 @@ SC_MODULE(CNN_Layer_Accel)
             m_next_rd_req_id            = 0;
             m_total_sys_mem_trans       = 0;
             m_max_sys_mem_trans         = 0;
-            m_last_time_stamp           = 0.0f;
         }
         
         // Destructor
@@ -233,7 +232,7 @@ SC_MODULE(CNN_Layer_Accel)
         double m_start_time;
         double m_QUAD_time;
         double m_FAS_time;
-        double m_last_time_stamp;
+        double m_ref_time;
         
         int m_total_sys_mem_trans;
         int m_max_sys_mem_trans;

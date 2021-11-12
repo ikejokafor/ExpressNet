@@ -782,7 +782,7 @@ void FAS::resdMap_dwc_fifo_process()
         }
         else
         {
-            m_resdMap_dwc_fifo_sz += KRNL_1X1_SIMD;
+            m_resdMap_dwc_fifo_sz += (KRNL_1X1_SIMD * MULT_SIMD);
         }
     }
 }
@@ -803,7 +803,7 @@ void FAS::prevMap_dwc_fifo_process()
     while(true)
     {
         wait(m_prevMap_dwc_fifo_wr.default_event());
-        m_prevMap_dwc_fifo_sz += KRNL_1X1_SIMD;
+        m_prevMap_dwc_fifo_sz += (KRNL_1X1_SIMD * MULT_SIMD);
         if(m_prevMap_dwc_fifo_sz >= PV_FIFO_RD_WIDTH && m_prevMap_fifo_sz >= PV_FIFO_RD_WIDTH)
         {
             m_prevMap_fifo_sz -= PV_FIFO_RD_WIDTH;
@@ -827,7 +827,7 @@ void FAS::outBuf_dwc_wr_process()
     while(true)
     {
         wait(m_outBuf_dwc_wr.default_event());
-        m_ob_dwc_fifo_sz += KRNL_1X1_SIMD;
+        m_ob_dwc_fifo_sz += (KRNL_1X1_SIMD * MULT_SIMD);
         if(m_ob_dwc_fifo_sz >= OB_FIFO_WR_WIDTH)
         {
             m_ob_dwc_fifo_sz = 0;
@@ -1109,7 +1109,7 @@ void FAS::b_getCfgData()
     {
         m_num_1x1_kernels_cfg       = m_num_1x1_kernels_cfg + (m_krnl1x1_pad_end_cfg - m_krnl1x1_pad_bgn_cfg);
     }
-    // nb_print_cfg();
+    nb_print_cfg();
 
     auto& AWP_cfg_arr = m_FAS_cfg->m_AWP_cfg_arr;
     for(int i = 0; i < MAX_AWP_PER_FAS; i++)

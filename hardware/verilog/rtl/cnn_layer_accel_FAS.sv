@@ -30,14 +30,16 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module cnn_layer_accel_FAS #(
-    parameter C_FAS_ID = 0,
-    parameter C_KL_IT_RD_ID = 0,    // mem trans ID for kernels params
-	parameter C_KB_IT_RD_ID = 1,    // mem trans ID for kernel bias params
-    parameter C_AC_IT_RD_ID = 2,    // mem trans ID for AWP cfg params
-    parameter C_IM_IT_RD_ID = 3,    // mem trans ID for input map params
-    parameter C_PM_IT_RD_ID = 4,    // mem trans ID for part maps params
-    parameter C_RM_IT_RD_ID = 5,    // mem trans ID for resd maps params
-    parameter C_PV_IT_RD_ID = 6     // mem trans ID for prev maps params
+    parameter C_FAS_ID          = 0,
+    parameter C_KL_IT_RD_ID     = 0,    // mem trans ID for kernels params
+	parameter C_KB_IT_RD_ID     = 1,    // mem trans ID for kernel bias params
+    parameter C_AC_IT_RD_ID     = 2,    // mem trans ID for AWP cfg params
+    parameter C_IM_IT_RD_ID     = 3,    // mem trans ID for input map params
+    parameter C_PM_IT_RD_ID     = 4,    // mem trans ID for part maps params
+    parameter C_RM_IT_RD_ID     = 5,    // mem trans ID for resd maps params
+    parameter C_PV_IT_RD_ID     = 6,    // mem trans ID for prev maps params
+    parameter C_NUM_RD_CLIENTS  = 4,
+    parameter C_NUM_WR_CLIENTS  = 1
 ) (
     clk_intf                    ,
     clk_FAS                     ,
@@ -108,6 +110,11 @@ module cnn_layer_accel_FAS #(
     localparam ST_ACTIVE                            = 8'b00100000;
     localparam ST_WAIT_LAST_WRITE                   = 8'b01000000;
     localparam ST_SEND_COMPLETE                     = 8'b10000000;
+  	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------       
+    localparam C_INIT_ID_WTH            = C_NUM_RD_CLIENTS * `INIT_ID_WTH;
+    localparam C_INIT_ADDR_WTH          = C_NUM_RD_CLIENTS * `INIT_ADDR_WTH;
+    localparam C_INIT_LEN_WTH           = C_NUM_RD_CLIENTS * `INIT_LEN_WTH;  
+    localparam C_INIT_DATA_WTH          = C_NUM_RD_CLIENTS * `INIT_DATA_WTH;
 	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     localparam C_NUM_QUAD_CFG_PKTS                  = 1;
     localparam C_AWP_QUAD_CFG_PKT_TOT               = 1;
@@ -284,10 +291,12 @@ module cnn_layer_accel_FAS #(
     logic [                                     15:0]   tot_krnl_count                                          ;    
 	logic												conv1x1_pip_exec										;
 	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    logic [                     `MAX_FAS_RD_ID - 1:0]   init_rd_in_prog                                       ;
-    logic [                     `MAX_FAS_RD_ID - 1:0]   init_rd_req_acked                                     ;
-    logic                                               init_wr_in_prog                                      ;
-    logic                                               init_wr_req_acked                                    ;
+    logic [                     `MAX_FAS_RD_ID - 1:0]   init_rd_in_prog                                         ;
+    logic [                     `MAX_FAS_RD_ID - 1:0]   init_rd_req_acked                                       ;
+    logic [                                     15:0]   init_rd_rem[`MAX_FAS_RD_ID - 1:0]                       ;
+    logic [                                     15:0]   init_wr_rem                                             ;
+    logic                                               init_wr_in_prog                                         ;
+    logic                                               init_wr_req_acked                                       ;
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic												convMap_fifo_wren										;
 	logic                                               convMap_fifo_rden                                       ;
@@ -1290,10 +1299,6 @@ module cnn_layer_accel_FAS #(
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
     assign init_rd_req_id[(`MAX_FAS_RD_ID * C_KL_IT_RD_ID) +: `MAX_FAS_RD_ID] = C_KL_IT_RD_ID;
     
-    always@(posedge clk) begin
-        if(rst) begin
-        init_rd_in_prog
-    end
     
     always@(posedge clk_FAS) begin
         if(rst || FAS_intf_rdy_n || process_cmpl_intf) begin
@@ -1706,7 +1711,7 @@ module cnn_layer_accel_FAS #(
                 init_wr_data_vld        <= 1;
             end            
             if(init_wr_cmpl) begin
-                init_wr_rem      <= init_wr_rem - ob_store_amount;
+                init_wr_rem      <= init_wr_rem - ob_store_amount_cfg;
                 outMapStoreCount <= outMapStoreCount + ob_store_amount_cfg;
             end
             if(state == ST_WAIT_LAST_WRITE && outMapStoreCount == outMapStoreTotal_cfg) begin
