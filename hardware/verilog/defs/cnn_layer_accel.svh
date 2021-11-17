@@ -34,7 +34,7 @@
 `define PIXEL_WIDTH					    16
 `define MAX_NUM_INPUT_ROWS              512
 `define MAX_NUM_INPUT_COLS              512
-`define NUM_RD_CLIENTS                 4
+`define NUM_RD_CLIENTS                 7
 `define NUM_WR_CLIENTS                 1
 
 

@@ -89,9 +89,9 @@ module cnn_layer_accel_quad_bram_ctrl (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------     
-    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = clog2(`ROW_BUF_BRAM_DEPTH);
+    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = $clog2(`ROW_BUF_BRAM_DEPTH);
     localparam C_NUM_CE                     = `NUM_AWE * `NUM_CE_PER_AWE;
-    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = clog2(`MAX_BRAM_3x3_KERNELS);
+    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = $clog2(`MAX_BRAM_3x3_KERNELS);
 
 
     localparam ST_IDLE                      = 6'b000001;  

@@ -1,34 +1,20 @@
 Command: synth_design -mode out_of_context -flatten_hierarchy rebuilt -top cnn_layer_accel -part xcvu37p-fsvh2892-2-e
 Starting synth_design
+WARNING: [Vivado_Tcl 4-393] The 'Synthesis' target of the following IPs are stale, please generate the output products using the generate_target or synth_ip command before running synth_design.
+/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip_viv2019.1/xcku115/pixel_sequence_data_bram/pixel_sequence_data_bram.xci
+
+WARNING: [IP_Flow 19-2162] IP 'pixel_sequence_data_bram' is locked:
+* IP definition 'Block Memory Generator (8.3)' for IP 'pixel_sequence_data_bram' (customized with software release 2016.4) has a newer minor version in the IP Catalog. * IP definition 'Block Memory Generator (8.3)' for IP 'pixel_sequence_data_bram' (customized with software release 2016.4) has a different revision in the IP Catalog. * Current project part 'xcvu37p-fsvh2892-2-e' and the part 'xcku115-flva1517-3-e' used to customize the IP 'pixel_sequence_data_bram' do not match.
 Attempting to get a license for feature 'Synthesis' and/or device 'xcvu37p'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcvu37p'
 INFO: [Common 17-1540] The version limit for your license is '2019.10' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
+INFO: [Device 21-403] Loading part xcvu37p-fsvh2892-2-e
 INFO: Launching helper process for spawning children vivado processes
-INFO: Helper process launched with PID 25993 
-WARNING: [Synth 8-2507] parameter declaration becomes local in cnn_layer_accel_awe_dsps with formal parameter declaration list [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.svh:1]
-WARNING: [Synth 8-976] trans_in_meta has already been declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:142]
-WARNING: [Synth 8-2654] second declaration of trans_in_meta ignored [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:142]
-INFO: [Synth 8-994] trans_in_meta is declared here [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:137]
-ERROR: [Synth 8-1766] cannot open include file awe.vh [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:38]
-ERROR: [Synth 8-1031] C_KERNAL_SIZE_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:66]
-ERROR: [Synth 8-1031] C_MODE_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:67]
-ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:70]
-ERROR: [Synth 8-1031] C_DATAIN_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:76]
-ERROR: [Synth 8-1031] C_DATAIN_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:79]
-ERROR: [Synth 8-1031] C_WEIGHT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:81]
-ERROR: [Synth 8-1031] C_WEIGHT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:84]
-ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:88]
-ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:91]
-ERROR: [Synth 8-1031] C_A_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:96]
-ERROR: [Synth 8-1031] C_B_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:97]
-ERROR: [Synth 8-1031] C_C_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:98]
-ERROR: [Synth 8-1031] C_A_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:100]
-ERROR: [Synth 8-1031] C_B_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:101]
-ERROR: [Synth 8-1031] C_C_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:102]
-ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:104]
-ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:108]
-ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:111]
-Failed to read verilog '/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv'
+INFO: Helper process launched with PID 25408 
+ERROR: [Synth 8-2715] syntax error near ; [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/OOC_synth_top.sv:31]
+ERROR: [Synth 8-2715] syntax error near ) [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/OOC_synth_top.sv:34]
+INFO: [Synth 8-2350] module OOC_synth_top ignored due to previous errors [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/OOC_synth_top.sv:27]
+Failed to read verilog '/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/OOC_synth_top.sv'
 INFO: [Common 17-83] Releasing license: Synthesis
-4 Infos, 3 Warnings, 0 Critical Warnings and 20 Errors encountered.
+8 Infos, 3 Warnings, 1 Critical Warnings and 3 Errors encountered.
 synth_design failed

@@ -41,17 +41,17 @@ set verbose      1
 set dcpLevel     1
 
 ####Output Directories
-set synthDir  "./Synth"
-set implDir   "./Implement"
-set dcpDir    "./Checkpoint"
+set synthDir  "./Synth/"
+set implDir   "./Implement/"
+set dcpDir    "./Checkpoint/"
 
 ####Input Directories
-set srcDir     "./Sources"
-set rtlDir     "$srcDir/hdl"
-set prjDir     "$srcDir/prj"
-set xdcDir     "$srcDir/xdc"
-set coreDir    "../ip_viv2019.1/xcvu37p-fsvh2892-2-e/"
-set netlistDir "$srcDir/netlist"
+set srcDir     "./Sources/"
+set rtlDir     "$srcDir/hdl/"
+set prjDir     "$srcDir/prj/"
+set xdcDir     "$srcDir/xdc/"
+set ipDir      "../ip_viv2019.1/xcvu37p-fsvh2892-2-e/"
+set netlistDir "$srcDir/netlist/"
 
 
 ####Source required Tcl Procs
@@ -68,26 +68,30 @@ set module1 "cnn_layer_accel"
 add_module $module1
 set_module_attribute $module1 prj          $prjDir/$module1.prj
 set_module_attribute $module1 synth        ${run.oocSynth}
-set_attribute module $module1 ip           [    list \
-                                                $coreDir/krnl1x1Bias_dwc_fifo/krnl1x1Bias_dwc_fifo.xci \
-                                                $coreDir/managed_ip_project/managed_ip_project.xci \
-                                                $coreDir/outbuf_fifo /outbuf_fifo.xci \
-                                                $coreDir/partMap_fifo/partMap_fifo.xci \
-                                                $coreDir/prevMap_fifo/prevMap_fifo.xci \
-                                                $coreDir/res_dwc_fifo/res_dwc_fifo.xci \
-                                                $coreDir/resdMap_fifo/resdMap_fifo.xci \
-                                                $coreDir/trans_eg_meta_fifo/trans_eg_meta_fifo.xci \
-                                                $coreDir/trans_eg_pyld_fifo/trans_eg_pyld_fifo.xci \
-                                                $coreDir/trans_in_meta_fifo/trans_in_meta_fifo.xci \
-                                                $coreDir/trans_in_pyld_fifo/trans_in_pyld_fifo.xci \
-                                                $coreDir/conv1x1_dwc_fifo/conv1x1_dwc_fifo.xci \
-                                                $coreDir/convMap_fifo/convMap_fifo.xci \
-                                                $coreDir/ip_user_files /ip_user_files.xci \
-                                                $coreDir/job_fetch_fifo/job_fetch_fifo.xci \
-                                                $coreDir/krnl1x1_bram/krnl1x1_bram.xci \
-                                                $coreDir/krnl1x1Bias_bram/krnl1x1Bias_bram.xci
+set_module_attribute $module1 ip           [list    $ipDir/krnl1x1Bias_dwc_fifo/krnl1x1Bias_dwc_fifo.xci \
+                                                    $ipDir/outbuf_fifo/outbuf_fifo.xci \
+                                                    $ipDir/partMap_fifo/partMap_fifo.xci \
+                                                    $ipDir/prevMap_fifo/prevMap_fifo.xci \
+                                                    $ipDir/res_dwc_fifo/res_dwc_fifo.xci \
+                                                    $ipDir/resdMap_fifo/resdMap_fifo.xci \
+                                                    $ipDir/trans_eg_meta_fifo/trans_eg_meta_fifo.xci \
+                                                    $ipDir/trans_eg_pyld_fifo/trans_eg_pyld_fifo.xci \
+                                                    $ipDir/trans_in_meta_fifo/trans_in_meta_fifo.xci \
+                                                    $ipDir/trans_in_pyld_fifo/trans_in_pyld_fifo.xci \
+                                                    $ipDir/conv1x1_dwc_fifo/conv1x1_dwc_fifo.xci \
+                                                    $ipDir/convMap_fifo/convMap_fifo.xci \
+                                                    $ipDir/job_fetch_fifo/job_fetch_fifo.xci \
+                                                    $ipDir/krnl1x1_bram/krnl1x1_bram.xci \
+                                                    $ipDir/krnl1x1Bias_bram/krnl1x1Bias_bram.xci \
+                                                    $ipDir/clk_wiz/clk_wiz.xci \
+                                                    ../ip_viv2019.1/xcku115/pixel_sequence_data_bram/pixel_sequence_data_bram.xci \
                                            ]
-
+set instance "cnn_layer_accel_inst"                                           
+add_ooc_implementation $instance
+set_ooc_attribute $instance   module       $module1
+set_ooc_attribute $instance   inst         $instance
+set_ooc_attribute $instance   hierInst     $instance
+set_ooc_attribute $instance   implXDC      $xdcDir/top.xdc
 ########################################################################
 ### Task / flow portion
 ########################################################################

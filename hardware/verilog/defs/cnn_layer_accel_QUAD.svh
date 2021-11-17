@@ -43,7 +43,7 @@
 // AWP General Defs
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 `define KRNL_3X3_SIMD                   8
-`define NUM_AWE                         4
+`define NUM_AWE                         (32'd4)
 `define NUM_CE_PER_AWE                  2
 `define NUM_QUADS                       1
 `define NUM_CE                          (`NUM_AWE * `NUM_CE_PER_AWE)

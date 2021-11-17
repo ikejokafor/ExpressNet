@@ -35,7 +35,7 @@ module cnn_layer_accel_ce_dsps
 	cascade_dataout_valid
 );
 
-	`include "awe.vh"
+	`include "awe.svh"
 
 	parameter C_MAX_WINDOW_SIZE_COUNTER = 11 +1; // MAX KERNAL SIZE + 1 
 

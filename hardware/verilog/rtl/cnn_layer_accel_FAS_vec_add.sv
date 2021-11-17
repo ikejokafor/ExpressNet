@@ -70,7 +70,7 @@ module cnn_layer_accel_FAS_vec_add (
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     localparam C_VEC_ADD_WIDTH          = `VECTOR_ADD_SIMD * `PIXEL_WIDTH;	
     localparam C_VEC_SUM_ARR_SZ         = `MAX_1X1_KRNL_DEPTH / `VECTOR_ADD_SIMD;
-    localparam C_VEC_SUM_ARR_ADDR_WTH	= clog2(C_VEC_SUM_ARR_SZ);
+    localparam C_VEC_SUM_ARR_ADDR_WTH	= $clog2(C_VEC_SUM_ARR_SZ);
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------

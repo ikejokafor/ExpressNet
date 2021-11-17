@@ -61,7 +61,7 @@ module cnn_layer_accel_prefetch_buffer (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_CLG2_ROW_BUF_BRAM_DEPTH = clog2(`MAX_NUM_INPUT_COLS);
+    localparam C_CLG2_ROW_BUF_BRAM_DEPTH = $clog2(`MAX_NUM_INPUT_COLS);
     localparam ST_IDLE                      = 6'b000001;  
     localparam ST_AWE_CE_PRIM_BUFFER        = 6'b000010;
     localparam ST_WAIT_PFB_LOAD             = 6'b000100;

@@ -1,0 +1,23 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Nov 17 18:26:51 2021
+# Process ID: 23446
+# Current directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj
+# Command line: vivado -mode batch -source design.tcl -notrace
+# Log file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.log
+# Journal file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.jou
+#-----------------------------------------------------------
+source design.tcl -notrace
+ERROR: Invalid implementation cnn_layer_accel specified in set_ooc_attribute
+    while executing
+"error $errMsg "
+    (procedure "check_ooc" line 5)
+    invoked from within
+"check_ooc $impl $procname"
+    (procedure "set_ooc_attribute" line 5)
+    invoked from within
+"set_ooc_attribute $module1    implXDC      $xdcDir/top.xdc"
+    (file "design.tcl" line 95)
+INFO: [Common 17-206] Exiting Vivado at Wed Nov 17 18:27:05 2021...

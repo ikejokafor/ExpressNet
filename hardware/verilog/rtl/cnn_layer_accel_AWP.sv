@@ -63,7 +63,7 @@ module cnn_layer_accel_awp (
    	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
     localparam C_NUM_QUAD_PER_CM_FIFO               = `CONVMAP_FIFO_WR_WTH / `PIXEL_WIDTH;
     localparam C_NUM_CONVMAP_FIFO                   = $ceil(`NUM_QUADS / C_NUM_QUAD_PER_CM_FIFO);
-    localparam C_CONVMAP_FIFO_CT_WTH                = clog2(`CONVMAP_FIFO_RD_DTH) + 1; 
+    localparam C_CONVMAP_FIFO_CT_WTH                = $clog2(`CONVMAP_FIFO_RD_DTH) + 1; 
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------

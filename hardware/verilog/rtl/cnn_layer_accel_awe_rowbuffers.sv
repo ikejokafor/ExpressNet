@@ -87,10 +87,10 @@ module cnn_layer_accel_awe_rowbuffers #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = clog2(`ROW_BUF_BRAM_DEPTH);
+    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = $clog2(`ROW_BUF_BRAM_DEPTH);
     localparam C_PIXEL_DATAOUT_WIDTH        = `PIXEL_WIDTH * 4;
     localparam C_CE_PIXEL_DOUT_WIDTH        = `PIXEL_WIDTH * `NUM_CE_PER_AWE;
-    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = clog2(`MAX_BRAM_3x3_KERNELS);
+    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = $clog2(`MAX_BRAM_3x3_KERNELS);
     
     localparam ST_IDLE                      = 6'b000001;  
     localparam ST_AWE_CE_PRIM_BUFFER        = 6'b000010;

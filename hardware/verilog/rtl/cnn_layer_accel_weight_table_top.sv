@@ -55,10 +55,10 @@ module cnn_layer_accel_weight_table_top #(
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	localparam C_CLG2_BRAM_A_DEPTH          = clog2(`WHT_TBL_BRAM_DEPTH);
-    localparam C_CLG2_BRAM_B_DEPTH          = clog2(`WHT_TBL_BRAM_DEPTH);
+	localparam C_CLG2_BRAM_A_DEPTH          = $clog2(`WHT_TBL_BRAM_DEPTH);
+    localparam C_CLG2_BRAM_B_DEPTH          = $clog2(`WHT_TBL_BRAM_DEPTH);
     localparam C_WHT_DOUT_WIDTH             = `WEIGHT_WIDTH * `NUM_DSP_PER_CE; 
-    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = clog2(`MAX_BRAM_3x3_KERNELS);
+    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = $clog2(`MAX_BRAM_3x3_KERNELS);
 
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ module cnn_layer_accel_weight_table_top #(
         .C_CLOCK_CYCLES ( 3 )
     ) 
     i0_SRL_bit (
-        .clk_core        ( clk_core                       ),
+        .clk        ( clk_core                       ),
         .rst        ( rst                       ),
         .ce         ( 1'b1                      ),
         .data_in    ( ce_wht_table_rden         ),
@@ -120,7 +120,7 @@ module cnn_layer_accel_weight_table_top #(
         .C_CLOCK_CYCLES ( 3 )
     ) 
     i1_SRL_bit (
-        .clk_core   ( clk_core                                           ),
+        .clk   ( clk_core                                           ),
         .rst        ( rst                                           ),
         .ce         ( 1'b1                                          ),
         .data_in    ( kernel_idx == num_kernels && !config_mode     ),
@@ -132,7 +132,7 @@ module cnn_layer_accel_weight_table_top #(
         .C_CLOCK_CYCLES ( 6 )   // seq data 3 cycle latency and awe bram 3 cycle read latency
     ) 
     i2_SRL_bit (
-        .clk_core   ( clk_core               ),
+        .clk   ( clk_core               ),
         .rst        ( rst               ),
         .ce         ( 1'b1              ),
         .data_in    ( next_kernel       ),
@@ -145,7 +145,7 @@ module cnn_layer_accel_weight_table_top #(
         .C_DATA_WIDTH    ( C_CLG2_BRAM_A_DEPTH      )
     ) 
     i0_SRL_bus (
-        .clk_core        ( clk_core                ),
+        .clk        ( clk_core                ),
         .ce         ( 1'b1               ),
         .rst        ( rst                ),
         .data_in    ( wht_table_addr0_w  ),
@@ -158,7 +158,7 @@ module cnn_layer_accel_weight_table_top #(
         .C_DATA_WIDTH    ( C_CLG2_BRAM_B_DEPTH      )
     ) 
     i1_SRL_bus (
-        .clk_core        ( clk_core                ),
+        .clk        ( clk_core                ),
         .ce         ( 1'b1               ),
         .rst        ( rst                ),
         .data_in    ( wht_table_addr1_w  ),

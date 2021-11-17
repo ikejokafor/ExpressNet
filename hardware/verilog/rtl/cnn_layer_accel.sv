@@ -1,4 +1,4 @@
-`timescale 1ns / 1ns
+`timescale 1ns / 1ps
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Company:			
 //				
@@ -60,14 +60,14 @@ module cnn_layer_accel (
     targ_rd_data              ,
     targ_rd_ack               ,
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    init_usrIntr                ,
+    init_usrIntr              ,
     init_usrIntr_ack            
-
 );
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
     `include "utilities.svh"
+    `include "math.svh"
     `include "cnn_layer_accel.svh"
 	`include "cnn_layer_accel_FAS.svh"
     `include "cnn_layer_accel_AWP.svh"
@@ -86,7 +86,7 @@ module cnn_layer_accel (
     localparam C_INIT_LEN_WTH                       = `NUM_RD_CLIENTS * `INIT_LEN_WTH;  
     localparam C_INIT_DATA_WTH                      = `NUM_RD_CLIENTS * `INIT_DATA_WTH;
 	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
-	localparam C_KRNL_1X1_BRAM_RD_ADDR_WTH          = clog2(`KRNL_1X1_BRAM_RD_DTH);
+	localparam C_KRNL_1X1_BRAM_RD_ADDR_WTH          = $clog2(`KRNL_1X1_BRAM_RD_DTH);
     localparam C_KRNL_1X1_TRAN_SZ                   = `INIT_DATA_WTH / `PIXEL_WIDTH;
     localparam C_KRNL_1X1_SIMD_M1                   = `KRNL_1X1_SIMD - 1;
     localparam C_KN1X1_BM_WR_SEL_DFT                = {{C_KRNL_1X1_SIMD_M1{1'b0}}, 1'b1};
@@ -95,18 +95,19 @@ module cnn_layer_accel (
     localparam C_KN1X1B_BM_WR_SEL_END				= {1'b1, {C_KRNL_1X1_SIMD_M1{1'b0}}};
 	localparam C_CONV_1X1_PIP_EN_CFG_WTH            = `KRNL_1X1_SIMD * `MAX_1X1_KRNL_IT;
     localparam C_CURR_CONV1X1_IT_META_WTH           = `KRNL_1X1_SIMD;
-    localparam C_CONV1X1_IT_WTH                     = clog2(`KRNL_1X1_SIMD);	
+    localparam C_CONV1X1_IT_WTH                     = $clog2(`KRNL_1X1_SIMD);	
 	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_CONVMAP_FIFO_CT_WTH                = clog2(`CONVMAP_FIFO_RD_DTH) + 1; 
-    localparam C_PARTMAP_FIFO_CT_WTH                = clog2(`CONVMAP_FIFO_RD_DTH) + 1;
-    localparam C_PREVMAP_FIFO_CT_WTH                = clog2(`CONVMAP_FIFO_RD_DTH) + 1;
-    localparam C_RESDMAP_FIFO_CT_WTH                = clog2(`CONVMAP_FIFO_RD_DTH) + 1;  
+    localparam C_CONVMAP_FIFO_CT_WTH                = $clog2(`CONVMAP_FIFO_RD_DTH) + 1; 
+    localparam C_PARTMAP_FIFO_CT_WTH                = $clog2(`CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_PREVMAP_FIFO_CT_WTH                = $clog2(`CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_RESDMAP_FIFO_CT_WTH                = $clog2(`CONVMAP_FIFO_RD_DTH) + 1;  
 	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_OUTBUF_FIFO_CT_WTH                 = clog2(`CONVMAP_FIFO_RD_DTH) + 1;
-    localparam C_OUTBUF_FIFO_DIN_FACTOR             = floor(`INIT_DATA_WTH, `PIXEL_WIDTH);
-    localparam C_CONV1X1_DWC_CT_WTH                 = clog2(`CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_OUTBUF_FIFO_CT_WTH                 = $clog2(`CONVMAP_FIFO_RD_DTH) + 1;
+    // localparam C_OUTBUF_FIFO_DIN_FACTOR             = floor(`INIT_DATA_WTH, `PIXEL_WIDTH);
+    localparam C_OUTBUF_FIFO_DIN_FACTOR             = 64;    
+    localparam C_CONV1X1_DWC_CT_WTH                 = $clog2(`CONVMAP_FIFO_RD_DTH) + 1;
     localparam C_CONV1X1_DWC_DIN_PD                 = `CONV1X1_DWC_FIFO_WR_WTH - `PIXEL_WIDTH;
-    localparam C_RES_DWC_FIFO_CT_WTH                = clog2(`CONVMAP_FIFO_RD_DTH) + 1;
+    localparam C_RES_DWC_FIFO_CT_WTH                = $clog2(`CONVMAP_FIFO_RD_DTH) + 1;
  	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
 	localparam C_TRANS_IN_FIFO_WR_WTH               = `TRANS_IN_FIFO_META_WTH + `TRANS_IN_FIFO_PYLD_WTH;
     localparam C_TRANS_IN_FIFO_RD_WTH               = `TRANS_IN_FIFO_META_WTH + `TRANS_IN_FIFO_PYLD_WTH;
@@ -116,7 +117,7 @@ module cnn_layer_accel (
     localparam C_VEC_ADD_WIDTH                      = `VECTOR_ADD_SIMD * `PIXEL_WIDTH;
     localparam C_VEC_MULT_WIDTH                     = `VECTOR_MULT_SIMD * `PIXEL_WIDTH;	
     localparam C_VEC_SUM_ARR_SZ                     = `MAX_1X1_KRNL_DEPTH / `VECTOR_ADD_SIMD;
-    localparam C_VEC_SUM_ARR_ADDR_WTH               = clog2(C_VEC_SUM_ARR_SZ);
+    localparam C_VEC_SUM_ARR_ADDR_WTH               = $clog2(C_VEC_SUM_ARR_SZ);
 	
 	
 	

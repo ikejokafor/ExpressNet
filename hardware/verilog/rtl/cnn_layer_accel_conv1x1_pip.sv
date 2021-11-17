@@ -78,10 +78,10 @@ module cnn_layer_accel_conv1x1_pip #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Parameters
     //----------------------------------------------------------------------------------------------------------------------------------------------- 
-    localparam C_KRNL_1X1_BRAM_WR_ADDR_WTH          = clog2(`KRNL_1X1_BRAM_WR_DTH);   
-    localparam C_KRNL_1X1_BRAM_RD_ADDR_WTH          = clog2(`KRNL_1X1_BRAM_RD_DTH);
-    localparam C_KRNL_1X1_BIAS_BRAM_WR_ADDR_WTH     = clog2(`KRNL_1X1_BIAS_BRAM_WR_DTH);   
-    localparam C_KRNL_1X1_BIAS_BRAM_RD_ADDR_WTH     = clog2(`KRNL_1X1_BIAS_BRAM_RD_DTH); 
+    localparam C_KRNL_1X1_BRAM_WR_ADDR_WTH          = $clog2(`KRNL_1X1_BRAM_WR_DTH);   
+    localparam C_KRNL_1X1_BRAM_RD_ADDR_WTH          = $clog2(`KRNL_1X1_BRAM_RD_DTH);
+    localparam C_KRNL_1X1_BIAS_BRAM_WR_ADDR_WTH     = $clog2(`KRNL_1X1_BIAS_BRAM_WR_DTH);   
+    localparam C_KRNL_1X1_BIAS_BRAM_RD_ADDR_WTH     = $clog2(`KRNL_1X1_BIAS_BRAM_RD_DTH); 
     localparam C_VEC_ADD_WIDTH                      = `VECTOR_ADD_SIMD * `PIXEL_WIDTH;
     localparam C_VEC_MULT_WIDTH                     = `VECTOR_MULT_SIMD * `PIXEL_WIDTH;    
     

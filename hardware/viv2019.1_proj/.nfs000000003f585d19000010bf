@@ -1,0 +1,28 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Nov 17 16:12:17 2021
+# Process ID: 10364
+# Current directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj
+# Command line: vivado -mode batch -source design.tcl -notrace
+# Log file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.log
+# Journal file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.jou
+#-----------------------------------------------------------
+source design.tcl -notrace
+#HD: Setting Tcl Params:
+	place.closeImportedSites == 1
+	tcl.notrace == 1
+	hd.visual == 0
+#HD: Running synthesis for block cnn_layer_accel
+	Writing results to: ./Synth/cnn_layer_accel
+	Parsing PRJ file: ./Sources/prj/cnn_layer_accel.prj
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/home/software/vivado-2019.1/Vivado/2019.1/data/ip'.
+add_files: Time (s): cpu = 00:00:04 ; elapsed = 00:00:07 . Memory (MB): peak = 1423.145 ; gain = 9.969 ; free physical = 52100 ; free virtual = 110073
+CRITICAL WARNING: [Vivado 12-3645] Please note that adding or importing multiple files, one at a time, can be performance intensive.  Both add_files and import_files commands accept multiple files as input, and passing a collection of multiple files to a single add_files or import_files commands can offer significant performance improvement.
+	WARNING: No XDC file specified for cnn_layer_accel
+Command: synth_design -mode out_of_context -flatten_hierarchy rebuilt -top cnn_layer_accel -part xcvu37p-fsvh2892-2-e
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcvu37p'

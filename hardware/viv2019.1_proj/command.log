@@ -2,11 +2,22 @@ set_param place.closeImportedSites 1
 set_param tcl.notrace 1
 set_param hd.visual 0
 puts "#HD: Running synthesis for block cnn_layer_accel"
-file delete -force ./Synth/cnn_layer_accel
-file mkdir ./Synth/cnn_layer_accel
+file delete -force ./Synth//cnn_layer_accel
+file mkdir ./Synth//cnn_layer_accel
 create_project -in_memory -part xcvu37p-fsvh2892-2-e
 add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/math.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/utilities.svh
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/SRL_bit.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/SRL_bus.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/xilinx_simple_dual_port_no_change_asym_width_count_2_clock_ram.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/xilinx_simple_dual_port_no_change_ram.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/xilinx_true_dual_port_no_change_ram.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/xilinx_simple_dual_port_no_change_2_clock_ram.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/xilinx_simple_dual_port_no_change_asym_width_2_clock_ram.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/fifo_fwft_prog_full_count.v
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/vector_multiply.sv
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/adder_tree.v
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS_pip_ctrl.svh
@@ -16,6 +27,7 @@ add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/def
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/axi_defs.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_AWP.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_conv1x1_pip.svh
+add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/OOC_synth_top.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_macc_0.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_macc_1.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_conv1x1_pip.sv
@@ -37,5 +49,22 @@ add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_axi_bridge.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//krnl1x1Bias_dwc_fifo/krnl1x1Bias_dwc_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//outbuf_fifo/outbuf_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//partMap_fifo/partMap_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//prevMap_fifo/prevMap_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//res_dwc_fifo/res_dwc_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//resdMap_fifo/resdMap_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//trans_eg_meta_fifo/trans_eg_meta_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//trans_eg_pyld_fifo/trans_eg_pyld_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//trans_in_meta_fifo/trans_in_meta_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//trans_in_pyld_fifo/trans_in_pyld_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//conv1x1_dwc_fifo/conv1x1_dwc_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//convMap_fifo/convMap_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//job_fetch_fifo/job_fetch_fifo.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//krnl1x1_bram/krnl1x1_bram.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//krnl1x1Bias_bram/krnl1x1Bias_bram.xci
+add_files ../ip_viv2019.1/xcvu37p-fsvh2892-2-e//clk_wiz/clk_wiz.xci
+add_files ../ip_viv2019.1/xcku115/pixel_sequence_data_bram/pixel_sequence_data_bram.xci
 synth_design -mode out_of_context -flatten_hierarchy rebuilt -top cnn_layer_accel -part xcvu37p-fsvh2892-2-e
-write_checkpoint -force ./Synth/cnn_layer_accel/cnn_layer_accel_synth_design_error.dcp
+write_checkpoint -force ./Synth//cnn_layer_accel/cnn_layer_accel_synth_design_error.dcp
