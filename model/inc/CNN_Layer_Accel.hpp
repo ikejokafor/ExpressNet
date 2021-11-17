@@ -2,7 +2,8 @@
 //
 //  M: Memory Cycle Latency
 //  I_R: Number of Ssliding WIndow Input Rows
-//  I_C: Number of Ssliding WIndow Input Columns
+//  I_C: Number of Sliding WIndow Input Columns
+//  I_D: Input Depth
 //  O_R: Number of Sliding Window Output Rows
 //  O_C: Number of Sliding Window Output Columns
 //  O_D: Output Depth
@@ -11,6 +12,8 @@
 //  K_1: Number of 1x1 Kernels
 //  K_3_S: 3x3 Kernel SIMD
 //  K_1_S: 1x1 Kernel SIMD
+//  K_3_M_S: 3x3 Kernel Multiplication SIMD (ie how many multiplications I can do in one unit for a single cycle)
+//  K_1_M_S: 1x1 Kernel Multiplication SIMD
 //  K_1_D: 1x1 Kernel Depth
 //  K_1_D_S: 1x1 Kernel Depth SIMD
 //
@@ -32,7 +35,7 @@
 //          + (M +  K_3))
 //          + (3 * (M + I_C))
 //          + ((I_R - 3)(M + I_C))
-//          + ((K_3 / K_3_S) * O_R * O_C)
+//          + ((K_3 / K_3_S) * O_R * (O_C / K_3_M_S))
 //
 //      For stride 2:
 //          (M + 8192)
@@ -40,7 +43,23 @@
 //          + (M +  K_3))
 //          + (3 * (M + I_C))
 //          + ((I_R - 3)(M + I_C))
-//          + ((K_3 / K_3_S)* O_R * O_C) + (I_R / 2)
+//          + ((K_3 / K_3_S / K_1_M_S) * O_R * (O_C / K_3_M_S)) + (I_R / 2)
+//
+//      For 1x1 kernels:
+//          (M + 8192)
+//          + (M + (10 * K_3))
+//          + (M +  K_3))
+//          + (3 * (M + I_C))
+//          + ((I_R - 3)(M + I_C))
+//          + ((K_3 / 9 / K_3_S / K_1_M_S) * O_R * (O_C / K_3_M_S)) + (I_R / 2)
+//
+//      For 1x1 kernels with depthwise separable:
+//          (M + 8192)
+//          + (M + (10 * K_3))
+//          + (M +  K_3))
+//          + (3 * (M + I_C))
+//          + ((I_R - 3)(M + I_C))
+//          + ((K_3 / 9 / I_D / K_3_S / K_1_M_S) * O_R * (O_C / K_3_M_S)) + (I_R / 2)
 //
 //  FAS Cycle Latency:
 //

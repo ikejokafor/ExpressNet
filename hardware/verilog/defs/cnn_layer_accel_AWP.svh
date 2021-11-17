@@ -40,6 +40,6 @@
 `define CONVMAP_FIFO_WR_WTH                	1024 // TODO: Remove hard coding
 `define CONVMAP_FIFO_RD_WTH                	1024 // TODO: Remove hard coding
 `define CONVMAP_FIFO_RD_DTH					512	 // TODO: Remove hard coding
-
+`define MAX_AWPS                            1
 
 `endif

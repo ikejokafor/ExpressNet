@@ -53,8 +53,8 @@ module cnn_layer_accel_trans_eg_fifo (
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Local Parameters
     //-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_TRANS_EG_DIN_WTH = `TRANS_EG_FIFO_META_WIDTH + `TRANS_EG_FIFO_PYLD_WIDTH;
-	localparam C_TRANS_EG_DOU_WTH = `TRANS_EG_FIFO_META_WIDTH + `TRANS_EG_FIFO_PYLD_WIDTH;
+    localparam C_TRANS_EG_DIN_WTH = `TRANS_EG_FIFO_META_WTH + `TRANS_EG_FIFO_PYLD_WTH;
+	localparam C_TRANS_EG_DOU_WTH = `TRANS_EG_FIFO_META_WTH + `TRANS_EG_FIFO_PYLD_WTH;
 	
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------

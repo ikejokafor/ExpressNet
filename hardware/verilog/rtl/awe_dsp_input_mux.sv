@@ -13,7 +13,7 @@ module awe_dsp_input_mux
 	dataout
 
 );
- `include "awe.vh"
+ `include "awe.svh"
  
 	parameter C_DATA_WIDTH   = 18;
 

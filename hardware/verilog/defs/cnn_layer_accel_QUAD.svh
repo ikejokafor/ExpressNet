@@ -34,32 +34,21 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------------------------------------------------------------------------------------
+`include "math.svh"
 `include "utilities.svh"
 
-
-//-----------------------------------------------------------------------------------------------------------------------------------------------
-//	[SYS DEFS
-//-----------------------------------------------------------------------------------------------------------------------------------------------
-`define INIT_RD_LEN_WIDTH                32
-`define INIT_WR_LEN_WIDTH                32
-`define INIT_RD_ADDR_WIDTH               32
-`define INIT_WR_ADDR_WIDTH               32
-`define INIT_RD_DATA_WIDTH               1024
-`define INIT_WR_DATA_WIDTH               1024
-`define SYS_INTC_DT_WIDTH                1024
-`define CLOCK_FACTOR					 4
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // AWP General Defs
 //-----------------------------------------------------------------------------------------------------------------------------------------------
+`define KRNL_3X3_SIMD                   8
 `define NUM_AWE                         4
 `define NUM_CE_PER_AWE                  2
 `define NUM_QUADS                       1
 `define NUM_CE                          (`NUM_AWE * `NUM_CE_PER_AWE)
 `define WINDOW_3x3_NUM_CYCLES           5    // num cycles to output a 3x3 window in our arch
 `define NUM_CONV_WINDOW_VALUES          10
-`define PIXEL_WIDTH                     16
 `define WEIGHT_WIDTH                    16
 `define ROW_BUF_BRAM_DEPTH              1024
 `define WHT_TBL_BRAM_DEPTH              1024
@@ -78,8 +67,6 @@
 `define NUM_CE_PER_QUAD                 (`NUM_AWE * `NUM_CE_PER_AWE)
 `define MIN_NUM_INPUT_ROWS              19
 `define MIN_NUM_INPUT_COLS              19
-`define MAX_NUM_INPUT_ROWS              512
-`define MAX_NUM_INPUT_COLS              512
 `define MAX_KERNEL_DEPTH                `NUM_CE_PER_QUAD
 `define MAX_BRAM_3x3_KERNELS            64  // floor(`ROW_BUF_BRAM_DEPTH / `KERNEL_BLOCK_SIZE)
 `define MIN_BRAM_3x3_KERNELS            1

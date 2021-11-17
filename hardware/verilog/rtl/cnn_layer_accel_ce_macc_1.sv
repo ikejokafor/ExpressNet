@@ -50,7 +50,7 @@ module cnn_layer_accel_ce_macc_1
    PCOUT
 );
 
-	`include "awe.vh"
+	`include "awe.svh"
 
 
 	parameter C_DELAY           = 3;

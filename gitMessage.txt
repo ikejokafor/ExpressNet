@@ -1,1 +1,2 @@
-Fixed Bug in fetching maps
+fixed syntax errors preventing synthesis
+Added better perf calculation

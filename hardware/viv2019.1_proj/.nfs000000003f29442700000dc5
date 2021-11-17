@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Nov 17 02:08:19 2021
+# Process ID: 23835
+# Current directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj
+# Command line: vivado
+# Log file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.log
+# Journal file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.jou
+#-----------------------------------------------------------
+start_gui
+create_project project_1 /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/temp -part xc7vx485tffg1157-1
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/home/software/vivado-2019.1/Vivado/2019.1/data/ip'.
+create_project: Time (s): cpu = 00:00:23 ; elapsed = 00:00:11 . Memory (MB): peak = 6653.305 ; gain = 32.812 ; free physical = 54250 ; free virtual = 111258
+add_files -norecurse -scan_for_includes {/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_quad.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_rowbuffers.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_trans_eg_fifo.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_conv1x1_pip.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS_pip_ctrl.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_axi_bridge.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/awe_dsp_input_mux.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_quad_bram_ctrl.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_macc_1.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_macc_0.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_trans_in_fifo.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_weight_table_top.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_weight_sequence_table0.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_prefetch_buffer.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_weight_sequence_table1.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS_vec_add.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_dsps.sv}
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+add_files -norecurse -scan_for_includes {/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS_pip_ctrl.svh /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel.svh /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_trans_fifo.svh /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS.svh /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_conv1x1_pip.svh /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/axi_defs.svh /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_AWP.svh /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_QUAD.svh /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.svh}
+update_compile_order -fileset sources_1
+add_files -norecurse -scan_for_includes {/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/utilities.svh /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/math.svh}
+update_compile_order -fileset sources_1

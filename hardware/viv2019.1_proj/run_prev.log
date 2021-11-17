@@ -4,4 +4,3 @@
 	hd.visual == 0
 
 #HD: Running synthesis for block cnn_layer_accel
-ERROR: [Synth 8-1031] ob_store_amount is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1714]

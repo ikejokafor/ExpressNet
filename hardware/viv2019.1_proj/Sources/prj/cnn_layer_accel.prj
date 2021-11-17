@@ -1,13 +1,15 @@
 ## Accelerator Infastructue
+verilog work "/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/math.svh"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/utilities.svh"
 
 
 ## Accel Files
+verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel.svh"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS.svh"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS_pip_ctrl.svh"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_QUAD.svh"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_trans_fifo.svh"
-verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.vh"
+verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.svh"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/axi_defs.svh"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_AWP.svh"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_conv1x1_pip.svh"
@@ -29,7 +31,6 @@ verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_dsps.sv"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_rowbuffers.sv"
-verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_stride_picker.sv"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_axi_bridge.sv"
 verilog work "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv"

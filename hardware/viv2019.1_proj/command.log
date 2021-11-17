@@ -5,12 +5,14 @@ puts "#HD: Running synthesis for block cnn_layer_accel"
 file delete -force ./Synth/cnn_layer_accel
 file mkdir ./Synth/cnn_layer_accel
 create_project -in_memory -part xcvu37p-fsvh2892-2-e
+add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/math.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/utilities.svh
+add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS_pip_ctrl.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_QUAD.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_trans_fifo.svh
-add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.vh
+add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/axi_defs.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_AWP.svh
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_conv1x1_pip.svh
@@ -32,7 +34,6 @@ add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_dsps.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_rowbuffers.sv
-add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_stride_picker.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_axi_bridge.sv
 add_files /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv

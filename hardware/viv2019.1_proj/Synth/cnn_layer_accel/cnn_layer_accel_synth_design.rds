@@ -2,29 +2,33 @@ Command: synth_design -mode out_of_context -flatten_hierarchy rebuilt -top cnn_l
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xcvu37p'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcvu37p'
-INFO: [Common 17-1540] The version limit for your license is '2019.01' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
+INFO: [Common 17-1540] The version limit for your license is '2019.10' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
 INFO: Launching helper process for spawning children vivado processes
-INFO: Helper process launched with PID 31312 
-ERROR: [Synth 8-2715] syntax error near end [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1296]
-ERROR: [Synth 8-1031] C_NUM_RD_CLIENTS is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:159]
-ERROR: [Synth 8-1031] C_INIT_ID_WTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:160]
-ERROR: [Synth 8-1031] C_INIT_ADDR_WTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:161]
-ERROR: [Synth 8-1031] C_INIT_LEN_WTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:162]
-ERROR: [Synth 8-1031] C_NUM_RD_CLIENTS is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:163]
-ERROR: [Synth 8-1031] C_INIT_DATA_WTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:165]
-ERROR: [Synth 8-1031] C_NUM_RD_CLIENTS is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:166]
-ERROR: [Synth 8-1031] C_NUM_RD_CLIENTS is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:167]
-ERROR: [Synth 8-1031] C_NUM_RD_CLIENTS is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:168]
-ERROR: [Synth 8-1031] C_NUM_WR_CLIENTS is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:170]
-ERROR: [Synth 8-1031] clk is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1293]
-ERROR: [Synth 8-1031] init_rd_rem is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1401]
-ERROR: [Synth 8-1031] init_rd_rem is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1401]
-ERROR: [Synth 8-1031] init_rd_rem is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1414]
-ERROR: [Synth 8-1031] init_rd_rem is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1419]
-ERROR: [Synth 8-1031] init_rd_rem is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1444]
-ERROR: [Synth 8-1031] init_rd_rem is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1444]
-ERROR: [Synth 8-1031] init_rd_rem is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv:1454]
-Failed to read verilog '/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv'
+INFO: Helper process launched with PID 25993 
+WARNING: [Synth 8-2507] parameter declaration becomes local in cnn_layer_accel_awe_dsps with formal parameter declaration list [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.svh:1]
+WARNING: [Synth 8-976] trans_in_meta has already been declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:142]
+WARNING: [Synth 8-2654] second declaration of trans_in_meta ignored [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:142]
+INFO: [Synth 8-994] trans_in_meta is declared here [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:137]
+ERROR: [Synth 8-1766] cannot open include file awe.vh [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:38]
+ERROR: [Synth 8-1031] C_KERNAL_SIZE_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:66]
+ERROR: [Synth 8-1031] C_MODE_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:67]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:70]
+ERROR: [Synth 8-1031] C_DATAIN_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:76]
+ERROR: [Synth 8-1031] C_DATAIN_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:79]
+ERROR: [Synth 8-1031] C_WEIGHT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:81]
+ERROR: [Synth 8-1031] C_WEIGHT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:84]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:88]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:91]
+ERROR: [Synth 8-1031] C_A_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:96]
+ERROR: [Synth 8-1031] C_B_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:97]
+ERROR: [Synth 8-1031] C_C_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:98]
+ERROR: [Synth 8-1031] C_A_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:100]
+ERROR: [Synth 8-1031] C_B_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:101]
+ERROR: [Synth 8-1031] C_C_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:102]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:104]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:108]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:111]
+Failed to read verilog '/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv'
 INFO: [Common 17-83] Releasing license: Synthesis
-3 Infos, 0 Warnings, 0 Critical Warnings and 20 Errors encountered.
+4 Infos, 3 Warnings, 0 Critical Warnings and 20 Errors encountered.
 synth_design failed

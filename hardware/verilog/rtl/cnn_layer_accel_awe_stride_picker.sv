@@ -29,19 +29,21 @@ module cnn_layer_accel_awe_stride_picker (
     datain_valid       ,
     dataout            ,
     dataout_valid
-)
+);
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	`include "math.vh"
-    `include "cnn_layer_accel_defs.vh"
+	`include "math.svh"
+    `include "awe.svh"
+    `include "cnn_layer_accel.svh"
+    `include "cnn_layer_accel_QUAD.svh"
 	
     
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	localparam C_STRIDE_COUNTER_WIDTH = clog2(`MAX_STRIDE);
-    
+
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
@@ -50,9 +52,9 @@ module cnn_layer_accel_awe_stride_picker (
 	input	logic												rst                 ;
 	input 	logic												config_valid        ;
 	input   logic [C_STRIDE_COUNTER_WIDTH - 1:0]                stride_size         ;
-	input   logic [          C_DATA_WIDTH - 1:0]                datain	            ;
+	input   logic [          C_DATAIN_WIDTH - 1:0]                datain	            ;
 	input	logic												datain_valid        ;
-	output	logic [          C_DATA_WIDTH - 1:0]				dataout             ;
+	output	logic [          C_DATAIN_WIDTH - 1:0]				dataout             ;
 	output	logic												dataout_valid       ;
 	
 

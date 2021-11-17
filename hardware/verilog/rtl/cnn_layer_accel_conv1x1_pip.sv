@@ -67,7 +67,9 @@ module cnn_layer_accel_conv1x1_pip #(
     //-----------------------------------------------------------------------------------------------------------------------------------------------
     //  Includes
     //-----------------------------------------------------------------------------------------------------------------------------------------------
+    `include "math.svh"
     `include "utilities.svh"
+    `include "cnn_layer_accel.svh"
     `include "cnn_layer_accel_FAS.svh"
     `include "cnn_layer_accel_FAS_pip_ctrl.svh"
     `include "cnn_layer_accel_conv1x1_pip.svh"

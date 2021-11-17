@@ -1,9 +1,9 @@
 #-----------------------------------------------------------
-# Vivado v2018.3 (64-bit)
-# SW Build 2405991 on Thu Dec  6 23:36:41 MST 2018
-# IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
-# Start of session at: Fri Nov 12 11:25:25 2021
-# Process ID: 22299
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Nov 17 02:24:31 2021
+# Process ID: 25941
 # Current directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj
 # Command line: vivado -mode batch -source design.tcl -notrace
 # Log file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.log
@@ -22,22 +22,59 @@ Command: synth_design -mode out_of_context -flatten_hierarchy rebuilt -top cnn_l
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xcvu37p'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcvu37p'
-INFO: [Common 17-1540] The version limit for your license is '2019.01' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
+INFO: [Common 17-1540] The version limit for your license is '2019.10' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
 INFO: Launching helper process for spawning children vivado processes
-INFO: Helper process launched with PID 22317 
-ERROR: [Synth 8-1766] cannot open include file math.vh [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_prefetch_buffer.sv:57]
-ERROR: [Synth 8-1766] cannot open include file cnn_layer_accel_defs.vh [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_prefetch_buffer.sv:58]
-INFO: [Synth 8-2350] module cnn_layer_accel_prefetch_buffer ignored due to previous errors [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_prefetch_buffer.sv:31]
-Failed to read verilog '/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_prefetch_buffer.sv'
+INFO: Helper process launched with PID 25993 
+WARNING: [Synth 8-2507] parameter declaration becomes local in cnn_layer_accel_awe_dsps with formal parameter declaration list [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.svh:1]
+WARNING: [Synth 8-976] trans_in_meta has already been declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:142]
+WARNING: [Synth 8-2654] second declaration of trans_in_meta ignored [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:142]
+INFO: [Synth 8-994] trans_in_meta is declared here [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:137]
+ERROR: [Synth 8-1766] cannot open include file awe.vh [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:38]
+ERROR: [Synth 8-1031] C_KERNAL_SIZE_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:66]
+ERROR: [Synth 8-1031] C_MODE_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:67]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:70]
+ERROR: [Synth 8-1031] C_DATAIN_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:76]
+ERROR: [Synth 8-1031] C_DATAIN_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:79]
+ERROR: [Synth 8-1031] C_WEIGHT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:81]
+ERROR: [Synth 8-1031] C_WEIGHT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:84]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:88]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:91]
+ERROR: [Synth 8-1031] C_A_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:96]
+ERROR: [Synth 8-1031] C_B_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:97]
+ERROR: [Synth 8-1031] C_C_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:98]
+ERROR: [Synth 8-1031] C_A_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:100]
+ERROR: [Synth 8-1031] C_B_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:101]
+ERROR: [Synth 8-1031] C_C_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:102]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:104]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:108]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:111]
+Failed to read verilog '/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv'
 INFO: [Common 17-83] Releasing license: Synthesis
-4 Infos, 0 Warnings, 0 Critical Warnings and 3 Errors encountered.
+4 Infos, 3 Warnings, 0 Critical Warnings and 20 Errors encountered.
 synth_design failed
-ERROR: [Synth 8-1766] cannot open include file math.vh [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_prefetch_buffer.sv:57]
-ERROR: [Synth 8-1766] cannot open include file cnn_layer_accel_defs.vh [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_prefetch_buffer.sv:58]
+ERROR: [Synth 8-1766] cannot open include file awe.vh [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:38]
+ERROR: [Synth 8-1031] C_KERNAL_SIZE_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:66]
+ERROR: [Synth 8-1031] C_MODE_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:67]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:70]
+ERROR: [Synth 8-1031] C_DATAIN_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:76]
+ERROR: [Synth 8-1031] C_DATAIN_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:79]
+ERROR: [Synth 8-1031] C_WEIGHT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:81]
+ERROR: [Synth 8-1031] C_WEIGHT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:84]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:88]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:91]
+ERROR: [Synth 8-1031] C_A_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:96]
+ERROR: [Synth 8-1031] C_B_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:97]
+ERROR: [Synth 8-1031] C_C_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:98]
+ERROR: [Synth 8-1031] C_A_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:100]
+ERROR: [Synth 8-1031] C_B_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:101]
+ERROR: [Synth 8-1031] C_C_INPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:102]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:104]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:108]
+ERROR: [Synth 8-1031] C_P_OUTPUT_WIDTH is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv:111]
 #HD: Writing checkpoint ./Synth/cnn_layer_accel/cnn_layer_accel_synth_design_error.dcp for debug.
 ERROR: [Common 17-53] User Exception: No open design. Please open an elaborated, synthesized or implemented design before executing this command.
 
     while executing
 "source $tclDir/run.tcl"
-    (file "design.tcl" line 74)
-INFO: [Common 17-206] Exiting Vivado at Fri Nov 12 11:26:18 2021...
+    (file "design.tcl" line 77)
+INFO: [Common 17-206] Exiting Vivado at Wed Nov 17 02:25:16 2021...

@@ -1,0 +1,369 @@
+/*
+
+Xilinx Vivado v2019.1 (64-bit) [Major: 2019, Minor: 1]
+SW Build: 2552052 on Fri May 24 14:47:09 MDT 2019
+IP Build: 2548770 on Fri May 24 18:01:18 MDT 2019
+
+Process ID (PID): 23835
+License: Customer
+
+Current time: 	Wed Nov 17 02:09:09 EST 2021
+Time zone: 	Eastern Standard Time (America/New_York)
+
+OS: Ubuntu
+OS Version: 4.15.0-154-generic
+OS Architecture: amd64
+Available processors (cores): 16
+
+Display: localhost:10.0
+Screen size: 2194x1234
+Screen resolution (DPI): 100
+Available screens: 3
+Available disk space: 353 GB
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+
+Java version: 	9.0.4 64-bit
+Java home: 	/home/software/vivado-2019.1/Vivado/2019.1/tps/lnx64/jre9.0.4
+Java executable location: 	/home/software/vivado-2019.1/Vivado/2019.1/tps/lnx64/jre9.0.4/bin/java
+Java initial memory (-Xms): 	128 MB
+Java maximum memory (-Xmx):	 3 GB
+
+
+User name: 	izo5011
+User home directory: /home/grads/izo5011
+User working directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: /home/software/vivado-2019.1/Vivado
+HDI_APPROOT: /home/software/vivado-2019.1/Vivado/2019.1
+RDI_DATADIR: /home/software/vivado-2019.1/Vivado/2019.1/data
+RDI_BINDIR: /home/software/vivado-2019.1/Vivado/2019.1/bin
+
+Vivado preferences file location: /home/grads/izo5011/.Xilinx/Vivado/2019.1/vivado.xml
+Vivado preferences directory: /home/grads/izo5011/.Xilinx/Vivado/2019.1/
+Vivado layouts directory: /home/grads/izo5011/.Xilinx/Vivado/2019.1/layouts
+PlanAhead jar file location: 	/home/software/vivado-2019.1/Vivado/2019.1/lib/classes/planAhead.jar
+Vivado log file location: 	/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.log
+Vivado journal file location: 	/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/vivado.jou
+Engine tmp dir: 	./.Xil/Vivado-23835-e5-cse-322-16
+
+Xilinx Environment Variables
+----------------------------
+VIVADO_2018_3_SIM_LIBS: /home/mdl/izo5011/IkennaWorkSpace/vivado_2018.3_sim_libs/
+VIVADO_2019_1_SIM_LIBS: /home/mdl/izo5011/IkennaWorkSpace/vivado_2019.1_sim_libs/
+XILINX: /home/software/vivado-2019.1/Vivado/2019.1/ids_lite/ISE
+XILINX_DSP: /home/software/vivado-2019.1/Vivado/2019.1/ids_lite/ISE
+XILINX_PLANAHEAD: /home/software/vivado-2019.1/Vivado/2019.1
+XILINX_SDK: /home/software/vivado-2019.1/SDK/2019.1
+XILINX_VIVADO: /home/software/vivado-2019.1/Vivado/2019.1
+XILINX_VIVADO_HLS: /home/software/vivado-2019.1/Vivado/2019.1
+
+
+GUI allocated memory:	128 MB
+GUI max memory:		3,072 MB
+Engine allocated memory: 921 MB
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// Tcl Message: start_gui 
+selectMenu(PAResourceItoN.MainMenuMgr_FILE, "File"); // Z (q, cl)
+dismissMenu(PAResourceItoN.MainMenuMgr_FILE, "File"); // Z (q, cl)
+selectMenu(PAResourceItoN.MainMenuMgr_FLOW, "Flow"); // Z (q, cl)
+// HMemoryUtils.trashcanNow. Engine heap size: 955 MB. GUI used memory: 46 MB. Current time: 11/17/21, 2:09:11 AM EST
+dismissMenu(PAResourceItoN.MainMenuMgr_FLOW, "Flow"); // Z (q, cl)
+selectMenu(PAResourceItoN.MainMenuMgr_FILE, "File"); // Z (q, cl)
+selectMenu(PAResourceItoN.MainMenuMgr_PROJECT, "Project"); // ae (cl)
+selectMenu(PAResourceItoN.MainMenuMgr_CHECKPOINT, "Checkpoint"); // ae (cl)
+selectMenu(PAResourceItoN.MainMenuMgr_IP, "IP"); // ae (cl)
+selectMenu(PAResourceItoN.MainMenuMgr_PROJECT, "Project"); // ae (cl)
+selectMenuItem(PAResourceCommand.PACommandNames_NEW_PROJECT, "New..."); // ah (cl)
+dismissMenu(PAResourceItoN.MainMenuMgr_FILE, "File"); // Z (q, cl)
+// Run Command: PAResourceCommand.PACommandNames_NEW_PROJECT
+// [GUI Memory]: 105 MB (+107575kb) [00:00:28]
+// [Engine Memory]: 958 MB (+853551kb) [00:00:28]
+// f (cl): New Project: addNotify
+selectButton("NEXT", "Next >"); // JButton (j, f)
+// HMemoryUtils.trashcanNow. Engine heap size: 972 MB. GUI used memory: 49 MB. Current time: 11/17/21, 2:09:26 AM EST
+// Elapsed time: 17 seconds
+setText(PAResourceOtoP.ProjectNameChooser_CHOOSE_PROJECT_LOCATION, "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/tempj"); // am (al, f)
+selectCheckBox(PAResourceOtoP.ProjectNameChooser_CREATE_PROJECT_SUBDIRECTORY, "Create project subdirectory", false); // g (Q, f): FALSE
+setText(PAResourceOtoP.ProjectNameChooser_CHOOSE_PROJECT_LOCATION, "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/temp"); // am (al, f)
+selectButton("NEXT", "Next >"); // JButton (j, f)
+selectButton("NEXT", "Next >"); // JButton (j, f)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, "Add Files"); // a (E, f)
+String[] filenames31467 = {"/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/awe_dsp_input_mux.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS_pip_ctrl.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_FAS_vec_add.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_dsps.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_rowbuffers.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_awe_stride_picker.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_axi_bridge.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_dsps.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_macc_0.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_ce_macc_1.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_conv1x1_pip.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_prefetch_buffer.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_quad.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_quad_bram_ctrl.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_trans_eg_fifo.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_trans_in_fifo.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_weight_sequence_table0.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_weight_sequence_table1.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_weight_table_top.sv", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/verilog template.sv"};
+setFileChooser(filenames31467);
+selectTable(PAResourceQtoS.SrcChooserTable_SRC_CHOOSER_TABLE, "VSourceFile ; 9 ; cnn_layer_accel_awe_stride_picker.sv ; xil_defaultlib ; Synthesis & Simulation ; /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl", 8, "cnn_layer_accel_awe_stride_picker.sv", 2); // bQ (O, f)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,024 MB. GUI used memory: 50 MB. Current time: 11/17/21, 2:10:06 AM EST
+// Elapsed time: 10 seconds
+selectTable(PAResourceQtoS.SrcChooserTable_SRC_CHOOSER_TABLE, "VSourceFile ; 22 ; verilog template.sv ; xil_defaultlib ; Synthesis & Simulation ; /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl", 21, "verilog template.sv", 2); // bQ (O, f)
+// Elapsed time: 11 seconds
+selectButton("NEXT", "Next >"); // JButton (j, f)
+selectButton("NEXT", "Next >"); // JButton (j, f)
+selectButton("NEXT", "Next >"); // JButton (j, f)
+// WARNING: HEventQueue.dispatchEvent() is taking  2446 ms.
+// by (f):  Create Project : addNotify
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_ADD
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_DASHBOARD_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_NEW
+// Tcl Message: create_project project_1 /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/temp -part xc7vx485tffg1157-1 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified 
+// TclEventType: PROJECT_NEW
+// [Engine Memory]: 1,041 MB (+36324kb) [00:01:50]
+// WARNING: HEventQueue.dispatchEvent() is taking  3408 ms.
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/home/software/vivado-2019.1/Vivado/2019.1/data/ip'. 
+// HMemoryUtils.trashcanNow. Engine heap size: 1,065 MB. GUI used memory: 55 MB. Current time: 11/17/21, 2:10:42 AM EST
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: create_project: Time (s): cpu = 00:00:23 ; elapsed = 00:00:11 . Memory (MB): peak = 6653.305 ; gain = 32.812 ; free physical = 54250 ; free virtual = 111258 
+// TclEventType: FILE_SET_CHANGE
+// Elapsed time: 16 seconds
+selectButton("FINISH", "Finish"); // JButton (j, f)
+// 'g' command handler elapsed time: 90 seconds
+dismissDialog("Create Project"); // by (f)
+dismissDialog("New Project"); // f (cl)
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: update_compile_order -fileset sources_1 
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// [Engine Memory]: 1,101 MB (+8650kb) [00:02:06]
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: update_compile_order -fileset sources_1 
+// HMemoryUtils.trashcanNow. Engine heap size: 1,118 MB. GUI used memory: 55 MB. Current time: 11/17/21, 2:11:01 AM EST
+// Elapsed time: 145 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel (cnn_layer_accel.sv)]", 3); // B (F, cl)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 1); // B (F, cl)
+// PAPropertyPanels.initPanels (cnn_layer_accel.sv) elapsed time: 0.2s
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel.sv]", 2, false); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel.sv]", 2, false); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel.sv]", 2, false, false, false, false, false, true); // B (F, cl) - Double Click
+// HMemoryUtils.trashcanNow. Engine heap size: 1,175 MB. GUI used memory: 60 MB. Current time: 11/17/21, 2:13:21 AM EST
+// [Engine Memory]: 1,175 MB (+19549kb) [00:04:43]
+// Elapsed time: 14 seconds
+selectButton(PAResourceCommand.PACommandNames_ADD_SOURCES, "Sources_add_sources"); // B (f, cl)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cl): Add Sources: addNotify
+selectButton("NEXT", "Next >"); // JButton (j, c)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, "Add Files"); // a (E, c)
+String[] filenames16706 = {"/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/awe.svh", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/axi_defs.svh", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel.svh", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_AWP.svh", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS.svh", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_FAS_pip_ctrl.svh", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_QUAD.svh", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_conv1x1_pip.svh", "/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/defs/cnn_layer_accel_trans_fifo.svh"};
+setFileChooser(filenames16706);
+selectButton("FINISH", "Finish"); // JButton (j, c)
+// 'h' command handler elapsed time: 17 seconds
+// TclEventType: DG_GRAPH_STALE
+dismissDialog("Add Sources"); // c (cl)
+// TclEventType: FILE_SET_CHANGE
+// by (cl):  Add Sources  : addNotify
+dismissDialog("Add Sources"); // by (cl)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,201 MB. GUI used memory: 60 MB. Current time: 11/17/21, 2:13:56 AM EST
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: update_compile_order -fileset sources_1 
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 2); // B (F, cl)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 2); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel.sv]", 3, false); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel.sv]", 3, false, false, false, false, false, true); // B (F, cl) - Double Click
+// [GUI Memory]: 114 MB (+4409kb) [00:05:16]
+// Elapsed time: 15 seconds
+selectCodeEditor("cnn_layer_accel.sv", 302, 385); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel.sv", 302, 385, false, false, false, true, false); // cl (w, cl) - Popup Trigger
+selectMenuItem(RDIResource.HInputHandler_FIND_TEXT_IN_CURRENT_FILE, "Find..."); // ah (an, cl)
+selectButton(RDIResource.HCodeEditor_CLOSE, (String) null); // k (aL, cl)
+selectCodeEditor("cnn_layer_accel.sv", 362, 392); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel.sv", 309, 380); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel.sv", 309, 380, false, false, false, true, false); // cl (w, cl) - Popup Trigger
+selectMenu(RDIResource.HCodeEditor_BLANK_OPERATIONS, "Blank Operations"); // Z (an, cl)
+selectCodeEditor("cnn_layer_accel.sv", 283, 27); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel.sv", 442, 222); // cl (w, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel_quad.sv]", 5, false); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel_quad.sv]", 5, false, false, false, false, false, true); // B (F, cl) - Double Click
+// HMemoryUtils.trashcanNow. Engine heap size: 1,230 MB. GUI used memory: 61 MB. Current time: 11/17/21, 2:14:46 AM EST
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 2); // B (F, cl)
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "24"); // h (f, cl)
+// [Engine Memory]: 1,235 MB (+929kb) [00:06:00]
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sources_1, [HDL 9-3952] use of undefined macro 'INIT_WR_DATA_WIDTH' [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv:106]. ]", 2, true); // ah (O, cl) - Node
+messagesViewCrossProbe(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "src;-;/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv;-;;-;16;-;line;-;106;-;;-;16;-;"); // ah (O, cl)
+selectCodeEditor("cnn_layer_accel.sv", 537, 154); // cl (w, cl)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sources_1, [HDL 9-806] Syntax error near (. [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_quad.sv:168]. ]", 3, true); // ah (O, cl) - Node
+messagesViewCrossProbe(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "src;-;/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_quad.sv;-;;-;16;-;line;-;168;-;;-;16;-;"); // ah (O, cl)
+selectCodeEditor("cnn_layer_accel_quad.sv", 318, 278); // cl (w, cl)
+selectButton(PAResourceCommand.PACommandNames_ADD_SOURCES, "Sources_add_sources"); // B (f, cl)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cl): Add Sources: addNotify
+selectButton("NEXT", "Next >"); // JButton (j, c)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, "Add Files"); // a (E, c)
+// Elapsed time: 12 seconds
+setFileChooser("/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/math.svh");
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, "Add Files"); // a (E, c)
+setFileChooser("/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/utilities.svh");
+selectButton("FINISH", "Finish"); // JButton (j, c)
+// 'h' command handler elapsed time: 23 seconds
+// TclEventType: DG_GRAPH_STALE
+dismissDialog("Add Sources"); // c (cl)
+// Tcl Message: add_files -norecurse -scan_for_includes {/home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/utilities.svh /home/mdl/izo5011/IkennaWorkSpace/accel_infst_common/hardware/verilog/math.svh} 
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// by (cl):  Add Sources  : addNotify
+// TclEventType: FILE_SET_CHANGE
+dismissDialog("Add Sources"); // by (cl)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,254 MB. GUI used memory: 59 MB. Current time: 11/17/21, 2:15:41 AM EST
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: update_compile_order -fileset sources_1 
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sources_1, [HDL 9-3952] use of undefined macro 'INIT_WR_DATA_WIDTH' [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv:106]. ]", 2, true); // ah (O, cl) - Node
+messagesViewCrossProbe(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "src;-;/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv;-;;-;16;-;line;-;106;-;;-;16;-;"); // ah (O, cl)
+selectCodeEditor("cnn_layer_accel.sv", 477, 158); // cl (w, cl)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-3952] use of undefined macro 'INIT_WR_DATA_WIDTH' [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv:106]. ]", 4, true); // ah (O, cl) - Node
+messagesViewCrossProbe(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "src;-;/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel.sv;-;;-;16;-;line;-;106;-;;-;16;-;"); // ah (O, cl)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+selectCodeEditor("cnn_layer_accel.sv", 525, 185); // cl (w, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel_AWP.sv]", 4, false); // B (F, cl)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 2); // B (F, cl)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 2); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel_AWP.sv]", 3, false); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel_trans_eg_fifo.sv]", 4, false); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, cnn_layer_accel_trans_eg_fifo.sv]", 4, false, false, false, false, false, true); // B (F, cl) - Double Click
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sources_1, [HDL 9-3952] use of undefined macro 'TRANS_IN_FIFO_PYLD_WIDTH' [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:293]. ]", 2, true); // ah (O, cl) - Node
+messagesViewCrossProbe(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "src;-;/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv;-;;-;16;-;line;-;293;-;;-;16;-;"); // ah (O, cl)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,276 MB. GUI used memory: 61 MB. Current time: 11/17/21, 2:16:21 AM EST
+// Elapsed time: 10 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header]", 1); // B (F, cl)
+// Elapsed time: 10 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, cnn_layer_accel_trans_fifo.svh]", 3, false); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, cnn_layer_accel_trans_fifo.svh]", 3, false, false, false, false, false, true); // B (F, cl) - Double Click
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sources_1, [HDL 9-3952] use of undefined macro 'TRANS_IN_FIFO_PYLD_WIDTH' [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:293]. ]", 2, true); // ah (O, cl) - Node
+messagesViewCrossProbe(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "src;-;/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv;-;;-;16;-;line;-;293;-;;-;16;-;"); // ah (O, cl)
+// Elapsed time: 16 seconds
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-3952] use of undefined macro 'TRANS_IN_FIFO_PYLD_WIDTH' [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:293]. ]", 4, true); // ah (O, cl) - Node
+messagesViewCrossProbe(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "src;-;/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv;-;;-;16;-;line;-;293;-;;-;16;-;"); // ah (O, cl)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "cnn_layer_accel_trans_eg_fifo.sv", 3); // k (j, cl)
+closeView(PAResourceOtoP.PAViews_CODE, "Code"); // B
+closeView(PAResourceOtoP.PAViews_CODE, "Code"); // B
+closeView(PAResourceOtoP.PAViews_CODE, "Code"); // B
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "cnn_layer_accel_trans_fifo.svh", 2); // k (j, cl)
+selectTab((HResource) null, "PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "cnn_layer_accel_trans_fifo.svh", 2, true, false); // k (j, cl) - Popup Trigger
+selectMenuItem((HResource) null, "Split Horizontally"); // JMenuItem (JidePopupMenu)
+// PAResourceOtoP.PAViews_CODE: Code: close view
+closeView(PAResourceOtoP.PAViews_CODE, "Code"); // B
+selectTab((HResource) null, "PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "cnn_layer_accel_trans_fifo.svh", 2, true, false); // k (j, cl) - Popup Trigger
+selectMenuItem(RDIResource.BaseWorkspace_TILE_VERTICALLY, "Tile Vertically"); // ah (cl)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "cnn_layer_accel_AWP.sv", 0); // k (j, cl)
+// Elapsed time: 25 seconds
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 400, 58); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 428, 52); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 428, 52, false, false, false, false, true); // cl (w, cl) - Double Click
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 521, 37); // cl (w, cl)
+// [GUI Memory]: 121 MB (+630kb) [00:09:11]
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 515, 115); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 520, 109); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 522, 192); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 518, 263); // cl (w, cl)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// [Engine Memory]: 1,306 MB (+9569kb) [00:09:26]
+// HMemoryUtils.trashcanNow. Engine heap size: 1,306 MB. GUI used memory: 60 MB. Current time: 11/17/21, 2:18:16 AM EST
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 121, 502); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_trans_fifo.svh", 121, 502, false, false, false, false, true); // cl (w, cl) - Double Click
+selectCodeEditor("cnn_layer_accel_AWP.sv", 307, 432); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 184, 197); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 208, 163); // cl (w, cl)
+selectTab((HResource) null, (HResource) null, "Log", 2); // aK (aH, cl)
+selectTab((HResource) null, (HResource) null, "Tcl Console", 0); // aK (aH, cl)
+selectTab((HResource) null, (HResource) null, "Messages", 1); // aK (aH, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 283, 414); // cl (w, cl)
+selectTab((HResource) null, (HResource) null, "Log", 2); // aK (aH, cl)
+selectTab((HResource) null, (HResource) null, "Design Runs", 4); // aK (aH, cl)
+selectTab((HResource) null, (HResource) null, "Tcl Console", 0); // aK (aH, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, awe.svh]", 6, false, false, false, false, true, false); // B (F, cl) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // ae (an, cl)
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ah (an, cl)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header]", 1); // B (F, cl)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel_axi_bridge (cnn_layer_accel_axi_bridge.sv)]", 2); // B (F, cl)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel_axi_bridge (cnn_layer_accel_axi_bridge.sv)]", 2); // B (F, cl)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel (cnn_layer_accel.sv)]", 3); // B (F, cl)
+// WARNING: HSwingWorker (Refresh Filesets Swing Worker) is taking 1006 ms. Increasing delay to 3018 ms.
+// Elapsed time: 174 seconds
+selectCodeEditor("cnn_layer_accel_AWP.sv", 153, 382); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 210, 183); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 209, 384); // cl (w, cl)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header]", 1); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, utilities.svh]", 7, false); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, utilities.svh]", 7, false, false, false, false, false, true); // B (F, cl) - Double Click
+// PAResourceOtoP.PAViews_CODE: Code: close view
+closeView(PAResourceOtoP.PAViews_CODE, "Code"); // B
+closeView(PAResourceOtoP.PAViews_CODE, "Code"); // B
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Project Summary", 0); // k (j, cl)
+// Elapsed time: 17 seconds
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header]", 1); // B (F, cl)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel (cnn_layer_accel.sv)]", 3); // B (F, cl)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel (cnn_layer_accel.sv), genblk1[0].cnn_layer_accel_awp : cnn_layer_accel_awp (cnn_layer_accel_AWP.sv)]", 5); // B (F, cl)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel (cnn_layer_accel.sv), genblk1[0].cnn_layer_accel_awp : cnn_layer_accel_awp (cnn_layer_accel_AWP.sv)]", 5, true); // B (F, cl) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel (cnn_layer_accel.sv), genblk1[0].cnn_layer_accel_awp : cnn_layer_accel_awp (cnn_layer_accel_AWP.sv)]", 5, true, false, false, false, false, true); // B (F, cl) - Double Click - Node
+// Elapsed time: 27 seconds
+selectCodeEditor("cnn_layer_accel_AWP.sv", 429, 496); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 359, 394); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 359, 394, false, false, false, false, true); // cl (w, cl) - Double Click
+selectCodeEditor("cnn_layer_accel_AWP.sv", 44, 222); // cl (w, cl)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// HMemoryUtils.trashcanNow. Engine heap size: 1,334 MB. GUI used memory: 61 MB. Current time: 11/17/21, 2:23:21 AM EST
+// Elapsed time: 13 seconds
+selectCodeEditor("cnn_layer_accel_AWP.sv", 45, 243); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 42, 248); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 42, 254, false, false, true, false, false); // cl (w, cl) - Alt Key
+selectCodeEditor("cnn_layer_accel_AWP.sv", 39, 325); // cl (w, cl)
+selectCodeEditor("cnn_layer_accel_AWP.sv", 39, 334); // cl (w, cl)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 61 MB. Current time: 11/17/21, 2:53:21 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 3:23:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 3:53:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 4:23:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 4:53:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 5:23:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 5:53:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 6:23:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 6:53:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 7:23:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 7:53:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 8:23:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 8:53:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 9:23:22 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 9:53:22 AM EST
+// WARNING: HEventQueue.dispatchEvent() is taking  1204 ms.
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 10:23:23 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 10:53:23 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 11:23:23 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 11:53:23 AM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 12:23:23 PM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 12:53:23 PM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 1:23:23 PM EST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 1:53:23 PM EST
+// Elapsed time: 42450 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel (cnn_layer_accel.sv), cnn_layer_accel_FAS : cnn_layer_accel_FAS (cnn_layer_accel_FAS.sv)]", 4); // B (F, cl)
+// Elapsed time: 10 seconds
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, cnn_layer_accel (cnn_layer_accel.sv)]", 3); // B (F, cl)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,341 MB. GUI used memory: 55 MB. Current time: 11/17/21, 2:23:23 PM EST

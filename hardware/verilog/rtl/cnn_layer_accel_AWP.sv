@@ -45,8 +45,10 @@ module cnn_layer_accel_awp (
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-	`include "math.vh"
-    `include "cnn_layer_accel_QUAD_defs.vh"
+	`include "math.svh"
+    `include "cnn_layer_accel.svh"
+    `include "cnn_layer_accel_AWP.svh"
+    `include "cnn_layer_accel_QUAD.svh"
     `include "cnn_layer_accel_trans_fifo.svh"
 	
     
@@ -54,22 +56,22 @@ module cnn_layer_accel_awp (
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
  	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
-	localparam C_TRANS_IN_FIFO_WR_WTH               = `TRANS_IN_FIFO_META_WIDTH + `TRANS_IN_FIFO_PYLD_WIDTH;
-    localparam C_TRANS_IN_FIFO_RD_WTH               = `TRANS_IN_FIFO_META_WIDTH + `TRANS_IN_FIFO_PYLD_WIDTH;
-    localparam C_TRANS_EG_FIFO_WR_WTH               = `TRANS_EG_FIFO_META_WIDTH + `TRANS_EG_FIFO_PYLD_WIDTH;
-    localparam C_TRANS_EG_FIFO_RD_WTH               = `TRANS_EG_FIFO_META_WIDTH + `TRANS_EG_FIFO_PYLD_WIDTH;
+	localparam C_TRANS_IN_FIFO_WR_WTH               = `TRANS_IN_FIFO_META_WTH + `TRANS_IN_FIFO_PYLD_WTH;
+    localparam C_TRANS_IN_FIFO_RD_WTH               = `TRANS_IN_FIFO_META_WTH + `TRANS_IN_FIFO_PYLD_WTH;
+    localparam C_TRANS_EG_FIFO_WR_WTH               = `TRANS_EG_FIFO_META_WTH + `TRANS_EG_FIFO_PYLD_WTH;
+    localparam C_TRANS_EG_FIFO_RD_WTH               = `TRANS_EG_FIFO_META_WTH + `TRANS_EG_FIFO_PYLD_WTH;
    	// BEGIN ----------------------------------------------------------------------------------------------------------------------------------------   
     localparam C_NUM_QUAD_PER_CM_FIFO               = `CONVMAP_FIFO_WR_WTH / `PIXEL_WIDTH;
-    localparam C_NUM_CONVMAP_FIFO                   = ceil(`NUM_QUADS, C_NUM_QUAD_PER_CM_FIFO);
+    localparam C_NUM_CONVMAP_FIFO                   = $ceil(`NUM_QUADS / C_NUM_QUAD_PER_CM_FIFO);
     localparam C_CONVMAP_FIFO_CT_WTH                = clog2(`CONVMAP_FIFO_RD_DTH) + 1; 
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Ports
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    input logic                                       clk_core                    ,             
-    input logic                                       clk_intf                    ,
-    input logic                                       rst                         ,
+    input logic                                       clk_core                    ;             
+    input logic                                       clk_intf                    ;
+    input logic                                       rst                         ;
     // BEGIN -----------------------------------------------------------------------------------------------------------------------------------------    
     input  logic                                      trans_in_fifo_din_vld       ;      
     output logic                                      trans_in_fifo_din_rdy       ;      
@@ -137,7 +139,7 @@ module cnn_layer_accel_awp (
     logic                                       trans_in_fifo_empty                     ;
     logic                                       trans_in_fifo_wr_rst_busy               ;
     logic                                       trans_in_fifo_rd_rst_busy               ;
-	logic [`TRANS_IN_FIFO_META_WIDTH - 1:0]     trans_in_meta						    ; 
+	logic [`TRANS_IN_FIFO_META_WTH - 1:0]     trans_in_meta						    ; 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                       trans_eg_fifo_wren                      ;
     logic                                       trans_eg_fifo_rden                      ;
@@ -273,8 +275,7 @@ module cnn_layer_accel_awp (
         end
     endgenerate
     
-    
-    generate
+
     generate
         for(gi0 = 0; gi0 < C_NUM_CONVMAP_FIFO; gi0 = gi0 + 1) begin
             // WR_WIDTH: 1024
@@ -299,17 +300,19 @@ module cnn_layer_accel_awp (
             
             // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------
             assign convMap_fifo_wren[gi0] = 1; // FIXME: needs to be last quad in set that is active, since this is variable best to have quad tell you through QUAD_enable and valid
-            assign convMap_fifo_prog_full[gi0] = (convMap_fifo_count > cm_high_watermark_cfg);
+            // assign convMap_fifo_prog_full[gi0] = (convMap_fifo_count > cm_high_watermark_cfg);
+            logic [15:0] temp;
+            // assign convMap_fifo_prog_full[gi0] = (convMap_fifo_count > temp);
          
-            always@(posedge clk) begin
-                for(gi1 = 0; gi1 < C_NUM_QUAD_PER_CM_FIFO; gi1 = gi1 + 1) begin
-                    if(result_valid[gi1]) begin
-                        convMap_fifo_datain[gi0][(gi1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] <= result_data[(gi1 * `PIXEL_WIDTH) +: `PIXEL_WIDTH]
-                    end
-                end
-            end
+            // always@(posedge clk_FAS) begin
+            //     for(gi0 = 0; gi0 < C_NUM_QUAD_PER_CM_FIFO; gi0 = gi0 + 1) begin
+            //         if(result_valid[gi0]) begin
+            //             convMap_fifo_datain[gi0][(gi0 * `PIXEL_WIDTH) +: `PIXEL_WIDTH] <= result_data[(gi0 * `PIXEL_WIDTH) +: `PIXEL_WIDTH];
+            //         end
+            //     end
+            // end
             
-
+            logic FAS_rdy_n;
             always@(posedge clk_FAS) begin
                 if(rst || FAS_rdy_n) begin
                     convMap_fifo_count[gi0] <= 0;
@@ -354,6 +357,8 @@ module cnn_layer_accel_awp (
     
     
     // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
+    integer idx0;
+    integer idx7;
     always@(*) begin
        for(idx0 = 0; idx0 < `NUM_QUADS; idx0 = idx0 + 1) begin
             all_pip_primed = pip_primed[idx0] && 1;
