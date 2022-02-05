@@ -33,6 +33,16 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+`include "cnn_layer_accel.svh"
+`include "cnn_layer_accel_AWP.svh"
+`include "cnn_layer_accel_conv1x1_pip.svh"
+`include "cnn_layer_accel_FAS.svh"
+`include "cnn_layer_accel_FAS_pip_ctrl.svh"
+`include "cnn_layer_accel_QUAD.svh"
+`include "cnn_layer_accel_trans_fifo.svh"
+`include "awe.svh"
+`include "axi_defs.svh"
+
 
 `include "monitor.sv"
 `include "cnl_sc1_verif_defs.svh"

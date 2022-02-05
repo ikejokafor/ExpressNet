@@ -1,5 +1,5 @@
-`ifndef	__CNL_SC2_MONITOR__
-`define	__CNL_SC2_MONITOR__
+`ifndef	__CNL_SC1_MONITOR__
+`define	__CNL_SC1_MONITOR__
 
 
 `timescale 1ns / 1ps
@@ -33,19 +33,27 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+`include "cnn_layer_accel.svh"
+`include "cnn_layer_accel_AWP.svh"
+`include "cnn_layer_accel_conv1x1_pip.svh"
+`include "cnn_layer_accel_FAS.svh"
+`include "cnn_layer_accel_FAS_pip_ctrl.svh"
+`include "cnn_layer_accel_QUAD.svh"
+`include "cnn_layer_accel_trans_fifo.svh"
+`include "awe.svh"
+`include "axi_defs.svh"
 
 `include "monitor.sv"
 `include "cnl_sc2_verif_defs.svh"
-`include "cnn_layer_accel_defs.vh"
 `include "cnn_layer_accel_verif_defs.svh"
-`include "cnn_layer_accel_awe_rowbuffers_intf.sv"
+`include "cnn_layer_accel_quad_intf.sv"
+`include "cnn_layer_accel_synch_intf.sv"
 `include "cnl_sc2_DUTOutput.sv"
 `include "cnl_sc2_generator.sv"
 
 
 class `scX_monParams_t extends monParams_t;
     virtual cnn_layer_accel_quad_intf quad_intf;
-    virtual cnn_layer_accel_awe_rowbuffers_intf awe_buf_intf;
 endclass: `scX_monParams_t;
 
 
@@ -60,6 +68,8 @@ endclass: `cnl_scX_monitor
 
 function `cnl_scX_monitor::new(monParams_t monParams = null);
     `scX_monParams_t `scX_monParams;
+    
+    
     if(monParams != null) begin
         $cast(`scX_monParams, monParams);
         m_monitor2scoreboardMB = `scX_monParams.monitor2scoreboardMB;
@@ -69,9 +79,10 @@ function `cnl_scX_monitor::new(monParams_t monParams = null);
         m_mon_rdy = `scX_monParams.mon_rdy;
         m_tid = `scX_monParams.tid;
         m_runForever = `scX_monParams.runForever;
+        m_model_delay = `scX_monParams.model_delay;
         m_test_bi = `scX_monParams.test_bi;
         m_test_ei = `scX_monParams.test_ei;
-        m_outputDir = `scX_monParams.outputDir;        
+        m_outputDir = `scX_monParams.outputDir;
     end
 endfunction: new
 
@@ -82,10 +93,14 @@ task `cnl_scX_monitor::run();
     `cnl_scX_generator test;
     int t;
     int signal;
-    int slv_addr;
-    int slv_reg_idx;
+    int num_kernels;
+    int num_acl_output_rows;
+    int num_acl_output_cols;
+    int stride;
+    int output_depth;
+    
+
     t = 0;
-    slv_reg_idx = 0;
     m_mon_rdy.put(signal);
     if(m_test_ei != -1) begin
         m_numTests = (m_test_ei - m_test_bi) + 1;
@@ -95,33 +110,25 @@ task `cnl_scX_monitor::run();
     while(t < m_numTests) begin
         @(m_quad_intf.clk_if_cb);
         if(m_agent2monitorMB.try_get(test)) begin
-            `scX_DUTOutParams                       = new();
-            `scX_DUTOutParams.m_num_kernels         = test.m_num_kernels;
-            `scX_DUTOutParams.m_depth               = test.m_depth;
-            query                                   = new(`scX_DUTOutParams);
-            m_mon_rdy.put(signal);
+            `scX_DUTOutParams                        = new();
+            `scX_DUTOutParams.num_kernels            = test.m_num_kernels;
+            `scX_DUTOutParams.num_output_rows        = test.m_num_output_rows;
+            `scX_DUTOutParams.num_output_cols        = test.m_num_output_cols;
+            `scX_DUTOutParams.num_acl_output_rows    = test.m_num_acl_output_rows;
+            `scX_DUTOutParams.num_acl_output_cols    = test.m_num_acl_output_cols;
+            `scX_DUTOutParams.inst_cfg               = 1;
+            `scX_DUTOutParams.conv_out_fmt           = test.m_conv_out_fmt;
+            output_depth                             = test.m_num_kernels;
+            query                                    = new(`scX_DUTOutParams);
+            stride                                   = test.m_stride;
+            num_kernels                              = query.m_num_kernels;
+            num_acl_output_rows                      = query.m_num_acl_output_rows;
+            num_acl_output_cols                      = query.m_num_acl_output_cols;
+            
+            
             forever begin
-                @(m_quad_intf.clk_if_cb);
-                if(m_quad_intf.clk_if_cb.slv_dbg_rdAck && m_quad_intf.clk_if_cb.slv_dbg_rdAddr == `SLV_SPCE_CFG_REG_HIGH) begin
-                    query.m_acl_slv_reg[(slv_reg_idx * 16) +: 16] = m_quad_intf.clk_if_cb.slv_dbg_data[15:0];                    
-                    query.m_pfb_full_count_cfg                    = query.m_acl_slv_reg[`PFB_FULL_COUNT_FIELD];
-                    query.m_stride_cfg    		                  = query.m_acl_slv_reg[`STRIDE_FIELD];
-                    query.m_conv_out_fmt_cfg                      = query.m_acl_slv_reg[`CONV_OUT_FMT_FIELD];
-                    query.m_padding_cfg                           = query.m_acl_slv_reg[`PADDING_FIELD];
-                    query.m_num_output_cols_cfg                   = query.m_acl_slv_reg[`NUM_OUTPUT_COLS_FIELD];
-                    query.m_num_output_rows_cfg                   = query.m_acl_slv_reg[`NUM_OUTPUT_ROWS_FIELD];
-                    query.m_pix_seq_data_full_count_cfg           = query.m_acl_slv_reg[`PIX_SEQ_DATA_FULL_COUNT_FIELD];
-                    query.m_upsample_cfg                          = query.m_acl_slv_reg[`UPSAMPLE_FIELD];
-                    query.m_num_expd_input_cols_cfg               = query.m_acl_slv_reg[`NUM_EXPD_INPUT_COLS_FIELD];
-                    query.m_num_expd_input_rows_cfg               = query.m_acl_slv_reg[`NUM_EXPD_INPUT_ROWS_FIELD];
-                    query.m_crpd_input_col_start_cfg              = query.m_acl_slv_reg[`CRPD_INPUT_COL_START_FIELD];
-                    query.m_crpd_input_row_start_cfg              = query.m_acl_slv_reg[`CRPD_INPUT_ROW_START_FIELD];
-                    query.m_crpd_input_col_end_cfg                = query.m_acl_slv_reg[`CRPD_INPUT_COL_END_FIELD];
-                    query.m_crpd_input_row_end_cfg                = query.m_acl_slv_reg[`CRPD_INPUT_ROW_END_FIELD];
-                    query.m_num_kernels_cfg                       = query.m_acl_slv_reg[`NUM_KERNELS_FIELD];
-                    query.m_master_quad_cfg                       = query.m_acl_slv_reg[`MASTER_QUAD_FIELD];
-                    query.m_cascade_cfg                           = query.m_acl_slv_reg[`CASCADE_FIELD];
-                    query.m_actv_cfg                              = query.m_acl_slv_reg[`ACTV_FIELD];
+                @(m_quad_intf.clk_core_cb);
+                if(m_quad_intf.clk_core_cb.output_row == num_acl_output_rows) begin
                     $display("//---------------------------------------------------------------");
                     $display("// At Time: %0t", $time                                           ); 
                     $display("// Test Index: %0d", test.m_ti                                    );                    
@@ -129,19 +136,13 @@ task `cnl_scX_monitor::run();
                     $display("//---------------------------------------------------------------");
                     $display("\n");
                     break;
-                end else if(m_quad_intf.clk_if_cb.slv_dbg_rdAck) begin
-                    slv_addr = m_quad_intf.clk_if_cb.slv_dbg_rdAddr >> 2;
-                    if(m_quad_intf.clk_if_cb.slv_dbg_rdAddr >= `SLV_SPCE_PIX_SEQ_LOW && m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= `SLV_SPCE_PIX_SEQ_HIGH) begin
-                        query.m_pix_seq_data_sim[slv_addr] = m_quad_intf.clk_if_cb.slv_dbg_data[15:0];
-                    end else if(m_quad_intf.clk_if_cb.slv_dbg_rdAddr >= `SLV_SPCE_KRN_DATA_LOW  && m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= `SLV_SPCE_KRN_DATA_HIGH) begin
-                        query.m_kernel_data_sim[slv_addr] = m_quad_intf.clk_if_cb.slv_dbg_data[15:0];
-                    end else if(m_quad_intf.clk_if_cb.slv_dbg_rdAddr >= `SLV_SPCE_CFG_REG_LOW && m_quad_intf.clk_if_cb.slv_dbg_rdAddr <= `SLV_SPCE_CFG_REG_HIGH) begin
-                        query.m_acl_slv_reg[(slv_reg_idx * 16) +: 16] = m_quad_intf.clk_if_cb.slv_dbg_data[15:0];
-                        slv_reg_idx = slv_reg_idx + 1;
-                    end
+                end else if(m_quad_intf.clk_core_cb.result_valid) begin
+                    query.m_conv_map[(m_quad_intf.clk_core_cb.output_depth * num_acl_output_rows + m_quad_intf.clk_core_cb.output_row) * num_acl_output_cols + m_quad_intf.clk_core_cb.output_col].pixel = m_quad_intf.clk_core_cb.result_data;
                 end
             end
             m_monitor2scoreboardMB.put(query);
+            
+            m_mon_rdy.put(signal);
             if(!m_runForever) begin
                 t = t + 1;
             end

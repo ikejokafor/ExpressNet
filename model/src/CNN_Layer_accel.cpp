@@ -105,8 +105,8 @@ void CNN_Layer_Accel::system_mem_arb_process()
                 numReq++;
             }
         }
-        numReq_st = max(numReq_st, numReq);
-        total_sys_mem_trans_st = max(total_sys_mem_trans_st, m_total_sys_mem_trans);
+        // numReq_st = max(numReq_st, numReq);
+        // total_sys_mem_trans_st = max(total_sys_mem_trans_st, m_total_sys_mem_trans);
         if(numReq > 0 && m_total_sys_mem_trans < m_max_sys_mem_trans)
         {
             for(int i = m_next_wr_req_id; true; i = (i + 1) % MAX_FAS_REQ)
@@ -285,8 +285,8 @@ void CNN_Layer_Accel::waitComplete(double& elapsedTime, double& memPower, double
     // cout << "m_req_arr_2: " << m_req_arr[2].max_tally << endl;
     // cout << "m_req_arr_3: " << m_req_arr[3].max_tally << endl;
     // cout << "m_req_arr_4: " << m_req_arr[4].max_tally << endl;
-    numReq_st = 0;
-    total_sys_mem_trans_st = 0;
+    // numReq_st = 0;
+    // total_sys_mem_trans_st = 0;
     m_req_arr[0].max_tally = 0;
     m_req_arr[1].max_tally = 0;
     m_req_arr[2].max_tally = 0;

@@ -45,6 +45,9 @@
 //          + ((I_R - 3)(M + I_C))
 //          + ((K_3 / K_3_S / K_1_M_S) * O_R * (O_C / K_3_M_S)) + (I_R / 2)
 //
+//      For 1x1 kernels: (in fas)
+//          (O_R * (O_C / K_1_M_S)) * (K_1_D / K_1_D_S) * (K_1 / K_1_S)
+//
 //      For 1x1 kernels:
 //          (M + 8192)
 //          + (M + (10 * K_3))

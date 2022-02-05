@@ -1,0 +1,222 @@
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Thu Jan 13 17:50:50 2022
+| Host         : e5-cse-322-16 running 64-bit Ubuntu 18.04.5 LTS
+| Command      : report_utilization -file ./Synth//cnn_layer_accel/cnn_layer_accel_utilization_synth.rpt
+| Design       : cnn_layer_accel
+| Device       : 7vx690tffg1157-2
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Slice Logic
+1.1 Summary of Registers by Type
+2. Memory
+3. DSP
+4. IO and GT Specific
+5. Clocking
+6. Specific Feature
+7. Primitives
+8. Black Boxes
+9. Instantiated Netlists
+
+1. Slice Logic
+--------------
+
++-------------------------+------+-------+-----------+-------+
+|        Site Type        | Used | Fixed | Available | Util% |
++-------------------------+------+-------+-----------+-------+
+| Slice LUTs*             | 1503 |     0 |    433200 |  0.35 |
+|   LUT as Logic          | 1503 |     0 |    433200 |  0.35 |
+|   LUT as Memory         |    0 |     0 |    174200 |  0.00 |
+| Slice Registers         | 1749 |     0 |    866400 |  0.20 |
+|   Register as Flip Flop | 1749 |     0 |    866400 |  0.20 |
+|   Register as Latch     |    0 |     0 |    866400 |  0.00 |
+| F7 Muxes                |   18 |     0 |    216600 | <0.01 |
+| F8 Muxes                |    9 |     0 |    108300 | <0.01 |
++-------------------------+------+-------+-----------+-------+
+* Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
+
+
+1.1 Summary of Registers by Type
+--------------------------------
+
++-------+--------------+-------------+--------------+
+| Total | Clock Enable | Synchronous | Asynchronous |
++-------+--------------+-------------+--------------+
+| 0     |            _ |           - |            - |
+| 0     |            _ |           - |          Set |
+| 0     |            _ |           - |        Reset |
+| 0     |            _ |         Set |            - |
+| 0     |            _ |       Reset |            - |
+| 0     |          Yes |           - |            - |
+| 0     |          Yes |           - |          Set |
+| 0     |          Yes |           - |        Reset |
+| 1     |          Yes |         Set |            - |
+| 1748  |          Yes |       Reset |            - |
++-------+--------------+-------------+--------------+
+
+
+2. Memory
+---------
+
++----------------+------+-------+-----------+-------+
+|    Site Type   | Used | Fixed | Available | Util% |
++----------------+------+-------+-----------+-------+
+| Block RAM Tile |    0 |     0 |      1470 |  0.00 |
+|   RAMB36/FIFO* |    0 |     0 |      1470 |  0.00 |
+|   RAMB18       |    0 |     0 |      2940 |  0.00 |
++----------------+------+-------+-----------+-------+
+* Note: Each Block RAM Tile only has one FIFO logic available and therefore can accommodate only one FIFO36E1 or one FIFO18E1. However, if a FIFO18E1 occupies a Block RAM Tile, that tile can still accommodate a RAMB18E1
+
+
+3. DSP
+------
+
++-----------+------+-------+-----------+-------+
+| Site Type | Used | Fixed | Available | Util% |
++-----------+------+-------+-----------+-------+
+| DSPs      |    0 |     0 |      3600 |  0.00 |
++-----------+------+-------+-----------+-------+
+
+
+4. IO and GT Specific
+---------------------
+
++-----------------------------+------+-------+-----------+-------+
+|          Site Type          | Used | Fixed | Available | Util% |
++-----------------------------+------+-------+-----------+-------+
+| Bonded IOB                  |    0 |     0 |       600 |  0.00 |
+| Bonded IPADs                |    0 |     0 |        62 |  0.00 |
+| Bonded OPADs                |    0 |     0 |        40 |  0.00 |
+| PHY_CONTROL                 |    0 |     0 |        20 |  0.00 |
+| PHASER_REF                  |    0 |     0 |        20 |  0.00 |
+| OUT_FIFO                    |    0 |     0 |        80 |  0.00 |
+| IN_FIFO                     |    0 |     0 |        80 |  0.00 |
+| IDELAYCTRL                  |    0 |     0 |        20 |  0.00 |
+| IBUFDS                      |    0 |     0 |       576 |  0.00 |
+| GTHE2_CHANNEL               |    0 |     0 |        20 |  0.00 |
+| PHASER_OUT/PHASER_OUT_PHY   |    0 |     0 |        80 |  0.00 |
+| PHASER_IN/PHASER_IN_PHY     |    0 |     0 |        80 |  0.00 |
+| IDELAYE2/IDELAYE2_FINEDELAY |    0 |     0 |      1000 |  0.00 |
+| ODELAYE2/ODELAYE2_FINEDELAY |    0 |     0 |      1000 |  0.00 |
+| IBUFDS_GTE2                 |    0 |     0 |        10 |  0.00 |
+| ILOGIC                      |    0 |     0 |       600 |  0.00 |
+| OLOGIC                      |    0 |     0 |       600 |  0.00 |
++-----------------------------+------+-------+-----------+-------+
+
+
+5. Clocking
+-----------
+
++------------+------+-------+-----------+-------+
+|  Site Type | Used | Fixed | Available | Util% |
++------------+------+-------+-----------+-------+
+| BUFGCTRL   |    0 |     0 |        32 |  0.00 |
+| BUFIO      |    0 |     0 |        80 |  0.00 |
+| MMCME2_ADV |    0 |     0 |        20 |  0.00 |
+| PLLE2_ADV  |    0 |     0 |        20 |  0.00 |
+| BUFMRCE    |    0 |     0 |        40 |  0.00 |
+| BUFHCE     |    0 |     0 |       240 |  0.00 |
+| BUFR       |    0 |     0 |        80 |  0.00 |
++------------+------+-------+-----------+-------+
+
+
+6. Specific Feature
+-------------------
+
++-------------+------+-------+-----------+-------+
+|  Site Type  | Used | Fixed | Available | Util% |
++-------------+------+-------+-----------+-------+
+| BSCANE2     |    0 |     0 |         4 |  0.00 |
+| CAPTUREE2   |    0 |     0 |         1 |  0.00 |
+| DNA_PORT    |    0 |     0 |         1 |  0.00 |
+| EFUSE_USR   |    0 |     0 |         1 |  0.00 |
+| FRAME_ECCE2 |    0 |     0 |         1 |  0.00 |
+| ICAPE2      |    0 |     0 |         2 |  0.00 |
+| PCIE_3_0    |    0 |     0 |         3 |  0.00 |
+| STARTUPE2   |    0 |     0 |         1 |  0.00 |
+| XADC        |    0 |     0 |         1 |  0.00 |
++-------------+------+-------+-----------+-------+
+
+
+7. Primitives
+-------------
+
++----------+------+---------------------+
+| Ref Name | Used | Functional Category |
++----------+------+---------------------+
+| FDRE     | 1748 |        Flop & Latch |
+| LUT3     | 1075 |                 LUT |
+| LUT1     |  549 |                 LUT |
+| LUT4     |  145 |                 LUT |
+| LUT6     |  135 |                 LUT |
+| LUT5     |   95 |                 LUT |
+| LUT2     |   57 |                 LUT |
+| MUXF7    |   18 |               MuxFx |
+| MUXF8    |    9 |               MuxFx |
+| CARRY4   |    4 |          CarryLogic |
+| FDSE     |    1 |        Flop & Latch |
++----------+------+---------------------+
+
+
+8. Black Boxes
+--------------
+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
+|                                                                                                                                                                                                                                                                               Ref Name                                                                                                                                                                                                                                                                               | Used |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
+| RAMB36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |  228 |
+| RAMB36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   64 |
+| FIFO36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   32 |
+| FIFO36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   30 |
+| FIFO36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   30 |
+| krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__krnl1x1Bias_bram__RAMB36E2 |   29 |
+| trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__trans_in_pyld_fifo__FIFO36E2                                                                                                                                                                                                                                                 |   28 |
+| trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__trans_eg_pyld_fifo__FIFO36E2                                                                                                                                                                                                                                                 |   28 |
+| FIFO36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   16 |
+| FIFO36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   15 |
+| FIFO36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   15 |
+| FIFO36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   15 |
+| FIFO36E2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |   15 |
+| resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__resdMap_fifo__FIFO36E2                                                                                                                                                                                                                                                                                                                                           |   14 |
+| res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__res_dwc_fifo__FIFO36E2                                                                                                                                                                                                                                                                                                                                           |   14 |
+| prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__prevMap_fifo__FIFO36E2                                                                                                                                                                                                                                                                                                                                           |   14 |
+| FIFO36E2_HD10381                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |    2 |
+| FIFO36E2_HD10306                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |    2 |
+| RAMB36E2_HD10459                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |    1 |
+| FIFO36E2_HD10458                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |    1 |
+| FIFO36E2_HD10457                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |    1 |
+| FIFO36E2_HD10456                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |    1 |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
+
+
+9. Instantiated Netlists
+------------------------
+
++--------------------------+------+
+|         Ref Name         | Used |
++--------------------------+------+
+| pixel_sequence_data_bram |   32 |
+| trans_in_pyld_fifo       |    2 |
+| trans_in_meta_fifo       |    2 |
+| trans_eg_pyld_fifo       |    2 |
+| trans_eg_meta_fifo       |    2 |
+| resdMap_fifo             |    1 |
+| res_dwc_fifo             |    1 |
+| prevMap_fifo             |    1 |
+| partMap_fifo             |    1 |
+| outbuf_fifo              |    1 |
+| krnl1x1_bram             |    1 |
+| krnl1x1Bias_dwc_fifo     |    1 |
+| krnl1x1Bias_bram         |    1 |
+| job_fetch_fifo           |    1 |
+| convMap_fifo             |    1 |
+| conv1x1_dwc_fifo         |    1 |
++--------------------------+------+
+
+

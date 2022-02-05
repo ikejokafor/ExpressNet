@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Fri Dec  3 16:23:56 2021
+# Process ID: 8037
+# Current directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/xcvu37p-fsvh2892-2-e/GUI_Flow/cnn_layer_accel.runs/synth_1
+# Command line: vivado -log xcvu37_fsvh2892_2_e.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source xcvu37_fsvh2892_2_e.tcl
+# Log file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/xcvu37p-fsvh2892-2-e/GUI_Flow/cnn_layer_accel.runs/synth_1/xcvu37_fsvh2892_2_e.vds
+# Journal file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/viv2019.1_proj/xcvu37p-fsvh2892-2-e/GUI_Flow/cnn_layer_accel.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source xcvu37_fsvh2892_2_e.tcl -notrace

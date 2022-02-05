@@ -68,15 +68,23 @@ interface cnn_layer_accel_quad_intf (
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    `include "math.vh"
-    `include "cnn_layer_accel_defs.vh"
-    `include "cnn_layer_accel_verif_defs.svh"
+    `include "math.svh"
+    `include "utilities.svh"
+    `include "cnn_layer_accel.svh"
+    `include "cnn_layer_accel_AWP.svh"
+    `include "cnn_layer_accel_conv1x1_pip.svh"
+    `include "cnn_layer_accel_FAS.svh"
+    `include "cnn_layer_accel_FAS_pip_ctrl.svh"
+    `include "cnn_layer_accel_QUAD.svh"
+    `include "cnn_layer_accel_trans_fifo.svh"
+    `include "awe.svh"
+    `include "axi_defs.svh"
     
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = clog2(`ROW_BUF_BRAM_DEPTH);
+    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = $clog2(`ROW_BUF_BRAM_DEPTH);
 
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------

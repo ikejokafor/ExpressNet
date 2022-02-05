@@ -1,6 +1,0 @@
-#HD: Setting Tcl Params:
-	place.closeImportedSites == 1
-	tcl.notrace == 1
-	hd.visual == 0
-
-#HD: Running synthesis for block cnn_layer_accel

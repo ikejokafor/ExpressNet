@@ -14,7 +14,7 @@
 `define scX_DUTOutParams_t      sc2_DUTOutParams_t
 `define scX_datum_t             sc2_datum_t
 `define scX_genParams_t         sc2_genParams_tarams_t
-`define scX_testParams_t        sc2_testParams_t
+`define scX_crtTestParams_t     sc2_crtTestParams_t
 `define scX_monParams_t         sc2_monParams_t
 `define scX_scoreParams_t       sc2_scoreParams_t
 `define scX_agentParams_t       sc2_agentParams_t
@@ -25,7 +25,7 @@
 `define scX_DUTOutParams        sc2_DUTOutParams
 `define scX_datum               sc2_datum
 `define scX_genParams           sc2_genParams_tarams
-`define scX_testParams          sc2_testParams
+`define scX_crtTestParams       sc2_crtTestParams
 `define scX_monParams           sc2_monParams
 `define scX_scoreParams         sc2_scoreParams
 `define scX_agentParams         sc2_agentParams

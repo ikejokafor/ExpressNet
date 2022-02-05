@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ns
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Company:			
 //				
@@ -92,6 +92,7 @@ module cnn_layer_accel_awp (
     logic                                       job_start[`NUM_QUADS - 1:0]             ;
     logic                                       job_accept[`NUM_QUADS - 1:0]            ;
     logic [127:0]                               job_parameters[`NUM_QUADS - 1:0]        ;
+    logic                                       job_parameters_valid[`NUM_QUADS - 1:0]  ;
     logic                                       job_fetch_request[`NUM_QUADS - 1:0]     ;
     logic                                       job_fetch_ack[`NUM_QUADS - 1:0]         ;
     logic                                       job_fetch_complete[`NUM_QUADS - 1:0]    ;      
@@ -139,7 +140,7 @@ module cnn_layer_accel_awp (
     logic                                       trans_in_fifo_empty                     ;
     logic                                       trans_in_fifo_wr_rst_busy               ;
     logic                                       trans_in_fifo_rd_rst_busy               ;
-	logic [`TRANS_IN_FIFO_META_WTH - 1:0]     trans_in_meta						    ; 
+	logic [`TRANS_IN_FIFO_META_WTH - 1:0]       trans_in_meta						    ; 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                       trans_eg_fifo_wren                      ;
     logic                                       trans_eg_fifo_rden                      ;
@@ -158,7 +159,7 @@ module cnn_layer_accel_awp (
     logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_rd_rst_busy                        ;
     logic [    C_CONVMAP_FIFO_CT_WTH - 1:0]     convMap_fifo_count[C_NUM_CONVMAP_FIFO - 1:0]    ;
     logic [       C_NUM_CONVMAP_FIFO - 1:0]     convMap_fifo_prog_full                          ;
-    
+    logic [                           15:0]     sel                                             ;
 
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Module Instantiations
@@ -208,7 +209,8 @@ module cnn_layer_accel_awp (
 
                 .job_start            ( job_start[gi0]            ),  
                 .job_accept           ( job_accept[gi0]           ),  
-                .job_parameters       ( job_parameters[gi0]       ),  
+                .job_parameters       ( job_parameters[gi0]       ),
+                .job_parameters_valid ( job_parameters_valid[gi0] ),
                 .job_fetch_request    ( job_fetch_request[gi0]    ),  
                 .job_fetch_ack        ( job_fetch_ack[gi0]        ), 
                 .job_fetch_complete   ( job_fetch_complete[gi0]   ),
@@ -272,9 +274,36 @@ module cnn_layer_accel_awp (
                 
                 assign cascade_in_valid[gi0 + 1] = !fifo_empty[gi0];
             end
+            
+            
+            always@(posedge clk_intf) begin
+                if(sel == gi0) begin
+                    job_start[gi0] <= 1;
+                    job_fetch_ack[gi0] <= 1;
+                    job_complete_ack[gi0] <= 1;
+                    job_parameters_valid[gi0] <= 1;
+                    job_parameters[gi0] <= trans_in_fifo_dout;
+                    job_fetch_ack[gi0] <= 1;
+                end else if(sel == gi0) begin
+                    config_valid[gi0] <= 1;
+                    config_data[gi0] = trans_in_fifo_dout; 
+                end else if(sel == gi0) begin
+                    weight_valid[gi0] <= 1;
+                    weight_data[gi0] <= trans_in_fifo_dout; 
+                end  else if(sel == gi0) begin
+                    pixel_valid[gi0] <= 1;
+                    pixel_data[gi0] <= trans_in_fifo_dout;          
+                end
+            end
+            
         end
     endgenerate
     
+    always@(posedge clk_FAS) begin
+        trans_in_fifo_rden <= 1;
+        trans_in_fifo_wren <= trans_in_fifo_din_vld;
+        trans_eg_fifo_wren <= result_valid[`NUM_QUADS - 1];
+    end
 
     generate
         for(gi0 = 0; gi0 < C_NUM_CONVMAP_FIFO; gi0 = gi0 + 1) begin
@@ -381,11 +410,14 @@ module cnn_layer_accel_awp (
             if(!trans_in_fifo_empty) begin
                 trans_in_fifo_rden <= 1;
             end
-            if(trans_in_meta[`TRANS_AWP_CFG]) begin
-                
-            end
         end
     end   
     // END Logic --------------------------------------------------------------------------------------------------------------------------------
 
+
+    // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
+    assign sel = 1;
+    assign trans_eg_fifo_dout_vld = 1;
+    assign trans_in_fifo_din_rdy = 1;
+    // END Logic --------------------------------------------------------------------------------------------------------------------------------
 endmodule

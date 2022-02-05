@@ -1,0 +1,11 @@
+#HD: Setting Tcl Params:
+	place.closeImportedSites == 1
+	tcl.notrace == 1
+	hd.visual == 0
+
+#HD: Running synthesis for block cnn_layer_accel
+	Time in synth_design:     	00h:20m:50s	[Thu Jan 13 17:30:01 2022]
+	-------------------------	--------
+	Total Synthesis time:		00h:20m:50s
+
+

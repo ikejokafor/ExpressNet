@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ns
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Company:
 //
@@ -496,7 +496,7 @@ module cnn_layer_accel_FAS #(
 	  .srst			( rst								),
 	  .wr_clk		( clk_intf							),
 	  .rd_clk		( clk_FAS							),
-	  .din			( init_rd_data					),
+	  .din			( init_rd_data[(C_KB_IT_RD_ID * `INIT_DATA_WTH) +: `INIT_DATA_WTH] ),
 	  .wr_en		( krnl1x1Bias_dwc_fifo_wren			),
 	  .rd_en		( krnl1x1Bias_dwc_fifo_rden			),
 	  .dout			( krnl1x1Bias_dwc_fifo_dout			),
@@ -794,8 +794,9 @@ module cnn_layer_accel_FAS #(
                 .vec_add_rm0_sum            ( vec_add_rm0_sum                                   ),
                 .vec_add_rm1_sum            ( vec_add_rm1_sum                                   ),
                 // BEGIN ----------------------------------------------------------------------------------------------------------------------------    
-                .krnl1x1_bram_din           ( init_rd_data                                    ),
-                .krnl1x1Bias_bram_din       ( krnl1x1Bias_dwc_fifo_dout_w                       ),                
+                .krnl1x1_bram_din           ( init_rd_data                                      ),
+                .krnl1x1Bias_bram_din       ( krnl1x1Bias_dwc_fifo_dout_w                       ),
+                .krnl1x1Bias_dwc_fifo_rden  ( krnl1x1Bias_dwc_fifo_rden                         ),
                 .krnl1x1_bram_wren          ( krnl1x1_bram_wren && kn1x1_bm_wr_sel[g4]      	),
                 .krnl1x1Bias_bram_wren      ( krnl1x1Bias_bram_wren && kn1x1b_bm_wr_sel[g4]		),
 				.convMap_fifo_dout			( convMap_fifo_dout									),
@@ -954,6 +955,7 @@ module cnn_layer_accel_FAS #(
 
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------	
 	assign krnl1x1Bias_dwc_fifo_dout_w = krnl1x1Bias_dwc_fifo_dout[`PIXEL_WIDTH - 1:0];
+    assign krnl1x1Bias_dwc_fifo_rden  = 1; // FIXME: put here for synth
     
     always@(posedge clk_intf) begin
         if(rst || FAS_intf_rdy_n) begin
@@ -1388,7 +1390,7 @@ module cnn_layer_accel_FAS #(
                 init_rd_in_prog[C_AC_IT_RD_ID] <= 0;
             end
             if(state == ST_CFG_AWP && !init_rd_in_prog[C_AC_IT_RD_ID]) begin
-                init_rd_addr[(`INIT_ADDR_WTH * C_KL_IT_RD_ID) +: `INIT_ADDR_WTH]      <= AWP_meta_Addr_cfg;
+                init_rd_addr[(`INIT_ADDR_WTH * C_AC_IT_RD_ID) +: `INIT_ADDR_WTH]      <= AWP_meta_Addr_cfg;
                 init_rd_len[(`INIT_LEN_WTH * C_AC_IT_RD_ID) +: `INIT_LEN_WTH]         <= AWP_meta_data_len_cfg;
                 init_rd_req[C_AC_IT_RD_ID]                                       
                     <= init_rd_req_ack[C_AC_IT_RD_ID] ? 1'b0 : (~init_rd_req_acked[C_AC_IT_RD_ID] ? 1'b1 : init_rd_req[C_AC_IT_RD_ID]);
@@ -1473,7 +1475,7 @@ module cnn_layer_accel_FAS #(
         end else begin
             init_rd_data_rdy[C_PM_IT_RD_ID]       <= 0;
             if(start_FAS) begin
-                init_rd_rem[C_IM_IT_RD_ID] <= partMapFetchTotal_cfg;
+                init_rd_rem[C_PM_IT_RD_ID] <= partMapFetchTotal_cfg;
             end
             if(init_rd_req_ack[C_PM_IT_RD_ID]) begin
                 init_rd_in_prog[C_PM_IT_RD_ID] <= 1;
@@ -1496,7 +1498,7 @@ module cnn_layer_accel_FAS #(
             end
             if(init_rd_cmpl[C_PM_IT_RD_ID]) begin
                 partMapFetchCount           <= partMapFetchCount + pm_fetch_amount;
-                init_rd_rem[C_IM_IT_RD_ID]  <= init_rd_rem[C_PM_IT_RD_ID] - pm_fetch_amount;
+                init_rd_rem[C_PM_IT_RD_ID]  <= init_rd_rem[C_PM_IT_RD_ID] - pm_fetch_amount;
                 partMapAddr                 <= partMapAddr + pm_fetch_amount;
             end
         end
@@ -1800,5 +1802,6 @@ module cnn_layer_accel_FAS #(
 
 
     // DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
+    assign trans_eg_fifo_dout_vld = 1;
     // DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
 endmodule

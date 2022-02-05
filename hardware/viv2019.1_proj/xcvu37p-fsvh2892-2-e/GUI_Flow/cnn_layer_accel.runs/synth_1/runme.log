@@ -1,0 +1,29 @@
+
+*** Running vivado
+    with args -log xcvu37_fsvh2892_2_e.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source xcvu37_fsvh2892_2_e.tcl
+
+
+****** Vivado v2019.1 (64-bit)
+  **** SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+  **** IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+    ** Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+
+source xcvu37_fsvh2892_2_e.tcl -notrace
+Command: synth_design -top xcvu37_fsvh2892_2_e -part xcvu37p-fsvh2892-2-e
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcvu37p'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcvu37p'
+INFO: [Common 17-1540] The version limit for your license is '2019.10' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 8108 
+WARNING: [Synth 8-976] trans_in_meta has already been declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:142]
+WARNING: [Synth 8-2654] second declaration of trans_in_meta ignored [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:142]
+INFO: [Synth 8-994] trans_in_meta is declared here [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:137]
+ERROR: [Synth 8-1031] job_parameter_valid is not declared [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:282]
+INFO: [Synth 8-2350] module cnn_layer_accel_awp ignored due to previous errors [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv:31]
+Failed to read verilog '/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/cnn_layer_accel_AWP.sv'
+INFO: [Common 17-83] Releasing license: Synthesis
+5 Infos, 2 Warnings, 0 Critical Warnings and 2 Errors encountered.
+synth_design failed
+ERROR: [Common 17-69] Command failed: Vivado Synthesis failed
+INFO: [Common 17-206] Exiting Vivado at Fri Dec  3 16:24:42 2021...

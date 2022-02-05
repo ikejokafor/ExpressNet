@@ -1,0 +1,2 @@
+trans_in_meta_fifo.v,verilog,xil_defaultlib,../../../../../../../ip_viv2019.1/xcvu37p-fsvh2892-2-e/trans_in_meta_fifo/sim/trans_in_meta_fifo.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

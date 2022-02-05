@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ns
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Company:			
 //				
@@ -230,13 +230,13 @@ module cnn_layer_accel (
         .init_usrIntr                ( init_usrIntr        ),
         .init_usrIntr_ack            ( init_usrIntr_ack    ),
         // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-        .trans_in_fifo_din_vld       ( trans_in_fifo_din_vld  ),
-        .trans_in_fifo_din_rdy       ( trans_in_fifo_din_rdy  ),
-        .trans_in_fifo_din           ( trans_in_fifo_din      ),
+        .trans_in_fifo_din_vld       (  trans_eg_fifo_dout_vld  ),
+        .trans_in_fifo_din_rdy       (  trans_eg_fifo_dout_rdy  ),
+        .trans_in_fifo_din           (  trans_eg_fifo_dout      ),
         // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-        .trans_eg_fifo_dout_vld      ( trans_eg_fifo_dout_vld  ),
-        .trans_eg_fifo_dout_rdy      ( trans_eg_fifo_dout_rdy  ),
-        .trans_eg_fifo_dout          ( trans_eg_fifo_dout      )
+        .trans_eg_fifo_dout_vld      ( trans_in_fifo_din_vld ),
+        .trans_eg_fifo_dout_rdy      ( trans_in_fifo_din_rdy ),
+        .trans_eg_fifo_dout          ( trans_in_fifo_din     )
     );
     
     
@@ -246,13 +246,13 @@ module cnn_layer_accel (
             .clk_intf                    ( clk_intf                ),
             .rst                         ( rst                     ),
             // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
-            .trans_in_fifo_din_vld       ( trans_in_fifo_din_vld   ),
-            .trans_in_fifo_din_rdy       ( trans_in_fifo_din_rdy   ),
-            .trans_in_fifo_din           ( trans_in_fifo_din       ),
+            .trans_in_fifo_din_vld       ( trans_eg_fifo_dout_vld   ),
+            .trans_in_fifo_din_rdy       ( trans_eg_fifo_dout_rdy   ),
+            .trans_in_fifo_din           ( trans_eg_fifo_dout       ),
             // BEGIN -----------------------------------------------------------------------------------------------------------------------------------------
-            .trans_eg_fifo_dout_vld      ( trans_eg_fifo_dout_vld  ),
-            .trans_eg_fifo_dout_rdy      ( trans_eg_fifo_dout_rdy  ),
-            .trans_eg_fifo_dout          ( trans_eg_fifo_dout      )
+            .trans_eg_fifo_dout_vld      ( trans_in_fifo_din_vld  ),
+            .trans_eg_fifo_dout_rdy      ( trans_in_fifo_din_rdy  ),
+            .trans_eg_fifo_dout          ( trans_in_fifo_din      )
         );
     end endgenerate
 	
@@ -272,6 +272,25 @@ module cnn_layer_accel (
     // DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
 	// DEBUG ----------------------------------------------------------------------------------------------------------------------------------------
 
-	
+`ifdef OCC_SYNTH
+    assign init_rd_req_ack      = {`NUM_RD_CLIENTS{1'b0}};
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
+    assign init_rd_data         = {C_INIT_DATA_WTH{1'b0}};
+    assign init_rd_data_vld     = {`NUM_RD_CLIENTS{1'b0}};
+    assign init_rd_cmpl         = {`NUM_RD_CLIENTS{1'b0}};
+    // BEGIN ---------------------------------------------------------------------------------------------------------------------------------------- 
+    assign init_wr_req_ack      = 1;
+    // BEGIN ---------------------------------------------------------------------------------------------------------------------------------------- 
+    assign init_wr_data_rdy     = 1;
+    assign init_wr_cmpl         = 1;
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
+    assign targ_wr_addr         = 1;
+    assign targ_wr_addr_vld     = 1;
+    assign targ_rd_addr         = 1;
+    assign targ_rd_addr_vld     = 1;
+    assign targ_rd_data         = {`TARG_RD_DATA_WTH{1'b0}};
+    // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
+    assign init_usrIntr_ack     = 1;    
+`endif
 	
 endmodule

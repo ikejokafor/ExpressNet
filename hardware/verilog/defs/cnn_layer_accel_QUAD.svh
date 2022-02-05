@@ -43,9 +43,9 @@
 // AWP General Defs
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 `define KRNL_3X3_SIMD                   8
-`define NUM_AWE                         (32'd4)
+`define NUM_AWE                         4
 `define NUM_CE_PER_AWE                  2
-`define NUM_QUADS                       1
+`define NUM_QUADS                       32
 `define NUM_CE                          (`NUM_AWE * `NUM_CE_PER_AWE)
 `define WINDOW_3x3_NUM_CYCLES           5    // num cycles to output a 3x3 window in our arch
 `define NUM_CONV_WINDOW_VALUES          10
@@ -78,18 +78,12 @@
 `define PIX_SEQ_BRAM_DEPTH              (`MAX_NUM_INPUT_COLS * 8) // (`MAX_NUM_INPUT_COLS * ceil2(`WINDOW_3x3_NUM_CYCLES))
 `define NUM_WHT_TABLES                  `NUM_CE_PER_QUAD
 `define MAX_QUAD_PER_AWP				4
-// Act Field
-// `define ACTV_NUM_FRAC_BITS              14
-// `define ACTV_WIDTH                      16
-// `define ACTV_WIDTH_LOW                  `ACTV_NUM_FRAC_BITS
-// `define ACTV_WIDTH_HIGH                 (`ACTV_WIDTH + `ACTV_WIDTH - 1)
-// `define ACTV_WIDTH_FIELD                (`ACTV_WIDTH_HIGH):(`ACTV_WIDTH_LOW)
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // SEQ DATA FIELDS
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-`define PIX_SEQ_DATA_SEQ_WIDTH              clog2(`ROW_BUF_BRAM_DEPTH)
+`define PIX_SEQ_DATA_SEQ_WIDTH              $clog2(`ROW_BUF_BRAM_DEPTH)
 `define PIX_SEQ_DATA_SEQ_LOW                0
 `define PIX_SEQ_DATA_SEQ_HIGH               (`PIX_SEQ_DATA_SEQ_LOW + `PIX_SEQ_DATA_SEQ_WIDTH - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD              (`PIX_SEQ_DATA_SEQ_HIGH):(`PIX_SEQ_DATA_SEQ_LOW)    // [9:0]
@@ -127,17 +121,17 @@
 
 `define PIX_SEQ_BRAM_DATA_WIDTH             16                                   
 
-`define PIX_SEQ_DATA_SEQ_WIDTH0             clog2(`ROW_BUF_BRAM_DEPTH) - 2
+`define PIX_SEQ_DATA_SEQ_WIDTH0             $clog2(`ROW_BUF_BRAM_DEPTH) - 2
 `define PIX_SEQ_DATA_SEQ_LOW0               1
 `define PIX_SEQ_DATA_SEQ_HIGH0              (`PIX_SEQ_DATA_SEQ_LOW0 + `PIX_SEQ_DATA_SEQ_WIDTH0 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD0             (`PIX_SEQ_DATA_SEQ_HIGH0):(`PIX_SEQ_DATA_SEQ_LOW0)
 
 `define PIX_SEQ_DATA_SEQ_WIDTH1             1
-`define PIX_SEQ_DATA_SEQ_LOW1               clog2(`ROW_BUF_BRAM_DEPTH) - 1
+`define PIX_SEQ_DATA_SEQ_LOW1               $clog2(`ROW_BUF_BRAM_DEPTH) - 1
 `define PIX_SEQ_DATA_SEQ_HIGH1              (`PIX_SEQ_DATA_SEQ_LOW1 + `PIX_SEQ_DATA_SEQ_WIDTH1 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD1             (`PIX_SEQ_DATA_SEQ_HIGH1):(`PIX_SEQ_DATA_SEQ_LOW1)  // MSB of seq value
 
-`define PIX_SEQ_DATA_SEQ_WIDTH2             clog2(`ROW_BUF_BRAM_DEPTH) - 1
+`define PIX_SEQ_DATA_SEQ_WIDTH2             $clog2(`ROW_BUF_BRAM_DEPTH) - 1
 `define PIX_SEQ_DATA_SEQ_LOW2               0
 `define PIX_SEQ_DATA_SEQ_HIGH2              (`PIX_SEQ_DATA_SEQ_LOW2 + `PIX_SEQ_DATA_SEQ_WIDTH2 - 1)
 `define PIX_SEQ_DATA_SEQ_FIELD2             (`PIX_SEQ_DATA_SEQ_HIGH2):(`PIX_SEQ_DATA_SEQ_LOW2)  // seq value minus the MSB
@@ -148,7 +142,7 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // TODO: some fields need not be hardcoded
 
-`define PFB_FULL_COUNT_WIDTH                (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define PFB_FULL_COUNT_WIDTH                ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define PFB_FULL_COUNT_LOW                  0
 `define PFB_FULL_COUNT_HIGH                 (`PFB_FULL_COUNT_LOW + `PFB_FULL_COUNT_WIDTH - 1)
 `define PFB_FULL_COUNT_FIELD                (`PFB_FULL_COUNT_HIGH):(`PFB_FULL_COUNT_LOW)  // [9:0]
@@ -168,12 +162,12 @@
 `define PADDING_HIGH                        (`PADDING_LOW + `PADDING_WIDTH - 1)
 `define PADDING_FIELD                       (`PADDING_HIGH):(`PADDING_LOW) // [18:18]
 
-`define NUM_OUTPUT_COLS_WIDTH               (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define NUM_OUTPUT_COLS_WIDTH               ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define NUM_OUTPUT_COLS_LOW                 (`PADDING_HIGH + 1)
 `define NUM_OUTPUT_COLS_HIGH                (`NUM_OUTPUT_COLS_LOW + `NUM_OUTPUT_COLS_WIDTH - 1)
 `define NUM_OUTPUT_COLS_FIELD               (`NUM_OUTPUT_COLS_HIGH):(`NUM_OUTPUT_COLS_LOW) // [28:19]
 
-`define NUM_OUTPUT_ROWS_WIDTH               (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define NUM_OUTPUT_ROWS_WIDTH               ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define NUM_OUTPUT_ROWS_LOW                 (`NUM_OUTPUT_COLS_HIGH + 1)
 `define NUM_OUTPUT_ROWS_HIGH                (`NUM_OUTPUT_ROWS_LOW + `NUM_OUTPUT_ROWS_WIDTH - 1)
 `define NUM_OUTPUT_ROWS_FIELD               (`NUM_OUTPUT_ROWS_HIGH):(`NUM_OUTPUT_ROWS_LOW)  // [38:29]
@@ -188,7 +182,7 @@
 `define UPSAMPLE_HIGH                       (`UPSAMPLE_LOW + `UPSAMPLE_WIDTH - 1)
 `define UPSAMPLE_FIELD                      (`UPSAMPLE_HIGH):(`UPSAMPLE_LOW) // [51:51]
 
-`define NUM_EXPD_INPUT_COLS_WIDTH           (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define NUM_EXPD_INPUT_COLS_WIDTH           ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define NUM_EXPD_INPUT_COLS_LOW             (`UPSAMPLE_HIGH + 1)
 `define NUM_EXPD_INPUT_COLS_HIGH            (`NUM_EXPD_INPUT_COLS_LOW + `NUM_EXPD_INPUT_COLS_WIDTH - 1)
 `define NUM_EXPD_INPUT_COLS_FIELD           (`NUM_EXPD_INPUT_COLS_HIGH):(`NUM_EXPD_INPUT_COLS_LOW) // [61:52]
@@ -203,32 +197,32 @@
 `define UNUSED_HIGH                         (`UNUSED_LOW + `UNUSED_WIDTH - 1)
 `define UNUSED_FIELD                        (`UNUSED_HIGH):(`UNUSED_LOW) // [63:62]
 
-`define NUM_EXPD_INPUT_ROWS_WIDTH           (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define NUM_EXPD_INPUT_ROWS_WIDTH           ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define NUM_EXPD_INPUT_ROWS_LOW             (`UNUSED_HIGH + 1)
 `define NUM_EXPD_INPUT_ROWS_HIGH            (`NUM_EXPD_INPUT_ROWS_LOW + `NUM_EXPD_INPUT_ROWS_WIDTH - 1)
 `define NUM_EXPD_INPUT_ROWS_FIELD           (`NUM_EXPD_INPUT_ROWS_HIGH):(`NUM_EXPD_INPUT_ROWS_LOW) // [73:64]
 
-`define CRPD_INPUT_COL_START_WIDTH          (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define CRPD_INPUT_COL_START_WIDTH          ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define CRPD_INPUT_COL_START_LOW            (`NUM_EXPD_INPUT_ROWS_HIGH + 1)
 `define CRPD_INPUT_COL_START_HIGH           (`CRPD_INPUT_COL_START_LOW + `CRPD_INPUT_COL_START_WIDTH - 1)
 `define CRPD_INPUT_COL_START_FIELD          (`CRPD_INPUT_COL_START_HIGH):(`CRPD_INPUT_COL_START_LOW) // [83:74]
 
-`define CRPD_INPUT_ROW_START_WIDTH          (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define CRPD_INPUT_ROW_START_WIDTH          ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define CRPD_INPUT_ROW_START_LOW            (`CRPD_INPUT_COL_START_HIGH + 1)
 `define CRPD_INPUT_ROW_START_HIGH           (`CRPD_INPUT_ROW_START_LOW + `CRPD_INPUT_ROW_START_WIDTH - 1)
 `define CRPD_INPUT_ROW_START_FIELD          (`CRPD_INPUT_ROW_START_HIGH):(`CRPD_INPUT_ROW_START_LOW) // [93:84]
 
-`define CRPD_INPUT_COL_END_WIDTH            (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define CRPD_INPUT_COL_END_WIDTH            ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define CRPD_INPUT_COL_END_LOW              (`CRPD_INPUT_ROW_START_HIGH + 1)
 `define CRPD_INPUT_COL_END_HIGH             (`CRPD_INPUT_COL_END_LOW + `CRPD_INPUT_COL_END_WIDTH - 1)
 `define CRPD_INPUT_COL_END_FIELD            (`CRPD_INPUT_COL_END_HIGH):(`CRPD_INPUT_COL_END_LOW) // [103:94]
 
-`define CRPD_INPUT_ROW_END_WIDTH            (clog2(`ROW_BUF_BRAM_DEPTH)) // 10
+`define CRPD_INPUT_ROW_END_WIDTH            ($clog2(`ROW_BUF_BRAM_DEPTH)) // 10
 `define CRPD_INPUT_ROW_END_LOW              (`CRPD_INPUT_COL_END_HIGH + 1)
 `define CRPD_INPUT_ROW_END_HIGH             (`CRPD_INPUT_ROW_END_LOW + `CRPD_INPUT_ROW_END_WIDTH - 1)
 `define CRPD_INPUT_ROW_END_FIELD            (`CRPD_INPUT_ROW_END_HIGH):(`CRPD_INPUT_ROW_END_LOW) // [113:104]
 
-`define NUM_KERNELS_WIDTH                   (clog2(`MAX_BRAM_3x3_KERNELS)) // 10
+`define NUM_KERNELS_WIDTH                   ($clog2(`MAX_BRAM_3x3_KERNELS)) // 10
 `define NUM_KERNELS_LOW                     (`CRPD_INPUT_ROW_END_HIGH + 1)
 `define NUM_KERNELS_HIGH                    (`NUM_KERNELS_LOW + `NUM_KERNELS_WIDTH - 1)
 `define NUM_KERNELS_FIELD                   (`NUM_KERNELS_HIGH):(`NUM_KERNELS_LOW) // [119:114]

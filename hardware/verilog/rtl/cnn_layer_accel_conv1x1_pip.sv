@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ns
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Company:
 //
@@ -57,6 +57,7 @@ module cnn_layer_accel_conv1x1_pip #(
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     krnl1x1_bram_din            ,
     krnl1x1Bias_bram_din        ,
+    krnl1x1Bias_dwc_fifo_rden   ,
     krnl1x1_bram_wren           ,
     krnl1x1Bias_bram_wren       ,
     convMap_fifo_dout			,
@@ -112,6 +113,7 @@ module cnn_layer_accel_conv1x1_pip #(
     input  logic [           C_VEC_ADD_WIDTH - 1:0]  	vec_add_rm1_sum              ; 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     input  logic                                        krnl1x1_bram_wren            ;
+    input  logic                                        krnl1x1Bias_dwc_fifo_rden    ;
     input  logic                                        krnl1x1Bias_bram_wren        ;
     input  logic [     `KRNL_1X1_BRAM_WR_WTH - 1:0]  	krnl1x1_bram_din             ;
     input  logic [`KRNL_1X1_BIAS_BRAM_WR_WTH - 1:0]  	krnl1x1Bias_bram_din         ;

@@ -1,8 +1,0 @@
-#HD: Setting Tcl Params:
-	place.closeImportedSites == 1
-	tcl.notrace == 1
-	hd.visual == 0
-
-#HD: Running synthesis for block cnn_layer_accel
-ERROR: [Synth 8-2715] syntax error near ; [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/OOC_synth_top.sv:31]
-ERROR: [Synth 8-2715] syntax error near ) [/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/verilog/rtl/OOC_synth_top.sv:34]

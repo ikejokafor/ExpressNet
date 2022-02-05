@@ -1,0 +1,2 @@
+create_clock -period 2.400 -name clk_FAS -waveform {0.000 1.200} -add [get_ports clk_FAS]
+create_clock -period 12.000 -name clk_intf -waveform {0.000 6.000} -add [get_ports clk_intf]

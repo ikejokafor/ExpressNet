@@ -1,0 +1,6 @@
+verilog xil_defaultlib  \
+"../../../../../../../ip_viv2019.1/xcvu37p-fsvh2892-2-e/conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+nosort

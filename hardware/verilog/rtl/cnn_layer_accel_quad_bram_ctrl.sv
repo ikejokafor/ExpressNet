@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ns
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Company:			
 //				
@@ -138,7 +138,7 @@ module cnn_layer_accel_quad_bram_ctrl (
     input  logic [                           11:0]      pix_seq_data_full_count     ;
     output logic [                 C_NUM_CE - 1:0]      next_kernel                 ;
 	output logic [                 C_NUM_CE - 1:0]      move_one_row_down           ;
-    input  logic                                        last_awe_last_kernel        ;
+    input  logic [`KRNL_3X3_SIMD - 1:0 ]                last_awe_last_kernel        ;
     output logic                                        ctrl_last_kernel            ;
     input  logic                                        pipeline_flushed            ;
 	output logic                                        wht_sequence_selector       ;

@@ -1,3 +1,7 @@
+`ifndef __AWE_DEFS__
+`define __AWE_DEFS__
+
+
 parameter  C_PACKET_WIDTH		 	= 66;
 
 
@@ -36,3 +40,6 @@ localparam C_INPUT_MUX_WIDTH        = 18;
 `define    MIN_VALUE               18'h2_0000
 `define    MAX_VALUE               18'h1_ffff
 `define    ZERO 		           0
+
+
+`endif
