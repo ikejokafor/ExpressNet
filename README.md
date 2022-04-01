@@ -4,10 +4,10 @@ hardware implementation to accelerate CNN layers along with software for invokin
 ## Dependencies
 systemC  
 espresso  
-util
-FPGA_shim
-fixedPoint
-SYSC_FPGA_shim
-network
-syscNetProto  
+util  
+FPGA_shim  
+fixedPoint  
+SYSC_FPGA_shim  
+network  
+syscNetProto    
 
