@@ -59,8 +59,8 @@ model/work
 simulation/testbench1/work/*
 hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0_ex/ddr4_0_ex.sim/sim_1/behav/questa/questa_lib
 
-hardware/ip
-ion/scenario2/vsim.wlf
+
+simulation/scenario2/vsim.wlf
 verification/scenario2/tcl_stacktrace.txt
 verification/scenario2/wlf*
 verification/scenario2/transcript
@@ -70,8 +70,6 @@ model/work
 
 simulation/testbench1/work/*
 hardware/ip/xcvu37p-fsvh2892-2-e/ddr4_0_ex/ddr4_0_ex.sim/sim_1/behav/questa/questa_lib
-
-hardware/ip
 
 hardware/doc/*
 
