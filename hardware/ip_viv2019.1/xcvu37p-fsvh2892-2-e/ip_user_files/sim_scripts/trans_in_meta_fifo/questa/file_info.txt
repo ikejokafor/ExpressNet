@@ -1,5 +1,0 @@
-fifo_generator_vlog_beh.v,verilog,fifo_generator_v13_2_4,../../../ipstatic/simulation/fifo_generator_vlog_beh.v,
-fifo_generator_v13_2_rfs.vhd,vhdl,fifo_generator_v13_2_4,../../../ipstatic/hdl/fifo_generator_v13_2_rfs.vhd,
-fifo_generator_v13_2_rfs.v,verilog,fifo_generator_v13_2_4,../../../ipstatic/hdl/fifo_generator_v13_2_rfs.v,
-trans_in_meta_fifo.v,verilog,xil_defaultlib,../../../../trans_in_meta_fifo/sim/trans_in_meta_fifo.v,
-glbl.v,Verilog,xil_defaultlib,glbl.v

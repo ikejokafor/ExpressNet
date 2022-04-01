@@ -1,6 +1,0 @@
-verilog xil_defaultlib  \
-"../../../../conv1x1_dwc_fifo/sim/conv1x1_dwc_fifo.v" \
-
-verilog xil_defaultlib "glbl.v"
-
-nosort

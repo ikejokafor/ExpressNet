@@ -1,1 +1,0 @@
-vopt -64 +acc -l elaborate.log -L blk_mem_gen_v8_4_3 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm -work xil_defaultlib xil_defaultlib.krnl1x1Bias_bram xil_defaultlib.glbl -o krnl1x1Bias_bram_opt

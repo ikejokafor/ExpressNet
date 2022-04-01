@@ -1,2 +1,0 @@
-outbuf_fifo.v,verilog,xil_defaultlib,../../../../outbuf_fifo/sim/outbuf_fifo.v,
-glbl.v,Verilog,xil_defaultlib,glbl.v
