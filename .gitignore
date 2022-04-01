@@ -76,7 +76,7 @@ hardware/doc/*
 hardware/viv2019.1_proj/xcvu37p-fsvh2892-2-e/TCL_Flow/Synth/*
 
 hardware/ip_viv2018.3/*
-!hardware/ip_viv2018.3/xczu9eg-ffvb1156-2-e/ip_user_files/*
+!hardware/ip_viv2018.3/xczu9eg-ffvb1156-2-e/ip_user_files/
 !*/hardware/ip_viv2018.3/xczu9eg-ffvb1156-2-e/managed_ip_project/*
 !*/hardware/ip_viv2018.3/xcvu37p-fsvh2892-2-e/res_dwc_fifo/res_dwc_fifo.xci
 !*/hardware/ip_viv2018.3/xcvu37p-fsvh2892-2-e/resdMap_fifo/resdMap_fifo.xci
