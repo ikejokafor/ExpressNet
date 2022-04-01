@@ -30,8 +30,17 @@ module cnl_sc2_testbench;
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//	Includes
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
-    `include "cnl_sc2_verif_defs.svh"
     `include "cnn_layer_accel.svh"
+    `include "cnn_layer_accel_AWP.svh"
+    `include "cnn_layer_accel_conv1x1_pip.svh"
+    `include "cnn_layer_accel_FAS.svh"
+    `include "cnn_layer_accel_FAS_pip_ctrl.svh"
+    `include "cnn_layer_accel_QUAD.svh"
+    `include "cnn_layer_accel_trans_fifo.svh"
+    `include "awe.svh"
+    `include "axi_defs.svh"
+    
+    `include "cnl_sc2_verif_defs.svh"
     `include "cnn_layer_accel_verif_defs.svh"
     `include "cnl_sc2_generator.sv"
     `include "cnl_sc2_environment.sv"
@@ -101,12 +110,12 @@ module cnl_sc2_testbench;
 	//-----------------------------------------------------------------------------------------------------------------------------------------------  
     `cnl_scX_environment #(
         .C_PERIOD_100MHz ( C_PERIOD_100MHz ), 
-        .C_PERIOD_500MHz ( C_PERIOD_500MHz ) 
+        .C_PERIOD_500MHz ( C_PERIOD_500MHz )
     ) env;
     `cnl_scX_generator test;
     `scX_genParams_t `scX_genParams;
     `scX_crtTestParams_t `scX_crtTestParams;
-    `cnl_scX_generator m_test_queue[$];
+    `cnl_scX_generator crt_test_queue[$];
     int i0;
     int i1;
     int i2;
@@ -123,10 +132,12 @@ module cnl_sc2_testbench;
     int conv_out_fmt_arr[1:0];
     int test_bi;
     int test_ei;
-    string outputDir;    
-    virtual cnn_layer_accel_quad_intf quad_intf_arr[0:`NUM_QUADS - 1];
+    string outputDir;
     genvar i;
-  
+    integer i6;
+    integer i7;
+    virtual cnn_layer_accel_quad_intf quad_intf_arr[0:`NUM_QUADS - 1];
+    
     
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
 	// Module Instantiations
@@ -153,8 +164,8 @@ module cnl_sc2_testbench;
         .clk_core   ( clk_core  ),
         .rst        ( rst       )
     );
-
-
+    
+    
     for(i = 0; i < `NUM_QUADS; i = i + 1) begin: QUAD
         cnn_layer_accel_quad
         i0_cnn_layer_accel_quad (
@@ -233,12 +244,12 @@ module cnl_sc2_testbench;
            .pixel_ready                     ( pixel_ready[i]                                        ),
            .pixel_data                      ( pixel_data[i]                                         ),
 
-           .output_row                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_row                    ),
-           .output_col                      ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_col                    ),
-           .output_depth                    ( cnl_sc1_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_depth                  )
+           .output_row                      ( cnl_sc2_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_row                    ),
+           .output_col                      ( cnl_sc2_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_col                    ),
+           .output_depth                    ( cnl_sc2_testbench.QUAD[i].i0_cnn_layer_accel_quad.output_depth                  )
         );
         
-        assign quad_intf_arr[i] = cnl_sc1_testbench.QUAD[i].i0_quad_intf;
+        assign quad_intf_arr[i] = cnl_sc2_testbench.QUAD[i].i0_quad_intf;
         if(i == 0) begin
             assign all_pip_primed_arr[i] = all_pip_primed;
             assign all_pfb_loaded_arr[i] = all_pfb_loaded;
@@ -271,7 +282,6 @@ module cnl_sc2_testbench;
     
     
     // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
-    integer i6, i7;
     always@(*) begin
        for(i6 = 0; i6 < `NUM_QUADS; i6 = i6 + 1) begin
             all_pip_primed = pip_primed[i6] && 1;
@@ -281,7 +291,7 @@ module cnl_sc2_testbench;
        end
     end    
     // END Logic --------------------------------------------------------------------------------------------------------------------------------
-
+ 
     
     initial begin
         // BEGIN Logic ------------------------------------------------------------------------------------------------------------------------------
@@ -397,11 +407,12 @@ module cnl_sc2_testbench;
         // test.createTest(`scX_crtTestParams);
         // crt_test_queue.push_back(test);
         // ti = ti + 1;
-
-        if($test$plusargs("test_ei")) begin
-            $value$plusargs("test_ei=%d", test_ei);
+        
+        
+        if($test$plusargs("test_bi")) begin
+            $value$plusargs("test_bi=%d", test_bi);
         end else begin
-            test_ei = -1;     
+            test_bi = 0;     
         end
         if($test$plusargs("test_ei")) begin
             $value$plusargs("test_ei=%d", test_ei);
@@ -413,18 +424,9 @@ module cnl_sc2_testbench;
         end else begin
             outputDir = "./";
         end
-        env = new(
-            i0_synch_intf, 
-            i0_quad_intf, 
-            m_test_queue.size() + C_NUM_RAND_TESTS, 
-            m_test_queue,
-            1,
-            FALSE, 
-            FALSE, 
-            test_bi, 
-            test_ei, 
-            outputDir
-        );
+
+       
+        env = new(i0_synch_intf, quad_intf_arr, crt_test_queue.size() + C_NUM_RAND_TESTS, crt_test_queue, 1, FALSE, FALSE, test_bi, test_ei, outputDir);
         env.build();
         fork
             env.run();

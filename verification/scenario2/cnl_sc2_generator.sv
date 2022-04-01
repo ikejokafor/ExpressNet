@@ -35,10 +35,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-`include "generator.sv"
-`include "cnl_sc2_verif_defs.svh"
-`include "math.svh"
-`include "utilities.svh"
 `include "cnn_layer_accel.svh"
 `include "cnn_layer_accel_AWP.svh"
 `include "cnn_layer_accel_conv1x1_pip.svh"
@@ -48,6 +44,9 @@
 `include "cnn_layer_accel_trans_fifo.svh"
 `include "awe.svh"
 `include "axi_defs.svh"
+
+`include "generator.sv"
+`include "cnl_sc2_verif_defs.svh"
 `include "cnn_layer_accel_verif_defs.svh"
 
 

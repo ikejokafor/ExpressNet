@@ -32,7 +32,6 @@
 //                          
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 `include "cnn_layer_accel.svh"
 `include "cnn_layer_accel_AWP.svh"
 `include "cnn_layer_accel_conv1x1_pip.svh"
@@ -46,6 +45,8 @@
 `include "scoreboard.sv"
 `include "cnl_sc2_verif_defs.svh"
 `include "cnn_layer_accel_verif_defs.svh"
+`include "cnn_layer_accel_quad_intf.sv"
+`include "cnn_layer_accel_synch_intf.sv"
 `include "cnl_sc2_generator.sv"
 `include "cnl_sc2_DUTOutput.sv"
 

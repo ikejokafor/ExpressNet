@@ -33,6 +33,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 `include "cnn_layer_accel.svh"
 `include "cnn_layer_accel_AWP.svh"
 `include "cnn_layer_accel_conv1x1_pip.svh"
@@ -80,7 +81,7 @@ function `cnl_scX_driver::new(drvParams_t drvParams = null);
     `scX_drvParams_t `scX_drvParams;
     if(drvParams != null) begin
         $cast(`scX_drvParams, drvParams);
-        m_quad_intf_arr = `scX_drvParams.m_quad_intf_arr;
+        m_quad_intf_arr = `scX_drvParams.quad_intf_arr;
         m_agent2driverMB = `scX_drvParams.agent2driverMB;
         m_num_mon = `scX_drvParams.num_mon;
         m_numTests = `scX_drvParams.numTests;
@@ -368,7 +369,7 @@ task `cnl_scX_driver::start_accel();
 endtask: start_accel
 
 
-task `cnl_scX_driver::hndl_req();
+task `cnl_scX_driver::hndl_req(`cnl_scX_generator test);
     int qi0;
     int qi1;
     int n;

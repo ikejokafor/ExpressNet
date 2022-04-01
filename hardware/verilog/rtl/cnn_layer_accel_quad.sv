@@ -88,7 +88,7 @@ module cnn_layer_accel_quad  (
     //-----------------------------------------------------------------------------------------------------------------------------------------------
 	//  Local Parameters
 	//-----------------------------------------------------------------------------------------------------------------------------------------------
-    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = clog2(`ROW_BUF_BRAM_DEPTH); 
+    localparam C_CLG2_ROW_BUF_BRAM_DEPTH    = $clog2(`ROW_BUF_BRAM_DEPTH); 
     localparam C_PIXEL_DATAOUT_WIDTH        = `NUM_CE_PER_AWE * `PIXEL_WIDTH;
     localparam C_PIXEL_DATAIN_WIDTH         = `NUM_AWE * `PIXEL_WIDTH;    
     localparam C_NUM_CE                     = `NUM_CE_PER_AWE * `NUM_AWE;
@@ -99,7 +99,7 @@ module cnn_layer_accel_quad  (
     localparam C_CE_CYCLE_CNT_WIDTH         = C_NUM_CE * 3;
     localparam C_WHT_TBL_ADDR_WIDTH         = C_NUM_CE * 4;
     localparam C_RELU_WIDTH                 = C_NUM_CE * `PIXEL_WIDTH;
-    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = clog2(`MAX_BRAM_3x3_KERNELS);
+    localparam C_CLG2_MAX_BRAM_3x3_KERNELS  = $clog2(`MAX_BRAM_3x3_KERNELS);
     localparam C_ACTV_WIDTH                 = `PIXEL_WIDTH * 2;
 
     
@@ -110,6 +110,14 @@ module cnn_layer_accel_quad  (
     localparam ST_AWE_CE_ACTIVE             = 6'b001000;
     localparam ST_WAIT_JOB_DONE             = 6'b010000;
     localparam ST_SEND_COMPLETE             = 6'b100000;
+    
+    localparam C_RES_VLD_WTH                = `KRNL_3X3_SIMD;
+    localparam C_RES_RDY_WTH                = `KRNL_3X3_SIMD;
+    localparam C_RES_DAT_WTH                = `PIXEL_WIDTH * `KRNL_3X3_SIMD;
+    
+    localparam C_CAS_VLD_WTH                = `KRNL_3X3_SIMD;
+    localparam C_CAS_RDY_WTH                = `KRNL_3X3_SIMD;
+    localparam C_CAS_DAT_WTH                = `PIXEL_WIDTH * `KRNL_3X3_SIMD;
     
     
     
@@ -134,13 +142,13 @@ module cnn_layer_accel_quad  (
     output logic            pfb_loaded          ;
     input  logic            all_pfb_loaded      ;
     
-    input  logic            cascade_in_valid    ;
-    output logic            cascade_in_ready    ;
-    input  logic [15:0]     cascade_in_data     ;
+    input  logic [C_CAS_VLD_WTH - 1:0]     cascade_in_valid    ;
+    output logic [C_RES_RDY_WTH - 1:0]     cascade_in_ready    ;
+    input  logic [C_CAS_DAT_WTH - 1:0]     cascade_in_data     ;
     
-    output logic            cascade_out_valid   ;
-    input  logic            cascade_out_ready   ;
-    output logic [15:0]     cascade_out_data    ;
+    output logic [C_CAS_VLD_WTH - 1:0]  cascade_out_valid   ;
+    input  logic [C_RES_RDY_WTH - 1:0]  cascade_out_ready   ;
+    output logic [C_CAS_DAT_WTH - 1:0]  cascade_out_data    ;
     
     input  logic [  3:0]    config_valid        ;
     output logic [  3:0]    config_accept       ;
@@ -150,9 +158,9 @@ module cnn_layer_accel_quad  (
     output logic            weight_ready        ;
     input  logic [127:0]    weight_data         ;
     
-    output logic            result_valid        ;
-    input  logic            result_accept       ;
-    output logic [15:0]     result_data         ;
+    output logic [C_RES_VLD_WTH - 1:0]     result_valid        ;
+    input  logic [C_RES_RDY_WTH - 1:0]     result_accept       ;
+    output logic [C_RES_DAT_WTH - 1:0]     result_data         ;
 
     input  logic            pixel_valid         ;
     output logic            pixel_ready         ;
@@ -171,10 +179,11 @@ module cnn_layer_accel_quad  (
         genvar g2; `UNPACK_ARRAY_1D(`WEIGHT_WIDTH, `NUM_CE, weight_data, weight_data_arr, g2);
     logic [`PIXEL_WIDTH - 1:0] cascade_in_data_arr[`KRNL_3X3_SIMD - 1:0];
         genvar g3; `UNPACK_ARRAY_1D(`PIXEL_WIDTH, `KRNL_3X3_SIMD, cascade_in_data, cascade_in_data_arr, g3);
-    logic [`PIXEL_WIDTH - 1:0] cascade_out_data_arr[`KRNL_3X3_SIMD - 1:0];
-        genvar g4; `PACK_ARRAY_1D(`PIXEL_WIDTH, `KRNL_3X3_SIMD, cascade_out_data_arr, cascade_out_data, g4);
-    logic [`PIXEL_WIDTH - 1:0] result_data_arr[`KRNL_3X3_SIMD - 1:0];
-        genvar g5; `PACK_ARRAY_1D(`PIXEL_WIDTH, `KRNL_3X3_SIMD, result_data_arr, result_data, g5);         
+    
+    // logic [`PIXEL_WIDTH - 1:0] cascade_out_data_arr[`KRNL_3X3_SIMD - 1:0];
+    //     genvar g4; `PACK_ARRAY_1D(`PIXEL_WIDTH, `KRNL_3X3_SIMD, cascade_out_data_arr, cascade_out_data, g4);
+    // logic [`PIXEL_WIDTH - 1:0] result_data_arr[`KRNL_3X3_SIMD - 1:0];
+    //     genvar g5; `PACK_ARRAY_1D(`PIXEL_WIDTH, `KRNL_3X3_SIMD, result_data_arr, result_data, g5);         
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------
     logic                                       job_fetch_request_w                                                 ;
     logic                                       job_fetch_ack_r                                                     ;
@@ -235,6 +244,7 @@ module cnn_layer_accel_quad  (
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------    
     genvar                                      i                                	                    ;
     genvar                                      j                                	                    ;
+    genvar                                      k                                                       ; 
     // BEGIN ----------------------------------------------------------------------------------------------------------------------------------------  
     logic                                         config_mode                     	 	                ;
     logic    [                              9:0]  pfb_full_count_cfg                                    ;
@@ -276,7 +286,7 @@ module cnn_layer_accel_quad  (
 	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_cascade_dataout	[`NUM_AWE - 1:0]	                ;
 	logic  								        awe_dataout_valid[`NUM_AWE - 1:0]			            ;
 	logic                                	    awe_carryout[`NUM_AWE - 1:0]        		            ;
-	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_dataout	[`NUM_AWE - 1:0]	    	                ;
+	logic     [          C_P_OUTPUT_WIDTH-1:0]  awe_dataout	[`NUM_AWE - 1:0][`KRNL_3X3_SIMD - 1:0]      ;
     logic                                       cascade_in_ready_arr[`NUM_AWE - 1:0]                    ;
 
 
@@ -399,87 +409,27 @@ module cnn_layer_accel_quad  (
             .ce0_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 0]                  ),
             .ce1_last_kernel            ( last_kernel[i * `NUM_CE_PER_AWE + 1]                  )
 `endif
-        );
-        
-        
-        if (i == 0 ) begin: AWE_DSP
-            cnn_layer_accel_awe_dsps #(
-                .C_DATAIN_DELAY				(	(i * 2)							)
-            )
-            i0_cnn_layer_accel_awe_dsps (	
-                .rst						( rst													    	),
-                .clk						( clk_if														), 
-                .clk_5x					    ( clk_core														),
-                .new_map				    ( job_accept_w													),
-                .kernal_window_size			( dsp_kernel_size_cfg    								        ),
-                .mode						( 2'b00													        ),	
-                .cascade_datain			    ( cascade_in_data                      							),    
-                .cascade_carryin			( 1'b0 															),
-                .cascade_datain_valid	    ( cascade_in_valid              							    ),
-                .ce0_pixel_valid		    ( ce0_pixel_dataout_valid[i]                                    ),
-                .ce0_pixel_datain		    ( ce0_pixel_dataout[i]											),
-                .ce1_pixel_valid	    	( ce1_pixel_dataout_valid[i]									),
-                .ce1_pixel_datain 			( ce1_pixel_dataout[i]											),
-                .ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0]				), 
-                .ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0]					),
-                .ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1]				), 
-                .ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1]					),
-                .dataout_valid				( awe_dataout_valid[i]											),
-                .dataout_p					( awe_dataout[i]												),
-                .dataout_c					( awe_carryout[i]		 										),
-                .cascade_dataout			( awe_cascade_dataout[i]										),
-                .cascade_carryout			( awe_cascade_carryout[i]										),
-                .cascade_dataout_valid		( awe_cascade_dataout_valid[i]									)
-            );
-        end else begin: AWE_DSP 
-            cnn_layer_accel_awe_dsps #(
-                .C_DATAIN_DELAY				(	(i * 2)							)
-            )
-            i0_cnn_layer_accel_awe_dsps (	
-                .rst						( rst													    	),
-                .clk						( clk_if														), 
-                .clk_5x					    ( clk_core														),
-                .new_map				    ( job_accept_w													),
-                .kernal_window_size			( dsp_kernel_size_cfg									        ),
-                .mode						( 2'b00													        ),	
-                .cascade_datain			    ( awe_cascade_dataout[i - 1]          				            ),    
-                .cascade_carryin			( awe_cascade_carryout[i - 1]       							),
-                .cascade_datain_valid	    ( awe_cascade_dataout_valid[i - 1]  	                		),
-                .ce0_pixel_valid		    ( ce0_pixel_dataout_valid[i]                                    ),
-                .ce0_pixel_datain		    ( ce0_pixel_dataout[i]											),
-                .ce1_pixel_valid	    	( ce1_pixel_dataout_valid[i]									),
-                .ce1_pixel_datain 			( ce1_pixel_dataout[i]											),
-                .ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0]				), 
-                .ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0]					),
-                .ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1]				), 
-                .ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1]					),
-                .dataout_valid				( awe_dataout_valid[i]											),
-                .dataout_p					( awe_dataout[i]												),
-                .dataout_c					( awe_carryout[i]		 										),
-                .cascade_dataout			( awe_cascade_dataout[i]										),
-                .cascade_carryout			( awe_cascade_carryout[i]										),
-                .cascade_dataout_valid		( awe_cascade_dataout_valid[i]									)
-            );
-        end        
+        );       
     end endgenerate
 
+
     
-	generate for(k = 0; k < `KRNL_3X3_SIMD; k = k + 1) begin: KRNL_SIMD
-        for(i = 0; i < `NUM_AWE; i = i + 1) begin: AWE
+	generate for(k = 0; k < `KRNL_3X3_SIMD; k = k + 1) begin: KRNL_SIMD_DLY_LBL
+        for(i = 0; i < `NUM_AWE; i = i + 1) begin: AWE_DLY_LBL
             if(i == 0) begin
-                ce0_pixel_dout_simd[i][k] 		= ce0_pixel_dataout[i];
-                ce1_pixel_dout_simd[i][k] 		= ce1_pixel_dataout[i];
-                ce0_pixel_dout_valid_simd[i][k] = ce0_pixel_dataout_valid;
-                ce1_pixel_dout_valid_simd[i][k] = ce1_pixel_dataout_valid;
+                assign ce0_pixel_dout_simd[i][k] 		= ce0_pixel_dataout[i];
+                assign ce1_pixel_dout_simd[i][k] 		= ce1_pixel_dataout[i];
+                assign ce0_pixel_dout_valid_simd[i][k] = ce0_pixel_dataout_valid[i];
+                assign ce1_pixel_dout_valid_simd[i][k] = ce1_pixel_dataout_valid[i];
             end else begin
                 SRL_bit #(
                     .C_CLOCK_CYCLES ( k ) 
                 )
                 i0_SRL_bit (
-                    .clk        ( clk                   				),
+                    .clk        ( clk_core                				),
                     .ce         ( 1'b1                  				),
                     .rst        ( rst                   				),
-                    .data_in    ( ce0_pixel_dataout_valid  				),
+                    .data_in    ( ce0_pixel_dataout_valid[i]    		),
                     .data_out   ( ce0_pixel_dout_valid_simd[i][k]       )
                 );
 
@@ -488,10 +438,10 @@ module cnn_layer_accel_quad  (
                     .C_CLOCK_CYCLES ( k )
                 )
                 i1_SRL_bit (
-                    .clk        ( clk                   				),
+                    .clk        ( clk_core                 				),
                     .ce         ( 1'b1                  				),
                     .rst        ( rst                   				),
-                    .data_in    ( ce1_pixel_dataout_valid  				),
+                    .data_in    ( ce1_pixel_dataout_valid[i]			),
                     .data_out   ( ce1_pixel_dout_valid_simd[i][k]       )
                 );
                 
@@ -500,7 +450,7 @@ module cnn_layer_accel_quad  (
                     .C_CLOCK_CYCLES ( k ) 
                 )
                 i2_SRL_bit (
-                    .clk        ( clk                   				),
+                    .clk        ( clk_core                   			),
                     .ce         ( 1'b1                  				),
                     .rst        ( rst                   				),
                     .data_in    ( next_kernel_w           				),
@@ -512,7 +462,7 @@ module cnn_layer_accel_quad  (
                     .C_CLOCK_CYCLES ( k ) 
                 )
                 i3_SRL_bit (
-                    .clk        ( clk                   				),
+                    .clk        ( clk_core                   			),
                     .ce         ( 1'b1                  				),
                     .rst        ( rst                   				),
                     .data_in    ( ce_execute_w          				),
@@ -524,10 +474,10 @@ module cnn_layer_accel_quad  (
                     .C_CLOCK_CYCLES ( k ) 
                 )
                 i0_SRL_bus (
-                    .clk        ( clk                   		  ),
+                    .clk        ( clk_core                        ),
                     .ce         ( 1'b1                  		  ),
                     .rst        ( rst                   		  ),
-                    .data_in    ( ce0_pixel_dataout  			  ),
+                    .data_in    ( ce0_pixel_dataout[i] 			  ),
                     .data_out   ( ce0_pixel_dout_simd[i][k]       )
                 );
  
@@ -536,10 +486,10 @@ module cnn_layer_accel_quad  (
                     .C_CLOCK_CYCLES ( k )
                 )
                 i1_SRL_bus (
-                    .clk        ( clk                   		  ),
+                    .clk        ( clk_core                   	  ),
                     .ce         ( 1'b1                  		  ),
                     .rst        ( rst                   		  ),
-                    .data_in    ( ce1_pixel_dataout  		      ),
+                    .data_in    ( ce1_pixel_dataout[i] 		      ),
                     .data_out   ( ce1_pixel_dout_simd[i][k]       )
                 );
             end
@@ -548,8 +498,8 @@ module cnn_layer_accel_quad  (
 
 
 
-	generate for(k = 0; k < `KRNL_3X3_SIMD; k = k + 1) begin: KRNL_SIMD
-        for(i = 0; i < `NUM_AWE; i = i + 1) begin: AWE
+	generate for(k = 0; k < `KRNL_3X3_SIMD; k = k + 1) begin: KRNL_SIMD_DSP_LBL
+        for(i = 0; i < `NUM_AWE; i = i + 1) begin: AWE_LBL
             if(i == 0) begin: AWE_DSP
                 cnn_layer_accel_awe_dsps #(
                     .C_DATAIN_DELAY((i * 2) + k)
@@ -565,52 +515,52 @@ module cnn_layer_accel_quad  (
                     .cascade_carryin			( 1'b0 															),
                     .cascade_datain_valid	    ( cascade_in_valid[k]              							    ),
                     .ce0_pixel_valid		    ( ce0_pixel_dout_valid_simd[i][k]                               ),
-                    .ce0_pixel_datain		    ( ce0_pixel_dout_simd[i][k]    									),
-                    .ce1_pixel_valid	    	( ce1_pixel_dout_valid_simd[i][k]								),
-                    .ce1_pixel_datain 			( ce1_pixel_dout_simd[i][k]										),
-                    .ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0][k]			), 
-                    .ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0][k]					),
-                    .ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1][k]			), 
-                    .ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1][k]					),
-                    .dataout_valid				( awe_dataout_valid[i][k]										),
-                    .dataout_p					( awe_dataout[i][k]												),
-                    .dataout_c					( awe_carryout[i][k]		 									),
-                    .cascade_dataout			( awe_cascade_dataout[i][k]										),
-                    .cascade_carryout			( awe_cascade_carryout[i][k]									),
-                    .cascade_dataout_valid		( awe_cascade_dataout_valid[i][k]								)
+                    .ce0_pixel_datain		    ( ce0_pixel_dout_simd[i][k]    								    ),
+                    .ce1_pixel_valid	    	( ce1_pixel_dout_valid_simd[i][k]							    ),
+                    .ce1_pixel_datain 			( ce1_pixel_dout_simd[i][k]									    ),
+                    .ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0][k]		    ),
+                    .ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0][k]				    ),
+                    .ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1][k]		    ),
+                    .ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1][k]				    ),
+                    .dataout_valid				( awe_dataout_valid[i][k]									    ),
+                    .dataout_p					( awe_dataout[i][k]											    ),
+                    .dataout_c					( awe_carryout[i][k]		 								    ),
+                    .cascade_dataout			( awe_cascade_dataout[i][k]									    ),
+                    .cascade_carryout			( awe_cascade_carryout[i][k]								    ),
+                    .cascade_dataout_valid		( awe_cascade_dataout_valid[i][k]							    )
                 );
-            end else begin: AWE_DSP 
+            end else begin: AWE_DSP_LBL 
                 cnn_layer_accel_awe_dsps #(
                     .C_DATAIN_DELAY((i * 2) + k)
                 )
                 i0_cnn_layer_accel_awe_dsps (	
-                    .rst						( rst													    	),
-                    .clk						( clk_if														), 
-                    .clk_5x					    ( clk_core														),
-                    .new_map				    ( job_accept_w													),
+                    .rst						( rst													        ),
+                    .clk						( clk_if													    ), 
+                    .clk_5x					    ( clk_core													    ),
+                    .new_map				    ( job_accept_w												    ),
                     .kernal_window_size			( dsp_kernel_size_cfg									        ),
                     .mode						( 2'b00													        ),	
                     .cascade_datain			    ( awe_cascade_dataout[i - 1][k]          				        ),    
-                    .cascade_carryin			( awe_cascade_carryout[i - 1][k]       							),
-                    .cascade_datain_valid	    ( awe_cascade_dataout_valid[i - 1][k]  	                		),
+                    .cascade_carryin			( awe_cascade_carryout[i - 1][k]       						    ),
+                    .cascade_datain_valid	    ( awe_cascade_dataout_valid[i - 1][k]  	                	    ),
                     .ce0_pixel_valid		    ( ce0_pixel_dout_valid_simd[i][k]                               ),
-                    .ce0_pixel_datain		    ( ce0_pixel_dout_simd[i][k]    									),
-                    .ce1_pixel_valid	    	( ce1_pixel_dout_valid_simd[i][k]								),
-                    .ce1_pixel_datain 			( ce1_pixel_dout_simd[i][k]										),
-                    .ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0][k]			), 
-                    .ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0][k]					),
-                    .ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1][k]			), 
-                    .ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1][k] 				),
-                    .dataout_valid				( awe_dataout_valid[i][k]										),
-                    .dataout_p					( awe_dataout[i][k]												),
-                    .dataout_c					( awe_carryout[i][k]		 									),
-                    .cascade_dataout			( awe_cascade_dataout[i][k]										),
-                    .cascade_carryout			( awe_cascade_carryout[i][k]									),
-                    .cascade_dataout_valid		( awe_cascade_dataout_valid[i][k]								)
+                    .ce0_pixel_datain		    ( ce0_pixel_dout_simd[i][k]    								    ),
+                    .ce1_pixel_valid	    	( ce1_pixel_dout_valid_simd[i][k]							    ),
+                    .ce1_pixel_datain 			( ce1_pixel_dout_simd[i][k]									    ),
+                    .ce0_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 0][k]		    ),
+                    .ce0_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 0][k]				    ),
+                    .ce1_weight_valid			( ce_wht_table_dout_valid[i * `NUM_CE_PER_AWE + 1][k]		    ),
+                    .ce1_weight_datain		    ( ce_wht_table_dout[i * `NUM_CE_PER_AWE + 1][k] 			    ),
+                    .dataout_valid				( awe_dataout_valid[i][k]									    ),
+                    .dataout_p					( awe_dataout[i][k]											    ),
+                    .dataout_c					( awe_carryout[i][k]		 								    ),
+                    .cascade_dataout			( awe_cascade_dataout[i][k]									    ),
+                    .cascade_carryout			( awe_cascade_carryout[i][k]								    ),
+                    .cascade_dataout_valid		( awe_cascade_dataout_valid[i][k]							    )
                 );
             end
                 
-            for(j = 0; j < `NUM_CE_PER_AWE; j = j + 1) begin: AWE_BUF_WHT					
+            for(j = 0; j < `NUM_CE_PER_AWE; j = j + 1) begin: AWE_BUF_WHT_LBL					
                 cnn_layer_accel_weight_table_top #(
                     .C_CE_WHT_SEQ_ADDR_DELAY   ( ((i * `NUM_CE_PER_AWE + j) + 3) ),
                     .C_KRNL_SIMD_DELAY         ( k                               )
@@ -621,7 +571,7 @@ module cnn_layer_accel_quad  (
                     .config_mode                ( config_mode                                           ),
                     .job_accept                 ( job_accept_w                                          ),
                     .next_kernel                ( next_kernel_w[i * `NUM_CE_PER_AWE + j][k]             ),
-                    .last_kernel                ( last_kernel[i * `NUM_CE_PER_AWE + j][k]               ), 
+                    .last_kernel                ( last_kernel[i * `NUM_CE_PER_AWE + j][k]               ),
                     .wht_config_wren            ( wht_config_wren[k]                                    ),
                     .wht_config_data            ( weight_data_arr[i * `NUM_CE_PER_AWE + j][k]           ),
                     .wht_seq_addr0              ( wht_seq_addr0                                         ),
@@ -634,10 +584,10 @@ module cnn_layer_accel_quad  (
                 );
             end
         end
-        assign cascade_out_data_arr[k]     = awe_cascade_dataout[`NUM_AWE - 1][k];
+        assign cascade_out_data[k * `PIXEL_WIDTH +: `PIXEL_WIDTH]     = awe_cascade_dataout[`NUM_AWE - 1][k];
         assign cascade_out_valid[k]     = awe_cascade_dataout_valid[`NUM_AWE - 1][k];
         assign cascade_in_ready[k]      = cascade_in_ready_arr[0];
-        assign result_data_arr[k]       = awe_dataout[`NUM_AWE - 1][15:0][k];
+        assign result_data[(k * `PIXEL_WIDTH) +: `PIXEL_WIDTH]       = awe_dataout[`NUM_AWE - 1][k][15:0];
         assign result_valid[k]          = awe_dataout_valid[`NUM_AWE - 1][k];
     end endgenerate
 
@@ -788,11 +738,11 @@ module cnn_layer_accel_quad  (
 
     
     // BEGIN logic ----------------------------------------------------------------------------------------------------------------------------------    
-    integer k0;
+    integer ki;
     always@(*) begin
-        for(k0 = 0; k0 < `KRNL_3X3_SIMD; k0 = k0 + 1) begin
-            assign wht_config_wren[k0]  = weight_ready[k0] && weight_valid[k0];
-            assign weight_ready[k0]     = weight_valid[k0];
+        for(ki = 0; ki < `KRNL_3X3_SIMD; ki = ki + 1) begin
+            wht_config_wren[ki]  = weight_ready[ki] && weight_valid[ki];
+            weight_ready[ki]     = weight_valid[ki];
         end
     end
     assign config_mode      = state[0];

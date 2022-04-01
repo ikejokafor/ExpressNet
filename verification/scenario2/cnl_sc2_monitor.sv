@@ -1,5 +1,5 @@
-`ifndef	__CNL_SC1_MONITOR__
-`define	__CNL_SC1_MONITOR__
+`ifndef	__CNL_SC2_MONITOR__
+`define	__CNL_SC2_MONITOR__
 
 
 `timescale 1ns / 1ps
@@ -32,7 +32,6 @@
 //                          
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 `include "cnn_layer_accel.svh"
 `include "cnn_layer_accel_AWP.svh"
 `include "cnn_layer_accel_conv1x1_pip.svh"
