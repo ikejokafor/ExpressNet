@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="conv1x1_dwc_fifo_synth_1" LaunchPart="xcvu37p-fsvh2892-2-e" LaunchTime="1623882674">
+  <File Type="RDS-DCP" Name="conv1x1_dwc_fifo.dcp"/>
+  <File Type="REPORTS-TCL" Name="conv1x1_dwc_fifo_reports.tcl"/>
+  <File Type="RDS-UTIL-PB" Name="conv1x1_dwc_fifo_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="conv1x1_dwc_fifo_utilization_synth.rpt"/>
+  <File Type="PA-TCL" Name="conv1x1_dwc_fifo.tcl"/>
+  <File Type="RDS-RDS" Name="conv1x1_dwc_fifo.vds"/>
+  <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/conv1x1_dwc_fifo">
+    <File Path="$PPRDIR/../conv1x1_dwc_fifo/conv1x1_dwc_fifo.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="conv1x1_dwc_fifo"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="BlockSrcs" RelSrcDir="$PSRCDIR/conv1x1_dwc_fifo">
+    <File Path="$PPRDIR/../conv1x1_dwc_fifo/conv1x1_dwc_fifo.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="conv1x1_dwc_fifo"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
+    <Filter Type="Utils"/>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2019"/>
+    <Step Id="synth_design"/>
+  </Strategy>
+</GenRun>

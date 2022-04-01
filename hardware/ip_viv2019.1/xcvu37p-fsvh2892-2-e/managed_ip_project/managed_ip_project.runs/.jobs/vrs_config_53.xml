@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<Runs Version="1" Minor="0">
+	<Run Id="conv1x1_dwc_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/conv1x1_dwc_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="convMap_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/convMap_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="job_fetch_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/job_fetch_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="krnl1x1_bram_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/krnl1x1_bram_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="krnl1x1Bias_bram_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/krnl1x1Bias_bram_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="krnl1x1Bias_dwc_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/krnl1x1Bias_dwc_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="outbuf_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/outbuf_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="partMap_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/partMap_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="prevMap_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/prevMap_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="convMap_fifo_synth_1"/>
+	</Run>
+	<Run Id="res_dwc_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/res_dwc_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="job_fetch_fifo_synth_1"/>
+	</Run>
+	<Run Id="resdMap_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/resdMap_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="convMap_fifo_synth_1"/>
+	</Run>
+	<Run Id="trans_eg_meta_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/trans_eg_meta_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="trans_eg_pyld_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/trans_eg_pyld_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="trans_eg_meta_fifo_synth_1"/>
+	</Run>
+	<Run Id="trans_in_meta_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/trans_in_meta_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="trans_in_pyld_fifo_synth_1" LaunchDir="/home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/trans_in_pyld_fifo_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="trans_in_meta_fifo_synth_1"/>
+	</Run>
+	<Parameters>
+		<Parameter Name="runs.monitorLSFJobs" Val="true" Type="bool"/>
+	</Parameters>
+</Runs>
+

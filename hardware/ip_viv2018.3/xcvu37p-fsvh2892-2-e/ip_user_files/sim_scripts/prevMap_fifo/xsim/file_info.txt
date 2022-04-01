@@ -1,0 +1,2 @@
+prevMap_fifo.v,verilog,xil_defaultlib,../../../../prevMap_fifo/sim/prevMap_fifo.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

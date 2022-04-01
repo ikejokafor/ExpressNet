@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Nov 17 18:07:50 2021
+# Process ID: 21572
+# Current directory: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip_viv2019.1/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/clk_wiz_synth_1
+# Command line: vivado -log clk_wiz.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source clk_wiz.tcl
+# Log file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip_viv2019.1/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/clk_wiz_synth_1/clk_wiz.vds
+# Journal file: /home/mdl/izo5011/IkennaWorkSpace/cnn_layer_accel/hardware/ip_viv2019.1/xcvu37p-fsvh2892-2-e/managed_ip_project/managed_ip_project.runs/clk_wiz_synth_1/vivado.jou
+#-----------------------------------------------------------
+source clk_wiz.tcl -notrace
